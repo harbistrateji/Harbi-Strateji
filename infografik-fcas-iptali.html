@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCAS İptali — Stratejik Analiz | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:#040810;color:#e2e8f0;overflow-x:hidden;padding-top:100px}
+:root{--red:#c41e3a;--cyan:#00e0ff;--gold:#c9a24b;--bg:#040810;--card:#0d1520;--accent:#3B82F6}
+.container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+/* HERO */
+.hero{text-align:center;padding:4rem 1.5rem;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,#3B82F611 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;padding:6px 16px;border:1px solid #3B82F655;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#3B82F6;letter-spacing:0.15em;margin-bottom:1.5rem}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:0.05em}
+.hero p{font-size:1.1rem;color:rgba(255,255,255,0.6);max-width:700px;margin:0 auto;line-height:1.7}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:3rem 0}
+.stat-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:#3B82F6}
+.stat-val{font-family:'IBM Plex Mono',monospace;font-size:2rem;font-weight:700;color:#3B82F6}
+.stat-lbl{font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.5rem}
+/* SECTIONS */
+.section{padding:4rem 0;border-top:1px solid rgba(255,255,255,0.05)}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:0.5rem}
+.section-sub{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:2rem}
+/* CARDS GRID */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.info-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;transition:all 0.3s ease;cursor:default}
+.info-card:hover{border-color:#3B82F644;transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.info-card-icon{font-size:2rem;margin-bottom:1rem}
+.info-card h3{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:0.75rem}
+.info-card p{font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.6}
+.info-card ul{list-style:none;padding:0;margin-top:0.75rem}
+.info-card ul li{font-size:0.8rem;color:rgba(255,255,255,0.5);padding:4px 0;padding-left:1rem;position:relative}
+.info-card ul li::before{content:'›';position:absolute;left:0;color:#3B82F6}
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#3B82F6,#3B82F633)}
+.tl-item{position:relative;margin-bottom:2rem;padding-left:2rem}
+.tl-item::before{content:'';position:absolute;left:-1.55rem;top:6px;width:12px;height:12px;border-radius:50%;background:#3B82F6;border:2px solid var(--bg)}
+.tl-date{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#3B82F6;margin-bottom:0.3rem}
+.tl-title{font-family:'Chakra Petch',sans-serif;font-size:1rem;color:#fff;margin-bottom:0.3rem}
+.tl-desc{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.5}
+/* TABS */
+.tabs{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.tab-btn{padding:8px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;background:transparent;color:rgba(255,255,255,0.6);font-family:'Chakra Petch',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s}
+.tab-btn.active,.tab-btn:hover{background:#3B82F622;border-color:#3B82F6;color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;margin:1.5rem 0}
+.comp-table th,.comp-table td{padding:12px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.85rem}
+.comp-table th{font-family:'Chakra Petch',sans-serif;color:#3B82F6;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em}
+.comp-table td{color:rgba(255,255,255,0.7)}
+.comp-table tr:hover td{background:rgba(255,255,255,0.02)}
+/* FOOTER */
+.page-footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid rgba(255,255,255,0.05);margin-top:4rem}
+.page-footer p{font-size:0.75rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace}
+@media(max-width:768px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .cards-grid{grid-template-columns:1fr}
+  body{padding-top:80px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <span class="hero-badge">SAVUNMA SANAYİİ ANALİZİ</span>
+  <h1>FCAS İPTALİ</h1>
+  <p>Avrupa'nın 6. nesil savaş uçağı projesi FCAS'ın (Future Combat Air System) iptal sürecinin stratejik analizi ve küresel etkileri</p>
+</section>
+<div class="container">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">100+</div><div class="stat-lbl">Milyar € Bütçe</div></div>
+    <div class="stat-card"><div class="stat-val">3</div><div class="stat-lbl">Ortak Ülke</div></div>
+    <div class="stat-card"><div class="stat-val">2040</div><div class="stat-lbl">Hedef Tarih</div></div>
+    <div class="stat-card"><div class="stat-val">6.</div><div class="stat-lbl">Nesil Teknoloji</div></div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Proje Geçmişi</h2>
+    <p class="section-sub">FCAS / SCAF — Almanya, Fransa, İspanya Ortak Projesi</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-date">2017</div><div class="tl-title">Macron-Merkel Anlaşması</div><div class="tl-desc">Fransa ve Almanya arasında 6. nesil savaş uçağı geliştirme mutabakatı imzalandı</div></div>
+      <div class="tl-item"><div class="tl-date">2019</div><div class="tl-title">İspanya Katılımı</div><div class="tl-desc">İspanya üçüncü ortak olarak projeye dahil oldu. Dassault lider firma seçildi</div></div>
+      <div class="tl-item"><div class="tl-date">2020-2022</div><div class="tl-title">Teknoloji Demonstratörleri</div><div class="tl-desc">Remote Carrier, motor ve sensör alt sistemleri için Faz 1A/1B çalışmaları</div></div>
+      <div class="tl-item"><div class="tl-date">2023</div><div class="tl-title">Bütçe Krizleri</div><div class="tl-desc">Almanya'nın savunma bütçesi tartışmaları, iş paylaşımı anlaşmazlıkları</div></div>
+      <div class="tl-item"><div class="tl-date">2024-2025</div><div class="tl-title">Çöküş Süreci</div><div class="tl-desc">Dassault-Airbus anlaşmazlığı, teknoloji paylaşımı sorunları, projenin askıya alınması</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">İptal Nedenleri</h2>
+    <p class="section-sub">Stratejik, Teknolojik ve Politik Faktörler</p>
+    <div class="cards-grid">
+      <div class="info-card"><div class="info-card-icon">🏭</div><h3>Endüstriyel Rekabet</h3><p>Dassault (Fransa) ve Airbus (Almanya) arasında liderlik ve teknoloji paylaşımı anlaşmazlığı</p>
+        <ul><li>Kaynak kod erişimi tartışması</li><li>Motor geliştirme hakları</li><li>İhracat pazarı paylaşımı</li></ul></div>
+      <div class="info-card"><div class="info-card-icon">💰</div><h3>Maliyet Patlaması</h3><p>Başlangıçta 50 milyar € olan bütçe 100+ milyar €'ya çıktı</p>
+        <ul><li>Enflasyon etkisi</li><li>Teknolojik karmaşıklık</li><li>Üçlü koordinasyon maliyeti</li></ul></div>
+      <div class="info-card"><div class="info-card-icon">🔬</div><h3>Teknolojik Belirsizlik</h3><p>6. nesil tanımının netleşmemesi, YZ entegrasyonu zorlukları</p>
+        <ul><li>Otonom uçuş gereksinimleri</li><li>Loyal Wingman entegrasyonu</li><li>Kuantum sensör belirsizliği</li></ul></div>
+      <div class="info-card"><div class="info-card-icon">🇪🇺</div><h3>Politik Ayrışma</h3><p>Avrupa savunma politikasındaki stratejik vizyon farklılıkları</p>
+        <ul><li>Fransa: Stratejik özerklik</li><li>Almanya: NATO entegrasyonu</li><li>İspanya: Maliyet odaklı</li></ul></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Küresel Etkiler</h2>
+    <p class="section-sub">FCAS İptalinin Dünya Savunma Dengesine Etkileri</p>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tab-nato">NATO</button>
+      <button class="tab-btn" data-tab="tab-turkiye">Türkiye</button>
+      <button class="tab-btn" data-tab="tab-alternatif">Alternatifler</button>
+    </div>
+    <div id="tab-nato" class="tab-panel active">
+      <div class="cards-grid">
+        <div class="info-card"><div class="info-card-icon">🛡️</div><h3>NATO Hava Gücü Açığı</h3><p>2040 sonrası Avrupa'nın 5. nesil ötesi hava üstünlüğü kapasitesi belirsizleşti. F-35'e bağımlılık artacak.</p></div>
+        <div class="info-card"><div class="info-card-icon">🇺🇸</div><h3>ABD NGAD Avantajı</h3><p>ABD'nin 6. nesil NGAD programı tek alternatif olarak öne çıkıyor. Avrupa teknolojik bağımsızlığını kaybediyor.</p></div>
+      </div>
+    </div>
+    <div id="tab-turkiye" class="tab-panel">
+      <div class="cards-grid">
+        <div class="info-card"><div class="info-card-icon">🇹🇷</div><h3>KAAN Fırsatı</h3><p>Türkiye'nin TF-X/KAAN programı, FCAS boşluğunda Avrupa pazarına alternatif sunabilir.</p></div>
+        <div class="info-card"><div class="info-card-icon">📈</div><h3>İhracat Potansiyeli</h3><p>FCAS ortağı ülkelerin alt yüklenicileri KAAN ekosistemine yönelebilir.</p></div>
+      </div>
+    </div>
+    <div id="tab-alternatif" class="tab-panel">
+      <div class="cards-grid">
+        <div class="info-card"><div class="info-card-icon">🇬🇧</div><h3>Tempest/GCAP</h3><p>İngiltere-İtalya-Japonya GCAP projesi tek Batılı alternatif olarak güçleniyor.</p></div>
+        <div class="info-card"><div class="info-card-icon">🤖</div><h3>Otonom Sistemler</h3><p>İnsanlı 6. nesil yerine insansız sürü sistemlerine yönelim hızlanabilir.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Karşılaştırma: 6. Nesil Programları</h2>
+    <table class="comp-table">
+      <thead><tr><th>Program</th><th>Ülkeler</th><th>Durum</th><th>Hedef</th><th>Bütçe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>FCAS/SCAF</strong></td><td>🇫🇷🇩🇪🇪🇸</td><td style="color:#EF4444">İPTAL/ASKIDA</td><td>2040</td><td>100+ Milyar €</td></tr>
+        <tr><td><strong>GCAP/Tempest</strong></td><td>🇬🇧🇮🇹🇯🇵</td><td style="color:#22C55E">AKTİF</td><td>2035</td><td>~50 Milyar £</td></tr>
+        <tr><td><strong>NGAD</strong></td><td>🇺🇸</td><td style="color:#F59E0B">YENİDEN YAPILANDIRMA</td><td>2030+</td><td>Gizli</td></tr>
+        <tr><td><strong>KAAN (TF-X)</strong></td><td>🇹🇷</td><td style="color:#22C55E">UÇUŞ TESTİ</td><td>2028-2032</td><td>~10 Milyar $</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<footer class="page-footer">
+  <p>© 2026 HARB-İ STRATEJİ // FCAS/SCAF STRATEJİK ANALİZ</p>
+</footer>
+<script>
+// Tab functionality
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const group = btn.closest('.section');
+    group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    group.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const target = group.querySelector('#' + btn.dataset.tab);
+    if(target) target.classList.add('active');
+  });
+});
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; });
+}, {threshold: 0.1});
+document.querySelectorAll('.info-card, .stat-card, .tl-item').forEach(el => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'all 0.6s ease';
+  observer.observe(el);
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

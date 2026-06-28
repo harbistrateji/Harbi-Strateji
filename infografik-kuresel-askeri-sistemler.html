@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Küresel Askeri Sistemler | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:#040810;color:#e2e8f0;overflow-x:hidden;padding-top:100px}
+:root{--red:#c41e3a;--cyan:#00e0ff;--gold:#c9a24b;--bg:#040810;--card:#0d1520;--accent:#00E0FF}
+.container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+/* HERO */
+.hero{text-align:center;padding:4rem 1.5rem;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,#00E0FF11 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;padding:6px 16px;border:1px solid #00E0FF55;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#00E0FF;letter-spacing:0.15em;margin-bottom:1.5rem}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:0.05em}
+.hero p{font-size:1.1rem;color:rgba(255,255,255,0.6);max-width:700px;margin:0 auto;line-height:1.7}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:3rem 0}
+.stat-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:#00E0FF}
+.stat-val{font-family:'IBM Plex Mono',monospace;font-size:2rem;font-weight:700;color:#00E0FF}
+.stat-lbl{font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.5rem}
+/* SECTIONS */
+.section{padding:4rem 0;border-top:1px solid rgba(255,255,255,0.05)}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:0.5rem}
+.section-sub{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:2rem}
+/* CARDS GRID */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.info-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;transition:all 0.3s ease;cursor:default}
+.info-card:hover{border-color:#00E0FF44;transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.info-card-icon{font-size:2rem;margin-bottom:1rem}
+.info-card h3{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:0.75rem}
+.info-card p{font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.6}
+.info-card ul{list-style:none;padding:0;margin-top:0.75rem}
+.info-card ul li{font-size:0.8rem;color:rgba(255,255,255,0.5);padding:4px 0;padding-left:1rem;position:relative}
+.info-card ul li::before{content:'›';position:absolute;left:0;color:#00E0FF}
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#00E0FF,#00E0FF33)}
+.tl-item{position:relative;margin-bottom:2rem;padding-left:2rem}
+.tl-item::before{content:'';position:absolute;left:-1.55rem;top:6px;width:12px;height:12px;border-radius:50%;background:#00E0FF;border:2px solid var(--bg)}
+.tl-date{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#00E0FF;margin-bottom:0.3rem}
+.tl-title{font-family:'Chakra Petch',sans-serif;font-size:1rem;color:#fff;margin-bottom:0.3rem}
+.tl-desc{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.5}
+/* TABS */
+.tabs{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.tab-btn{padding:8px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;background:transparent;color:rgba(255,255,255,0.6);font-family:'Chakra Petch',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s}
+.tab-btn.active,.tab-btn:hover{background:#00E0FF22;border-color:#00E0FF;color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;margin:1.5rem 0}
+.comp-table th,.comp-table td{padding:12px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.85rem}
+.comp-table th{font-family:'Chakra Petch',sans-serif;color:#00E0FF;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em}
+.comp-table td{color:rgba(255,255,255,0.7)}
+.comp-table tr:hover td{background:rgba(255,255,255,0.02)}
+/* FOOTER */
+.page-footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid rgba(255,255,255,0.05);margin-top:4rem}
+.page-footer p{font-size:0.75rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace}
+@media(max-width:768px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .cards-grid{grid-template-columns:1fr}
+  body{padding-top:80px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <span class="hero-badge">KÜRESEL SAVUNMA ANALİZİ</span>
+  <h1>KÜRESEL ASKERİ SİSTEMLER</h1>
+  <p>Dünyanın önde gelen askeri güçlerinin silah sistemleri, doktrinleri ve teknolojik kapasitelerinin karşılaştırmalı analizi</p>
+</section>
+<div class="container">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">2.4T$</div><div class="stat-lbl">Küresel Savunma Harcaması</div></div>
+    <div class="stat-card"><div class="stat-val">195</div><div class="stat-lbl">Ülke Ordusu</div></div>
+    <div class="stat-card"><div class="stat-val">13.000+</div><div class="stat-lbl">Nükleer Başlık</div></div>
+    <div class="stat-card"><div class="stat-val">5</div><div class="stat-lbl">Nesil Savaş Uçağı</div></div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Askeri Güç Kategorileri</h2>
+    <p class="section-sub">Kara, Deniz, Hava, Uzay ve Siber Boyutlar</p>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tab-kara">Kara</button>
+      <button class="tab-btn" data-tab="tab-deniz">Deniz</button>
+      <button class="tab-btn" data-tab="tab-hava">Hava</button>
+      <button class="tab-btn" data-tab="tab-uzay">Uzay & Siber</button>
+    </div>
+    <div id="tab-kara" class="tab-panel active">
+      <div class="cards-grid">
+        <div class="info-card"><div class="info-card-icon">🏋️</div><h3>Ana Muharebe Tankları</h3><p>Dünya genelinde 60.000+ aktif tank</p>
+          <ul><li>M1A2 Abrams (ABD)</li><li>T-14 Armata (Rusya)</li><li>Leopard 2A7 (Almanya)</li><li>ALTAY (Türkiye)</li><li>Type 99A (Çin)</li></ul></div>
+        <div class="info-card"><div class="info-card-icon">🚀</div><h3>Balistik Füze Sistemleri</h3><p>Kıtalararası ve taktik balistik füzeler</p>
+          <ul><li>Minuteman III / Sentinel (ABD)</li><li>RS-28 Sarmat (Rusya)</li><li>DF-41 (Çin)</li><li>Tayfun (Türkiye)</li><li>Agni-V (Hindistan)</li></ul></div>
+        <div class="info-card"><div class="info-card-icon">🤖</div><h3>Otonom Kara Araçları</h3><p>İnsansız kara araçları ve robotik sistemler</p>
+          <ul><li>RCV (ABD)</li><li>Uran-9 (Rusya)</li><li>BARKAN (Türkiye)</li><li>THeMIS (Estonya)</li></ul></div>
+      </div>
+    </div>
+    <div id="tab-deniz" class="tab-panel">
+      <div class="cards-grid">
+        <div class="info-card"><div class="info-card-icon">🚢</div><h3>Uçak Gemileri</h3><p>Küresel güç projeksiyonunun sembolü</p>
+          <ul><li>Gerald Ford Sınıfı (ABD) — 11 adet</li><li>Fujian (Çin) — 3 adet</li><li>Queen Elizabeth (İngiltere) — 2 adet</li><li>TCG Anadolu (Türkiye) — LHD</li></ul></div>
+        <div class="info-card"><div class="info-card-icon">🦈</div><h3>Nükleer Denizaltılar</h3><p>Stratejik caydırıcılığın deniz ayağı</p>
+          <ul><li>Ohio/Columbia Sınıfı (ABD)</li><li>Borei-A Sınıfı (Rusya)</li><li>Vanguard (İngiltere)</li><li>Type 096 (Çin)</li></ul></div>
+      </div>
+    </div>
+    <div id="tab-hava" class="tab-panel">
+      <div class="cards-grid">
+        <div class="info-card"><div class="info-card-icon">✈️</div><h3>5. Nesil Savaş Uçakları</h3><p>Stealth teknolojisi ve sensör füzyonu</p>
+          <ul><li>F-35 Lightning II (ABD)</li><li>F-22 Raptor (ABD)</li><li>J-20 (Çin)</li><li>Su-57 (Rusya)</li><li>KAAN (Türkiye)</li></ul></div>
+        <div class="info-card"><div class="info-card-icon">🛸</div><h3>İnsansız Hava Araçları</h3><p>Drone teknolojisinde devrim</p>
+          <ul><li>MQ-9 Reaper (ABD)</li><li>Bayraktar TB3 (Türkiye)</li><li>ANKA-3 Stealth (Türkiye)</li><li>Wing Loong III (Çin)</li><li>Shahed-136 (İran)</li></ul></div>
+      </div>
+    </div>
+    <div id="tab-uzay" class="tab-panel">
+      <div class="cards-grid">
+        <div class="info-card"><div class="info-card-icon">🛰️</div><h3>Uzay Kuvvetleri</h3><p>Yörünge hakimiyeti ve uydu savaşı</p>
+          <ul><li>US Space Force — 77 GPS uydusu</li><li>Çin Stratejik Destek Kuvveti</li><li>Rusya Uzay Kuvvetleri</li><li>Türkiye TUA — GÖKTÜRK serisi</li></ul></div>
+        <div class="info-card"><div class="info-card-icon">💻</div><h3>Siber Komutanlıklar</h3><p>Dijital savaş kapasiteleri</p>
+          <ul><li>US Cyber Command — 6.000+ personel</li><li>Unit 8200 (İsrail)</li><li>PLA Unit 61398 (Çin)</li><li>GRU Unit 74455 (Rusya)</li><li>STM Siber (Türkiye)</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Askeri Güç Sıralaması 2026</h2>
+    <table class="comp-table">
+      <thead><tr><th>#</th><th>Ülke</th><th>Aktif Personel</th><th>Savunma Bütçesi</th><th>Nükleer</th><th>5. Nesil Uçak</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>🇺🇸 ABD</td><td>1.4M</td><td>886 Milyar $</td><td>5.500</td><td>F-22, F-35</td></tr>
+        <tr><td>2</td><td>🇨🇳 Çin</td><td>2.0M</td><td>296 Milyar $</td><td>500</td><td>J-20</td></tr>
+        <tr><td>3</td><td>🇷🇺 Rusya</td><td>1.3M</td><td>109 Milyar $</td><td>6.200</td><td>Su-57</td></tr>
+        <tr><td>4</td><td>🇮🇳 Hindistan</td><td>1.5M</td><td>75 Milyar $</td><td>172</td><td>—</td></tr>
+        <tr><td>5</td><td>🇬🇧 İngiltere</td><td>150K</td><td>75 Milyar $</td><td>225</td><td>F-35B</td></tr>
+        <tr><td>8</td><td>🇹🇷 Türkiye</td><td>460K</td><td>41 Milyar $</td><td>—</td><td>KAAN (test)</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<footer class="page-footer">
+  <p>© 2026 HARB-İ STRATEJİ // KÜRESEL SAVUNMA SİSTEMLERİ ANALİZİ</p>
+</footer>
+<script>
+// Tab functionality
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const group = btn.closest('.section');
+    group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    group.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const target = group.querySelector('#' + btn.dataset.tab);
+    if(target) target.classList.add('active');
+  });
+});
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; });
+}, {threshold: 0.1});
+document.querySelectorAll('.info-card, .stat-card, .tl-item').forEach(el => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'all 0.6s ease';
+  observer.observe(el);
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

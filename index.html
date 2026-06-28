@@ -10,8 +10,14 @@
 <link rel="stylesheet" href="hs-global.css">
 <style>
 *{box-sizing:border-box;}
-.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;white-space:nowrap;}
-.ticker-content{display:inline-block;animation:tickerScroll 60s linear infinite;font-family:var(--font-mono);font-size:.65rem;color:#fff;letter-spacing:.02em;}
+.ticker-bar{background:linear-gradient(90deg,#0d1520 0%,#1a2744 50%,#0d1520 100%);border-bottom:1px solid rgba(0,224,255,0.2);padding:0;height:30px;overflow:hidden;white-space:nowrap;display:flex;align-items:center;}
+.ticker-bar.breaking{background:linear-gradient(90deg,#1a0808 0%,#2d0f0f 50%,#1a0808 100%);border-bottom:1px solid rgba(196,30,58,0.3);}
+.ticker-bar.breaking .ticker-content{color:rgba(255,80,80,0.95);animation-duration:45s;}
+.ticker-bar.breaking .ticker-dot{background:#ff4444;}
+.breaking-label{flex-shrink:0;background:rgba(196,30,58,0.2);border-right:1px solid rgba(196,30,58,0.4);height:100%;display:flex;align-items:center;padding:0 12px;font-family:'Chakra Petch',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;color:#ff4444;gap:6px;}
+.breaking-label::before{content:'';width:6px;height:6px;border-radius:50%;background:#ff4444;animation:blink-dot 1s infinite;}
+@keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.2}}
+.ticker-content{display:inline-block;animation:tickerScroll 60s linear infinite;font-family:var(--font-mono);font-size:.65rem;color:rgba(0,224,255,0.9);letter-spacing:.02em;}
 @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-item{display:inline;margin-right:3rem;}
 .ticker-dot{display:inline-block;width:4px;height:4px;background:#fff;border-radius:50%;margin-right:.5rem;vertical-align:middle;opacity:.6;}
@@ -127,21 +133,36 @@
 </style>
 </head>
 <body>
-<!-- TICKER -->
-<div class="ticker-bar">
+<!-- SON DAKİKA TICKER -->
+<div class="ticker-bar breaking"><div class="breaking-label">SON DAKİKA</div>
   <div class="ticker-content">
-    <span class="ticker-item"><span class="ticker-dot"></span>KAAN F110 Motor Satışı Kongre'ye Bildirildi</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>TB3 TCG Anadolu'dan Elektronik Taarruz Görevi</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>ALTAY Seri Üretim: 2026 Hedefi 11 Araç</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>NATO Ankara Zirvesi 2026 Hazırlıkları</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Savunma İhracatı 2026'da $8.5 Milyar Rekor</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>İMECE-2 Uydusu Fırlatma Tarihi Açıklandı</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Kızılelma İHA İlk Uçuş Testi Başarılı</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>Hipersonik Füze Programı Yeni Aşamaya Geçti</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>KAAN F110 Motor Satışı Kongre'ye Bildirildi</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>TB3 TCG Anadolu'dan Elektronik Taarruz Görevi</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>ALTAY Seri Üretim: 2026 Hedefi 11 Araç</span>
-    <span class="ticker-item"><span class="ticker-dot"></span>NATO Ankara Zirvesi 2026 Hazırlıkları</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>SSB: KAAN 5. Nesil Savaş Uçağı İkinci Prototip Uçuşunu Tamamladı</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Doğu Akdeniz'de Türk-Yunan Gerilimi: NATO Acil Toplantı Çağrısı</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>İran-İsrail Krizi: BM Güvenlik Konseyi Olağanüstü Oturum</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Rusya-Ukrayna: Kırım'da Yeni Cephe Hattı Açıldı</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Çin Tayvan Boğazı'nda Askeri Tatbikat Başlattı</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>BAYKAR: Kızılelma Block-2 İlk Uçuş Testini Geçti</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>SSB: KAAN 5. Nesil Savaş Uçağı İkinci Prototip Uçuşunu Tamamladı</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Doğu Akdeniz'de Türk-Yunan Gerilimi: NATO Acil Toplantı Çağrısı</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>İran-İsrail Krizi: BM Güvenlik Konseyi Olağanüstü Oturum</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Rusya-Ukrayna: Kırım'da Yeni Cephe Hattı Açıldı</span>
+  </div>
+</div>
+<!-- YENİ İÇERİKLER TICKER -->
+<div class="ticker-bar"><div style="flex-shrink:0;background:rgba(0,224,255,0.1);border-right:1px solid rgba(0,224,255,0.3);height:100%;display:flex;align-items:center;padding:0 12px;font-family:Chakra Petch,sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;color:rgba(0,224,255,0.9)">YENİ İÇERİKLER</div>
+  <div class="ticker-content">
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni İnfografik: FCAS İptali Stratejik Analiz</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni İnfografik: Spektrum Savaşı — Elektronik Harp</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni Simülasyon: Hürmüz Enerji Şoku Simülatörü</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni İnfografik: Küresel Askeri Sistemler Karşılaştırması</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni İnfografik: Geleceğin Askeri 2030-2050</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni Analiz: Hibrit Savaş — Tüm Boyutlarıyla</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni Oyun: OZA Külliyat Arcade — 8 Yeni Oyun</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Güncelleme: Ticaret Yolları Haritası — Zoom & Pan Eklendi</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni İnfografik: FCAS İptali Stratejik Analiz</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni İnfografik: Spektrum Savaşı — Elektronik Harp</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni Simülasyon: Hürmüz Enerji Şoku Simülatörü</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Yeni İnfografik: Küresel Askeri Sistemler Karşılaştırması</span>
   </div>
 </div>
 
@@ -268,9 +289,9 @@
           <div class="widget-head"><div class="widget-title">Son Haberler</div><a href="haberler.html" class="sec-more">Tümü &rarr;</a></div>
           <div class="widget-body">
             <div class="news-mini">
-              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Savunma</div><div class="news-mini-title">KAAN F110 Motor Satışı Kongre'ye Bildirildi</div><div class="news-mini-date">26 Haziran 2026</div></a>
+              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Savunma</div><div class="news-mini-title">Yeni İnfografik: FCAS İptali Stratejik Analiz</div><div class="news-mini-date">26 Haziran 2026</div></a>
               <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Deniz</div><div class="news-mini-title">TB3 TCG Anadolu'dan Elektronik Taarruz</div><div class="news-mini-date">22 Haziran 2026</div></a>
-              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Kara</div><div class="news-mini-title">ALTAY Seri Üretim: 2026 Hedefi 11 Araç</div><div class="news-mini-date">24 Haziran 2026</div></a>
+              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Kara</div><div class="news-mini-title">Yeni Simülasyon: Hürmüz Enerji Şoku Simülatörü</div><div class="news-mini-date">24 Haziran 2026</div></a>
               <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Uzay</div><div class="news-mini-title">İMECE-2 Fırlatma Tarihi Açıklandı</div><div class="news-mini-date">22 Haziran 2026</div></a>
               <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Hava</div><div class="news-mini-title">Kızılelma İlk Uçuş Testi Başarılı</div><div class="news-mini-date">20 Haziran 2026</div></a>
             </div>

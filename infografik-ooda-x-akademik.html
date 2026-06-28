@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OODA-X Akademik İnfografik — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--card:#1f2937;--accent:#00d4ff;--accent2:#6366f1;--accent3:#f59e0b;--white:#f0f0f0;--gray:#9ca3af;--border:rgba(255,255,255,.08);--danger:#ef4444}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;padding-top:60px}
+.hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(0,212,255,.04),var(--bg));border-bottom:1px solid var(--border)}
+.hero-icon{font-size:3.5rem;margin-bottom:12px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.hero p{color:var(--gray);font-size:.95rem;max-width:700px;margin:0 auto}
+.nav-tabs{display:flex;justify-content:center;gap:6px;padding:14px 20px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:60px;z-index:50}
+.nav-tab{padding:8px 16px;border-radius:6px;font-size:.8rem;font-weight:600;font-family:'Chakra Petch',sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--gray);transition:all .25s}
+.nav-tab:hover{border-color:var(--accent);color:var(--white)}
+.nav-tab.active{background:var(--accent);border-color:var(--accent);color:#000}
+.content{max-width:1200px;margin:0 auto;padding:40px 20px}
+.section{display:none;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:24px 0}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:all .3s}
+.info-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.info-card h3{font-family:'Chakra Petch',sans-serif;font-size:1rem;color:var(--accent);margin-bottom:8px}
+.info-card p{color:var(--gray);font-size:.88rem;line-height:1.6}
+.info-card .stat{font-size:1.6rem;font-weight:700;color:var(--white);font-family:'IBM Plex Mono',monospace}
+.info-card .label{font-size:.7rem;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:1.3rem;color:var(--white);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.quote-box{background:var(--card);border-left:4px solid var(--accent);padding:20px 24px;margin:20px 0;border-radius:0 8px 8px 0}
+.quote-box p{font-style:italic;color:var(--gray);line-height:1.6}
+.quote-box cite{display:block;margin-top:8px;font-size:.8rem;color:var(--accent);font-style:normal}
+.flow-diagram{display:flex;align-items:center;justify-content:center;gap:0;margin:30px 0;flex-wrap:wrap}
+.flow-step{background:var(--card);border:2px solid var(--border);border-radius:50%;width:120px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:all .3s}
+.flow-step:hover{border-color:var(--accent);transform:scale(1.08)}
+.flow-step h4{font-family:'Chakra Petch',sans-serif;font-size:.85rem;color:var(--accent)}
+.flow-step p{font-size:.65rem;color:var(--gray);margin-top:2px}
+.flow-arrow{font-size:1.5rem;color:var(--accent);margin:0 6px}
+.formula-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:16px 0;font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--accent);overflow-x:auto}
+.timeline-h{display:flex;gap:0;margin:24px 0;overflow-x:auto;padding-bottom:10px}
+.tl-node{min-width:160px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:8px;text-align:center;position:relative;transition:all .3s}
+.tl-node:hover{border-color:var(--accent);transform:translateY(-3px)}
+.tl-node h4{font-family:'Chakra Petch',sans-serif;font-size:.8rem;color:var(--accent)}
+.tl-node p{font-size:.7rem;color:var(--gray);margin-top:4px}
+.tl-connector{width:30px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:1.2rem}
+.comparison-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.85rem}
+.comparison-table th{background:var(--card);color:var(--accent);font-family:'Chakra Petch',sans-serif;padding:12px;text-align:left;border-bottom:2px solid var(--accent)}
+.comparison-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--gray)}
+.comparison-table tr:hover td{background:rgba(0,212,255,.03);color:var(--white)}
+.layer-stack{display:flex;flex-direction:column;gap:8px;margin:20px 0}
+.layer{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 20px;display:flex;align-items:center;gap:16px;transition:all .3s}
+.layer:hover{border-color:var(--accent);transform:translateX(4px)}
+.layer .num{font-family:'IBM Plex Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--accent);min-width:30px}
+.layer h4{font-family:'Chakra Petch',sans-serif;font-size:.9rem;color:var(--white)}
+.layer p{font-size:.8rem;color:var(--gray);margin-top:2px}
+.source-ref{margin-top:40px;padding:16px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.source-ref p{font-size:.8rem;color:var(--gray)}
+@media(max-width:768px){.nav-tabs{gap:4px;padding:10px}.nav-tab{padding:6px 10px;font-size:.7rem}.info-grid{grid-template-columns:1fr}.flow-diagram{flex-direction:column}.flow-arrow{transform:rotate(90deg)}.flow-step{width:100px;height:100px}.timeline-h{flex-direction:column}.tl-connector{width:auto;height:20px;transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<div class="hero">
+<div class="hero-icon">🔄</div>
+<h1>OODA ve OODA-X: Karar Döngüsü Teorisi</h1>
+<p>John Boyd'un OODA döngüsünden OODA-X süper döngüye — algoritmik harp çağında karar üstünlüğünün akademik analizi.</p>
+</div>
+<div class="nav-tabs">
+<button class="nav-tab active" data-target="sec-boyd">John Boyd Doktrini</button>
+<button class="nav-tab" data-target="sec-klasik">Klasik OODA</button>
+<button class="nav-tab" data-target="sec-oodax">OODA-X Süper Döngü</button>
+<button class="nav-tab" data-target="sec-matematik">Matematiksel Modeller</button>
+<button class="nav-tab" data-target="sec-bilissel">Bilişsel Harp</button>
+<button class="nav-tab" data-target="sec-teknoloji">Teknoloji Devleri</button>
+<button class="nav-tab" data-target="sec-turkiye">Türkiye Vizyonu</button>
+</div>
+<div class="content">
+
+<!-- Boyd Doktrini -->
+<div class="section active" id="sec-boyd">
+<h2 class="section-title">John Boyd ve Karar Üstünlüğü Teorisi</h2>
+<div class="quote-box"><p>"Savaşı kazanan, daha fazla silaha sahip olan değil, karar döngüsünü rakipten hızlı tamamlayandır."</p><cite>— Albay John Boyd, USAF (1927-1997)</cite></div>
+<div class="info-grid">
+<div class="info-card"><h3>Enerji-Manevra Teorisi</h3><p>Boyd, F-86 vs MiG-15 analizinden yola çıkarak "enerji avantajı" kavramını geliştirdi. Kore Savaşı'ndaki 10:1 kill ratio'yu açıkladı.</p></div>
+<div class="info-card"><h3>Karar Üstünlüğü</h3><p>Fiziksel güç yerine karar hızı ve kalitesi. Rakibin OODA döngüsüne girip onu "karar felcine" sürüklemek.</p></div>
+<div class="info-card"><h3>Çöküş ve Yaratım</h3><p>Boyd'un epistemolojisi: Mevcut paradigmaları yık (Destruction), yeni sentezler yarat (Creation). Sürekli adaptasyon.</p></div>
+<div class="info-card"><h3>Manevra Savaşı</h3><p>Yıpratma savaşı yerine manevra savaşı. Düşmanın zayıf noktasına hız ve sürprizle vurmak.</p></div>
+</div>
+<h3 style="font-family:'Chakra Petch',sans-serif;margin:30px 0 16px;color:var(--accent)">BOYD'UN ETKİ ALANI</h3>
+<div class="info-grid">
+<div class="info-card"><h3>ABD Deniz Piyadeleri</h3><p>MCDP-1 Warfighting doktrini Boyd'un manevra savaşı felsefesine dayanır.</p></div>
+<div class="info-card"><h3>İş Dünyası</h3><p>Agile metodoloji, Lean Startup, Toyota Üretim Sistemi — hepsi OODA mantığını kullanır.</p></div>
+<div class="info-card"><h3>Siber Güvenlik</h3><p>Tehdit avcılığı (threat hunting) ve olay müdahalesi OODA döngüsüne göre yapılandırılır.</p></div>
+</div>
+</div>
+
+<!-- Klasik OODA -->
+<div class="section" id="sec-klasik">
+<h2 class="section-title">Klasik OODA Döngüsü</h2>
+<div class="flow-diagram">
+<div class="flow-step" style="border-color:#22c55e"><h4>OBSERVE</h4><p>Gözlemle</p></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step" style="border-color:#3b82f6"><h4>ORIENT</h4><p>Yönlendir</p></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step" style="border-color:#f59e0b"><h4>DECIDE</h4><p>Karar Ver</p></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step" style="border-color:#ef4444"><h4>ACT</h4><p>Harekete Geç</p></div>
+</div>
+<div class="info-grid">
+<div class="info-card"><h3>OBSERVE — Gözlemle</h3><p>Çevresel verilerin toplanması. Sensörler, istihbarat, keşif. Ham bilginin akışı. Çok kaynaklı veri füzyonu.</p><div class="stat">Veri</div><div class="label">Girdi Katmanı</div></div>
+<div class="info-card"><h3>ORIENT — Yönlendir</h3><p>Boyd'a göre en kritik aşama. Kültürel gelenekler, genetik miras, önceki deneyimler, yeni bilgi ve analiz/sentez yeteneği ile durumu yorumlama.</p><div class="stat">Schwerpunkt</div><div class="label">Ağırlık Merkezi</div></div>
+<div class="info-card"><h3>DECIDE — Karar Ver</h3><p>Yönlendirme sonucunda oluşan hipotezler arasından seçim yapma. Hareket tarzı belirleme.</p><div class="stat">Seçim</div><div class="label">Karar Noktası</div></div>
+<div class="info-card"><h3>ACT — Harekete Geç</h3><p>Kararın uygulanması. Eylem sonuçları gözlem aşamasına geri beslenir — döngü yeniden başlar.</p><div class="stat">Eylem</div><div class="label">Çıktı Katmanı</div></div>
+</div>
+<div class="quote-box"><p>"Orient aşaması, OODA'nın kalbidir. Bir komutanın dünyayı nasıl gördüğü, ne yapacağını belirler. Yanlış yönlendirme, doğru gözlemi bile işe yaramaz kılar."</p><cite>— John Boyd, "Patterns of Conflict" (1986)</cite></div>
+</div>
+
+<!-- OODA-X -->
+<div class="section" id="sec-oodax">
+<h2 class="section-title">OODA-X: Süper Döngü — Algoritmik Çağ</h2>
+<p style="color:var(--gray);margin-bottom:20px">Klasik OODA'nın yapay zekâ, otonom sistemler ve çok alanlı operasyonlarla genişletilmiş versiyonu.</p>
+<div class="timeline-h">
+<div class="tl-node"><h4>O¹</h4><p>Çok Kaynaklı Gözlem</p></div>
+<div class="tl-connector">→</div>
+<div class="tl-node"><h4>O²</h4><p>YZ Yönlendirme</p></div>
+<div class="tl-connector">→</div>
+<div class="tl-node"><h4>D</h4><p>İnsan-YZ Karar</p></div>
+<div class="tl-connector">→</div>
+<div class="tl-node"><h4>A</h4><p>Otonom Eylem</p></div>
+<div class="tl-connector">→</div>
+<div class="tl-node" style="border-color:var(--accent)"><h4>X</h4><p>Süper Geri Besleme</p></div>
+</div>
+<div class="info-grid">
+<div class="info-card"><h3>X Faktörü: Süper Geri Besleme</h3><p>Klasik OODA'da geri besleme lineerdir. OODA-X'te her aşama eş zamanlı olarak diğer tüm aşamalara geri besleme yapar — paralel döngüler.</p></div>
+<div class="info-card"><h3>YZ Hızlandırması</h3><p>Orient aşaması insan bilişsel kapasitesinin ötesine taşınır. Milisaniyeler içinde milyonlarca veri noktası analiz edilir.</p><div class="stat">&lt;100ms</div><div class="label">YZ Orient Süresi</div></div>
+<div class="info-card"><h3>Otonom Eylem</h3><p>Act aşamasında insan onayı gerektirmeyen otonom sistemler. Sürü dronları, otomatik savunma sistemleri.</p></div>
+<div class="info-card"><h3>Çok Alanlı Entegrasyon</h3><p>Kara, deniz, hava, uzay, siber ve EMS'nin tek bir OODA-X döngüsünde birleştirilmesi.</p></div>
+</div>
+<table class="comparison-table">
+<thead><tr><th>Parametre</th><th>Klasik OODA</th><th>OODA-X</th></tr></thead>
+<tbody>
+<tr><td>Döngü Süresi</td><td>Dakikalar-Saatler</td><td>Milisaniyeler-Saniyeler</td></tr>
+<tr><td>Geri Besleme</td><td>Lineer (A→O)</td><td>Paralel (Her aşama ↔ Her aşama)</td></tr>
+<tr><td>Karar Verici</td><td>İnsan</td><td>İnsan-YZ Hibrit</td></tr>
+<tr><td>Veri Kaynağı</td><td>Sınırlı sensörler</td><td>Çok alanlı füzyon</td></tr>
+<tr><td>Ölçek</td><td>Taktik</td><td>Taktik + Operatif + Stratejik</td></tr>
+<tr><td>Adaptasyon</td><td>Deneyim tabanlı</td><td>Makine öğrenmesi tabanlı</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- Matematiksel Modeller -->
+<div class="section" id="sec-matematik">
+<h2 class="section-title">Matematiksel ve Fiziksel Modeller</h2>
+<h3 style="font-family:'Chakra Petch',sans-serif;margin:20px 0 12px;color:var(--accent3)">A. Olasılık Modelleri — Savunma Sızma Krizi</h3>
+<div class="formula-box">P_success = 1 − (1 − P_intercept)^N<br>P_kill = P_detect × P_track × P_engage × P_destroy</div>
+<div class="info-grid">
+<div class="info-card"><h3>Bernoulli Modeli</h3><p>Her önleme bağımsız bir deneme. N interceptor ile başarı olasılığı üstel artar — ancak saturation saldırısında çöker.</p></div>
+<div class="info-card"><h3>Poisson Sızma</h3><p>Tehdit sayısı (M) önleyici sayısını (N) aştığında: P_leak ≈ e^(-λ) × (λ^k / k!) — sızma kaçınılmaz hale gelir.</p><div class="stat">%70-80</div><div class="label">2026 Sızma Oranı</div></div>
+<div class="info-card"><h3>Wilkening Modeli (1999)</h3><p>λ = M × (1 − P_intercept). İran Fattah-1 vs Iron Dome: P_intercept %20-30, leakage %70-80.</p></div>
+</div>
+<h3 style="font-family:'Chakra Petch',sans-serif;margin:20px 0 12px;color:var(--accent3)">B. Hipersonik Plazma Fiziği</h3>
+<div class="formula-box">f_p = √(n_e × e² / ε₀ × m_e) — Plazma frekansı<br>Radar zayıflatma: %50-70 | Manevra ivmesi: 200-300g</div>
+<div class="info-grid">
+<div class="info-card"><h3>Plazma Kılıfı</h3><p>Mach 5+ hızda oluşan iyonize tabaka (n_e = 10¹²-10¹⁵ m⁻³) radarları %50-70 oranında kör eder.</p></div>
+<div class="info-card"><h3>Kinematik Yetersizlik</h3><p>Interceptor maks. 100g ivme yapabilirken, hipersonik füze 200-300g manevra yapar. P_escape = %60-70.</p></div>
+<div class="info-card"><h3>Enkaz Felaketi</h3><p>Başarılı önlemede bile 1-10 kg parçalar E = 0.5mv² ≈ 500+ kJ enerjiyle düşer. %10-15 sivil hasar.</p></div>
+</div>
+<h3 style="font-family:'Chakra Petch',sans-serif;margin:20px 0 12px;color:var(--accent3)">C. Tarihsel Karşılaştırma</h3>
+<table class="comparison-table">
+<thead><tr><th>Yıl / Senaryo</th><th>P_intercept</th><th>Leakage</th><th>Sistem</th></tr></thead>
+<tbody>
+<tr><td>1991 — Patriot vs Scud</td><td>%9</td><td>%91</td><td>Patriot PAC-1</td></tr>
+<tr><td>2022 — S-300 vs Drone Swarm</td><td>%40</td><td>%60</td><td>S-300PM</td></tr>
+<tr><td>2026 — Iron Dome vs Fattah-1</td><td>%20-30</td><td>%70-80</td><td>Iron Dome + Patriot</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- Bilişsel Harp -->
+<div class="section" id="sec-bilissel">
+<h2 class="section-title">Bilişsel Harp ve Bilgi Entropisi</h2>
+<div class="quote-box"><p>"Bugünün en yıkıcı silahı nükleer füzeler değil, doğrudan insan zihni ve algısına yöneltilen 'Bilgi Entropisi' operasyonlarıdır."</p><cite>— Bilişsel Dayanıklılık Realizmi Ekolü</cite></div>
+<div class="info-grid">
+<div class="info-card"><h3>Epistemik Çökertme</h3><p>Amaç sahte bir hikâye satmak değil; yüzlerce çelişkili bilgi yayarak toplumun "gerçeği ayırt etme kapasitesini" felç etmek.</p></div>
+<div class="info-card"><h3>Amigdala Kaçırması</h3><p>Rasyonel düşünceyi değil, beynin ilkel tehdit merkezi olan amigdalayı hedefler. Prefrontal korteks baypas edilir.</p></div>
+<div class="info-card"><h3>Karar Felci</h3><p>Hiçbir şeye güvenilemeyen ortamda toplumlar "decision incapacity" yaşar ve dış müdahaleye açık hale gelir.</p></div>
+<div class="info-card"><h3>Nöro-Propaganda</h3><p>Dopamin döngüleriyle kitlenin manipülasyona bağımlı hale getirilmesi. Sanal tehditlere bağımlılık.</p></div>
+</div>
+<h3 style="font-family:'Chakra Petch',sans-serif;margin:20px 0 12px;color:var(--danger)">BİLİŞSEL SAVAŞ KATMANLARI</h3>
+<div class="layer-stack">
+<div class="layer"><div class="num">1</div><div><h4>Bilgi Entropisi</h4><p>20 farklı kriz, 10 farklı yalan senaryo — doğruyu ayırt etme yetisini yok etme</p></div></div>
+<div class="layer"><div class="num">2</div><div><h4>Deepfake ve AI Botlar</h4><p>Gerçeği önemsizleştirme — "Hiçbir şeye güvenemem" hissi yaratma</p></div></div>
+<div class="layer"><div class="num">3</div><div><h4>Mnem-Suikastçılar</h4><p>Liderlerin zihinlerine yapay anılar ekme — bilişsel suikast</p></div></div>
+<div class="layer"><div class="num">4</div><div><h4>Operasyon Paslı Çark</h4><p>50 yıllık operasyonla "ilerleme" kavramını kültürel silahlarla çürütme</p></div></div>
+<div class="layer"><div class="num">5</div><div><h4>Trol Orduları</h4><p>Üniformalı askerden daha yıkıcı — toplumda ortak gerçeklik alanını yıkma</p></div></div>
+</div>
+</div>
+
+<!-- Teknoloji Devleri -->
+<div class="section" id="sec-teknoloji">
+<h2 class="section-title">Teknoloji Devlerinin Savaşı Boyunduruk Altına Alması</h2>
+<div class="info-grid">
+<div class="info-card"><h3>SpaceX + xAI Mega-Şirket</h3><p>1.25 trilyon dolarlık birleşme. Starlink 7000+ uydu. Starshield askeri varyant. Grok AI Pentagon entegrasyonu.</p><div class="stat">$1.25T</div><div class="label">Mega-Şirket Değeri</div></div>
+<div class="info-card"><h3>Starlink Askeri Etkisi</h3><p>Ukrayna'da Rus dronlarını whitelist engellemeleriyle %60-70 etkisizleştirme. %80 askeri iletişim altyapısı.</p><div class="stat">%80</div><div class="label">Askeri İletişim Payı</div></div>
+<div class="info-card"><h3>Neuralink + OODA</h3><p>Beyin-makine arayüzleri OODA döngüsünü telepati hızıyla %80 hızlandırarak milisaniyelere indirme.</p></div>
+<div class="info-card"><h3>Tesla Optimus</h3><p>Savaş alanında 10:1 robot-insan oranı. Otonom lojistik ve taktik görevler.</p></div>
+<div class="info-card"><h3>Amazon HSA Projesi</h3><p>Hybrid Space Architecture. AWS edge computing ile OODA analiz süresini %60 optimize etme.</p></div>
+<div class="info-card"><h3>Project Kuiper + TeraWave</h3><p>3.236 + 5.408 uydu. Saniyede 6 TB askeri veri aktarımı. Çok alanlı hâkimiyet.</p><div class="stat">6 TB/s</div><div class="label">Veri Aktarım Hızı</div></div>
+</div>
+</div>
+
+<!-- Türkiye Vizyonu -->
+<div class="section" id="sec-turkiye">
+<h2 class="section-title">Türkiye İçin Stratejik Vizyon — Bilişsel Dayanıklılık Realizmi</h2>
+<div class="quote-box"><p>"Ayakta kalacak devletler, en fazla füzeye sahip olanlar değil; toplumun bilişsel güvenliğini sağlayan, zihinlere atılan algı bombalarını savuşturan, erken uyanan ve en geç yorulanlardır."</p><cite>— Bilişsel Dayanıklılık Realizmi (BDR) Ekolü</cite></div>
+<div class="info-grid">
+<div class="info-card"><h3>Asimetrik Ölçek</h3><p>"Çin Hızı, Türk Zekâsı" — Binlerce akıllı, sarf edilebilir, düşük maliyetli İHA/İKA sistemi. Mass production ekosistemi.</p></div>
+<div class="info-card"><h3>Millî Dijital Omurga</h3><p>Dağıtık zekâ — komuta kopsa bile sistemler kendi aralarında organize olabilmeli. Edge computing.</p></div>
+<div class="info-card"><h3>Endüstriyel Demokrasi</h3><p>ASELSAN/TUSAŞ iskelet, Anadolu KOBİ'leri parça üretimi. Açık mimari (API) standartları. Lego modeli.</p></div>
+<div class="info-card"><h3>Beylikova Sırrı</h3><p>694 milyon ton Nadir Toprak Elementi. Ham değil rafine — çiplere, motorlara, mıknatıslara dönüştürme. Çin tekelini kırma.</p></div>
+<div class="info-card"><h3>Avrasya-Afrika Köprüsü</h3><p>TDT + Afrika Birliği bağlantısı. Yeni lojistik/ticari jeopolitik merkez.</p></div>
+<div class="info-card"><h3>Zihinsel Savunma</h3><p>Dijital okuryazarlık = milli güvenlik dersi. "Bilgi Geciktirme Protokolü" — hızlı yalana karşı yavaş ama teyitli doğru.</p></div>
+</div>
+</div>
+
+</div>
+<div class="source-ref" style="max-width:1200px;margin:20px auto;padding:16px 20px">
+<p><strong>Kaynaklar:</strong> John Boyd, "Patterns of Conflict" (1986) · SIPRI 2024 Raporu · Wilkening, D. "A Simple Model for Calculating Ballistic Missile Defense Effectiveness" (1999) · Bostrom, N. "Superintelligence" (2014) · Selahaddin Koyuncu, Harb-i Strateji Külliyatı (2026)</p>
+</div>
+<script>
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.target).classList.add('active');
+  });
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -4,118 +4,274 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="hs-skip" content="true">
-<title>SİBER SAVUNMA: BLOK — OZA Arcade</title>
+<title>CYBER DEFENSE: BLOCK — SOC Simülasyonu</title>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080c14;--panel:#0f1722;--accent:#00ff88;--text:#eaf0f7;--dim:#6b7280}
+:root{--bg:#060a10;--panel:#0c1219;--surface:#111a24;--accent:#00ff88;--cyan:#00e0ff;--red:#ef4444;--orange:#f4a261;--purple:#a855f7;--pink:#ec4899;--gold:#c9a84c;--text:#eaf0f7;--dim:#6b7280;--border:rgba(255,255,255,.06)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace}
-.game-wrap{display:grid;grid-template-columns:1fr 360px;height:100vh}
-@media(max-width:900px){.game-wrap{grid-template-columns:1fr;grid-template-rows:65vh 35vh}}
-.canvas-panel{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.06)}
-.game-board{display:grid;grid-template-columns:repeat(10,1fr);gap:1px;width:min(300px,80vw);aspect-ratio:1/2;background:rgba(255,255,255,.02);border:2px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden}
-.cell{background:var(--bg);transition:background .1s}
-.cell.filled{border-radius:2px}
-.hud-bar{display:flex;gap:20px;margin-bottom:16px}
-.hud-item{text-align:center}
-.hud-label{font-size:9px;color:var(--dim);text-transform:uppercase}
-.hud-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700;color:var(--accent)}
-.info-panel{background:var(--panel);padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
-.info-title{font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:800;color:var(--accent);text-transform:uppercase}
-.info-subtitle{font-size:11px;color:var(--dim);margin-top:4px}
-.info-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px}
-.info-section h3{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
-.info-section p,.info-section li{font-size:12px;line-height:1.7;color:var(--dim)}
-.info-section ul{list-style:none;padding:0}
-.info-section li::before{content:'▸ ';color:var(--accent)}
-.back-btn{position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-size:12px;border:1px solid rgba(0,224,255,.2)}
-.overlay{position:absolute;inset:0;background:rgba(8,12,20,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50}
+.game-wrap{display:grid;grid-template-columns:200px 1fr 260px;height:100vh}
+@media(max-width:1100px){.game-wrap{grid-template-columns:1fr;grid-template-rows:auto 1fr auto}}
+@media(max-width:900px){.game-wrap{grid-template-columns:1fr;grid-template-rows:auto 1fr auto}}
+
+/* LEFT PANEL - Company Info */
+.left-panel{background:var(--panel);border-right:1px solid var(--border);padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+@media(max-width:1100px){.left-panel{display:none}}
+.lp-title{font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.lp-stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px}
+.lp-stat .label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+.lp-stat .val{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:var(--accent);margin-top:2px}
+.lp-stat .val.warning{color:var(--orange)}
+.lp-stat .val.critical{color:var(--red)}
+.threat-bar{height:4px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden}
+.threat-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));transition:width .5s;border-radius:2px}
+
+/* CENTER - Game Board */
+.center-panel{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+.hud-bar{display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;justify-content:center}
+.hud-item{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 12px;min-width:80px}
+.hud-label{font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+.hud-val{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;color:var(--accent)}
+.game-board{display:grid;grid-template-columns:repeat(10,1fr);gap:1px;width:min(280px,70vw);aspect-ratio:1/2;background:rgba(0,255,136,.02);border:2px solid rgba(0,255,136,.15);border-radius:8px;overflow:hidden;position:relative}
+.cell{background:var(--bg);transition:background .08s,box-shadow .08s}
+.cell.filled{border-radius:2px;box-shadow:inset 0 0 6px rgba(0,0,0,.5)}
+.cell.ghost{opacity:.25}
+/* Scan line animation */
+.game-board::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanline 3s linear infinite;pointer-events:none}
+@keyframes scanline{0%{top:0}100%{top:100%}}
+/* Alert flash */
+.game-board.alert{animation:alertFlash .3s}
+@keyframes alertFlash{0%,100%{border-color:rgba(0,255,136,.15)}50%{border-color:var(--red)}}
+
+/* RIGHT PANEL - SOC Dashboard */
+.right-panel{background:var(--panel);border-left:1px solid var(--border);padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+@media(max-width:1100px){.right-panel{flex-direction:row;overflow-x:auto;padding:8px;gap:6px}.right-panel .rp-section{min-width:150px;flex-shrink:0}}
+.rp-title{font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.rp-section{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px}
+.rp-section h4{font-family:'Chakra Petch',sans-serif;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.feed-item{font-size:10px;color:var(--dim);padding:3px 0;border-bottom:1px solid var(--border);display:flex;gap:6px;align-items:center}
+.feed-item .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.feed-item .time{color:var(--dim);font-size:8px;margin-left:auto}
+.threat-tag{display:inline-block;font-size:9px;padding:2px 6px;border-radius:4px;margin:2px;font-weight:600}
+.next-piece-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.next-piece-box h4{font-family:'Chakra Petch',sans-serif;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.next-piece{display:grid;grid-template-columns:repeat(4,16px);gap:1px;margin:0 auto;width:fit-content}
+.np-cell{width:16px;height:16px;background:var(--bg);border-radius:2px}
+
+/* Overlay */
+.overlay{position:absolute;inset:0;background:rgba(6,10,16,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;backdrop-filter:blur(4px)}
 .overlay.hidden{display:none}
-.start-btn{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:14px 40px;border-radius:10px;cursor:pointer;margin-top:16px}
-.next-piece{display:grid;grid-template-columns:repeat(4,20px);gap:1px;margin:12px auto}
-.np-cell{width:20px;height:20px;background:var(--bg);border-radius:2px}
+.ov-title{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:800;color:var(--cyan);text-transform:uppercase;letter-spacing:2px}
+.ov-sub{font-size:11px;color:var(--dim);margin-top:8px;text-align:center;max-width:280px;line-height:1.6}
+.start-btn{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#000;background:var(--accent);border:none;padding:12px 36px;border-radius:8px;cursor:pointer;margin-top:16px;text-transform:uppercase;letter-spacing:1px;transition:all .2s}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(0,255,136,.3)}
+/* Event Banner */
+.event-banner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,10,16,.9);border:2px solid var(--red);border-radius:12px;padding:16px 24px;text-align:center;z-index:60;display:none;animation:eventPulse 1s infinite}
+@keyframes eventPulse{0%,100%{box-shadow:0 0 10px rgba(239,68,68,.3)}50%{box-shadow:0 0 30px rgba(239,68,68,.6)}}
+.event-banner.show{display:block}
+.event-banner h3{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--red);text-transform:uppercase}
+.event-banner p{font-size:11px;color:var(--dim);margin-top:4px}
+
+/* Mobile Controls */
+.mobile-ctrl{display:none;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+@media(max-width:900px){.mobile-ctrl{display:flex}}
+.mobile-ctrl button{width:48px;height:48px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,255,136,.08);color:#fff;font-size:16px;cursor:pointer;font-family:'Chakra Petch',sans-serif;transition:all .1s}
+.mobile-ctrl button:active{background:rgba(0,255,136,.25);transform:scale(.9)}
+
+/* Back buttons */
+.nav-btns{position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px}
+.nav-btns a{background:rgba(10,15,23,0.9);padding:6px 14px;border-radius:20px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-size:12px;backdrop-filter:blur(8px)}
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
 <link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
-<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
-<a href="oza-hub.html" class="back-btn">← OZA Hub</a>
+<div class="nav-btns">
+  <a href="oza-hub.html" style="color:#00E0FF;border:1px solid #00E0FF33">← OZA Hub</a>
+  <a href="index.html" style="color:#c41e3a;border:1px solid rgba(196,30,58,0.3)">Ana Sayfa</a>
+</div>
+
 <div class="game-wrap">
-  <div class="canvas-panel">
+  <!-- LEFT PANEL: Company Status -->
+  <div class="left-panel">
+    <div class="lp-title">KURUM DURUMU</div>
+    <div class="lp-stat"><div class="label">Tehdit Seviyesi</div><div class="val" id="threatLevel">YEŞİL</div><div class="threat-bar"><div class="threat-fill" id="threatBar" style="width:10%"></div></div></div>
+    <div class="lp-stat"><div class="label">Güvenlik Puanı</div><div class="val" id="secScore">0</div></div>
+    <div class="lp-stat"><div class="label">Savunma Zinciri</div><div class="val" id="defChain">0x</div></div>
+    <div class="lp-stat"><div class="label">Altyapı Bütünlüğü</div><div class="val" id="integrity">100%</div></div>
+    <div class="lp-stat"><div class="label">Sunucu Durumu</div><div class="val" id="servers">12/12</div></div>
+    <div class="lp-stat"><div class="label">Çalışan Çevrimiçi</div><div class="val" id="employees">847</div></div>
+    <div class="lp-stat"><div class="label">Bant Genişliği</div><div class="val" id="bandwidth">94%</div></div>
+    <div class="lp-stat"><div class="label">SOC İtibarı</div><div class="val" id="reputation">A+</div></div>
+  </div>
+
+  <!-- CENTER: Network Grid -->
+  <div class="center-panel">
     <div class="hud-bar">
-      <div class="hud-item"><div class="hud-label">SEVİYE</div><div class="hud-val" id="level">1</div></div>
-      <div class="hud-item"><div class="hud-label">SKOR</div><div class="hud-val" id="score">0</div></div>
-      <div class="hud-item"><div class="hud-label">SATIRLAR</div><div class="hud-val" id="lines">0</div></div>
+      <div class="hud-item"><div class="hud-label">TEHDİT SEVİYESİ</div><div class="hud-val" id="level">1</div></div>
+      <div class="hud-item"><div class="hud-label">GÜVENLİK PUANI</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">TEHDİT BERTARAF</div><div class="hud-val" id="lines">0</div></div>
+      <div class="hud-item"><div class="hud-label">SAVUNMA ZİNCİRİ</div><div class="hud-val" id="combo">0</div></div>
     </div>
     <div class="game-board" id="board"></div>
+    <div class="event-banner" id="eventBanner"><h3 id="eventTitle">OLAY</h3><p id="eventDesc">Açıklama</p></div>
     <div class="overlay" id="overlay">
-      <div style="font-family:Chakra Petch;font-size:24px;font-weight:800;color:var(--accent)">🛡️ SİBER SAVUNMA: BLOK</div>
-      <div style="font-size:11px;color:var(--dim);margin-top:8px;text-align:center;max-width:280px">Malware, DDoS, Phishing blokları düşüyor. Doğru savunma katmanını yerleştir, firewall'u kur!</div>
-      <button class="start-btn" onclick="startGame()">BAŞLAT</button>
+      <div class="ov-title">CYBER DEFENSE: BLOCK</div>
+      <div class="ov-sub">SOC Operatörü olarak kurumunuzun ağ altyapısını siber saldırılara karşı koruyun. Düşen tehditler ağınıza sızıyor — savunma katmanlarını yerleştirin!</div>
+      <button class="start-btn" onclick="startGame()">SİMÜLASYONU BAŞLAT</button>
+    </div>
+    <div class="mobile-ctrl">
+      <button id="mLeft">◀</button>
+      <button id="mRotate">↻</button>
+      <button id="mDown">▼</button>
+      <button id="mRight">▶</button>
+      <button id="mDrop">⏬</button>
     </div>
   </div>
-  <div class="info-panel">
-    <div>
-      <div class="info-title">🛡️ SİBER SAVUNMA: BLOK</div>
-      <div class="info-subtitle">Siber Saldırı Blokları Düşüyor</div>
+
+  <!-- RIGHT PANEL: SOC Dashboard -->
+  <div class="right-panel">
+    <div class="rp-title">SOC DASHBOARD</div>
+    <div class="next-piece-box">
+      <h4>TEHDİT İSTİHBARAT</h4>
+      <div class="next-piece" id="nextPiece"></div>
+      <div id="nextName" style="font-size:9px;color:var(--dim);margin-top:4px;text-transform:uppercase"></div>
     </div>
-    <div class="info-section">
-      <h3>Siber Savunma Katmanları</h3>
-      <ul>
-        <li><strong style="color:#00ff88">Firewall:</strong> Ağ trafiğini filtreler</li>
-        <li><strong style="color:#00e0ff">IDS/IPS:</strong> Sızma tespit ve önleme</li>
-        <li><strong style="color:#a855f7">Encryption:</strong> Veri şifreleme katmanı</li>
-        <li><strong style="color:#f4a261">Honeypot:</strong> Saldırganı tuzağa çek</li>
-        <li><strong style="color:#ef4444">Patch:</strong> Zafiyet yamala</li>
-        <li><strong style="color:#ec4899">Zero Trust:</strong> Sıfır güven mimarisi</li>
-        <li><strong style="color:#c9a84c">SOC:</strong> Güvenlik operasyon merkezi</li>
-      </ul>
+    <div class="rp-section">
+      <h4>CANLI SALDIRI AKIŞI</h4>
+      <div id="attackFeed"></div>
     </div>
-    <div class="info-section">
-      <h3>Kontroller</h3>
-      <ul>
-        <li>← → : Yatay hareket</li>
-        <li>↑ : Döndür</li>
-        <li>↓ : Hızlı düşür</li>
-        <li>SPACE : Anında yerleştir</li>
-      </ul>
+    <div class="rp-section">
+      <h4>AKTİF TEHDİTLER</h4>
+      <div id="activeThreats"></div>
     </div>
-    <div class="info-section">
-      <h3>Saldırı Tipleri</h3>
-      <p>DDoS (kırmızı), Malware (mor), Phishing (turuncu), Ransomware (pembe), APT (mavi) — her biri farklı blok şekli. Tam satır = saldırı engellendi!</p>
+    <div class="rp-section">
+      <h4>SAVUNMA MODÜLLER</h4>
+      <div id="defenseModules" style="font-size:10px;color:var(--dim)">
+        <div style="display:flex;flex-wrap:wrap;gap:4px">
+          <span class="threat-tag" style="background:rgba(0,255,136,.15);color:#00ff88">Firewall</span>
+          <span class="threat-tag" style="background:rgba(0,224,255,.15);color:#00e0ff">IDS/IPS</span>
+          <span class="threat-tag" style="background:rgba(168,85,247,.15);color:#a855f7">Encryption</span>
+          <span class="threat-tag" style="background:rgba(244,162,97,.15);color:#f4a261">Honeypot</span>
+          <span class="threat-tag" style="background:rgba(239,68,68,.15);color:#ef4444">Patch</span>
+          <span class="threat-tag" style="background:rgba(236,72,153,.15);color:#ec4899">Zero Trust</span>
+          <span class="threat-tag" style="background:rgba(201,168,76,.15);color:#c9a84c">EDR</span>
+        </div>
+      </div>
+    </div>
+    <div class="rp-section">
+      <h4>CVE UYARILARI</h4>
+      <div id="cveAlerts" style="font-size:9px;color:var(--dim)"></div>
+    </div>
+    <div class="rp-section">
+      <h4>KONTROLLER</h4>
+      <div style="font-size:10px;color:var(--dim);line-height:1.8">
+        ← → Yatay Manevra<br>
+        ↑ Modül Döndür<br>
+        ↓ Hızlı Yerleştir<br>
+        SPACE Anında Deploy<br>
+        H Olay Kuyruğu (Hold)
+      </div>
     </div>
   </div>
 </div>
+
 <script>
 const COLS=10,ROWS=20;
 const board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
 const boardEl=document.getElementById('board');
 const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-let score=0,lines=0,level=1,running=false,dropInterval,currentPiece,currentPos;
+let score=0,linesCleared=0,level=1,running=false,dropInterval,currentPiece,currentPos,nextPieceData;
+let combo=0,totalThreats=0,integrity=100,defenseChain=0;
+let holdPiece=null,canHold=true;
+let eventTimer=null,feedItems=[];
+
+// Attack Types (Tetrominos reimagined)
+const ATTACKS=[
+  {shape:[[1,1,1,1]],color:'#ef4444',name:'DDoS',icon:'🌊',desc:'Yoğun trafik saldırısı — yatay baskı oluşturur'},
+  {shape:[[1,1],[1,1]],color:'#a855f7',name:'Malware',icon:'🦠',desc:'Kötücül yazılım — bitişik hücreleri enfekte eder'},
+  {shape:[[0,1,0],[1,1,1]],color:'#00e0ff',name:'Phishing',icon:'🎣',desc:'Oltalama — kimliğini gizler'},
+  {shape:[[1,0,0],[1,1,1]],color:'#f4a261',name:'Ransomware',icon:'🔒',desc:'Fidye yazılımı — satırları kilitler'},
+  {shape:[[0,0,1],[1,1,1]],color:'#ec4899',name:'APT',icon:'🕷️',desc:'Gelişmiş kalıcı tehdit — yavaş ama ölümcül'},
+  {shape:[[1,1,0],[0,1,1]],color:'#c9a84c',name:'Zero-Day',icon:'⚡',desc:'Sıfır-gün açığı — şekil değiştirir'},
+  {shape:[[0,1,1],[1,1,0]],color:'#00ff88',name:'Botnet',icon:'🤖',desc:'Bot ağı — yakın saldırıları hızlandırır'}
+];
+
+// Special Events
+const EVENTS=[
+  {title:'GLOBAL DDoS KAMPANYASI',desc:'Saldırı hızı 3 saniye artıyor!',effect:'speed'},
+  {title:'ZERO-DAY EXPLOIT TESPİT',desc:'Bilinmeyen tehdit türü aktif!',effect:'morph'},
+  {title:'DARK WEB SIZINTISI',desc:'Kimlik bilgileri sızdı — tehdit çeşitliliği arttı!',effect:'variety'},
+  {title:'SOLAR STORM',desc:'Elektromanyetik fırtına — kontroller 2sn gecikecek!',effect:'lag'},
+  {title:'SUPPLY CHAIN BREACH',desc:'Tedarik zinciri saldırısı — bloklar çoğalıyor!',effect:'duplicate'},
+  {title:'APT KAMPANYASI',desc:'Devlet destekli saldırı başladı!',effect:'apt'}
+];
+
+// Boss Attacks
+const BOSSES=['WannaCry','NotPetya','Mirai','Stuxnet','SolarWinds','Log4Shell'];
+
+// CVE Database
+const CVES=['CVE-2024-3094 (XZ Utils)','CVE-2021-44228 (Log4Shell)','CVE-2023-34362 (MOVEit)','CVE-2024-21887 (Ivanti)','CVE-2023-23397 (Outlook)'];
+
+// Line clear messages
+const CLEAR_MSGS={1:'TEHDİT BERTARAF',2:'SALDIRI DURDURULDU',3:'İNSİDENT KONTROL ALTINDA',4:'TAM ALTYAPI KORUMASI'};
 
 // Create board cells
 for(let i=0;i<ROWS*COLS;i++){const d=document.createElement('div');d.className='cell';boardEl.appendChild(d)}
 
-const PIECES=[
-  [[1,1,1,1]],
-  [[1,1],[1,1]],
-  [[0,1,0],[1,1,1]],
-  [[1,0,0],[1,1,1]],
-  [[0,0,1],[1,1,1]],
-  [[1,1,0],[0,1,1]],
-  [[0,1,1],[1,1,0]]
-];
-const PIECE_COLORS=['#00ff88','#00e0ff','#a855f7','#f4a261','#ef4444','#ec4899','#c9a84c'];
-const ATTACK_NAMES=['Firewall','IDS','Encryption','Honeypot','Patch','Zero Trust','SOC'];
+// Create next piece display
+const npEl=document.getElementById('nextPiece');
+for(let i=0;i<16;i++){const d=document.createElement('div');d.className='np-cell';npEl.appendChild(d)}
 
-function playTone(f,d,t='square',v=.12){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+// Audio
+function playTone(f,d,t='square',v=.1){try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}catch(e){}}
+function playAlert(){playTone(880,.1,'sawtooth',.15);setTimeout(()=>playTone(660,.1,'sawtooth',.12),100)}
+function playClear(n){for(let i=0;i<n;i++)setTimeout(()=>playTone(400+i*200,.15,'sine',.12),i*80)}
+function playBreach(){playTone(100,.5,'sawtooth',.2);setTimeout(()=>playTone(80,.5,'sawtooth',.15),200)}
 
+// Feed system
+function addFeed(text,color='var(--dim)'){
+  feedItems.unshift({text,color,time:new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})});
+  if(feedItems.length>8)feedItems.pop();
+  renderFeed();
+}
+function renderFeed(){
+  const el=document.getElementById('attackFeed');
+  el.innerHTML=feedItems.map(f=>`<div class="feed-item"><span class="dot" style="background:${f.color}"></span><span>${f.text}</span><span class="time">${f.time}</span></div>`).join('');
+}
+
+// Game Logic
 function newPiece(){
-  const idx=Math.floor(Math.random()*PIECES.length);
-  currentPiece={shape:PIECES[idx].map(r=>[...r]),color:PIECE_COLORS[idx],idx};
+  if(nextPieceData!==undefined){
+    currentPiece={...nextPieceData,shape:nextPieceData.shape.map(r=>[...r])};
+  }else{
+    const idx=Math.floor(Math.random()*ATTACKS.length);
+    currentPiece={shape:ATTACKS[idx].shape.map(r=>[...r]),color:ATTACKS[idx].color,idx,name:ATTACKS[idx].name,icon:ATTACKS[idx].icon};
+  }
   currentPos={x:Math.floor(COLS/2)-1,y:0};
+  canHold=true;
+  
+  // Generate next
+  const nIdx=Math.floor(Math.random()*ATTACKS.length);
+  nextPieceData={shape:ATTACKS[nIdx].shape.map(r=>[...r]),color:ATTACKS[nIdx].color,idx:nIdx,name:ATTACKS[nIdx].name,icon:ATTACKS[nIdx].icon};
+  renderNextPiece();
+  
   if(!canPlace(currentPiece.shape,currentPos.x,currentPos.y))gameOver();
+  
+  addFeed(`${currentPiece.icon} ${currentPiece.name} tespit edildi`,currentPiece.color);
+  totalThreats++;
+  updateActiveThreats();
+}
+
+function renderNextPiece(){
+  const cells=npEl.children;
+  for(let i=0;i<16;i++)cells[i].style.background='var(--bg)';
+  if(!nextPieceData)return;
+  const s=nextPieceData.shape;
+  for(let r=0;r<s.length;r++)for(let c=0;c<s[r].length;c++){
+    if(s[r][c])cells[r*4+c].style.background=nextPieceData.color;
+  }
+  document.getElementById('nextName').textContent=`${nextPieceData.icon} ${nextPieceData.name}`;
 }
 
 function canPlace(shape,px,py){
@@ -135,7 +291,7 @@ function placePiece(){
     const ny=currentPos.y+r;if(ny<0)continue;
     board[ny][currentPos.x+c]=currentPiece.color;
   }
-  playTone(200,.05,'sine',.1);
+  playTone(200,.04,'sine',.08);
   clearLines();newPiece();
 }
 
@@ -145,20 +301,33 @@ function clearLines(){
     if(board[r].every(c=>c)){board.splice(r,1);board.unshift(Array(COLS).fill(0));cleared++;r++;}
   }
   if(cleared){
-    lines+=cleared;score+=cleared*cleared*100*level;
-    level=Math.floor(lines/10)+1;
-    [600,800,1000,1200].slice(0,cleared).forEach((f,i)=>setTimeout(()=>playTone(f,.1,'sine',.15),i*60));
-    document.getElementById('score').textContent=score;
-    document.getElementById('lines').textContent=lines;
-    document.getElementById('level').textContent=level;
-    clearInterval(dropInterval);dropInterval=setInterval(drop,Math.max(100,800-level*60));
+    combo++;defenseChain=Math.max(defenseChain,combo);
+    const mult=combo>1?combo:1;
+    linesCleared+=cleared;
+    score+=cleared*cleared*100*level*mult;
+    level=Math.floor(linesCleared/8)+1;
+    
+    playClear(cleared);
+    boardEl.classList.add('alert');setTimeout(()=>boardEl.classList.remove('alert'),300);
+    
+    const msg=CLEAR_MSGS[Math.min(cleared,4)];
+    addFeed(`✅ ${msg} (${cleared} katman)`,cleared>=3?'var(--accent)':'var(--cyan)');
+    if(combo>1)addFeed(`🔗 Savunma Zinciri: ${combo}x`,'var(--gold)');
+    
+    updateHUD();
+    clearInterval(dropInterval);dropInterval=setInterval(drop,Math.max(80,700-level*50));
+  }else{
+    combo=0;
   }
+  document.getElementById('combo').textContent=combo;
 }
 
 function rotate(){
   const s=currentPiece.shape;
   const rotated=s[0].map((_,i)=>s.map(r=>r[i]).reverse());
-  if(canPlace(rotated,currentPos.x,currentPos.y)){currentPiece.shape=rotated;playTone(300,.03,'sine',.08)}
+  if(canPlace(rotated,currentPos.x,currentPos.y)){currentPiece.shape=rotated;playTone(300,.02,'sine',.06)}
+  else if(canPlace(rotated,currentPos.x-1,currentPos.y)){currentPos.x--;currentPiece.shape=rotated}
+  else if(canPlace(rotated,currentPos.x+1,currentPos.y)){currentPos.x++;currentPiece.shape=rotated}
 }
 
 function drop(){
@@ -167,7 +336,26 @@ function drop(){
   render();
 }
 
-function hardDrop(){while(canPlace(currentPiece.shape,currentPos.x,currentPos.y+1))currentPos.y++;placePiece();render()}
+function hardDrop(){
+  while(canPlace(currentPiece.shape,currentPos.x,currentPos.y+1))currentPos.y++;
+  placePiece();render();
+}
+
+function holdCurrentPiece(){
+  if(!canHold)return;
+  canHold=false;
+  if(holdPiece){
+    const temp=holdPiece;
+    holdPiece={shape:ATTACKS[currentPiece.idx].shape.map(r=>[...r]),color:currentPiece.color,idx:currentPiece.idx,name:currentPiece.name,icon:currentPiece.icon};
+    currentPiece={...temp,shape:temp.shape.map(r=>[...r])};
+    currentPos={x:Math.floor(COLS/2)-1,y:0};
+  }else{
+    holdPiece={shape:ATTACKS[currentPiece.idx].shape.map(r=>[...r]),color:currentPiece.color,idx:currentPiece.idx,name:currentPiece.name,icon:currentPiece.icon};
+    newPiece();
+  }
+  addFeed(`📋 ${holdPiece.name} olay kuyruğuna alındı`,'var(--dim)');
+  render();
+}
 
 function render(){
   const cells=boardEl.children;
@@ -175,38 +363,132 @@ function render(){
     const cell=cells[r*COLS+c];
     cell.style.background=board[r][c]||'var(--bg)';
     cell.classList.toggle('filled',!!board[r][c]);
+    cell.style.boxShadow=board[r][c]?`inset 0 0 8px ${board[r][c]}40`:'none';
   }
-  // Draw current piece
+  // Ghost piece
   if(currentPiece){
+    let ghostY=currentPos.y;
+    while(canPlace(currentPiece.shape,currentPos.x,ghostY+1))ghostY++;
+    if(ghostY!==currentPos.y){
+      const s=currentPiece.shape;
+      for(let r=0;r<s.length;r++)for(let c=0;c<s[r].length;c++){
+        if(!s[r][c])continue;
+        const ny=ghostY+r,nx=currentPos.x+c;
+        if(ny>=0&&ny<ROWS&&nx>=0&&nx<COLS){
+          cells[ny*COLS+nx].style.background=currentPiece.color+'30';
+        }
+      }
+    }
+    // Current piece
     const s=currentPiece.shape;
     for(let r=0;r<s.length;r++)for(let c=0;c<s[r].length;c++){
       if(!s[r][c])continue;
       const ny=currentPos.y+r,nx=currentPos.x+c;
-      if(ny>=0&&ny<ROWS&&nx>=0&&nx<COLS)cells[ny*COLS+nx].style.background=currentPiece.color;
+      if(ny>=0&&ny<ROWS&&nx>=0&&nx<COLS){
+        cells[ny*COLS+nx].style.background=currentPiece.color;
+        cells[ny*COLS+nx].style.boxShadow=`0 0 10px ${currentPiece.color}60`;
+      }
     }
   }
+}
+
+function updateHUD(){
+  document.getElementById('score').textContent=score;
+  document.getElementById('secScore').textContent=score;
+  document.getElementById('lines').textContent=linesCleared;
+  document.getElementById('level').textContent=level;
+  document.getElementById('defChain').textContent=defenseChain+'x';
+  
+  // Threat level
+  const levels=['YEŞİL','SARI','TURUNCU','KIRMIZI','KRİTİK','SİYAH'];
+  const tl=Math.min(level-1,5);
+  const tlEl=document.getElementById('threatLevel');
+  tlEl.textContent=levels[tl];
+  tlEl.className='val'+(tl>=3?' critical':tl>=2?' warning':'');
+  document.getElementById('threatBar').style.width=Math.min(100,tl*20+10)+'%';
+  
+  // Integrity
+  integrity=Math.max(0,100-Math.floor((ROWS-emptyRows())*5));
+  document.getElementById('integrity').textContent=integrity+'%';
+  const intEl=document.getElementById('integrity');
+  intEl.className='val'+(integrity<30?' critical':integrity<60?' warning':'');
+  
+  // Bandwidth
+  const bw=Math.max(10,94-level*8);
+  document.getElementById('bandwidth').textContent=bw+'%';
+  
+  // Servers
+  const srv=Math.max(1,12-Math.floor(level/3));
+  document.getElementById('servers').textContent=srv+'/12';
+}
+
+function emptyRows(){let count=0;for(let r=0;r<ROWS;r++)if(board[r].every(c=>!c))count++;return count;}
+
+function updateActiveThreats(){
+  const el=document.getElementById('activeThreats');
+  const counts={};
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    if(board[r][c]){
+      const atk=ATTACKS.find(a=>a.color===board[r][c]);
+      if(atk){counts[atk.name]=(counts[atk.name]||0)+1;}
+    }
+  }
+  el.innerHTML=Object.entries(counts).map(([name,count])=>{
+    const atk=ATTACKS.find(a=>a.name===name);
+    return `<span class="threat-tag" style="background:${atk.color}20;color:${atk.color}">${atk.icon} ${name}: ${count}</span>`;
+  }).join('');
+}
+
+function triggerEvent(){
+  if(!running)return;
+  const evt=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+  const banner=document.getElementById('eventBanner');
+  document.getElementById('eventTitle').textContent=evt.title;
+  document.getElementById('eventDesc').textContent=evt.desc;
+  banner.classList.add('show');
+  playAlert();
+  addFeed(`⚠️ ${evt.title}`,'var(--red)');
+  
+  // Apply effect
+  if(evt.effect==='speed'){clearInterval(dropInterval);dropInterval=setInterval(drop,Math.max(50,500-level*50));setTimeout(()=>{if(running){clearInterval(dropInterval);dropInterval=setInterval(drop,Math.max(80,700-level*50))}},5000)}
+  
+  setTimeout(()=>banner.classList.remove('show'),3000);
+}
+
+function updateCVE(){
+  const el=document.getElementById('cveAlerts');
+  const shuffled=[...CVES].sort(()=>Math.random()-.5).slice(0,3);
+  el.innerHTML=shuffled.map(c=>`<div style="padding:2px 0;border-bottom:1px solid var(--border)">⚠ ${c}</div>`).join('');
 }
 
 function startGame(){
   audioCtx.resume();
   document.getElementById('overlay').classList.add('hidden');
   for(let r=0;r<ROWS;r++)board[r].fill(0);
-  score=0;lines=0;level=1;running=true;
-  document.getElementById('score').textContent='0';
-  document.getElementById('lines').textContent='0';
-  document.getElementById('level').textContent='1';
+  score=0;linesCleared=0;level=1;running=true;combo=0;defenseChain=0;integrity=100;totalThreats=0;
+  holdPiece=null;nextPieceData=undefined;feedItems=[];
+  updateHUD();renderFeed();updateCVE();
+  document.getElementById('combo').textContent='0';
+  addFeed('🟢 SOC Simülasyonu başlatıldı','var(--accent)');
+  addFeed('📡 Ağ izleme aktif','var(--cyan)');
   newPiece();render();
-  dropInterval=setInterval(drop,800);
+  dropInterval=setInterval(drop,700);
+  eventTimer=setInterval(triggerEvent,30000);
+  setInterval(updateActiveThreats,2000);
 }
 
 function gameOver(){
-  running=false;clearInterval(dropInterval);
-  playTone(150,.4,'sawtooth',.2);
+  running=false;clearInterval(dropInterval);clearInterval(eventTimer);
+  playBreach();
   const ov=document.getElementById('overlay');ov.classList.remove('hidden');
-  ov.querySelector('div').textContent='SAVUNMA KIRILDI!';
-  ov.querySelector('div:nth-child(2)').textContent=`Skor: ${score} | Satır: ${lines} | Seviye: ${level}`;
+  ov.querySelector('.ov-title').textContent='AĞ İHLAL EDİLDİ';
+  ov.querySelector('.ov-title').style.color='var(--red)';
+  ov.querySelector('.ov-sub').innerHTML=`Kritik sistemler ele geçirildi.<br><br>Güvenlik Puanı: <strong>${score}</strong><br>Tehdit Bertaraf: <strong>${linesCleared}</strong><br>Maks Savunma Zinciri: <strong>${defenseChain}x</strong><br>Tehdit Seviyesi: <strong>${level}</strong>`;
+  ov.querySelector('.start-btn').textContent='YENİDEN BAŞLAT';
+  addFeed('🔴 NETWORK BREACHED — Kritik sistemler ele geçirildi','var(--red)');
 }
 
+// Controls
 document.addEventListener('keydown',e=>{
   if(!running)return;
   if(e.key==='ArrowLeft'&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render()}
@@ -214,41 +496,29 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowUp'){rotate();render()}
   if(e.key==='ArrowDown'){drop()}
   if(e.key===' '){e.preventDefault();hardDrop()}
+  if(e.key==='h'||e.key==='H'){holdCurrentPiece()}
 });
 
-// Mobile touch controls
+// Mobile controls
+document.getElementById('mLeft').onclick=()=>{if(running&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render()}};
+document.getElementById('mRight').onclick=()=>{if(running&&canPlace(currentPiece.shape,currentPos.x+1,currentPos.y)){currentPos.x++;render()}};
+document.getElementById('mRotate').onclick=()=>{if(running){rotate();render()}};
+document.getElementById('mDown').onclick=()=>{if(running)drop()};
+document.getElementById('mDrop').onclick=()=>{if(running)hardDrop()};
+
+// Touch swipe
 (function(){
-  let startX=0,startY=0,startTime=0;
-  const board=document.getElementById('board');
-  board.addEventListener('touchstart',function(e){
-    startX=e.touches[0].clientX;startY=e.touches[0].clientY;startTime=Date.now();
-  },{passive:true});
-  board.addEventListener('touchend',function(e){
+  let sx=0,sy=0,st=0;
+  boardEl.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now()},{passive:true});
+  boardEl.addEventListener('touchend',e=>{
     if(!running)return;
-    const dx=e.changedTouches[0].clientX-startX;
-    const dy=e.changedTouches[0].clientY-startY;
-    const dt=Date.now()-startTime;
-    if(dt<200&&Math.abs(dx)<20&&Math.abs(dy)<20){rotate();render();return;}
+    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy,dt=Date.now()-st;
+    if(dt<200&&Math.abs(dx)<20&&Math.abs(dy)<20){rotate();render();return}
     if(Math.abs(dx)>Math.abs(dy)){
-      if(dx>30&&canPlace(currentPiece.shape,currentPos.x+1,currentPos.y)){currentPos.x++;render();}
-      else if(dx<-30&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render();}
-    }else{
-      if(dy>50){hardDrop();}
-      else if(dy>20){drop();}
-    }
+      if(dx>30&&canPlace(currentPiece.shape,currentPos.x+1,currentPos.y)){currentPos.x++;render()}
+      else if(dx<-30&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render()}
+    }else{if(dy>50)hardDrop();else if(dy>20)drop()}
   },{passive:true});
-  // Add on-screen buttons for mobile
-  const mc=document.createElement('div');
-  mc.id='mobileCtrl';
-  mc.style.cssText='display:none;gap:8px;justify-content:center;margin-top:8px;';
-  mc.innerHTML='<button onclick="if(running&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">◀</button>'+
-    '<button onclick="if(running){rotate();render()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">↻</button>'+
-    '<button onclick="if(running){drop()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">▼</button>'+
-    '<button onclick="if(running&&canPlace(currentPiece.shape,currentPos.x+1,currentPos.y)){currentPos.x++;render()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">▶</button>'+
-    '<button onclick="if(running){hardDrop()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:14px;cursor:pointer">⏬</button>';
-  document.querySelector('.canvas-panel').appendChild(mc);
-  if(window.innerWidth<900)mc.style.display='flex';
-  window.addEventListener('resize',()=>{mc.style.display=window.innerWidth<900?'flex':'none';});
 })();
 </script>
 <script src="hs-nav.js"></script>

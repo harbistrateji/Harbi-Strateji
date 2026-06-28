@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Geleceğin Ordusu 2040 — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--card:#1f2937;--accent:#10b981;--white:#f0f0f0;--gray:#9ca3af;--border:rgba(255,255,255,.08)}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;padding-top:60px}
+.hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(17,24,39,.9),var(--bg));border-bottom:1px solid var(--border)}
+.hero-icon{font-size:3rem;margin-bottom:12px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.hero p{color:var(--gray);font-size:1rem;max-width:700px;margin:0 auto}
+.nav-tabs{display:flex;justify-content:center;gap:8px;padding:16px 20px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:60px;z-index:50}
+.nav-tab{padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:600;font-family:'Chakra Petch',sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--gray);transition:all .25s}
+.nav-tab:hover{border-color:var(--accent);color:var(--white)}
+.nav-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.content{max-width:1200px;margin:0 auto;padding:40px 20px}
+.section{display:none;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:24px 0}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:all .3s}
+.info-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.info-card h3{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;color:var(--accent);margin-bottom:8px}
+.info-card p{color:var(--gray);font-size:.9rem;line-height:1.6}
+.info-card .stat{font-size:1.8rem;font-weight:700;color:var(--white);font-family:'IBM Plex Mono',monospace}
+.info-card .label{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.timeline{position:relative;padding-left:30px;margin:24px 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),transparent)}
+.tl-item{position:relative;margin-bottom:24px;padding-left:20px}
+.tl-item::before{content:'';position:absolute;left:-26px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.tl-item h4{font-family:'Chakra Petch',sans-serif;color:var(--white);font-size:1rem;margin-bottom:4px}
+.tl-item p{color:var(--gray);font-size:.85rem;line-height:1.5}
+.spectrum-bar{display:flex;align-items:center;gap:0;margin:24px 0;border-radius:8px;overflow:hidden}
+.spectrum-seg{flex:1;padding:16px 8px;text-align:center;font-size:.75rem;font-weight:600;font-family:'Chakra Petch',sans-serif;transition:all .3s;cursor:pointer}
+.spectrum-seg:hover{filter:brightness(1.3);transform:scaleY(1.1)}
+.quote-box{background:var(--card);border-left:4px solid var(--accent);padding:20px 24px;margin:20px 0;border-radius:0 8px 8px 0}
+.quote-box p{font-style:italic;color:var(--gray);line-height:1.6}
+.quote-box cite{display:block;margin-top:8px;font-size:.8rem;color:var(--accent);font-style:normal}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:1.4rem;color:var(--white);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:.7rem;font-weight:700;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--gray);margin:2px}
+.flow-diagram{display:flex;align-items:center;justify-content:center;gap:0;margin:30px 0;flex-wrap:wrap}
+.flow-step{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;text-align:center;min-width:140px;transition:all .3s}
+.flow-step:hover{border-color:var(--accent);transform:scale(1.05)}
+.flow-step h4{font-family:'Chakra Petch',sans-serif;font-size:.9rem;color:var(--accent)}
+.flow-step p{font-size:.75rem;color:var(--gray);margin-top:4px}
+.flow-arrow{font-size:1.5rem;color:var(--accent);margin:0 8px}
+.source-ref{margin-top:40px;padding:16px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.source-ref p{font-size:.8rem;color:var(--gray)}
+@media(max-width:768px){.nav-tabs{gap:4px;padding:10px}.nav-tab{padding:6px 12px;font-size:.75rem}.info-grid{grid-template-columns:1fr}.flow-diagram{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<div class="hero">
+<div class="hero-icon">🎖️</div>
+<h1>Geleceğin Ordusu 2040</h1>
+<p>İnsan-makine takımları, otonom sürüler, yönlendirilmiş enerji silahları ve uzay kuvvetleri — geleceğin savaş alanı.</p>
+</div>
+<div class="nav-tabs">
+<button class="nav-tab active" data-target="sec-vizyon">2040 Vizyonu</button>
+<button class="nav-tab" data-target="sec-otonom">Otonom Sistemler</button>
+<button class="nav-tab" data-target="sec-asker">Geliştirilmiş Asker</button>
+<button class="nav-tab" data-target="sec-enerji">Enerji Silahları</button>
+<button class="nav-tab" data-target="sec-uzay">Uzay Kuvvetleri</button>
+</div>
+<div class="content">
+<div class="section active" id="sec-vizyon">
+<h2 class="section-title">2040 Vizyonu: Geleceğin Ordusu</h2>
+<div class="info-grid">
+<div class="info-card"><h3>İnsan-Makine Takımları</h3><p>Her askerî birlik, insanlı ve insansız platformların entegre çalıştığı hibrit ekiplerden oluşacak.</p><div class="stat">1:5</div><div class="label">İnsan:Robot Oranı (2040)</div></div>
+<div class="info-card"><h3>Ağ Merkezli Savaş 2.0</h3><p>5G/6G taktik ağlar, kuantum şifreli iletişim, mesh uydu bağlantısı.</p><div class="stat">&lt;1ms</div><div class="label">Gecikme Süresi</div></div>
+<div class="info-card"><h3>Çok Alanlı Operasyonlar</h3><p>Kara, deniz, hava, uzay, siber ve EMS'nin eş zamanlı koordinasyonu.</p><div class="stat">6</div><div class="label">Operasyonel Alan</div></div>
+<div class="info-card"><h3>Hız ve Çeviklik</h3><p>Karar döngüsü hızı, fiziksel güçten daha belirleyici hale gelecek.</p></div>
+</div>
+</div>
+
+<div class="section" id="sec-otonom">
+<h2 class="section-title">Otonom Sistemler</h2>
+<div class="info-grid">
+<div class="info-card"><h3>Sürü Dronları</h3><p>Binlerce mikro-dronun koordineli saldırısı — savunma doygunluğu.</p><div class="stat">10.000+</div><div class="label">Sürü Kapasitesi</div></div>
+<div class="info-card"><h3>Otonom Kara Araçları (UGV)</h3><p>Lojistik, keşif, mayın temizleme ve doğrudan ateş görevleri.</p></div>
+<div class="info-card"><h3>İnsansız Deniz Araçları (USV/UUV)</h3><p>Deniz mayını avcılığı, denizaltı avcılığı, gözetleme.</p></div>
+<div class="info-card"><h3>Sadık Wingman</h3><p>Pilotlu uçaklara eşlik eden otonom savaş dronları — risk paylaşımı.</p></div>
+</div>
+</div>
+
+<div class="section" id="sec-asker">
+<h2 class="section-title">Geliştirilmiş Asker</h2>
+<div class="info-grid">
+<div class="info-card"><h3>Ekzoskelet</h3><p>Güçlendirilmiş taşıma kapasitesi, azaltılmış yorgunluk, artırılmış dayanıklılık.</p></div>
+<div class="info-card"><h3>Artırılmış Gerçeklik (AR)</h3><p>Taktik bilgi katmanı — düşman konumu, takım durumu, navigasyon.</p></div>
+<div class="info-card"><h3>Biyometrik İzleme</h3><p>Gerçek zamanlı sağlık takibi — stres, yorgunluk, yaralanma tespiti.</p></div>
+<div class="info-card"><h3>Beyin-Bilgisayar Arayüzü</h3><p>Düşünce ile drone kontrolü, hızlandırılmış karar verme (2040+).</p></div>
+</div>
+</div>
+
+<div class="section" id="sec-enerji">
+<h2 class="section-title">Yönlendirilmiş Enerji Silahları</h2>
+<div class="info-grid">
+<div class="info-card"><h3>Lazer Silahları</h3><p>C-UAS, C-RAM görevleri — sınırsız mühimmat, atış başına düşük maliyet.</p><div class="stat">$1-10</div><div class="label">Atış Başına Maliyet</div></div>
+<div class="info-card"><h3>Yüksek Güçlü Mikrodalga (HPM)</h3><p>Elektronik sistemleri anında devre dışı bırakma — EMP etkisi.</p></div>
+<div class="info-card"><h3>Railgun</h3><p>Mach 6-7 hızda kinetik mühimmat — kimyasal itici gerektirmez.</p><div class="stat">Mach 7</div><div class="label">Mühimmat Hızı</div></div>
+</div>
+</div>
+
+<div class="section" id="sec-uzay">
+<h2 class="section-title">Uzay Kuvvetleri</h2>
+<div class="info-grid">
+<div class="info-card"><h3>Uzay Durumsal Farkındalık</h3><p>Yörüngedeki tüm nesnelerin izlenmesi — tehdit tespiti.</p></div>
+<div class="info-card"><h3>Uydu Savunma</h3><p>Anti-uydu silahları, yörünge manevra, uzay mayınları.</p></div>
+<div class="info-card"><h3>Uzay Tabanlı ISR</h3><p>Hiperspektral görüntüleme, SAR radar, SIGINT uyduları.</p></div>
+<div class="info-card"><h3>Cislunar Operasyonlar</h3><p>Ay yörüngesi ve ötesinde askerî varlık — 2040 sonrası.</p></div>
+</div>
+</div>
+</div>
+<div class="source-ref" style="max-width:1200px;margin:20px auto;padding:16px 20px">
+<p><strong>Kaynak:</strong> Selahaddin Koyuncu, "Görünmez Savaş Alanı: Elektromanyetik Spektrumun ve Algoritmik Hakimiyetin Modern Savaştaki Belirleyici Rolü," Harb-i Strateji Külliyatı, Nisan 2026.</p>
+</div>
+<script>
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.target).classList.add('active');
+  });
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

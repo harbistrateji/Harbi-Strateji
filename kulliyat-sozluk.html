@@ -601,7 +601,36 @@ function renderDict(){
   const groups={};
   filtered.forEach(t=>{
     const letter=t[0].charAt(0).toUpperCase();
-    if(!groups[letter])groups[letter]=[];
+    if(!groups[letter])groups[letter]=[,
+// DİPLOMASİ & OSMANLI TARİHİ
+["Amasya Antlaşması","Treaty of Amasya (1555)","Osmanlı-İran arasında imzalanan ilk resmi antlaşma. Doğu sınırlarını belirledi.","diplomasi"],
+["Bucaş Antlaşması","Treaty of Buchach (1672)","Osmanlı Devleti'nin batıda en geniş sınırlara ulaştığı antlaşma. Lehistan ile imzalandı.","diplomasi"],
+["Çehrin Antlaşması","Treaty of Bahçesaray (1681)","Osmanlı-Rus arasında imzalanan ilk resmi antlaşma.","diplomasi"],
+["Edirne-Segedin Antlaşması","Treaty of Edirne-Szeged (1444)","Osmanlı'nın batıda imzaladığı ilk antlaşma. İlk defa sınır kavramı kullanıldı.","diplomasi"],
+["Ferhat Paşa Antlaşması","Treaty of Ferhat Pasha (1590)","Osmanlı'nın doğuda en geniş sınırlara ulaştığı antlaşma. İran ile imzalandı.","diplomasi"],
+["Hünkâr İskelesi Antlaşması","Treaty of Hünkâr İskelesi (1833)","Osmanlı'nın Boğazlar üzerinde egemenlik haklarını son kez tek başına kullandığı antlaşma.","diplomasi"],
+["Kanun-i Esasi","Ottoman Constitution (1876)","Osmanlı'nın ilk anayasası. Mithat Paşa öncülüğünde hazırlandı, II. Abdülhamid ilan etti.","diplomasi"],
+["Kapitülasyon","Capitulation","Yabancı devlet vatandaşlarına tanınan ekonomik ve hukuki ayrıcalıklar. İlk kez Fatih tarafından Venedik'e verildi.","diplomasi"],
+["Karlofça Antlaşması","Treaty of Karlowitz (1699)","Osmanlı'nın ilk büyük toprak kaybı. Osmanlı topraklarının paylaşıldığı ilk uluslararası antlaşma.","diplomasi"],
+["Kasr-ı Şirin Antlaşması","Treaty of Zuhab (1639)","Günümüz Türk-İran sınırını belirleyen antlaşma.","diplomasi"],
+["Küçük Kaynarca Antlaşması","Treaty of Küçük Kaynarca (1774)","Halkı Türk ve Müslüman olan ilk toprak kaybı (Kırım). Halifelik ilk kez siyasi araç olarak kullanıldı.","diplomasi"],
+["Lale Devri","Tulip Period (1718-1730)","Avrupa'ya ilk elçilerin gönderildiği, ilk matbaanın kurulduğu, ilk çiçek aşısının yapıldığı dönem.","diplomasi"],
+["Niğbolu Zaferi","Battle of Nicopolis (1396)","İngiltere ve Fransa'nın katıldığı ilk Haçlı Savaşı. Osmanlı'yı Balkanlardan atmanın mümkün olmadığı anlaşıldı.","tarih"],
+["Nizam-ı Cedid","New Order Army","III. Selim döneminde Avrupa orduları örnek alınarak kurulan ilk modern ordu.","askeri"],
+["Pasarofça Antlaşması","Treaty of Passarowitz (1718)","Osmanlı'nın Avrupa'dan geri kaldığını ilk kez kabul ettiği antlaşma.","diplomasi"],
+["Sened-i İttifak","Deed of Alliance (1808)","Padişahın yetkilerinin ilk kez sınırlandırıldığı belge. II. Mahmut ile ayanlar arasında imzalandı.","diplomasi"],
+["Tanzimat Fermanı","Edict of Gülhane (1839)","Padişahın kendi üzerinde bir gücün varlığını ilk kez tanıdığı belge. Hukuk devleti anlayışının başlangıcı.","diplomasi"],
+["Zitvatorok Antlaşması","Treaty of Zsitvatorok (1606)","Osmanlı'nın Avrupa karşısındaki üstünlüğünü kaybettiği antlaşma.","diplomasi"],
+["Devşirme Sistemi","Devshirme System","Hristiyan ailelerden çocuk alınarak askeri ve idari kadro yetiştirilmesi. İlk kez II. Murad döneminde kuruldu.","tarih"],
+["Divan-ı Hümayun","Imperial Council","Osmanlı'nın en yüksek karar organı. İlk kez Orhan Gazi döneminde kuruldu.","tarih"],
+["Enderun Mektebi","Palace School","Saray içi eğitim kurumu. İlk kez II. Murad döneminde Edirne'de kuruldu.","tarih"],
+["Fetret Devri","Ottoman Interregnum (1402-1413)","Ankara Savaşı sonrası şehzadeler arası taht mücadelesi dönemi.","tarih"],
+["Kafes Usulü","Cage System","Şehzadelerin sancağa gönderilmesi yerine sarayda tutulması. I. Ahmed döneminde başladı.","tarih"],
+["Kanunname-i Âl-i Osman","Ottoman Dynastic Law","Fatih Sultan Mehmed tarafından çıkarılan ilk yazılı Osmanlı kanunları.","tarih"],
+["Pencik Sistemi","Pencik System","Savaş esirlerinin beşte birinin devlete alınması. I. Murad döneminde başladı.","tarih"],
+["Tımar Sistemi","Timar System","Toprak gelirinin askeri hizmet karşılığı dağıtılması. I. Murad döneminde kuruldu.","tarih"],
+["Yeniçeri Ocağı","Janissary Corps","Osmanlı'nın profesyonel piyade birliği. I. Murad döneminde kuruldu, 1826'da II. Mahmud kaldırdı.","askeri"]
+];
     groups[letter].push(t);
   });
   

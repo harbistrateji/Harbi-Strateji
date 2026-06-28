@@ -271,3 +271,88 @@ document.querySelectorAll('[id^=routes-]').forEach(g=>{
 </script>
 </body></html>
 </div>
+<script>
+// Add zoom/pan to map
+(function(){
+  const svg = document.getElementById('mainmap');
+  if(!svg) return;
+  let scale = 1, panX = 0, panY = 0, isDragging = false, startX, startY;
+  const vb = svg.viewBox.baseVal;
+  const origW = vb.width, origH = vb.height;
+  
+  svg.style.cursor = 'grab';
+  
+  svg.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 1.1 : 0.9;
+    scale = Math.max(0.5, Math.min(3, scale * delta));
+    updateViewBox();
+  });
+  
+  svg.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    svg.style.cursor = 'grabbing';
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    if(!isDragging) return;
+    const dx = (e.clientX - startX) * scale;
+    const dy = (e.clientY - startY) * scale;
+    panX -= dx * 0.5;
+    panY -= dy * 0.5;
+    startX = e.clientX;
+    startY = e.clientY;
+    updateViewBox();
+  });
+  
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    svg.style.cursor = 'grab';
+  });
+  
+  function updateViewBox() {
+    const w = origW * scale;
+    const h = origH * scale;
+    const x = Math.max(0, Math.min(origW - w, (origW - w) / 2 + panX));
+    const y = Math.max(0, Math.min(origH - h, (origH - h) / 2 + panY));
+    svg.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
+  }
+  
+  // Add tooltip on node hover
+  const tooltip = document.createElement('div');
+  tooltip.style.cssText = 'position:fixed;background:#0d1520;border:1px solid rgba(0,224,255,0.3);border-radius:6px;padding:6px 12px;font-size:12px;color:#e2e8f0;font-family:IBM Plex Mono,monospace;pointer-events:none;z-index:9999;display:none;backdrop-filter:blur(8px)';
+  document.body.appendChild(tooltip);
+  
+  const nodeNames = {
+    canakkale:'Çanakkale Boğazı',istanbul:'İstanbul Boğazı',suez:'Süveyş Kanalı',
+    hurmuz:'Hürmüz Boğazı',malakka:'Malakka Boğazı',gibraltar:'Cebelitarık',
+    panama:'Panama Kanalı',hamburg:'Hamburg Limanı',shanghai:'Şangay Limanı',
+    mersin:'Mersin Limanı',gwadar:'Gwadar Limanı',faw:'Faw Limanı'
+  };
+  
+  svg.querySelectorAll('.node').forEach(node => {
+    const key = node.getAttribute('onclick')?.match(/showInfo\('(.+?)'\)/)?.[1];
+    node.addEventListener('mouseenter', (e) => {
+      if(nodeNames[key]) {
+        tooltip.textContent = nodeNames[key];
+        tooltip.style.display = 'block';
+      }
+    });
+    node.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY - 30) + 'px';
+    });
+    node.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+  });
+  
+  // Double-click to reset zoom
+  svg.addEventListener('dblclick', () => {
+    scale = 1; panX = 0; panY = 0;
+    updateViewBox();
+  });
+})();
+</script>

@@ -4,313 +4,282 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Osmanlı Padişahları — İnteraktif İnfografik | Harb-i Strateji</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0a;--card:#141414;--red:#c41e3a;--gold:#d4a017;--white:#f0f0f0;--gray:#888;--border:#222}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
-.nav{position:fixed;top:0;width:100%;background:rgba(10,10,10,.95);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:100;backdrop-filter:blur(8px)}
-.nav-title{font-size:.85rem;font-weight:900;color:var(--red);letter-spacing:1px}
-.nav-back{color:var(--gray);text-decoration:none;font-size:.8rem;font-weight:700}
-.nav-controls{display:flex;gap:8px}
-.nav-btn{background:var(--card);border:1px solid var(--border);color:var(--white);padding:6px 12px;border-radius:6px;font-size:.9rem;font-weight:700;cursor:pointer}
-.nav-btn:hover{border-color:var(--red)}
-.nav-btn.active{background:var(--red);border-color:var(--red)}
-/* Slide Container */
-.slides{margin-top:56px;width:100%;overflow:hidden;position:relative}
-.slide{display:none;padding:30px 20px;min-height:calc(100vh - 56px);animation:fadeIn .4s}
-.slide.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-/* Hero Slide */
-.hero{text-align:center;padding:60px 20px}
-.hero h1{font-size:2.2rem;font-weight:900;margin-bottom:8px}
-.hero h1 span{color:var(--red)}
-.hero .sub{font-size:1rem;color:var(--gold);margin-bottom:6px}
-.hero .desc{font-size:.85rem;color:var(--gray);max-width:500px;margin:0 auto 30px;line-height:1.6}
-.hero-stats{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
-.hero-stat{background:var(--card);padding:16px 24px;border-radius:12px;border:1px solid var(--border);text-align:center;min-width:100px}
-.hero-stat .val{font-size:1.5rem;font-weight:900;color:var(--gold)}
-.hero-stat .lbl{font-size:.9rem;color:var(--gray);margin-top:4px}
-/* Timeline */
-.timeline{max-width:800px;margin:0 auto}
-.era-section{margin-bottom:30px}
-.era-title{font-size:1rem;font-weight:900;color:var(--red);border-left:4px solid var(--red);padding-left:12px;margin-bottom:16px}
-.sultan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.sultan-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:border-color .2s,transform .15s}
-.sultan-card:hover{border-color:var(--gold);transform:translateY(-2px)}
-.sultan-card .num{font-size:.85rem;color:var(--red);font-weight:900}
-.sultan-card .name{font-size:.85rem;font-weight:800;margin:4px 0 2px}
-.sultan-card .reign{font-size:.9rem;color:var(--gold)}
-.sultan-card .years{font-size:.85rem;color:var(--gray);margin-top:2px}
-.sultan-card .feat{font-size:.9rem;color:var(--gray);margin-top:6px;border-top:1px solid var(--border);padding-top:6px;line-height:1.4}
-/* Detail Modal */
-.modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:200;justify-content:center;align-items:center;padding:20px}
-.modal-bg.show{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;padding:30px}
-.modal .close{float:right;background:none;border:none;color:var(--gray);font-size:1.2rem;cursor:pointer}
-.modal h2{font-size:1.1rem;font-weight:900;margin-bottom:4px}
-.modal .reign-detail{font-size:.8rem;color:var(--gold);margin-bottom:12px}
-.modal .events{list-style:none}
-.modal .events li{font-size:.78rem;color:var(--gray);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.4}
-.modal .events li::before{content:"▸ ";color:var(--red)}
-/* Stats Slide */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;max-width:800px;margin:20px auto}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
-.stat-card .big{font-size:1.8rem;font-weight:900;color:var(--gold)}
-.stat-card .label{font-size:.95rem;color:var(--gray);margin-top:4px}
-/* Bar Chart */
-.bar-chart{max-width:600px;margin:20px auto}
-.bar-row{display:flex;align-items:center;margin-bottom:8px}
-.bar-name{width:140px;font-size:.72rem;font-weight:700;text-align:right;padding-right:10px}
-.bar-track{flex:1;height:20px;background:var(--card);border-radius:4px;overflow:hidden;position:relative}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:4px;transition:width 1s ease}
-.bar-val{position:absolute;right:8px;top:2px;font-size:.85rem;font-weight:800;color:var(--white)}
-/* Slide nav */
-.slide-nav{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:90}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s}
-.dot.active{background:var(--red);width:20px;border-radius:4px}
-/* Audio */
-.audio-btn{position:fixed;bottom:20px;right:20px;z-index:90;background:var(--card);border:1px solid var(--border);color:var(--white);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem}
-
-.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
-.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
-@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
-.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
-@keyframes scanDown{0%{top:0;}100%{top:100%;}}
-.slide-arrows{position:fixed;top:50%;transform:translateY(-50%);z-index:90;display:flex;justify-content:space-between;width:100%;padding:0 10px;pointer-events:none;}
-.slide-arrow{pointer-events:all;background:rgba(196,30,58,0.8);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;transition:background 0.3s;}
-.slide-arrow:hover{background:rgba(196,30,58,1);}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;900&subset=latin-ext&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--card:#1f2937;--gold:#d4a017;--gold-light:#f4d03f;--crimson:#c41e3a;--white:#f0f0f0;--gray:#9ca3af;--border:rgba(255,255,255,.08);--kurulus:#22c55e;--yukselis:#3b82f6;--duraklama:#f59e0b;--gerileme:#ef4444}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;padding-top:60px}
+.hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(212,160,23,.05),var(--bg));border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(212,160,23,.08),transparent 70%);pointer-events:none}
+.hero-icon{font-size:4rem;margin-bottom:12px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--gold);margin-bottom:8px}
+.hero .subtitle{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;color:var(--white);margin-bottom:6px;letter-spacing:1px}
+.hero .desc{color:var(--gray);font-size:.9rem;max-width:700px;margin:0 auto 24px;line-height:1.6}
+.hero-stats{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.hero-stat{background:var(--card);padding:16px 24px;border-radius:12px;border:1px solid var(--border);text-align:center;min-width:100px}
+.hero-stat .val{font-family:'Chakra Petch',sans-serif;font-size:1.8rem;font-weight:700;color:var(--gold)}
+.hero-stat .lbl{font-size:.7rem;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.nav-tabs{display:flex;justify-content:center;gap:6px;padding:16px 20px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:60px;z-index:50}
+.nav-tab{padding:8px 16px;border-radius:6px;font-size:.8rem;font-weight:600;font-family:'Chakra Petch',sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--gray);transition:all .25s}
+.nav-tab:hover{border-color:var(--gold);color:var(--white)}
+.nav-tab.active{background:var(--gold);border-color:var(--gold);color:#000}
+.content{max-width:1300px;margin:0 auto;padding:30px 20px 60px}
+.section{display:none;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.era-header{text-align:center;margin-bottom:30px;padding:20px}
+.era-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:8px}
+.era-header p{color:var(--gray);font-size:.9rem}
+.era-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.75rem;font-weight:700;font-family:'Chakra Petch',sans-serif;margin-bottom:10px}
+.era-badge.kurulus{background:rgba(34,197,94,.15);color:var(--kurulus)}
+.era-badge.yukselis{background:rgba(59,130,246,.15);color:var(--yukselis)}
+.era-badge.duraklama{background:rgba(245,158,11,.15);color:var(--duraklama)}
+.era-badge.gerileme{background:rgba(239,68,68,.15);color:var(--gerileme)}
+.sultan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.sultan-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.sultan-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.sultan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.sultan-card.era-kurulus::before{background:var(--kurulus)}
+.sultan-card.era-yukselis::before{background:var(--yukselis)}
+.sultan-card.era-duraklama::before{background:var(--duraklama)}
+.sultan-card.era-gerileme::before{background:var(--gerileme)}
+.sultan-card .num{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--gray);letter-spacing:1px;margin-bottom:4px}
+.sultan-card .name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:6px}
+.sultan-card .reign-info{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.sultan-card .reign-badge{font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--gray)}
+.sultan-card .feat{font-size:.85rem;color:var(--gray);line-height:1.5;margin-bottom:10px}
+.sultan-card .events{list-style:none;padding:0}
+.sultan-card .events li{font-size:.8rem;color:var(--gray);padding:3px 0;padding-left:14px;position:relative}
+.sultan-card .events li::before{content:'▸';position:absolute;left:0;color:var(--gold)}
+.bar-chart{max-width:700px;margin:0 auto}
+.bar-row{display:flex;align-items:center;margin-bottom:10px;gap:12px}
+.bar-name{font-family:'Chakra Petch',sans-serif;font-size:.85rem;min-width:180px;text-align:right;color:var(--white)}
+.bar-track{flex:1;height:28px;background:var(--card);border-radius:6px;overflow:hidden;position:relative;border:1px solid var(--border)}
+.bar-fill{height:100%;border-radius:6px;transition:width 1s ease}
+.bar-val{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--white)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:24px 0}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+.stat-card .icon{font-size:2rem;margin-bottom:8px}
+.stat-card h3{font-family:'Chakra Petch',sans-serif;font-size:1rem;color:var(--gold);margin-bottom:4px}
+.stat-card p{font-size:.85rem;color:var(--gray)}
+.stat-card .big-num{font-family:'IBM Plex Mono',monospace;font-size:2rem;font-weight:700;color:var(--white)}
+.timeline-vertical{position:relative;padding-left:30px;margin:24px 0}
+.timeline-vertical::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),var(--crimson),transparent)}
+.tl-item{position:relative;margin-bottom:20px;padding-left:24px}
+.tl-item::before{content:'';position:absolute;left:-26px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.tl-item h4{font-family:'Chakra Petch',sans-serif;color:var(--white);font-size:.95rem;margin-bottom:3px}
+.tl-item p{color:var(--gray);font-size:.82rem;line-height:1.5}
+.tl-item .year{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--gold)}
+.filter-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:600;font-family:'Chakra Petch',sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--gray);transition:all .25s}
+.filter-btn:hover{border-color:var(--gold);color:var(--white)}
+.filter-btn.active{background:var(--gold);border-color:var(--gold);color:#000}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:600px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal-close{position:absolute;top:12px;right:16px;font-size:1.5rem;cursor:pointer;color:var(--gray);background:none;border:none}
+.modal-close:hover{color:var(--white)}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:4px}
+.modal .reign-text{font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--gray);margin-bottom:12px}
+.modal .feat-text{font-size:.9rem;color:var(--white);line-height:1.6;margin-bottom:16px}
+.modal .event-list{list-style:none;padding:0}
+.modal .event-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--gray);padding-left:16px;position:relative}
+.modal .event-list li::before{content:'⚔';position:absolute;left:0;font-size:.7rem}
+@media(max-width:768px){.sultan-grid{grid-template-columns:1fr}.hero-stats{gap:12px}.hero-stat{padding:12px 16px;min-width:80px}.hero-stat .val{font-size:1.4rem}.nav-tabs{gap:4px;padding:10px}.nav-tab{padding:6px 10px;font-size:.7rem}.bar-name{min-width:100px;font-size:.75rem}}
+</style>
 </head>
-<body><div class="particles" id="particles"></div><div class="scan-line"></div>
-<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
-<nav class="nav">
-<a href="infografik.html" class="nav-back">← İnfografik</a>
-<span class="nav-title">OSMANLI PADİŞAHLARI</span>
-<div class="nav-controls">
-<button class="nav-btn" onclick="prevSlide()">◀</button>
-<button class="nav-btn" onclick="nextSlide()">▶</button>
-</div>
-</nav>
-
-<div class="slides" id="slides">
-<!-- Slide 1: Hero -->
-<div class="slide active" data-idx="0">
-<div class="hero">
-<h1>64 ÜLKE'YE MİRASINI BIRAKAN<br><span>İMPARATORLUK</span></h1>
-<p class="sub">Osmanlı Devleti (1299-1922)</p>
+<body>
+<section class="hero">
+<div class="hero-icon">👑</div>
+<h1>Osmanlı Padişahları</h1>
+<div class="subtitle">64 ÜLKEYE MİRASINI BIRAKAN İMPARATORLUK</div>
 <p class="desc">623 yıl hüküm süren, 3 kıtaya yayılan, 36 padişahın yönettiği dünyanın en uzun ömürlü Türk-İslam devleti. Selçuklu mirasından Cumhuriyet'e uzanan büyük destan.</p>
 <div class="hero-stats">
-<div class="hero-stat"><div class="val">623</div><div class="lbl">YIL</div></div>
-<div class="hero-stat"><div class="val">36</div><div class="lbl">PADİŞAH</div></div>
-<div class="hero-stat"><div class="val">64</div><div class="lbl">MİRAS ÜLKE</div></div>
-<div class="hero-stat"><div class="val">3</div><div class="lbl">KITA</div></div>
-<div class="hero-stat"><div class="val">24M</div><div class="lbl">km² ZİRVE</div></div>
+<div class="hero-stat"><div class="val">623</div><div class="lbl">Yıl</div></div>
+<div class="hero-stat"><div class="val">36</div><div class="lbl">Padişah</div></div>
+<div class="hero-stat"><div class="val">64</div><div class="lbl">Miras Ülke</div></div>
+<div class="hero-stat"><div class="val">3</div><div class="lbl">Kıta</div></div>
+<div class="hero-stat"><div class="val">24M km²</div><div class="lbl">Zirve Toprak</div></div>
 </div>
+</section>
+<div class="nav-tabs">
+<button class="nav-tab active" data-target="sec-tumu">Tüm Padişahlar</button>
+<button class="nav-tab" data-target="sec-kurulus">Kuruluş (1299-1453)</button>
+<button class="nav-tab" data-target="sec-yukselis">Yükseliş (1453-1579)</button>
+<button class="nav-tab" data-target="sec-duraklama">Duraklama (1579-1699)</button>
+<button class="nav-tab" data-target="sec-gerileme">Gerileme (1699-1922)</button>
+<button class="nav-tab" data-target="sec-istatistik">İstatistikler</button>
+<button class="nav-tab" data-target="sec-ilkler">İlkler ve Zaferler</button>
 </div>
+<div class="content">
+<div class="section active" id="sec-tumu">
+<div class="era-header"><h2>36 Padişah — Tüm Dönemler</h2><p>Kartlara tıklayarak detaylı bilgiye ulaşabilirsiniz.</p></div>
+<div class="filter-bar" id="allFilter">
+<button class="filter-btn active" data-era="all">Tümü (36)</button>
+<button class="filter-btn" data-era="kurulus">Kuruluş (6)</button>
+<button class="filter-btn" data-era="yukselis">Yükseliş (4)</button>
+<button class="filter-btn" data-era="duraklama">Duraklama (12)</button>
+<button class="filter-btn" data-era="gerileme">Gerileme (14)</button>
 </div>
-
-<!-- Slide 2: En Uzun Saltanat -->
-<div class="slide" data-idx="1">
-<h2 style="text-align:center;margin-bottom:20px;color:var(--gold)">EN UZUN SÜRE TAHTTA KALAN PADİŞAHLAR</h2>
-<div class="bar-chart" id="longest-reign"></div>
+<div class="sultan-grid" id="allGrid"></div>
 </div>
-
-<!-- Slide 3: Kuruluş -->
-<div class="slide" data-idx="2">
-<div class="timeline">
-<div class="era-section">
-<h3 class="era-title">KURULUŞ DÖNEMİ (1299-1453)</h3>
-<div class="sultan-grid" id="grid-kurulus"></div>
+<div class="section" id="sec-kurulus">
+<div class="era-header"><span class="era-badge kurulus">KURULUŞ DÖNEMİ</span><h2>Kuruluş Dönemi (1299-1453)</h2><p>Bir uç beyliğinden imparatorluğa uzanan 154 yıllık kuruluş destanı.</p></div>
+<div class="sultan-grid" id="kurulusGrid"></div>
 </div>
+<div class="section" id="sec-yukselis">
+<div class="era-header"><span class="era-badge yukselis">YÜKSELİŞ DÖNEMİ</span><h2>Yükseliş Dönemi (1453-1579)</h2><p>İstanbul'un fethinden Sokollu'nun ölümüne. Osmanlı'nın süper güç olduğu altın çağ.</p></div>
+<div class="sultan-grid" id="yukselisGrid"></div>
 </div>
+<div class="section" id="sec-duraklama">
+<div class="era-header"><span class="era-badge duraklama">DURAKLAMA DÖNEMİ</span><h2>Duraklama Dönemi (1579-1699)</h2><p>Toprak genişlemesinin durması, iç isyanlar ve Karlofça'ya giden süreç.</p></div>
+<div class="sultan-grid" id="duraklamaGrid"></div>
 </div>
-
-<!-- Slide 4: Yükseliş -->
-<div class="slide" data-idx="3">
-<div class="timeline">
-<div class="era-section">
-<h3 class="era-title">YÜKSELİŞ DÖNEMİ (1453-1579)</h3>
-<div class="sultan-grid" id="grid-yukselis"></div>
+<div class="section" id="sec-gerileme">
+<div class="era-header"><span class="era-badge gerileme">GERİLEME VE DAĞILMA</span><h2>Gerileme ve Dağılma (1699-1922)</h2><p>Karlofça'dan Cumhuriyet'e. Reform çabaları, toprak kayıpları ve son.</p></div>
+<div class="sultan-grid" id="gerilemeGrid"></div>
 </div>
-</div>
-</div>
-
-<!-- Slide 5: Duraklama -->
-<div class="slide" data-idx="4">
-<div class="timeline">
-<div class="era-section">
-<h3 class="era-title">DURAKLAMA DÖNEMİ (1579-1699)</h3>
-<div class="sultan-grid" id="grid-duraklama"></div>
-</div>
-</div>
-</div>
-
-<!-- Slide 6: Gerileme + Dağılma -->
-<div class="slide" data-idx="5">
-<div class="timeline">
-<div class="era-section">
-<h3 class="era-title">GERİLEME VE DAĞILMA DÖNEMİ (1699-1922)</h3>
-<div class="sultan-grid" id="grid-gerileme"></div>
-</div>
-</div>
-</div>
-
-<!-- Slide 7: Miras -->
-<div class="slide" data-idx="6">
-<h2 style="text-align:center;margin-bottom:6px;color:var(--gold)">OSMANLI MİRASI</h2>
-<p style="text-align:center;font-size:.8rem;color:var(--gray);margin-bottom:20px">Selçuklu'dan Osmanlı'ya, Osmanlı'dan Cumhuriyet'e</p>
+<div class="section" id="sec-istatistik">
+<div class="era-header"><h2>İstatistikler ve Karşılaştırmalar</h2><p>Osmanlı İmparatorluğu'nun sayılarla portresi.</p></div>
 <div class="stats-grid">
-<div class="stat-card"><div class="big">3</div><div class="label">MİRAS KAYNAĞI<br>Mevlana · Hacı Bektaş · Ahi Evran</div></div>
-<div class="stat-card"><div class="big">200+</div><div class="label">KURULAN MEDRESE</div></div>
-<div class="stat-card"><div class="big">400+</div><div class="label">CAMİ VE KÜLLIYE</div></div>
-<div class="stat-card"><div class="big">64</div><div class="label">MİRAS ÜLKE</div></div>
-<div class="stat-card"><div class="big">5</div><div class="label">KATMANLI EGEMENLİK<br>Fiziksel · Dijital · Finansal · Bilişsel · Uzay</div></div>
-<div class="stat-card"><div class="big">623</div><div class="label">YIL DEVLET GELENEĞİ</div></div>
+<div class="stat-card"><div class="icon">⏱️</div><h3>En Uzun Saltanat</h3><div class="big-num">46 yıl</div><p>Kanuni Sultan Süleyman</p></div>
+<div class="stat-card"><div class="icon">⚡</div><h3>En Kısa Saltanat</h3><div class="big-num">93 gün</div><p>V. Murad (1876)</p></div>
+<div class="stat-card"><div class="icon">🗡️</div><h3>En Çok Sefer</h3><div class="big-num">13</div><p>Kanuni Sultan Süleyman</p></div>
+<div class="stat-card"><div class="icon">🏰</div><h3>En Büyük Fetih</h3><div class="big-num">İstanbul</div><p>Fatih Sultan Mehmed (1453)</p></div>
+<div class="stat-card"><div class="icon">📜</div><h3>En Büyük Reform</h3><div class="big-num">Vaka-i Hayriye</div><p>II. Mahmud (1826)</p></div>
+<div class="stat-card"><div class="icon">🌍</div><h3>Zirve Toprak</h3><div class="big-num">24M km²</div><p>Kanuni Dönemi</p></div>
+</div>
+<h3 style="font-family:'Chakra Petch',sans-serif;margin:30px 0 16px;color:var(--gold)">EN UZUN SALTANATLAR</h3>
+<div class="bar-chart" id="barChart"></div>
+</div>
+<div class="section" id="sec-ilkler">
+<div class="era-header"><h2>İlkler, Zaferler ve Dönüm Noktaları</h2></div>
+<div class="timeline-vertical">
+<div class="tl-item"><div class="year">1299</div><h4>Osmanlı Beyliği'nin Kuruluşu</h4><p>Osman Gazi, Söğüt'te bağımsızlık ilan etti.</p></div>
+<div class="tl-item"><div class="year">1326</div><h4>Bursa'nın Fethi — İlk Başkent</h4><p>Orhan Gazi ile Bursa başkent oldu.</p></div>
+<div class="tl-item"><div class="year">1354</div><h4>Rumeli'ye Geçiş</h4><p>Gelibolu'nun alınması — Avrupa'da ilk Osmanlı toprağı.</p></div>
+<div class="tl-item"><div class="year">1363</div><h4>Yeniçeri Ocağı Kuruldu</h4><p>I. Murad döneminde kurulan profesyonel piyade birliği.</p></div>
+<div class="tl-item"><div class="year">1389</div><h4>I. Kosova Meydan Muharebesi</h4><p>I. Murad'ın şehadeti ve Balkan hâkimiyetinin başlangıcı.</p></div>
+<div class="tl-item"><div class="year">1402</div><h4>Ankara Muharebesi — Fetret Devri</h4><p>Timur'a yenilgi. 11 yıllık taht kavgası.</p></div>
+<div class="tl-item"><div class="year">1444</div><h4>Varna Zaferi</h4><p>II. Murad, Haçlı ordusunu bozguna uğrattı.</p></div>
+<div class="tl-item"><div class="year">1453</div><h4>İstanbul'un Fethi — Çağ Kapandı, Çağ Açıldı</h4><p>Fatih Sultan Mehmed, 1000 yıllık Bizans'ı sona erdirdi.</p></div>
+<div class="tl-item"><div class="year">1517</div><h4>Halifeliğin Osmanlı'ya Geçişi</h4><p>Yavuz Sultan Selim, İslam dünyasının lideri oldu.</p></div>
+<div class="tl-item"><div class="year">1526</div><h4>Mohaç Meydan Muharebesi</h4><p>Kanuni, Macaristan'ı 2 saatte fethetti.</p></div>
+<div class="tl-item"><div class="year">1538</div><h4>Preveze Deniz Zaferi</h4><p>Barbaros Hayreddin Paşa, Akdeniz'i Türk gölü yaptı.</p></div>
+<div class="tl-item"><div class="year">1683</div><h4>II. Viyana Kuşatması</h4><p>Başarısızlık — gerilemenin sembolik başlangıcı.</p></div>
+<div class="tl-item"><div class="year">1699</div><h4>Karlofça Antlaşması</h4><p>İlk büyük toprak kaybı.</p></div>
+<div class="tl-item"><div class="year">1727</div><h4>İlk Matbaa</h4><p>İbrahim Müteferrika, Osmanlı'da matbaayı kurdu.</p></div>
+<div class="tl-item"><div class="year">1826</div><h4>Vaka-i Hayriye</h4><p>II. Mahmud, Yeniçeri Ocağı'nı kaldırdı.</p></div>
+<div class="tl-item"><div class="year">1839</div><h4>Tanzimat Fermanı</h4><p>Modernleşme hareketinin resmi başlangıcı.</p></div>
+<div class="tl-item"><div class="year">1876</div><h4>I. Meşrutiyet — Kanun-i Esasi</h4><p>İlk anayasa ilan edildi.</p></div>
+<div class="tl-item"><div class="year">1915</div><h4>Çanakkale Zaferi</h4><p>Dünya tarihini değiştiren savunma destanı.</p></div>
+<div class="tl-item"><div class="year">1922</div><h4>Saltanatın Kaldırılması</h4><p>623 yıllık Osmanlı hanedanlığı sona erdi. Cumhuriyet'e geçiş.</p></div>
 </div>
 </div>
 </div>
-
-<!-- Modal -->
-<div class="modal-bg" id="modal-bg" onclick="closeModal()">
-<div class="modal" onclick="event.stopPropagation()">
-<button class="close" onclick="closeModal()">✕</button>
-<h2 id="modal-name"></h2>
-<div class="reign-detail" id="modal-reign"></div>
-<ul class="events" id="modal-events"></ul>
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+<div class="modal">
+<button class="modal-close" onclick="closeModal()">✕</button>
+<h2 id="modalName"></h2>
+<div class="reign-text" id="modalReign"></div>
+<div class="feat-text" id="modalFeat"></div>
+<div class="bio-text" id="modalBio" style="font-size:.85rem;color:var(--gray);line-height:1.7;margin-bottom:16px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;border-left:3px solid var(--gold)"></div>
+<h3 style="font-size:.9rem;color:var(--white);margin-bottom:8px;font-family:'Chakra Petch',sans-serif">ÖNEMLİ OLAYLAR</h3>
+<ul class="event-list" id="modalEvents"></ul>
 </div>
 </div>
-
-<!-- Slide dots -->
-<div class="slide-arrows"><button class="slide-arrow" onclick="prevSlide()">◀</button><button class="slide-arrow" onclick="nextSlide()">▶</button></div><div class="slide-nav" id="slide-nav"></div>
-
-<!-- Audio toggle -->
-<button class="audio-btn" id="audio-btn" onclick="toggleAudio()">🔇</button>
-
 <script>
 const SULTANS=[
-{n:1,name:"Osman Gazi",reign:"1299-1326",years:27,era:"kurulus",feat:"Osmanlı Beyliği'ni kurdu. Söğüt'ten Bursa'ya genişledi.",events:["1299 – Osmanlı Beyliği kuruldu","1302 – Koyunhisar Muharebesi","1326 – Bursa'nın fethi"]},
-{n:2,name:"Orhan Gazi",reign:"1326-1362",years:36,era:"kurulus",feat:"İlk düzenli ordu, ilk medrese. Rumeli'ye geçiş.",events:["1326 – Bursa başkent","1331 – İznik fethi","1352 – Çimpe Kalesi, Rumeli'ye ilk adım"]},
-{n:3,name:"I. Murad",reign:"1362-1389",years:27,era:"kurulus",feat:"Edirne başkent. Yeniçeri Ocağı. Kosova Zaferi. Şehit padişah.",events:["1362 – Edirne fethi","1363 – Yeniçeri Ocağı kuruldu","1389 – I. Kosova Zaferi, şehadet"]},
-{n:4,name:"Yıldırım Bayezid",reign:"1389-1402",years:13,era:"kurulus",feat:"Niğbolu Zaferi. İstanbul kuşatması. Ankara Savaşı'nda esaret.",events:["1396 – Niğbolu Zaferi","1402 – Ankara Savaşı, Timur'a yenilgi"]},
-{n:5,name:"Çelebi Mehmed",reign:"1413-1421",years:8,era:"kurulus",feat:"Fetret Devri'ni bitirdi. Devleti yeniden birleştirdi.",events:["1413 – Fetret Devri sona erdi","Devlet yeniden birleştirildi"]},
-{n:6,name:"II. Murad",reign:"1421-1451",years:30,era:"kurulus",feat:"Varna ve II. Kosova zaferleri. Fatih'in babası.",events:["1444 – Varna Zaferi","1448 – II. Kosova Zaferi"]},
-{n:7,name:"Fatih Sultan Mehmed",reign:"1451-1481",years:30,era:"yukselis",feat:"İstanbul'u fethetti. Çağ kapattı, çağ açtı. 21 yaşında.",events:["1453 – İstanbul'un Fethi","Topkapı Sarayı inşası","Kanunname-i Ali Osman"]},
-{n:8,name:"II. Bayezid",reign:"1481-1512",years:31,era:"yukselis",feat:"Barış dönemi. Donanma güçlendirildi.",events:["Donanma genişletildi","İlim ve sanat desteklendi"]},
-{n:9,name:"Yavuz Sultan Selim",reign:"1512-1520",years:8,era:"yukselis",feat:"8 yılda toprakları 2.5 kat büyüttü. Halifelik Osmanlı'ya geçti.",events:["1514 – Çaldıran Zaferi","1516 – Mercidabık","1517 – Ridaniye, Halifelik alındı"]},
-{n:10,name:"Kanuni Sultan Süleyman",reign:"1520-1566",years:46,era:"yukselis",feat:"En uzun saltanat. Muhteşem Süleyman. Kanunname. 13 sefer.",events:["1521 – Belgrad fethi","1526 – Mohaç Zaferi","1529 – Viyana Kuşatması","1538 – Preveze Deniz Zaferi"]},
-{n:11,name:"II. Selim",reign:"1566-1574",years:8,era:"yukselis",feat:"Sokollu dönemi. Kıbrıs fethi.",events:["1571 – Kıbrıs fethi","İnebahtı Deniz Savaşı"]},
-{n:12,name:"III. Murad",reign:"1574-1595",years:21,era:"duraklama",feat:"Duraklama başlangıcı. Toprak genişlemesi devam etti.",events:["Kafkasya seferleri","Osmanlı-İran savaşları"]},
-{n:13,name:"III. Mehmed",reign:"1595-1603",years:8,era:"duraklama",feat:"Eğri Seferi. Haçova Zaferi.",events:["1596 – Haçova Meydan Muharebesi"]},
-{n:14,name:"I. Ahmed",reign:"1603-1617",years:14,era:"duraklama",feat:"Sultanahmet Camii. Kardeş katli kaldırıldı.",events:["Sultanahmet Camii inşası","Ekber-erşed sistemi"]},
-{n:15,name:"I. Mustafa",reign:"1617-1618",years:1,era:"duraklama",feat:"Kısa ve istikrarsız saltanat.",events:["Tahttan indirildi"]},
-{n:16,name:"Genç Osman (II. Osman)",reign:"1618-1622",years:4,era:"duraklama",feat:"Reform girişimi. Yeniçeriler tarafından katledildi.",events:["1622 – Yeniçeri isyanı, şehadet"]},
-{n:17,name:"IV. Murad",reign:"1623-1640",years:17,era:"duraklama",feat:"Demir yumruk. Bağdat'ı geri aldı. Yasaklar koydu.",events:["1638 – Bağdat'ın geri alınması","Tütün/alkol yasakları"]},
-{n:18,name:"İbrahim",reign:"1640-1648",years:8,era:"duraklama",feat:"Girit Seferi başladı. Tahttan indirildi.",events:["1645 – Girit Seferi başladı"]},
-{n:19,name:"IV. Mehmed",reign:"1648-1687",years:39,era:"duraklama",feat:"Köprülüler dönemi. II. Viyana Kuşatması.",events:["1656 – Köprülü Mehmed Paşa","1683 – II. Viyana Kuşatması"]},
-{n:20,name:"II. Süleyman",reign:"1687-1691",years:4,era:"duraklama",feat:"Gerileme dönemi başlangıcı.",events:["Karlofça'ya giden süreç"]},
-{n:21,name:"II. Ahmed",reign:"1691-1695",years:4,era:"duraklama",feat:"Avusturya savaşları devam etti.",events:["Zenta Muharebesi"]},
-{n:22,name:"II. Mustafa",reign:"1695-1703",years:8,era:"duraklama",feat:"Karlofça Antlaşması. İlk büyük toprak kaybı.",events:["1699 – Karlofça Antlaşması"]},
-{n:23,name:"III. Ahmed",reign:"1703-1730",years:27,era:"gerileme",feat:"Lale Devri. Matbaa geldi. Patrona Halil İsyanı.",events:["1727 – İlk matbaa","1730 – Patrona Halil İsyanı"]},
-{n:24,name:"I. Mahmud",reign:"1730-1754",years:24,era:"gerileme",feat:"Askerî reformlar başladı.",events:["Humbaracı Ocağı modernizasyonu"]},
-{n:25,name:"III. Osman",reign:"1754-1757",years:3,era:"gerileme",feat:"Kısa saltanat.",events:["İstikrarsız dönem"]},
-{n:26,name:"III. Mustafa",reign:"1757-1774",years:17,era:"gerileme",feat:"Rus savaşları. Denizcilik reformları.",events:["1768-1774 – Osmanlı-Rus Savaşı"]},
-{n:27,name:"I. Abdülhamid",reign:"1774-1789",years:15,era:"gerileme",feat:"Küçük Kaynarca. Kırım kaybedildi.",events:["1774 – Küçük Kaynarca Antlaşması","1783 – Kırım kaybı"]},
-{n:28,name:"III. Selim",reign:"1789-1807",years:18,era:"gerileme",feat:"Nizam-ı Cedid ordusu. Reformcu padişah. Katledildi.",events:["Nizam-ı Cedid kuruldu","1807 – Kabakçı İsyanı, tahttan indirildi"]},
-{n:29,name:"IV. Mustafa",reign:"1807-1808",years:1,era:"gerileme",feat:"Çok kısa saltanat.",events:["Âlemdar Mustafa Paşa olayı"]},
-{n:30,name:"II. Mahmud",reign:"1808-1839",years:31,era:"gerileme",feat:"Yeniçeri Ocağı kaldırıldı (Vaka-i Hayriye). Modernleşme.",events:["1826 – Vaka-i Hayriye","Tıbbiye, Harbiye kuruldu","Posta teşkilatı"]},
-{n:31,name:"Abdülmecid",reign:"1839-1861",years:22,era:"gerileme",feat:"Tanzimat Fermanı. Islahat Fermanı.",events:["1839 – Tanzimat Fermanı","1856 – Islahat Fermanı","Dolmabahçe Sarayı"]},
-{n:32,name:"Abdülaziz",reign:"1861-1876",years:15,era:"gerileme",feat:"Donanma güçlendirildi. Tahttan indirildi.",events:["Dünyanın 3. büyük donanması","1876 – Tahttan indirildi"]},
-{n:33,name:"V. Murad",reign:"1876",years:0.25,era:"gerileme",feat:"93 gün tahtta kaldı.",events:["En kısa saltanat"]},
-{n:34,name:"II. Abdülhamid",reign:"1876-1909",years:33,era:"gerileme",feat:"33 yıl. Denge politikası. Hicaz Demiryolu. Eğitim seferberliği.",events:["1876 – I. Meşrutiyet","Hicaz Demiryolu","Hamidiye Alayları","1908 – II. Meşrutiyet"]},
-{n:35,name:"V. Mehmed Reşad",reign:"1909-1918",years:9,era:"gerileme",feat:"I. Dünya Savaşı. İttihat ve Terakki dönemi.",events:["1911 – Trablusgarp","1912-13 – Balkan Savaşları","1914-18 – I. Dünya Savaşı"]},
-{n:36,name:"VI. Mehmed Vahdeddin",reign:"1918-1922",years:4,era:"gerileme",feat:"Son padişah. Saltanat kaldırıldı.",events:["1920 – Sevr Antlaşması","1922 – Saltanat kaldırıldı","İstanbul'dan ayrıldı"]}
+{n:1,name:"Osman Gazi",reign:"1299-1326",years:27,era:"kurulus",feat:"Osmanlı Devleti'nin kurucusu. Söğüt'te bağımsızlık ilan etti. Karacahisar, İnegöl, Bilecik'i fethetti.",events:["1299 – Bağımsızlık ilanı","Karacahisar fethi","1302 – Koyunhisar Muharebesi","İnegöl ve Bilecik fetihleri"],bio:"1258\'de Söğüt\'te doğdu. Uzun boylu, yuvarlak yüzlü, esmer tenli, ela gözlü. Dürüst, tedbirli, cesur, cömert ve adalet sahibiydi. Fakirlere yedirip giydirmeyi severdi. Nikris hastalığından 1326\'da Bursa\'da vefat etti."},
+{n:2,name:"Orhan Gazi",reign:"1326-1362",years:36,era:"kurulus",feat:"Bursa'yı başkent yaptı. İlk Osmanlı parasını bastırdı. Rumeli'ye geçişi başlattı. Düzenli ordu kurdu.",events:["1326 – Bursa fethi (başkent)","1331 – İznik fethi","1337 – İzmit fethi","1354 – Gelibolu'ya geçiş","İlk Osmanlı gümüş akçesi"],bio:"1281\'de doğdu. Sarı sakallı, uzunca boylu, mavi gözlü. Yumuşak huylu, merhametli, dindar. Bizans İmparatoru Kantakuzenos\'un kızı Teodora ile evlendi. Nilüfer Hatun ile evliliğinden I. Murad doğdu."},
+{n:3,name:"I. Murad (Hüdavendigâr)",reign:"1362-1389",years:27,era:"kurulus",feat:"Edirne'yi başkent yaptı. Devşirme ve Yeniçeri Ocağı'nı kurdu. Balkan fetihleri. Kosova'da şehit düştü.",events:["1362 – Edirne fethi","1363 – Sırpsındığı Zaferi","1364 – Yeniçeri Ocağı kuruldu","1371 – Çirmen Muharebesi","1389 – I. Kosova (şehadet)"],bio:"1326\'da Bursa\'da doğdu. Uzun boylu, değirmi yüzlü, iri burunlu. Mevlevî sikkesi üzerine destar sarılı başlık giyerdi. Dahî bir asker ve devlet adamıydı. I. Kosova\'da şehit düştü (1389)."},
+{n:4,name:"Yıldırım Bayezid",reign:"1389-1402",years:13,era:"kurulus",feat:"Hızlı fetihler. Niğbolu Zaferi. Anadolu Türk birliğini sağladı. Ankara Savaşı'nda Timur'a yenildi.",events:["1396 – Niğbolu Zaferi","Anadolu beylikleri ilhakı","İstanbul kuşatması","1402 – Ankara Muharebesi"],bio:"1360\'da Edirne\'de doğdu. Yuvarlak yüzlü, beyaz tenli, koç burunlu, ela gözlü. Hızlı hareket etmesinden \'Yıldırım\' lakabını aldı. Ankara Savaşı\'nda Timur\'a yenildi ve esaret altında vefat etti."},
+{n:5,name:"I. Mehmed (Çelebi)",reign:"1413-1421",years:8,era:"kurulus",feat:"Fetret Devri'ni sona erdirdi. Devleti yeniden topladı. İkinci kurucu olarak anılır.",events:["1413 – Fetret Devri sona erdi","Devleti yeniden birleştirdi","Şeyh Bedreddin İsyanı bastırıldı"],bio:"1389\'da Edirne\'de doğdu. Orta boylu, yuvarlak yüzlü, beyaz tenli. 24 savaşa katıldı, 40\'a yakın yara aldı. Fetret Devri\'ni sona erdirerek devletin ikinci kurucusu sayılır."},
+{n:6,name:"II. Murad",reign:"1421-1451",years:30,era:"kurulus",feat:"Varna ve II. Kosova zaferleri. Tahtı oğluna bırakıp geri döndü. Balkan hâkimiyetini pekiştirdi.",events:["1444 – Varna Zaferi","1448 – II. Kosova Zaferi","Edirne-Segedin Antlaşması","Tahtı Fatih'e bırakması"],bio:"1402\'de doğdu. Uzun boylu, beyaz tenli, doğan burunlu. Sakin ama gerektiğinde cesur. Avrupalılar onu \'bütün Avrupa\'yı fethedebilecek\' biri olarak tanımladı. Fatih\'in babası olmaktan gurur duyardı."},
+{n:7,name:"Fatih Sultan Mehmed",reign:"1451-1481",years:30,era:"yukselis",feat:"İstanbul'u fethetti. Çağ açıp çağ kapattı. Kanunname-i Âl-i Osman. 2 imparatorluk, 4 krallık yıktı.",events:["1453 – İstanbul'un Fethi","1461 – Trabzon İmparatorluğu sona erdi","1463-79 – Venedik Savaşları","1473 – Otlukbeli","1480 – Otranto Seferi"],bio:"29 Mart 1432\'de Edirne\'de doğdu. Uzun boylu, dolgun yanaklı, kıvrık burunlu. 7 yabancı dil bilirdi. 20 yaşında İstanbul\'u fethederek çağ açıp çağ kapattı. 25 sefere bizzat katıldı. 1481\'de vefat etti."},
+{n:8,name:"II. Bayezid",reign:"1481-1512",years:31,era:"yukselis",feat:"Konsolidasyon dönemi. Deniz gücünü artırdı. Cem Sultan meselesi.",events:["Cem Sultan olayı","Venedik-Osmanlı Savaşı","Deniz gücü artışı","1512 – Tahttan feragat"],bio:"3 Aralık 1448\'de Dimetoka\'da doğdu. Uzun boylu, geniş göğüslü. Dindar ve hoşgörülü olduğundan \'Bayezid-i Velî\' denildi. Arapça, Farsça, Çağatay lehçesi ve Uygur alfabesini bilirdi."},
+{n:9,name:"Yavuz Sultan Selim",reign:"1512-1520",years:8,era:"yukselis",feat:"8 yılda toprakları 2.5 kat büyüttü. Halifelik Osmanlı'ya geçti. Mısır, Suriye, Hicaz fethedildi.",events:["1514 – Çaldıran Zaferi","1516 – Mercidâbık Muharebesi","1517 – Ridaniye Muharebesi","Halifeliğin Osmanlı'ya geçişi"],bio:"10 Ekim 1470\'de doğdu. Uzun boylu, geniş omuzlu, kırmızı yüzlü. Sert tabiatlı ve cesur. Hazineyi ağzına kadar doldurdu. Sakalını \'ele vermemek için\' keserdi. 8 yılda 3 kıtada hakimiyet kurdu."},
+{n:10,name:"Kanuni Sultan Süleyman",reign:"1520-1566",years:46,era:"yukselis",feat:"En uzun saltanat (46 yıl). Muhteşem Süleyman. 13 büyük sefer. Osmanlı'nın zirve noktası.",events:["1521 – Belgrad fethi","1522 – Rodos fethi","1526 – Mohaç Zaferi","1529 – I. Viyana Kuşatması","1538 – Preveze Deniz Zaferi","1566 – Zigetvar (vefat)"],bio:"6 Kasım 1494\'te Trabzon\'da doğdu. Uzun boylu, yuvarlak yüzlü, seyrek sakallı. 46 yıl hüküm sürdü. 13 sefere bizzat katıldı. Muhteşem Süleyman olarak bilinir. Şiirlerinde \'Muhibbî\' mahlasını kullandı."},
+{n:11,name:"II. Selim",reign:"1566-1574",years:8,era:"duraklama",feat:"Sokollu Mehmed Paşa dönemi. Kıbrıs fethedildi. İnebahtı yenilgisi.",events:["1570-71 – Kıbrıs fethi","1571 – İnebahtı Deniz Savaşı","Sokollu'nun etkin yönetimi"],bio:"28 Mayıs 1524\'te doğdu. Sarı sakallı, açık tenli. Ordusunun başında sefere çıkmayan ilk padişah. Sokullu Mehmed Paşa döneminin başlangıcı. Edirne\'de av sırasında vefat etti."},
+{n:12,name:"III. Murad",reign:"1574-1595",years:21,era:"duraklama",feat:"Kafkasya ve İran seferleri. Toprak genişlemesi devam etti ancak iç sorunlar arttı.",events:["1578-90 – Osmanlı-Safevi Savaşı","Kafkasya fetihleri","Celâlî isyanlarının başlangıcı"],bio:"1546\'da Manisa\'da doğdu. Uzun boylu, esmer tenli. Babası II. Selim\'in vefatı üzerine tahta çıktı. 19 şehzadesini boğdurarak tahta çıkan padişah olarak bilinir."},
+{n:13,name:"III. Mehmed",reign:"1595-1603",years:8,era:"duraklama",feat:"Eğri Seferi'ne bizzat katıldı. Haçova Zaferi.",events:["1596 – Eğri Kalesi fethi","1596 – Haçova Meydan Muharebesi","Celâlî isyanları yoğunlaştı"],bio:"1590\'da İstanbul\'da doğdu. Ekber ve Erşed yasasını çıkardı. Kafes usulünü başlattı. Sultan Ahmed Camii\'ni (Mavi Cami) yaptırdı. 27 yaşında tifüsten vefat etti."},
+{n:14,name:"I. Ahmed",reign:"1603-1617",years:14,era:"duraklama",feat:"Sultanahmet Camii'ni yaptırdı. Kardeş katli geleneğini kaldırdı (ekber-erşed).",events:["Sultanahmet Camii inşası","Ekber-erşed sistemi","Zitvatorok Antlaşması (1606)"],bio:"1591\'de doğdu. Akli dengesi yerinde olmadığı için \'Deli\' lakabıyla anılır. Sadece 3 ay tahtta kaldı."},
+{n:15,name:"I. Mustafa",reign:"1617-1618 / 1622-1623",years:2,era:"duraklama",feat:"İki kez tahta çıktı. Akıl sağlığı sorunları nedeniyle tahttan indirildi.",events:["İlk tahttan indirilme (1618)","İkinci kez tahta çıkış (1622)","İkinci tahttan indirilme (1623)"],bio:"1604\'te doğdu. \'Genç Osman\' olarak bilinir. Yeniçeri Ocağı\'nı kaldırmayı planladı. 1622\'de Yeniçeri isyanıyla Yedikule\'de boğduruldu. İstanbul\'da öldürülen ilk padişah."},
+{n:16,name:"Genç Osman (II. Osman)",reign:"1618-1622",years:4,era:"duraklama",feat:"Genç yaşta reform girişimi. Yeniçerileri kaldırmak istedi. Katledildi.",events:["Hotin Seferi (1621)","Yeniçeri reformu girişimi","1622 – Yeniçeri isyanı ve şehadet"],bio:"1591\'de doğdu. İkinci kez tahta çıktı. Akli sorunları devam etti. 1 yıl 4 ay daha hüküm sürdü."},
+{n:17,name:"IV. Murad",reign:"1623-1640",years:17,era:"duraklama",feat:"Demir yumrukla düzeni sağladı. Bağdat'ı geri aldı. Son sefere çıkan padişah.",events:["İsyanları bastırdı","Revan Seferi (1635)","1638 – Bağdat'ın geri alınması","Kasr-ı Şirin Antlaşması (1639)"],bio:"1612\'de İstanbul\'da doğdu. Uzun boylu, iri yapılı, heybetli. \'Bağdat Fatihi\' olarak bilinir. İçki ve tütün yasağı koydu. Koçi Bey Risalesi bu dönemde yazıldı. 27 yaşında sirozdan vefat etti."},
+{n:18,name:"İbrahim (Deli İbrahim)",reign:"1640-1648",years:8,era:"duraklama",feat:"Girit Seferi'ni başlattı. Savurganlığı nedeniyle tahttan indirildi.",events:["1645 – Girit Seferi başladı","Saray israfı","1648 – Tahttan indirilme ve idam"],bio:"1615\'te doğdu. Av meraklısıydı. \'Avcı\' lakabıyla anılır. Köprülüler dönemini başlattı. 39 yıl tahtta kaldı."},
+{n:19,name:"IV. Mehmed (Avcı)",reign:"1648-1687",years:39,era:"duraklama",feat:"7 yaşında tahta çıktı. Köprülüler dönemi. II. Viyana Kuşatması felaketi.",events:["1656 – Köprülü Mehmed Paşa","Köprülü reformları","1683 – II. Viyana Kuşatması","1687 – Tahttan indirildi"],bio:"1642\'de doğdu. Köprülü Fazıl Ahmed Paşa döneminde Girit fethedildi. II. Viyana Kuşatması başarısızlıkla sonuçlandı. Edirne Vakası ile tahttan indirildi."},
+{n:20,name:"II. Süleyman",reign:"1687-1691",years:4,era:"duraklama",feat:"Kutsal İttifak savaşları. Belgrad kaybedildi.",events:["Belgrad'ın kaybı","Köprülüzade Fazıl Mustafa Paşa","Slankamen Muharebesi (1691)"],bio:"1664\'te Edirne\'de doğdu. Karlofça Antlaşması\'nı imzaladı. Osmanlı\'nın ilk büyük toprak kaybı bu dönemde yaşandı."},
+{n:21,name:"II. Ahmed",reign:"1691-1695",years:4,era:"duraklama",feat:"Avusturya savaşları devam etti.",events:["Avusturya ile savaş devam","Amcazade Hüseyin Paşa"],bio:"1673\'te doğdu. Prut Zaferi\'ni kazandı. Lale Devri\'ni başlattı. Patrona Halil İsyanı ile tahttan indirildi."},
+{n:22,name:"II. Mustafa",reign:"1695-1703",years:8,era:"duraklama",feat:"Karlofça Antlaşması ile büyük toprak kaybı. Edirne Vakası.",events:["Avusturya seferleri","1697 – Zenta Muharebesi","1699 – Karlofça Antlaşması","1703 – Edirne Vakası"],bio:"1696\'da doğdu. Batı tarzı ilk askeri ıslahatları başlattı. Humbaracı Ahmed Paşa (Comte de Bonneval) reformları bu dönemdedir."},
+{n:23,name:"III. Ahmed",reign:"1703-1730",years:27,era:"gerileme",feat:"Lale Devri. İlk matbaa. Batılılaşma hareketleri. Patrona Halil İsyanı.",events:["1711 – Prut Zaferi","1718 – Pasarofça Antlaşması","Lale Devri (1718-1730)","1727 – İlk matbaa","1730 – Patrona Halil İsyanı"],bio:"1717\'de doğdu. İlk iç borçlanmayı (Esham) başlattı. Koca Ragıp Paşa sadrazamlık yaptı."},
+{n:24,name:"I. Mahmud",reign:"1730-1754",years:24,era:"gerileme",feat:"Askerî reformlara başladı. Humbaracı Ocağı modernize edildi.",events:["Humbaracı Ocağı modernizasyonu","Comte de Bonneval","1736-39 – Avusturya-Rusya Savaşı","Belgrad'ın geri alınması (1739)"],bio:"1725\'te doğdu. Küçük Kaynarca Antlaşması\'nı imzaladı. Kırım\'ın kaybedilmesi bu dönemdedir. Reformcu bir padişahtı."},
+{n:25,name:"III. Osman",reign:"1754-1757",years:3,era:"gerileme",feat:"Kısa ve sessiz saltanat.",events:["Sakin bir dönem","Kısa saltanat"],bio:"1761\'de doğdu. Nizam-ı Cedid ordusunu kurdu. İlk daimi elçilikleri açtı. Kabakçı Mustafa İsyanı ile tahttan indirildi ve öldürüldü."},
+{n:26,name:"III. Mustafa",reign:"1757-1774",years:17,era:"gerileme",feat:"Denizcilik reformları. Mühendishane-i Bahri-i Hümayun. Rusya ile savaş.",events:["Mühendishane-i Bahri-i Hümayun","1768-74 – Osmanlı-Rus Savaşı","Çeşme Baskını (1770)"],bio:"1779\'da doğdu. Alemdar Mustafa Paşa tarafından tahta çıkarıldı. Sened-i İttifak imzalandı. Sadece 1 yıl 2 ay tahtta kaldı."},
+{n:27,name:"I. Abdülhamid",reign:"1774-1789",years:15,era:"gerileme",feat:"Küçük Kaynarca Antlaşması. Kırım kaybedildi.",events:["1774 – Küçük Kaynarca","1783 – Kırım'ın kaybı","İstihkâm Okulu açıldı"],bio:"1785\'te doğdu. Yeniçeri Ocağı\'nı kaldırdı (Vaka-i Hayriye). İlk nüfus sayımı, ilk posta teşkilatı, ilk gazete bu dönemdedir. Batılılaşma reformlarının öncüsü."},
+{n:28,name:"III. Selim",reign:"1789-1807",years:18,era:"gerileme",feat:"Nizam-ı Cedid ordusu. Kapsamlı reform programı. Katledildi.",events:["Nizam-ı Cedid ordusu","Avrupa'ya daimî elçiler","1807 – Kabakçı İsyanı","Tahttan indirilme ve şehadet"],bio:"1823\'te doğdu. Tanzimat Fermanı\'nı ilan etti. İlk dış borçlanma, ilk telgraf, ilk demiryolu bu dönemdedir. Islahat Fermanı da bu dönemde çıktı."},
+{n:29,name:"IV. Mustafa",reign:"1807-1808",years:1,era:"gerileme",feat:"Çok kısa saltanat. Alemdar Mustafa Paşa olayı.",events:["Kabakçı İsyanı sonrası","Alemdar vakası","1808 – Tahttan indirildi"],bio:"1830\'da doğdu. Yurt dışına çıkan ilk padişah. Donanmayı güçlendirdi. Tahttan indirilerek intihar etti (veya intihar süsü verildi)."},
+{n:30,name:"II. Mahmud",reign:"1808-1839",years:31,era:"gerileme",feat:"Yeniçeri Ocağı'nı kaldırdı (Vaka-i Hayriye). Modernleşmenin mimarı.",events:["1826 – Vaka-i Hayriye","Asakir-i Mansure-i Muhammediye","Tıbbiye ve Harbiye açıldı","İlk posta teşkilatı","İlk nüfus sayımı"],bio:"1840\'ta doğdu. Sadece 93 gün tahtta kaldı. Ruhsal sağlık sorunları nedeniyle tahttan indirildi. Piyano çalan tek padişah."},
+{n:31,name:"Abdülmecid",reign:"1839-1861",years:22,era:"gerileme",feat:"Tanzimat Fermanı. Islahat Fermanı. Dolmabahçe Sarayı. Kırım Savaşı.",events:["1839 – Tanzimat Fermanı","1853-56 – Kırım Savaşı","1856 – Islahat Fermanı","Dolmabahçe Sarayı"],bio:"1842\'de doğdu. 33 yıl hüküm sürdü. İstibdat dönemi. Hicaz Demiryolu, Hamidiye Alayları, ilk yetimhane. Pan-İslamizm politikası izledi."},
+{n:32,name:"Abdülaziz",reign:"1861-1876",years:15,era:"gerileme",feat:"Donanmayı dünyanın 3. büyüğü yaptı. Avrupa gezisi yapan ilk padişah.",events:["Dünyanın 3. büyük donanması","Avrupa seyahati (1867)","1876 – Tahttan indirildi"],bio:"1844\'te doğdu. II. Meşrutiyet\'in ilanından sonra tahta çıktı. Sembolik bir padişahtı. I. Dünya Savaşı bu dönemde başladı."},
+{n:33,name:"V. Murad",reign:"1876",years:0.25,era:"gerileme",feat:"93 gün tahtta kaldı. Osmanlı tarihinin en kısa saltanatı.",events:["30 Mayıs 1876 – Tahta çıkış","31 Ağustos 1876 – Tahttan indirilme"]},
+{n:34,name:"II. Abdülhamid",reign:"1876-1909",years:33,era:"gerileme",feat:"33 yıl. Denge politikası. Hicaz Demiryolu. Eğitim seferberliği. Hamidiye Alayları.",events:["1876 – Kanun-i Esasi","1877-78 – 93 Harbi","Hicaz Demiryolu","Hamidiye Alayları","Eğitim seferberliği","1908 – II. Meşrutiyet","1909 – Tahttan indirildi"],bio:"1861\'de doğdu. Son Osmanlı padişahı. Kurtuluş Savaşı döneminde İngilizlerle işbirliği yaptığı gerekçesiyle eleştirildi. 1922\'de İngiliz gemisiyle İstanbul\'dan ayrıldı."},
+{n:35,name:"V. Mehmed Reşad",reign:"1909-1918",years:9,era:"gerileme",feat:"İttihat ve Terakki dönemi. Trablusgarp, Balkan Savaşları ve I. Dünya Savaşı.",events:["1911 – Trablusgarp Savaşı","1912-13 – Balkan Savaşları","1914-18 – I. Dünya Savaşı","1915 – Çanakkale Zaferi"],bio:"Osmanlı hanedanının son halifesi. Saltanat kaldırıldıktan sonra halife olarak kaldı. 3 Mart 1924\'te halifelik kaldırılınca sürgüne gönderildi."},
+{n:36,name:"VI. Mehmed Vahdeddin",reign:"1918-1922",years:4,era:"gerileme",feat:"Son padişah. Mondros, Sevr. Saltanat kaldırıldı. İstanbul'dan ayrıldı.",events:["1918 – Mondros Mütarekesi","1920 – Sevr Antlaşması","1922 – Saltanatın kaldırılması","17 Kasım 1922 – İstanbul'dan ayrılış"],bio:"Son Osmanlı veliahtı ve şehzadesi. Hanedan sürgünüyle birlikte yurt dışına çıktı."}
 ];
-
-let currentSlide=0;const totalSlides=7;
-let audioPlaying=false;let audioCtx=null;
-
-function renderSlideNav(){
-const nav=document.getElementById('slide-nav');nav.innerHTML='';
-for(let i=0;i<totalSlides;i++){
-const d=document.createElement('div');d.className='dot'+(i===currentSlide?' active':'');
-d.onclick=()=>goSlide(i);nav.appendChild(d);
-}}
-
-function goSlide(idx){
-document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
-document.querySelectorAll('.slide')[idx].classList.add('active');
-currentSlide=idx;renderSlideNav();
-if(idx===1)renderLongestReign();
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.target).classList.add('active');
+  });
+});
+function renderGrid(containerId,era){
+  const container=document.getElementById(containerId);
+  const filtered=era==='all'?SULTANS:SULTANS.filter(s=>s.era===era);
+  container.innerHTML=filtered.map(s=>`
+    <div class="sultan-card era-${s.era}" onclick="openModal(${s.n-1})">
+      <div class="num">${s.n}. PADİŞAH</div>
+      <div class="name">${s.name}</div>
+      <div class="reign-info"><span class="reign-badge">${s.reign}</span><span class="reign-badge">${s.years>=1?s.years+' yıl':'93 gün'}</span></div>
+      <div class="feat">${s.feat}</div>
+      <ul class="events">${s.events.slice(0,3).map(e=>'<li>'+e+'</li>').join('')}</ul>
+    </div>`).join('');
 }
-function nextSlide(){goSlide(Math.min(currentSlide+1,totalSlides-1))}
-function prevSlide(){goSlide(Math.max(currentSlide-1,0))}
-
-function renderSultanGrid(era,containerId){
-const c=document.getElementById(containerId);if(!c)return;
-c.innerHTML=SULTANS.filter(s=>s.era===era).map(s=>`
-<div class="sultan-card" onclick="openModal(${s.n-1})">
-<div class="num">${s.n}. PADİŞAH</div>
-<div class="name">${s.name}</div>
-<div class="reign">${s.reign} (${s.years} yıl)</div>
-<div class="feat">${s.feat}</div>
-</div>`).join('');
-}
-
-function renderLongestReign(){
-const top10=[
-{name:"Kanuni",years:46},{name:"IV. Mehmed",years:39},{name:"Fatih",years:30},
-{name:"Orhan Gazi",years:36},{name:"II. Abdülhamid",years:33},{name:"II. Bayezid",years:31},
-{name:"II. Mahmud",years:31},{name:"II. Murad",years:30},{name:"I. Murad",years:27},
-{name:"III. Ahmed",years:27}
-].sort((a,b)=>b.years-a.years);
-const c=document.getElementById('longest-reign');
-c.innerHTML=top10.map(s=>{
-const pct=(s.years/46)*100;
-return `<div class="bar-row"><div class="bar-name">${s.name}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div><span class="bar-val">${s.years} yıl</span></div></div>`;
+renderGrid('allGrid','all');
+renderGrid('kurulusGrid','kurulus');
+renderGrid('yukselisGrid','yukselis');
+renderGrid('duraklamaGrid','duraklama');
+renderGrid('gerilemeGrid','gerileme');
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid('allGrid',btn.dataset.era);
+  });
+});
+const top10=[{name:"Kanuni Sultan Süleyman",years:46},{name:"IV. Mehmed",years:39},{name:"Orhan Gazi",years:36},{name:"II. Abdülhamid",years:33},{name:"II. Mahmud",years:31},{name:"II. Bayezid",years:31},{name:"Fatih Sultan Mehmed",years:30},{name:"II. Murad",years:30},{name:"Osman Gazi",years:27},{name:"I. Murad",years:27}];
+const colors=['#d4a017','#f59e0b','#eab308','#84cc16','#22c55e','#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6'];
+document.getElementById('barChart').innerHTML=top10.map((s,i)=>{
+  const pct=(s.years/46)*100;
+  return `<div class="bar-row"><div class="bar-name">${s.name}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[i]}"></div><span class="bar-val">${s.years} yıl</span></div></div>`;
 }).join('');
-}
-
 function openModal(idx){
-const s=SULTANS[idx];
-document.getElementById('modal-name').textContent=`${s.n}. ${s.name}`;
-document.getElementById('modal-reign').textContent=`${s.reign} — ${s.years} yıl saltanat`;
-document.getElementById('modal-events').innerHTML=s.events.map(e=>`<li>${e}</li>`).join('');
-document.getElementById('modal-bg').classList.add('show');
+  const s=SULTANS[idx];
+  document.getElementById('modalName').textContent=`${s.n}. ${s.name}`;
+  document.getElementById('modalReign').textContent=`${s.reign} — ${s.years>=1?s.years+' yıl':'93 gün'} saltanat`;
+  document.getElementById('modalFeat').textContent=s.feat;
+  document.getElementById('modalBio').textContent=s.bio||'';
+  document.getElementById('modalEvents').innerHTML=s.events.map(e=>`<li>${e}</li>`).join('');
+  document.getElementById('modalBg').classList.add('show');
 }
-function closeModal(){document.getElementById('modal-bg').classList.remove('show')}
-
-function toggleAudio(){
-if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-audioPlaying=!audioPlaying;
-document.getElementById('audio-btn').textContent=audioPlaying?'🔊':'🔇';
-if(audioPlaying){playBGM()}
-}
-function playBGM(){
-if(!audioPlaying||!audioCtx)return;
-const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-o.connect(g);g.connect(audioCtx.destination);
-o.type='sine';o.frequency.setValueAtTime(220,audioCtx.currentTime);
-g.gain.setValueAtTime(.015,audioCtx.currentTime);
-g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+3);
-o.start();o.stop(audioCtx.currentTime+3);
-setTimeout(playBGM,3200);
-}
-
-// Keyboard + Swipe
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')nextSlide();if(e.key==='ArrowLeft')prevSlide()});
-let sx=0;
-document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
-document.addEventListener('touchend',e=>{const dx=sx-e.changedTouches[0].clientX;if(dx>50)nextSlide();if(dx<-50)prevSlide()},{passive:true});
-
-// Init
-renderSlideNav();
-renderSultanGrid('kurulus','grid-kurulus');
-renderSultanGrid('yukselis','grid-yukselis');
-renderSultanGrid('duraklama','grid-duraklama');
-renderSultanGrid('gerileme','grid-gerileme');
+function closeModal(){document.getElementById('modalBg').classList.remove('show')}
+window.openModal=openModal;window.closeModal=closeModal;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
-<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+<script src="hs-nav.js?v=11"></script>
 </body>
 </html>

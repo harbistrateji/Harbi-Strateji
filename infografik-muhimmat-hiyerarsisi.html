@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mühimmat Hiyerarşisi — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--card:#1f2937;--accent:#f59e0b;--white:#f0f0f0;--gray:#9ca3af;--border:rgba(255,255,255,.08)}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;padding-top:60px}
+.hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(17,24,39,.9),var(--bg));border-bottom:1px solid var(--border)}
+.hero-icon{font-size:3rem;margin-bottom:12px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.hero p{color:var(--gray);font-size:1rem;max-width:700px;margin:0 auto}
+.nav-tabs{display:flex;justify-content:center;gap:8px;padding:16px 20px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:60px;z-index:50}
+.nav-tab{padding:8px 18px;border-radius:6px;font-size:.85rem;font-weight:600;font-family:'Chakra Petch',sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--gray);transition:all .25s}
+.nav-tab:hover{border-color:var(--accent);color:var(--white)}
+.nav-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.content{max-width:1200px;margin:0 auto;padding:40px 20px}
+.section{display:none;animation:fadeIn .4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:24px 0}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:all .3s}
+.info-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.info-card h3{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;color:var(--accent);margin-bottom:8px}
+.info-card p{color:var(--gray);font-size:.9rem;line-height:1.6}
+.info-card .stat{font-size:1.8rem;font-weight:700;color:var(--white);font-family:'IBM Plex Mono',monospace}
+.info-card .label{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.timeline{position:relative;padding-left:30px;margin:24px 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),transparent)}
+.tl-item{position:relative;margin-bottom:24px;padding-left:20px}
+.tl-item::before{content:'';position:absolute;left:-26px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.tl-item h4{font-family:'Chakra Petch',sans-serif;color:var(--white);font-size:1rem;margin-bottom:4px}
+.tl-item p{color:var(--gray);font-size:.85rem;line-height:1.5}
+.spectrum-bar{display:flex;align-items:center;gap:0;margin:24px 0;border-radius:8px;overflow:hidden}
+.spectrum-seg{flex:1;padding:16px 8px;text-align:center;font-size:.75rem;font-weight:600;font-family:'Chakra Petch',sans-serif;transition:all .3s;cursor:pointer}
+.spectrum-seg:hover{filter:brightness(1.3);transform:scaleY(1.1)}
+.quote-box{background:var(--card);border-left:4px solid var(--accent);padding:20px 24px;margin:20px 0;border-radius:0 8px 8px 0}
+.quote-box p{font-style:italic;color:var(--gray);line-height:1.6}
+.quote-box cite{display:block;margin-top:8px;font-size:.8rem;color:var(--accent);font-style:normal}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:1.4rem;color:var(--white);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:.7rem;font-weight:700;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--gray);margin:2px}
+.flow-diagram{display:flex;align-items:center;justify-content:center;gap:0;margin:30px 0;flex-wrap:wrap}
+.flow-step{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;text-align:center;min-width:140px;transition:all .3s}
+.flow-step:hover{border-color:var(--accent);transform:scale(1.05)}
+.flow-step h4{font-family:'Chakra Petch',sans-serif;font-size:.9rem;color:var(--accent)}
+.flow-step p{font-size:.75rem;color:var(--gray);margin-top:4px}
+.flow-arrow{font-size:1.5rem;color:var(--accent);margin:0 8px}
+.source-ref{margin-top:40px;padding:16px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.source-ref p{font-size:.8rem;color:var(--gray)}
+@media(max-width:768px){.nav-tabs{gap:4px;padding:10px}.nav-tab{padding:6px 12px;font-size:.75rem}.info-grid{grid-template-columns:1fr}.flow-diagram{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<div class="hero">
+<div class="hero-icon">💣</div>
+<h1>Mühimmat Hiyerarşisi</h1>
+<p>Stratejik caydırıcılıktan otonom sürülere — modern savaşın mühimmat piramidi ve maliyet-etkinlik analizi.</p>
+</div>
+<div class="nav-tabs">
+<button class="nav-tab active" data-target="sec-genel">Hiyerarşi</button>
+<button class="nav-tab" data-target="sec-hassas">Hassas Güdümlü</button>
+<button class="nav-tab" data-target="sec-hipersonik">Hipersonik</button>
+<button class="nav-tab" data-target="sec-otonom">Otonom Mühimmat</button>
+<button class="nav-tab" data-target="sec-maliyet">Maliyet Analizi</button>
+</div>
+<div class="content">
+<div class="section active" id="sec-genel">
+<h2 class="section-title">Mühimmat Hiyerarşisi — Stratejik Sınıflandırma</h2>
+<div class="timeline">
+<div class="tl-item"><h4>Katman 1: Stratejik Caydırıcılık</h4><p>Nükleer başlıklar, ICBM, SLBM — varoluşsal tehdit seviyesi.</p></div>
+<div class="tl-item"><h4>Katman 2: Hipersonik Vuruş</h4><p>Mach 5+ hızda manevra kabiliyetli araçlar — mevcut savunmaları aşar.</p></div>
+<div class="tl-item"><h4>Katman 3: Uzun Menzilli Hassas</h4><p>Seyir füzeleri, balistik füzeler — 500+ km menzil, metre altı doğruluk.</p></div>
+<div class="tl-item"><h4>Katman 4: Taktik Hassas</h4><p>Güdümlü bombalar, kısa menzilli füzeler — 50-500 km.</p></div>
+<div class="tl-item"><h4>Katman 5: Otonom / Sürü</h4><p>Kamikaze dronlar, sürü mühimmatı — düşük maliyet, yüksek hacim.</p></div>
+<div class="tl-item"><h4>Katman 6: Yönlendirilmiş Enerji</h4><p>Lazer, HPM, Railgun — sınırsız "mühimmat", düşük atış maliyeti.</p></div>
+</div>
+</div>
+
+<div class="section" id="sec-hassas">
+<h2 class="section-title">Hassas Güdümlü Mühimmat (PGM)</h2>
+<div class="info-grid">
+<div class="info-card"><h3>GPS/INS Güdümlü</h3><p>JDAM, SDB — ucuz ve güvenilir, ancak GPS karıştırmaya açık.</p><div class="stat">3m CEP</div><div class="label">Doğruluk</div></div>
+<div class="info-card"><h3>Lazer Güdümlü</h3><p>Paveway, Hellfire — hareketli hedeflere karşı etkili, hava koşullarına duyarlı.</p><div class="stat">1m CEP</div><div class="label">Doğruluk</div></div>
+<div class="info-card"><h3>Görüntü Eşleştirme</h3><p>DSMAC, sahne eşleştirme — GPS'e bağımlı değil, otonom terminal güdüm.</p></div>
+<div class="info-card"><h3>Radar Güdümlü</h3><p>Aktif/yarı-aktif radar — her hava koşulunda, gece/gündüz etkili.</p></div>
+</div>
+</div>
+
+<div class="section" id="sec-hipersonik">
+<h2 class="section-title">Hipersonik Silahlar</h2>
+<div class="info-grid">
+<div class="info-card"><h3>Hipersonik Kayma Aracı (HGV)</h3><p>Balistik füze ile yükseltilip atmosferde kayarak manevra yapar.</p><div class="stat">Mach 10-20</div><div class="label">Hız</div></div>
+<div class="info-card"><h3>Hipersonik Seyir Füzesi (HCM)</h3><p>Scramjet motorlu, atmosfer içi sürekli uçuş.</p><div class="stat">Mach 5-8</div><div class="label">Hız</div></div>
+<div class="info-card"><h3>Türkiye: Tayfun</h3><p>Balistik füze, 1000+ km menzil — Türkiye'nin stratejik caydırıcılığı.</p></div>
+<div class="info-card"><h3>Savunma Zorluğu</h3><p>Mevcut hava savunma sistemleri hipersonik tehditlere karşı yetersiz — yeni konseptler gerekli.</p></div>
+</div>
+</div>
+
+<div class="section" id="sec-otonom">
+<h2 class="section-title">Otonom Mühimmat</h2>
+<div class="info-grid">
+<div class="info-card"><h3>Kamikaze Dronlar</h3><p>Tek kullanımlık, hedef üzerinde bekleme kabiliyeti — Bayraktar KARGU, Switchblade.</p><div class="stat">$6.000-50.000</div><div class="label">Birim Maliyet</div></div>
+<div class="info-card"><h3>Sürü Mühimmatı</h3><p>Koordineli toplu saldırı — savunma doygunluğu stratejisi.</p></div>
+<div class="info-card"><h3>Akıllı Mayınlar</h3><p>Hedef tanıma kabiliyetli, uzaktan aktive edilebilir deniz/kara mayınları.</p></div>
+<div class="info-card"><h3>Otonom Torpido</h3><p>YZ güdümlü denizaltı avcı torpidoları — otonom arama ve imha.</p></div>
+</div>
+</div>
+
+<div class="section" id="sec-maliyet">
+<h2 class="section-title">Maliyet-Etkinlik Analizi</h2>
+<div class="info-grid">
+<div class="info-card"><h3>Maliyet Asimetrisi</h3><p>$50.000 drone vs $3M Patriot füzesi — savunma ekonomisi sürdürülemez.</p><div class="stat">60:1</div><div class="label">Saldırı/Savunma Maliyet Oranı</div></div>
+<div class="info-card"><h3>Üretim Hızı</h3><p>3D baskı ve modüler üretim ile mühimmat üretim hızı 10x artırılabilir.</p></div>
+<div class="info-card"><h3>Lojistik Yük</h3><p>Ağır mühimmatın taşınması vs hafif dron sürülerinin konuşlandırılması.</p></div>
+<div class="info-card"><h3>Stok Derinliği</h3><p>Ukrayna Savaşı dersi: Yüksek yoğunluklu çatışmada mühimmat stokları hızla tükenir.</p></div>
+</div>
+</div>
+</div>
+<div class="source-ref" style="max-width:1200px;margin:20px auto;padding:16px 20px">
+<p><strong>Kaynak:</strong> Selahaddin Koyuncu, "Görünmez Savaş Alanı: Elektromanyetik Spektrumun ve Algoritmik Hakimiyetin Modern Savaştaki Belirleyici Rolü," Harb-i Strateji Külliyatı, Nisan 2026.</p>
+</div>
+<script>
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.target).classList.add('active');
+  });
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spektrum Savaşı — Elektronik Harp | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:#040810;color:#e2e8f0;overflow-x:hidden;padding-top:100px}
+:root{--red:#c41e3a;--cyan:#00e0ff;--gold:#c9a24b;--bg:#040810;--card:#0d1520;--accent:#F59E0B}
+.container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+/* HERO */
+.hero{text-align:center;padding:4rem 1.5rem;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,#F59E0B11 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;padding:6px 16px;border:1px solid #F59E0B55;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#F59E0B;letter-spacing:0.15em;margin-bottom:1.5rem}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:0.05em}
+.hero p{font-size:1.1rem;color:rgba(255,255,255,0.6);max-width:700px;margin:0 auto;line-height:1.7}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:3rem 0}
+.stat-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:#F59E0B}
+.stat-val{font-family:'IBM Plex Mono',monospace;font-size:2rem;font-weight:700;color:#F59E0B}
+.stat-lbl{font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.5rem}
+/* SECTIONS */
+.section{padding:4rem 0;border-top:1px solid rgba(255,255,255,0.05)}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:0.5rem}
+.section-sub{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:2rem}
+/* CARDS GRID */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.info-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;transition:all 0.3s ease;cursor:default}
+.info-card:hover{border-color:#F59E0B44;transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.info-card-icon{font-size:2rem;margin-bottom:1rem}
+.info-card h3{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:0.75rem}
+.info-card p{font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.6}
+.info-card ul{list-style:none;padding:0;margin-top:0.75rem}
+.info-card ul li{font-size:0.8rem;color:rgba(255,255,255,0.5);padding:4px 0;padding-left:1rem;position:relative}
+.info-card ul li::before{content:'›';position:absolute;left:0;color:#F59E0B}
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#F59E0B,#F59E0B33)}
+.tl-item{position:relative;margin-bottom:2rem;padding-left:2rem}
+.tl-item::before{content:'';position:absolute;left:-1.55rem;top:6px;width:12px;height:12px;border-radius:50%;background:#F59E0B;border:2px solid var(--bg)}
+.tl-date{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#F59E0B;margin-bottom:0.3rem}
+.tl-title{font-family:'Chakra Petch',sans-serif;font-size:1rem;color:#fff;margin-bottom:0.3rem}
+.tl-desc{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.5}
+/* TABS */
+.tabs{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.tab-btn{padding:8px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;background:transparent;color:rgba(255,255,255,0.6);font-family:'Chakra Petch',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s}
+.tab-btn.active,.tab-btn:hover{background:#F59E0B22;border-color:#F59E0B;color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;margin:1.5rem 0}
+.comp-table th,.comp-table td{padding:12px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.85rem}
+.comp-table th{font-family:'Chakra Petch',sans-serif;color:#F59E0B;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em}
+.comp-table td{color:rgba(255,255,255,0.7)}
+.comp-table tr:hover td{background:rgba(255,255,255,0.02)}
+/* FOOTER */
+.page-footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid rgba(255,255,255,0.05);margin-top:4rem}
+.page-footer p{font-size:0.75rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace}
+@media(max-width:768px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .cards-grid{grid-template-columns:1fr}
+  body{padding-top:80px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <span class="hero-badge">ELEKTRONİK HARP</span>
+  <h1>SPEKTRUM SAVAŞI</h1>
+  <p>Elektromanyetik spektrumun askeri kullanımı: Elektronik harp, sinyal istihbaratı, frekans yönetimi ve spektrum hakimiyeti stratejileri</p>
+</section>
+<div class="container">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">3 Hz</div><div class="stat-lbl">ELF (En Düşük)</div></div>
+    <div class="stat-card"><div class="stat-val">300 GHz</div><div class="stat-lbl">EHF (En Yüksek)</div></div>
+    <div class="stat-card"><div class="stat-val">%80</div><div class="stat-lbl">Askeri Bağımlılık</div></div>
+    <div class="stat-card"><div class="stat-val">5</div><div class="stat-lbl">Savaş Boyutu</div></div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Elektronik Harp Boyutları</h2>
+    <p class="section-sub">EA (Taarruz) / EP (Koruma) / ES (Destek)</p>
+    <div class="cards-grid">
+      <div class="info-card" style="--accent:#EF4444"><div class="info-card-icon">⚡</div><h3>Elektronik Taarruz (EA)</h3><p>Düşman sistemlerini karıştırma, aldatma ve imha</p>
+        <ul><li>Radar karıştırma (jamming)</li><li>İletişim bozma</li><li>GPS aldatma (spoofing)</li><li>Yönlendirilmiş enerji silahları</li><li>KORAL (Türkiye)</li></ul></div>
+      <div class="info-card" style="--accent:#22C55E"><div class="info-card-icon">🛡️</div><h3>Elektronik Koruma (EP)</h3><p>Kendi sistemlerini düşman EH'ye karşı koruma</p>
+        <ul><li>Frekans atlamalı yayın</li><li>Yayılmış spektrum</li><li>Düşük olasılıklı kesme (LPI)</li><li>Uyarlanabilir anten</li><li>ASELSAN MILKAR</li></ul></div>
+      <div class="info-card" style="--accent:#3B82F6"><div class="info-card-icon">📡</div><h3>Elektronik Destek (ES)</h3><p>Düşman emisyonlarını tespit, tanımlama ve yönlendirme</p>
+        <ul><li>Sinyal istihbaratı (SIGINT)</li><li>Radar uyarı alıcıları (RWR)</li><li>Emisyon haritalama</li><li>Tehdit kütüphanesi</li><li>ASELSAN ARES-2</li></ul></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Frekans Bantları ve Askeri Kullanım</h2>
+    <table class="comp-table">
+      <thead><tr><th>Bant</th><th>Frekans</th><th>Askeri Kullanım</th><th>Platform</th></tr></thead>
+      <tbody>
+        <tr><td><strong>HF</strong></td><td>3-30 MHz</td><td>Uzun mesafe iletişim</td><td>Denizaltı, uzak karakol</td></tr>
+        <tr><td><strong>VHF</strong></td><td>30-300 MHz</td><td>Taktik iletişim</td><td>Piyade telsizi</td></tr>
+        <tr><td><strong>UHF</strong></td><td>300 MHz-3 GHz</td><td>Uydu iletişim, radar</td><td>Uçak, gemi</td></tr>
+        <tr><td><strong>S-Band</strong></td><td>2-4 GHz</td><td>Hava savunma radarı</td><td>S-400, Patriot</td></tr>
+        <tr><td><strong>X-Band</strong></td><td>8-12 GHz</td><td>Ateş kontrol radarı</td><td>Savaş uçağı, gemi</td></tr>
+        <tr><td><strong>Ku/Ka</strong></td><td>12-40 GHz</td><td>SATCOM, hassas güdüm</td><td>İHA, füze</td></tr>
+        <tr><td><strong>mmWave</strong></td><td>30-300 GHz</td><td>5G askeri, kısa mesafe</td><td>Şehir içi harp</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Türk Elektronik Harp Kapasitesi</h2>
+    <p class="section-sub">ASELSAN, HAVELSAN, STM Ekosistemi</p>
+    <div class="cards-grid">
+      <div class="info-card"><div class="info-card-icon">🇹🇷</div><h3>KORAL</h3><p>Radar elektronik harp sistemi. Düşman radarlarını karıştırma ve aldatma kapasitesi.</p>
+        <ul><li>S-400 radarlarını karıştırabilir</li><li>Mobil platform (araç üstü)</li><li>Çoklu hedef kapasitesi</li></ul></div>
+      <div class="info-card"><div class="info-card-icon">🇹🇷</div><h3>REDET</h3><p>Radar elektronik destek ve tehdit tespit sistemi</p>
+        <ul><li>Geniş bant tarama</li><li>Otomatik tehdit sınıflandırma</li><li>Emisyon yönlendirme</li></ul></div>
+      <div class="info-card"><div class="info-card-icon">🇹🇷</div><h3>MILKAR</h3><p>Askeri haberleşme karıştırma sistemi</p>
+        <ul><li>VHF/UHF karıştırma</li><li>Seçici/barraj karıştırma</li><li>Frekans takip</li></ul></div>
+      <div class="info-card"><div class="info-card-icon">🇹🇷</div><h3>HAVA SOJ</h3><p>Hava platformu tabanlı elektronik taarruz</p>
+        <ul><li>Pod tabanlı (uçak altı)</li><li>Standoff karıştırma</li><li>SEAD/DEAD desteği</li></ul></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Geleceğin Spektrum Savaşı</h2>
+    <p class="section-sub">2030+ Trendler</p>
+    <div class="cards-grid">
+      <div class="info-card"><div class="info-card-icon">🧠</div><h3>Bilişsel EH</h3><p>YZ destekli, gerçek zamanlı öğrenen ve adapte olan elektronik harp sistemleri</p></div>
+      <div class="info-card"><div class="info-card-icon">🔮</div><h3>Kuantum Sensörler</h3><p>Kuantum manyetometreler ile stealth uçak tespiti</p></div>
+      <div class="info-card"><div class="info-card-icon">🌐</div><h3>Dağıtık EH</h3><p>Sürü İHA'lar ile koordineli spektrum baskılama</p></div>
+    </div>
+  </section>
+</div>
+
+<footer class="page-footer">
+  <p>© 2026 HARB-İ STRATEJİ // ELEKTRONİK HARP & SPEKTRUM ANALİZİ</p>
+</footer>
+<script>
+// Tab functionality
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const group = btn.closest('.section');
+    group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    group.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const target = group.querySelector('#' + btn.dataset.tab);
+    if(target) target.classList.add('active');
+  });
+});
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; });
+}, {threshold: 0.1});
+document.querySelectorAll('.info-card, .stat-card, .tl-item').forEach(el => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'all 0.6s ease';
+  observer.observe(el);
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

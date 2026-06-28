@@ -80,13 +80,20 @@ const NAV_LINKS = [
       {t:'Jeostrateji',h:'medeniyet-dinamikleri.html#jeostrateji'},
       {t:'Jeoekonomi',h:'medeniyet-dinamikleri.html#jeoekonomi'},
       {t:'Enerji',h:'medeniyet-dinamikleri.html#enerji'},
-      {t:'Psikoloji',h:'medeniyet-dinamikleri.html#psikoloji'}
+      {t:'Psikoloji',h:'medeniyet-dinamikleri.html#psikoloji'},
+      {t:'Spor',h:'medeniyet-dinamikleri.html#spor'},
+      {t:'Yaşam',h:'medeniyet-dinamikleri.html#yasam'},
+      {t:'Uzay',h:'medeniyet-dinamikleri.html#uzay'},
+      {t:'Yapay Dünya',h:'medeniyet-dinamikleri.html#yapay-dunya'},
+      {t:'Yapay Zekâ',h:'medeniyet-dinamikleri.html#yapay-zeka'}
     ]},
     {lbl:'Türk & İslam Tarihi', links:[
-      {t:'Türk Savaş Zekâsı',h:'oza-turk-savas-zekasi.html'},
-      {t:'16 Türk Devleti',h:'oza-16-turk-devleti.html'},
       {t:'Bilim Arenası',h:'bilim-arenasi-tam.html'},
-      {t:'Ekonomi Tarihi',h:'md-turklerde-ekonomi.html'}
+      {t:'Ekonomi Tarihi',h:'md-turklerde-ekonomi.html'},
+      {t:'Toplum Tarihi',h:'md-turklerde-toplum.html'},
+      {t:'Sanat Tarihi',h:'md-turklerde-sanat.html'},
+      {t:'Spor Tarihi',h:'md-turklerde-spor.html'},
+      {t:'Eğitim Tarihi',h:'md-turklerde-egitim.html'}
     ]}
   ]},
   { label:'Veri', href:'veri-tabani.html', sub:[

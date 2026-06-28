@@ -36,6 +36,61 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .tag{background:rgba(0,224,255,.08);border:1px solid rgba(0,224,255,.25);color:var(--pri);padding:3px 10px;border-radius:4px;font-size:.7rem;font-family:'IBM Plex Mono',monospace}
 .source{text-align:center;padding:40px 20px;opacity:.5;font-size:.8rem;border-top:1px solid var(--border)}
 @media(max-width:600px){.scene{flex-direction:column;gap:8px}.stats{gap:20px}.nav-tabs{gap:4px;padding:10px}.nav-tab{padding:6px 10px;font-size:.7rem}}
+
+/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  body { font-size: 14px !important; }
+  .container, .main, .wrap, .content, .page-content {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
+  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
+  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
+  table { font-size: 11px !important; }
+  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
+  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .container, .main, .wrap { padding: 8px !important; }
+  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
+  .nav, .navbar, .top-bar, .header { 
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+}
+/* Prevent horizontal overflow */
+html { overflow-x: hidden !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; }
+img, video, iframe, canvas, svg, table { max-width: 100% !important; }
+pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
+
+
+/* === SCROLL REVEAL ANİMASYONLARI === */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.19,1,.22,1),transform .8s cubic-bezier(.19,1,.22,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .8s,transform .8s}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .8s,transform .8s}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.9);transition:opacity .6s,transform .6s}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+/* Stagger children */
+.stagger-children > *{opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s}
+.stagger-children.visible > *{opacity:1;transform:translateY(0)}
+.stagger-children.visible > *:nth-child(1){transition-delay:.05s}
+.stagger-children.visible > *:nth-child(2){transition-delay:.1s}
+.stagger-children.visible > *:nth-child(3){transition-delay:.15s}
+.stagger-children.visible > *:nth-child(4){transition-delay:.2s}
+.stagger-children.visible > *:nth-child(5){transition-delay:.25s}
+.stagger-children.visible > *:nth-child(6){transition-delay:.3s}
+/* Counter animation */
+[data-count]{font-variant-numeric:tabular-nums}
+/* Glow pulse for important elements */
+.glow-pulse{animation:glowPulse 3s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
+
 </style>
 </head>
 <body>
@@ -74,7 +129,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <div class="scene"><div class="scene-num">10</div><div class="scene-content"><h3>Bilissel Harp: Zihinlere Saldiri</h3><p>Epistemik cokertme: Yuzlerce celiskili bilgi yayarak toplumun gercegi ayirt etme kapasitesini felc etmek. Amigdala kacirmasi, noro-propaganda, dopamin donguleri. Trol artik askerden yikici.</p><div class="tags"><span class="tag">Epistemik</span><span class="tag">Amigdala</span><span class="tag">Deepfake</span><span class="tag">Karar Felci</span></div></div></div>
 <div class="scene"><div class="scene-num">11</div><div class="scene-content"><h3>Bilgi Entropisi ve Mnem-Suikastcilar</h3><p>20 farkli kriz, 10 farkli yalan senaryo ureterek dogruyu ayirt etme yetisini yok etme. Liderlerin zihinlerine yapay anilar ekme. Operasyon Pasli Cark: 50 yillik kulturel curutme.</p><div class="tags"><span class="tag">Entropi</span><span class="tag">Mnem</span><span class="tag">Pasli Cark</span><span class="tag">Kulturel Silah</span></div></div></div>
 <div class="scene"><div class="scene-num">12</div><div class="scene-content"><h3>Teknoloji Devleri ve Orbital AI</h3><p>SpaceX+xAI: 1.25 trilyon dolarlik mega-sirket. Starshield askeri uydu agi. Grok AI Pentagon entegrasyonu. Tesla Optimus 10:1 robot-insan orani. Savasin kaderi devletlerden sirketlere geciyor.</p><div class="tags"><span class="tag">SpaceX</span><span class="tag">xAI</span><span class="tag">Starshield</span><span class="tag">Orbital AI</span></div></div></div>
-<div class="scene"><div class="scene-num">13</div><div class="scene-content"><h3>Amazon HSA ve Bulut Savasi</h3><p>AWS edge computing ile OODA analiz suresini %60 optimize etme. Project Kuiper + TeraWave: 8.644 uydu, 6 TB/s askeri veri aktarimi. Gigawatt orbital data merkezleri.</p><div class="tags"><span class="tag">AWS</span><span class="tag">Kuiper</span><span class="tag">Edge</span><span class="tag">Bulut Savas</span></div></div></div>
+<div class="scene"><div class="scene-num">13</div><div class="scene-content"><h3>Amazon HSA ve Bulut Savasi</h3><p>AWS edge computing ile OODA analiz suresini %60 optimize etme. Project Kuiper + TeraDalga: 8.644 uydu, 6 TB/s askeri veri aktarimi. Gigawatt orbital data merkezleri.</p><div class="tags"><span class="tag">AWS</span><span class="tag">Kuiper</span><span class="tag">Edge</span><span class="tag">Bulut Savas</span></div></div></div>
 <div class="scene"><div class="scene-num">14</div><div class="scene-content"><h3>Asimetrik Olcek: Turkiye Doktrini</h3><p>"Cin Hizi, Turk Zekasi" - Binlerce akilli, sarf edilebilir, dusuk maliyetli IHA/IKA. Mass production ekosistemi. Donanimi basitlestir, yazilimi zirveye tasi.</p><div class="tags"><span class="tag">Asimetrik</span><span class="tag">Mass</span><span class="tag">Attritable</span><span class="tag">Turk Doktrini</span></div></div></div>
 <div class="scene"><div class="scene-num">15</div><div class="scene-content"><h3>Milli Dijital Omurga ve Dagitik Zeka</h3><p>Sistemler Sistemi: Dronlar, gemiler, muhimmatlar tek agdan konusmali. Komuta kopsa bile edge computing ile organize olabilme. Otonom karar yetenegi.</p><div class="tags"><span class="tag">Dagitik</span><span class="tag">Edge</span><span class="tag">Sistemler Sistemi</span><span class="tag">Otonom</span></div></div></div>
 <div class="scene"><div class="scene-num">16</div><div class="scene-content"><h3>Endustriyel Demokrasi: Lego Modeli</h3><p>ASELSAN/TUSAS iskelet, Anadolu KOBI'leri parca uretimi. Acik mimari (API) standartlari. Tekellesmyi kiran, surdurulebilir uretim saglayan model.</p><div class="tags"><span class="tag">KOBI</span><span class="tag">API</span><span class="tag">Lego</span><span class="tag">Acik Mimari</span></div></div></div>
@@ -82,7 +137,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <div class="scene"><div class="scene-num">18</div><div class="scene-content"><h3>Enkaz Felaketi ve Sivil Koruma</h3><p>Basarili onlemede bile 1-10 kg parcalar 500+ kJ enerjiyle duser. %90 basarili onlemelerde %10-15 sivil kayip. Kinetik enerji formulu: E = 0.5mv2.</p><div class="tags"><span class="tag">Debris</span><span class="tag">Kinetik</span><span class="tag">Sivil Koruma</span><span class="tag">500 kJ</span></div></div></div>
 <div class="scene"><div class="scene-num">19</div><div class="scene-content"><h3>Avrasya-Afrika Koprusu</h3><p>Turkiye cografi kaderini avantaja cevirmeli. TDT + Afrika Birligi baglantisi. Yeni lojistik/ticari jeopolitik merkez. Dogu-Bati ve Kuzey-Guney aksi.</p><div class="tags"><span class="tag">TDT</span><span class="tag">Afrika</span><span class="tag">Lojistik</span><span class="tag">Jeopolitik Merkez</span></div></div></div>
 <div class="scene"><div class="scene-num">20</div><div class="scene-content"><h3>Zihinsel Savunma El Kitabi</h3><p>Dijital okuryazarlik = milli guvenlik dersi. "Bilgi Geciktirme Protokolu": Hizli yalana karsi yavas ama teyitli dogru. Amigdala kacirmalarinin onlenmesi.</p><div class="tags"><span class="tag">Dijital Okur</span><span class="tag">Protokol</span><span class="tag">Milli Guvenlik</span><span class="tag">Teyit</span></div></div></div>
-<div class="scene"><div class="scene-num">21</div><div class="scene-content"><h3>Buyuk Muharebeler: Tarihten Dersler</h3><p>Malazgirt 1071, Nigbolu 1396, Mohac 1526, Canakkale 1915, Kursk 1943. Her savas bir doktrin dersi, her zafer bir strateji formulu. Binyillik analoglar.</p><div class="tags"><span class="tag">Malazgirt</span><span class="tag">Canakkale</span><span class="tag">Kursk</span><span class="tag">Doktrin</span></div></div></div>
+<div class="scene"><div class="scene-num">21</div><div class="scene-content"><h3>Buyuk Muharebeler: Tarihten Dersler</h3><p>Malazgirt 1071, Nigbolu 1396, Mohac 1526, Çanakkale 1915, Kursk 1943. Her savas bir doktrin dersi, her zafer bir strateji formulu. Binyillik analoglar.</p><div class="tags"><span class="tag">Malazgirt</span><span class="tag">Çanakkale</span><span class="tag">Kursk</span><span class="tag">Doktrin</span></div></div></div>
 </div>
 <div class="section" id="sec-eharp">
 <div class="scene"><div class="scene-num">1</div><div class="scene-content"><h3>Elektronik Harp (EW): Gorunmez Cephe</h3><p>Elektromanyetik spektrum kontrolu modern savasin temel tasi. Radar karistirma (jamming), sinyal istihbarati (SIGINT), elektronik destek tedbirleri (ESM) ve elektronik taarruz (EA). Rusya'nin Krasukha-4, ABD'nin AN/ALQ-99 ve Turkiye'nin KORAL sistemi bu alanin onculeri. Spektrum ustunlugu olmadan hava ustunlugu mumkun degil.</p><div class="tags"><span class="tag">EW</span><span class="tag">SIGINT</span><span class="tag">KORAL</span><span class="tag">Jamming</span><span class="tag">ESM</span></div></div></div>
@@ -92,11 +147,11 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 </div>
 <div class="section" id="sec-uzay">
 <div class="scene"><div class="scene-num">3</div><div class="scene-content"><h3>Uydu Savasi: Yorunge Hakimiyeti</h3><p>2.500+ aktif askeri uydu yorungede. GPS, ISR, SATCOM, fuze uyari - hepsi uzaya bagimli. Anti-uydu silahlari (ASAT). Starlink'in Ukrayna'da kanitladigi: Uydu aglari savas kazandirir.</p><div class="tags"><span class="tag">ASAT</span><span class="tag">GPS</span><span class="tag">SATCOM</span><span class="tag">LEO</span><span class="tag">Starlink</span></div></div></div>
-<div class="scene"><div class="scene-num">13</div><div class="scene-content"><h3>Amazon HSA ve Bulut Savasi</h3><p>AWS edge computing ile OODA analiz suresini %60 optimize etme. Project Kuiper + TeraWave: 8.644 uydu, 6 TB/s askeri veri aktarimi. Gigawatt orbital data merkezleri.</p><div class="tags"><span class="tag">AWS</span><span class="tag">Kuiper</span><span class="tag">Edge</span><span class="tag">Bulut Savas</span></div></div></div>
+<div class="scene"><div class="scene-num">13</div><div class="scene-content"><h3>Amazon HSA ve Bulut Savasi</h3><p>AWS edge computing ile OODA analiz suresini %60 optimize etme. Project Kuiper + TeraDalga: 8.644 uydu, 6 TB/s askeri veri aktarimi. Gigawatt orbital data merkezleri.</p><div class="tags"><span class="tag">AWS</span><span class="tag">Kuiper</span><span class="tag">Edge</span><span class="tag">Bulut Savas</span></div></div></div>
 </div>
 <div class="section" id="sec-dron">
 <div class="scene"><div class="scene-num">4</div><div class="scene-content"><h3>Dron Savasi: Hava Gucunun Demokratiklesmesi</h3><p>TB2'nin Libya ve Karabag'daki basarisi dron cagini baslatti. FPV dronlar 500 dolara tank imha ediyor. Suru dronlar (swarm) savunma sistemlerini doyuruyor. 2026'da 50+ ulke silahli dron uretiyor.</p><div class="tags"><span class="tag">TB2</span><span class="tag">FPV</span><span class="tag">Suru</span><span class="tag">Otonom</span><span class="tag">UCAV</span></div></div></div>
-<div class="scene"><div class="scene-num">5</div><div class="scene-content"><h3>Deniz Dronlari: Mavi Vatan'in Yeni Muhafizlari</h3><p>Ukrayna'nin Magura V5 deniz dronu Rus Karadeniz Filosu'nu felc etti. Insansiz su ustu araclari (USV) mayin tarama, gozetleme ve saldiri gorevlerinde. Turkiye'nin ULAQ, MIR ve ALBATROS sistemleri.</p><div class="tags"><span class="tag">USV</span><span class="tag">ULAQ</span><span class="tag">Magura</span><span class="tag">Mayin Tarama</span><span class="tag">Otonom Filo</span></div></div></div>
+<div class="scene"><div class="scene-num">5</div><div class="scene-content"><h3>Deniz Dronlari: Mavi Vatan'in Yeni Muhafizlari</h3><p>Ukrayna'nin Magura V5 deniz dronu Rus Karadeniz Filosu'nu felc etti. Insansiz su ustu araclari (USV) mayin tarama, gozetleme ve saldiri gorevlerinde. Turkiye'nin ULAQ, MIR ve ALBATROS sistemleri.</p><div class="tags"><span class="tag">USV</span><span class="tag">ULAQ</span><span class="tag">Magura</span><span class="tag">Mayın Tarama</span><span class="tag">Otonom Filo</span></div></div></div>
 </div>
 <div class="section" id="sec-yz">
 <div class="scene"><div class="scene-num">6</div><div class="scene-content"><h3>Yapay Zeka: Karar Ustunlugu</h3><p>YZ artik hedef tanima, lojistik optimizasyon, istihbarat analizi ve komuta-kontrol'de aktif. Project Maven OODA dongusunu dakikalardan saniyelere indirdi. Otonom silah sistemleri (LAWS) tartismasi.</p><div class="tags"><span class="tag">LAWS</span><span class="tag">OODA</span><span class="tag">Project Maven</span><span class="tag">Hedef Tanima</span></div></div></div>
@@ -112,7 +167,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <div class="scene"><div class="scene-num">8</div><div class="scene-content"><h3>Savunma Sistemlerinin Matematiksel Sinirlari</h3><p>P_success = 1-(1-P_intercept)^N. Bernoulli modeli saturation saldirisinda coker. Wilkening modeli. 2026'da Iron Dome vs Fattah-1: Sizma orani %70-80.</p><div class="tags"><span class="tag">Bernoulli</span><span class="tag">Poisson</span><span class="tag">Wilkening</span><span class="tag">Leakage</span></div></div></div>
 <div class="scene"><div class="scene-num">14</div><div class="scene-content"><h3>Asimetrik Olcek: Turkiye Doktrini</h3><p>"Cin Hizi, Turk Zekasi" - Binlerce akilli, sarf edilebilir, dusuk maliyetli IHA/IKA. Mass production ekosistemi.</p><div class="tags"><span class="tag">Asimetrik</span><span class="tag">Mass</span><span class="tag">Attritable</span><span class="tag">Turk Doktrini</span></div></div></div>
 <div class="scene"><div class="scene-num">17</div><div class="scene-content"><h3>Beylikova Sirri: Nadir Toprak Stratejisi</h3><p>Eskisehir-Beylikova: 694 milyon ton NTE rezervi. Ham degil rafine - ciplere, motorlara, miknatislara donusturme. Cin tekelini kirma stratejisi.</p><div class="tags"><span class="tag">NTE</span><span class="tag">Beylikova</span><span class="tag">Rafine</span><span class="tag">Cin Tekeli</span></div></div></div>
-<div class="scene"><div class="scene-num">21</div><div class="scene-content"><h3>Buyuk Muharebeler: Tarihten Dersler</h3><p>Malazgirt 1071, Nigbolu 1396, Mohac 1526, Canakkale 1915, Kursk 1943. Her savas bir doktrin dersi, her zafer bir strateji formulu.</p><div class="tags"><span class="tag">Malazgirt</span><span class="tag">Canakkale</span><span class="tag">Kursk</span><span class="tag">Doktrin</span></div></div></div>
+<div class="scene"><div class="scene-num">21</div><div class="scene-content"><h3>Buyuk Muharebeler: Tarihten Dersler</h3><p>Malazgirt 1071, Nigbolu 1396, Mohac 1526, Çanakkale 1915, Kursk 1943. Her savas bir doktrin dersi, her zafer bir strateji formulu.</p><div class="tags"><span class="tag">Malazgirt</span><span class="tag">Çanakkale</span><span class="tag">Kursk</span><span class="tag">Doktrin</span></div></div></div>
 </div>
 </div>
 <div class="source">Kaynak: Harb-i Strateji Kulliyati (Koyuncu & Unlu) | SIPRI 2024 | Wilkening (1999) | Boyd, "Patterns of Conflict" (1986) | 2026</div>
@@ -137,5 +192,49 @@ document.querySelectorAll('.nav-tab').forEach(tab=>{
 });
 </script>
 <script src="hs-nav.js?v=11"></script>
+
+<script>
+// === INTERSECTION OBSERVER — SCROLL REVEAL ===
+(function(){
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        // Counter animation
+        const counters = entry.target.querySelectorAll('[data-count]');
+        counters.forEach(c => {
+          const target = parseInt(c.dataset.count);
+          const duration = 1500;
+          const start = performance.now();
+          const prefix = c.dataset.prefix || '';
+          const suffix = c.dataset.suffix || '';
+          function animate(now){
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            c.textContent = prefix + Math.floor(target * eased).toLocaleString('tr-TR') + suffix;
+            if(progress < 1) requestAnimationFrame(animate);
+          }
+          requestAnimationFrame(animate);
+        });
+      }
+    });
+  }, {threshold: 0.15, rootMargin: '0px 0px -5% 0px'});
+  
+  // Auto-detect sections and add reveal class
+  document.querySelectorAll('section, .section, .interactive-section, .paradigm-card, .stat-card, [class*="card"], .grid > *, .panel, .info-box, .chart-container, .timeline-item').forEach(el => {
+    if(!el.classList.contains('reveal') && !el.classList.contains('visible')){
+      el.classList.add('reveal');
+      observer.observe(el);
+    }
+  });
+  
+  // Also observe elements already marked with reveal
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children').forEach(el => {
+    observer.observe(el);
+  });
+})();
+</script>
+
 </body>
 </html>

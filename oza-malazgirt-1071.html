@@ -88,6 +88,96 @@ body{font-family:var(--font-sans);background:var(--bg);color:var(--white)}
 .mc-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--white);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
 .mc-btn:active{background:var(--red);border-color:var(--red)}
 .mc-btn.fire{background:var(--red-dark);border-color:var(--red)}
+
+/* ═══ TEK EKRAN — NO SCROLL ═══ */
+html, body {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+}
+body > .wrap, body > .container, body > .main, body > .game-container, body > .game-wrap {
+  max-height: calc(100vh - 54px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+@media (max-width: 480px) {
+  body > .wrap, body > .container, body > .main { 
+    max-height: calc(100vh - 44px) !important;
+    padding: 8px !important;
+  }
+}
+
+
+/* ═══ TEK EKRAN VIEWPORT FIT ═══ */
+html, body { 
+  height: 100vh !important; 
+  max-height: 100vh !important; 
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.game-container, .container, .main, #app, #game, .game-wrapper, .game-area {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+/* Mobil uyum */
+@media (max-width: 768px) {
+  body { font-size: 13px !important; }
+  h1, .game-title { font-size: clamp(16px, 4vw, 24px) !important; }
+  h2 { font-size: clamp(14px, 3.5vw, 20px) !important; }
+  .btn, button { 
+    padding: 8px 16px !important; 
+    font-size: 12px !important;
+    min-height: 40px !important;
+    touch-action: manipulation !important;
+  }
+  .card, .option, .choice { 
+    padding: 10px !important; 
+    margin: 4px !important;
+  }
+}
+@media (max-width: 480px) {
+  body { font-size: 12px !important; }
+  .nav, .navbar, .top-bar, .header { 
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+}
+@media (max-height: 700px) {
+  .game-container, .container, .main {
+    padding: 8px !important;
+  }
+  h1, .game-title { font-size: 18px !important; }
+}
+
+
+/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  body { font-size: 14px !important; }
+  .container, .main, .wrap, .content, .page-content {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
+  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
+  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
+  table { font-size: 11px !important; }
+  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
+  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .container, .main, .wrap { padding: 8px !important; }
+  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
+}
+html { overflow-x: hidden !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; }
+img, video, iframe, canvas, svg, table { max-width: 100% !important; }
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -96,26 +186,26 @@ body{font-family:var(--font-sans);background:var(--bg);color:var(--white)}
 <a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
 <div class="intro-screen" id="introScreen">
   <h1>MALAZGIRT 1071</h1>
-  <div class="sub">Hilal Taktigi Simulasyonu</div>
-  <p>26 Agustos 1071. Sultan Alparslan, 40.000 askerle 200.000 kisilik Bizans ordusuna karsi. Ok tuslari veya parmaginizla birliklerinizi yonetin. Turan taktigi ile Bizans'i kusat ve imha edin.</p>
+  <div class="sub">Hilal Taktiği Simülasyonu</div>
+  <p>26 Ağustos 1071. Sultan Alparslan, 40.000 askerle 200.000 kişilik Bizans ordusuna karşı. Ok tuşları veya parmağınızla birliklerinizi yönetin. Turan taktiği ile Bizans'i kuşat ve imha edin.</p>
   <div class="tutorial-grid">
-    <div class="tutorial-card"><h4>Hareket</h4><p>WASD / Ok tuslari / Swipe ile birliklerinizi hareket ettirin</p></div>
-    <div class="tutorial-card"><h4>Ok At</h4><p>SPACE / Ekrana dokun — dusmanin yakinindayken ok yagdirin</p></div>
-    <div class="tutorial-card"><h4>Hilal Formasyonu</h4><p>Düşmanin etrafini sarin. Kanatlardan kusat.</p></div>
-    <div class="tutorial-card"><h4>Turan Taktigi</h4><p>Geri cekil, takibe gectir, pusuya dus.</p></div>
-    <div class="tutorial-card"><h4>5 Etap</h4><p>Kesfif → Ricat → Pusu → Hilal → Son Saldiri</p></div>
-    <div class="tutorial-card"><h4>XP Sistemi</h4><p>Her basarili hamle XP kazandirir.</p></div>
+    <div class="tutorial-card"><h4>Hareket</h4><p>WASD / Ok tuşları / Swipe ile birliklerinizi hareket ettirin</p></div>
+    <div class="tutorial-card"><h4>Ok At</h4><p>SPACE / Ekrana dokun — düşmanın yakınındayken ok yağdırın</p></div>
+    <div class="tutorial-card"><h4>Hilâl Formasyonu</h4><p>Düşmanın etrafını sarın. Kanatlardan kuşatın.</p></div>
+    <div class="tutorial-card"><h4>Turan Taktiği</h4><p>Geri çekil, takibe geçtir, pusuya düşür.</p></div>
+    <div class="tutorial-card"><h4>5 Etap</h4><p>Keşif → Ricat → Pusu → Hilal → Son Saldırı</p></div>
+    <div class="tutorial-card"><h4>XP Sistemi</h4><p>Her başarılı hamle XP kazandırır.</p></div>
   </div>
-  <button class="start-btn" onclick="startGame()">SAVASA BAŞLA</button>
+  <button class="start-btn" onclick="startGame()">SAVAŞA BAŞLA</button>
 </div>
 
 <div class="top-bar" style="display:none" id="topBar">
   <a href="oza-hub.html">← OZA</a>
   <h1>Malazgirt 1071</h1>
   <div class="stats">
-    <div class="stat green"><span class="v" id="selcukHP">40,000</span> SEL</div>
-    <div class="stat red"><span class="v" id="bizansHP">200,000</span> BIZ</div>
-    <div class="stat gold"><span class="v" id="moralVal">80</span> MRL</div>
+    <div class="stat green"><span class="v" id="selcukHP">40,000</span> Selçuklu</div>
+    <div class="stat red"><span class="v" id="bizansHP">200,000</span> Bizans</div>
+    <div class="stat gold"><span class="v" id="moralVal">80</span> Moral</div>
     <div class="stat"><span class="v" id="phaseVal">1</span>/5</div>
   </div>
 </div>
@@ -123,10 +213,10 @@ body{font-family:var(--font-sans);background:var(--bg);color:var(--white)}
 <div class="main-layout" style="display:none" id="mainLayout">
   <div class="left-panel">
     <div class="battlefield" id="battlefield">
-      <div class="terrain-label">Malazgirt Ovasi — 26 Agustos 1071</div>
+      <div class="terrain-label">Malazgirt Ovası — 26 Ağustos 1071</div>
     </div>
     <div class="action-bar">
-      <div class="phase-title-bar" id="phaseTitle">Etap 1: Kesfif</div>
+      <div class="phase-title-bar" id="phaseTitle">Etap 1: Keşif</div>
       <div class="phase-desc-bar" id="phaseDesc">Hafif suvarileri one sur.</div>
       <div class="action-buttons" id="actionBtns"></div>
       <div class="controls-hint"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> hareket | <kbd>SPACE</kbd> ok at | <kbd>Q</kbd> ozel</div>
@@ -172,12 +262,12 @@ const PHASES=[
   {title:'Etap 3: Sahte Geri Çekilme',desc:'Turan taktiği! Geri çekil, Bizans takibe geçsin.',threshold:145000,actions:['feint_retreat','parth_shot','lure']},
   {title:'Etap 4: Tuzak Kurulumu',desc:'Düşmanı vadiye çek! Pusu hazırla.',threshold:115000,actions:['lure','feint_retreat','scout']},
   {title:'Etap 5: Pusu',desc:'Gizli birlikler ortaya çık! Kanatlardan saldırı.',threshold:80000,actions:['ambush','flank_attack','crossfire']},
-  {title:'Etap 6: Hilal Formasyonu',desc:'Bizans kuşatıldı! Hilal kapanıyor.',threshold:50000,actions:['crescent','defection','mace_charge']},
+  {title:'Etap 6: Hilâl Formasyonu',desc:'Bizans kuşatıldı! Hilal kapanıyor.',threshold:50000,actions:['crescent','defection','mace_charge']},
   {title:'Etap 7: Kuşatma Daraltılıyor',desc:'Bizans paniğe kapıldı! Firari birlikler.',threshold:25000,actions:['crescent','flank_attack','general_assault']},
   {title:'Etap 8: Son Saldırı',desc:'İmparatoru yakala! Genel saldırı!',threshold:0,actions:['general_assault','cavalry_charge','capture_emperor']}
 ];
 const ACTIONS={
-  scout:{name:'Kesfif',icon:'🐎',dmg:[3000,5000],moral:2},
+  scout:{name:'Keşif',icon:'🐎',dmg:[3000,5000],moral:2},
   provoke:{name:'Provoke',icon:'📯',dmg:[4000,6000],moral:3},
   arrow_rain:{name:'Ok Yagmuru',icon:'🏹',dmg:[6000,9000],moral:2},
   feint_retreat:{name:'Sahte Ricat',icon:'🐎',dmg:[5000,8000],moral:5},
@@ -196,14 +286,14 @@ const ACTIONS={
 const EQUIP=[
   {name:'Turk Kompozit Yayi',icon:'🏹',stat:'Menzil 300m, Hiz +30%',desc:'Boynuz+ahsap+sinir. At ustunde 300m.'},
   {name:'Gurz (Topuz)',icon:'🔨',stat:'Zirh Delme +40%',desc:'Flansli demir topuz. Bizans zirhini ezer.'},
-  {name:'Hafif Süvari',icon:'🐎',stat:'Manevra +50%',desc:'Hit-and-run uzmani. Bozkirlarin hizli atlilari.'},
+  {name:'Hafif Süvari',icon:'🐎',stat:'Manevra +50%',desc:'Hit-and-run uzmani. Bozkırlarin hizli atlilari.'},
   {name:'Turkmen Akincisi',icon:'⚔️',stat:'Kanat +35%',desc:'Yildirim hiziyla kanat manevrasi.'},
   {name:'Pecenekler',icon:'📯',stat:'+20.000 asker',desc:'Bizans saflarindan Selcuklu tarafina gecti.'}
 ];
 const HISTORY=[
-  {title:'Malazgirt Ovasi',text:'Mus ilinin kuzeybatisinda. Alparslan burada savas meydanini secti. Genis ova suvari manevrasina uygun.'},
-  {title:'Turan Taktigi',text:'Sahte geri cekilme + pusu. Orta Asya bozkirlarindan gelen klasik strateji.'},
-  {title:'Hilal Formasyonu',text:'Düşmanin etrafini yari daire seklinde kusatma. Kanatlardan baski.'},
+  {title:'Malazgirt Ovası',text:'Mus ilinin kuzeybatisinda. Alparslan burada savas meydanini secti. Genis ova suvari manevrasina uygun.'},
+  {title:'Turan Taktiği',text:'Sahte geri cekilme + pusu. Orta Asya bozkirlarindan gelen klasik strateji.'},
+  {title:'Hilâl Formasyonu',text:'Düşmanin etrafini yari daire seklinde kusatma. Kanatlardan baski.'},
   {title:'Romanos IV',text:'Son Bizans imparatorlarindan. Esir alindi. Alparslan onu onurla karsiladi.'},
   {title:'Sonuc',text:'Anadolunun kapilari Turklere acildi. 1000 yillik Turk-Anadolu tarihinin baslangici.'}
 ];
@@ -219,8 +309,8 @@ function startGame(){
   initBattlefield();
   renderPhase();
   renderTab();
-  addLog('=== 26 Agustos 1071 — Malazgirt ===','system');
-  addLog('Sultan Alparslan: "Ya sehit ya gazi!"','selcuk');
+  addLog('=== 26 Ağustos 1071 — Malazgirt ===','system');
+  addLog('Sultan Alparslan: "Ya şehit ya gazi!"','selcuk');
   requestAnimationFrame(gameLoop);
 }
 
@@ -311,7 +401,7 @@ function checkCombat(){
       const eDmg=300+Math.floor(Math.random()*400);
       state.selcukHP=Math.max(0,state.selcukHP-eDmg);
       updateStats();
-      if(state.selcukHP<=0)showDefeat();
+      if(state.selcukHP<=0)showYenilgi();
     }
   });
 }
@@ -323,7 +413,7 @@ function checkPhaseAdvance(){
     addLog('=== '+PHASES[state.phase].title+' ===','system');
     if(state.phase>=3)state.enemies.push({x:8+Math.floor(Math.random()*4),y:Math.floor(Math.random()*3),hp:100,icon:'🛡️'});
   }
-  if(state.bizansHP<=0)showVictory();
+  if(state.bizansHP<=0)showZafer();
 }
 
 function executeAction(aid){
@@ -338,9 +428,9 @@ function executeAction(aid){
   addLog(a.icon+' '+a.name+': -'+dmg.toLocaleString()+' Bizans','selcuk');
   const counter=800+Math.floor(Math.random()*1500);
   state.selcukHP=Math.max(0,state.selcukHP-counter);
-  addLog('Bizans karsi saldiri: -'+counter.toLocaleString(),'bizans');
+  addLog('Bizans karşı saldiri: -'+counter.toLocaleString(),'bizans');
   updateStats();renderBattlefield();checkPhaseAdvance();
-  if(state.selcukHP<=0)showDefeat();
+  if(state.selcukHP<=0)showYenilgi();
 }
 
 function renderPhase(){
@@ -383,7 +473,7 @@ function updateStats(){
   document.getElementById('phaseVal').textContent=(state.phase+1);
 }
 
-function showVictory(){
+function showZafer(){
   gameStarted=false;
   const ov=document.getElementById('resultOverlay');ov.classList.add('active');
   document.getElementById('resultTitle').textContent='MALAZGIRT ZAFERI!';
@@ -392,7 +482,7 @@ function showVictory(){
   document.getElementById('rKills').textContent=(200000-state.bizansHP).toLocaleString();
   document.getElementById('rPhase').textContent=(state.phase+1)+'/8';
 }
-function showDefeat(){
+function showYenilgi(){
   gameStarted=false;
   const ov=document.getElementById('resultOverlay');ov.classList.add('active');
   document.getElementById('resultTitle').textContent='YENILGI';

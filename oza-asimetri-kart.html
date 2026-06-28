@@ -76,6 +76,136 @@ body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif
 .btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;padding:12px 20px;border-radius:9px;border:none;cursor:pointer}
 .btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red2)}
 .btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+
+/* ═══ TEK EKRAN — NO SCROLL ═══ */
+html, body {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.wrap, .container, .main, .game-container, .game-wrap, #game-container {
+  height: calc(100vh - 52px) !important;
+  max-height: calc(100vh - 52px) !important;
+  overflow: hidden !important;
+  padding: 8px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+/* Responsive font scaling */
+@media (max-height: 600px) {
+  .game-header h1, .card-title { font-size: 16px !important; }
+  .game-header .sub { font-size: 9px !important; }
+  .score-band, .stat-row, .stats { margin-bottom: 6px !important; }
+  .sb-val, .stat-val, .sv { font-size: 16px !important; }
+  .sb-item { padding: 6px 4px !important; }
+  .card-arena { height: 280px !important; }
+  .swipe-card { padding: 14px !important; }
+  .card-name { font-size: 16px !important; }
+  .card-desc { font-size: 11px !important; margin-bottom: 8px !important; }
+  .card-icon { font-size: 28px !important; margin-bottom: 6px !important; }
+  .decision-btns { margin-bottom: 8px !important; }
+  .dec-btn, .ctrl-btn, .act-btn { padding: 8px 6px !important; font-size: 11px !important; }
+}
+@media (max-height: 500px) {
+  .game-header { margin-bottom: 4px !important; }
+  .game-header h1 { font-size: 14px !important; }
+  .game-header .sub { display: none !important; }
+  .score-band, .stats { margin-bottom: 4px !important; }
+  .sb-val, .sv { font-size: 14px !important; }
+  .sb-item { padding: 4px 3px !important; }
+  .card-arena { height: 220px !important; }
+  .swipe-card { padding: 10px !important; }
+  .card-stats { gap: 4px !important; }
+  .stat-box, .sbox { padding: 6px 4px !important; }
+}
+@media (max-width: 480px) {
+  .top .in, .hdr { min-height: 44px !important; height: 44px !important; }
+  .wrap, .container, .main { height: calc(100vh - 44px) !important; max-height: calc(100vh - 44px) !important; padding: 6px 8px !important; }
+  .card-arena { height: 260px !important; }
+}
+
+/* Asimetri Kart — tek ekran özel */
+.wrap { justify-content: space-between !important; }
+.game-header { margin-bottom: 6px !important; }
+.score-band { margin-bottom: 8px !important; }
+.card-arena { flex: 1 !important; min-height: 0 !important; height: auto !important; max-height: 50vh !important; }
+.swipe-card { position: relative !important; max-width: 100% !important; }
+.swipe-hint { margin: 4px 0 !important; }
+.decision-btns { margin-top: auto !important; margin-bottom: 0 !important; padding-bottom: 8px !important; }
+
+
+/* ═══ TEK EKRAN VIEWPORT FIT ═══ */
+html, body { 
+  height: 100vh !important; 
+  max-height: 100vh !important; 
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.game-container, .container, .main, #app, #game, .game-wrapper, .game-area {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+/* Mobil uyum */
+@media (max-width: 768px) {
+  body { font-size: 13px !important; }
+  h1, .game-title { font-size: clamp(16px, 4vw, 24px) !important; }
+  h2 { font-size: clamp(14px, 3.5vw, 20px) !important; }
+  .btn, button { 
+    padding: 8px 16px !important; 
+    font-size: 12px !important;
+    min-height: 40px !important;
+    touch-action: manipulation !important;
+  }
+  .card, .option, .choice { 
+    padding: 10px !important; 
+    margin: 4px !important;
+  }
+}
+@media (max-width: 480px) {
+  body { font-size: 12px !important; }
+  .nav, .navbar, .top-bar, .header { 
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+}
+@media (max-height: 700px) {
+  .game-container, .container, .main {
+    padding: 8px !important;
+  }
+  h1, .game-title { font-size: 18px !important; }
+}
+
+
+/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  body { font-size: 14px !important; }
+  .container, .main, .wrap, .content, .page-content {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
+  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
+  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
+  table { font-size: 11px !important; }
+  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
+  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .container, .main, .wrap { padding: 8px !important; }
+  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
+}
+html { overflow-x: hidden !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; }
+img, video, iframe, canvas, svg, table { max-width: 100% !important; }
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">

@@ -5,8 +5,107 @@
 @keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
 .scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
 @keyframes scanDown{0%{top:0;}100%{top:100%;}}
+
+/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  body { font-size: 14px !important; }
+  .container, .main, .wrap, .content, .page-content {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
+  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
+  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
+  table { font-size: 11px !important; }
+  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
+  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .container, .main, .wrap { padding: 8px !important; }
+  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
+  .nav, .navbar, .top-bar, .header { 
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+}
+/* Prevent horizontal overflow */
+html { overflow-x: hidden !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; }
+img, video, iframe, canvas, svg, table { max-width: 100% !important; }
+pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
+
+
+/* === SCROLL REVEAL ANİMASYONLARI === */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.19,1,.22,1),transform .8s cubic-bezier(.19,1,.22,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .8s,transform .8s}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .8s,transform .8s}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.9);transition:opacity .6s,transform .6s}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+/* Stagger children */
+.stagger-children > *{opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s}
+.stagger-children.visible > *{opacity:1;transform:translateY(0)}
+.stagger-children.visible > *:nth-child(1){transition-delay:.05s}
+.stagger-children.visible > *:nth-child(2){transition-delay:.1s}
+.stagger-children.visible > *:nth-child(3){transition-delay:.15s}
+.stagger-children.visible > *:nth-child(4){transition-delay:.2s}
+.stagger-children.visible > *:nth-child(5){transition-delay:.25s}
+.stagger-children.visible > *:nth-child(6){transition-delay:.3s}
+/* Counter animation */
+[data-count]{font-variant-numeric:tabular-nums}
+/* Glow pulse for important elements */
+.glow-pulse{animation:glowPulse 3s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
+
 </style><link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 </head><body><div class="particles" id="particles"></div><div class="scan-line"></div>
 <a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a><div class="master-loader" id="loader"><div class="loader-circle"></div><div style="margin-top:20px;font-family:var(--font-title);color:var(--gold);letter-spacing:0.5em;">PREVEZE 1538</div></div><button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔊 MÜZİK AÇ</button><div id="canvas-container"></div><div class="hud-overlay"><div class="nav-rail" id="navRail"></div><div class="top-hud"><div class="logo">HARB-İ STRATEJİ // ARŞİV</div><div class="status">SİSTEM: AKTİF // VERİ: 4/4 DOĞRULANDI</div></div><div class="main-stage"><div class="analogy-container animate-content" id="contentStage"><div class="info-side"><div class="header-block"><div class="category" id="categoryLabel">⚓ 1538 M.S.</div><h2 id="mainTitle">PREVEZE DENİZ SAVAŞI</h2></div><div class="comparison-block"><div class="tech-box"><div class="tech-label">Stratejik Sonuç</div><div class="tech-name" id="modernName">Osmanlı Deniz Zaferi</div><div class="tech-desc" id="modernDesc">Barbaros Hayreddin Paşa, Haçlı donanmasını yenilgiye uğrattı.</div></div><div class="tech-box"><div class="tech-label">Stratejik Mantık</div><div class="tech-desc" id="logicDesc">Deniz taktik ve komutan yeteneği Akdeniz'i Osmanlı'ya kattı.</div></div></div></div><div class="visual-side"><div class="visualization" id="visualization"></div></div><div class="historical-side"><div class="record-card"><div class="record-title">◆ TARİHSEL KAYITLAR</div><div class="record-item"><div class="record-label">Komutan</div><div class="record-value" id="ancientName">Barbaros Hayreddin Paşa</div></div><div class="record-item"><div class="record-label">Tarih / Yer</div><div class="record-value" id="firstUse">28 Eylül 1538 / Preveze Körfezi</div></div><div class="record-item"><div class="record-label">Tarihsel Özellik</div><div class="record-value" id="ancientFeature">Osmanlı deniz gücünün sembolü. Akdeniz'in Osmanlı denetimini sağladı.</div></div></div></div></div></div><div class="bottom-hud"><div style="font-family:var(--font-mono);font-size:13px;color:var(--gold);">SAHNE: <span id="currentIndex">01</span> / 04</div><div class="timeline-track"><div class="timeline-fill" id="timelineFill"></div><div class="timeline-cursor" id="timelineCursor"></div></div><div style="font-family:var(--font-mono);font-size:13px;color:var(--cyan);">DÖNEM: <span id="periodLabel">ORTA ÇAĞ</span></div></div><div class="nav-hint">← SOL/SAĞ OK TUŞU VEYA NAV RAİL'E TIKLA →</div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script>let audioContext=null,isPlaying=false;const scenes=[{cat:'TARAFLAR',title:'Barbaros vs Haçlılar',modern:'Filo Büyüklüğü',mDesc:'Osmanlı: 82 gemi | Haçlı: 302 gemi | Barbaros taktik üstünlüğü',logic:'Deniz taktik ve komutan yeteneği savaşı belirler.',ancient:'Barbaros Hayreddin Paşa',first:'28 Eylül 1538 / Preveze',feature:'Barbaros, sayısal olarak daha güçlü Haçlı donanmasını yenilgiye uğrattı.',period:'ORTA ÇAĞ',viz:'armies'},{cat:'DENİZ TAKTİĞİ',title:'Akdeniz Hakimiyeti',modern:'Deniz Strateji',mDesc:'Barbaros’un deniz taktik bilgisi Akdeniz’i Osmanlı’ya kattı.',logic:'Deniz taktik medeniyetleri şekillendirir.',ancient:'Barbaros’un Stratejisi',first:'1538 / Akdeniz',feature:'Preveze, Osmanlı deniz gücünün sembolü haline geldi.',period:'ORTA ÇAĞ',viz:'tactical'},{cat:'SAVAŞ SONUCU',title:'Haçlı Donanması Yenildi',modern:'Jeopolitik Dönüşüm',mDesc:'Haçlı donanması Akdeniz’den çekildi, Osmanlı deniz gücü tescil edildi.',logic:'Deniz savaşları medeniyetleri kontrol eder.',ancient:'Osmanlı Deniz İmparatorluğu',first:'1538 / Akdeniz',feature:'Preveze’nin zaferi, Osmanlı’nın Akdeniz’de hâkim güç olduğunu gösterdi.',period:'ORTA ÇAĞ',viz:'impact'},{cat:'TARİHSEL ETKİ',title:'Osmanlı Deniz Gücü',modern:'Medeniyetler Arası Bağlantı',mDesc:'Preveze’nin zaferi, Osmanlı deniz gücünün temelini attı.',logic:'Tarihsel olaylar medeniyetleri şekillendirir.',ancient:'Osmanlı Deniz İmparatorluğu',first:'1538 sonrası / Akdeniz',feature:'Preveze’nin zaferi, Osmanlı’nın Akdeniz’de 300 yıl hâkim kalmasını sağladı.',period:'ORTA ÇAĞ',viz:'culture'}];const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setSize(window.innerWidth,window.innerHeight);document.getElementById('canvas-container').appendChild(renderer.domElement);camera.position.z=100;const grid=new THREE.GridHelper(300,30,0xc9a24b,0x16202d);grid.rotation.x=Math.PI/3;grid.position.y=-50;scene.add(grid);const light=new THREE.PointLight(0xc9a24b,1.5,500);light.position.set(50,50,50);scene.add(light);function animateThree(){requestAnimationFrame(animateThree);grid.rotation.z+=0.0005;renderer.render(scene,camera)}animateThree();function playPrevezeMusic(){if(!audioContext)audioContext=new(window.AudioContext||window.webkitAudioContext)();const notes=[{freq:196,dur:400},{freq:220,dur:400},{freq:247,dur:400},{freq:294,dur:400},{freq:330,dur:400},{freq:370,dur:400},{freq:415,dur:400},{freq:440,dur:800},{freq:415,dur:400},{freq:370,dur:400},{freq:330,dur:400},{freq:294,dur:400},{freq:247,dur:400},{freq:220,dur:400},{freq:196,dur:800}];let time=audioContext.currentTime;notes.forEach(note=>{const osc=audioContext.createOscillator();const gain=audioContext.createGain();osc.connect(gain);gain.connect(audioContext.destination);osc.frequency.value=note.freq;gain.gain.setValueAtTime(0.2,time);gain.gain.exponentialRampToValueAtTime(0.01,time+note.dur/1000);osc.start(time);osc.stop(time+note.dur/1000);time+=note.dur/1000})}function toggleMusic(){isPlaying=!isPlaying;const btn=document.getElementById('musicBtn');if(isPlaying){playPrevezeMusic();musicInterval=setInterval(function(){if(isPlaying)playPrevezeMusic()},8000);btn.textContent='🔊 MÜZİK AÇIK';btn.style.background='var(--cyan)'}else{if(musicInterval){clearInterval(musicInterval);musicInterval=null;}btn.textContent='🔊 MÜZİK AÇ';btn.style.background='var(--gold)'}}function generateVisualization(type,container){container.innerHTML='';const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 200 200');svg.setAttribute('width','100%');svg.setAttribute('height','100%');svg.style.stroke='var(--gold)';svg.style.strokeWidth='1.5';svg.style.fill='none';svg.style.filter='drop-shadow(0 0 10px var(--gold))';const shapes={armies:'<circle cx="60" cy="100" r="30" style="animation: pulse 2s infinite;"/><text x="60" y="105" font-size="12" text-anchor="middle" fill="var(--cyan)" style="animation: glow 2s infinite;">82</text><circle cx="140" cy="100" r="45" style="animation: pulse 2s infinite 0.3s;"/><text x="140" y="105" font-size="12" text-anchor="middle" fill="var(--gold)" style="animation: glow 2s infinite 0.3s;">302</text><line x1="100" y1="100" x2="100" y2="160" stroke-width="2" style="animation: glow 1s infinite;"/>',tactical:'<circle cx="100" cy="100" r="50" style="animation: pulse 2s infinite;"/><path d="M 100 50 L 130 100 L 100 150 L 70 100 Z" style="animation: rotate 4s linear infinite;"/><circle cx="100" cy="100" r="25" style="animation: float 2s infinite;"/>',impact:'<circle cx="100" cy="100" r="50" style="animation: pulse 2s infinite;"/><circle cx="100" cy="100" r="35" style="animation: pulse 2s infinite 0.3s;"/><circle cx="100" cy="100" r="20" style="animation: glow 2s infinite;"/><line x1="100" y1="50" x2="100" y2="20" stroke-width="2" style="animation: glow 1s infinite;"/><line x1="150" y1="100" x2="180" y2="100" stroke-width="2" style="animation: glow 1s infinite;"/><line x1="100" y1="150" x2="100" y2="180" stroke-width="2" style="animation: glow 1s infinite;"/><line x1="50" y1="100" x2="20" y2="100" stroke-width="2" style="animation: glow 1s infinite;"/>',culture:'<path d="M 100 30 L 130 80 L 100 70 L 70 80 Z" style="animation: float 2s infinite;"/><circle cx="100" cy="100" r="40" style="animation: pulse 2s infinite;"/><line x1="100" y1="60" x2="100" y2="140" stroke-width="2" style="animation: glow 1s infinite;"/><circle cx="100" cy="100" r="20" style="animation: rotate 4s linear infinite;"/>'};svg.innerHTML=shapes[type]||'';container.appendChild(svg)}let currentIdx=0;const rail=document.getElementById('navRail');scenes.forEach((_,i)=>{const dot=document.createElement('div');dot.className='nav-dot'+(i===0?' active':'');dot.onclick=()=>updateUI(i);rail.appendChild(dot)});function updateUI(idx){currentIdx=idx;const s=scenes[idx];document.getElementById('categoryLabel').textContent=s.cat;document.getElementById('mainTitle').textContent=s.title;document.getElementById('modernName').textContent=s.modern;document.getElementById('modernDesc').textContent=s.mDesc;document.getElementById('logicDesc').textContent=s.logic;document.getElementById('ancientName').textContent=s.ancient;document.getElementById('firstUse').textContent=s.first;document.getElementById('ancientFeature').textContent=s.feature;document.getElementById('periodLabel').textContent=s.period;document.getElementById('currentIndex').textContent=String(idx+1).padStart(2,'0');generateVisualization(s.viz,document.getElementById('visualization'));document.querySelectorAll('.nav-dot').forEach((dot,i)=>{dot.classList.toggle('active',i===idx)});const progress=(idx+1)/scenes.length;document.getElementById('timelineFill').style.width=(progress*100)+'%';document.getElementById('timelineCursor').style.left=(progress*100)+'%'}setTimeout(()=>{document.getElementById('loader').style.display='none';updateUI(0)},1500);document.addEventListener('keydown',(e)=>{if(e.key==='ArrowRight')updateUI((currentIdx+1)%scenes.length);if(e.key==='ArrowLeft')updateUI((currentIdx-1+scenes.length)%scenes.length)});window.addEventListener('resize',()=>{renderer.setSize(window.innerWidth,window.innerHeight);camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix()})</script><script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+
+<script>
+// === INTERSECTION OBSERVER — SCROLL REVEAL ===
+(function(){
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        // Counter animation
+        const counters = entry.target.querySelectorAll('[data-count]');
+        counters.forEach(c => {
+          const target = parseInt(c.dataset.count);
+          const duration = 1500;
+          const start = performance.now();
+          const prefix = c.dataset.prefix || '';
+          const suffix = c.dataset.suffix || '';
+          function animate(now){
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            c.textContent = prefix + Math.floor(target * eased).toLocaleString('tr-TR') + suffix;
+            if(progress < 1) requestAnimationFrame(animate);
+          }
+          requestAnimationFrame(animate);
+        });
+      }
+    });
+  }, {threshold: 0.15, rootMargin: '0px 0px -5% 0px'});
+  
+  // Auto-detect sections and add reveal class
+  document.querySelectorAll('section, .section, .interactive-section, .paradigm-card, .stat-card, [class*="card"], .grid > *, .panel, .info-box, .chart-container, .timeline-item').forEach(el => {
+    if(!el.classList.contains('reveal') && !el.classList.contains('visible')){
+      el.classList.add('reveal');
+      observer.observe(el);
+    }
+  });
+  
+  // Also observe elements already marked with reveal
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children').forEach(el => {
+    observer.observe(el);
+  });
+})();
+</script>
+
 </body></html>

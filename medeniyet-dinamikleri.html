@@ -45,7 +45,7 @@ a{text-decoration:none;color:inherit;transition:all .2s}
 .section-head .count{margin-left:auto;font-size:10px;color:var(--muted);font-family:var(--font-mono)}
 
 /* CARD GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
 .card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,160,23,.1)}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);opacity:0;transition:opacity .2s}
@@ -91,6 +91,61 @@ a{text-decoration:none;color:inherit;transition:all .2s}
   .hero-cats{padding:.6rem;gap:4px}
   .hero-cat{font-size:8px;padding:4px 8px}
 }
+
+/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  body { font-size: 14px !important; }
+  .container, .main, .wrap, .content, .page-content {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
+  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
+  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
+  table { font-size: 11px !important; }
+  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
+  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .container, .main, .wrap { padding: 8px !important; }
+  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
+  .nav, .navbar, .top-bar, .header { 
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+}
+/* Prevent horizontal overflow */
+html { overflow-x: hidden !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; }
+img, video, iframe, canvas, svg, table { max-width: 100% !important; }
+pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
+
+
+/* === PROFESYONEL KART BORDER RENKLERİ === */
+.card[data-cat="jeopolitik"]{border-left:3px solid #e74c3c}
+.card[data-cat="jeostrateji"]{border-left:3px solid #9b59b6}
+.card[data-cat="jeoekonomi"]{border-left:3px solid #27ae60}
+.card[data-cat="ekonomi"]{border-left:3px solid #2ecc71}
+.card[data-cat="politika"]{border-left:3px solid #e67e22}
+.card[data-cat="kultur"]{border-left:3px solid #f39c12}
+.card[data-cat="toplum"]{border-left:3px solid #3498db}
+.card[data-cat="medya"]{border-left:3px solid #1abc9c}
+.card[data-cat="enerji"]{border-left:3px solid #e74c3c}
+.card[data-cat="psikoloji"]{border-left:3px solid #9b59b6}
+.card[data-cat="kimlik"]{border-left:3px solid #f1c40f}
+.card[data-cat="spor"]{border-left:3px solid #2ecc71}
+.card[data-cat="sanat"]{border-left:3px solid #e91e63}
+.card[data-cat="egitim"]{border-left:3px solid #00bcd4}
+.card[data-cat="siyaset"]{border-left:3px solid #ff5722}
+.card[data-cat="uzay"]{border-left:3px solid #673ab7}
+.card[data-cat="yapay-zeka"]{border-left:3px solid #00e5ff}
+.card[data-cat="yapay-dunya"]{border-left:3px solid #76ff03}
+.card[data-cat="yasam"]{border-left:3px solid #ffab00}
+.card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 12px 32px rgba(212,160,23,.15)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),#FFD700,var(--gold));background-size:200% 100%;opacity:0;transition:opacity .3s;animation:shimmer 2s linear infinite}
+.card:hover::before{opacity:1}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -164,11 +219,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
       <div class="card-title">Bulut Jeopolitiği: Veri Egemenliği</div>
       <div class="card-desc">Dijital çağda veri merkezleri ve siber egemenlik mücadelesi.</div>
     </a>
-    <a href="sim14-hurmuz-petrodolar.html" class="card" data-cat="jeoekonomi">
-      <div class="card-tag">Jeoekonomi</div>
-      <div class="card-title">Hürmüz Boğazı ve Petrodolar Krizi</div>
-      <div class="card-desc">Enerji koridorları, petrol fiyatları ve küresel ekonomik denge.</div>
-    </a>
   </div>
 </div>
 
@@ -220,31 +270,19 @@ a{text-decoration:none;color:inherit;transition:all .2s}
       <div class="card-tag">Akademik</div>
       <div class="card-title">Jeopolitik Bilimi ve Kuramcıları</div>
       <div class="card-desc">Mackinder'den Brzezinski'ye jeopolitik düşüncenin evrimi.</div>
-      <div class="card-meta"><span class="type">Tez İnfografik</span><span>Harb-i Strateji Külliyatı</span></div>
+      <div class="card-meta"><span class="type">Akademik</span><span>Harb-i Strateji Külliyatı</span></div>
     </a>
     <a href="tez-infografik-13-jeopolitik-soylemler-tablosu.html" class="card" data-cat="jeopolitik">
       <div class="card-tag">Akademik</div>
       <div class="card-title">Jeopolitik Söylemler Tablosu</div>
       <div class="card-desc">Klasik, eleştirel ve post-modern jeopolitik söylem karşılaştırması.</div>
-      <div class="card-meta"><span class="type">Tez İnfografik</span></div>
+      <div class="card-meta"><span class="type">Akademik</span></div>
     </a>
     <a href="tez-infografik-14-soguk-savastan-gunumuze-ulusl.html" class="card" data-cat="jeostrateji">
       <div class="card-tag">Jeostrateji</div>
       <div class="card-title">Soğuk Savaş'tan Günümüze Uluslararası Sistem</div>
       <div class="card-desc">İki kutuplu dünyadan çok kutuplu düzene geçiş süreci.</div>
-      <div class="card-meta"><span class="type">Tez İnfografik</span></div>
-    </a>
-    <a href="infografik-bulut-jeopolitik.html" class="card" data-cat="jeopolitik">
-      <div class="card-tag">Dijital Jeopolitik</div>
-      <div class="card-title">Bulut Jeopolitiği ve Veri Egemenliği</div>
-      <div class="card-desc">Veri merkezleri, dijital sınırlar ve siber egemenlik mücadelesi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="sim9-imparatorluk-stres-testi.html" class="card" data-cat="jeopolitik">
-      <div class="card-tag">Simülasyon</div>
-      <div class="card-title">İmparatorluk Stres Testi</div>
-      <div class="card-desc">Büyük güçlerin çöküş senaryoları ve dayanıklılık analizi.</div>
-      <div class="card-meta"><span class="type">Simülasyon</span></div>
+      <div class="card-meta"><span class="type">Akademik</span></div>
     </a>
 
   </div>
@@ -258,18 +296,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
     <span class="count">8 İçerik</span>
   </div>
   <div class="grid">
-    <a href="sim14-hurmuz-petrodolar.html" class="card" data-cat="jeoekonomi">
-      <div class="card-tag">Enerji Ekonomisi</div>
-      <div class="card-title">Hürmüz Boğazı ve Petrodolar Sistemi</div>
-      <div class="card-desc">Küresel enerji koridorları ve petrodolar mekanizmasının geleceği.</div>
-      <div class="card-meta"><span class="type">Simülasyon</span></div>
-    </a>
-    <a href="sim7-darbe30-tuccar-devlet.html" class="card" data-cat="jeoekonomi">
-      <div class="card-tag">Devlet Kapitalizmi</div>
-      <div class="card-title">Tüccar Devlet: Ekonomik Darbe</div>
-      <div class="card-desc">Ekonomik güç ile siyasi güç arasındaki ilişki simülasyonu.</div>
-      <div class="card-meta"><span class="type">Simülasyon</span></div>
-    </a>
     <a href="infografik-mineral-agi.html" class="card" data-cat="jeoekonomi">
       <div class="card-tag">Kritik Mineraller</div>
       <div class="card-title">Küresel Mineral Ağı</div>
@@ -408,7 +434,7 @@ a{text-decoration:none;color:inherit;transition:all .2s}
       <div class="card-meta"><span class="type">İnfografik</span></div>
     </a>
       <div class="card-tag">Toplumsal Mühendislik</div>
-      <div class="card-title">Manufactured Chaos — Kaos Üretimi</div>
+      <div class="card-title">Üretilmiş Kaos — Kaos Üretimi</div>
       <div class="card-desc">Toplumsal kırılganlıkların istismarı ve kaos mühendisliği.</div>
       <div class="card-meta"><span class="type">İnfografik</span></div>
     </a>
@@ -423,12 +449,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
     <span class="count">6 İçerik</span>
   </div>
   <div class="grid">
-    <a href="enerji-infografik-gelecek.html" class="card" data-cat="enerji">
-      <div class="card-tag">Enerji Dönüşümü</div>
-      <div class="card-title">Geleceğin Enerji Teknolojileri</div>
-      <div class="card-desc">Füzyon, SMR, Hidrojen ekonomisi ve yeni nesil güneş panelleri.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
     <a href="enerji-minecraft-reaktor.html" class="card" data-cat="enerji">
       <div class="card-tag">Nükleer Enerji</div>
       <div class="card-title">Enerji Reaktörü İnşa Et</div>
@@ -440,12 +460,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
       <div class="card-title">Enerji Altyapısı Savunması</div>
       <div class="card-desc">Kritik enerji altyapılarını siber ve fiziksel tehditlere karşı koruyun.</div>
       <div class="card-meta"><span class="type">OZA Oyun</span></div>
-    </a>
-    <a href="su-infografik-kitlik.html" class="card" data-cat="enerji">
-      <div class="card-tag">Su Güvenliği</div>
-      <div class="card-title">Küresel Su Kıtlığı</div>
-      <div class="card-desc">Su savaşları, kıtlık haritası ve teknolojik çözümler.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
     </a>
     <a href="su-minecraft-aritma.html" class="card" data-cat="enerji">
       <div class="card-tag">Su Teknolojisi</div>
@@ -535,66 +549,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
     <span class="count">12+ İçerik</span>
   </div>
   <div class="grid">
-    <a href="bilim-arenasi-tam.html" class="card" data-cat="kimlik" style="border:2px solid var(--gold)">
-      <div class="card-tag">Bilim Tarihi · İnteraktif</div>
-      <div class="card-title">Bilim Arenası — Türk & İslam Bilginleri</div>
-      <div class="card-desc">İbn-i Sina'dan El-Cezeri'ye, Biruni'den Uluğ Bey'e — İslam medeniyetinin bilim devlerine interaktif yolculuk.</div>
-      <div class="card-meta"><span class="type">İnteraktif Arena</span></div>
-    </a>
-    <a href="md-bozkir-imparatorluk-evrim.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Devlet Yapısı</div>
-      <div class="card-title">Bozkırdan İmparatorluğa Evrim</div>
-      <div class="card-desc">Kut, Kurultay ve İl sistemi — Göktürk'ten Osmanlı'ya Türk devlet yapısının evrimsel analizi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-selcuklu-osmanli-kronoloji.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Kronoloji</div>
-      <div class="card-title">Selçuklu-Osmanlı Kronolojisi</div>
-      <div class="card-desc">1040 Dandanakan'dan 1922 Saltanat'ın kaldırılmasına — 900 yıllık süreç.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-kulturel-senkretizm.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Kültürel Sentez</div>
-      <div class="card-title">Kültürel Senkretizm</div>
-      <div class="card-desc">Bozkır, İslam, Fars, Bizans ve Batı unsurlarının Türk kimliğinde sentezi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-ekonomik-aglar-vakif.html" class="card" data-cat="ekonomi">
-      <div class="card-tag">Ekonomi Tarihi</div>
-      <div class="card-title">Ekonomik Ağlar ve Vakıf Sistemi</div>
-      <div class="card-desc">İpek Yolu'ndan Vakıf sistemine — Türk ekonomik organizasyonunun analizi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-hukuk-adalet.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Hukuk Tarihi</div>
-      <div class="card-title">Türk Hukuk ve Adalet Geleneği</div>
-      <div class="card-desc">Kut, Töre, Şer'iat ve Cumhuriyet — Türk hukuk geleneğinin evrimi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-askeri-teknolojik-evrim.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Askerî Teknoloji</div>
-      <div class="card-title">Türk Askerî Teknolojik Evrimi</div>
-      <div class="card-desc">Atlı okçuluktan İHA/SİHA'ya — 2500 yıllık askerî teknoloji yolculuğu.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-bilgi-altyapisi.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Bilgi Yönetimi</div>
-      <div class="card-title">Bilgi Altyapısı: Türk Devlet Hafızası</div>
-      <div class="card-desc">Arşiv, defter ve kayıt sistemleri — Osmanlı bürokrasisinin bilgi mimarisi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="infografik-osmanli-padisahlari.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Osmanlı</div>
-      <div class="card-title">Osmanlı Padişahları İnfografiği</div>
-      <div class="card-desc">36 padişah, dönemler, saltanat süreleri ve miras istatistikleri.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="infografik-turklerin-ilkleri.html" class="card" data-cat="kimlik">
-      <div class="card-tag">Türk Kültür Tarihi</div>
-      <div class="card-title">Türklerin İlkleri — İnteraktif Timeline</div>
-      <div class="card-desc">MÖ 220'den günümüze 180+ "ilk" — Türk, Osmanlı ve İnkılap tarihi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
     <a href="infografik-binyillik-analoglar.html" class="card" data-cat="kimlik">
       <div class="card-tag">Karşılaştırmalı Tarih</div>
       <div class="card-title">Binyıllık Analoglar</div>
@@ -602,54 +556,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
       <div class="card-meta"><span class="type">İnfografik</span></div>
     </a>
     
-    <a href="md-turklerde-ekonomi.html" class="card" data-cat="ekonomi">
-      <div class="card-tag">Ekonomi Tarihi</div>
-      <div class="card-title">Türklerde Ekonomi: İpek Yolu'ndan Vakıf Sistemine</div>
-      <div class="card-desc">Bozkır ticaretinden küresel ticaret ağlarına — 2500 yıllık ekonomik evrim.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-turklerde-spor.html" class="card" data-cat="spor">
-      <div class="card-tag">Spor · Yeni</div>
-      <div class="card-title">Türk Spor Tarihi: Cirit'ten Olimpiyata</div>
-      <div class="card-desc">Yağlı güreş, okçuluk, cirit, çevgan ve modern spor — askerî kökenli beden kültürü.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
-    <a href="md-turklerde-sanat.html" class="card" data-cat="sanat">
-      <div class="card-tag">Sanat · Yeni</div>
-      <div class="card-title">Türk Sanat Tarihi: Hayvan Üslubundan Mimar Sinan'a</div>
-      <div class="card-desc">Bozkır hayvan üslubundan İslam hat sanatına — 3000 yıllık estetik yolculuk.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
-    <a href="md-turklerde-egitim.html" class="card" data-cat="egitim">
-      <div class="card-tag">Eğitim · Yeni</div>
-      <div class="card-title">Türk Eğitim Tarihi: Töre'den Üniversiteye</div>
-      <div class="card-desc">Bozkır töre eğitiminden Nizamiye Medreselerine — 2500 yıllık eğitim serüveni.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
-    <a href="md-turklerde-spor.html" class="card" data-cat="spor">
-      <div class="card-tag">Spor & Beden Kültürü</div>
-      <div class="card-title">Türklerde Spor: Savaş Sanatından Olimpiyat Kürsüsüne</div>
-      <div class="card-desc">Atlı okçuluktan güreşe, ciritten polo'ya — askerî kökenli spor geleneği.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-turklerde-toplum.html" class="card" data-cat="toplum">
-      <div class="card-tag">Toplum & Sosyal Yapı</div>
-      <div class="card-title">Türklerde Toplum: Oguş'tan Millet'e</div>
-      <div class="card-desc">Aile, boy, budun ve il — toplumsal örgütlenmenin evrimi.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-turklerde-sanat.html" class="card" data-cat="sanat">
-      <div class="card-tag">Sanat & Estetik</div>
-      <div class="card-title">Türklerde Sanat: Hayvan Üslubundan Mimar Sinan'a</div>
-      <div class="card-desc">Bozkır hayvan üslubundan İslam hat sanatına — 3000 yıllık estetik yolculuk.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
-    <a href="md-turklerde-egitim.html" class="card" data-cat="egitim">
-      <div class="card-tag">Eğitim & Bilim</div>
-      <div class="card-title">Türklerde Eğitim: Töre'den Üniversiteye</div>
-      <div class="card-desc">Bozkır töre eğitiminden Nizamiye Medreselerine — 2500 yıllık eğitim serüveni.</div>
-      <div class="card-meta"><span class="type">İnfografik</span></div>
-    </a>
   </div>
 </section>
 
@@ -679,12 +585,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
       <div class="card-desc">Anti-uydu silahları, yörünge silahları ve uzay durumsal farkındalık.</div>
       <div class="card-meta"><span class="type">İnfografik</span></div>
     </a>
-    <a href="uzay-komutanligi.html" class="card" data-cat="uzay">
-      <div class="card-tag">Simülasyon</div>
-      <div class="card-title">Uzay Savunma Simülasyonu</div>
-      <div class="card-desc">Yörünge savunma, uydu koruması ve uzay hâkimiyeti senaryoları.</div>
-      <div class="card-meta"><span class="type">Simülasyon</span></div>
-    </a>
     <a href="infografik-spektrum-savasi.html" class="card" data-cat="uzay">
       <div class="card-tag">Spektrum & EMS</div>
       <div class="card-title">Spektrum Savaşı</div>
@@ -708,12 +608,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
     <span class="count">5 İçerik</span>
   </div>
   <div class="grid">
-    <a href="sim01-algoritmik-harp.html" class="card" data-cat="yapay-zeka">
-      <div class="card-tag">Algoritmik Harp</div>
-      <div class="card-title">Algoritmik Harp: Veriden Zafere</div>
-      <div class="card-desc">Ham veri → YZ işleme → eyleme dönüşen içgörü → kesin etki. OODA Loop sıkıştırması.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span><span>Yeni</span></div>
-    </a>
     <a href="ooda-dongusu-interaktif.html" class="card" data-cat="yapay-zeka">
       <div class="card-tag">OODA Döngüsü</div>
       <div class="card-title">OODA ve OODA-X: Karar Döngüsü Evrimi</div>
@@ -749,12 +643,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
     <span class="count">5 İçerik</span>
   </div>
   <div class="grid">
-    <a href="infografik-bulut-jeopolitik.html" class="card" data-cat="yapay-dunya">
-      <div class="card-tag">Bulut Jeopolitiği</div>
-      <div class="card-title">Dünya Bulut Sağlayıcıları</div>
-      <div class="card-desc">AWS, Azure, Google Cloud — veri egemenliği ve dijital bağımlılık haritası.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
     <a href="lego-propaganda-analiz.html" class="card" data-cat="yapay-dunya">
       <div class="card-tag">Dijital Propaganda</div>
       <div class="card-title">Lego Propaganda: İran'ın Dijital Savaşı</div>
@@ -790,30 +678,6 @@ a{text-decoration:none;color:inherit;transition:all .2s}
     <span class="count">6 İçerik</span>
   </div>
   <div class="grid">
-    <a href="md-turklerde-toplum.html" class="card" data-cat="yasam">
-      <div class="card-tag">Toplum</div>
-      <div class="card-title">Türklerde Toplum ve Yaşam</div>
-      <div class="card-desc">Bozkır yaşamından şehir medeniyetine — Türk toplumsal yapısının evrimi.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
-    <a href="md-turklerde-egitim.html" class="card" data-cat="yasam">
-      <div class="card-tag">Eğitim</div>
-      <div class="card-title">Eğitim ve Bilgi Yönetimi</div>
-      <div class="card-desc">Medrese, Enderun, Darülfünun — eğitim kurumlarının evrimi.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
-    <a href="md-turklerde-sanat.html" class="card" data-cat="yasam">
-      <div class="card-tag">Sanat & Kültür</div>
-      <div class="card-title">Sanat ve Kültürel Miras</div>
-      <div class="card-desc">Hat, minyätür, mimari, musiki — Türk sanat geleneğinin zenginliği.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
-    <a href="md-turklerde-spor.html" class="card" data-cat="yasam">
-      <div class="card-tag">Spor & Sağlık</div>
-      <div class="card-title">Spor ve Beden Kültürü</div>
-      <div class="card-desc">Atlı okçuluk, güreş, cirit — askerî kökenli beden eğitimi geleneği.</div>
-      <div class="card-meta"><span class="type">İnteraktif</span></div>
-    </a>
     <a href="md-turklerde-toplum.html#sehir" class="card" data-cat="yasam">
       <div class="card-tag">Şehir Yaşamı</div>
       <div class="card-title">Akıllı Şehirler ve Gelecek Yaşam</div>
@@ -849,7 +713,7 @@ a{text-decoration:none;color:inherit;transition:all .2s}
     <a href="md-turklerde-egitim.html" class="cross-item">Eğitim & Bilim →</a>
     <a href="haberler.html" class="cross-item">Haberler →</a>
     <a href="yazarlar.html" class="cross-item">Yazarlar →</a>
-    <a href="simulasyonlar.html" class="cross-item">Simülasyonlar →</a>
+    
   </div>
 </div>
 

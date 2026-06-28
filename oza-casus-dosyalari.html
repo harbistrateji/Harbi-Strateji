@@ -19,6 +19,96 @@ html,body{height:100%;overflow:hidden;font-family:'IBM Plex Sans',sans-serif;bac
 .intro-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}.intro-overlay.hidden{display:none;}.intro-overlay h1{font-family:'Chakra Petch',monospace;font-size:2rem;font-weight:900;}.intro-overlay .sub{font-size:.85rem;color:var(--red);margin:8px 0 20px;}.intro-overlay p{font-size:.8rem;color:var(--gray);max-width:500px;line-height:1.8;margin-bottom:24px;}.intro-overlay button{background:var(--red);color:var(--white);border:none;border-radius:6px;padding:14px 40px;font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;cursor:pointer;}
 .log-item{font-size:.6rem;color:var(--gray);padding:4px 0;border-bottom:1px solid var(--border);}.log-item b{color:var(--red2);}
 @media(max-width:900px){.main{grid-template-columns:1fr;}.right-panel{border-top:2px solid var(--red);border-left:none;max-height:50vh;}}
+
+/* ═══ TEK EKRAN — NO SCROLL ═══ */
+html, body {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+}
+body > .wrap, body > .container, body > .main, body > .game-container, body > .game-wrap {
+  max-height: calc(100vh - 54px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+@media (max-width: 480px) {
+  body > .wrap, body > .container, body > .main { 
+    max-height: calc(100vh - 44px) !important;
+    padding: 8px !important;
+  }
+}
+
+
+/* ═══ TEK EKRAN VIEWPORT FIT ═══ */
+html, body { 
+  height: 100vh !important; 
+  max-height: 100vh !important; 
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.game-container, .container, .main, #app, #game, .game-wrapper, .game-area {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+/* Mobil uyum */
+@media (max-width: 768px) {
+  body { font-size: 13px !important; }
+  h1, .game-title { font-size: clamp(16px, 4vw, 24px) !important; }
+  h2 { font-size: clamp(14px, 3.5vw, 20px) !important; }
+  .btn, button { 
+    padding: 8px 16px !important; 
+    font-size: 12px !important;
+    min-height: 40px !important;
+    touch-action: manipulation !important;
+  }
+  .card, .option, .choice { 
+    padding: 10px !important; 
+    margin: 4px !important;
+  }
+}
+@media (max-width: 480px) {
+  body { font-size: 12px !important; }
+  .nav, .navbar, .top-bar, .header { 
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+}
+@media (max-height: 700px) {
+  .game-container, .container, .main {
+    padding: 8px !important;
+  }
+  h1, .game-title { font-size: 18px !important; }
+}
+
+
+/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  body { font-size: 14px !important; }
+  .container, .main, .wrap, .content, .page-content {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
+  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
+  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
+  table { font-size: 11px !important; }
+  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
+  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .container, .main, .wrap { padding: 8px !important; }
+  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
+}
+html { overflow-x: hidden !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; }
+img, video, iframe, canvas, svg, table { max-width: 100% !important; }
+
 </style><link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 </head><body>
@@ -35,8 +125,8 @@ var CASES=[
 {title:'U-2 Krizi',header:'GIZLI // 1960 // MOSKOVA',body:'Amerikan U-2 casus ucagi dusuruld. Pilot Gary Powers hayatta.',q:'Ucagin gorevi?',suspects:[{name:'Nukleer tesis fotografi',role:'Kesfif',correct:true},{name:'Suikast',role:'Operasyon'},{name:'Ajan birakma',role:'Infiltrasyon'},{name:'Sinyal dinleme',role:'SIGINT'}],fact:'U-2 ucaklari 21km yukseklikten Sovyet nukleer tesislerini fotografliyordu.'},
 {title:'Mossad Eichmann',header:'GIZLI // 1960 // BUENOS AIRES',body:'Nazi savas suclusi Arjantin\'de saklanyor. Mossad operasyonu.',q:'Operasyonun adi?',suspects:[{name:'Garibaldi Op.',role:'Kacirma',correct:true},{name:'Entebbe',role:'Kurtarma'},{name:'Wrath of God',role:'Suikast'},{name:'Bayonet',role:'Infiltrasyon'}],fact:'Mossad Eichmann\'i Buenos Aires\'te yakaladi ve Israil\'e kacirdi.'},
 {title:'Venona Projesi',header:'GIZLI // 1943 // NSA',body:'Sovyet sifreleri kirildi. Atom casuslarinin kimligi ortaya cikiyor.',q:'Atom sirrini kim sizdirdi?',suspects:[{name:'Julius Rosenberg',role:'Muhendis',correct:true},{name:'Oppenheimer',role:'Fizikci'},{name:'Fuchs',role:'Bilim'},{name:'Hiss',role:'Diplomat'}],fact:'Rosenberg cifti atom bombasi sirlarini Sovyetlere sizdirdi.'},
-{title:'Stuxnet',header:'GIZLI // 2010 // NATANZ',body:'Iran nukleer tesisine siber saldiri. 1000 santrifuj imha edildi.',q:'Kim gelistirdi?',suspects:[{name:'ABD + Israel',role:'NSA+8200',correct:true},{name:'Rusya',role:'FSB'},{name:'Cin',role:'PLA'},{name:'Anonymous',role:'Hacker'}],fact:'Olympic Games: NSA ve Israel Unit 8200 birlikte gelistirdi. İlk siber silah.'},
-{title:'Salisbury',header:'GIZLI // 2018 // INGILTERE',body:'Eski Rus ajani Skripal Novichok ile zehirlendi.',q:'Saldirganlar hangi birim?',suspects:[{name:'GRU Unit 29155',role:'Askerî Ist.',correct:true},{name:'FSB',role:'Ic Güvenlik'},{name:'SVR',role:'Dis Ist.'},{name:'Wagner',role:'Paralel'}],fact:'GRU Unit 29155 sahte pasaportla girdi. Novichok kapi koluna suruldu.'}
+{title:'Stuxnet',header:'GIZLI // 2010 // NATANZ',body:'İran nukleer tesisine siber saldiri. 1000 santrifuj imha edildi.',q:'Kim gelistirdi?',suspects:[{name:'ABD + Israel',role:'NSA+8200',correct:true},{name:'Rusya',role:'FSB'},{name:'Cin',role:'PLA'},{name:'Anonymous',role:'Hacker'}],fact:'Olympic Games: NSA ve Israel Unit 8200 birlikte gelistirdi. İlk siber silah.'},
+{title:'Salisbury',header:'GIZLI // 2018 // İNGİLTERE',body:'Eski Rus ajani Skripal Novichok ile zehirlendi.',q:'Saldirganlar hangi birim?',suspects:[{name:'GRU Unit 29155',role:'Askerî Ist.',correct:true},{name:'FSB',role:'Ic Güvenlik'},{name:'SVR',role:'Dis Ist.'},{name:'Wagner',role:'Paralel'}],fact:'GRU Unit 29155 sahte pasaportla girdi. Novichok kapi koluna suruldu.'}
 ];
 var G={cur:0,puan:0,logs:[]};
 function startGame(){document.getElementById('intro').classList.add('hidden');document.getElementById('topBar').style.display='flex';document.getElementById('mainArea').style.display='grid';showCase();}

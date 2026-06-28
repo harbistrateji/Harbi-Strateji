@@ -47,6 +47,36 @@ canvas{display:block;cursor:crosshair;}
 /* OYUN BİTTİ */
 #gameOver{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
 #gameOver.show{display:flex;}
+
+/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  body { font-size: 14px !important; }
+  .container, .main, .wrap, .content, .page-content {
+    padding: 12px !important;
+    max-width: 100% !important;
+  }
+  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
+  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
+  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
+  table { font-size: 11px !important; }
+  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
+  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  body { font-size: 13px !important; }
+  .container, .main, .wrap { padding: 8px !important; }
+  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
+  .nav, .navbar, .top-bar, .header { 
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+}
+/* Prevent horizontal overflow */
+html { overflow-x: hidden !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; }
+img, video, iframe, canvas, svg, table { max-width: 100% !important; }
+pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -112,12 +142,12 @@ const mctx = mm.getContext('2d');
 
 // ===== WEAPONS =====
 const WEAPONS_DATA = [
-  {id:'ak47',name:'AK-47',icon:'🔫',damage:35,rng:300,fireRate:150,ammo:30,maxAmmo:30,speed:0.8,color:'#e67e22',metals:'Co+Cr+Ni',metalReq:{Co:1},desc:'Güvenilir, yüksek hasar'},
-  {id:'m4',name:'M4A1',icon:'🔫',damage:28,rng:350,fireRate:100,ammo:30,maxAmmo:30,speed:1,color:'#3498db',metals:'Ti+Cr+Nd',metalReq:{Ti:1},desc:'Hassas, hızlı atış'},
-  {id:'awp',name:'AWP Keskin',icon:'🎯',damage:120,rng:600,fireRate:1200,ammo:5,maxAmmo:5,speed:0.6,color:'#9b59b6',metals:'Ti+W+Nd',metalReq:{W:1},desc:'Tek atım öldürme'},
-  {id:'railgun',name:'Raylı Top',icon:'⚡',damage:200,rng:800,fireRate:2000,ammo:3,maxAmmo:3,speed:0.5,color:'#c41e3a',metals:'Nd+Dy+Ga',metalReq:{Nd:2,Dy:1},desc:'Nadir metal lazer'},
-  {id:'shotgun',name:'Av Tüfeği',icon:'💥',damage:80,rng:150,fireRate:600,ammo:8,maxAmmo:8,speed:0.7,color:'#e74c3c',metals:'Ti+Co',metalReq:{Co:1},desc:'Yakın mesafe etkili'},
-  {id:'smg',name:'MP5',icon:'🔫',damage:18,rng:200,fireRate:80,ammo:45,maxAmmo:45,speed:1.2,color:'#27ae60',metals:'Co+Cr',metalReq:{Co:1},desc:'Hızlı, çok mermi'},
+  {id:'ak47',name:'AK-47',icon:'🔫',damage:35,rng:300,fireRate:150,ammo:30,maxMermi:30,speed:0.8,color:'#e67e22',metals:'Co+Cr+Ni',metalReq:{Co:1},desc:'Güvenilir, yüksek hasar'},
+  {id:'m4',name:'M4A1',icon:'🔫',damage:28,rng:350,fireRate:100,ammo:30,maxMermi:30,speed:1,color:'#3498db',metals:'Ti+Cr+Nd',metalReq:{Ti:1},desc:'Hassas, hızlı atış'},
+  {id:'awp',name:'AWP Keskin',icon:'🎯',damage:120,rng:600,fireRate:1200,ammo:5,maxMermi:5,speed:0.6,color:'#9b59b6',metals:'Ti+W+Nd',metalReq:{W:1},desc:'Tek atım öldürme'},
+  {id:'railgun',name:'Raylı Top',icon:'⚡',damage:200,rng:800,fireRate:2000,ammo:3,maxMermi:3,speed:0.5,color:'#c41e3a',metals:'Nd+Dy+Ga',metalReq:{Nd:2,Dy:1},desc:'Nadir metal lazer'},
+  {id:'shotgun',name:'Av Tüfeği',icon:'💥',damage:80,rng:150,fireRate:600,ammo:8,maxMermi:8,speed:0.7,color:'#e74c3c',metals:'Ti+Co',metalReq:{Co:1},desc:'Yakın mesafe etkili'},
+  {id:'smg',name:'MP5',icon:'🔫',damage:18,rng:200,fireRate:80,ammo:45,maxMermi:45,speed:1.2,color:'#27ae60',metals:'Co+Cr',metalReq:{Co:1},desc:'Hızlı, çok mermi'},
 ];
 
 // ===== MAP =====
@@ -171,7 +201,7 @@ function spawnEnemies(){
       y:sp[1]+(Math.random()-.5)*TILE*2,
       hp:30+G.round*10,maxHp:30+G.round*10,
       angle:0,speed:0.8+G.round*0.1,
-      shootTimer:Math.random()*2000,
+      shootSüre:Math.random()*2000,
       color:`hsl(${Math.random()*60},70%,50%)`,
       type:Math.random()<.2?'heavy':'normal',
     });

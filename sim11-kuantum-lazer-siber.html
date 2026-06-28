@@ -329,6 +329,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 </style>
 <link rel="stylesheet" href="sim-ui-fix.css">
 <link rel="stylesheet" href="hs-global-fix.css">
+
+<style>
+.da-panel{display:none;margin-top:15px;padding:20px;background:linear-gradient(135deg,#0a1628,#0f1f3a);border:1px solid rgba(0,224,255,0.15);border-radius:12px;max-height:500px;overflow-y:auto;}
+.da-panel.show{display:block;animation:fadeIn .4s ease;}
+.da-panel h3{color:#00E0FF;font-family:'Chakra Petch',sans-serif;margin-bottom:15px;font-size:1.1em;border-bottom:1px solid rgba(0,224,255,0.2);padding-bottom:8px;}
+.da-section{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.da-section:last-child{border-bottom:none;}
+.da-section h4{color:#C9A24B;font-size:0.95em;margin-bottom:8px;font-family:'Chakra Petch',sans-serif;}
+.da-section p{font-size:0.82em;color:rgba(255,255,255,0.8);line-height:1.6;}
+.da-section table{width:100%;border-collapse:collapse;font-size:0.75em;margin:8px 0;}
+.da-section table th{background:rgba(0,224,255,0.1);color:#00E0FF;padding:6px 8px;text-align:left;border:1px solid rgba(0,224,255,0.15);}
+.da-section table td{padding:5px 8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);}
+.da-section table tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+.da-section ul{padding-left:16px;font-size:0.82em;color:rgba(255,255,255,0.8);}
+.da-section ul li{margin-bottom:5px;line-height:1.5;}
+.da-formula{background:rgba(201,162,75,0.08);border:1px solid rgba(201,162,75,0.2);border-radius:8px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:0.78em;color:#C9A24B;line-height:1.7;margin:8px 0;}
+.da-sources{list-style:none;padding:0;}
+.da-sources li{font-size:0.75em;color:rgba(255,255,255,0.5);padding:3px 0;border-bottom:1px dotted rgba(255,255,255,0.05);}
+.da-sources li:before{content:"📄 ";margin-right:4px;}
+.btn-deep-analysis{background:linear-gradient(135deg,#0a2540,#0f3060);color:#00E0FF;border:1px solid rgba(0,224,255,0.3);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-size:0.85em;margin-top:10px;transition:all .3s;}
+.btn-deep-analysis:hover{background:linear-gradient(135deg,#0f3060,#1a4080);border-color:#00E0FF;box-shadow:0 0 15px rgba(0,224,255,0.2);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+
 </head>
 <body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
@@ -451,6 +475,48 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
                 <div class="score-item"><div class="s-label">Genel Değerlendirme</div><div class="s-value" id="fGrade">-</div></div>
             </div>
             <div id="finalAnalysis" style="text-align:left; margin-top:15px; padding:15px; background:rgba(0,0,0,0.3); border-radius:8px;"></div>
+                <button class="btn-deep-analysis" onclick="toggleDeepAnalysis()">📊 DERİN ANALİZ AÇ</button>
+                
+<div id="deep-analysis-panel" class="da-panel"><h3>Kuantum, Lazer ve Siber Üçgeni — Derin Analiz</h3>
+<div class="da-section">
+<h4>Kuantum Bilişim ve Güvenlik</h4>
+<p>Kuantum bilgisayarlar mevcut şifreleme sistemlerini kırma potansiyeline sahiptir. "Q-Day" — kuantum bilgisayarların RSA-2048'i kıracağı gün — 2030-2035 arası bekleniyor.</p>
+<table><tr><th>Parametre</th><th>Klasik</th><th>Kuantum</th><th>Etki</th></tr>
+<tr><td>RSA-2048 Kırma</td><td>10^15 yıl</td><td>~8 saat (4096 qubit)</td><td>Tüm bankacılık, askeri iletişim</td></tr>
+<tr><td>AES-256 Kırma</td><td>10^38 yıl</td><td>Grover: √ hızlanma</td><td>Hâlâ güvenli (AES-512'ye geç)</td></tr>
+<tr><td>Optimizasyon</td><td>Saatler/günler</td><td>Saniyeler</td><td>Lojistik, ilaç, malzeme</td></tr></table>
+</div>
+<div class="da-section">
+<h4>Yönlendirilmiş Enerji Silahları (DEW)</h4>
+<div class="da-formula">Lazer Gücü Gereksinimi:<br>
+• Drone imha: 10-50 kW<br>
+• Füze imha: 100-300 kW<br>
+• Balistik füze: 1+ MW (uzay tabanlı)<br><br>
+Mevcut Sistemler:<br>
+• IRON BEAM (İsrail): 100 kW, operasyonel 2025<br>
+• HELIOS (ABD Donanma): 60 kW, gemi tabanlı<br>
+• DragonFire (İngiltere): 50 kW, test aşaması<br>
+• Atış maliyeti: $1-10 (vs füze $50K-3M)</div>
+</div>
+<div class="da-section">
+<h4>Post-Kuantum Kriptografi</h4>
+<ul>
+<li><strong>NIST PQC Standardı (2024):</strong> CRYSTALS-Kyber (anahtar değişimi) + CRYSTALS-Dilithium (dijital imza)</li>
+<li><strong>Harvest Now, Decrypt Later:</strong> Düşmanlar bugün şifreli veriyi topluyor, kuantum gelince kıracak</li>
+<li><strong>QKD (Quantum Key Distribution):</strong> Çin 4.600 km kuantum ağı kurdu (2024)</li>
+<li><strong>Türkiye:</strong> TÜBİTAK kuantum iletişim projesi, 2027 hedef</li>
+</ul>
+</div>
+<div class="da-section">
+<h4>Kaynaklar</h4>
+<ul class="da-sources">
+<li>NIST — "Post-Quantum Cryptography Standardization" (2024)</li>
+<li>IBM Quantum Roadmap 2025</li>
+<li>CRS — "Directed Energy Weapons" Report (2025)</li>
+<li>Nature — "Quantum Computing Milestones" Review (2024)</li>
+</ul>
+</div></div>
+
             <button class="btn-yeniden başlat" onclick="location.reload()">Yeniden Başla</button>
         </div>
     </div>
@@ -560,5 +626,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     
 (function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
 </script>
+
+<script>
+function toggleDeepAnalysis(){var p=document.getElementById('deep-analysis-panel');if(p.classList.contains('show')){p.classList.remove('show');setTimeout(function(){p.style.display='none';},300);}else{p.style.display='block';setTimeout(function(){p.classList.add('show');},10);p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+</script>
+
 </body>
 </html>

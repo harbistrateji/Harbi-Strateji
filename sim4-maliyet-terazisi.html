@@ -258,6 +258,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 }
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
+
+<style>
+.da-panel{display:none;margin-top:15px;padding:20px;background:linear-gradient(135deg,#0a1628,#0f1f3a);border:1px solid rgba(0,224,255,0.15);border-radius:12px;max-height:500px;overflow-y:auto;}
+.da-panel.show{display:block;animation:fadeIn .4s ease;}
+.da-panel h3{color:#00E0FF;font-family:'Chakra Petch',sans-serif;margin-bottom:15px;font-size:1.1em;border-bottom:1px solid rgba(0,224,255,0.2);padding-bottom:8px;}
+.da-section{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.da-section:last-child{border-bottom:none;}
+.da-section h4{color:#C9A24B;font-size:0.95em;margin-bottom:8px;font-family:'Chakra Petch',sans-serif;}
+.da-section p{font-size:0.82em;color:rgba(255,255,255,0.8);line-height:1.6;}
+.da-section table{width:100%;border-collapse:collapse;font-size:0.75em;margin:8px 0;}
+.da-section table th{background:rgba(0,224,255,0.1);color:#00E0FF;padding:6px 8px;text-align:left;border:1px solid rgba(0,224,255,0.15);}
+.da-section table td{padding:5px 8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);}
+.da-section table tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+.da-section ul{padding-left:16px;font-size:0.82em;color:rgba(255,255,255,0.8);}
+.da-section ul li{margin-bottom:5px;line-height:1.5;}
+.da-formula{background:rgba(201,162,75,0.08);border:1px solid rgba(201,162,75,0.2);border-radius:8px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:0.78em;color:#C9A24B;line-height:1.7;margin:8px 0;}
+.da-sources{list-style:none;padding:0;}
+.da-sources li{font-size:0.75em;color:rgba(255,255,255,0.5);padding:3px 0;border-bottom:1px dotted rgba(255,255,255,0.05);}
+.da-sources li:before{content:"📄 ";margin-right:4px;}
+.btn-deep-analysis{background:linear-gradient(135deg,#0a2540,#0f3060);color:#00E0FF;border:1px solid rgba(0,224,255,0.3);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-size:0.85em;margin-top:10px;transition:all .3s;}
+.btn-deep-analysis:hover{background:linear-gradient(135deg,#0f3060,#1a4080);border-color:#00E0FF;box-shadow:0 0 15px rgba(0,224,255,0.2);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+
 </head>
 <body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
@@ -553,6 +577,50 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
                     </p>
                 </div>
                 
+                <button class="btn-deep-analysis" onclick="toggleDeepAnalysis()">📊 DERİN ANALİZ AÇ</button>
+                
+<div id="deep-analysis-panel" class="da-panel"><h3>Maliyet Terazisi: Savunma Ekonomisi — Derin Analiz</h3>
+<div class="da-section">
+<h4>Savunma Harcamaları Küresel Tablo (2025)</h4>
+<table><tr><th>Ülke</th><th>Bütçe ($B)</th><th>GSYİH %</th><th>Kişi Başı ($)</th></tr>
+<tr><td>ABD</td><td>886</td><td>3.4%</td><td>2.600</td></tr>
+<tr><td>Çin</td><td>296</td><td>1.7%</td><td>210</td></tr>
+<tr><td>Rusya</td><td>109</td><td>5.9%</td><td>750</td></tr>
+<tr><td>Hindistan</td><td>83</td><td>2.4%</td><td>60</td></tr>
+<tr><td>S. Arabistan</td><td>78</td><td>7.1%</td><td>2.200</td></tr>
+<tr><td>Türkiye</td><td>42</td><td>2.1%</td><td>490</td></tr>
+<tr><td>İsrail</td><td>27</td><td>5.3%</td><td>2.800</td></tr></table>
+</div>
+<div class="da-section">
+<h4>Maliyet Asimetrisi Kanunu</h4>
+<div class="da-formula">Asimetri Oranı = C_savunma / C_saldırı<br>
+Eğer Oran > 10:1 → Savunma ekonomik olarak sürdürülemez<br>
+Eğer Oran < 1:1 → Saldırı caydırılmış<br><br>
+Örnekler:<br>
+• Patriot vs Houthi Drone: $3M / $2K = 1500:1 (KRİTİK)<br>
+• Iron Dome vs Kassam: $50K / $800 = 62:1 (YÜKSEK)<br>
+• C-RAM vs Roket: $30 / $800 = 0.04:1 (İDEAL)<br>
+• Lazer vs Drone: $2 / $2K = 0.001:1 (DEVRIMSEL)</div>
+</div>
+<div class="da-section">
+<h4>Türkiye Savunma Sanayii Ekonomisi</h4>
+<ul>
+<li><strong>2023 İhracat:</strong> $5.5 milyar → <strong>2025 İhracat:</strong> $8.5 milyar (rekor)</li>
+<li><strong>Yerlilik Oranı:</strong> 2002'de %20 → 2025'te %80+</li>
+<li><strong>Bayraktar TB2 Maliyet:</strong> ~$5M (MQ-9 Reaper: $32M — 6.4x daha ucuz)</li>
+<li><strong>KAAN Projesi:</strong> Toplam ~$10-12B (F-35: $1.7T program maliyeti)</li>
+</ul>
+</div>
+<div class="da-section">
+<h4>Kaynaklar</h4>
+<ul class="da-sources">
+<li>SIPRI Military Expenditure Database 2025</li>
+<li>IISS — The Military Balance 2025-2026</li>
+<li>SSB (Savunma Sanayii Başkanlığı) — Yıllık Faaliyet Raporu 2025</li>
+<li>Jane's Defence Budgets — Country Profiles</li>
+</ul>
+</div></div>
+
                 <button class="btn btn-primary" onclick="location.reload()">🔄 YENİDEN DENE</button>
                 <button class="btn btn-secondary" onclick="window.location='index.html'">← ANA MENÜ</button>
             `;
@@ -560,5 +628,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     
 (function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
 </script>
+
+<script>
+function toggleDeepAnalysis(){var p=document.getElementById('deep-analysis-panel');if(p.classList.contains('show')){p.classList.remove('show');setTimeout(function(){p.style.display='none';},300);}else{p.style.display='block';setTimeout(function(){p.classList.add('show');},10);p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+</script>
+
 </body>
 </html>

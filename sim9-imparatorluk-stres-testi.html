@@ -276,6 +276,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 </style>
 <link rel="stylesheet" href="sim-ui-fix.css">
 <link rel="stylesheet" href="hs-global-fix.css">
+
+<style>
+.da-panel{display:none;margin-top:15px;padding:20px;background:linear-gradient(135deg,#0a1628,#0f1f3a);border:1px solid rgba(0,224,255,0.15);border-radius:12px;max-height:500px;overflow-y:auto;}
+.da-panel.show{display:block;animation:fadeIn .4s ease;}
+.da-panel h3{color:#00E0FF;font-family:'Chakra Petch',sans-serif;margin-bottom:15px;font-size:1.1em;border-bottom:1px solid rgba(0,224,255,0.2);padding-bottom:8px;}
+.da-section{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.da-section:last-child{border-bottom:none;}
+.da-section h4{color:#C9A24B;font-size:0.95em;margin-bottom:8px;font-family:'Chakra Petch',sans-serif;}
+.da-section p{font-size:0.82em;color:rgba(255,255,255,0.8);line-height:1.6;}
+.da-section table{width:100%;border-collapse:collapse;font-size:0.75em;margin:8px 0;}
+.da-section table th{background:rgba(0,224,255,0.1);color:#00E0FF;padding:6px 8px;text-align:left;border:1px solid rgba(0,224,255,0.15);}
+.da-section table td{padding:5px 8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);}
+.da-section table tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+.da-section ul{padding-left:16px;font-size:0.82em;color:rgba(255,255,255,0.8);}
+.da-section ul li{margin-bottom:5px;line-height:1.5;}
+.da-formula{background:rgba(201,162,75,0.08);border:1px solid rgba(201,162,75,0.2);border-radius:8px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:0.78em;color:#C9A24B;line-height:1.7;margin:8px 0;}
+.da-sources{list-style:none;padding:0;}
+.da-sources li{font-size:0.75em;color:rgba(255,255,255,0.5);padding:3px 0;border-bottom:1px dotted rgba(255,255,255,0.05);}
+.da-sources li:before{content:"📄 ";margin-right:4px;}
+.btn-deep-analysis{background:linear-gradient(135deg,#0a2540,#0f3060);color:#00E0FF;border:1px solid rgba(0,224,255,0.3);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-size:0.85em;margin-top:10px;transition:all .3s;}
+.btn-deep-analysis:hover{background:linear-gradient(135deg,#0f3060,#1a4080);border-color:#00E0FF;box-shadow:0 0 15px rgba(0,224,255,0.2);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+
 </head>
 <body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
@@ -491,5 +515,52 @@ panel.innerHTML=`<h2>SİMÜLASYON SONUCU: ${names[empire]}</h2>
 
 (function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
 </script>
+<button class="btn-deep-analysis" onclick="toggleDeepAnalysis()">📊 DERİN ANALİZ AÇ</button>
+
+<div id="deep-analysis-panel" class="da-panel"><h3>İmparatorluk Stres Testi: Süper Güç Çöküşü — Derin Analiz</h3>
+<div class="da-section">
+<h4>İmparatorluk Çöküş Kalıpları</h4>
+<p>Tarihte tüm imparatorluklar benzer kalıplarla çökmüştür. Paul Kennedy'nin "Imperial Overstretch" teorisi hâlâ geçerlidir.</p>
+<table><tr><th>İmparatorluk</th><th>Zirve</th><th>Çöküş</th><th>Süre</th><th>Ana Neden</th></tr>
+<tr><td>Roma</td><td>MS 117</td><td>MS 476</td><td>~350 yıl</td><td>Aşırı genişleme + barbar göçü</td></tr>
+<tr><td>Osmanlı</td><td>1683</td><td>1922</td><td>~240 yıl</td><td>Teknolojik geri kalma + milliyetçilik</td></tr>
+<tr><td>İngiliz</td><td>1920</td><td>1947</td><td>~27 yıl</td><td>2 Dünya Savaşı ekonomik tükenme</td></tr>
+<tr><td>Sovyet</td><td>1975</td><td>1991</td><td>~16 yıl</td><td>Ekonomik çöküş + ideolojik boşluk</td></tr>
+<tr><td>ABD?</td><td>1991?</td><td>?</td><td>?</td><td>Aşırı borç + iç kutuplaşma?</td></tr></table>
+</div>
+<div class="da-section">
+<h4>Çöküş Formülü (Kennedy-Turchin Modeli)</h4>
+<div class="da-formula">Çöküş Riski = (Askeri Harcama/GSYİH) × (Borç/GSYİH) × (İç Kutuplaşma Endeksi) / (Ekonomik Büyüme × İnovasyon Kapasitesi)<br><br>
+ABD 2025 Değerleri:<br>
+• Askeri/GSYİH: 3.4%<br>
+• Borç/GSYİH: 124%<br>
+• Kutuplaşma: Tarihsel zirve (Pew Research)<br>
+• Büyüme: %2.1<br>
+• İnovasyon: Hâlâ lider (AI, uzay, biyotek)</div>
+</div>
+<div class="da-section">
+<h4>Güncel Stres Göstergeleri</h4>
+<ul>
+<li><strong>ABD Ulusal Borç:</strong> $36+ trilyon (2025) — faiz ödemesi savunma bütçesini geçti</li>
+<li><strong>De-dolarizasyon:</strong> BRICS+ alternatif ödeme sistemleri, Çin-Rusya yuan ticareti</li>
+<li><strong>İç Kutuplaşma:</strong> 2024 seçimleri sonrası toplumsal gerilim zirve</li>
+<li><strong>Teknolojik Rekabet:</strong> Çin AI patent sayısında ABD'yi geçti (2024)</li>
+</ul>
+</div>
+<div class="da-section">
+<h4>Kaynaklar</h4>
+<ul class="da-sources">
+<li>Kennedy, P. — "The Rise and Fall of the Great Powers" (1987)</li>
+<li>Turchin, P. — "End Times: Elites, Counter-Elites, and the Path of Political Disintegration" (2023)</li>
+<li>Dalio, R. — "Principles for Dealing with the Changing World Order" (2021)</li>
+<li>CBO — "The Long-Term Budget Outlook 2025"</li>
+</ul>
+</div></div>
+
+
+<script>
+function toggleDeepAnalysis(){var p=document.getElementById('deep-analysis-panel');if(p.classList.contains('show')){p.classList.remove('show');setTimeout(function(){p.style.display='none';},300);}else{p.style.display='block';setTimeout(function(){p.classList.add('show');},10);p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+</script>
+
 </body>
 </html>

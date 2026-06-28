@@ -259,6 +259,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 </style>
 <link rel="stylesheet" href="sim-ui-fix.css">
 <link rel="stylesheet" href="hs-global-fix.css">
+
+<style>
+.da-panel{display:none;margin-top:15px;padding:20px;background:linear-gradient(135deg,#0a1628,#0f1f3a);border:1px solid rgba(0,224,255,0.15);border-radius:12px;max-height:500px;overflow-y:auto;}
+.da-panel.show{display:block;animation:fadeIn .4s ease;}
+.da-panel h3{color:#00E0FF;font-family:'Chakra Petch',sans-serif;margin-bottom:15px;font-size:1.1em;border-bottom:1px solid rgba(0,224,255,0.2);padding-bottom:8px;}
+.da-section{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.da-section:last-child{border-bottom:none;}
+.da-section h4{color:#C9A24B;font-size:0.95em;margin-bottom:8px;font-family:'Chakra Petch',sans-serif;}
+.da-section p{font-size:0.82em;color:rgba(255,255,255,0.8);line-height:1.6;}
+.da-section table{width:100%;border-collapse:collapse;font-size:0.75em;margin:8px 0;}
+.da-section table th{background:rgba(0,224,255,0.1);color:#00E0FF;padding:6px 8px;text-align:left;border:1px solid rgba(0,224,255,0.15);}
+.da-section table td{padding:5px 8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);}
+.da-section table tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+.da-section ul{padding-left:16px;font-size:0.82em;color:rgba(255,255,255,0.8);}
+.da-section ul li{margin-bottom:5px;line-height:1.5;}
+.da-formula{background:rgba(201,162,75,0.08);border:1px solid rgba(201,162,75,0.2);border-radius:8px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:0.78em;color:#C9A24B;line-height:1.7;margin:8px 0;}
+.da-sources{list-style:none;padding:0;}
+.da-sources li{font-size:0.75em;color:rgba(255,255,255,0.5);padding:3px 0;border-bottom:1px dotted rgba(255,255,255,0.05);}
+.da-sources li:before{content:"📄 ";margin-right:4px;}
+.btn-deep-analysis{background:linear-gradient(135deg,#0a2540,#0f3060);color:#00E0FF;border:1px solid rgba(0,224,255,0.3);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-size:0.85em;margin-top:10px;transition:all .3s;}
+.btn-deep-analysis:hover{background:linear-gradient(135deg,#0f3060,#1a4080);border-color:#00E0FF;box-shadow:0 0 15px rgba(0,224,255,0.2);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+
 </head>
 <body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
@@ -478,5 +502,51 @@ function showAlternative(scenario) {
 
 (function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
 </script>
+<button class="btn-deep-analysis" onclick="toggleDeepAnalysis()">📊 DERİN ANALİZ AÇ</button>
+
+<div id="deep-analysis-panel" class="da-panel"><h3>FCAS/Tempest Çöküşü: 6. Nesil Savaş — Derin Analiz</h3>
+<div class="da-section">
+<h4>6. Nesil Savaş Uçağı Programları</h4>
+<table><tr><th>Program</th><th>Ülkeler</th><th>Bütçe</th><th>İlk Uçuş</th><th>Durum</th></tr>
+<tr><td>NGAD</td><td>ABD</td><td>$100B+</td><td>2030?</td><td>Yeniden değerlendirme</td></tr>
+<tr><td>FCAS/SCAF</td><td>Almanya/Fransa/İspanya</td><td>€100B</td><td>2040</td><td>Gecikme + anlaşmazlık</td></tr>
+<tr><td>Tempest/GCAP</td><td>İngiltere/İtalya/Japonya</td><td>£50B+</td><td>2035</td><td>Aktif geliştirme</td></tr>
+<tr><td>KAAN (TF-X)</td><td>Türkiye</td><td>$10-12B</td><td>2024 ✓</td><td>İlk uçuş başarılı</td></tr>
+<tr><td>KF-21</td><td>G. Kore/Endonezya</td><td>$8B</td><td>2022 ✓</td><td>Seri üretim 2026</td></tr></table>
+</div>
+<div class="da-section">
+<h4>Neden Çöküyor?</h4>
+<div class="da-formula">Program Başarı Olasılığı = f(Politik İrade, Teknolojik Olgunluk, Bütçe Disiplini, Endüstriyel Kapasite)<br><br>
+FCAS Sorunları:<br>
+• Almanya-Fransa iş paylaşımı anlaşmazlığı (motor: Safran vs MTU)<br>
+• Maliyet artışı: Başlangıç €60B → Güncel €100B+ (%67 artış)<br>
+• Otonom wingman entegrasyonu: Hukuki çerçeve eksik<br>
+• Drone çağında pilotlu uçak gerekli mi? sorusu</div>
+</div>
+<div class="da-section">
+<h4>KAAN Avantajı</h4>
+<ul>
+<li><strong>Tek karar merkezi:</strong> Türkiye tek başına karar alıyor — politik gecikme yok</li>
+<li><strong>Maliyet etkinliği:</strong> F-35'in 1/10 program maliyeti</li>
+<li><strong>Modüler tasarım:</strong> Block 0 → Block 1 → Block 2 evrimsel geliştirme</li>
+<li><strong>İlk uçuş:</strong> 21 Şubat 2024 — programdan sadece 7 yıl sonra (FCAS: 20+ yıl planlı)</li>
+<li><strong>Motor:</strong> F110 (geçici) → TEI-TF35000 (yerli, 2028 hedef)</li>
+</ul>
+</div>
+<div class="da-section">
+<h4>Kaynaklar</h4>
+<ul class="da-sources">
+<li>Aviation Week — "FCAS Program Status" (2025)</li>
+<li>RUSI — "The Future Combat Air System" Analysis</li>
+<li>TAI/TUSAŞ — KAAN Program Bilgileri</li>
+<li>Jane's All the World's Aircraft — 6th Gen Comparison</li>
+</ul>
+</div></div>
+
+
+<script>
+function toggleDeepAnalysis(){var p=document.getElementById('deep-analysis-panel');if(p.classList.contains('show')){p.classList.remove('show');setTimeout(function(){p.style.display='none';},300);}else{p.style.display='block';setTimeout(function(){p.classList.add('show');},10);p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+</script>
+
 </body>
 </html>

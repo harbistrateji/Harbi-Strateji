@@ -258,6 +258,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 }
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
+
+<style>
+.da-panel{display:none;margin-top:15px;padding:20px;background:linear-gradient(135deg,#0a1628,#0f1f3a);border:1px solid rgba(0,224,255,0.15);border-radius:12px;max-height:500px;overflow-y:auto;}
+.da-panel.show{display:block;animation:fadeIn .4s ease;}
+.da-panel h3{color:#00E0FF;font-family:'Chakra Petch',sans-serif;margin-bottom:15px;font-size:1.1em;border-bottom:1px solid rgba(0,224,255,0.2);padding-bottom:8px;}
+.da-section{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.da-section:last-child{border-bottom:none;}
+.da-section h4{color:#C9A24B;font-size:0.95em;margin-bottom:8px;font-family:'Chakra Petch',sans-serif;}
+.da-section p{font-size:0.82em;color:rgba(255,255,255,0.8);line-height:1.6;}
+.da-section table{width:100%;border-collapse:collapse;font-size:0.75em;margin:8px 0;}
+.da-section table th{background:rgba(0,224,255,0.1);color:#00E0FF;padding:6px 8px;text-align:left;border:1px solid rgba(0,224,255,0.15);}
+.da-section table td{padding:5px 8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);}
+.da-section table tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+.da-section ul{padding-left:16px;font-size:0.82em;color:rgba(255,255,255,0.8);}
+.da-section ul li{margin-bottom:5px;line-height:1.5;}
+.da-formula{background:rgba(201,162,75,0.08);border:1px solid rgba(201,162,75,0.2);border-radius:8px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:0.78em;color:#C9A24B;line-height:1.7;margin:8px 0;}
+.da-sources{list-style:none;padding:0;}
+.da-sources li{font-size:0.75em;color:rgba(255,255,255,0.5);padding:3px 0;border-bottom:1px dotted rgba(255,255,255,0.05);}
+.da-sources li:before{content:"📄 ";margin-right:4px;}
+.btn-deep-analysis{background:linear-gradient(135deg,#0a2540,#0f3060);color:#00E0FF;border:1px solid rgba(0,224,255,0.3);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-size:0.85em;margin-top:10px;transition:all .3s;}
+.btn-deep-analysis:hover{background:linear-gradient(135deg,#0f3060,#1a4080);border-color:#00E0FF;box-shadow:0 0 15px rgba(0,224,255,0.2);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+</style>
+
 </head>
 <body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
@@ -383,6 +407,52 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             <div class="result-title" id="overlay-title">SİSTEM ÇÖKTÜ</div>
             <div class="result-text" id="overlay-text"></div>
             <div class="formula-box" id="overlay-formula"></div>
+                <button class="btn-deep-analysis" onclick="toggleDeepAnalysis()">📊 DERİN ANALİZ AÇ</button>
+                
+<div id="deep-analysis-panel" class="da-panel"><h3>Demir Kubbe vs Füze Saldırısı — Derin Analiz</h3>
+<div class="da-section">
+<h4>Tarihsel Bağlam</h4>
+<p>Iron Dome (Demir Kubbe), İsrail'in Rafael Advanced Defense Systems tarafından 2011'de operasyonel hale getirilen kısa menzilli hava savunma sistemidir. Nisan 2024 İran saldırısında 300+ füze ve drone'a karşı %99 başarı oranı göstermiştir.</p>
+<table><tr><th>Parametre</th><th>Değer</th></tr>
+<tr><td>Menzil</td><td>4-70 km</td></tr>
+<tr><td>Tamir Füze Maliyeti</td><td>~$50.000/adet</td></tr>
+<tr><td>Batarya Maliyeti</td><td>~$50 milyon</td></tr>
+<tr><td>Tepki Süresi</td><td><15 saniye</td></tr>
+<tr><td>Eş Zamanlı Hedef</td><td>Batarya başına 20+</td></tr></table>
+</div>
+<div class="da-section">
+<h4>Maliyet Asimetrisi Formülü</h4>
+<div class="da-formula">C_defense / C_attack = $50.000 / $600 ≈ 83:1 (Drone saldırısında)<br>
+C_defense / C_attack = $50.000 / $30.000 ≈ 1.67:1 (Roket saldırısında)</div>
+<p>Bu asimetri, savunma tarafının ekonomik olarak sürdürülemez hale gelebileceğini gösterir. Saldırgan ucuz mühimmat kullanarak savunmacıyı tüketme stratejisi izleyebilir.</p>
+</div>
+<div class="da-section">
+<h4>Karşılaştırmalı Sistemler</h4>
+<table><tr><th>Sistem</th><th>Ülke</th><th>Menzil</th><th>Birim Maliyet</th></tr>
+<tr><td>Iron Dome</td><td>İsrail</td><td>4-70 km</td><td>$50K/füze</td></tr>
+<tr><td>HİSAR-A+</td><td>Türkiye</td><td>0-25 km</td><td>~$1M/füze</td></tr>
+<tr><td>Pantsir-S1</td><td>Rusya</td><td>1-20 km</td><td>~$15M/sistem</td></tr>
+<tr><td>C-RAM</td><td>ABD</td><td>0-2 km</td><td>$30/mermi</td></tr>
+<tr><td>Lazer (IRON BEAM)</td><td>İsrail</td><td>0-7 km</td><td>~$2/atış</td></tr></table>
+</div>
+<div class="da-section">
+<h4>Güncel Veriler (2024-2026)</h4>
+<ul>
+<li><strong>14 Nisan 2024:</strong> İran 170 drone, 120 balistik füze, 30 cruise füze fırlattı. İsrail+ABD+İngiltere+Ürdün koalisyonu %99 önleme başardı.</li>
+<li><strong>Ekim 2024:</strong> İran 180 balistik füze fırlattı, bazıları hedefi buldu — Iron Dome balistik füzelere karşı yetersiz (David's Sling/Arrow görevi).</li>
+<li><strong>2025-2026:</strong> Iron Beam lazer sistemi operasyonel oldu — atış başına maliyet $2'a düştü.</li>
+</ul>
+</div>
+<div class="da-section">
+<h4>Kaynaklar</h4>
+<ul class="da-sources">
+<li>CSIS Missile Defense Project (2024) — "Iron Dome: A Technical Assessment"</li>
+<li>IISS Military Balance 2025-2026</li>
+<li>SIPRI Arms Transfers Database</li>
+<li>Rafael Advanced Defense Systems — Teknik Spesifikasyonlar</li>
+</ul>
+</div></div>
+
             <button class="btn btn-primary" onclick="resetSimulation()">🔄 YENİDEN DENE</button>
             <button class="btn btn-secondary" style="margin-top:10px;" onclick="showAlternatives()">📋 ALTERNATİF STRATEJİLER</button>
         </div>
@@ -634,5 +704,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     
 (function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
 </script>
+
+<script>
+function toggleDeepAnalysis(){var p=document.getElementById('deep-analysis-panel');if(p.classList.contains('show')){p.classList.remove('show');setTimeout(function(){p.style.display='none';},300);}else{p.style.display='block';setTimeout(function(){p.classList.add('show');},10);p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+</script>
+
 </body>
 </html>

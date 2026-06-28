@@ -146,6 +146,22 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),#FFD700,var(--gold));background-size:200% 100%;opacity:0;transition:opacity .3s;animation:shimmer 2s linear infinite}
 .card:hover::before{opacity:1}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.card .btn-row{display:flex;gap:8px;margin-top:auto;padding-top:12px;}
+.card .btn-row a{
+  text-decoration:none!important;
+  padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:600;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px;
+  transition:all 0.3s ease;display:inline-flex;align-items:center;gap:4px;
+}
+.card .btn-row a.gradient-pill{
+  background:linear-gradient(135deg,#5865f2,#00E0FF);color:#fff;border:none;
+}
+.card .btn-row a.gradient-pill:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(88,101,242,0.4);}
+.card .btn-row a.badge-new{
+  background:rgba(0,224,255,0.1);color:#00E0FF;border:1px solid rgba(0,224,255,0.3);
+}
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -626,7 +642,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
       <div class="card-desc">Otonom sistemler, biyonik asker, YZ destekli C4ISR ve insan-makine iş birliği.</div>
       <div class="card-meta"><span class="type">İnteraktif</span></div>
     </a>
-    <a href="infografik-kuresel-askeri-sistemler.html" class="card" data-cat="yapay-zeka">
+    <a href="panel-silah-metal.html" class="card" data-cat="yapay-zeka">
       <div class="card-tag">Küresel Sistemler</div>
       <div class="card-title">Küresel Askeri YZ Sistemleri</div>
       <div class="card-desc">ABD JADC2, Çin Zhi-Sheng, Rusya Štorm — küresel YZ askeri programları.</div>

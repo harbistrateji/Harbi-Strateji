@@ -595,7 +595,7 @@ const HABERLER = [
 ];
 
 let cur = HABERLER[0];
-let xp = 440;
+// xp already declared in logic.js
 let tStep = 0;
 let pollVoted = false;
 
@@ -611,8 +611,8 @@ function sw(t, el) {
   if(t==='quiz') buildQuiz();
 }
 
-function buildGrid() {
-  const g = document.getElementById('cl-hgrid');
+function buildHaberGrid() {
+  const g = document.getElementById('hgrid');
   g.innerHTML = HABERLER.slice(1).map(h=>`
     <div class="hc${cur&&cur.id===h.id?' sel':''}" onclick="selCard(${h.id})">
       <div class="hc-top" style="background:${h.bg};">
@@ -631,8 +631,8 @@ window.selCard = function(id) {
   cur = HABERLER.find(h=>h.id===id);
   pollVoted = false;
   tStep = 0;
-  buildGrid();
-  const dp = document.getElementById('cl-dpanel');
+  buildHaberGrid();
+  const dp = document.getElementById('dpanel');
   document.getElementById('dpIco').textContent = cur.icon;
   document.getElementById('dpIco').style.background = cur.bg;
   document.getElementById('dpTitle').textContent = cur.baslik;
@@ -724,7 +724,7 @@ function gainXP(p) {
   document.getElementById('cl-xppt').textContent = xp.toLocaleString('tr-TR')+' / 2.000 XP';
 }
 
-buildGrid();
+buildHaberGrid();
 selCard(0);
 </script>
 </body></html>

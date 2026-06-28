@@ -109,6 +109,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style><link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 </head><body>
@@ -121,11 +137,11 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 var CASES=[
 {title:'Cicero Dosyası',header:'GİZLİ // 1943 // ANKARA',body:'İngiliz Büyükelçisinin uşağından alınan belgeler. Kod adı: Cicero. 35 film rulosu.',q:'Casus kim?',suspects:[{name:'Elyesa Bazna',role:'Uşak',correct:true},{name:'Kim Philby',role:'MI6'},{name:'Allen Dulles',role:'OSS'},{name:'Canaris',role:'Abwehr'}],fact:'Elyesa Bazna İngiliz Büyükelçisinin kasasından belgeleri fotoğrafladı. Sahte parayla ödendi.'},
 {title:'Cambridge Besli',header:'GIZLI // 1951 // LONDRA',body:'MI6 icinde Sovyet molesi. 30 yildir bilgi sizdiriyor.',q:'Besli\'nin lideri?',suspects:[{name:'Kim Philby',role:'MI6',correct:true},{name:'Guy Burgess',role:'Diplomat'},{name:'Anthony Blunt',role:'Sanat'},{name:'Maclean',role:'Disisleri'}],fact:'Kim Philby 30 yil MI6\'da calisirken Sovyetlere bilgi sizdirdi.'},
-{title:'Enigma Kirici',header:'GIZLI // 1941 // BLETCHLEY',body:'Alman Enigma makinesi kirildi. Almanlar bilmemeli.',q:'Projenin lideri?',suspects:[{name:'Alan Turing',role:'Matematikci',correct:true},{name:'Ian Fleming',role:'Deniz'},{name:'Menzies',role:'MI6'},{name:'Churchill',role:'Basbakan'}],fact:'Alan Turing Enigma\'yi kirdi. Ultra istihbarati savasi 2 yil kisaltti.'},
-{title:'U-2 Krizi',header:'GIZLI // 1960 // MOSKOVA',body:'Amerikan U-2 casus ucagi dusuruld. Pilot Gary Powers hayatta.',q:'Ucagin gorevi?',suspects:[{name:'Nukleer tesis fotografi',role:'Kesfif',correct:true},{name:'Suikast',role:'Operasyon'},{name:'Ajan birakma',role:'Infiltrasyon'},{name:'Sinyal dinleme',role:'SIGINT'}],fact:'U-2 ucaklari 21km yukseklikten Sovyet nukleer tesislerini fotografliyordu.'},
-{title:'Mossad Eichmann',header:'GIZLI // 1960 // BUENOS AIRES',body:'Nazi savas suclusi Arjantin\'de saklanyor. Mossad operasyonu.',q:'Operasyonun adi?',suspects:[{name:'Garibaldi Op.',role:'Kacirma',correct:true},{name:'Entebbe',role:'Kurtarma'},{name:'Wrath of God',role:'Suikast'},{name:'Bayonet',role:'Infiltrasyon'}],fact:'Mossad Eichmann\'i Buenos Aires\'te yakaladi ve Israil\'e kacirdi.'},
+{title:'Enigma Kirici',header:'GIZLI // 1941 // BLETCHLEY',body:'Alman Enigma makinesi kirildi. Almanlar bilmemeli.',q:'Projenin lideri?',suspects:[{name:'Alan Turing',role:'Matematikci',correct:true},{name:'Ian Fleming',role:'Deniz'},{name:'Menzies',role:'MI6'},{name:'Churchill',role:'Basbakan'}],fact:'Alan Turing Enigma\'yi kirdi. Ultra istihbarati savaşı 2 yil kisaltti.'},
+{title:'U-2 Krizi',header:'GIZLI // 1960 // MOSKOVA',body:'Amerikan U-2 casus ucagi dusuruld. Pilot Gary Powers hayatta.',q:'Ucagin gorevi?',suspects:[{name:'Nükleer tesis fotografi',role:'Kesfif',correct:true},{name:'Suikast',role:'Operasyon'},{name:'Ajan birakma',role:'Infiltrasyon'},{name:'Sinyal dinleme',role:'SIGINT'}],fact:'U-2 ucaklari 21km yukseklikten Sovyet nükleer tesislerini fotografliyordu.'},
+{title:'Mossad Eichmann',header:'GIZLI // 1960 // BUENOS AIRES',body:'Nazi savaş suclusi Arjantin\'de saklanyor. Mossad operasyonu.',q:'Operasyonun adi?',suspects:[{name:'Garibaldi Op.',role:'Kacirma',correct:true},{name:'Entebbe',role:'Kurtarma'},{name:'Wrath of God',role:'Suikast'},{name:'Bayonet',role:'Infiltrasyon'}],fact:'Mossad Eichmann\'i Buenos Aires\'te yakaladi ve İsrail\'e kacirdi.'},
 {title:'Venona Projesi',header:'GIZLI // 1943 // NSA',body:'Sovyet sifreleri kirildi. Atom casuslarinin kimligi ortaya cikiyor.',q:'Atom sirrini kim sizdirdi?',suspects:[{name:'Julius Rosenberg',role:'Muhendis',correct:true},{name:'Oppenheimer',role:'Fizikci'},{name:'Fuchs',role:'Bilim'},{name:'Hiss',role:'Diplomat'}],fact:'Rosenberg cifti atom bombasi sirlarini Sovyetlere sizdirdi.'},
-{title:'Stuxnet',header:'GIZLI // 2010 // NATANZ',body:'İran nukleer tesisine siber saldiri. 1000 santrifuj imha edildi.',q:'Kim gelistirdi?',suspects:[{name:'ABD + Israel',role:'NSA+8200',correct:true},{name:'Rusya',role:'FSB'},{name:'Cin',role:'PLA'},{name:'Anonymous',role:'Hacker'}],fact:'Olympic Games: NSA ve Israel Unit 8200 birlikte gelistirdi. İlk siber silah.'},
+{title:'Stuxnet',header:'GIZLI // 2010 // NATANZ',body:'İran nükleer tesisine siber saldırı. 1000 santrifuj imha edildi.',q:'Kim gelistirdi?',suspects:[{name:'ABD + Israel',role:'NSA+8200',correct:true},{name:'Rusya',role:'FSB'},{name:'Cin',role:'PLA'},{name:'Anonymous',role:'Hacker'}],fact:'Olympic Games: NSA ve Israel Unit 8200 birlikte gelistirdi. İlk siber silah.'},
 {title:'Salisbury',header:'GIZLI // 2018 // İNGİLTERE',body:'Eski Rus ajani Skripal Novichok ile zehirlendi.',q:'Saldirganlar hangi birim?',suspects:[{name:'GRU Unit 29155',role:'Askerî Ist.',correct:true},{name:'FSB',role:'Ic Güvenlik'},{name:'SVR',role:'Dis Ist.'},{name:'Wagner',role:'Paralel'}],fact:'GRU Unit 29155 sahte pasaportla girdi. Novichok kapi koluna suruldu.'}
 ];
 var G={cur:0,puan:0,logs:[]};

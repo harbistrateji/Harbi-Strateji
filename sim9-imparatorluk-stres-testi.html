@@ -79,9 +79,9 @@ p{color:var(--bone-dim);}
 
 /* Hero */
 .sim-hero{
-  min-height:40vh;
+  min-height:auto;
   display:flex;flex-direction:column;justify-content:center;
-  padding:120px 32px 60px;
+  padding:40px 32px 60px;
   max-width:1180px;margin:0 auto;
   position:relative;z-index:1;
 }
@@ -113,7 +113,7 @@ p{color:var(--bone-dim);}
   padding:40px 32px 100px;
   position:relative;z-index:1;
 }
-@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:40px 18px 40px;}}
 
 /* Panels */
 .sim-panel{
@@ -273,6 +273,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .result-box{background:var(--panel-2);border-radius:10px;padding:20px;margin-top:16px;}
 .meter{width:100%;height:24px;background:var(--deep);border-radius:12px;overflow:hidden;margin-top:12px;}
 .meter-fill{height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:bold;color:var(--void);transition:width 1s ease;}
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="sim-ui-fix.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -496,7 +512,7 @@ kararlar.push(s.opts[idx].text);
 Object.keys(fx).forEach(k=>{scores[k]=Math.max(0,Math.min(100,scores[k]+fx[k]))});
 updateBoard();
 document.getElementById('step'+step).classList.add('hidden');
-if(step<3){showStep(step+1)}else{showSonuc()}
+if(step<3){showStep(step+1)}else{showSonuç()}
 }
 
 function updateBoard(){
@@ -518,8 +534,8 @@ document.getElementById('vKimlik').textContent=scores.kimlik;
 document.getElementById('vEkoloji').textContent=scores.ekoloji;
 }}
 
-function showSonuc(){
-let panel=document.getElementById('sonuc');panel.classList.remove('hidden');
+function showSonuç(){
+let panel=document.getElementById('sonuç');panel.classList.remove('hidden');
 let toplam=scores.kaynak+scores.otorite+scores.inovasyon+scores.kimlik+scores.ekoloji;
 let max=500;let pct=Math.round(toplam/max*100);
 let verdict='',color='';
@@ -560,7 +576,7 @@ panel.innerHTML=`<h2>SİMÜLASYON SONUCU: ${names[empire]}</h2>
 </div>
 <div class="da-section">
 <h4>Çöküş Formülü (Kennedy-Turchin Modeli)</h4>
-<div class="da-formula">Çöküş Riski = (Askeri Harcama/GSYİH) × (Borç/GSYİH) × (İç Kutuplaşma Endeksi) / (Ekonomik Büyüme × İnovasyon Kapasitesi)<br><br>
+<div class="da-formula">Çöküş Riski = (Askerî Harcama/GSYİH) × (Borç/GSYİH) × (İç Kutuplaşma Endeksi) / (Ekonomik Büyüme × İnovasyon Kapasitesi)<br><br>
 ABD 2025 Değerleri:<br>
 • Askeri/GSYİH: 3.4%<br>
 • Borç/GSYİH: 124%<br>

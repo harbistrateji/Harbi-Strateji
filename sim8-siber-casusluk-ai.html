@@ -79,9 +79,9 @@ p{color:var(--bone-dim);}
 
 /* Hero */
 .sim-hero{
-  min-height:40vh;
+  min-height:auto;
   display:flex;flex-direction:column;justify-content:center;
-  padding:120px 32px 60px;
+  padding:40px 32px 60px;
   max-width:1180px;margin:0 auto;
   position:relative;z-index:1;
 }
@@ -113,7 +113,7 @@ p{color:var(--bone-dim);}
   padding:40px 32px 100px;
   position:relative;z-index:1;
 }
-@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:40px 18px 40px;}}
 
 /* Panels */
 .sim-panel{
@@ -335,6 +335,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .btn-cyan:hover{background:#00E0FF;color:var(--void);}
 
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
 
@@ -517,7 +533,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 </div>
 <h3>Uzun vadeli strateji öneriniz?</h3>
 <div class="options">
-<button class="btn btn-red" onclick="vaka(4,'saldiri')">⚔️ Karşı Siber Operasyon (Ofansif)</button>
+<button class="btn btn-red" onclick="vaka(4,'saldırı')">⚔️ Karşı Siber Operasyon (Ofansif)</button>
 <button class="btn btn-orange" onclick="vaka(4,'ai_savunma')">🤖 AI Destekli Otomatik Tespit Sistemi</button>
 <button class="btn btn-gold" onclick="vaka(4,'egitim')">🎓 Hedef Kitle Eğitimi (Bilişsel Savunma)</button>
 <button class="btn btn-grey" onclick="vaka(4,'hepsi')">🛡️ Katmanlı Savunma (Hepsi)</button>
@@ -605,7 +621,7 @@ function showFeedback(step, type, msg) {
 function showFinal() {
     setTimeout(()=>{
         document.getElementById('s5').classList.add('hidden');
-        document.getElementById('sonuc').classList.remove('hidden');
+        document.getElementById('sonuç').classList.remove('hidden');
         
         let html = '';
         let puan = Math.round((detect/total)*100);
@@ -624,7 +640,7 @@ function showFinal() {
         html += '<p style="margin:10px 0"><strong>İnsan Faktörü:</strong> En gelişmiş siber savunma sistemleri bile, "insan" zayıf halkasını koruyamaz. Bilişsel savunma (cognitive defense) artık bir lüks değil, ulusal güvenlik zorunluluğudur.</p>';
         html += '<p style="margin:10px 0;color:#c8a415"><strong>Sonuç:</strong> "Askerî-Sivil Füzyon" stratejisinin siber uzaydaki yansıması, geleneksel istihbarat yöntemlerini tamamen dönüştürmüştür. Geleceğin savaşları, sahada değil ekranlarda ve zihinlerde kazanılacaktır.</p>';
         
-        document.getElementById('sonucIcerik').innerHTML = html;
+        document.getElementById('sonuçIcerik').innerHTML = html;
     }, 2500);
 }
 

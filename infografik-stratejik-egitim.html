@@ -108,6 +108,22 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 .glow-pulse{animation:glowPulse 3s ease-in-out infinite}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 </head>
 <body>
@@ -118,10 +134,10 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 </div>
 <div class="nav-tabs">
 <button class="nav-tab active" data-target="sec-genel">Genel Bakış</button>
-<button class="nav-tab" data-target="sec-simulasyon">Simülasyon</button>
+<button class="nav-tab" data-target="sec-simülasyon">Simülasyon</button>
 <button class="nav-tab" data-target="sec-wargame">Savaş Oyunları</button>
 <button class="nav-tab" data-target="sec-yz">YZ Eğitimi</button>
-<button class="nav-tab" data-target="sec-turkiye">Türkiye</button>
+<button class="nav-tab" data-target="sec-türkiye">Türkiye</button>
 </div>
 <div class="content">
 <div class="section active" id="sec-genel">

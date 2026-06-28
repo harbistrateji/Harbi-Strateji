@@ -10,7 +10,7 @@
 <style>
 :root{--void:#080d17;--panel:#0f1923;--line:rgba(255,255,255,0.08);--bone:#e8e6e1;--bone-dim:rgba(232,230,225,0.6);--signal:#00b4d8;--signal-dim:#0077b6;--threat:#e63946;--gold:#c9a24b;--font-display:'Chakra Petch',sans-serif;--font-mono:'IBM Plex Mono',monospace;--font-body:'IBM Plex Sans',sans-serif;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:var(--font-body);background:var(--void);color:var(--bone);min-height:100vh;padding-top:130px;}
+body{font-family:var(--font-body);background:var(--void);color:var(--bone);min-height:100vh;padding-top:40px;}
 .container{max-width:1200px;margin:0 auto;padding:40px 24px;}
 .page-header{text-align:center;margin-bottom:50px;}
 .page-header .eyebrow{font-family:var(--font-mono);font-size:0.75rem;color:var(--signal);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;}
@@ -110,6 +110,22 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 /* Glow pulse for important elements */
 .glow-pulse{animation:glowPulse 3s ease-in-out infinite}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
+
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
 
 </style>
 </head>
@@ -281,7 +297,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 </div>
 <div class="info-card">
 <h3>QKD Altyapısı</h3>
-<p>Türk Telekom ve TUBITAK işbirliğiyle Ankara-Istanbul hattında QKD pilot agi kuruldu. Askeri haberleşme için yerli QKD cihazı geliştirilmekte.</p>
+<p>Türk Telekom ve TUBITAK işbirliğiyle Ankara-İstanbul hattında QKD pilot agi kuruldu. Askeri haberleşme için yerli QKD cihazı geliştirilmekte.</p>
 <div class="stat-row">
 <div class="stat"><span class="val">450 km</span><span class="lbl">Pilot Hat</span></div>
 <div class="stat"><span class="val">Yerli</span><span class="lbl">QKD Cihazı</span></div>

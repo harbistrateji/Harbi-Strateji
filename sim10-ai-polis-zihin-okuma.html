@@ -79,9 +79,9 @@ p{color:var(--bone-dim);}
 
 /* Hero */
 .sim-hero{
-  min-height:40vh;
+  min-height:auto;
   display:flex;flex-direction:column;justify-content:center;
-  padding:120px 32px 60px;
+  padding:40px 32px 60px;
   max-width:1180px;margin:0 auto;
   position:relative;z-index:1;
 }
@@ -113,7 +113,7 @@ p{color:var(--bone-dim);}
   padding:40px 32px 100px;
   position:relative;z-index:1;
 }
-@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:40px 18px 40px;}}
 
 /* Panels */
 .sim-panel{
@@ -324,6 +324,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .btn-grey:hover{background:var(--steel);color:var(--bone);}
 
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
 
@@ -451,7 +467,7 @@ dogru:'gozalti'}
 ];
 
 function showVaka(){
-if(vakaNo>=5){showSonuc();return}
+if(vakaNo>=5){showSonuç();return}
 let v=vakalar[vakaNo];
 let panel=document.getElementById('vaka-panel');
 panel.innerHTML=`
@@ -482,21 +498,21 @@ function karar(k){
 let v=vakalar[vakaNo];
 let dogru=v.dogru;
 let panel=document.getElementById('vaka-panel');
-let sonucHTML='';
+let sonuçHTML='';
 if(k===dogru){
 dogruluk++;
-sonucHTML=`<div class="result-box" style="border-color:#2ecc71"><h3 style="color:#2ecc71">DOĞRU KARAR</h3><p style="margin-top:8px">${v.gercek}</p></div>`;
+sonuçHTML=`<div class="result-box" style="border-color:#2ecc71"><h3 style="color:#2ecc71">DOĞRU KARAR</h3><p style="margin-top:8px">${v.gercek}</p></div>`;
 }else if(k==='gozalti'&&dogru==='serbest'){
 hata++;guven-=15;
-sonucHTML=`<div class="result-box" style="border-color:#e30a17"><h3 style="color:#e30a17">YANLIŞ - MASUM BİR KİŞİYİ GÖZALTINA ALDINIZ</h3><p style="margin-top:8px">${v.gercek}</p><p style="color:#e30a17;margin-top:5px">AI'ın yüksek stres okuması sizi yanılttı. Halk güveni düştü.</p></div>`;
+sonuçHTML=`<div class="result-box" style="border-color:#e30a17"><h3 style="color:#e30a17">YANLIŞ - MASUM BİR KİŞİYİ GÖZALTINA ALDINIZ</h3><p style="margin-top:8px">${v.gercek}</p><p style="color:#e30a17;margin-top:5px">AI'ın yüksek stres okuması sizi yanılttı. Halk güveni düştü.</p></div>`;
 }else if(k==='serbest'&&dogru==='gozalti'){
 hata++;guven-=20;
-sonucHTML=`<div class="result-box" style="border-color:#e30a17"><h3 style="color:#e30a17">YANLIŞ - TEHLİKELİ BİR KİŞİYİ SERBEST BIRAKTINIZ</h3><p style="margin-top:8px">${v.gercek}</p><p style="color:#e30a17;margin-top:5px">AI'ın düşük stres okuması sizi yanılttı. Güvenlik riski oluştu.</p></div>`;
+sonuçHTML=`<div class="result-box" style="border-color:#e30a17"><h3 style="color:#e30a17">YANLIŞ - TEHLİKELİ BİR KİŞİYİ SERBEST BIRAKTINIZ</h3><p style="margin-top:8px">${v.gercek}</p><p style="color:#e30a17;margin-top:5px">AI'ın düşük stres okuması sizi yanılttı. Güvenlik riski oluştu.</p></div>`;
 }else{
 dogruluk++;guven-=5;
-sonucHTML=`<div class="result-box" style="border-color:#c8a415"><h3 style="color:#c8a415">KISMİ DOĞRU - İzleme kararı makul ama optimal değil.</h3><p style="margin-top:8px">${v.gercek}</p></div>`;
+sonuçHTML=`<div class="result-box" style="border-color:#c8a415"><h3 style="color:#c8a415">KISMİ DOĞRU - İzleme kararı makul ama optimal değil.</h3><p style="margin-top:8px">${v.gercek}</p></div>`;
 }
-panel.innerHTML+=sonucHTML+'<div class="options"><button class="btn btn-grey" onclick="sonraki()">Sonraki Vaka →</button></div>';
+panel.innerHTML+=sonuçHTML+'<div class="options"><button class="btn btn-grey" onclick="sonraki()">Sonraki Vaka →</button></div>';
 document.getElementById('vDoğruluk').textContent=dogruluk;
 document.getElementById('vHata').textContent=hata;
 document.getElementById('vGuven').textContent=Math.max(0,guven);
@@ -504,9 +520,9 @@ document.getElementById('vGuven').textContent=Math.max(0,guven);
 
 function sonraki(){vakaNo++;showVaka()}
 
-function showSonuc(){
+function showSonuç(){
 document.getElementById('vaka-panel').classList.add('hidden');
-let panel=document.getElementById('sonuc-panel');panel.classList.remove('hidden');
+let panel=document.getElementById('sonuç-panel');panel.classList.remove('hidden');
 let pct=Math.round(dogruluk/5*100);
 let verdict='',color='';
 if(pct>=80){verdict='MÜKEMMEL ANALİST: AI verilerini doğru yorumladınız.';color='#2ecc71'}

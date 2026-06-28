@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Küresel Askeri Sistemler | Harb-i Strateji</title>
+<title>Küresel Askerî Sistemler | Harb-i Strateji</title>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'IBM Plex Sans',sans-serif;background:#040810;color:#e2e8f0;overflow-x:hidden;padding-top:100px}
+body{font-family:'IBM Plex Sans',sans-serif;background:#040810;color:#e2e8f0;overflow-x:hidden;padding-top:40px}
 :root{--red:#c41e3a;--cyan:#00e0ff;--gold:#c9a24b;--bg:#040810;--card:#0d1520;--accent:#00E0FF}
 .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
 /* HERO */
@@ -65,7 +65,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#040810;color:#e2e8f0;ove
 @media(max-width:768px){
   .stats-row{grid-template-columns:1fr 1fr}
   .cards-grid{grid-template-columns:1fr}
-  body{padding-top:80px}
+  body{padding-top:50px}
 }
 
 /* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
@@ -122,6 +122,37 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 .glow-pulse{animation:glowPulse 3s ease-in-out infinite}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
+
+/* === YAPI DÜZELTME === */
+.hero, .page-hero, .infographic-hero {
+  padding-top: 40px !important;
+  min-height: auto !important;
+}
+.nav, .navbar, header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+}
+section, .section {
+  padding: 20px !important;
+}
+
 </style>
 </head>
 <body>
@@ -129,7 +160,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 <section class="hero">
   <span class="hero-badge">KÜRESEL SAVUNMA ANALİZİ</span>
   <h1>KÜRESEL ASKERİ SİSTEMLER</h1>
-  <p>Dünyanın önde gelen askeri güçlerinin silah sistemleri, doktrinleri ve teknolojik kapasitelerinin karşılaştırmalı analizi</p>
+  <p>Dünyanın önde gelen askerî güçlerinin silah sistemleri, doktrinleri ve teknolojik kapasitelerinin karşılaştırmalı analizi</p>
 </section>
 <div class="container">
   <div class="stats-row">
@@ -140,7 +171,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
   </div>
 
   <section class="section">
-    <h2 class="section-title">Askeri Güç Kategorileri</h2>
+    <h2 class="section-title">Askerî Güç Kategorileri</h2>
     <p class="section-sub">Kara, Deniz, Hava, Uzay ve Siber Boyutlar</p>
     <div class="tabs">
       <button class="tab-btn active" data-tab="tab-kara">Kara</button>
@@ -185,7 +216,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
   </section>
 
   <section class="section">
-    <h2 class="section-title">Askeri Güç Sıralaması 2026</h2>
+    <h2 class="section-title">Askerî Güç Sıralaması 2026</h2>
     <table class="comp-table">
       <thead><tr><th>#</th><th>Ülke</th><th>Aktif Personel</th><th>Savunma Bütçesi</th><th>Nükleer</th><th>5. Nesil Uçak</th></tr></thead>
       <tbody>

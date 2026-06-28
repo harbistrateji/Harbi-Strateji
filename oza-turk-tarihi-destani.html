@@ -91,6 +91,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style><link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 </head><body>
@@ -102,7 +118,7 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 <script>
 var ERAS=[
 {name:'Bozkır Çağı',period:'MÖ 3000-MS 552',missions:[{title:'Göktürk Kuruluşu',desc:'Bumin Kağan Avar hâkimiyetine son verdi.',q:'Göktürk ne zaman kuruldu?',opts:['552','630','744','840'],c:0,fact:'552 Bumin Kağan. İlk Türk devleti.'},{title:'Orhun Yazıtları',desc:'Bilge Kağan ve Kül Tigin anısına.',q:'Yazıtlar kaç yılında?',opts:['732','552','840','1040'],c:0,fact:'732-735 Orhun Yazıtları. Turk tarihinin ilk yazili belgeleri.'}]},
-{name:'İslam Çağı',period:'751-1071',missions:[{title:'Talas Savaşı',desc:'Türk-İslam ittifakı Çin i yendi.',q:'En önemli sonucu?',opts:['Kâğıt Batıya geçti','Çin yıkıldı','İpek Yolu kapandı','Ticaret durdu'],c:0,fact:'Karluklar saf değiştirdi. Kâğıt üretimi Batıya geçti.'},{title:'Karahanlılar',desc:'İlk Müslüman Türk devleti.',q:'İslamı ne zaman kabul etti?',opts:['940','751','1040','1071'],c:0,fact:'Karahanlılar 940da Islami kabul etti.'}]},
+{name:'İslam Çağı',period:'751-1071',missions:[{title:'Talas Savaşı',desc:'Türk-İslam ittifakı Çin i yendi.',q:'En önemli sonuçu?',opts:['Kâğıt Batıya geçti','Çin yıkıldı','İpek Yolu kapandı','Ticaret durdu'],c:0,fact:'Karluklar saf değiştirdi. Kâğıt üretimi Batıya geçti.'},{title:'Karahanlılar',desc:'İlk Müslüman Türk devleti.',q:'İslamı ne zaman kabul etti?',opts:['940','751','1040','1071'],c:0,fact:'Karahanlılar 940da Islami kabul etti.'}]},
 {name:'Selçuklu Çağı',period:'1040-1308',missions:[{title:'Dandanakan',desc:'Selçuklular Gaznelileri yendi.',q:'Dandanakan kaç?',opts:['1040','1071','1176','1243'],c:0,fact:'1040: Büyük Selçuklu resmen kuruldu.'},{title:'Malazgirt',desc:'Anadolunun kapıları açıldı.',q:'Alparslanın taktiği?',opts:['Hilâl (Turan)','Falanks','Testudo','Kare'],c:0,fact:'Hilâl taktiğiyle Bizans bozguna uğratıldı.'}]},
 {name:'Osmanlı Kuruluşu',period:'1299-1453',missions:[{title:'Osman Gazi',desc:'Beylikten devlete.',q:'Osmanlı ne zaman kuruldu?',opts:['1299','1326','1389','1402'],c:0,fact:'1299 Osman Gazi bağımsızlık ilânı.'},{title:'İstanbul Fethi',desc:'1000 yıllık Bizans yıkıldı.',q:'Kuşatma kaç gün?',opts:['53','29','40','100'],c:0,fact:'53 gün kuşatma. 29 Mayıs 1453 fetih.'}]},
 {name:'Osmanlı Zirvesi',period:'1453-1683',missions:[{title:'Kanuni',desc:'En geniş sınırlar.',q:'Kanuni kaç yıl tahtta?',opts:['46','30','20','55'],c:0,fact:'1520-1566: 46 yıl. En uzun saltanat.'},{title:'Preveze',desc:'Akdeniz Türk gölü.',q:'Komutan kim?',opts:['Barbaros','Piri Reis','Turgut','Kilicali'],c:0,fact:'Barbaros 1538 Haçlı donanmasını bozguna uğrattı.'}]},

@@ -79,9 +79,9 @@ p{color:var(--bone-dim);}
 
 /* Hero */
 .sim-hero{
-  min-height:40vh;
+  min-height:auto;
   display:flex;flex-direction:column;justify-content:center;
-  padding:120px 32px 60px;
+  padding:40px 32px 60px;
   max-width:1180px;margin:0 auto;
   position:relative;z-index:1;
 }
@@ -113,7 +113,7 @@ p{color:var(--bone-dim);}
   padding:40px 32px 100px;
   position:relative;z-index:1;
 }
-@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:40px 18px 40px;}}
 
 /* Panels */
 .sim-panel{
@@ -334,6 +334,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 }
 .next2:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);}
 
+
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
 
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">

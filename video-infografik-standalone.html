@@ -23,7 +23,7 @@
   .badge.kanun { background: #ef4444; }
   .badge.tarih { background: #f97316; }
   .badge.silah { background: #64748b; }
-  .badge.ulke { background: #06b6d4; }
+  .badge.ülke { background: #06b6d4; }
   .badge.finans { background: #10b981; }
   .badge.kriz { background: #dc2626; }
   .badge.jeopolitik { background: #6366f1; }
@@ -151,7 +151,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 // Scene data embedded for standalone use
 const scenes = [
   { id: "guc_formulu", title: "Gücün Algoritması", subtitle: "G = T × S × E × L", category: "Formül", duration: 10, type: "formula" },
-  { id: "sistemler_savasi", title: "Sistemler Savaşı", subtitle: "SW = (Sk×Sh×Sd) − (Sf+Se)", category: "Formül", duration: 10, type: "formula" },
+  { id: "sistemler_savaşı", title: "Sistemler Savaşı", subtitle: "SW = (Sk×Sh×Sd) − (Sf+Se)", category: "Formül", duration: 10, type: "formula" },
   { id: "stratejik_ozerklik", title: "Stratejik Özerklik İndeksi", subtitle: "SÖİ = (DEE+FEE+EES+TEK+KUR)/5", category: "Formül", duration: 10, type: "formula" },
   { id: "türkiye_grand_strateji", title: "Türkiye Grand Strateji 2040", subtitle: "TG = (C×O×B×S×D) ÷ K", category: "Formül", duration: 10, type: "formula" },
   { id: "finansman_zinciri", title: "Savunma Finansman Zinciri", subtitle: "E → I → T → M → F", category: "Formül", duration: 10, type: "formula" },
@@ -167,7 +167,7 @@ const scenes = [
   { id: "cannae", title: "Cannae Muharebesi", subtitle: "MÖ 216 · İtalya", category: "Tarih", duration: 8, type: "counter" },
   { id: "malazgirt", title: "Malazgirt Muharebesi", subtitle: "1071 · Anadolu", category: "Tarih", duration: 8, type: "counter" },
   { id: "istanbul_fethi", title: "İstanbul'un Fethi", subtitle: "1453 · Konstantinopolis", category: "Tarih", duration: 8, type: "counter" },
-  { id: "canakkale", title: "Çanakkale Savaşı", subtitle: "1915 · Gelibolu", category: "Tarih", duration: 8, type: "counter" },
+  { id: "çanakkale", title: "Çanakkale Savaşı", subtitle: "1915 · Gelibolu", category: "Tarih", duration: 8, type: "counter" },
   { id: "alti_gun", title: "Altı Gün Savaşı", subtitle: "1967 · Orta Doğu", category: "Tarih", duration: 8, type: "counter" },
   { id: "karabag_2020", title: "İkinci Karabağ Savaşı", subtitle: "2020 · Kafkasya", category: "Tarih", duration: 8, type: "counter" },
   { id: "ukrayna_2022", title: "Rusya-Ukrayna Savaşı", subtitle: "2022-devam · Ukrayna", category: "Tarih", duration: 8, type: "counter" },
@@ -195,12 +195,12 @@ const scenes = [
   { id: "hurmuz_krizi", title: "Hürmüz Boğazı Krizi", subtitle: "Dünya petrolünün %21'i", category: "Kriz", duration: 8, type: "counter" },
   { id: "tayvan_abluka", title: "Tayvan Boğazı Ablukası", subtitle: "Küresel çip üretiminin %92'si", category: "Kriz", duration: 8, type: "counter" },
   { id: "siber_altyapi", title: "Kritik Altyapı Siber Saldırısı", subtitle: "Elektrik Şebekesi Çökerse", category: "Kriz", duration: 8, type: "timeline_flash" },
-  { id: "deepfake_saldiri", title: "Deepfake Bilişsel Saldırı", subtitle: "Lider Deepfake'i Yayılırsa", category: "Kriz", duration: 8, type: "timeline_flash" },
+  { id: "deepfake_saldırı", title: "Deepfake Bilişsel Saldırı", subtitle: "Lider Deepfake'i Yayılırsa", category: "Kriz", duration: 8, type: "timeline_flash" },
   { id: "yedi_havza", title: "Türkiye'nin 7 Havzası", subtitle: "Stratejik Derinlik Haritası", category: "Jeopolitik", duration: 8, type: "radar_pulse" },
   { id: "orta_koridor", title: "Orta Koridor", subtitle: "Türkiye-Kafkasya-Orta Asya", category: "Jeopolitik", duration: 8, type: "timeline_flash" },
   { id: "hazar_enerji", title: "Hazar Yeşil Enerji Koridoru", subtitle: "Azerbaycan-Kazakistan-Özbekistan", category: "Jeopolitik", duration: 8, type: "counter" },
   { id: "dijital_ipek", title: "Dijital İpek Yolu", subtitle: "Çin'in Siber Egemenlik Projesi", category: "Jeopolitik", duration: 8, type: "counter" },
-  { id: "cin_rusya_nukleer", title: "Çin-Rusya Nükleer İttifak", subtitle: "Zenginleştirilmiş Uranyum Rekoru", category: "Jeopolitik", duration: 8, type: "comparison" },
+  { id: "cin_rusya_nükleer", title: "Çin-Rusya Nükleer İttifak", subtitle: "Zenginleştirilmiş Uranyum Rekoru", category: "Jeopolitik", duration: 8, type: "comparison" },
   { id: "jadc2", title: "JADC2 — Ortak Tüm Alanlar", subtitle: "Komuta Kontrol Devrimi", category: "Doktrin", duration: 8, type: "radar_pulse" },
   { id: "cca", title: "İşbirlikçi Savaş Uçakları (CCA)", subtitle: "Siber Destekli Hava Üstünlüğü", category: "Doktrin", duration: 8, type: "counter" },
   { id: "moduler_ew", title: "Modüler Elektronik Harp", subtitle: "Farklı Bölge = Farklı EW", category: "Doktrin", duration: 8, type: "radar_pulse" },
@@ -221,8 +221,8 @@ const scenes = [
   { id: "dijital_egemenlik", title: "Dijital Egemenlik", subtitle: "Veri + Siber + Bağımsızlık", category: "Kavram", duration: 8, type: "radar_pulse" },
   { id: "slopaganda", title: "Slopaganda", subtitle: "YZ Üretimi Propaganda", category: "Kavram", duration: 8, type: "counter" },
   { id: "maliyet_asimetri_tarihi", title: "Maliyet Asimetrisi Tarihi", subtitle: "IED'den Siber Saldırıya", category: "Kavram", duration: 10, type: "timeline_flash" },
-  { id: "roma_cokusu", title: "Roma'nın Çöküşü", subtitle: "800 Yıl İnşa — 1 Gece Çöküş", category: "Hikaye", duration: 8, type: "timeline_flash" },
-  { id: "sovyet_cokusu", title: "Sovyetler Birliği Çöküşü", subtitle: "NATO Değil, Ekonomi Yıktı", category: "Hikaye", duration: 8, type: "counter" },
+  { id: "roma_çöküşü", title: "Roma'nın Çöküşü", subtitle: "800 Yıl İnşa — 1 Gece Çöküş", category: "Hikaye", duration: 8, type: "timeline_flash" },
+  { id: "sovyet_çöküşü", title: "Sovyetler Birliği Çöküşü", subtitle: "NATO Değil, Ekonomi Yıktı", category: "Hikaye", duration: 8, type: "counter" },
   { id: "stuxnet", title: "Stuxnet — İlk Siber Silah", subtitle: "1.000 Santrifüj Yok Edildi", category: "Hikaye", duration: 8, type: "timeline_flash" },
   { id: "starlink_ukrayna", title: "Starlink Ukrayna Etkisi", subtitle: "Uydu İnterneti = Savaş Gücü", category: "Hikaye", duration: 8, type: "counter" },
   { id: "iron_dome", title: "Iron Dome Paradoksu", subtitle: "$50K Füze vs $50 Roket", category: "Hikaye", duration: 8, type: "comparison" },
@@ -236,7 +236,7 @@ const scenes = [
 
 const badgeClass = {
   "Formül": "formul", "Kanun": "kanun", "Tarih": "tarih", "Silah": "silah",
-  "Ülke": "ulke", "Finans": "finans", "Kriz": "kriz", "Jeopolitik": "jeopolitik",
+  "Ülke": "ülke", "Finans": "finans", "Kriz": "kriz", "Jeopolitik": "jeopolitik",
   "Doktrin": "doktrin", "Güncel": "guncel", "Kavram": "kavram", "Hikaye": "hikaye", "Alıntı": "alinti"
 };
 

@@ -79,9 +79,9 @@ p{color:var(--bone-dim);}
 
 /* Hero */
 .sim-hero{
-  min-height:40vh;
+  min-height:auto;
   display:flex;flex-direction:column;justify-content:center;
-  padding:120px 32px 60px;
+  padding:40px 32px 60px;
   max-width:1180px;margin:0 auto;
   position:relative;z-index:1;
 }
@@ -113,7 +113,7 @@ p{color:var(--bone-dim);}
   padding:40px 32px 100px;
   position:relative;z-index:1;
 }
-@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:40px 18px 40px;}}
 
 /* Panels */
 .sim-panel{
@@ -266,6 +266,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .result-box{background:var(--panel-2);border-radius:10px;padding:20px;margin-top:16px;}
 .meter{width:100%;height:24px;background:var(--deep);border-radius:12px;overflow:hidden;margin-top:12px;}
 .meter-fill{height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:bold;color:var(--void);transition:width 1s ease;}
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="sim-ui-fix.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -446,71 +462,71 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 
 <script>
 
-let guc=100, guven=100, borsa=100, secim=50;
+let guc=100, guven=100, borsa=100, seçim=50;
 let kararlar = {};
 
 function karar(step, choice) {
     kararlar[step] = choice;
     
     if(step === 1) {
-        if(choice==='tarife'){secim+=20;borsa-=15;guven-=20;guc+=5}
-        else if(choice==='nato'){secim+=10;guven-=30;guc+=10;borsa+=5}
-        else if(choice==='kesinti'){secim-=10;guven+=5;guc-=20;borsa+=10}
-        else{secim-=15;guven+=10;guc-=5;borsa-=5}
+        if(choice==='tarife'){seçim+=20;borsa-=15;guven-=20;guc+=5}
+        else if(choice==='nato'){seçim+=10;guven-=30;guc+=10;borsa+=5}
+        else if(choice==='kesinti'){seçim-=10;guven+=5;guc-=20;borsa+=10}
+        else{seçim-=15;guven+=10;guc-=5;borsa-=5}
         document.getElementById('k1').classList.add('hidden');
         document.getElementById('k2').classList.remove('hidden');
         document.getElementById('ts1').classList.replace('active','done');
         document.getElementById('ts2').classList.add('active');
     } else if(step === 2) {
-        if(choice==='vurun'){guc+=20;guven-=15;borsa-=20;secim+=15}
-        else if(choice==='muhlet'){guc+=10;guven-=5;borsa-=5;secim+=10}
-        else if(choice==='israil'){guc-=5;guven-=10;borsa-=10;secim+=5}
-        else{guc-=10;guven+=10;borsa+=5;secim-=10}
+        if(choice==='vurun'){guc+=20;guven-=15;borsa-=20;seçim+=15}
+        else if(choice==='muhlet'){guc+=10;guven-=5;borsa-=5;seçim+=10}
+        else if(choice==='israil'){guc-=5;guven-=10;borsa-=10;seçim+=5}
+        else{guc-=10;guven+=10;borsa+=5;seçim-=10}
         document.getElementById('k2').classList.add('hidden');
         document.getElementById('k3').classList.remove('hidden');
         document.getElementById('ts2').classList.replace('active','done');
         document.getElementById('ts3').classList.add('active');
     } else if(step === 3) {
-        if(choice==='darbe'){guc+=15;guven-=25;borsa+=10;secim+=10}
-        else if(choice==='baski'){guc+=5;guven-=5;borsa-=5;secim+=5}
-        else if(choice==='takas'){guc-=5;guven-=10;borsa+=15;secim-=5}
-        else{guc-=10;guven+=5;borsa-=10;secim-=10}
+        if(choice==='darbe'){guc+=15;guven-=25;borsa+=10;seçim+=10}
+        else if(choice==='baski'){guc+=5;guven-=5;borsa-=5;seçim+=5}
+        else if(choice==='takas'){guc-=5;guven-=10;borsa+=15;seçim-=5}
+        else{guc-=10;guven+=5;borsa-=10;seçim-=10}
         document.getElementById('k3').classList.add('hidden');
         document.getElementById('k4').classList.remove('hidden');
         document.getElementById('ts3').classList.replace('active','done');
         document.getElementById('ts4').classList.add('active');
     } else if(step === 4) {
-        if(choice==='abonelik'){secim+=15;guven-=30;guc+=5;borsa+=10}
-        else if(choice==='secici'){secim+=5;guven-=10;guc+=5;borsa+=5}
-        else if(choice==='geleneksel'){secim-=15;guven+=20;guc+=10;borsa-=10}
-        else{secim+=10;guven-=40;guc-=30;borsa-=15}
+        if(choice==='abonelik'){seçim+=15;guven-=30;guc+=5;borsa+=10}
+        else if(choice==='secici'){seçim+=5;guven-=10;guc+=5;borsa+=5}
+        else if(choice==='geleneksel'){seçim-=15;guven+=20;guc+=10;borsa-=10}
+        else{seçim+=10;guven-=40;guc-=30;borsa-=15}
         document.getElementById('k4').classList.add('hidden');
         document.getElementById('k5').classList.remove('hidden');
         document.getElementById('ts4').classList.replace('active','done');
         document.getElementById('ts5').classList.add('active');
-        showSonuc();
+        showSonuç();
     }
     updateScores();
 }
 
 function updateScores() {
     guc=Math.max(0,Math.min(150,guc));guven=Math.max(0,Math.min(150,guven));
-    borsa=Math.max(0,Math.min(150,borsa));secim=Math.max(0,Math.min(100,secim));
+    borsa=Math.max(0,Math.min(150,borsa));seçim=Math.max(0,Math.min(100,seçim));
     document.getElementById('sGuc').textContent=guc;
     document.getElementById('sGuven').textContent=guven;
     document.getElementById('sBorsa').textContent=borsa;
-    document.getElementById('sSecim').textContent=secim+'%';
+    document.getElementById('sSeçim').textContent=seçim+'%';
 }
 
-function showSonuc() {
+function showSonuç() {
     let html = '';
-    const toplam = guc + guven + borsa;
+    const toplam = güç + guven + borsa;
     
     if(toplam > 320) {
         html = '<h3 style="color:#c8a415">SÜPER GÜÇ STATÜSÜ KORUNDU</h3><p>Hem güç hem güven hem ekonomi dengesini kurdunuz. Ancak bu denge kırılgandır. Gerçek hayatta Trump bu dengeyi kuramadı - çünkü "Tüccar-Devlet" modeli doğası gereği güven sermayesini tüketir.</p>';
     } else if(guven < 50) {
-        html = '<h3 style="color:#e30a17">GÜVEN KRİZİ: YALNIZ SÜPER GÜÇ</h3><p>Müttefik güveni çöktü. ABD askeri olarak güçlü ama diplomatik olarak yalnız. Bu tam olarak "Handshake vs Handcuffs" ikileminin sonucudur. Güçlü ama güvenilmez bir aktör, uzun vadede hegemonya sürdüremez.</p>';
-    } else if(secim > 70) {
+        html = '<h3 style="color:#e30a17">GÜVEN KRİZİ: YALNIZ SÜPER GÜÇ</h3><p>Müttefik güveni çöktü. ABD askeri olarak güçlü ama diplomatik olarak yalnız. Bu tam olarak "Handshake vs Handcuffs" ikileminin sonuçudur. Güçlü ama güvenilmez bir aktör, uzun vadede hegemonya sürdüremez.</p>';
+    } else if(seçim > 70) {
         html = '<h3 style="color:#d4620a">SEÇİM KAZANDINIZ AMA...</h3><p>Seçmen desteği yüksek, ancak küresel düzen sarsıldı. Kısa vadeli popülist kazanımlar, uzun vadeli stratejik kayıplara dönüşebilir. "Tüccar-Sezar" modeli tam da budur.</p>';
     } else {
         html = '<h3 style="color:#888">BELİRSİZLİK REJİMİ</h3><p>Ne tam bir zafer ne tam bir yenilgi. Dünya "kuralsız bir belirsizlik rejimine" yerleşti. Bu, Harb-i Strateji\'nin öngördüğü en muhtemel senaryodur.</p>';
@@ -519,7 +535,7 @@ function showSonuc() {
     html += '<br><p><strong>Kararlarınız:</strong> Bütçe: '+kararlar[1]+' | İran: '+kararlar[2]+' | Venezuela: '+kararlar[3]+' | Müttefikler: '+kararlar[4]+'</p>';
     html += '<div class="meter"><div class="meter-fill" style="width:'+Math.round(toplam/4.5)+'%;background:linear-gradient(90deg,#e30a17,#c8a415)">Toplam Skor: '+toplam+'/450</div></div>';
     
-    document.getElementById('sonucIcerik').innerHTML = html;
+    document.getElementById('sonuçIcerik').innerHTML = html;
 }
 
 (function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();

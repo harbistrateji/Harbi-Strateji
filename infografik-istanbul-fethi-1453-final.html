@@ -113,6 +113,22 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 .glow-pulse{animation:glowPulse 3s ease-in-out infinite}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -172,7 +188,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
         scene.add(light);
         function animateThree() { requestAnimationFrame(animateThree); grid.rotation.z += 0.0005; renderer.render(scene, camera); }
         animateThree();
-        function playIstanbulMusic() {
+        function playİstanbulMusic() {
             if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const notes = [{freq: 262, dur: 400}, {freq: 294, dur: 400}, {freq: 330, dur: 400}, {freq: 392, dur: 400}, {freq: 440, dur: 400}, {freq: 494, dur: 400}, {freq: 523, dur: 800}, {freq: 494, dur: 400}, {freq: 440, dur: 400}, {freq: 392, dur: 400}, {freq: 330, dur: 400}, {freq: 294, dur: 400}, {freq: 262, dur: 400}, {freq: 262, dur: 800}];
             let time = audioContext.currentTime;
@@ -193,7 +209,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
             isPlaying = !isPlaying;
             const btn = document.getElementById('musicBtn');
             if (isPlaying) {
-                playIstanbulMusic();musicInterval=setInterval(function(){if(isPlaying)playIstanbulMusic()},8000);
+                playİstanbulMusic();musicInterval=setInterval(function(){if(isPlaying)playİstanbulMusic()},8000);
                 btn.textContent = '🔊 MÜZİK AÇIK';
                 btn.style.background = 'var(--cyan)';
             } else {

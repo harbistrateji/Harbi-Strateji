@@ -160,6 +160,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -231,7 +247,7 @@ turk: [
 {q:"İlk Türk-İslam hastanesini kim kurdu?",a:"Nureddin Zengi",opts:["Nureddin Zengi","Gazneli Mahmut","Melikşah","Alparslan"],cat:"Bilim",era:"1154",desc:"Nureddin Zengi tarafından Şamda kurulan darüşşifa, ilk büyük Türk-İslam hastanesidir."},
 {q:"İslamiyeti kabul eden ilk Türk boyu?",a:"Karluklar",opts:["Karluklar","Oğuzlar","Kıpçaklar","Peçenekler"],cat:"Din",era:"751",desc:"Talas Savaşında Abbasilerin yanında yer alan Karluklar, İslamı benimseyen ilk Türk boyudur."},
 ],
-osmanli: [
+osmanlı: [
 {q:"İlk Osmanlı parası kimin döneminde basıldı?",a:"Osman Bey",opts:["Osman Bey","Orhan Bey","I. Murat","Fatih"],cat:"Ekonomi",era:"1299",desc:"İlk Osmanlı akçesi Osman Bey döneminde basılmıştır."},
 {q:"Osmanlının aldığı ilk beylik?",a:"Karesi Beyliği",opts:["Karesi Beyliği","Saruhan","Aydınoğlu","Germiyanoğlu"],cat:"Devlet",era:"1345",desc:"Karesi Beyliğinin alınması Osmanlıya denizcilik gücü kazandırmıştır."},
 {q:"İlk Osmanlı donanması kimin döneminde kuruldu?",a:"Orhan Bey",opts:["Orhan Bey","I. Murat","Yıldırım","Fatih"],cat:"Askerî",era:"1327",desc:"Orhan Bey döneminde ilk donanma oluşturulmuş ve Rumeliye geçiş sağlanmıştır."},
@@ -282,8 +298,8 @@ let audioCtx = null;
 let soundEnabled = true;
 
 // Init categories
-const cats = ['all','turk','osmanli','inkilap'];
-const catLabels = {all:'TÜMÜ',turk:'TÜRK TARİHİ',osmanli:'OSMANLI',inkilap:'İNKILAP'};
+const cats = ['all','turk','osmanlı','inkilap'];
+const catLabels = {all:'TÜMÜ',turk:'TÜRK TARİHİ',osmanlı:'OSMANLI',inkilap:'İNKILAP'};
 document.getElementById('catSelect').innerHTML = cats.map(c=>
   `<button class="cat-btn${c==='all'?' active':''}" data-cat="${c}" onclick="selectCat('${c}')">${catLabels[c]}</button>`
 ).join('');
@@ -301,7 +317,7 @@ function shuffleArray(arr){
 function startGame(){
   document.getElementById('intro').classList.add('hidden');
   if(currentCategory==='all'){
-    questions=[...ALL_DATA.turk,...ALL_DATA.osmanli,...ALL_DATA.inkilap];
+    questions=[...ALL_DATA.turk,...ALL_DATA.osmanlı,...ALL_DATA.inkilap];
   } else {
     questions=[...ALL_DATA[currentCategory]];
   }

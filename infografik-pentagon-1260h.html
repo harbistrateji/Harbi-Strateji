@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pentagon 1260H Listesi — Harb-i Strateji</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0f17;--card:#111827;--cyan:#00E0FF;--red:#E01515;--gold:#C9A24B;--text:#e2e8f0}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.nav{display:flex;align-items:center;padding:.8rem 1.5rem;background:rgba(10,15,23,.95);border-bottom:1px solid rgba(0,224,255,.1);position:sticky;top:0;z-index:100}
+.nav a{color:var(--cyan);text-decoration:none;font-size:.8rem;margin-right:1rem}
+.nav h1{font-family:'Chakra Petch',monospace;font-size:1rem;color:#fff;margin-left:auto}
+.hero{text-align:center;padding:3rem 1rem 2rem}
+.hero h2{font-family:'Chakra Petch',monospace;font-size:2rem;color:#fff;margin-bottom:.5rem}
+.hero p{color:rgba(255,255,255,.6);max-width:700px;margin:0 auto;font-size:.85rem}
+.stats{display:flex;justify-content:center;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid rgba(0,224,255,.15);border-radius:8px;padding:1rem 1.5rem;text-align:center;min-width:120px}
+.stat .num{font-family:'Chakra Petch',monospace;font-size:1.8rem;color:var(--cyan)}
+.stat .lbl{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-top:.3rem}
+.filters{display:flex;justify-content:center;gap:.5rem;margin:1.5rem 0;flex-wrap:wrap;padding:0 1rem}
+.filters button{background:rgba(0,224,255,.08);border:1px solid rgba(0,224,255,.2);color:var(--cyan);padding:.4rem .8rem;border-radius:4px;cursor:pointer;font-size:.7rem;transition:all .2s}
+.filters button.active,.filters button:hover{background:rgba(0,224,255,.2);border-color:var(--cyan)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;padding:1rem 2rem;max-width:1400px;margin:0 auto}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:1.2rem;transition:all .3s;cursor:pointer}
+.card:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,224,255,.1)}
+.card .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;padding:.2rem .5rem;border-radius:3px;display:inline-block}
+.card .cat.cn{background:rgba(239,68,68,.15);color:#ef4444}
+.card .cat.ru{background:rgba(168,85,247,.15);color:#a855f7}
+.card .cat.ir{background:rgba(245,158,11,.15);color:#f59e0b}
+.card .cat.kp{background:rgba(220,38,38,.15);color:#dc2626}
+.card .cat.other{background:rgba(34,211,238,.15);color:#22d3ee}
+.card h3{font-size:.9rem;color:#fff;margin-bottom:.4rem}
+.card p{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.4}
+.card .tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.6rem}
+.card .tag{font-size:.55rem;padding:.15rem .4rem;background:rgba(255,255,255,.05);border-radius:3px;color:rgba(255,255,255,.4)}
+.card .threat{display:flex;align-items:center;gap:.4rem;margin-top:.5rem}
+.card .threat-bar{flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.card .threat-fill{height:100%;border-radius:2px;transition:width .5s}
+.card .threat-lbl{font-size:.6rem;color:rgba(255,255,255,.4)}
+@media(max-width:768px){.grid{grid-template-columns:1fr;padding:1rem}.hero h2{font-size:1.4rem}.stats{gap:.8rem}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a href="infografik.html">← İnfografikler</a>
+<a href="index.html">🏠 Ana Sayfa</a>
+<h1>PENTAGON 1260H</h1>
+</nav>
+
+<div class="hero">
+<h2>Pentagon 1260H Listesi</h2>
+<p>ABD Savunma Bakanlığı'nın Çin askeri şirketleri listesi — 134+ şirket, teknoloji transferi yasağı, yatırım kısıtlaması. Küresel tedarik zinciri etkisi analizi.</p>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="num" data-target="134">0</div><div class="lbl">Listeli Şirket</div></div>
+<div class="stat"><div class="num" data-target="47">0</div><div class="lbl">Savunma Sanayi</div></div>
+<div class="stat"><div class="num" data-target="28">0</div><div class="lbl">Yapay Zekâ</div></div>
+<div class="stat"><div class="num" data-target="19">0</div><div class="lbl">Uzay/Uydu</div></div>
+<div class="stat"><div class="num" data-target="23">0</div><div class="lbl">Gözetim Tech</div></div>
+<div class="stat"><div class="num" data-target="17">0</div><div class="lbl">Nükleer/Enerji</div></div>
+</div>
+
+<div class="filters">
+<button class="active" onclick="filterCards('all',this)">Tümü (134)</button>
+<button onclick="filterCards('cn',this)">🇨🇳 Çin Savunma (47)</button>
+<button onclick="filterCards('yz',this)">🤖 Yapay Zekâ (28)</button>
+<button onclick="filterCards('uzay',this)">🛰️ Uzay/Uydu (19)</button>
+<button onclick="filterCards('gozetim',this)">📡 Gözetim (23)</button>
+<button onclick="filterCards('nukleer',this)">☢️ Nükleer (17)</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const companies=[
+{name:"AVIC (Aviation Industry Corp)",cat:"cn",desc:"Çin'in en büyük havacılık holdingi. J-20, J-35 savaş uçakları, Z-20 helikopter üretimi.",tags:["Havacılık","Savaş Uçağı","J-20"],threat:95},
+{name:"CETC (China Electronics Tech)",cat:"cn",desc:"Elektronik harp, radar, C4ISR sistemleri. PLA'nın dijital omurgası.",tags:["Elektronik Harp","Radar","C4ISR"],threat:92},
+{name:"NORINCO",cat:"cn",desc:"Kara sistemleri: tanklar, topçu, mühimmat. 150+ ülkeye silah ihracatı.",tags:["Kara Sistemleri","Tank","Mühimmat"],threat:88},
+{name:"CASIC (Aerospace Science & Industry)",cat:"cn",desc:"Balistik füzeler, hipersonik silahlar, uzay fırlatma araçları.",tags:["Füze","Hipersonik","DF-17"],threat:96},
+{name:"CSSC (China Shipbuilding)",cat:"cn",desc:"Savaş gemileri, denizaltılar, uçak gemileri. Dünyanın en büyük gemi inşa kapasitesi.",tags:["Deniz","Uçak Gemisi","Denizaltı"],threat:90},
+{name:"Huawei Technologies",cat:"gozetim",desc:"5G altyapısı, gözetim teknolojisi, YZ çipleri. 170+ ülkede aktif.",tags:["5G","Gözetim","Telekomünikasyon"],threat:85},
+{name:"Hikvision",cat:"gozetim",desc:"Dünyanın en büyük güvenlik kamerası üreticisi. Yüz tanıma, Uygur gözetimi.",tags:["Kamera","Yüz Tanıma","Gözetim"],threat:82},
+{name:"SenseTime",cat:"yz",desc:"Yapay zekâ devi: yüz tanıma, otonom araç, akıllı şehir. PLA ile işbirliği.",tags:["YZ","Yüz Tanıma","Akıllı Şehir"],threat:78},
+{name:"DJI (Da-Jiang Innovations)",cat:"yz",desc:"Drone pazarının %70'i. Askeri keşif ve gözetimde kullanımı tartışmalı.",tags:["Drone","Gözetim","Sivil-Askeri"],threat:72},
+{name:"CNNC (China National Nuclear)",cat:"nukleer",desc:"Nükleer silah, reaktör, uranyum zenginleştirme. Çin'in nükleer triadının temeli.",tags:["Nükleer","Uranyum","Reaktör"],threat:98},
+{name:"China Aerospace S&T Corp (CASC)",cat:"uzay",desc:"Uzay fırlatma, uydu, Chang'e Ay programı, BeiDou navigasyon.",tags:["Uzay","Uydu","BeiDou"],threat:91},
+{name:"iFlytek",cat:"yz",desc:"Ses tanıma YZ'si. Uygur dil gözetimi, PLA iletişim sistemleri.",tags:["Ses Tanıma","YZ","Gözetim"],threat:75},
+{name:"Megvii (Face++)",cat:"yz",desc:"Yüz tanıma platformu. Çin'in sosyal kredi sisteminin altyapısı.",tags:["Yüz Tanıma","Sosyal Kredi","YZ"],threat:76},
+{name:"China Mobile",cat:"gozetim",desc:"Dünyanın en büyük mobil operatörü. Veri toplama, gözetim altyapısı.",tags:["Telekomünikasyon","Veri","Gözetim"],threat:65},
+{name:"CRRC Corporation",cat:"cn",desc:"Dünyanın en büyük demiryolu araçları üreticisi. Askeri lojistik kapasitesi.",tags:["Demiryolu","Lojistik","Altyapı"],threat:55},
+{name:"BGI Genomics",cat:"yz",desc:"Genetik veri toplama, biyoteknoloji. COVID test kitleri ile küresel DNA veritabanı.",tags:["Biyotech","Genetik","Veri"],threat:70},
+{name:"Inspur Group",cat:"yz",desc:"Sunucu ve bulut bilişim. PLA veri merkezleri altyapısı.",tags:["Sunucu","Bulut","Veri Merkezi"],threat:68},
+{name:"Dawning Information (Sugon)",cat:"yz",desc:"Süper bilgisayar üreticisi. Nükleer simülasyon ve YZ eğitimi.",tags:["Süper Bilgisayar","YZ","Nükleer Sim"],threat:80},
+{name:"China Spacesat",cat:"uzay",desc:"Askeri haberleşme ve keşif uyduları. Yaojing gözetim uydu ağı.",tags:["Uydu","Gözetim","Haberleşme"],threat:84},
+{name:"Panda Electronics",cat:"gozetim",desc:"Elektronik gözetim, sinyal istihbaratı ekipmanları.",tags:["SIGINT","Elektronik","Gözetim"],threat:73}
+];
+
+function renderCards(data){
+const grid=document.getElementById('grid');
+grid.innerHTML=data.map(c=>{
+const catClass=c.cat;
+const catLabel={'cn':'Savunma','yz':'Yapay Zekâ','uzay':'Uzay/Uydu','gozetim':'Gözetim','nukleer':'Nükleer'}[c.cat]||c.cat;
+const color=c.threat>90?'#ef4444':c.threat>75?'#f59e0b':c.threat>60?'#eab308':'#22d3ee';
+return `<div class="card" data-cat="${c.cat}">
+<span class="cat ${catClass}">${catLabel}</span>
+<h3>${c.name}</h3>
+<p>${c.desc}</p>
+<div class="tags">${c.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+<div class="threat"><div class="threat-bar"><div class="threat-fill" style="width:${c.threat}%;background:${color}"></div></div><span class="threat-lbl">${c.threat}/100</span></div>
+</div>`;
+}).join('');
+}
+
+function filterCards(cat,el){
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+el.classList.add('active');
+const data=cat==='all'?companies:companies.filter(c=>c.cat===cat);
+renderCards(data);
+}
+
+// Counter animation
+document.querySelectorAll('.num[data-target]').forEach(el=>{
+const target=parseInt(el.dataset.target);
+let current=0;
+const step=Math.ceil(target/40);
+const timer=setInterval(()=>{
+current+=step;
+if(current>=target){current=target;clearInterval(timer);}
+el.textContent=current;
+},30);
+});
+
+renderCards(companies);
+</script>
+</body>
+</html>

@@ -10,12 +10,12 @@
 <link rel="stylesheet" href="hs-global.css">
 <style>
 *{box-sizing:border-box;}
-.ticker-bar{background:linear-gradient(90deg,#0d1520 0%,#1a2744 50%,#0d1520 100%);border-bottom:1px solid rgba(0,224,255,0.2);padding:0;height:30px;overflow:hidden;white-space:nowrap;display:flex;align-items:center;}
+
 .ticker-label{flex-shrink:0;background:rgba(0,224,255,0.1);border-right:1px solid rgba(0,224,255,0.3);height:100%;display:flex;align-items:center;padding:0 14px;font-family:'Chakra Petch',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;color:rgba(0,224,255,0.95);gap:6px;}
 .ticker-label::before{content:'';width:6px;height:6px;border-radius:50%;background:#00e0ff;animation:blink-dot 1s infinite;}
 @keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.2}}
-.ticker-content{display:inline-block;animation:tickerScroll 60s linear infinite;font-family:var(--font-mono);font-size:.65rem;color:rgba(0,224,255,0.9);letter-spacing:.02em;}
-@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+100%{transform:translateX(-50%)}}
 .ticker-item{display:inline;margin-right:3rem;}
 .ticker-dot{display:inline-block;width:4px;height:4px;background:#fff;border-radius:50%;margin-right:.5rem;vertical-align:middle;opacity:.6;}
 .intel-strip{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:2px solid var(--crimson);background:linear-gradient(180deg,rgba(10,15,23,.98),rgba(10,15,23,.95));}
@@ -160,15 +160,6 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 </style>
 </head>
 <body>
-<div class="ticker-bar" style="background:linear-gradient(90deg,#0a0f17,#1a1f2e);border-bottom:1px solid #00e0ff33;padding:6px 0;overflow:hidden;white-space:nowrap;">
-  <div style="display:inline-block;animation:ticker-scroll 45s linear infinite;">
-    <span style="color:#00e0ff;font-weight:700;font-family:'Chakra Petch',sans-serif;margin-right:12px;">&#9679; GÜNCELLEME</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Doğu Akdeniz'de Türk-Yunan Gerilimi: NATO Acil Toplantı Çağrısı</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">İran-İsrail Krizi: BM Güvenlik Konseyi Olağanüstü Oturum</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Yeni Oyun: OZA Külliyat Arcade — 8 Yeni Oyun</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Güncelleme: Ticaret Yolları Haritası — Zoom &amp; Pan Eklendi</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Yeni İnfografik: FCAS İptali Stratejik Analiz</span>
-  </div>
 </div>
 
 <!-- INTEL STRIP -->
@@ -223,7 +214,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
             <div class="analysis-list">
               <a href="musk-infografik-serisi.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-kuantum.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Teknoloji</div><div class="analysis-title">Elon Musk: Medeniyet İşletim Sistemi ve Küresel Güç Projeksiyonu</div><div class="analysis-meta">16 İnfografik Serisi</div></div></a>
               <a href="lego-propaganda-analiz.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-siber-eh.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Bilişsel Savaş</div><div class="analysis-title">Lego Propaganda: İran'ın Dijital Savaş Stratejisi</div><div class="analysis-meta">Derinlemesine Analiz</div></div></a>
-              <a href="geleceğin-harp-ekosistemi.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Gelecek Savaşı</div><div class="analysis-title">Geleceğin Harp Ekosistemi 2030-2040</div><div class="analysis-meta">Stratejik Öngörü</div></div></a>
+              <a href="gelecegin-harp-ekosistemi.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Gelecek Savaşı</div><div class="analysis-title">Geleceğin Harp Ekosistemi 2030-2040</div><div class="analysis-meta">Stratejik Öngörü</div></div></a>
               <a href="infografik-hibrit-savas-tum-boyutlar.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-mineraller.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Hibrit Savaş</div><div class="analysis-title">Hibrit Savaş: Tüm Boyutlarıyla İnteraktif Analiz</div><div class="analysis-meta">9 Bölüm · Ses + Animasyon</div></div></a>
             </div>
           </div>
@@ -349,7 +340,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
         <div class="sim-featured">
           <a href="musk-infografik-serisi.html" class="sim-card"><img src="thumbs/card-kuantum.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#ff6b35;">Teknoloji</div><div class="sim-card-title">Elon Musk: Stratejik Analiz</div></div></a>
           <a href="lego-propaganda-analiz.html" class="sim-card"><img src="thumbs/card-siber-eh.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#ff4757;">Bilişsel Savaş</div><div class="sim-card-title">Lego Propaganda: Dijital Savaş</div></div></a>
-          <a href="geleceğin-harp-ekosistemi.html" class="sim-card"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#00d9ff;">Gelecek</div><div class="sim-card-title">Geleceğin Harp Ekosistemi</div></div></a>
+          <a href="gelecegin-harp-ekosistemi.html" class="sim-card"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#00d9ff;">Gelecek</div><div class="sim-card-title">Geleceğin Harp Ekosistemi</div></div></a>
           <a href="infografik-hibrit-savas-tum-boyutlar.html" class="sim-card"><img src="thumbs/card-hurmuz.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#f59e0b;">Analiz</div><div class="sim-card-title">Hibrit Savaş: Tüm Boyutlar</div></div></a>
         </div>
       </div>
@@ -423,7 +414,7 @@ const KG_DATA=[
   {term:'İran',links:[{t:'Hürmüz Krizi Simülasyonu',h:'sim14-hurmuz-petrodolar.html'},{t:'Şahab-3 Analizi',h:'panel-silah-metal.html'},{t:'İran-İsrail Gerilimi',h:'haberler.html'}]},
   {term:'ABD',links:[{t:'Pentagon YZ Stratejisi',h:'haberler.html'},{t:'Iron Dome Sistemi',h:'panel-silah-metal.html'},{t:'NATO İttifakı',h:'nato-ankara-zirvesi-2026.html'}]},
   {term:'İsrail',links:[{t:'Iron Dome',h:'sim1-demir-kubbe.html'},{t:'İran-İsrail Gerilimi',h:'sim14-hurmuz-petrodolar.html'},{t:'Asimetrik Savaş',h:'infografik-hibrit-savas-tum-boyutlar.html'}]},
-  {term:'Rusya',links:[{t:'Hipersonik Silahlar',h:'haberler.html'},{t:'Karadeniz Stratejisi',h:'simulasyonlar.html'},{t:'Enerji Jeopolitiği',h:'infografik-hibrit-savas-tum-boyutlar.html'}]},
+  {term:'Rusya',links:[{t:'Hipersonik Silahlar',h:'haberler.html'},{t:'Karadeniz Stratejisi',h:'simülasyonlar.html'},{t:'Enerji Jeopolitiği',h:'infografik-hibrit-savas-tum-boyutlar.html'}]},
   {term:'NATO',links:[{t:'Ankara Zirvesi 2026',h:'nato-ankara-zirvesi-2026.html'},{t:'Askerî Harcama',h:'infografik-askeri-harcama.html'},{t:'Kritik Mineral Tedarik',h:'stratejik-mineraller-periyodik-tablo.html'}]},
   {term:'Şahab-3',links:[{t:'Silah Paneli',h:'panel-silah-metal.html'},{t:'İran Analizi',h:'iran-ek-icerik.html'}]},
   {term:'Demir Kubbe',links:[{t:'Demir Kubbe Simülasyonu',h:'sim1-demir-kubbe.html'},{t:'Silah Paneli',h:'panel-silah-metal.html'}]},

@@ -570,6 +570,22 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 .glow-pulse{animation:glowPulse 3s ease-in-out infinite}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -839,7 +855,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
             'cognitive-detail': { title: '🧠 Bilişsel Katman Detay', content: 'Meşruiyet, toplumsal güven, ortak gerçeklik algısı ve kriz dayanıklılığı. Bir devletin yalnızca askeri gücü olması yeterli değildir. Devletin sürdürülebilirliği bu katmana bağlıdır. Eğer toplum devletine güvenmiyorsa, dünyanın en güçlü ordusu bile işgalci gibi algılanabilir.' },
             'tech-detail': { title: '⚙️ Teknolojik Katman Detay', content: 'Veri altyapıları, yazılım sistemleri, sensör ağları, uydu sistemleri, komuta ve kontrol ağları, yapay zekâ destekli analiz sistemleri. Modern savaş ve kriz yönetiminde belirleyici unsur artık hızdır. Decision Dominance (Karar Üstünlüğü) kavramı ortaya çıkmıştır.' },
             'physical-detail': { title: '💪 Fiziksel Katman Detay', content: 'Askerî güç, enerji üretimi, gıda güvenliği, endüstriyel üretim kapasitesi, kritik altyapılar, şiddet tekeli. Modern çağda enerji altyapıları, veri merkezleri, üretim zincirleri, kritik lojistik ağları jeopolitik güç mimarisinin temeli haline gelmiştir.' },
-            military: { title: '🎖️ Askerî Güç', content: 'Devletin şiddet tekeli. Fiziksel güç yoksa egemenlik yalnızca bir niyet beyanıdır. Ancak modern çağda askeri güç tek başına yeterli değildir. Teknolojik kapasite ve meşruiyet de eşit derecede önemlidir.' },
+            military: { title: '🎖️ Askerî Güç', content: 'Devletin şiddet tekeli. Fiziksel güç yoksa egemenlik yalnızca bir niyet beyanıdır. Ancak modern çağda askerî güç tek başına yeterli değildir. Teknolojik kapasite ve meşruiyet de eşit derecede önemlidir.' },
             energy: { title: '⚡ Enerji', content: 'Devletin yaşam kaynağı. Enerji altyapısı çökmüş bir devlet hiçbir şey yapamaz. Hormuç Boğazı, Süveyş Kanalı gibi enerji boğazları jeopolitik güç mimarisinin kritik noktalarıdır.' },
             food: { title: '🌾 Gıda', content: 'Devletin besini. Gıda güvenliği sağlanamayan bir devlet, dış bağımlılığa düşer. ABD gibi tarım devleri, gıda ihracatını diplomasi kaldıracı olarak kullanır. Kaloriler = Kontrol.' },
             industry: { title: '🏭 Üretim', content: 'Devletin kas gücü. Endüstriyel üretim kapasitesi olmayan bir devlet, savaşı uzun süre sürdüremez. Modern çağda üretim zincirleri küreselleşmiştir. Hiçbir devlet tamamen bağımsız üretim yapamaz.' },
@@ -860,7 +876,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
             observe: { title: '1️⃣ Observe (Gözlem)', content: 'Sensörler, uydu sistemleri, veri toplama altyapısı aracılığıyla bilgi toplanır. Modern çağda gözlem, sadece görsel değil, tüm spektrumda (radar, sonar, elektronik) gerçekleşir.' },
             orient: { title: '2️⃣ Orient (Yorumlama)', content: 'Toplanan veriler, AI ve analitik araçlarla anlamlandırılır. Bağlam oluşturulur. Bilişsel önyargılar, kültürel faktörler, tarihsel deneyim bu aşamada devreye girer.' },
             decide: { title: '3️⃣ Decide (Karar)', content: 'İnsan komuta, stratejik seçim yapar. Algoritma karar vermez, karar destek aracıdır. Nihai karar hâlâ insan komuta zincirine aittir. Hızlı karar = Karar üstünlüğü.' },
-            act: { title: '4️⃣ Act (Uygulama)', content: 'Karar operasyonel hareket haline dönüştürülür. Etki ölçülür. Geri bildirim döngüsü başlar. Uygulama hızı, savaşın sonucunu belirler.' },
+            act: { title: '4️⃣ Act (Uygulama)', content: 'Karar operasyonel hareket haline dönüştürülür. Etki ölçülür. Geri bildirim döngüsü başlar. Uygulama hızı, savaşın sonuçunu belirler.' },
             ecosystem1: { title: '🌐 Sensör Ağları', content: 'Veri toplama altyapısı. Milyarlarca sensör, küresel ölçekte bilgi toplar. IoT, drone\'lar, yerden sistemler, hava radarları.' },
             ecosystem2: { title: '🌐 Büyük Veri', content: 'Masif veri işleme kapasitesi. Petabyte ölçeğinde veri işlenir. Veri depoları, veri analiz merkezleri.' },
             ecosystem3: { title: '🌐 AI Analiz', content: 'Tahmine dayalı modeller. Makine öğrenmesi, derin öğrenme, sinir ağları. Gelecek tahmin edilir, riskler önceden tespit edilir.' },
@@ -868,7 +884,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
             ecosystem5: { title: '🌐 Bilgi Operasyonları', content: 'Algı yönetimi, propaganda, dezenformasyon. Anlatı kontrolü. Halk ve dünya kamuoyunun algısını yönetme.' },
             ecosystem6: { title: '🌐 Platform Ekonomisi', content: 'Dijital pazar kontrolü. Sosyal medya, e-ticaret, veri platformları. Platform kontrol = Ekonomik kontrol.' },
             westphalia: { title: '1648 Westphalia', content: 'Toprak egemenliği. Sınırlar = Güç. Devletler, coğrafi sınırları kontrol eder. Egemenlik = Toprak kontrolü.' },
-            industrial: { title: '1789-1918 Endüstriye', content: 'Üretim kapasitesi. Fabrikalar = Ordu. Endüstriyel devrim, savaşın doğasını değiştirir. Üretim gücü, askeri güç haline gelir.' },
+            industrial: { title: '1789-1918 Endüstriye', content: 'Üretim kapasitesi. Fabrikalar = Ordu. Endüstriyel devrim, savaşın doğasını değiştirir. Üretim gücü, askerî güç haline gelir.' },
             information: { title: '1945-1990 Bilgi Çağı', content: 'Teknoloji. Silah = Veri. Bilgisayarlar, radarlar, iletişim sistemleri. Teknoloji, savaşın hızını artırır. Nükleer silahlar, stratejik dengeyi değiştirir.' },
             digital: { title: '1990-2020 Dijital Çağ', content: 'Platform ekonomisi. Algoritma = Güç. İnternet, sosyal medya, e-ticaret. Veri, petrol kadar değerli hale gelir. Platform kontrol = Ekonomik kontrol.' },
             cognitive: { title: '2020+ Bilişsel Çağ', content: 'Meşruiyet. Anlatı = Egemenlik. Bilişsel savaş, zihinleri hedef alır. Propaganda, dezenformasyon, psikolojik operasyonlar. Anlatı kontrolü = Halk kontrolü.' },

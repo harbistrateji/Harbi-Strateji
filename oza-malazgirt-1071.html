@@ -178,6 +178,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -274,12 +290,12 @@ const ACTIONS={
   parth_shot:{name:'Part Atisi',icon:'🏹',dmg:[9000,14000],moral:4},
   lure:{name:'Tuzaga Cek',icon:'🪤',dmg:[7000,11000],moral:6},
   ambush:{name:'Pusu',icon:'⚔️',dmg:[14000,20000],moral:5},
-  flank_attack:{name:'Kanat Saldirisi',icon:'🐎',dmg:[16000,24000],moral:6},
+  flank_attack:{name:'Kanat Saldırısi',icon:'🐎',dmg:[16000,24000],moral:6},
   crossfire:{name:'Capraz Ates',icon:'🏹',dmg:[12000,17000],moral:4},
   crescent:{name:'Hilal',icon:'🌙',dmg:[22000,32000],moral:8},
   defection:{name:'Iltica',icon:'📯',dmg:[25000,25000],moral:10},
   mace_charge:{name:'Gurz',icon:'🔨',dmg:[20000,28000],moral:7},
-  general_assault:{name:'Genel Saldiri',icon:'⚔️',dmg:[32000,48000],moral:10},
+  general_assault:{name:'Genel Saldırı',icon:'⚔️',dmg:[32000,48000],moral:10},
   cavalry_charge:{name:'Süvari Sarji',icon:'🐎',dmg:[28000,38000],moral:8},
   capture_emperor:{name:'Imparatoru Yakala',icon:'👑',dmg:[60000,90000],moral:20}
 };
@@ -288,14 +304,14 @@ const EQUIP=[
   {name:'Gurz (Topuz)',icon:'🔨',stat:'Zirh Delme +40%',desc:'Flansli demir topuz. Bizans zirhini ezer.'},
   {name:'Hafif Süvari',icon:'🐎',stat:'Manevra +50%',desc:'Hit-and-run uzmani. Bozkırlarin hizli atlilari.'},
   {name:'Turkmen Akincisi',icon:'⚔️',stat:'Kanat +35%',desc:'Yildirim hiziyla kanat manevrasi.'},
-  {name:'Pecenekler',icon:'📯',stat:'+20.000 asker',desc:'Bizans saflarindan Selcuklu tarafina gecti.'}
+  {name:'Pecenekler',icon:'📯',stat:'+20.000 asker',desc:'Bizans saflarindan Selçuklu tarafina gecti.'}
 ];
 const HISTORY=[
-  {title:'Malazgirt Ovası',text:'Mus ilinin kuzeybatisinda. Alparslan burada savas meydanini secti. Genis ova suvari manevrasina uygun.'},
-  {title:'Turan Taktiği',text:'Sahte geri cekilme + pusu. Orta Asya bozkirlarindan gelen klasik strateji.'},
-  {title:'Hilâl Formasyonu',text:'Düşmanin etrafini yari daire seklinde kusatma. Kanatlardan baski.'},
+  {title:'Malazgirt Ovası',text:'Mus ilinin kuzeybatisinda. Alparslan burada savaş meydanini secti. Genis ova suvari manevrasina uygun.'},
+  {title:'Turan Taktiği',text:'Sahte geri cekilme + pusu. Orta Asya bozkırlarindan gelen klasik strateji.'},
+  {title:'Hilâl Formasyonu',text:'Düşmanin etrafini yari daire seklinde kuşatma. Kanatlardan baski.'},
   {title:'Romanos IV',text:'Son Bizans imparatorlarindan. Esir alindi. Alparslan onu onurla karsiladi.'},
-  {title:'Sonuc',text:'Anadolunun kapilari Turklere acildi. 1000 yillik Turk-Anadolu tarihinin baslangici.'}
+  {title:'Sonuç',text:'Anadolunun kapilari Turklere acildi. 1000 yillik Turk-Anadolu tarihinin başlangici.'}
 ];
 
 let state={selcukHP:40000,bizansHP:200000,moral:80,phase:0,puan:0,log:[],playerX:3,playerY:6,allies:[],enemies:[]};
@@ -428,7 +444,7 @@ function executeAction(aid){
   addLog(a.icon+' '+a.name+': -'+dmg.toLocaleString()+' Bizans','selcuk');
   const counter=800+Math.floor(Math.random()*1500);
   state.selcukHP=Math.max(0,state.selcukHP-counter);
-  addLog('Bizans karşı saldiri: -'+counter.toLocaleString(),'bizans');
+  addLog('Bizans karşı saldırı: -'+counter.toLocaleString(),'bizans');
   updateStats();renderBattlefield();checkPhaseAdvance();
   if(state.selcukHP<=0)showYenilgi();
 }
@@ -486,7 +502,7 @@ function showYenilgi(){
   gameStarted=false;
   const ov=document.getElementById('resultOverlay');ov.classList.add('active');
   document.getElementById('resultTitle').textContent='YENILGI';
-  document.getElementById('resultDesc').textContent='Selcuklu ordusu dagildi. Tekrar dene!';
+  document.getElementById('resultDesc').textContent='Selçuklu ordusu dagildi. Tekrar dene!';
   document.getElementById('rScore').textContent=state.score;
   document.getElementById('rKills').textContent=(200000-state.bizansHP).toLocaleString();
   document.getElementById('rPhase').textContent=(state.phase+1)+'/8';

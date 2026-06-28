@@ -201,6 +201,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style><link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 </head><body>
@@ -213,16 +229,16 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 <div class="tutorial-screen" id="tutorialScreen">
 <h2>NASIL OYNANIR?</h2>
 <div class="tut-grid">
-<div class="tut-card"><h4>Harita</h4><p>Sol: Turk mevzileri. Orta: Bogaz/Siper. Sag: Düşman kuvvetleri. 3 katman: Zaman/Cephe/Kaynak.</p></div>
-<div class="tut-card"><h4>10 Safha</h4><p>Deniz bombardimani, Mayın savasi, Ariburnu, Conkbayiri, Anafartalar, Son direnis.</p></div>
-<div class="tut-card"><h4>Karar</h4><p>Her tur 1 hamle. Topçu atesi, mayin dose, sungu hucumu, takviye iste.</p></div>
-<div class="tut-card"><h4>Keşif</h4><p>İstihbarat kartlari XP ile satin al. Düşman planlarini ogren.</p></div>
+<div class="tut-card"><h4>Harita</h4><p>Sol: Turk mevzileri. Orta: Boğaz/Siper. Sag: Düşman kuvvetleri. 3 katman: Zaman/Cephe/Kaynak.</p></div>
+<div class="tut-card"><h4>10 Safha</h4><p>Deniz bombardimani, Mayın savaşı, Ariburnu, Conkbayiri, Anafartalar, Son direnis.</p></div>
+<div class="tut-card"><h4>Karar</h4><p>Her tur 1 hamle. Topçu atesi, mayin dose, sungu hücumu, takviye iste.</p></div>
+<div class="tut-card"><h4>Keşif</h4><p>İstihbarat kartlari XP ile satin al. Düşman planlarini öğren.</p></div>
 <div class="tut-card"><h4>Yetenek</h4><p>4 dal: Topçu, Sipahi, Denizci, Komutan. XP ile seviye atla.</p></div>
 <div class="tut-card"><h4>Kaynak</h4><p>Cephane, erzak, moral, asker, mayin. Dengeyi koru!</p></div>
 <div class="tut-card"><h4>Hikaye</h4><p>Gercek tarihsel olaylar, komutan sozleri, istatistikler.</p></div>
 <div class="tut-card"><h4>Zafer</h4><p>8 ay boyunca dayan. Düşman moralini kir. Boğaz geçilmezse zafer senin!</p></div>
 </div>
-<div class="tut-flow">Giris - Harita - Keşif - Karar - Sonuc - +XP - Yeni Yetenek - Yeni Safha</div>
+<div class="tut-flow">Giriş - Harita - Keşif - Karar - Sonuç - +XP - Yeni Yetenek - Yeni Safha</div>
 <button class="tut-start" onclick="startGame()">Anladim, Başla!</button>
 </div>
 <div class="game-wrap" id="gameWrap" style="display:none;">
@@ -283,53 +299,53 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 <div class="xp-popup" id="xpPopup"><h3 id="xpTitle">TUR SONU</h3><p id="xpResult"></p><div class="xp-val" id="xpGainDisp">+0 XP</div><p id="xpExtra" style="color:var(--gold);margin-top:6px;font-size:.65rem;"></p></div>
 <div class="cinematic" id="cinematic"></div>
 <script>
-const G={day:1,maxDay:259,hour:6,minute:0,bogaz:100,army:90,morale:92,food:80,ammo:85,mine:100,enemyMorale:100,enemyShips:22,enemyArmy:75000,xp:0,level:1,phase:0,skills:{topcu:0,sipahi:0,denizci:0,komutan:0},selectedUnit:'topcu',turnsPlayed:0,unitHP:{topcu:100,piyade:100,mayin:100,komutan:100}};
+const G={day:1,maxDay:259,hour:6,minute:0,boğaz:100,army:90,morale:92,food:80,ammo:85,mine:100,enemyMorale:100,enemyShips:22,enemyArmy:75000,xp:0,level:1,phase:0,skills:{topcu:0,sipahi:0,denizci:0,komutan:0},selectedUnit:'topcu',turnsPlayed:0,unitHP:{topcu:100,piyade:100,mayin:100,komutan:100}};
 const PHASES=[
 {title:"Deniz Bombardımanı — 19 Subat",desc:"İtilaf donanmasi dis istihkamlari bombaliyor. Bataryalari koru!",days:[1,10],actions:[
 {label:"💣 Karsi Ates",cost:"+1 gun, -5 cephane",effect:()=>{G.ammo-=5;G.enemyMorale-=4;return"Düşman gemilerine isabet! Düşman morali -4";}},
 {label:"🔇 Sessiz Kal",cost:"+1 gun",effect:()=>{G.morale-=3;G.ammo+=2;return"Cephane koruduk ama moral dustu. -3 moral";}},
-{label:"💥 Mayın Hattı Guclendir",cost:"+1 gun",effect:()=>{G.mine=Math.min(100,G.mine+10);return"Nusret yeni mayin dosedi!";}},
+{label:"💥 Mayın Hattı Güçlendir",cost:"+1 gun",effect:()=>{G.mine=Math.min(100,G.mine+10);return"Nusret yeni mayin dosedi!";}},
 {label:"📡 Keşif Ucusu",cost:"+1 gun",effect:()=>{G.morale+=2;return"Düşman filosunun konumu tespit edildi. +2 moral";}}]},
-{title:"18 Mart Deniz Zaferi",desc:"İtilafin buyuk taarruzu! 18 zirhli Bogaza giriyor. Mayinlar kritik!",days:[11,30],actions:[
+{title:"18 Mart Deniz Zaferi",desc:"İtilafin büyük taarruzu! 18 zirhli Boğaza giriyor. Mayinlar kritik!",days:[11,30],actions:[
 {label:"💥 Mayın Tuzagi",cost:"+1 gun, -15 mayin",effect:()=>{G.mine-=15;G.enemyShips-=3;G.enemyMorale-=12;return"3 zirhli batti! Bouvet, Irresistible, Ocean! -12 dusman morali";}},
 {label:"💣 Yogun Topçu Atesi",cost:"+1 gun, -12 cephane",effect:()=>{G.ammo-=12;G.enemyShips-=1;G.enemyMorale-=6;return"1 gemi agir hasar! -6 dusman morali";}},
 {label:"🎯 Mecidiye Bataryası",cost:"+1 gun, -8 cephane",effect:()=>{G.ammo-=8;G.enemyMorale-=5;return"Mecidiyeden isabetli atis! -5 dusman morali";}},
 {label:"🏴 Sahte Mevzi",cost:"+1 gun",effect:()=>{G.morale+=4;G.enemyMorale-=3;return"Düşman sahte mevzileri bombaladi! +4 moral";}}]},
-{title:"Kara Çıkarmasi Hazirlik",desc:"Denizde basarisiz olan İtilaf kara harekati planliyor. Savunma hatlarini guclendir!",days:[31,55],actions:[
-{label:"⛏️ Siper Kaz",cost:"+2 gun",effect:()=>{G.day++;G.bogaz+=3;G.food-=3;return"Yeni siper hatti hazir. Savunma +3%";}},
-{label:"🔫 Takviye Iste",cost:"+1 gun",effect:()=>{G.army=Math.min(100,G.army+8);return"Istanbuldan takviye geldi. Asker +8%";}},
-{label:"💣 Kiyi Bataryası Kur",cost:"+2 gun, -10 cephane",effect:()=>{G.day++;G.ammo-=10;G.bogaz+=5;return"Yeni kiyi bataryasi aktif. Savunma +5%";}},
-{label:"🏇 Keşif Kolu",cost:"+1 gun",effect:()=>{G.morale+=3;return"Olasi cikarma noktalari tespit edildi. +3 moral";}}]},
+{title:"Kara Çıkarmasi Hazirlik",desc:"Denizde başarısız olan İtilaf kara harekati planliyor. Savunma hatlarini güçlendir!",days:[31,55],actions:[
+{label:"⛏️ Siper Kaz",cost:"+2 gun",effect:()=>{G.day++;G.boğaz+=3;G.food-=3;return"Yeni siper hatti hazir. Savunma +3%";}},
+{label:"🔫 Takviye Iste",cost:"+1 gun",effect:()=>{G.army=Math.min(100,G.army+8);return"İstanbuldan takviye geldi. Asker +8%";}},
+{label:"💣 Kiyi Bataryası Kur",cost:"+2 gun, -10 cephane",effect:()=>{G.day++;G.ammo-=10;G.boğaz+=5;return"Yeni kiyi bataryasi aktif. Savunma +5%";}},
+{label:"🏇 Keşif Kolu",cost:"+1 gun",effect:()=>{G.morale+=3;return"Olasi çıkarma noktalari tespit edildi. +3 moral";}}]},
 {title:"Ariburnu Çıkarmasi — 25 Nisan",desc:"ANZAC birlikleri Ariburnuna cikiyor! Mustafa Kemal 19. Tümeni harekete gecir!",days:[56,85],actions:[
 {label:"⚔️ Karsi Taarruz",cost:"+1 gun, -8 asker, -6 cephane",effect:()=>{G.army-=8;G.ammo-=6;G.enemyMorale-=8;G.enemyArmy-=5000;return"Karsi taarruz! ANZAC ilerleyisi durdu. -8 dusman morali";}},
 {label:"🔫 Siper Savunması",cost:"+1 gun, -4 cephane",effect:()=>{G.ammo-=4;G.enemyMorale-=4;G.morale+=2;return"Siperlerde direndik! -4 dusman morali";}},
 {label:"⭐ 'Olmeyi Emrediyorum!'",cost:"+1 gun, -5 asker",effect:()=>{G.army-=5;G.morale+=12;G.enemyMorale-=10;return"'Ben size olmeyi emrediyorum!' +12 moral";}},
-{label:"🏴 Gece Baskini",cost:"+1 gun, -3 asker",effect:()=>{G.army-=3;G.enemyMorale-=6;G.enemyArmy-=3000;return"Gece sungu hucumu! -6 dusman morali";}}]},
+{label:"🏴 Gece Baskini",cost:"+1 gun, -3 asker",effect:()=>{G.army-=3;G.enemyMorale-=6;G.enemyArmy-=3000;return"Gece sungu hücumu! -6 dusman morali";}}]},
 {title:"Seddulbahir Cephesi",desc:"İngilizler guneyde Seddulbahire cikti. İki cephede savas!",days:[86,110],actions:[
 {label:"💣 Topçu Baraji",cost:"+1 gun, -10 cephane",effect:()=>{G.ammo-=10;G.enemyMorale-=7;G.enemyArmy-=4000;return"Yogun topcu atesi! -7 dusman morali";}},
 {label:"🔫 Mevzi Savunması",cost:"+1 gun, -3 cephane",effect:()=>{G.ammo-=3;G.enemyMorale-=3;return"Seddulbahirde direniyoruz!";}},
 {label:"⛏️ Tünel Savaşı",cost:"+2 gun, -5 cephane",effect:()=>{G.day++;G.ammo-=5;G.enemyMorale-=5;G.enemyArmy-=2000;return"Lağım patlatıldı! Düşman siperi coktu.";}},
 {label:"📦 Lojistik Takviye",cost:"+1 gun",effect:()=>{G.food=Math.min(100,G.food+10);G.ammo=Math.min(100,G.ammo+5);return"Erzak ve cephane takviyesi geldi.";}}]},
 {title:"Conkbayiri Muharebeleri",desc:"Stratejik tepe icin kanli muharebeler. Conkbayiri duserse Boğaz tehlikede!",days:[111,140],actions:[
-{label:"⚔️ Sungu Hucumu",cost:"+1 gun, -6 asker",effect:()=>{G.army-=6;G.enemyMorale-=9;G.enemyArmy-=6000;return"Conkbayirinda sungu hucumu! Tepe geri alindi!";}},
+{label:"⚔️ Sungu Hücumu",cost:"+1 gun, -6 asker",effect:()=>{G.army-=6;G.enemyMorale-=9;G.enemyArmy-=6000;return"Conkbayirinda sungu hücumu! Tepe geri alindi!";}},
 {label:"🔫 Savunma Hattı",cost:"+1 gun, -4 cephane",effect:()=>{G.ammo-=4;G.enemyMorale-=4;return"Tepeyi tutuyoruz!";}},
 {label:"⭐ Kemal Cephede",cost:"+1 gun, -2 asker",effect:()=>{G.army-=2;G.morale+=10;G.enemyMorale-=6;return"Kemal Bey bizzat cephede! Saatine srapnel isabet etti ama sag! +10 moral";}},
-{label:"🏇 Yan Kusatma",cost:"+1 gun, -4 asker",effect:()=>{G.army-=4;G.enemyMorale-=7;G.enemyArmy-=4000;return"Yandan kusatma! Düşman cembere alindi.";}}]},
-{title:"Anafartalar Taarruzu",desc:"İtilafin son buyuk taarruzu. Mustafa Kemal Anafartalar Grup Komutani!",days:[141,180],actions:[
+{label:"🏇 Yan Kuşatma",cost:"+1 gun, -4 asker",effect:()=>{G.army-=4;G.enemyMorale-=7;G.enemyArmy-=4000;return"Yandan kuşatma! Düşman cembere alindi.";}}]},
+{title:"Anafartalar Taarruzu",desc:"İtilafin son büyük taarruzu. Mustafa Kemal Anafartalar Grup Komutani!",days:[141,180],actions:[
 {label:"⚔️ Karsi Taarruz",cost:"+1 gun, -7 asker, -8 cephane",effect:()=>{G.army-=7;G.ammo-=8;G.enemyMorale-=11;G.enemyArmy-=8000;return"Anafartalar karsi taarruzu! Düşman geri puskurtuldu!";}},
 {label:"💣 Topçu Destegi",cost:"+1 gun, -10 cephane",effect:()=>{G.ammo-=10;G.enemyMorale-=6;G.enemyArmy-=3000;return"Topçu baraji! -6 dusman morali";}},
-{label:"🏴 Gece Taarruzu",cost:"+1 gun, -5 asker",effect:()=>{G.army-=5;G.enemyMorale-=8;G.enemyArmy-=5000;return"Gece baskini basarili!";}},
+{label:"🏴 Gece Taarruzu",cost:"+1 gun, -5 asker",effect:()=>{G.army-=5;G.enemyMorale-=8;G.enemyArmy-=5000;return"Gece baskini başarıli!";}},
 {label:"📡 İstihbarat Topla",cost:"+1 gun",effect:()=>{G.morale+=4;return"Düşman tahliye planlari tespit edildi! +4 moral";}}]},
 {title:"Siper Savaşı — Yipratma",desc:"Cepheler dondu. Siper savaşı, hastalık, soğuk. Dayanma gücü kritik!",days:[181,220],actions:[
 {label:"🔫 Keskin Nisanci",cost:"+1 gun, -2 cephane",effect:()=>{G.ammo-=2;G.enemyMorale-=3;return"Keskin nisancilar etkili! -3 dusman morali";}},
 {label:"📦 Saglik Hizmeti",cost:"+1 gun",effect:()=>{G.morale+=5;G.army=Math.min(100,G.army+3);return"Hastane cadirlari kuruldu. +5 moral";}},
-{label:"⛏️ Siper Gelistir",cost:"+2 gun",effect:()=>{G.day++;G.bogaz+=2;return"Siperlere beton takviye. Savunma +2%";}},
+{label:"⛏️ Siper Gelistir",cost:"+2 gun",effect:()=>{G.day++;G.boğaz+=2;return"Siperlere beton takviye. Savunma +2%";}},
 {label:"🏴 Propaganda",cost:"+1 gun",effect:()=>{G.enemyMorale-=4;G.morale+=2;return"Düşmana propaganda brosuru! -4 dusman morali";}}]},
 {title:"Kis Sartlari",desc:"Kasim-Aralik. Siddetli firtina, sel, dondurucu soguk.",days:[221,245],actions:[
 {label:"📦 Kislik Malzeme",cost:"+1 gun",effect:()=>{G.morale+=4;G.food-=5;return"Kislik giysi dagitildi. +4 moral";}},
 {label:"🔥 Siper Isitma",cost:"+1 gun, -3 erzak",effect:()=>{G.food-=3;G.morale+=3;return"Siperler isitildi. Donma kayiplari azaldi.";}},
 {label:"💣 Firtina Baskini",cost:"+1 gun, -4 asker",effect:()=>{G.army-=4;G.enemyMorale-=6;return"Firtinada baskin! Düşman hazirliksiz yakalandi.";}},
-{label:"📡 Tahliye Istihbarati",cost:"+1 gun",effect:()=>{G.morale+=6;return"Düşman tahliye hazirligi yapiyor! +6 moral";}}]},
+{label:"📡 Tahliye İstihbarati",cost:"+1 gun",effect:()=>{G.morale+=6;return"Düşman tahliye hazirligi yapiyor! +6 moral";}}]},
 {title:"Düşman Tahliyesi — Ocak 1916",desc:"İtilaf kuvvetleri gizlice cekiliyor. Çanakkale gecilmedi!",days:[246,259],actions:[
 {label:"💣 Tahliyeyi Engelle",cost:"+1 gun, -5 cephane",effect:()=>{G.ammo-=5;G.enemyMorale-=8;G.enemyArmy-=5000;return"Tahliye gemilerine ates! -8 dusman morali";}},
 {label:"🏴 Takip Et",cost:"+1 gun, -3 asker",effect:()=>{G.army-=3;G.enemyMorale-=5;return"Cekilen dusmani takip! Agir kayip verdirdik.";}},
@@ -342,12 +358,12 @@ const INTEL=[
 {icon:"💀",title:"ANZAC Çıkarma Noktası",desc:"Düşman Kabatepe yerine Ariburnuna cikacak. Hazirlik yapilabilir.",accuracy:70,cost:300,unlocked:false},
 {icon:"🌙",title:"Hamiltonun Tereddüdü",desc:"General Hamilton kararsiz. Hizli hareket edersek avantaj bizde.",accuracy:65,cost:250,unlocked:false},
 {icon:"🔥",title:"Conkbayiri Kritik",desc:"Conkbayirini tutan Boğazı tutar. Düşman bunu henuz anlamadi.",accuracy:88,cost:180,unlocked:false},
-{icon:"📡",title:"Anafartalar Plani",desc:"İtilaf Anafartalardan kusatma planliyor. Kemali oraya gonder.",accuracy:75,cost:350,unlocked:false},
+{icon:"📡",title:"Anafartalar Plani",desc:"İtilaf Anafartalardan kuşatma planliyor. Kemali oraya gonder.",accuracy:75,cost:350,unlocked:false},
 {icon:"🏴",title:"Tahliye Sinyalleri",desc:"Düşman gece gizli tahliye yapiyor. Sahte ates duzenegi kullaniyorlar.",accuracy:80,cost:200,unlocked:false}
 ];
 const SKILLS=[
 {id:"topcu",icon:"💣",name:"Topçu Ustasi",desc:"Topçu hasari +20%/seviye. Cephane tasarrufu.",lvl:0,maxLvl:3,xpCost:200},
-{id:"sipahi",icon:"⚔️",name:"Sipahi",desc:"Sungu hucumu +25% etkili. Asker kaybi azalir.",lvl:0,maxLvl:3,xpCost:180},
+{id:"sipahi",icon:"⚔️",name:"Sipahi",desc:"Sungu hücumu +25% etkili. Asker kaybi azalir.",lvl:0,maxLvl:3,xpCost:180},
 {id:"denizci",icon:"⚓",name:"Denizci",desc:"Mayın etkinligi +30%. Deniz savunmasi guclenir.",lvl:0,maxLvl:3,xpCost:220},
 {id:"komutan",icon:"⭐",name:"Komutan",desc:"Moral bonusu +15%. Ekstra hamle sansi.",lvl:0,maxLvl:3,xpCost:250}
 ];
@@ -355,18 +371,18 @@ const STORIES=[
 {badge:"Tarihsel Gerçek",text:"18 Mart 1915: Nusretin dosedigi 26 mayin, 3 zirhliyi batirdi, 3unu agir hasara ugratti. Deniz taarruzu tamamen coktu.",stat:"6 zirhli devre disi, 700+ denizci kayip"},
 {badge:"Komutan Sozu",text:"'Ben size taarruz emri vermiyorum. Ben size olmeyi emrediyorum! Biz olunceye kadar gececek zaman zarfinda yerimize baska kuvvetler gelebilir.' — Mustafa Kemal",stat:"57. Alay, 25 Nisan 1915"},
 {badge:"Kritik Bilgi",text:"Çanakkalede toplam 253.000 Turk askeri savasti. 57.000i şehit dustu. İtilaf: 503.000 asker, 252.000 kayip.",stat:"Turk: %22 kayip, İtilaf: %50 kayip"},
-{badge:"Strateji Dersi",text:"İtilafin hatasi: Deniz ve kara harekatini koordine edememesi. 25 Nisan cikarmasi 5 hafta gec kaldi.",stat:"5 hafta = 100.000 kayip farki"},
+{badge:"Strateji Dersi",text:"İtilafin hatasi: Deniz ve kara harekatini koordine edememesi. 25 Nisan çıkarmasi 5 hafta gec kaldi.",stat:"5 hafta = 100.000 kayip farki"},
 {badge:"Eger... Senaryosu",text:"Eger Mustafa Kemal 19. Tümeni kendi inisiyatifiyle harekete gecirmeseydi, ANZAC Conkbayirini alir ve Boğaz duserdi.",stat:"1 subayin karari = 1 imparatorlugun kaderi"},
 {badge:"Silah Bilgisi",text:"Nusret Mayın Gemisi: 40 mayin kapasiteli, 8 dugum hiz. Gece operasyonlariyla toplam 26 mayin dosedi.",stat:"1 gemi, 26 mayin, 3 batik zirhli"},
 {badge:"Psikolojik Savas",text:"Mehmetcik siperlerde dusmana sigara ve yiyecek firlatiyordu. ANZAC askerleri Turklere 'Johnny Turk' diyerek saygi gosterdi.",stat:"Düşmanin bile saygi duydugu asker"},
-{badge:"Lojistik Gercek",text:"Çanakkalede en buyuk dusman hastalikti. Dizanteri, tifus ve donma, savas kayiplarinin 2 kati can aldi.",stat:"Hastalik kayiplari: Savas kayiplarinin 2xi"}
+{badge:"Lojistik Gercek",text:"Çanakkalede en büyük dusman hastalikti. Dizanteri, tifus ve donma, savaş kayiplarinin 2 kati can aldi.",stat:"Hastalik kayiplari: Savaş kayiplarinin 2xi"}
 ];
 function showTutorial(){document.getElementById('introScreen').style.display='none';document.getElementById('tutorialScreen').classList.add('active');}
 function startGame(){document.getElementById('introScreen').style.display='none';document.getElementById('tutorialScreen').classList.remove('active');document.getElementById('tutorialScreen').style.display='none';document.getElementById('gameWrap').style.display='grid';renderPhase();switchTab('intel');}
 function selectUnit(u){G.selectedUnit=u;document.querySelectorAll('.unit-row').forEach(r=>r.classList.remove('selected'));event.currentTarget.classList.add('selected');}
 function renderPhase(){const p=PHASES[G.phase];document.getElementById('phaseTitle').textContent=p.title;document.getElementById('phaseDesc').textContent=p.desc;const c=document.getElementById('actionBtns');c.innerHTML='';p.actions.forEach((a,i)=>{const btn=document.createElement('button');btn.className='action-btn'+(i>0?' secondary':'');btn.innerHTML=a.label+'<span class="cost">'+a.cost+'</span>';btn.onclick=()=>executeAction(a);c.appendChild(btn);});updateUI();}
-function executeAction(action){const result=action.effect();if(!result)return;G.day=Math.min(G.day+1,G.maxDay);G.hour=5+Math.floor(Math.random()*16);G.minute=Math.floor(Math.random()*60);G.turnsPlayed++;G.bogaz=Math.max(0,Math.min(100,G.bogaz));G.morale=Math.max(0,Math.min(100,G.morale));G.food=Math.max(0,Math.min(100,G.food));G.ammo=Math.max(0,Math.min(100,G.ammo));G.mine=Math.max(0,Math.min(100,G.mine));G.army=Math.max(0,Math.min(100,G.army));G.enemyMorale=Math.max(0,Math.min(100,G.enemyMorale));const xpGain=70+Math.floor(Math.random()*50);G.xp+=xpGain;const nextLvl=G.level*280;let newSkill='';if(G.xp>=nextLvl){G.level++;newSkill='Seviye '+G.level+' - Yeni yetenek acildi!';}showXP(xpGain,result,newSkill);const p=PHASES[G.phase];if(G.day>p.days[1]&&G.phase<PHASES.length-1){G.phase++;renderPhase();}if(G.enemyMorale<=0){setTimeout(()=>showCinematic(),800);}updateUI();}
-function updateUI(){document.getElementById('dayDisp').textContent=G.day+'/'+G.maxDay;document.getElementById('enemyDisp').textContent=G.enemyMorale+'%';document.getElementById('xpDisp').textContent=G.xp;document.getElementById('dayTitle').textContent="ÇANAKKALE'NİN "+G.day+". GUNU";const sd=new Date(1915,1,19);sd.setDate(sd.getDate()+G.day-1);const m=['Ocak','Subat','Mart','Nisan','Mayis','Haziran','Temmuz','Agustos','Eylul','Ekim','Kasim','Aralik'];document.getElementById('daySub').textContent=sd.getDate()+' '+m[sd.getMonth()]+' 1915 — '+PHASES[G.phase].title;document.getElementById('dayBar').style.width=(G.day/G.maxDay*100)+'%';document.getElementById('timeDisp').textContent=String(G.hour).padStart(2,'0')+':'+String(G.minute).padStart(2,'0');const w=['N','NE','E','SE','S','SW','W','NW'];document.getElementById('windDisp').textContent=w[Math.floor(Math.random()*8)]+' '+Math.floor(8+Math.random()*20)+'km/h';document.getElementById('moraleDisp').textContent=G.morale+'%';document.getElementById('surFill').style.height=G.bogaz+'%';document.getElementById('surPct').textContent=G.bogaz+'%';document.getElementById('resAmmo').style.width=G.ammo+'%';document.getElementById('resAmmoVal').textContent=G.ammo+'%';document.getElementById('resFood').style.width=G.food+'%';document.getElementById('resFoodVal').textContent=G.food+'%';document.getElementById('resArmy').style.width=G.army+'%';document.getElementById('resArmyVal').textContent=G.army+'%';document.getElementById('resMine').style.width=G.mine+'%';document.getElementById('resMineVal').textContent=G.mine+'%';['topcu','piyade','mayin','komutan'].forEach(u=>{const el=document.getElementById('hp_'+u);if(el)el.style.width=G.unitHP[u]+'%';});}
+function executeAction(action){const result=action.effect();if(!result)return;G.day=Math.min(G.day+1,G.maxDay);G.hour=5+Math.floor(Math.random()*16);G.minute=Math.floor(Math.random()*60);G.turnsPlayed++;G.boğaz=Math.max(0,Math.min(100,G.boğaz));G.morale=Math.max(0,Math.min(100,G.morale));G.food=Math.max(0,Math.min(100,G.food));G.ammo=Math.max(0,Math.min(100,G.ammo));G.mine=Math.max(0,Math.min(100,G.mine));G.army=Math.max(0,Math.min(100,G.army));G.enemyMorale=Math.max(0,Math.min(100,G.enemyMorale));const xpGain=70+Math.floor(Math.random()*50);G.xp+=xpGain;const nextLvl=G.level*280;let newSkill='';if(G.xp>=nextLvl){G.level++;newSkill='Seviye '+G.level+' - Yeni yetenek acildi!';}showXP(xpGain,result,newSkill);const p=PHASES[G.phase];if(G.day>p.days[1]&&G.phase<PHASES.length-1){G.phase++;renderPhase();}if(G.enemyMorale<=0){setTimeout(()=>showCinematic(),800);}updateUI();}
+function updateUI(){document.getElementById('dayDisp').textContent=G.day+'/'+G.maxDay;document.getElementById('enemyDisp').textContent=G.enemyMorale+'%';document.getElementById('xpDisp').textContent=G.xp;document.getElementById('dayTitle').textContent="ÇANAKKALE'NİN "+G.day+". GUNU";const sd=new Date(1915,1,19);sd.setDate(sd.getDate()+G.day-1);const m=['Ocak','Subat','Mart','Nisan','Mayis','Haziran','Temmuz','Agustos','Eylul','Ekim','Kasim','Aralik'];document.getElementById('daySub').textContent=sd.getDate()+' '+m[sd.getMonth()]+' 1915 — '+PHASES[G.phase].title;document.getElementById('dayBar').style.width=(G.day/G.maxDay*100)+'%';document.getElementById('timeDisp').textContent=String(G.hour).padStart(2,'0')+':'+String(G.minute).padStart(2,'0');const w=['N','NE','E','SE','S','SW','W','NW'];document.getElementById('windDisp').textContent=w[Math.floor(Math.random()*8)]+' '+Math.floor(8+Math.random()*20)+'km/h';document.getElementById('moraleDisp').textContent=G.morale+'%';document.getElementById('surFill').style.height=G.boğaz+'%';document.getElementById('surPct').textContent=G.boğaz+'%';document.getElementById('resAmmo').style.width=G.ammo+'%';document.getElementById('resAmmoVal').textContent=G.ammo+'%';document.getElementById('resFood').style.width=G.food+'%';document.getElementById('resFoodVal').textContent=G.food+'%';document.getElementById('resArmy').style.width=G.army+'%';document.getElementById('resArmyVal').textContent=G.army+'%';document.getElementById('resMine').style.width=G.mine+'%';document.getElementById('resMineVal').textContent=G.mine+'%';['topcu','piyade','mayin','komutan'].forEach(u=>{const el=document.getElementById('hp_'+u);if(el)el.style.width=G.unitHP[u]+'%';});}
 function showXP(gain,result,extra){const p=document.getElementById('xpPopup');document.getElementById('xpResult').textContent=result;document.getElementById('xpGainDisp').textContent='+'+gain+' XP';document.getElementById('xpExtra').textContent=extra;p.style.display='block';setTimeout(()=>{p.style.display='none';},2200);}
 function switchTab(tab){document.querySelectorAll('.panel-tab').forEach(t=>t.classList.remove('active'));event.currentTarget.classList.add('active');const c=document.getElementById('panelContent');if(tab==='intel'){c.innerHTML=INTEL.map((intel,i)=>'<div class="intel-card '+(intel.unlocked?'unlocked':'')+'" onclick="buyIntel('+i+')"><div class="intel-header"><span class="intel-icon">'+intel.icon+'</span><span class="intel-title">'+intel.title+'</span></div><div class="intel-desc">'+(intel.unlocked?intel.desc:'???')+'</div><div class="intel-meta"><span>Doğruluk: '+(intel.unlocked?intel.accuracy+'%':'?')+'</span><span>'+(intel.unlocked?'ACILDI':intel.cost+' XP')+'</span></div></div>').join('');}else if(tab==='skills'){c.innerHTML=SKILLS.map((s,i)=>'<div class="skill-card"><div class="skill-header"><span class="skill-icon">'+s.icon+'</span><span class="skill-name">'+s.name+'</span><span class="skill-lvl">Lv.'+s.lvl+'/'+s.maxLvl+'</span></div><div class="skill-desc">'+s.desc+'</div><button class="skill-btn" onclick="upgradeSkill('+i+')" '+(G.xp<s.xpCost||s.lvl>=s.maxLvl?'disabled':'')+'>'+( s.lvl>=s.maxLvl?'MAX':s.xpCost+' XP ile Gelistir')+'</button></div>').join('');}else{c.innerHTML=STORIES.map(s=>'<div class="story-card"><div class="story-badge">'+s.badge+'</div><div class="story-text">'+s.text+'</div>'+(s.stat?'<div class="story-stat">'+s.stat+'</div>':'')+'</div>').join('');}}
 function buyIntel(i){if(INTEL[i].unlocked||G.xp<INTEL[i].cost)return;G.xp-=INTEL[i].cost;INTEL[i].unlocked=true;G.morale=Math.min(100,G.morale+3);switchTab('intel');updateUI();}

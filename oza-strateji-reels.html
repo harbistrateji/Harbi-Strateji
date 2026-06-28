@@ -144,6 +144,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style><link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 </head><body>
@@ -209,7 +225,7 @@ const C=[
 {y:1982,t:'Falkland Savaşı',d:'İngiltere 13.000 km uzaktaki adaları geri aldı.',q:'İngiliz donanmasının en büyük kaybı?',o:['Denizaltı saldırısı','Hava bombardımanı','Exocet füzesiyle HMS Sheffield','Mayın'],c:2,f:'Arjantin\'in Exocet füzeleri 2 İngiliz gemisini batırdı.'},
 {y:2011,t:'Bin Laden Operasyonu',d:'SEAL Team 6, Pakistan\'da Usame bin Laden\'i öldürdü.',q:'Operasyonun kod adı?',o:['Geronimo','Neptune Spear','Gothic Serpent','Red Wings'],c:1,f:'2 stealth Black Hawk helikopteri. 38 dakikalık operasyon.'},
 {y:1942,t:'Midway Muharebesi',d:'ABD 4 Japon uçak gemisini batırdı. Pasifik\'in dönüm noktası.',q:'ABD\'nin avantajı?',o:['Sayısal üstünlük','Teknoloji','Japon şifrelerini kırmışlardı','Şans'],c:2,f:'ABD Japon JN-25 şifresini kırdı. Saldırı zamanını biliyorlardı.'},
-{y:751,t:'Talas Savaşı',d:'Türk-İslam ittifakı Çin Tang hanedanını yendi.',q:'Savaşın en önemli sonucu?',o:['Kağıt üretimi Batı\'ya geçti','Çin yıkıldı','İpek Yolu kapandı','İslam Çin\'e yayıldı'],c:0,f:'Karluk Türkleri saf değiştirdi. Kağıt üretimi Batı\'ya geçti. Türklerin İslamlaşması hızlandı.'},
+{y:751,t:'Talas Savaşı',d:'Türk-İslam ittifakı Çin Tang hanedanını yendi.',q:'Savaşın en önemli sonuçu?',o:['Kağıt üretimi Batı\'ya geçti','Çin yıkıldı','İpek Yolu kapandı','İslam Çin\'e yayıldı'],c:0,f:'Karluk Türkleri saf değiştirdi. Kağıt üretimi Batı\'ya geçti. Türklerin İslamlaşması hızlandı.'},
 {y:1962,t:'Küba Füze Krizi',d:'Sovyet füzeleri Küba\'da. ABD\'ye 5 dakika mesafede nükleer başlıklar.',q:'Kennedy ne yaptı?',o:['Deniz ablukası','Küba\'yı bombaladı','Diplomatik nota','Hiçbir şey'],c:0,f:'Kennedy deniz ablukası uyguladı. Kruşçev füzeleri geri çekti. Dünya nükleer savaşın eşiğinden döndü.'},
 {y:1258,t:'Bağdat\'ın Düşüşü',d:'Moğollar Abbasi Halifeliği\'ni yıktı. İslam dünyasının en karanlık günü.',q:'Hülagu kaç kişiyi katletti?',o:['200.000-1.000.000','10.000','50.000','500'],c:0,f:'Dicle nehri mürekkep ve kandan siyaha döndü. Kütüphaneler yakıldı.'},
 {y:1241,t:'Mohi Muharebesi',d:'Moğol ordusu Macaristan\'ı işgal etti.',q:'Moğolların temel stratejisi?',o:['Frontal saldırı','Kuşatma','Sahte geri çekilme + kanat kuşatma','Gece baskını'],c:2,f:'Batu Han sahte geri çekilmeyle Macar ordusunu açık alana çekti.'},

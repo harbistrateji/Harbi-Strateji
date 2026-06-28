@@ -79,9 +79,9 @@ p{color:var(--bone-dim);}
 
 /* Hero */
 .sim-hero{
-  min-height:40vh;
+  min-height:auto;
   display:flex;flex-direction:column;justify-content:center;
-  padding:120px 32px 60px;
+  padding:40px 32px 60px;
   max-width:1180px;margin:0 auto;
   position:relative;z-index:1;
 }
@@ -113,7 +113,7 @@ p{color:var(--bone-dim);}
   padding:40px 32px 100px;
   position:relative;z-index:1;
 }
-@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:40px 18px 40px;}}
 
 /* Panels */
 .sim-panel{
@@ -256,6 +256,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   .hero-stats{grid-template-columns:repeat(2,1fr);}
   .sim-grid{grid-template-columns:1fr;}
 }
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="sim-ui-fix.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -493,7 +509,7 @@ function updateScores() {
 function showFinalResult(type) {
     let content = '';
     if(type === 'cancel') {
-        content = '<h3 style="color:#e30a17">PROJE İPTAL EDİLDİ</h3><p>Tıpkı gerçek hayatta olduğu gibi, projeyi erken iptal ettiniz. Bu aslında en rasyonel karar olabilir - çünkü gerçekte 9 yıl ve milyarlarca Euro harcandıktan sonra aynı sonuca ulaşıldı.</p><p><strong>Tarihsel Gerçeklik:</strong> FCAS 2017-2026 arasında 9 yıl sürdü ve sonuçta iptal edildi. Erken iptal, kaynakların dron ve otonom sistemlere yönlendirilmesini sağlayabilirdi.</p>';
+        content = '<h3 style="color:#e30a17">PROJE İPTAL EDİLDİ</h3><p>Tıpkı gerçek hayatta olduğu gibi, projeyi erken iptal ettiniz. Bu aslında en rasyonel karar olabilir - çünkü gerçekte 9 yıl ve milyarlarca Euro harcandıktan sonra aynı sonuça ulaşıldı.</p><p><strong>Tarihsel Gerçeklik:</strong> FCAS 2017-2026 arasında 9 yıl sürdü ve sonuçta iptal edildi. Erken iptal, kaynakların dron ve otonom sistemlere yönlendirilmesini sağlayabilirdi.</p>';
     } else {
         if(trust < 30) {
             content = '<h3 style="color:#e30a17">PROJE ÇÖKTÜ - GÜVEN KRİZİ</h3><p>Güven endeksi kritik seviyenin altına düştü. Ortaklar birbirlerine güvenemez hale geldi ve proje çöktü. <strong>Bu tam olarak gerçekte olan şey.</strong></p>';

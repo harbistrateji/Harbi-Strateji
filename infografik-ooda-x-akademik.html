@@ -115,6 +115,22 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 .glow-pulse{animation:glowPulse 3s ease-in-out infinite}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 5px rgba(0,224,255,.2)}50%{box-shadow:0 0 20px rgba(0,224,255,.4),0 0 40px rgba(0,224,255,.1)}}
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 </head>
 <body>
@@ -130,7 +146,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 <button class="nav-tab" data-target="sec-matematik">Matematiksel Modeller</button>
 <button class="nav-tab" data-target="sec-bilissel">Bilişsel Harp</button>
 <button class="nav-tab" data-target="sec-teknoloji">Teknoloji Devleri</button>
-<button class="nav-tab" data-target="sec-turkiye">Türkiye Vizyonu</button>
+<button class="nav-tab" data-target="sec-türkiye">Türkiye Vizyonu</button>
 </div>
 <div class="content">
 
@@ -167,7 +183,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 <div class="info-grid">
 <div class="info-card"><h3>OBSERVE — Gözlemle</h3><p>Çevresel verilerin toplanması. Sensörler, istihbarat, keşif. Ham bilginin akışı. Çok kaynaklı veri füzyonu.</p><div class="stat">Veri</div><div class="label">Girdi Katmanı</div></div>
 <div class="info-card"><h3>ORIENT — Yönlendir</h3><p>Boyd'a göre en kritik aşama. Kültürel gelenekler, genetik miras, önceki deneyimler, yeni bilgi ve analiz/sentez yeteneği ile durumu yorumlama.</p><div class="stat">Schwerpunkt</div><div class="label">Ağırlık Merkezi</div></div>
-<div class="info-card"><h3>DECIDE — Karar Ver</h3><p>Yönlendirme sonucunda oluşan hipotezler arasından seçim yapma. Hareket tarzı belirleme.</p><div class="stat">Seçim</div><div class="label">Karar Noktası</div></div>
+<div class="info-card"><h3>DECIDE — Karar Ver</h3><p>Yönlendirme sonuçunda oluşan hipotezler arasından seçim yapma. Hareket tarzı belirleme.</p><div class="stat">Seçim</div><div class="label">Karar Noktası</div></div>
 <div class="info-card"><h3>ACT — Harekete Geç</h3><p>Kararın uygulanması. Eylem sonuçları gözlem aşamasına geri beslenir — döngü yeniden başlar.</p><div class="stat">Eylem</div><div class="label">Çıktı Katmanı</div></div>
 </div>
 <div class="quote-box"><p>"Orient aşaması, OODA'nın kalbidir. Bir komutanın dünyayı nasıl gördüğü, ne yapacağını belirler. Yanlış yönlendirme, doğru gözlemi bile işe yaramaz kılar."</p><cite>— John Boyd, "Patterns of Conflict" (1986)</cite></div>

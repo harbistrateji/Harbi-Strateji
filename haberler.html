@@ -82,15 +82,6 @@ a{text-decoration:none;color:inherit}
 </style>
 </head>
 <body>
-<div class="ticker-bar" style="background:linear-gradient(90deg,#0a0f17,#1a1f2e);border-bottom:1px solid #00e0ff33;padding:6px 0;overflow:hidden;white-space:nowrap;">
-  <div style="display:inline-block;animation:ticker-scroll 45s linear infinite;">
-    <span style="color:#00e0ff;font-weight:700;font-family:'Chakra Petch',sans-serif;margin-right:12px;">&#9679; GÜNCELLEME</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Doğu Akdeniz'de Türk-Yunan Gerilimi: NATO Acil Toplantı Çağrısı</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">İran-İsrail Krizi: BM Güvenlik Konseyi Olağanüstü Oturum</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Yeni Oyun: OZA Külliyat Arcade — 8 Yeni Oyun</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Güncelleme: Ticaret Yolları Haritası — Zoom &amp; Pan Eklendi</span>
-    <span style="color:#e0e0e0;font-family:'IBM Plex Sans',sans-serif;margin-right:40px;">Yeni İnfografik: FCAS İptali Stratejik Analiz</span>
-  </div>
 </div>
 
 
@@ -118,7 +109,7 @@ a{text-decoration:none;color:inherit}
     <span style="display:inline;margin-right:3rem"><span style="display:inline-block;width:4px;height:4px;background:#fff;border-radius:50%;margin-right:.5rem;vertical-align:middle;opacity:.6"></span>Güncelleme: Modern Savaş Akademisi — 21 Ders</span>
   </div>
 </div>
-<style>@keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.2}}@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+<style>@keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.2}}100%{transform:translateX(-50%)}}
 /* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
 @media (max-width: 768px) {
   body { font-size: 14px !important; }
@@ -171,7 +162,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
   <button class="hb-fbtn" onclick="filterHB('enerji')"><i class="ti ti-bolt"></i> Enerji</button>
   <button class="hb-fbtn" onclick="filterHB('teknoloji')"><i class="ti ti-cpu"></i> Teknoloji</button>
   <button class="hb-fbtn" onclick="filterHB('odka')"><i class="ti ti-map-pin"></i> ODKA</button>
-  <button class="hb-fbtn" onclick="filterHB('turkistan')"><i class="ti ti-flag"></i> Türkistan</button>
+  <button class="hb-fbtn" onclick="filterHB('türkistan')"><i class="ti ti-flag"></i> Türkistan</button>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -232,9 +223,9 @@ const NEWS_DATA = [
   {id:28,cat:'odka',title:'TSK Pençe Operasyonları: PKK\'ya Karşı Yeni Faz',summary:'Kuzey Irak\'ta Pençe-Kilit operasyonu genişletilerek yeni bölgeler kontrol altına alındı. 847 hedef imha edildi.',tags:['Pençe-Kilit','Irak','TSK','Operasyon'],date:'25 Haz 2026',icon:'ti-target-arrow',color:'#f97316'},
   {id:29,cat:'odka',title:'Suriye Güvenli Bölge: Uluslararası Müzakereler Hızlandı',summary:'Kuzey Suriye\'de oluşturulacak güvenli bölge için Türkiye-Rusya-ABD üçlü müzakereleri yoğunlaştı.',tags:['Suriye','Güvenli Bölge','Müzakere','M4'],date:'23 Haz 2026',icon:'ti-map-pin',color:'#f97316'},
   {id:30,cat:'odka',title:'Libya Savunma İş Birliği: Anlaşma 5 Yıl Uzatıldı',summary:'Türkiye-Libya savunma iş birliği anlaşması 5 yıl daha uzatıldı. Deniz yetki alanları mutabakatı güçlendirildi.',tags:['Libya','Savunma','MoU','Deniz'],date:'21 Haz 2026',icon:'ti-handshake',color:'#f97316'},
-  {id:31,cat:'turkistan',title:'Kardeş Yumruk-2026: Türkiye-Azerbaycan Ortak Tatbikatı',summary:'İki ülke silahlı kuvvetleri Nahçıvan\'da büyük çaplı ortak tatbikat gerçekleştirdi. 5.000 personel katıldı.',tags:['Azerbaycan','Tatbikat','Nahçıvan','5000'],date:'24 Haz 2026',icon:'ti-flag',color:'#14b8a6'},
-  {id:32,cat:'turkistan',title:'TDT Ortak Siber Güvenlik Merkezi Kuruldu',summary:'Türk Devletleri Teşkilatı üyeleri Astana\'da ortak siber güvenlik merkezi kurulması kararı aldı ve faaliyete geçirdi.',tags:['TDT','Siber','Astana','Merkez'],date:'22 Haz 2026',icon:'ti-shield-check',color:'#14b8a6'},
-  {id:33,cat:'turkistan',title:'Orta Koridor Ticaret Hacmi: %40 Artış',summary:'Trans-Hazar güzergâhı üzerinden ticaret hacmi 2025\'e göre %40 arttı. BTK hattı tam kapasite çalışıyor.',tags:['Orta Koridor','BTK','%40','Ticaret'],date:'20 Haz 2026',icon:'ti-train',color:'#14b8a6'},
+  {id:31,cat:'türkistan',title:'Kardeş Yumruk-2026: Türkiye-Azerbaycan Ortak Tatbikatı',summary:'İki ülke silahlı kuvvetleri Nahçıvan\'da büyük çaplı ortak tatbikat gerçekleştirdi. 5.000 personel katıldı.',tags:['Azerbaycan','Tatbikat','Nahçıvan','5000'],date:'24 Haz 2026',icon:'ti-flag',color:'#14b8a6'},
+  {id:32,cat:'türkistan',title:'TDT Ortak Siber Güvenlik Merkezi Kuruldu',summary:'Türk Devletleri Teşkilatı üyeleri Astana\'da ortak siber güvenlik merkezi kurulması kararı aldı ve faaliyete geçirdi.',tags:['TDT','Siber','Astana','Merkez'],date:'22 Haz 2026',icon:'ti-shield-check',color:'#14b8a6'},
+  {id:33,cat:'türkistan',title:'Orta Koridor Ticaret Hacmi: %40 Artış',summary:'Trans-Hazar güzergâhı üzerinden ticaret hacmi 2025\'e göre %40 arttı. BTK hattı tam kapasite çalışıyor.',tags:['Orta Koridor','BTK','%40','Ticaret'],date:'20 Haz 2026',icon:'ti-train',color:'#14b8a6'},
   {id:34,cat:'savunma',title:'SSB 2026 Projeler Raporu: 850+ Aktif Proje',summary:'Savunma Sanayii Başkanlığı 2026 yarıyıl raporunda 850+ aktif projeyi açıkladı. Yerlilik oranı %80\'e ulaştı.',tags:['SSB','850 Proje','%80 Yerlilik','Rapor'],date:'26 Haz 2026',icon:'ti-report',color:'#6366f1'},
   {id:35,cat:'savunma',title:'ASELSAN Yeni Radar: ÇAFRAD Blok-2 Testleri Başladı',summary:'ASELSAN\'ın geliştirdiği ÇAFRAD Blok-2 çok fonksiyonlu radar sistemi deniz testlerine başladı.',tags:['ASELSAN','ÇAFRAD','Radar','Blok-2'],date:'24 Haz 2026',icon:'ti-radar',color:'#6366f1'},
   {id:36,cat:'savunma',title:'ROKETSAN Yeni Nesil Mühimmat: Akıllı Bomba Ailesi',summary:'ROKETSAN\'ın yeni nesil akıllı mühimmat ailesi (HGK-84, KGK-83, SOM-J) seri üretime geçti.',tags:['ROKETSAN','HGK','KGK','SOM-J'],date:'22 Haz 2026',icon:'ti-bomb',color:'#6366f1'}

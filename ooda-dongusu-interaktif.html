@@ -37,7 +37,7 @@ body { background: var(--bg); color: var(--text-primary); font-family: 'IBM Plex
 <script src="hs-nav.js?v=11"></script>
 <div class="page-wrap">
     
-<h2 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">OODA döngüsü interaktif simülatörü — Gözlem, Yönelim, Karar ve Eylem aşamalarını keşfet, döngü hızının savaş sonucuna etkisini simüle et.</h2>
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">OODA döngüsü interaktif simülatörü — Gözlem, Yönelim, Karar ve Eylem aşamalarını keşfet, döngü hızının savaş sonuçuna etkisini simüle et.</h2>
 <style>
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes rotateCW{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -170,7 +170,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 </div>
 
 <div class="otc" id="otab-speed">
-  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">İki kuvvetin OODA hızını ayarla ve sonucu gör:</div>
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">İki kuvvetin OODA hızını ayarla ve sonuçu gör:</div>
   <div class="combatant" id="blueForce">
     <div class="cb-header">
       <span class="cb-name" style="color:#378ADD"><i class="ti ti-user-military" aria-hidden="true"></i> Mavi kuvvet</span>
@@ -289,7 +289,7 @@ function updateSim() {
   const ratio = rTotal/bTotal;
   const outlet = document.getElementById('speedOutcome');
   if(Math.abs(ratio-1)<0.15){
-    outlet.innerHTML=`<div class="outcome-box neutral"><b>Eşit döngü hızı.</b> ${bTotal}s vs ${rTotal}s — Her iki taraf da benzer hızda karar veriyor. Sonucu belirleyecek olan sayısal üstünlük ve malzeme kalitesidir. Boyd’a göre bu durum uzun ve yıpratıcı bir çatışmaya işaret eder.</div>`;
+    outlet.innerHTML=`<div class="outcome-box neutral"><b>Eşit döngü hızı.</b> ${bTotal}s vs ${rTotal}s — Her iki taraf da benzer hızda karar veriyor. Sonuçu belirleyecek olan sayısal üstünlük ve malzeme kalitesidir. Boyd’a göre bu durum uzun ve yıpratıcı bir çatışmaya işaret eder.</div>`;
   } else if(ratio>1){
     outlet.innerHTML=`<div class="outcome-box win"><b>Mavi kuvvet avantajlı.</b> ${bTotal}s vs ${rTotal}s (${(ratio).toFixed(1)}× hızlı). Kırmızı kuvvet her döngüde geride kalıyor. Mavi kuvvet kırmızının tepki veremediği hızda durum değiştiriyor — OODA içine girme (inside the loop). Tarihsel örnek: Körfez Savaşı\'nda Koalisyon kuvvetlerinin 100 saatlik kara harekâtı.</div>`;
   } else {

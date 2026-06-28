@@ -142,6 +142,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
 </head>
@@ -262,7 +278,7 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 <a href="oza-kbrn-triage.html" class="oza-game"><div class="oza-game-icon">☢️</div><div class="oza-game-title">KBRN Triage</div><div class="oza-game-meta"><span>Acil müdahale</span></div></a>
 <a href="oza-harbi-quiz.html" class="oza-game"><div class="oza-game-icon">❓</div><div class="oza-game-title">Harbi Quiz</div><div class="oza-game-meta"><span>Bilgi yarışması</span></div></a>
 <a href="oza-hibrit-harita.html" class="oza-game"><div class="oza-game-icon">🗺️</div><div class="oza-game-title">Hibrit Harita</div><div class="oza-game-meta"><span>Coğrafya</span></div></a>
-<a href="oza-küresel-guc.html" class="oza-game"><div class="oza-game-icon">🌍</div><div class="oza-game-title">Küresel Güç</div><div class="oza-game-meta"><span>Güç endeksi</span></div></a>
+<a href="oza-kuresel-guc.html" class="oza-game"><div class="oza-game-icon">🌍</div><div class="oza-game-title">Küresel Güç</div><div class="oza-game-meta"><span>Güç endeksi</span></div></a>
 <a href="oza-16-turk-devleti.html" class="oza-game"><div class="oza-game-icon">🏛️</div><div class="oza-game-title">16 Türk Devleti</div><div class="oza-game-meta"><span>Zaman çizelgesi</span></div></a>
 <a href="oza-komutan-sozleri.html" class="oza-game"><div class="oza-game-icon">💬</div><div class="oza-game-title">Komutan Sözleri</div><div class="oza-game-meta"><span>Koleksiyon</span></div></a>
 <a href="oza-turk-savas-zekasi.html" class="oza-game"><div class="oza-game-icon">🧠</div><div class="oza-game-title">Türk Savaş Zekâsı</div><div class="oza-game-meta"><span>Strateji quiz</span></div></a>
@@ -326,7 +342,7 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 <a href="infografik-turk-savunma-yukselisi.html" class="oza-game"><div class="oza-game-icon">🚀</div><div class="oza-game-title">Savunma Sanayii Yükselisi</div><div class="oza-game-meta"><span>Animasyonlu</span></div></a>
 <a href="infografik-siber-savas-anatomisi.html" class="oza-game"><div class="oza-game-icon">💻</div><div class="oza-game-title">Siber Savaş Anatomisi</div><div class="oza-game-meta"><span>Matrix efekt</span></div></a>
 <a href="infografik-nato-genislemesi.html" class="oza-game"><div class="oza-game-icon">🌍</div><div class="oza-game-title">NATO Genişlemesi</div><div class="oza-game-meta"><span>Harita anim.</span></div></a>
-<a href="infografik-küresel-enerji-savaslari.html" class="oza-game"><div class="oza-game-icon">🔥</div><div class="oza-game-title">Küresel Enerji Savaşları</div><div class="oza-game-meta"><span>Gauge efekt</span></div></a>
+<a href="infografik-kuresel-enerji-savaslari.html" class="oza-game"><div class="oza-game-icon">🔥</div><div class="oza-game-title">Küresel Enerji Savaşları</div><div class="oza-game-meta"><span>Gauge efekt</span></div></a>
 <a href="infografik-yapay-zeka-savas.html" class="oza-game"><div class="oza-game-icon">🤖</div><div class="oza-game-title">YZ ve Savaşın Geleceği</div><div class="oza-game-meta"><span>Neon/glitch</span></div></a>
 <a href="infografik-hurmuz-bogazi.html" class="oza-game"><div class="oza-game-icon">🚢</div><div class="oza-game-title">Hürmüz Boğazı Krizi</div><div class="oza-game-meta"><span>Particle efekt</span></div></a>
 <a href="infografik-turk-deniz-gucu.html" class="oza-game"><div class="oza-game-icon">⛵</div><div class="oza-game-title">Türk Deniz Gücü</div><div class="oza-game-meta"><span>Dalga anim.</span></div></a>
@@ -340,7 +356,7 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 <div style="margin:2rem 0;padding:0 1.5rem;">
   <h2 class="oza-section-title" style="font-size:1.3rem;margin-bottom:1rem;">📡 Stratejik Analiz</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;">
-    <a href="elon_musk_disruptor_universe.html" style="display:block;background:rgba(15,15,26,.9);border:1px solid rgba(239,159,39,.3);border-radius:12px;padding:1.2rem;text-decoration:none;transition:all .3s;"><div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;"><span style="font-size:1.5rem;">🌌</span><div><div style="color:#EF9F27;font-size:.65rem;font-weight:700;letter-spacing:.05em;">STRATEJİK ANALİZ</div><div style="color:#fff;font-size:.95rem;font-weight:600;">Elon Musk — Disruptor: Z Kuşağı</div></div></div><div style="color:#9ca3af;font-size:.8rem;line-height:1.4;">7 şirket gezegen haritası — Tesla, SpaceX, xAI, Neuralink. Portföy, Vizyon, Askeri Analiz, OODA.</div><div style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span style="background:rgba(239,159,39,.15);color:#EF9F27;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">7 Sekme</span><span style="background:rgba(55,138,221,.15);color:#378ADD;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">İnteraktif</span><span style="background:rgba(29,158,117,.15);color:#1D9E75;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">Gezegen Haritası</span></div></a>
+    <a href="elon_musk_disruptor_universe.html" style="display:block;background:rgba(15,15,26,.9);border:1px solid rgba(239,159,39,.3);border-radius:12px;padding:1.2rem;text-decoration:none;transition:all .3s;"><div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;"><span style="font-size:1.5rem;">🌌</span><div><div style="color:#EF9F27;font-size:.65rem;font-weight:700;letter-spacing:.05em;">STRATEJİK ANALİZ</div><div style="color:#fff;font-size:.95rem;font-weight:600;">Elon Musk — Disruptor: Z Kuşağı</div></div></div><div style="color:#9ca3af;font-size:.8rem;line-height:1.4;">7 şirket gezegen haritası — Tesla, SpaceX, xAI, Neuralink. Portföy, Vizyon, Askerî Analiz, OODA.</div><div style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span style="background:rgba(239,159,39,.15);color:#EF9F27;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">7 Sekme</span><span style="background:rgba(55,138,221,.15);color:#378ADD;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">İnteraktif</span><span style="background:rgba(29,158,117,.15);color:#1D9E75;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">Gezegen Haritası</span></div></a>
   </div>
 </div>
   <h2 class="oza-section-title" style="font-size:1.3rem;margin-bottom:1rem;">🃏 Strateji Kartları & Quiz</h2>
@@ -360,7 +376,7 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
   <h3>Barut Simyacısı</h3>
   <p>Doğru malzemeleri seç, tarihi patlayıcıları yarat!</p>
 </div>
-<div class="game-card" onclick="location.href='oza-kusatma-ustasi.html'">
+<div class="game-card" onclick="location.href='oza-kuşatma-ustasi.html'">
   <div class="game-badge">Yeni</div>
   <div class="game-icon">🏰</div>
   <h3>Kuşatma Ustası</h3>
@@ -429,9 +445,9 @@ img, video, iframe, canvas, svg, table { max-width: 100% !important; }
       <span class="oza-card-desc">Bütüncül stratejik matris — konvansiyonel vs algoritmik savaş, OODA-X, canlı osiloskop</span>
       <span class="oza-cat-badge">Siber · Algoritmik</span>
     </a>
-    <a href="küresel-askeri-sistemler.html" class="oza-card">
+    <a href="kuresel-askeri-sistemler.html" class="oza-card">
       <span class="oza-card-icon">🌐</span>
-      <span class="oza-card-title">Küresel Askeri Sistemler</span>
+      <span class="oza-card-title">Küresel Askerî Sistemler</span>
       <span class="oza-card-desc">Konvansiyonel vs algoritmik savaş odası — İran analizi, Mind×Mine, maliyet asimetrisi</span>
       <span class="oza-cat-badge">Jeopolitik · Askeri</span>
     </a>

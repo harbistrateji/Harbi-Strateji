@@ -74,7 +74,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
   <button class="filter-btn" onclick="filterFacts('xy')">X + Y Kuşağı</button>
   <button class="filter-btn" onclick="filterFacts('silah')">Silah</button>
   <button class="filter-btn" onclick="filterFacts('ekonomi')">Ekonomi</button>
-  <button class="filter-btn" onclick="filterFacts('osmanli')">Osmanlı</button>
+  <button class="filter-btn" onclick="filterFacts('osmanlı')">Osmanlı</button>
   <button class="filter-btn" onclick="filterFacts('modern')">Modern</button>
 </div>
 <div class="facts-grid" id="factsGrid">
@@ -83,10 +83,10 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
 <script>
 const facts=[
   {icon:"🔥",title:"Suda Yanan Silah",text:"Grek Ateşi suda bile yanmaya devam ediyordu! Bileşimindeki sönmemiş kireç suyla temas edince kuvvetle ısınarak karışımı tutuşturuyordu. 7 yüzyıl boyunca formülü gizli kaldı.",tags:["z","silah"],cat:"silah"},
-  {icon:"🏹",title:"800 Metrelik Ok",text:"Türk kompozit yayı 800 metreye kadar ok atabiliyordu. Boynuz, sinir ve ahşap katmanlarından yapılırdı. Okçu eğitimi 7 yaşında başlıyordu!",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"🏹",title:"800 Metrelik Ok",text:"Türk kompozit yayı 800 metreye kadar ok atabiliyordu. Boynuz, sinir ve ahşap katmanlarından yapılırdı. Okçu eğitimi 7 yaşında başlıyordu!",tags:["z","osmanlı"],cat:"osmanlı"},
   {icon:"💰",title:"Savaşın Gerçek Maliyeti",text:"18. yüzyılda silah ve mühimmat, toplam savaş giderinin sadece %1'ini oluşturuyordu. Asıl maliyet lojistik ve erzaktaydı (%12).",tags:["xy","ekonomi"],cat:"ekonomi"},
   {icon:"⚗",title:"107 Barut Formülü",text:"Suriyeli Hasan el-Rammah 1280'de yazdığı kitapta 107 farklı barut formülü ve 22 roket tasarımı sundu. Dünyada ilk matematiksel roket yakıtı hesabı!",tags:["z","silah"],cat:"silah"},
-  {icon:"💣",title:"680 Kiloluk Mermi",text:"Fatih’in İstanbul kuşatmasında kullandığı Şahi topları 680 kg ağırlığında mermi atıyordu. Top 8 metre uzunluğundaydı ve 1.5 km menzile sahipti.",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"💣",title:"680 Kiloluk Mermi",text:"Fatih’in İstanbul kuşatmasında kullandığı Şahi topları 680 kg ağırlığında mermi atıyordu. Top 8 metre uzunluğundaydı ve 1.5 km menzile sahipti.",tags:["z","osmanlı"],cat:"osmanlı"},
   {icon:"🏭",title:"Krupp: 400 Yıllık Silah İmparatorluğu",text:"Alman Krupp ailesi 400 yıl boyunca Avrupa’nın yarısını silahlandırdı. I. Dünya Savaşı’nda fabrikada 70.000 işçi çalışıyordu.",tags:["xy","ekonomi"],cat:"ekonomi"},
   {icon:"☢",title:"2 Milyar Dolarlık Gizli Proje",text:"Manhattan Projesi: 130.000 kişi çalıştı, 2 milyar $ harcandı (bugün 28 milyar $). Çoğu çalışan ne yaptığını bilmiyordu!",tags:["z","modern"],cat:"modern"},
   {icon:"🗡",title:"Nanotüp Kılıç",text:"Şam çeliği (wootz) modern analizlerde karbon nanotüp benzeri yapı gösterdi. Bu yüzden olağanüstü keskin ve dayanıklıydı!",tags:["z","silah"],cat:"silah"},
@@ -94,14 +94,14 @@ const facts=[
   {icon:"💸",title:"1.7 Trilyon Dolarlık Uçak",text:"F-35 programı 1.7 trilyon dolarla tarihin en pahalı silah programı. Tek bir uçağın maliyeti 80-100 milyon dolar.",tags:["xy","modern"],cat:"modern"},
   {icon:"⚔",title:"Şövalye Zırhı = 1 Köy",text:"Ortaçağ’da tam bir şövalye donanımı (zırh, at, silah) bir köyün yıllık geliri kadardı. Bu yüzden sadece soylular savaşabiliyordu.",tags:["z","ekonomi"],cat:"ekonomi"},
   {icon:"🧪",title:"Nobel’in Pişmanlığı",text:"Alfred Nobel bir gazetede kendi ölüm ilanını okudu: 'Ölüm taciri öldü.' Bu olay onu Nobel Barış Ödülü’nü kurmaya itti.",tags:["z","silah"],cat:"silah"},
-  {icon:"🏰",title:"53 Gün 53 Gece",text:"İstanbul’un fethi 53 gün sürdü. Fatih 21 yaşındaydı. 80.000-100.000 asker, 69 top, 126 gemi. Tarihin en büyük kuşatmalarından.",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"🏰",title:"53 Gün 53 Gece",text:"İstanbul’un fethi 53 gün sürdü. Fatih 21 yaşındaydı. 80.000-100.000 asker, 69 top, 126 gemi. Tarihin en büyük kuşatmalarından.",tags:["z","osmanlı"],cat:"osmanlı"},
   {icon:"🌍",title:"Barut 1200 Yılda 3 Kıta Geçti",text:"Barut 9. yüzyılda Çin’de keşfedildi, 13. yüzyılda İslam dünyasına, 14. yüzyılda Avrupa’ya ulaştı. Her kıtada farklı geliştirildi.",tags:["xy","silah"],cat:"silah"},
   {icon:"🛢",title:"Napalm = Grek Ateşi 2.0",text:"1942'de geliştirilen Napalm, Grek Ateşi’nin modern versiyonu. İkisi de nafta bazlı, ikisi de yapışkan ve söndürülmesi zor.",tags:["z","modern"],cat:"modern"},
   {icon:"💎",title:"70.000 Nükleer Başlık",text:"Soğuk Savaş’ın zirvesinde dünyada 70.000'den fazla nükleer başlık vardı. Dünyayı birçok kez yok edecek güçteydi.",tags:["xy","modern"],cat:"modern"},
-  {icon:"⛵",title:"Osmanlı Deniz Mayını",text:"Osmanlılar deniz mayınının erken formlarını kullandı. Barut dolu fıçılar su altına yerleştirilerek düşman gemileri batırılıyordu.",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"⛵",title:"Osmanlı Deniz Mayını",text:"Osmanlılar deniz mayınının erken formlarını kullandı. Barut dolu fıçılar su altına yerleştirilerek düşman gemileri batırılıyordu.",tags:["z","osmanlı"],cat:"osmanlı"},
   {icon:"📐",title:"Leonardo’nun 200+ Silah Tasarımı",text:"Leonardo da Vinci Codex Atlanticus’ta 200'den fazla askeri tasarım çizdi: tank, helikopter, makineli tüfek, zırhlı araç. Çoğu 400 yıl ilerisindeydi.",tags:["z","silah"],cat:"silah"},
   {icon:"🏦",title:"Roma’nın Askeri Bütçesi",text:"Roma İmparatorluğu MÖ 406'da askerlere düzenli maaş ödemeye başladı. Savunma harcamaları vergiyle finanse edildi — bugünkü sistemin kökeni!",tags:["xy","ekonomi"],cat:"ekonomi"},
-  {icon:"🎆",title:"Osmanlı Şenlik Roketleri",text:"Osmanlı şenliklerinde havai fişek gösterileri yapılırdı. Roketler sarayda eğlence aracıydı. Aynı teknoloji savaşta da kullanıldı.",tags:["z","osmanli"],cat:"osmanli"}
+  {icon:"🎆",title:"Osmanlı Şenlik Roketleri",text:"Osmanlı şenliklerinde havai fişek gösterileri yapılırdı. Roketler sarayda eğlence aracıydı. Aynı teknoloji savaşta da kullanıldı.",tags:["z","osmanlı"],cat:"osmanlı"}
 ];
 
 function renderFacts(list){

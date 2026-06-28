@@ -91,14 +91,30 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style><link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
 </head><body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
 <a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
 <div class="intro-overlay" id="intro"><h1>Küresel Güç Dengesi</h1><div class="sub">6 Süper Güç | Kaynak Savaşı | İttifak</div><p>Türkiye'yi yonet. 6 süper güçle rekabet et, ittifak kur, kaynakları kontrol et.</p><button onclick="startGame()">Oyuna Başla</button></div>
-<div class="top-bar" id="topBar" style="display:none;padding-left:150px;"><a href="oza-harbi-strateji-evren.html" class="tb-back">&#8592; OZA</a><div class="tb-title">Küresel Güç</div><div class="tb-stats"><span>Tur: <b id="turnV">1</b></span><span>Guc: <b id="powV">50</b></span></div></div>
-<div class="main" id="mainArea" style="display:none;"><div class="left-panel" id="leftP"></div><div class="right-panel"><div class="info-card"><h3>Türkiye Istatistikleri</h3><div id="myStats"></div></div><div class="info-card"><h3>Guc Siralaması</h3><div id="rankList"></div></div><div class="info-card"><h3>Gunluk</h3><div id="logList"></div></div></div></div>
+<div class="top-bar" id="topBar" style="display:none;padding-left:150px;"><a href="oza-harbi-strateji-evren.html" class="tb-back">&#8592; OZA</a><div class="tb-title">Küresel Güç</div><div class="tb-stats"><span>Tur: <b id="turnV">1</b></span><span>Güç: <b id="powV">50</b></span></div></div>
+<div class="main" id="mainArea" style="display:none;"><div class="left-panel" id="leftP"></div><div class="right-panel"><div class="info-card"><h3>Türkiye Istatistikleri</h3><div id="myStats"></div></div><div class="info-card"><h3>Güç Siralaması</h3><div id="rankList"></div></div><div class="info-card"><h3>Gunluk</h3><div id="logList"></div></div></div></div>
 <script>
 var P=[{name:'Türkiye',mil:60,eco:55,tech:50,dip:65,flag:'TR'},{name:'ABD',mil:95,eco:90,tech:95,dip:70,flag:'US'},{name:'Cin',mil:80,eco:92,tech:85,dip:50,flag:'CN'},{name:'Rusya',mil:85,eco:45,tech:60,dip:40,flag:'RU'},{name:'AB',mil:55,eco:85,tech:80,dip:80,flag:'EU'},{name:'Hindistan',mil:65,eco:60,tech:55,dip:55,flag:'IN'}];
 var G={turn:1,sel:null,logs:[]};

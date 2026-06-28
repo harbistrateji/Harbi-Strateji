@@ -79,9 +79,9 @@ p{color:var(--bone-dim);}
 
 /* Hero */
 .sim-hero{
-  min-height:40vh;
+  min-height:auto;
   display:flex;flex-direction:column;justify-content:center;
-  padding:120px 32px 60px;
+  padding:40px 32px 60px;
   max-width:1180px;margin:0 auto;
   position:relative;z-index:1;
 }
@@ -113,7 +113,7 @@ p{color:var(--bone-dim);}
   padding:40px 32px 100px;
   position:relative;z-index:1;
 }
-@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:40px 18px 40px;}}
 
 /* Panels */
 .sim-panel{
@@ -325,6 +325,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   border-radius:8px;padding:32px;text-align:center;margin-top:24px;
 }
 
+
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
 
 </style>
 <link rel="stylesheet" href="sim-ui-fix.css">
@@ -622,13 +638,13 @@ Mevcut Sistemler:<br>
             if (p === 1) {
                 if (choice === 'A') {
                     budget -= 30; tech += 25; deter += 20;
-                    html = '<h3>Tam Ölçekli Yatırım Sonucu</h3><p>3 yıl içinde 100 kW+ lazer sistemi geliştirildi. Dron sürülerine karşı tam koruma sağlandı. Maliyet asimetrisi tersine döndü: Artık 2 milyon dolarlık füze yerine birkaç dolarlık lazer atışıyla savunma yapıyorsunuz. Ancak bütçe ciddi daraldı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Tarihsel Analoji:</strong> İsrail Iron Beam projesi gibi cesur bir hamle.</p>';
+                    html = '<h3>Tam Ölçekli Yatırım Sonuçu</h3><p>3 yıl içinde 100 kW+ lazer sistemi geliştirildi. Dron sürülerine karşı tam koruma sağlandı. Maliyet asimetrisi tersine döndü: Artık 2 milyon dolarlık füze yerine birkaç dolarlık lazer atışıyla savunma yapıyorsunuz. Ancak bütçe ciddi daraldı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Tarihsel Analoji:</strong> İsrail Iron Beam projesi gibi cesur bir hamle.</p>';
                 } else if (choice === 'B') {
                     budget -= 15; tech += 12; deter += 8;
-                    html = '<h3>Kademeli Geliştirme Sonucu</h3><p>ARMOL/ALKA 50 kW\'a yükseltildi. Kısa menzilli dronlara karşı etkili ama büyük füzelere yetersiz. AR-GE devam ediyor ancak rakipler (İsrail, ABD) 100 kW eşiğini geçti.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Risk:</strong> Teknolojik açık büyüyebilir.</p>';
+                    html = '<h3>Kademeli Geliştirme Sonuçu</h3><p>ARMOL/ALKA 50 kW\'a yükseltildi. Kısa menzilli dronlara karşı etkili ama büyük füzelere yetersiz. AR-GE devam ediyor ancak rakipler (İsrail, ABD) 100 kW eşiğini geçti.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Risk:</strong> Teknolojik açık büyüyebilir.</p>';
                 } else {
                     budget -= 10; tech += 15; deter += 5;
-                    html = '<h3>Uluslararası Ortaklık Sonucu</h3><p>Hızlı teknoloji transferi sağlandı. Ancak kritik IP (fikri mülkiyet) paylaşıldı. Ortak ülke, kriz anında teknoloji erişimini kısıtlayabilir. Bağımlılık riski oluştu.</p><p style="margin-top:10px;color:#ff8a65;"><strong>Uyarı:</strong> FCAS projesindeki IP kavgalarını hatırlayın.</p>';
+                    html = '<h3>Uluslararası Ortaklık Sonuçu</h3><p>Hızlı teknoloji transferi sağlandı. Ancak kritik IP (fikri mülkiyet) paylaşıldı. Ortak ülke, kriz anında teknoloji erişimini kısıtlayabilir. Bağımlılık riski oluştu.</p><p style="margin-top:10px;color:#ff8a65;"><strong>Uyarı:</strong> FCAS projesindeki IP kavgalarını hatırlayın.</p>';
                     isNeg = true;
                 }
             } else if (p === 2) {
@@ -640,44 +656,44 @@ Mevcut Sistemler:<br>
                     html = '<h3>Kuantum Radarı (K-RAD) Öncelikli Sonuç</h3><p>K-RAD sistemi devreye girdi. Komşu ülkelerin stealth uçakları artık radarınızda görünüyor. Hava savunmasında devrimci avantaj. Ancak mevcut şifreleriniz hâlâ kırılabilir durumda.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Risk:</strong> İstihbarat sızıntısı devam ediyor.</p>';
                 } else {
                     budget -= 15; tech += 10; deter += 8;
-                    html = '<h3>Dengeli Yaklaşım Sonucu</h3><p>Post-kuantum algoritmalar geçici güvenlik sağladı. Hem KAD hem K-RAD düşük hızda ilerliyor. Hiçbir alanda lider değilsiniz ama kritik bir açık da yok.</p><p style="margin-top:10px;color:#90caf9;"><strong>Değerlendirme:</strong> Güvenli ama sıradışı değil.</p>';
+                    html = '<h3>Dengeli Yaklaşım Sonuçu</h3><p>Post-kuantum algoritmalar geçici güvenlik sağladı. Hem KAD hem K-RAD düşük hızda ilerliyor. Hiçbir alanda lider değilsiniz ama kritik bir açık da yok.</p><p style="margin-top:10px;color:#90caf9;"><strong>Değerlendirme:</strong> Güvenli ama sıradışı değil.</p>';
                 }
             } else if (p === 3) {
                 if (choice === 'A') {
                     budget -= 5; tech += 5; deter += 20;
-                    html = '<h3>Karşı Siber Saldırı Sonucu</h3><p>Rakibin enerji altyapısına karşı operasyon başarılı oldu. Caydırıcılık mesajı net verildi. Ancak uluslararası kamuoyunda "orantısız güç" eleştirisi aldınız. Hukuki meşruiyet tartışmalı.</p><p style="margin-top:10px;color:#ff8a65;"><strong>Tallinn Perspektifi:</strong> Kanıt %70 ise karşılık hukuki olarak tartışmalıdır.</p>';
+                    html = '<h3>Karşı Siber Saldırı Sonuçu</h3><p>Rakibin enerji altyapısına karşı operasyon başarılı oldu. Caydırıcılık mesajı net verildi. Ancak uluslararası kamuoyunda "orantısız güç" eleştirisi aldınız. Hukuki meşruiyet tartışmalı.</p><p style="margin-top:10px;color:#ff8a65;"><strong>Tallinn Perspektifi:</strong> Kanıt %70 ise karşılık hukuki olarak tartışmalıdır.</p>';
                     isNeg = true;
                 } else if (choice === 'B') {
                     budget -= 2; tech += 0; deter -= 10;
-                    html = '<h3>Diplomatik Yol Sonucu</h3><p>BM\'ye başvuruldu ama veto nedeniyle karar çıkmadı. Müttefikler "derin endişe" açıklaması yaptı. Saldırgan cezasız kaldı. Caydırıcılığınız ciddi düştü; bir sonraki saldırı cesaretlendirildi.</p><p style="margin-top:10px;color:#ff5252;"><strong>Tarihsel Analoji:</strong> 2007 Estonya saldırısı sonrası BM\'nin etkisizliği.</p>';
+                    html = '<h3>Diplomatik Yol Sonuçu</h3><p>BM\'ye başvuruldu ama veto nedeniyle karar çıkmadı. Müttefikler "derin endişe" açıklaması yaptı. Saldırgan cezasız kaldı. Caydırıcılığınız ciddi düştü; bir sonraki saldırı cesaretlendirildi.</p><p style="margin-top:10px;color:#ff5252;"><strong>Tarihsel Analoji:</strong> 2007 Estonya saldırısı sonrası BM\'nin etkisizliği.</p>';
                     isNeg = true;
                 } else {
                     budget -= 8; tech += 5; deter += 15;
-                    html = '<h3>Tallinn Kriteri Uygulaması Sonucu</h3><p>Saldırının fiziksel etkileri (hastane çöküşü, can kaybı riski) belgelendi. BM Madde 51 kapsamında meşru müdafaa ilan edildi. Hem siber hem kinetik seçenekler masada tutularak caydırıcılık sağlandı. Uluslararası destek alındı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Optimal:</strong> Hukuki meşruiyet + caydırıcılık dengesi.</p>';
+                    html = '<h3>Tallinn Kriteri Uygulaması Sonuçu</h3><p>Saldırının fiziksel etkileri (hastane çöküşü, can kaybı riski) belgelendi. BM Madde 51 kapsamında meşru müdafaa ilan edildi. Hem siber hem kinetik seçenekler masada tutularak caydırıcılık sağlandı. Uluslararası destek alındı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Optimal:</strong> Hukuki meşruiyet + caydırıcılık dengesi.</p>';
                 }
             
             } else if (p === 4) {
                 if (choice === 'A') {
                     budget -= 25; tech += 20; deter += 25;
-                    html = '<h3>ASAT Sistemi Sonucu</h3><p>Yerli ASAT sistemi başarıyla test edildi. Düşman uydu varlıkları artık tehdit altında. Ancak "uzayın silahlanması" nedeniyle BM'de kınama aldınız ve bazı müttefikler endişeli.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Stratejik Etki:</strong> Uzay caydırıcılığı kazanıldı. Kessler Sendromu riski not edildi.</p>';
+                    html = '<h3>ASAT Sistemi Sonuçu</h3><p>Yerli ASAT sistemi başarıyla test edildi. Düşman uydu varlıkları artık tehdit altında. Ancak "uzayın silahlanması" nedeniyle BM'de kınama aldınız ve bazı müttefikler endişeli.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Stratejik Etki:</strong> Uzay caydırıcılığı kazanıldı. Kessler Sendromu riski not edildi.</p>';
                 } else if (choice === 'B') {
                     budget -= 15; tech += 15; deter += 12;
-                    html = '<h3>Mikro-Uydu Sürüsü Sonucu</h3><p>200+ mikro-uydudan oluşan orbital savunma ağı kuruldu. Düşman uyduları sürekli takip altında. Gerektiğinde "yakın geçiş" ile devre dışı bırakma kapasitesi kazanıldı. Uluslararası tepki minimal.</p><p style="margin-top:10px;color:#90caf9;"><strong>Değerlendirme:</strong> Akıllı ve ölçülü bir hamle. Ancak kinetik tehditlere karşı yetersiz.</p>';
+                    html = '<h3>Mikro-Uydu Sürüsü Sonuçu</h3><p>200+ mikro-uydudan oluşan orbital savunma ağı kuruldu. Düşman uyduları sürekli takip altında. Gerektiğinde "yakın geçiş" ile devre dışı bırakma kapasitesi kazanıldı. Uluslararası tepki minimal.</p><p style="margin-top:10px;color:#90caf9;"><strong>Değerlendirme:</strong> Akıllı ve ölçülü bir hamle. Ancak kinetik tehditlere karşı yetersiz.</p>';
                 } else {
                     budget -= 20; tech += 18; deter += 15;
-                    html = '<h3>Yerden Uzaya Lazer Sonucu</h3><p>3 adet yüksek enerjili lazer istasyonu kuruldu. Bulutlu havalarda etkinlik %40'a düşüyor ama açık havada yörüngedeki tehditleri 3 saniyede imha edebiliyor.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Kısıt:</strong> Hava koşullarına bağımlılık kritik zayıflık. Yedek sistemler şart.</p>';
+                    html = '<h3>Yerden Uzaya Lazer Sonuçu</h3><p>3 adet yüksek enerjili lazer istasyonu kuruldu. Bulutlu havalarda etkinlik %40'a düşüyor ama açık havada yörüngedeki tehditleri 3 saniyede imha edebiliyor.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Kısıt:</strong> Hava koşullarına bağımlılık kritik zayıflık. Yedek sistemler şart.</p>';
                 }
             } else if (p === 5) {
                 if (choice === 'A') {
                     budget -= 5; tech += 10; deter += 20;
-                    html = '<h3>Tam Otonom Sonucu</h3><p>Tepki süresi 0.003 saniyeye düştü. Hipersonik tehditlere karşı etkili. Ancak bir sivil uçak "yanlış pozitif" ile düşürüldü. Uluslararası kriz, BM soruşturması başlatıldı.</p><p style="margin-top:10px;color:#ff5252;"><strong>Felaket:</strong> Teknolojik üstünlük kazanıldı ama meşruiyet kaybedildi.</p>';
+                    html = '<h3>Tam Otonom Sonuçu</h3><p>Tepki süresi 0.003 saniyeye düştü. Hipersonik tehditlere karşı etkili. Ancak bir sivil uçak "yanlış pozitif" ile düşürüldü. Uluslararası kriz, BM soruşturması başlatıldı.</p><p style="margin-top:10px;color:#ff5252;"><strong>Felaket:</strong> Teknolojik üstünlük kazanıldı ama meşruiyet kaybedildi.</p>';
                     isNeg = true;
                 } else if (choice === 'B') {
                     budget -= 8; tech += 12; deter += 10;
-                    html = '<h3>İnsan Denetimli Otonom Sonucu</h3><p>3 saniyelik veto penceresi çoğu durumda yeterli. Ancak bir hipersonik saldırıda operatör tepki veremedi ve hedef kaçırıldı. Sistem güvenilir ama mükemmel değil.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Denge:</strong> Etik standartlar korundu, bazı taktik kayıplar yaşandı.</p>';
+                    html = '<h3>İnsan Denetimli Otonom Sonuçu</h3><p>3 saniyelik veto penceresi çoğu durumda yeterli. Ancak bir hipersonik saldırıda operatör tepki veremedi ve hedef kaçırıldı. Sistem güvenilir ama mükemmel değil.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Denge:</strong> Etik standartlar korundu, bazı taktik kayıplar yaşandı.</p>';
                 } else {
                     budget -= 10; tech += 15; deter += 18;
-                    html = '<h3>Hibrit Doktrin Sonucu</h3><p>Savunma sistemleri tam otonom çalışıyor: Hava savunma 0.01s tepki, siber savunma anlık. Saldırı operasyonlarında insan karar veriyor. Uluslararası hukuka tam uyumlu + caydırıcı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Optimal:</strong> Hem etik hem etkili. NATO standartlarıyla uyumlu.</p>';
+                    html = '<h3>Hibrit Doktrin Sonuçu</h3><p>Savunma sistemleri tam otonom çalışıyor: Hava savunma 0.01s tepki, siber savunma anlık. Saldırı operasyonlarında insan karar veriyor. Uluslararası hukuka tam uyumlu + caydırıcı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Optimal:</strong> Hem etik hem etkili. NATO standartlarıyla uyumlu.</p>';
                 }
             }
 }

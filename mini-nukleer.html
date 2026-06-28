@@ -210,7 +210,7 @@ function updateBalance(){
 function endStage(){
   try{
     var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
-    sc['mobil-nukleer']=Math.max(sc['mobil-nukleer']||0,pts);
+    sc['mobil-nükleer']=Math.max(sc['mobil-nükleer']||0,pts);
     localStorage.setItem('hs_scores',JSON.stringify(sc));
   }catch(e){}
   document.getElementById('hdr-pts').textContent='⭐ '+pts;

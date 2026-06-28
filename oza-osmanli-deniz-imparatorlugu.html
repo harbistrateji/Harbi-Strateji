@@ -195,6 +195,22 @@ html { overflow-x: hidden !important; }
 body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 
+
+/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
+h1, .sim-title, .game-title, .page-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+.sim-hero h1, .hero h1, .page-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
 </style>
 <link rel="stylesheet" href="hs-global.css">
 <link rel="stylesheet" href="hs-global-fix.css">
@@ -327,9 +343,9 @@ function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerH
 resize();window.addEventListener('resize',resize);
 
 const PORTS=[
-  {id:'istanbul',name:'İstanbul',x:.55,y:.25,owner:'osmanli',defense:3,income:50,bonus:'Başkent: +30 Altın/tur',type:'Osmanlı Başkenti',icon:'🕌'},
-  {id:'izmir',name:'İzmir',x:.50,y:.35,owner:'osmanli',defense:2,income:30,bonus:'Ticaret: +20 Altın/tur',type:'Osmanlı Limanı',icon:'⚓'},
-  {id:'preveze',name:'Preveze',x:.40,y:.40,owner:'osmanli',defense:2,income:25,bonus:'Stratejik konum',type:'Osmanlı Üssü',icon:'⚓'},
+  {id:'istanbul',name:'İstanbul',x:.55,y:.25,owner:'osmanlı',defense:3,income:50,bonus:'Başkent: +30 Altın/tur',type:'Osmanlı Başkenti',icon:'🕌'},
+  {id:'izmir',name:'İzmir',x:.50,y:.35,owner:'osmanlı',defense:2,income:30,bonus:'Ticaret: +20 Altın/tur',type:'Osmanlı Limanı',icon:'⚓'},
+  {id:'preveze',name:'Preveze',x:.40,y:.40,owner:'osmanlı',defense:2,income:25,bonus:'Stratejik konum',type:'Osmanlı Üssü',icon:'⚓'},
   {id:'tunus',name:'Tunus',x:.30,y:.55,owner:'neutral',defense:3,income:35,bonus:'Korsanlar: +1 Gemi/3 tur',type:'Berber Korsanları',icon:'🏴'},
   {id:'cezayir',name:'Cezayir',x:.18,y:.50,owner:'neutral',defense:4,income:40,bonus:'Batı Akdeniz kontrolü',type:'Berber Üssü',icon:'🏴'},
   {id:'tripoli',name:'Trablus',x:.35,y:.62,owner:'neutral',defense:2,income:20,bonus:'Ticaret yolu',type:'Kuzey Afrika',icon:'🏝'},
@@ -473,8 +489,8 @@ function showHistoryCard(trigger){
 }
 
 function updateProgress(){
-  const osmanli=PORTS.filter(p=>p.owner==='osmanli').length;
-  const pct=Math.round(osmanli/PORTS.length*100);
+  const osmanlı=PORTS.filter(p=>p.owner==='osmanlı').length;
+  const pct=Math.round(osmanlı/PORTS.length*100);
   document.getElementById('progFill').style.width=pct+'%';
   document.getElementById('progPct').textContent=pct+'%';
 }
@@ -491,7 +507,7 @@ function updateHUD(){
   document.getElementById('yilV').textContent=G.yil;
   document.getElementById('altinV').textContent=G.altin;
   document.getElementById('gemV').textContent=G.gemiler.length;
-  document.getElementById('limanV').textContent=PORTS.filter(p=>p.owner==='osmanli').length;
+  document.getElementById('limanV').textContent=PORTS.filter(p=>p.owner==='osmanlı').length;
   document.getElementById('zaferV').textContent=G.score;
   updateProgress();
   // Komutan
@@ -505,8 +521,8 @@ function buildShip(type){
   const cost=costs[type]||80;
   if(G.altin<cost){addLog('Yetersiz altın!','bad');return;}
   G.altin-=cost;
-  const osmanliPorts=PORTS.filter(p=>p.owner==='osmanli');
-  const port=osmanliPorts[Math.floor(Math.random()*osmanliPorts.length)];
+  const osmanlıPorts=PORTS.filter(p=>p.owner==='osmanlı');
+  const port=osmanlıPorts[Math.floor(Math.random()*osmanlıPorts.length)];
   const hps={kadirga:100,galeass:140,kapak:180};
   G.gemiler.push({id:Date.now(),type,port:port.id,hp:hps[type]||100});
   G.gemilerBuilt++;
@@ -518,10 +534,10 @@ function buildShip(type){
 
 function buildTersane(){
   if(G.altin<200){addLog('Yetersiz altın!','bad');return;}
-  const osmanliPorts=PORTS.filter(p=>p.owner==='osmanli'&&!G.tersaneler.includes(p.id));
-  if(osmanliPorts.length===0){addLog('Tüm limanlarda tersane var!','warn');return;}
+  const osmanlıPorts=PORTS.filter(p=>p.owner==='osmanlı'&&!G.tersaneler.includes(p.id));
+  if(osmanlıPorts.length===0){addLog('Tüm limanlarda tersane var!','warn');return;}
   G.altin-=200;
-  const port=osmanliPorts[Math.floor(Math.random()*osmanliPorts.length)];
+  const port=osmanlıPorts[Math.floor(Math.random()*osmanlıPorts.length)];
   G.tersaneler.push(port.id);
   addLog('TERSANE kuruldu — '+port.name,'good');
   showXP('TERSANE!',W/2,H/3);
@@ -531,7 +547,7 @@ function buildTersane(){
 function attackTarget(){
   if(!G.selectedPort){addLog('Önce bir düşman limanına tıklayın!','bad');return;}
   const target=G.selectedPort;
-  if(target.owner==='osmanli'){addLog('Bu liman zaten bizim!','warn');return;}
+  if(target.owner==='osmanlı'){addLog('Bu liman zaten bizim!','warn');return;}
   const myShips=G.gemiler.length;
   if(myShips<2){addLog('Saldırmak için en az 2 gemi gerekli!','bad');return;}
   // BATTLE SCREEN
@@ -558,7 +574,7 @@ function showBattle(target,myPower,enemyPower,attackMod){
     const chance=0.35+(myPower*0.08*attackMod)-(enemyPower*0.05);
     const success=Math.random()<Math.max(.2,Math.min(.9,chance));
     if(success){
-      target.owner='osmanli';target.color='var(--red)';
+      target.owner='osmanlı';target.color='var(--red)';
       G.score++;G.altin+=target.income*2;
       document.getElementById('battleResult').textContent='ZAFER!';
       document.getElementById('battleResult').style.color='var(--gold)';
@@ -570,8 +586,8 @@ function showBattle(target,myPower,enemyPower,attackMod){
       if(G.score===1)checkAchievement('ilk_liman');
       if(target.id==='malta')checkAchievement('malta_fatihi');
       if(G.score>=10)checkAchievement('on_zafer');
-      if(PORTS.filter(p=>p.owner==='osmanli').length>=9)checkAchievement('akdeniz');
-      if(PORTS.filter(p=>p.owner==='osmanli').length>=12)checkAchievement('barbaros_mirasi');
+      if(PORTS.filter(p=>p.owner==='osmanlı').length>=9)checkAchievement('akdeniz');
+      if(PORTS.filter(p=>p.owner==='osmanlı').length>=12)checkAchievement('barbaros_mirasi');
       // Görev kontrolü
       const q=G.quests[G.currentQuest];
       if(q&&target.id===q.target){q.done=true;G.currentQuest++;updateQuest();}
@@ -614,9 +630,9 @@ function nextTurn(){
   // Tersane geliri
   G.altin+=G.tersaneler.length*25;
   // Liman geliri
-  const osmanliLimanlar=PORTS.filter(p=>p.owner==='osmanli');
+  const osmanlıLimanlar=PORTS.filter(p=>p.owner==='osmanlı');
   let income=0;
-  osmanliLimanlar.forEach(p=>{income+=p.income;});
+  osmanlıLimanlar.forEach(p=>{income+=p.income;});
   const k=KOMUTANLAR[G.komutan];
   if(k.income)income=Math.round(income*k.income);
   G.altin+=income;
@@ -678,7 +694,7 @@ function draw(){
   // Limanlar
   PORTS.forEach(port=>{
     const px=port.x*W,py=port.y*H;
-    const isO=port.owner==='osmanli';
+    const isO=port.owner==='osmanlı';
     const isE=port.owner==='enemy';
     const pulse=.8+.2*Math.sin(Date.now()*.003+px);
     // Halo

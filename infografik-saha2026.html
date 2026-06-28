@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAHA 2026 Silah Haritası — Harb-i Strateji İnfografik</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#3a7bd5;--purple:#8b5cf6;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:5px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;color:var(--gold)}
+.hero{text-align:center;padding:40px 20px 20px;max-width:960px;margin:0 auto}
+.hero-tag{display:inline-block;padding:4px 14px;border:1px solid var(--gold);border-radius:20px;font-size:13px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(20px,4.5vw,36px);font-weight:700;line-height:1.2;margin-bottom:10px}
+.hero h1 span{color:var(--gold)}
+.hero p{font-size:13px;color:var(--dim);line-height:1.8;max-width:640px;margin:0 auto}
+/* Stats */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;max-width:960px;margin:24px auto;padding:0 16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden;cursor:default;transition:.2s}
+.kpi:hover{border-color:var(--gold);transform:translateY(-2px)}
+.kpi::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,162,75,.05),transparent);pointer-events:none}
+.kpi-num{font-family:'Chakra Petch',sans-serif;font-size:28px;font-weight:700;line-height:1}
+.kpi-unit{font-size:13px;color:var(--dim);margin-top:2px}
+.kpi-label{font-size:12px;color:var(--dim);margin-top:6px;text-transform:uppercase;letter-spacing:1px}
+/* Weapon categories */
+.section{max-width:960px;margin:0 auto;padding:0 16px 30px}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--line)}
+.weapon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.weapon-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.weapon-card:hover{transform:translateY(-3px)}
+.weapon-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.weapon-card.drone::before{background:var(--cyan)}
+.weapon-card.missile::before{background:var(--red)}
+.weapon-card.air::before{background:var(--blue)}
+.weapon-card.naval::before{background:var(--purple)}
+.weapon-card.defense::before{background:var(--green)}
+.weapon-card.engine::before{background:var(--gold)}
+.wc-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.wc-icon{font-size:24px}
+.wc-name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700}
+.wc-sub{font-size:13px;color:var(--dim)}
+.wc-specs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.spec-tag{padding:2px 8px;border-radius:8px;font-size:12px;font-weight:700;text-transform:uppercase}
+.wc-desc{font-size:13px;color:var(--dim);line-height:1.7}
+.wc-strategic{font-size:13px;color:var(--gold);margin-top:8px;font-style:italic}
+/* Missile hierarchy */
+.missile-hierarchy{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:14px}
+.mh-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--red);margin-bottom:14px}
+.mh-item{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:10px;border-radius:8px;background:rgba(255,255,255,.02);transition:.2s}
+.mh-item:hover{background:rgba(224,21,21,.06)}
+.mh-name{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;min-width:120px}
+.mh-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.mh-bar{height:100%;border-radius:4px;background:var(--red);transition:width 1.5s ease}
+.mh-range{font-size:13px;color:var(--dim);min-width:80px;text-align:right}
+/* Export chart */
+.export-section{max-width:960px;margin:0 auto;padding:0 16px 30px}
+.export-bars{display:flex;flex-direction:column;gap:10px}
+.exp-item{display:flex;align-items:center;gap:10px}
+.exp-label{font-size:13px;min-width:100px;color:var(--dim)}
+.exp-bar-wrap{flex:1;height:10px;background:rgba(255,255,255,.07);border-radius:5px;overflow:hidden}
+.exp-bar{height:100%;border-radius:5px;background:var(--gold);transition:width 1.5s ease}
+.exp-val{font-size:13px;color:var(--gold);min-width:60px;text-align:right;font-weight:700}
+/* Risk section */
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;max-width:960px;margin:0 auto;padding:0 16px 40px}
+.risk-card{background:rgba(224,21,21,.06);border:1px solid rgba(224,21,21,.2);border-radius:10px;padding:14px}
+.risk-icon{font-size:24px;margin-bottom:6px}
+.risk-title{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px}
+.risk-text{font-size:13px;color:var(--dim);line-height:1.6}
+.play-btn{display:block;max-width:320px;margin:0 auto 40px;padding:14px 28px;background:var(--gold);border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#0a0f17;cursor:pointer;text-align:center;text-decoration:none}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🏭 SAHA 2026 SİLAH HARİTASI</div>
+  <div style="font-size:13px;color:var(--dim);margin-left:auto">linkedinyazılar10 · Türk Savunma Sanayii Analizi</div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">İnteraktif İnfografik</div>
+  <h1>Türkiye'nin <span>Stratejik Özerklik</span> Projesi<br>SAHA 2026 Kapsamlı Analizi</h1>
+  <p>Savaşan bir dünyada doğru silahlanmak: SAHA 2026, Türkiye'nin savunma sanayiindeki dönüşümün en kapsamlı vitrini. İhracat hedefi 8+ milyar dolar, motor bağımsızlığı yolunda kritik adımlar.</p>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-num" style="color:var(--gold)" data-target="8">0</div><div class="kpi-unit">+ milyar $</div><div class="kpi-label">SAHA 2026 İhracat Hedefi</div></div>
+  <div class="kpi"><div class="kpi-num" style="color:var(--cyan)" data-target="42000">0</div><div class="kpi-unit">lbf itki</div><div class="kpi-label">GÜÇHAN Turbofan</div></div>
+  <div class="kpi"><div class="kpi-num" style="color:var(--red)" data-target="6000">0</div><div class="kpi-unit">+ km menzil</div><div class="kpi-label">YILDIRIMHAN</div></div>
+  <div class="kpi"><div class="kpi-num" style="color:var(--green)" data-target="29">0</div><div class="kpi-unit">% artış</div><div class="kpi-label">SAHA 2024'e Göre</div></div>
+  <div class="kpi"><div class="kpi-num" style="color:var(--blue)" data-target="14">0</div><div class="kpi-unit">% büyüme</div><div class="kpi-label">Avrupa Savunma 2025</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title" style="color:var(--cyan)">🚁 DRONE & İNSANSIZ SİSTEMLER</div>
+  <div class="weapon-grid">
+    <div class="weapon-card drone">
+      <div class="wc-head"><div class="wc-icon">🚁</div><div><div class="wc-name">K2 & MIZRAK</div><div class="wc-sub">FPV Saldırı Drone Sistemi</div></div></div>
+      <div class="wc-specs">
+        <span class="spec-tag" style="background:rgba(0,224,255,.15);color:var(--cyan)">FPV</span>
+        <span class="spec-tag" style="background:rgba(0,255,136,.15);color:var(--green)">SÜRÜ</span>
+        <span class="spec-tag" style="background:rgba(201,162,75,.15);color:var(--gold)">YZ DESTEKLİ</span>
+      </div>
+      <div class="wc-desc">Ukrayna drone paradigmasını içselleştiren yerli FPV sistemi. Sürü koordinasyonu ve YZ destekli hedefleme. Maliyet-etkinlik oranı geleneksel sistemlerin çok üzerinde.</div>
+      <div class="wc-strategic">Stratejik Önem: Asimetrik savaş kapasitesi, ucuz kitle üretimi</div>
+    </div>
+    <div class="weapon-card drone">
+      <div class="wc-head"><div class="wc-icon">⚓</div><div><div class="wc-name">KILIC & TUFAN</div><div class="wc-sub">İnsansız Deniz Araçları</div></div></div>
+      <div class="wc-specs">
+        <span class="spec-tag" style="background:rgba(139,92,246,.15);color:var(--purple)">DENİZ</span>
+        <span class="spec-tag" style="background:rgba(0,224,255,.15);color:var(--cyan)">OTONOM</span>
+      </div>
+      <div class="wc-desc">Mavi Vatan doktrinine uyarlanmış insansız deniz savaş araçları. Deniz gözetleme, mayın tarama ve saldırı görevleri. Karadeniz ve Doğu Akdeniz için kritik.</div>
+      <div class="wc-strategic">Stratejik Önem: Mavi Vatan uyarlaması, deniz hakimiyeti</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title" style="color:var(--red)">🚀 FÜZE & MÜHİMMAT HİYERARŞİSİ</div>
+  <div class="missile-hierarchy">
+    <div class="mh-title">🎯 Menzil Mimarisi — Tabaka Tabaka Erişim</div>
+    <div class="mh-item">
+      <div class="mh-name" style="color:var(--red)">YILDIRIMHAN</div>
+      <div class="mh-bar-wrap"><div class="mh-bar" style="width:0%" data-width="100"></div></div>
+      <div class="mh-range">6.000+ km</div>
+    </div>
+    <div class="mh-item">
+      <div class="mh-name" style="color:var(--gold)">TAYFUN Blok-4</div>
+      <div class="mh-bar-wrap"><div class="mh-bar" style="width:0%;background:var(--gold)" data-width="33"></div></div>
+      <div class="mh-range">2.000+ km</div>
+    </div>
+    <div class="mh-item">
+      <div class="mh-name" style="color:var(--cyan)">GEZGİN</div>
+      <div class="mh-bar-wrap"><div class="mh-bar" style="width:0%;background:var(--cyan)" data-width="17"></div></div>
+      <div class="mh-range">1.000+ km</div>
+    </div>
+    <div class="mh-item">
+      <div class="mh-name" style="color:var(--green)">TAYFUN Blok-1</div>
+      <div class="mh-bar-wrap"><div class="mh-bar" style="width:0%;background:var(--green)" data-width="13"></div></div>
+      <div class="mh-range">800+ km</div>
+    </div>
+    <div class="mh-item">
+      <div class="mh-name" style="color:var(--blue)">BORA</div>
+      <div class="mh-bar-wrap"><div class="mh-bar" style="width:0%;background:var(--blue)" data-width="5"></div></div>
+      <div class="mh-range">300+ km</div>
+    </div>
+  </div>
+  <div class="weapon-grid">
+    <div class="weapon-card missile">
+      <div class="wc-head"><div class="wc-icon">⚡</div><div><div class="wc-name">YILDIRIMHAN</div><div class="wc-sub">Hipersonik Balistik Füze</div></div></div>
+      <div class="wc-specs">
+        <span class="spec-tag" style="background:rgba(224,21,21,.15);color:var(--red)">HİPERSONİK</span>
+        <span class="spec-tag" style="background:rgba(201,162,75,.15);color:var(--gold)">6000+ KM</span>
+        <span class="spec-tag" style="background:rgba(0,255,136,.15);color:var(--green)">SIVI YAKIT</span>
+      </div>
+      <div class="wc-desc">Türkiye'nin ilk sıvı roket yakıtlı hipersonik mühimmatı. Yıldırım Bayezid tuğrası ve Atatürk imzası taşıyan sembolik sistem. ICBM sınıfına adım.</div>
+      <div class="wc-strategic">Stratejik Önem: Caydırıcılık, bölgesel güç projeksiyonu</div>
+    </div>
+    <div class="weapon-card missile">
+      <div class="wc-head"><div class="wc-icon">💣</div><div><div class="wc-name">MK-84 GAZAP</div><div class="wc-sub">Termobarik Uçak Bombası</div></div></div>
+      <div class="wc-specs">
+        <span class="spec-tag" style="background:rgba(224,21,21,.15);color:var(--red)">TERMOBARİK</span>
+        <span class="spec-tag" style="background:rgba(0,224,255,.15);color:var(--cyan)">90+ KM</span>
+        <span class="spec-tag" style="background:rgba(139,92,246,.15);color:var(--purple)">F-16 UYUMLU</span>
+      </div>
+      <div class="wc-desc">MSB AR-GE Merkezi geliştirmesi. Yeraltı sığınakları, tüneller ve güçlendirilmiş tesislere karşı etkili. Aerosol bulutu + aşırı basınç dalgası mekanizması.</div>
+      <div class="wc-strategic">Stratejik Önem: Yeraltı hedef kapasitesi, güdümlü hassasiyet</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title" style="color:var(--blue)">✈️ HAVA HAKİMİYETİ & MOTOR BAĞIMSIZLIĞI</div>
+  <div class="weapon-grid">
+    <div class="weapon-card engine">
+      <div class="wc-head"><div class="wc-icon">⚙️</div><div><div class="wc-name">GÜÇHAN TURBOFAN</div><div class="wc-sub">42.000 lbf Yerli Motor</div></div></div>
+      <div class="wc-specs">
+        <span class="spec-tag" style="background:rgba(201,162,75,.15);color:var(--gold)">42.000 LBF</span>
+        <span class="spec-tag" style="background:rgba(0,255,136,.15);color:var(--green)">F-35 SINIFI</span>
+        <span class="spec-tag" style="background:rgba(0,224,255,.15);color:var(--cyan)">MSB AR-GE</span>
+      </div>
+      <div class="wc-desc">40.000+ lbf sınıfında seri üretim yapabilen ülke sayısı sadece iki: ABD ve Çin. Türkiye bu kulübe adım atmak üzere. S-400 krizinin yarattığı F-35 dışlanmasına yanıt.</div>
+      <div class="wc-strategic">Stratejik Önem: Motor bağımlılığı kırılıyor, stratejik özerklik</div>
+    </div>
+    <div class="weapon-card engine">
+      <div class="wc-head"><div class="wc-icon">🔧</div><div><div class="wc-name">TEI MOTOR EKOSİSTEMİ</div><div class="wc-sub">TF-6000 / TF-10000 / TF-35000</div></div></div>
+      <div class="wc-specs">
+        <span class="spec-tag" style="background:rgba(201,162,75,.15);color:var(--gold)">3 MODEL</span>
+        <span class="spec-tag" style="background:rgba(224,21,21,.15);color:var(--red)">2027 HEDEF</span>
+      </div>
+      <div class="wc-desc">Türk Motor Sanayii'nin üç turbofan modeli. TF-35000, 2026'da ilk testini tamamlayacak. ONUR Turbo Şaft helikopter motoru GÖKBEY bağımlılığını azaltıyor.</div>
+      <div class="wc-strategic">Stratejik Önem: Tam motor ekosistemi, KAAN bağımsızlığı</div>
+    </div>
+    <div class="weapon-card defense">
+      <div class="wc-head"><div class="wc-icon">🛡️</div><div><div class="wc-name">ÇELİK KUBBE YENİ KATMANLAR</div><div class="wc-sub">Çok Katmanlı Hava Savunma</div></div></div>
+      <div class="wc-specs">
+        <span class="spec-tag" style="background:rgba(0,255,136,.15);color:var(--green)">LAZER</span>
+        <span class="spec-tag" style="background:rgba(0,224,255,.15);color:var(--cyan)">MİKRODALGA</span>
+        <span class="spec-tag" style="background:rgba(139,92,246,.15);color:var(--purple)">ÇOK KATMANLI</span>
+      </div>
+      <div class="wc-desc">İsrail'in çok katmanlı savunma mimarisi dersini yansıtıyor. Lazer ve mikrodalga sistemleri maliyet asimetrisine karşı sistematik yanıt sunuyor. Drone tehdidine özel tasarım.</div>
+      <div class="wc-strategic">Stratejik Önem: Maliyet asimetrisini tersine çevirme</div>
+    </div>
+  </div>
+</div>
+
+<div class="export-section">
+  <div class="section-title" style="color:var(--gold)">📊 İHRACAT BÜYÜME TRENDİ</div>
+  <div class="export-bars">
+    <div class="exp-item"><div class="exp-label">SAHA 2022</div><div class="exp-bar-wrap"><div class="exp-bar" style="width:0%" data-width="40"></div></div><div class="exp-val">~3,5 Mrd $</div></div>
+    <div class="exp-item"><div class="exp-label">SAHA 2024</div><div class="exp-bar-wrap"><div class="exp-bar" style="width:0%" data-width="71"></div></div><div class="exp-val">6,2 Mrd $</div></div>
+    <div class="exp-item"><div class="exp-label">SAHA 2026 Hedef</div><div class="exp-bar-wrap"><div class="exp-bar" style="width:0%;background:var(--red)" data-width="100"></div></div><div class="exp-val">8+ Mrd $</div></div>
+  </div>
+  <div style="font-size:13px;color:var(--dim);margin-top:12px;text-align:center">Avrupa 2025'te %14 büyüyerek 1953'ten bu yana en hızlı silahlanma sürecine girdi. Rheinmetall ve BAE Systems'in üretim dar boğazı Türkiye için stratejik pencere açıyor.</div>
+</div>
+
+<div class="risk-grid">
+  <div class="risk-card"><div class="risk-icon">⛏️</div><div class="risk-title">NADİR TOPRAK BAĞIMLILIĞI</div><div class="risk-text">Çin'in küresel nadir toprak tekeli devam ediyor. Eskişehir Beylikova rezervi henüz operasyonel düzeye indirilmedi.</div></div>
+  <div class="risk-card"><div class="risk-icon">🔌</div><div class="risk-title">ELEKTRONİK BILEŞEN</div><div class="risk-text">Kritik elektronik bileşen tedarik kırılganlığı. Yerli çip gerçek seri üretime henüz dönüşmedi.</div></div>
+  <div class="risk-card"><div class="risk-icon">🏭</div><div class="risk-title">ANA YÜKLENİCİ YOĞUNLAŞMASI</div><div class="risk-text">ASELSAN, BAYKAR, ROKETSAN, TUSAŞ, STM yoğunlaşması. KOBİ ekosistemi henüz yeterince derin değil.</div></div>
+  <div class="risk-card"><div class="risk-icon">🔬</div><div class="risk-title">TEKNİK DOĞRULAMA</div><div class="risk-text">Hipersonik iddiaların bağımsız teknik doğrulaması bekleniyor. Üretim ölçeği gerçek çatışmada sınanmadı.</div></div>
+</div>
+
+<a href="oza-stratejik-ozerklik.html" class="play-btn">🎮 Stratejik Özerklik Oyununu Oyna →</a>
+
+<script>
+// Counter animation
+function animateCounter(el, target, duration) {
+  var start=0, step=target/(duration/16);
+  var timer=setInterval(function(){
+    start+=step;
+    if(start>=target){start=target;clearInterval(timer);}
+    el.textContent=Math.floor(start).toLocaleString('tr-TR');
+  },16);
+}
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      animateCounter(entry.target,parseInt(entry.target.dataset.target),1500);
+      obs.unobserve(entry.target);
+    }
+  });
+});
+document.querySelectorAll('[data-target]').forEach(function(el){obs.observe(el);});
+
+// Bar animations
+var barObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.querySelectorAll('[data-width]').forEach(function(bar){
+        bar.style.width=bar.dataset.width+'%';
+      });
+      barObs.unobserve(entry.target);
+    }
+  });
+},{threshold:0.3});
+document.querySelectorAll('.missile-hierarchy,.export-bars').forEach(function(el){barObs.observe(el);});
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

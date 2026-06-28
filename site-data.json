@@ -1,0 +1,35 @@
+{
+  "version": "10.0",
+  "lastUpdated": "2026-06-26T12:00:00Z",
+  "counters": {
+    "kriz": 7,
+    "simulasyon": 54,
+    "analiz": 383,
+    "sozluk": 3335,
+    "oyun": 115,
+    "infografik": 45,
+    "haber": 120,
+    "uye": 0,
+    "video": 28,
+    "makale": 65
+  },
+  "categories": [
+    {"id": "strateji", "title": "Strateji", "count": 23},
+    {"id": "tarihsel", "title": "Tarihsel Savaşlar", "count": 8},
+    {"id": "aksiyon", "title": "Aksiyon & Arcade", "count": 12},
+    {"id": "egitim", "title": "Eğitim Modülleri", "count": 5},
+    {"id": "medeniyet", "title": "Medeniyet Dinamikleri", "count": 16},
+    {"id": "simulasyon", "title": "Simülasyonlar", "count": 54},
+    {"id": "infografik", "title": "İnfografikler", "count": 45}
+  ],
+  "recentContent": [
+    {"type": "haber", "title": "KAAN 5. Nesil Savaş Uçağı Seri Üretime Hazırlanıyor", "url": "haberler.html", "date": "2026-06-26"},
+    {"type": "simulasyon", "title": "NATO Ankara Zirvesi 2026", "url": "nato-ankara-zirvesi-2026.html", "date": "2026-06-25"},
+    {"type": "oyun", "title": "Türk Savaş Zekâsı", "url": "oza-turk-savas-zekasi.html", "date": "2026-06-24"},
+    {"type": "infografik", "title": "Hibrit Savaş Tüm Boyutlarıyla", "url": "infografik-hibrit-savas-tum-boyutlar.html", "date": "2026-06-23"}
+  ],
+  "navigation": {
+    "mainMenu": ["Analizler", "Simülasyonlar", "OZA", "EVREN", "Medeniyet", "Veri Tabanı", "Külliyat", "HSTV", "Haberler", "Profil"],
+    "footerLinks": ["Küresel Strateji", "Bölgesel Strateji", "Savunma Teknolojileri", "Jeopolitik", "OZA Hub", "EVREN", "Simülasyonlar", "Mobil Oyunlar"]
+  }
+}

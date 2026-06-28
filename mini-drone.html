@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Drone Kaçış — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;flex-shrink:0}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.hud{display:flex;gap:10px;padding:8px 16px;flex-shrink:0;background:rgba(10,15,23,.8)}
+.hud-item{flex:1;text-align:center}
+.hud-val{font-size:18px;font-weight:700}
+.hud-lbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.hp-bar{height:4px;background:var(--line);flex-shrink:0;overflow:hidden}
+.hp-fill{height:100%;background:var(--green);transition:width .3s}
+canvas{flex:1;display:block;touch-action:none}
+.overlay{position:fixed;inset:0;background:rgba(10,15,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:20}
+.ov-title{font-size:28px;font-weight:700}
+.ov-score{font-size:48px;font-weight:700;color:var(--cyan)}
+.ov-sub{font-size:13px;color:var(--dim)}
+.btn{padding:14px 40px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;background:var(--cyan);color:#000}
+.stage-badge{padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid var(--gold);color:var(--gold)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🛸 DRONE KAÇIŞ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="hud">
+  <div class="hud-item"><div class="hud-val" id="h-score" style="color:var(--cyan)">0</div><div class="hud-lbl">PUAN</div></div>
+  <div class="hud-item"><div class="hud-val" id="h-stage" style="color:var(--gold)">AŞAMA 1</div><div class="hud-lbl">AŞAMA</div></div>
+  <div class="hud-item"><div class="hud-val" id="h-hp" style="color:var(--green)">3 ❤️</div><div class="hud-lbl">CAN</div></div>
+  <div class="hud-item"><div class="hud-val" id="h-time" style="color:var(--red)">0s</div><div class="hud-lbl">SÜRE</div></div>
+</div>
+<div class="hp-bar"><div class="hp-fill" id="hp-fill"></div></div>
+<canvas id="canvas"></canvas>
+<div class="overlay" id="overlay">
+  <div class="ov-title">🛸 DRONE KAÇIŞ</div>
+  <div style="font-size:13px;color:var(--dim);text-align:center;max-width:280px">3 aşama · Düşmanlar her aşamada hızlanır · Ekrana dokun veya fareyi hareket ettir</div>
+  <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--dim);text-align:center">
+    <div>🟢 <b>Aşama 1</b> — 2 düşman, yavaş mermi · 20sn</div>
+    <div>🟡 <b>Aşama 2</b> — 3 düşman, orta hız · 25sn</div>
+    <div>🔴 <b>Aşama 3</b> — 4 düşman, hızlı + takip · 30sn</div>
+  </div>
+  <button class="btn" onclick="startGame()">▶ BAŞLAT</button>
+</div>
+<script>
+var canvas=document.getElementById('canvas');
+var ctx=canvas.getContext('2d');
+var W,H;
+var drone={x:0,y:0,r:14,tx:0,ty:0};
+var enemies=[];
+var bullets=[];
+var particles=[];
+var hp=3,score=0,stage=1,stageTime=0,running=false,raf=null;
+var stageConfig=[
+  {enemies:2,bulletSpeed:2.5,enemySpeed:0.8,fireRate:90,timeLimit:20,label:'AŞAMA 1'},
+  {enemies:3,bulletSpeed:3.5,enemySpeed:1.2,fireRate:70,timeLimit:25,label:'AŞAMA 2'},
+  {enemies:4,bulletSpeed:4.5,enemySpeed:1.6,fireRate:50,timeLimit:30,label:'AŞAMA 3'}
+];
+var frameCount=0,lastHit=0;
+
+function resize(){
+  W=canvas.offsetWidth;H=canvas.offsetHeight;
+  canvas.width=W;canvas.height=H;
+  if(!running){drone.x=W/2;drone.y=H/2;drone.tx=W/2;drone.ty=H/2;}
+}
+window.addEventListener('resize',resize);
+
+canvas.addEventListener('mousemove',function(e){
+  var r=canvas.getBoundingClientRect();
+  drone.tx=e.clientX-r.left;drone.ty=e.clientY-r.top;
+});
+canvas.addEventListener('touchmove',function(e){
+  e.preventDefault();
+  var r=canvas.getBoundingClientRect();
+  drone.tx=e.touches[0].clientX-r.left;drone.ty=e.touches[0].clientY-r.top;
+},{passive:false});
+canvas.addEventListener('touchstart',function(e){
+  e.preventDefault();
+  var r=canvas.getBoundingClientRect();
+  drone.tx=e.touches[0].clientX-r.left;drone.ty=e.touches[0].clientY-r.top;
+},{passive:false});
+
+function startGame(){
+  document.getElementById('overlay').style.display='none';
+  hp=3;score=0;stage=1;stageTime=0;frameCount=0;lastHit=0;
+  bullets=[];particles=[];enemies=[];
+  resize();
+  drone.x=W/2;drone.y=H/2;drone.tx=W/2;drone.ty=H/2;
+  spawnEnemies();
+  running=true;
+  if(raf)cancelAnimationFrame(raf);
+  loop();
+}
+
+function spawnEnemies(){
+  var cfg=stageConfig[stage-1];
+  enemies=[];
+  for(var i=0;i<cfg.enemies;i++){
+    var side=Math.floor(Math.random()*4);
+    var ex,ey;
+    if(side===0){ex=Math.random()*W;ey=-20;}
+    else if(side===1){ex=W+20;ey=Math.random()*H;}
+    else if(side===2){ex=Math.random()*W;ey=H+20;}
+    else{ex=-20;ey=Math.random()*H;}
+    enemies.push({x:ex,y:ey,r:12,fireTimer:Math.floor(Math.random()*60)});
+  }
+}
+
+function loop(){
+  if(!running)return;
+  frameCount++;
+  stageTime++;
+  var cfg=stageConfig[stage-1];
+  // Move drone
+  drone.x+=(drone.tx-drone.x)*0.12;
+  drone.y+=(drone.ty-drone.y)*0.12;
+  drone.x=Math.max(drone.r,Math.min(W-drone.r,drone.x));
+  drone.y=Math.max(drone.r,Math.min(H-drone.r,drone.y));
+  // Move enemies
+  enemies.forEach(function(e){
+    var dx=drone.x-e.x,dy=drone.y-e.y,dist=Math.sqrt(dx*dx+dy*dy);
+    e.x+=dx/dist*cfg.enemySpeed;e.y+=dy/dist*cfg.enemySpeed;
+    e.fireTimer++;
+    if(e.fireTimer>=cfg.fireRate){
+      e.fireTimer=0;
+      var angle=Math.atan2(drone.y-e.y,drone.x-e.x);
+      bullets.push({x:e.x,y:e.y,vx:Math.cos(angle)*cfg.bulletSpeed,vy:Math.sin(angle)*cfg.bulletSpeed,r:5});
+    }
+  });
+  // Move bullets
+  bullets=bullets.filter(function(b){
+    b.x+=b.vx;b.y+=b.vy;
+    return b.x>-20&&b.x<W+20&&b.y>-20&&b.y<H+20;
+  });
+  // Collision: drone vs bullets
+  if(frameCount-lastHit>60){
+    for(var i=bullets.length-1;i>=0;i--){
+      var b=bullets[i];
+      var dx=b.x-drone.x,dy=b.y-drone.y;
+      if(Math.sqrt(dx*dx+dy*dy)<drone.r+b.r){
+        bullets.splice(i,1);hp--;lastHit=frameCount;
+        addParticles(drone.x,drone.y,'#E01515',8);
+        if(hp<=0){endGame();return;}
+        break;
+      }
+    }
+  }
+  // Score
+  score++;
+  // Stage advance
+  if(stageTime>=cfg.timeLimit*60){
+    if(stage<3){
+      stage++;stageTime=0;bullets=[];
+      spawnEnemies();
+      addParticles(W/2,H/2,'#c41e3a',20);
+    } else {
+      endGame(true);return;
+    }
+  }
+  // Particles
+  particles=particles.filter(function(p){p.life--;p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;return p.life>0;});
+  // Draw
+  draw();
+  updateHUD();
+  raf=requestAnimationFrame(loop);
+}
+
+function addParticles(x,y,color,n){
+  for(var i=0;i<n;i++){
+    var a=Math.random()*Math.PI*2,s=1+Math.random()*3;
+    particles.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:20+Math.random()*20,color:color,r:2+Math.random()*3});
+  }
+}
+
+function draw(){
+  ctx.fillStyle='#0d0d0d';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(150,170,200,.05)';ctx.lineWidth=1;
+  for(var x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(var y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Particles
+  particles.forEach(function(p){
+    ctx.globalAlpha=p.life/40;
+    ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+  });
+  ctx.globalAlpha=1;
+  // Enemies
+  enemies.forEach(function(e){
+    ctx.fillStyle='#E01515';ctx.strokeStyle='#ff4444';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('👾',e.x,e.y);
+  });
+  // Bullets
+  bullets.forEach(function(b){
+    ctx.fillStyle='#ff6666';ctx.shadowColor='#ff0000';ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+  });
+  // Drone
+  var invincible=frameCount-lastHit<60;
+  if(!invincible||Math.floor(frameCount/5)%2===0){
+    ctx.fillStyle='#c41e3a';ctx.shadowColor='#c41e3a';ctx.shadowBlur=16;
+    ctx.beginPath();ctx.arc(drone.x,drone.y,drone.r,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#fff';ctx.font='18px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('🛸',drone.x,drone.y);
+  }
+}
+
+function updateHUD(){
+  var cfg=stageConfig[stage-1];
+  document.getElementById('h-score').textContent=Math.floor(score/10);
+  document.getElementById('h-stage').textContent=cfg.label;
+  document.getElementById('h-hp').textContent=hp+' ❤️';
+  document.getElementById('h-time').textContent=Math.ceil((cfg.timeLimit*60-stageTime)/60)+'s';
+  document.getElementById('hp-fill').style.width=(hp/3*100)+'%';
+  document.getElementById('hp-fill').style.background=hp===3?'var(--green)':hp===2?'var(--gold)':'var(--red)';
+  document.getElementById('hdr-pts').textContent='⭐ '+Math.floor(score/10);
+}
+
+function endGame(win){
+  running=false;
+  var finalScore=Math.floor(score/10);
+  try{
+    var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    sc['mobil-drone']=Math.max(sc['mobil-drone']||0,finalScore);
+    localStorage.setItem('hs_scores',JSON.stringify(sc));
+  }catch(e){}
+  var ov=document.getElementById('overlay');
+  ov.innerHTML='<div class="ov-title">'+(win?'🏆 TAMAMLANDI!':'💥 DRONE DÜŞTÜ')+'</div>'+
+    '<div class="ov-score">'+finalScore+'</div>'+
+    '<div class="ov-sub">Aşama '+stage+' · '+(win?'Tüm aşamalar geçildi!':hp+' can kaldı')+'</div>'+
+    '<button class="btn" onclick="startGame()">🔄 YENİDEN OYNA</button>'+
+    '<a href="oza-hub.html" style="color:var(--dim);font-size:13px;text-decoration:none">← OZA Hub</a>';
+  ov.style.display='flex';
+}
+
+resize();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

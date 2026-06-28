@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bozkır Sisteminden İmparatorluğa Evrim | Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2332;--gold:#C9A24B;--gold-dim:rgba(201,162,75,.15);--cyan:#00E0FF;--red:#E01515;--text:#e8e6e3;--text-dim:#9ca3af;--accent:#5865f2;--serif:'Playfair Display',serif;--mono:'Chakra Petch',sans-serif;--code:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7;overflow-x:hidden}
+/* Progress Bar */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .3s}
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(10,14,26,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,162,75,.1);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+nav a{color:var(--gold);text-decoration:none;font-family:var(--mono);font-size:1rem;letter-spacing:1px}
+nav .title{color:var(--text);font-family:var(--mono);font-size:.95rem;letter-spacing:2px;text-transform:uppercase}
+#soundBtn{background:none;border:1px solid var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:.9rem;padding:4px 12px;border-radius:4px;cursor:pointer}
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(201,162,75,.06) 0%,transparent 60%)}
+.hero-tag{font-family:var(--mono);font-size:.95rem;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;line-height:1.15;margin-bottom:24px;color:#fff}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{max-width:680px;font-size:1.05rem;color:var(--text-dim);line-height:1.8}
+.scroll-hint{position:absolute;bottom:40px;color:var(--text-dim);font-family:var(--mono);font-size:.95rem;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+/* Sections */
+.section{min-height:100vh;padding:120px 32px 80px;max-width:1100px;margin:0 auto;opacity:0;transform:translateY(60px);transition:all .8s cubic-bezier(.19,1,.22,1)}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-num{font-family:var(--mono);font-size:.9rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:8px}
+.section-period{font-family:var(--mono);font-size:.9rem;color:var(--text-dim);margin-bottom:24px}
+.section h2{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:16px;color:#fff}
+.section h2 em{font-style:normal;color:var(--gold)}
+.section-lead{font-size:1.05rem;color:var(--text-dim);line-height:1.8;max-width:800px;margin-bottom:40px}
+/* Formula Box */
+.formula-box{background:var(--surface);border:1px solid var(--gold-dim);border-radius:12px;padding:32px;margin:32px 0;font-family:var(--code);font-size:.9rem;line-height:2}
+.formula-box .eq{color:var(--gold);font-size:1rem;margin:8px 0;padding:12px 16px;background:rgba(201,162,75,.05);border-radius:8px;border-left:3px solid var(--gold)}
+.formula-box .label{color:var(--cyan);font-size:.9rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+/* Cards Grid */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin:32px 0}
+.card{background:var(--surface);border:1px solid rgba(201,162,75,.1);border-radius:12px;padding:28px;transition:all .3s;cursor:pointer}
+.card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 40px rgba(201,162,75,.1)}
+.card-icon{font-size:2rem;margin-bottom:12px}
+.card h3{font-family:var(--serif);font-size:1.2rem;color:#fff;margin-bottom:8px}
+.card p{font-size:.9rem;color:var(--text-dim);line-height:1.6}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.card-tags span{font-family:var(--mono);font-size:.85rem;padding:3px 8px;border-radius:4px;background:var(--gold-dim);color:var(--gold)}
+/* Phase Timeline */
+.phase-timeline{display:flex;gap:0;margin:48px 0;position:relative}
+.phase-timeline::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--accent))}
+.phase{flex:1;text-align:center;position:relative;padding:60px 16px 0}
+.phase-dot{position:absolute;top:calc(50% - 60px + 30px);left:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:var(--gold);border:3px solid var(--bg);z-index:2}
+.phase-num{font-family:var(--mono);font-size:.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:4px}
+.phase-title{font-family:var(--serif);font-size:1rem;color:#fff;margin-bottom:4px}
+.phase-desc{font-size:1rem;color:var(--text-dim)}
+.phase-model{font-family:var(--code);font-size:.9rem;color:var(--gold);margin-top:6px}
+/* Mechanism Grid */
+.mech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:32px 0}
+.mech{background:var(--surface);border:1px solid rgba(201,162,75,.1);border-radius:12px;padding:24px;text-align:center;transition:all .4s}
+.mech:hover{border-color:var(--gold);transform:scale(1.02)}
+.mech-icon{font-size:2.5rem;margin-bottom:12px}
+.mech h4{font-family:var(--serif);font-size:1.1rem;color:var(--gold);margin-bottom:8px}
+.mech p{font-size:.85rem;color:var(--text-dim);line-height:1.6}
+.mech-list{list-style:none;text-align:left;margin-top:12px}
+.mech-list li{font-size:1rem;color:var(--text-dim);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.mech-list li::before{content:'→ ';color:var(--gold)}
+/* Quote */
+.quote{border-left:3px solid var(--gold);padding:20px 24px;margin:32px 0;background:var(--gold-dim);border-radius:0 8px 8px 0}
+.quote p{font-family:var(--serif);font-size:1.1rem;font-style:italic;color:#fff;line-height:1.6}
+.quote cite{display:block;margin-top:8px;font-family:var(--mono);font-size:.9rem;color:var(--gold);font-style:normal}
+/* Source List */
+.sources{background:var(--surface);border-radius:12px;padding:32px;margin:48px 0}
+.sources h3{font-family:var(--serif);font-size:1.2rem;color:var(--gold);margin-bottom:16px}
+.sources ul{list-style:none}
+.sources li{font-size:1rem;color:var(--text-dim);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-family:var(--code)}
+/* Footer */
+footer{text-align:center;padding:40px 24px;border-top:1px solid rgba(201,162,75,.1)}
+footer a{color:var(--gold);text-decoration:none;font-family:var(--mono);font-size:1rem}
+/* Canvas */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.content{position:relative;z-index:1}
+/* Responsive */
+@media(max-width:768px){
+  .mech-grid{grid-template-columns:1fr}
+  .phase-timeline{flex-direction:column;gap:24px}
+  .phase-timeline::before{display:none}
+  .phase{padding:16px}
+  .phase-dot{display:none}
+  nav{padding:10px 16px}
+}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div id="progress" style="width:0%"></div>
+<canvas id="particles"></canvas>
+<nav>
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a>
+  <span class="title">Siyasi Organizasyon Mühendisliği</span>
+  <button id="soundBtn">Ses: Kapalı</button>
+</nav>
+
+<div class="content">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Medeniyet Dinamikleri · Devlet Teorisi Serisi</div>
+  <h1>Bozkır Sisteminden İmparatorluğa:<br><em>Siyasi Organizasyon Mühendisliği</em></h1>
+  <p>Avrasya bozkırlarındaki erken dönem Türk siyasi teşekküllerinin yerleşik ve kozmopolit imparatorluk modellerine dönüşüm sürecini "Siyasi Organizasyon Mühendisliği" perspektifinden inceleyen analitik bir okuma. Göktürk Kağanlığı'ndan Osmanlı'ya uzanan çizgide; meşruiyetin metafizik temeli, kurumsal denge mekanizmaları ve idari ölçekleme mimarisi.</p>
+  <div class="scroll-hint">↓ Keşfetmek için kaydır</div>
+</section>
+
+<!-- SECTION 1: GİRİŞ -->
+<div class="section">
+  <div class="section-num">I. Giriş</div>
+  <div class="section-period">Kavramsal Çerçeve · Organizasyon Teorisi</div>
+  <h2>Siyasi Organizasyon Mühendisliği<br>Olarak <em>Devlet</em></h2>
+  <p class="section-lead">Klasik tarih yazımı, devletlerin doğuşunu askeri fetihler veya karizmatik liderlerin şahsi dehasıyla açıklar. Ancak modern organizasyon teorisi ve tarihsel sosyoloji (Tilly, 1990; North, 1990), devletleri fetihten ziyade "karmaşıklığı yönetme ve sürdürülebilirlik sağlama aygıtları" olarak tanımlar.</p>
+
+  <div class="formula-box">
+    <div class="label">Temel Soru</div>
+    <div class="eq">"Devlet nasıl kuruldu?" → "Devlet, yapısal dağınıklık riskine karşı nasıl sürdürülebilir kılınır?"</div>
+    <div class="label" style="margin-top:16px">Türk Devlet Mimarisi</div>
+    <div class="eq">Teolojik Meşruiyet + Aristokratik Denge + Modüler Ölçekleme = Medeniyet Motoru</div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>Neyi Organize Ediyor?</h3>
+      <p>Akışkan ve yüksek mobiliteli bir toplumu, sürekli değişen askeri tehditleri ve geniş coğrafyalara yayılan kaynak yönetimini. Organize edilen temel unsur "toprak" değil, "insan gücü ve hareket kabiliyeti"dir.</p>
+      <div class="card-tags"><span>Barfield, 1989</span><span>Pastoralizm</span><span>Mobilite</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Hangi Problemi Çözüyor?</h3>
+      <p>Göçebe/yarı-göçebe yapıların doğasında var olan "sentrifüjal (merkezkaç) dağınıklık ve fraksiyonel bölünme" krizi. Boyların kendi başlarına buyruk hareket etme eğilimini merkezi otoriteye konsolide etme.</p>
+      <div class="card-tags"><span>Segmentary Lineage</span><span>Merkezkaç Kriz</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <h3>Hangi Ölçekte Etkili?</h3>
+      <p>Yerel kabile ölçeğinden başlayıp, bölgesel konfederasyonlara (Göktürkler) ve nihayetinde kıtalararası evrensel imparatorluklara (Osmanlı) kadar genişleyebilen "esnek ölçeklenebilirlik (scalability)".</p>
+      <div class="card-tags"><span>Kabile → Konfederasyon → İmparatorluk</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: KUT -->
+<div class="section">
+  <div class="section-num">II. Kut</div>
+  <div class="section-period">Meşruiyetin Teolojik Siyaset Kodlaması</div>
+  <h2>Kut: Performansa Dayalı<br><em>Meşruiyet Algoritması</em></h2>
+  <p class="section-lead">Max Weber'in otorite tipolojileri bağlamında, "Kut" kavramı karizmatik otoritenin kurumsallaşmış ve teolojik bir türevidir. Yönetme yetkisinin, askeri başarının ve ekonomik bereketin Tanrı (Tengri) tarafından kağana verilmesidir (Roux, 2000). Ancak Kut, mutlak despotizm üretmez; performansa dayalı bir meşruiyet algoritması işletir.</p>
+
+  <div class="formula-box">
+    <div class="label">Kut'un Devam Formülü</div>
+    <div class="eq">Askerî Başarı + Ekonomik Bereket (Budunu Doyurmak) ⟹ Kut'un Devamı</div>
+    <div class="label" style="margin-top:16px">Kut'un Geri Alınması</div>
+    <div class="eq">Kıtlık / Yenilgi ⟹ Kut'un Geri Alınması ⟹ Yeni Lider Arayışı</div>
+  </div>
+
+  <div class="quote">
+    <p>"Eğer bir hakan toplumu doyuramıyor ve savaş kaybediyorsa, Kut'un kendisini terk ettiği kabul edilir ve sistem yeni bir lidere alan açar."</p>
+    <cite>— Denis Sinor (1990), Peter B. Golden (1992)</cite>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">👑</div>
+      <h3>Karizmatik Otorite</h3>
+      <p>Kut, Tengri tarafından verilen ilahi yönetme yetkisidir. Kağan soyuna bağlı ancak bireysel performansla sürdürülür. Weber'in karizmatik otoritesinin kurumsallaşmış hali.</p>
+      <div class="card-tags"><span>Tengri</span><span>Weber</span><span>Roux, 2000</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <h3>Performans Denetimi</h3>
+      <p>Kut sistemi beceriksiz liderlerin sistemi kilitlemesini engeller. Başarısız lider meşruiyetini kaybeder — bu, modern "accountability" kavramının erken prototipidir.</p>
+      <div class="card-tags"><span>Hesap Verebilirlik</span><span>Sinor, 1990</span><span>Golden, 1992</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: KURULTAY -->
+<div class="section">
+  <div class="section-num">III. Kurultay</div>
+  <div class="section-period">Aristokratik Denge ve Müzakere Mekanizması</div>
+  <h2>Kurultay: Yönetişim<br><em>Denge Sistemi</em></h2>
+  <p class="section-lead">Bozkır devlet mimarisi monolitik bir otokrasi değil, paydaşların (stakeholders) yönetim sürecine dahil olduğu bir "aristokratik denge sistemi"dir. Kurultay (Toy), boy beylerinin, askeri elitlerin ve üst düzey bürokratların katıldığı, kağan seçiminden stratejik savaş kararlarına kadar kritik süreçlerin karara bağlandığı yönetim meclisidir.</p>
+
+  <div class="quote">
+    <p>"Kurultay, patrimonyal otoriteyi sınırlayan yapısal bir supaptır. Kağan, boy beylerinin rızasını ve lojistik desteğini almak zorundadır."</p>
+    <cite>— Halil İnalcık, "Türk Devlet Geleneği"</cite>
+  </div>
+
+  <div class="formula-box">
+    <div class="label">Kurumsal Evrim Çizgisi</div>
+    <div class="eq">Kurultay (Göktürk) → Divan-ı Âlâ (Selçuklu) → Meşveret Meclisi (Osmanlı)</div>
+    <div class="label" style="margin-top:16px">Yönetişim İlkesi</div>
+    <div class="eq">Kararlar yukarıdan aşağıya dikte edilmez; aşağıdan yukarıya gelen rıza ile dengelenir.</div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🏛️</div>
+      <h3>Müzakere Platformu</h3>
+      <p>Boy beylerinin, askeri elitlerin ve bürokratların katıldığı karar mekanizması. Kağan seçimi, savaş kararları, kaynak dağılımı burada belirlenir.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <h3>Kurumsal DNA Sürekliliği</h3>
+      <p>Kurultay → Divan-ı Âlâ → Meşveret Meclisi evrimi. Aynı yönetişim ilkesi farklı kurumsal formlarda yaşamaya devam eder.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: İL SİSTEMİ -->
+<div class="section">
+  <div class="section-num">IV. İl (Devlet) Sistemi</div>
+  <div class="section-period">İdari Ölçekleme ve Soyut Hafıza</div>
+  <h2>İl: Devletin<br><em>Soyut Tüzel Kişiliği</em></h2>
+  <p class="section-lead">Siyasi organizasyon mühendisliğinin en soyut ve kalıcı ürünü "İl" (veya El) kavramıdır. Türk felsefesinde "İl", coğrafi bir sınırın ötesinde; hukukun, nizamın ve evrensel barışın tesis edildiği en üst kurumsal organizasyonu ifade eder.</p>
+
+  <div class="quote">
+    <p>"İl gider, töre kalır."</p>
+    <cite>— Kadim Türk ilkesi — Devletin şahıslara bağlı olmayan soyut tüzel kişilik olarak algılandığının kanıtı</cite>
+  </div>
+
+  <div class="formula-box">
+    <div class="label">Eisenstadt Modeli (1963)</div>
+    <div class="eq">Devlet = "Yazılım" (İl/Töre) | Hanedanlar & Coğrafyalar = "Donanım"</div>
+    <div class="label" style="margin-top:16px">Taşınabilirlik</div>
+    <div class="eq">Ötüken → Konya → İstanbul: Merkez taşınır, kurumsal hafıza korunur</div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">📜</div>
+      <h3>Töre: Soyut Anayasa</h3>
+      <p>Fetret dönemlerinde bile toplumun anarşiye düşmemesini sağlayan şey, töre ve il fikrinin zihinlerde kodlanmış soyut sürekliliğidir (Kafesoğlu, 1987).</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <h3>Ölçeklenebilir Mimari</h3>
+      <p>Mikro boy düzeyinden makro imparatorluk düzeyine taşıyan soyut hukuk ve normlar bütünü. Aynı "İl" kavramı farklı ölçeklerde çalışır.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: EVRİM FAZLARI -->
+<div class="section">
+  <div class="section-num">V. Dinamik Evrim</div>
+  <div class="section-period">Göçebe Askerî Yapıdan Merkezî İmparatorluğa</div>
+  <h2>Üç Organizasyonel Faz:<br><em>Sistemin Evrimi</em></h2>
+  <p class="section-lead">Sistem, yüzyıllar içinde karmaşıklık düzeyini artırarak üç büyük organizasyonel fazdan geçmiştir. Her faz, bir öncekinin kurumsal hafızasını taşıyarak yeni bir karmaşıklık düzeyine evrilir.</p>
+
+  <div class="phase-timeline">
+    <div class="phase">
+      <div class="phase-dot"></div>
+      <div class="phase-num">Faz 1</div>
+      <div class="phase-title">Akışkan Yapı</div>
+      <div class="phase-desc">Göktürk Konfederasyonu</div>
+      <div class="phase-model">Boylar Dengesi / Esnek</div>
+    </div>
+    <div class="phase">
+      <div class="phase-dot" style="background:var(--cyan)"></div>
+      <div class="phase-num">Faz 2</div>
+      <div class="phase-title">Hibrit Yapı</div>
+      <div class="phase-desc">Büyük Selçuklu Devleti</div>
+      <div class="phase-model">İkta Sistemi / Bürokrasi</div>
+    </div>
+    <div class="phase">
+      <div class="phase-dot" style="background:var(--accent)"></div>
+      <div class="phase-num">Faz 3</div>
+      <div class="phase-title">Rasyonel Yapı</div>
+      <div class="phase-desc">Osmanlı İmparatorluğu</div>
+      <div class="phase-model">Kul Sistemi / Mutlak Merkez</div>
+    </div>
+  </div>
+
+  <div class="mech-grid">
+    <div class="mech">
+      <div class="mech-icon">🏹</div>
+      <h4>Faz 1: Gevşek Konfederasyon</h4>
+      <p>Göktürk / Uygur Dönemi</p>
+      <ul class="mech-list">
+        <li>Boyların özerkliğini koruması</li>
+        <li>İkili (Doğu-Batı) idari şema</li>
+        <li>Askerî mobilitenin maksimum olması</li>
+        <li>Gevşek konfederasyon modeli</li>
+        <li>Kut + Kurultay dengesi</li>
+      </ul>
+    </div>
+    <div class="mech">
+      <div class="mech-icon">🏰</div>
+      <h4>Faz 2: Bürokratik Entegrasyon</h4>
+      <p>Selçuklu Dönemi</p>
+      <ul class="mech-list">
+        <li>İslam medeniyetiyle sentez</li>
+        <li>Fars bürokratik hafızası (Nizamülmülk)</li>
+        <li>İkta Sistemi: mülkiyet-asker dengesi</li>
+        <li>Taşradaki askeri gücü merkez adına kontrol</li>
+        <li>İlk büyük organizasyonel inovasyon</li>
+      </ul>
+    </div>
+    <div class="mech">
+      <div class="mech-icon">🌍</div>
+      <h4>Faz 3: Evrensel İmparatorluk</h4>
+      <p>Osmanlı Dönemi</p>
+      <ul class="mech-list">
+        <li>Kul (Devşirme) sistemi</li>
+        <li>Aristokratik boy beylerinin tasfiyesi</li>
+        <li>Feodal dağınıklığın önlenmesi</li>
+        <li>Merkezi Bürokrasi + Padişah ekseni</li>
+        <li>Rasyonel, sürdürülebilir mühendislik</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: MEKANİZMA -->
+<div class="section">
+  <div class="section-num">VI. Üçlü Mekanizma</div>
+  <div class="section-period">Sistemin Çalışma Algoritması</div>
+  <h2>Üç Alt Mekanizmanın<br><em>Senkronizasyonu</em></h2>
+  <p class="section-lead">Sistem üç ana alt mekanizmanın senkronizasyonuyla çalışır. Her biri diğerini dengeler ve sınırlar.</p>
+
+  <div class="mech-grid">
+    <div class="mech">
+      <div class="mech-icon">⚡</div>
+      <h4>Teolojik Siyaset Sürücüsü</h4>
+      <p><strong>KUT</strong></p>
+      <ul class="mech-list">
+        <li>Karizmatik otoritenin sürekliliği</li>
+        <li>Meşruiyet kodu</li>
+        <li>Performans bazlı denetim</li>
+        <li>Tengri'den gelen yetki</li>
+        <li>Başarısızlık = meşruiyet kaybı</li>
+      </ul>
+    </div>
+    <div class="mech">
+      <div class="mech-icon">⚖️</div>
+      <h4>Denge ve Denetleme Arabirimi</h4>
+      <p><strong>KURULTAY</strong></p>
+      <ul class="mech-list">
+        <li>Merkez-çevre müzakere platformu</li>
+        <li>Boy beylerinin rızası</li>
+        <li>Stratejik karar mekanizması</li>
+        <li>Patrimonyal otoriteyi sınırlama</li>
+        <li>Aşağıdan yukarıya rıza</li>
+      </ul>
+    </div>
+    <div class="mech">
+      <div class="mech-icon">📐</div>
+      <h4>İdari Ölçekleme Kütüphanesi</h4>
+      <p><strong>İL / EL</strong></p>
+      <ul class="mech-list">
+        <li>Mikro → makro ölçekleme</li>
+        <li>Soyut hukuk ve normlar</li>
+        <li>Kurumsal hafıza korunması</li>
+        <li>Coğrafyadan bağımsız süreklilik</li>
+        <li>Töre = yazılımsal anayasa</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7: SONUÇ -->
+<div class="section">
+  <div class="section-num">VII. Sonuç</div>
+  <div class="section-period">Yaşayan Sistemlerin Evrimi</div>
+  <h2>Canlı Bir Organizasyonel<br><em>Algoritma</em></h2>
+  <p class="section-lead">Türk tarihinin "Devlet Modeli", statik bir kurumlar listesi değil; göç, adaptasyon ve sentez süreçleriyle sürekli güncellenen canlı bir organizasyonel algoritmadır. Bozkırın getirdiği hareket kabiliyeti ve hızlı karar alma yeteneği, yerleşik medeniyetlerin kurumsal hafızasıyla (İran, Bizans, İslam bürokrasisi) birleşerek, kriz anlarında yıkılmayan, aksine kendini yeni coğrafyada yeniden kuran esnek bir sistem mühendisliği üretmiştir.</p>
+
+  <div class="quote">
+    <p>"Türk devlet geleneği, tarihsel sosyolojide 'çalışan sistemlerin evrimi' olarak okunmalıdır."</p>
+    <cite>— Analiz Sonucu</cite>
+  </div>
+
+  <div class="formula-box">
+    <div class="label">Sentez Formülü</div>
+    <div class="eq">Bozkır Mobilitesi + Yerleşik Kurumsal Hafıza (İran/Bizans/İslam) = Esnek Sistem Mühendisliği</div>
+    <div class="label" style="margin-top:16px">Sonuç</div>
+    <div class="eq">Kriz anlarında yıkılmayan, aksine kendini yeni coğrafyada yeniden kuran devlet modeli</div>
+  </div>
+
+  <!-- Kaynakça -->
+  <div class="sources">
+    <h3>Kaynakça</h3>
+    <ul>
+      <li>Barkey, K. (1994). <em>Bandits and Bureaucrats: The Ottoman Route to State Centralization.</em> Cornell University Press.</li>
+      <li>Barfield, T. J. (1989). <em>The Perilous Frontier: Nomadic Empires and China.</em> Blackwell.</li>
+      <li>Eisenstadt, S. N. (1963). <em>The Political Systems of Empires.</em> Free Press.</li>
+      <li>Golden, P. B. (1992). <em>An Introduction to the History of the Turkic Peoples.</em> Harrassowitz.</li>
+      <li>İnalcık, H. (1980). "Osmanlı'da Devlet, Hukuk ve Adalet". <em>Osmanlı Araştırmaları I.</em></li>
+      <li>Kafesoğlu, İ. (1987). <em>Türk Milli Kültürü.</em> Boğaziçi Yayınları.</li>
+      <li>North, D. C. (1990). <em>Institutions, Institutional Change and Economic Performance.</em> Cambridge University Press.</li>
+      <li>Roux, J. P. (2000). <em>Orta Asya'da Kutsal Simgeler ve Dinsel İnanışlar.</em> Kabalcı.</li>
+      <li>Sinor, D. (1990). <em>The Cambridge History of Early Inner Asia.</em> Cambridge University Press.</li>
+      <li>Tilly, C. (1990). <em>Coercion, Capital, and European States, AD 990–1992.</em> Blackwell.</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<footer>
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a> · Harb-i Strateji · Selahaddin Koyuncu Arşivi
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  const p=(window.scrollY/h)*100;
+  document.getElementById('progress').style.width=p+'%';
+});
+
+// Intersection Observer for sections
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');playReveal()}});
+},{threshold:0.15});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+
+// Particles
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let particles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+for(let i=0;i<40;i++){
+  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+.5,a:Math.random()*.3+.1});
+}
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(201,162,75,${p.a})`;ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// Sound
+let audioCtx=null,soundOn=false;
+document.getElementById('soundBtn').addEventListener('click',()=>{
+  soundOn=!soundOn;
+  document.getElementById('soundBtn').textContent=soundOn?'Ses: Açık':'Ses: Kapalı';
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(soundOn){playAmbient();if(!window.ambientInterval)window.ambientInterval=setInterval(()=>{if(soundOn)playAmbient()},8000);}
+});
+function playAmbient(){
+  if(!audioCtx||!soundOn){if(window.ambientInterval){clearInterval(window.ambientInterval);window.ambientInterval=null;}return;}
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.type='sine';osc.frequency.value=80;
+  gain.gain.value=0.02;
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+8);
+  osc.stop(audioCtx.currentTime+8);
+}
+function playReveal(){
+  if(!audioCtx||!soundOn)return;
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.type='triangle';osc.frequency.value=600+Math.random()*400;
+  gain.gain.value=0.04;
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.4);
+  osc.stop(audioCtx.currentTime+.4);
+}
+
+// Card click sound
+document.querySelectorAll('.card,.mech').forEach(c=>{
+  c.addEventListener('click',()=>{
+    if(!audioCtx||!soundOn)return;
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+    osc.type='sine';osc.frequency.value=800;
+    gain.gain.value=0.05;
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.15);
+    osc.stop(audioCtx.currentTime+.15);
+  });
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

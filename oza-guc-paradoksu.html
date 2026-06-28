@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Güç Paradoksu — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#4488ff;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--gold),var(--red))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-gold{background:var(--gold);color:#000}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* Aktörler */
+.actors-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.actor-card{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px;transition:.2s}
+.actor-card.active{border-color:var(--gold);box-shadow:0 0 12px rgba(201,162,75,.2)}
+.actor-flag{font-size:28px;margin-bottom:6px}
+.actor-name{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.actor-agenda{font-size:10px;color:var(--dim);line-height:1.5;margin-bottom:8px}
+.actor-rel-bar{height:6px;background:var(--panel);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.actor-rel-fill{height:100%;border-radius:3px;transition:width .4s}
+.actor-rel-val{font-size:9px;color:var(--dim)}
+/* Müzakere */
+.negotiation-panel{background:rgba(201,162,75,.04);border:1px solid rgba(201,162,75,.2);border-radius:12px;padding:16px;margin-bottom:14px}
+.neg-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);margin-bottom:8px}
+.neg-situation{font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:12px}
+.neg-options{display:flex;flex-direction:column;gap:8px}
+.neg-option{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:12px;cursor:pointer;transition:.2s}
+.neg-option:active{transform:scale(.98)}
+.neg-option.selected{border-color:var(--gold);background:rgba(201,162,75,.06)}
+.neg-opt-name{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.neg-opt-desc{font-size:10px;color:var(--dim);line-height:1.5}
+.neg-opt-effects{font-size:10px;margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+.effect-tag{padding:2px 8px;border-radius:4px;font-size:9px}
+/* Sonuç */
+.outcome-panel{background:var(--panel2);border-radius:12px;padding:14px;margin-bottom:14px;display:none}
+.outcome-panel.show{display:block}
+.outcome-title{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px}
+.outcome-chain{font-size:11px;color:var(--dim);line-height:1.8}
+/* Round indicator */
+.round-dots{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.rd{width:12px;height:12px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);transition:.2s}
+.rd.win{background:var(--green)}.rd.partial{background:var(--gold)}.rd.lose{background:var(--red2)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🤝 GÜÇ PARADOKSU</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">🤝 Güç Paradoksu</div>
+  <div class="card-sub">Birden fazla devlet aktörüyle eş zamanlı müzakere. Her aktörün gizli ajandası var. Anlaşma imzalamak bazen kaybetmek anlamına gelir — gerçek diplomasinin paradoksu!</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="gp-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="gp-round" style="color:var(--cyan)">1/8</div><div class="stat-lbl">TUR</div></div>
+    <div class="stat-box"><div class="stat-val" id="gp-prestige" style="color:var(--gold)">50</div><div class="stat-lbl">PRESTIJ</div></div>
+    <div class="stat-box"><div class="stat-val" id="gp-stability" style="color:var(--green)">70</div><div class="stat-lbl">İSTİKRAR</div></div>
+  </div>
+  <div class="round-dots" id="round-dots"></div>
+  <div class="actors-grid" id="actors-grid"></div>
+  <div class="negotiation-panel" id="neg-panel">
+    <div class="neg-title" id="neg-title">🌐 MÜZAKERE MASASI</div>
+    <div class="neg-situation" id="neg-situation">Oyunu başlatmak için aşağıdaki butona bas.</div>
+    <div class="neg-options" id="neg-options"></div>
+  </div>
+  <div class="outcome-panel" id="outcome-panel">
+    <div class="outcome-title" id="outcome-title"></div>
+    <div class="outcome-chain" id="outcome-chain"></div>
+  </div>
+  <button class="btn btn-gold" id="gp-btn" onclick="gpStart()">🤝 DİPLOMASİYİ BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var ACTORS=[
+  {flag:'🇺🇸',name:'Batı Bloğu',color:'var(--blue)',agenda:'Küresel liderliği korumak, ittifak ağını genişletmek'},
+  {flag:'🇷🇺',name:'Doğu Bloğu',color:'var(--red2)',agenda:'Nüfuz alanını genişletmek, yaptırımları kaldırmak'},
+  {flag:'🇨🇳',name:'Asya Gücü',color:'var(--gold)',agenda:'Ekonomik üstünlük, teknoloji transferi'},
+  {flag:'🌍',name:'Küresel Güney',color:'var(--green)',agenda:'Bağımsızlık, kalkınma yardımı'}
+];
+
+var NEGOTIATIONS=[
+  {title:'Silah Kontrolü Anlaşması',situation:'Tüm taraflar silah azaltımını tartışıyor. Ancak her tarafın gizli silah programı var.',
+   options:[
+     {name:'Tam Şeffaflık',desc:'Tüm silah programlarını açıkla',effects:{prestige:+15,stability:+20,pts:150},actorEffects:{0:+20,1:-15,2:-10,3:+25},hidden:'Batı güvendi, Doğu şüphelendi.'},
+     {name:'Kısmi Anlaşma',desc:'Sadece konvansiyonel silahları sınırla',effects:{prestige:+5,stability:+10,pts:100},actorEffects:{0:+5,1:+5,2:+5,3:+10},hidden:'Herkes az memnun, ama istikrar korundu.'},
+     {name:'Görünüşte Anlaş',desc:'İmzala ama uyma',effects:{prestige:-20,stability:-10,pts:40},actorEffects:{0:-25,1:+10,2:+5,3:-20},hidden:'Kısa vadeli kazanç, uzun vadeli güven kaybı.'},
+     {name:'Müzakereden Çekil',desc:'Masayı terk et',effects:{prestige:-10,stability:-5,pts:60},actorEffects:{0:-10,1:-5,2:-5,3:-10},hidden:'Bağımsızlık korundu ama yalnızlaştı.'}
+   ]},
+  {title:'Enerji Koridoru Anlaşması',situation:'Kritik enerji güzergahı üzerinde hakimiyet mücadelesi. Ekonomik çıkarlar çatışıyor.',
+   options:[
+     {name:'Ortak İşletme',desc:'Tüm taraflarla gelir paylaşımı',effects:{prestige:+10,stability:+15,pts:130},actorEffects:{0:+10,1:+10,2:+10,3:+15},hidden:'Herkes kazandı, ama hiç kimse tam kazanamadı.'},
+     {name:'Tek Taraflı Kontrol',desc:'Güzergahı tamamen ele geçir',effects:{prestige:+20,stability:-25,pts:80},actorEffects:{0:-20,1:-20,2:-15,3:-25},hidden:'Kısa vadeli güç, uzun vadeli çatışma.'},
+     {name:'Bölgesel Otorite',desc:'Komşu ülkelere öncelik ver',effects:{prestige:+5,stability:+20,pts:120},actorEffects:{0:-5,1:-5,2:-5,3:+30},hidden:'Küresel Güney kazandı, büyük güçler memnun değil.'},
+     {name:'Uluslararası Denetim',desc:'BM denetimine bırak',effects:{prestige:+8,stability:+12,pts:110},actorEffects:{0:+5,1:-10,2:-5,3:+15},hidden:'Meşru ama yavaş çözüm.'}
+   ]},
+  {title:'Siber Güvenlik Çerçevesi',situation:'Küresel siber saldırılar artıyor. Ortak normlar oluşturulması gündemde.',
+   options:[
+     {name:'Bağlayıcı Anlaşma',desc:'Siber saldırıları yasaklayan uluslararası hukuk',effects:{prestige:+15,stability:+18,pts:140},actorEffects:{0:+15,1:-20,2:-15,3:+20},hidden:'Batı kazandı, siber güçler kaybetti.'},
+     {name:'Gönüllü Normlar',desc:'Bağlayıcı olmayan davranış kuralları',effects:{prestige:+5,stability:+8,pts:90},actorEffects:{0:+5,1:+5,2:+5,3:+5},hidden:'Herkes imzaladı ama kimse uymadı.'},
+     {name:'İkili Anlaşmalar',desc:'Her ülkeyle ayrı müzakere',effects:{prestige:+10,stability:+5,pts:100},actorEffects:{0:+10,1:+8,2:+8,3:-5},hidden:'Karmaşık ama esnek sistem.'},
+     {name:'Tek Taraflı Kapasite',desc:'Kendi siber gücünü geliştir',effects:{prestige:+5,stability:-10,pts:70},actorEffects:{0:-10,1:-10,2:-10,3:-10},hidden:'Güçlü ama yalnız.'}
+   ]}
+];
+
+var gp={pts:0,round:0,prestige:50,stability:70,running:false,actorRels:[50,50,50,50],results:[]};
+
+function gpStart(){
+  gp={pts:0,round:0,prestige:50,stability:70,running:true,actorRels:[50,50,50,50],results:[]};
+  document.getElementById('gp-btn').style.display='none';
+  document.getElementById('outcome-panel').classList.remove('show');
+  updateDisplay();
+  renderActors();
+  gpNextRound();
+}
+
+function renderActors(){
+  document.getElementById('actors-grid').innerHTML=ACTORS.map(function(a,i){
+    var rel=gp.actorRels[i];
+    var relColor=rel>60?'var(--green)':rel>30?'var(--gold)':'var(--red2)';
+    return '<div class="actor-card" id="actor-'+i+'">'+
+      '<div class="actor-flag">'+a.flag+'</div>'+
+      '<div class="actor-name">'+a.name+'</div>'+
+      '<div class="actor-agenda">'+a.agenda+'</div>'+
+      '<div class="actor-rel-bar"><div class="actor-rel-fill" style="width:'+rel+'%;background:'+relColor+'"></div></div>'+
+      '<div class="actor-rel-val" style="color:'+relColor+'">İlişki: '+rel+'%</div>'+
+    '</div>';
+  }).join('');
+}
+
+function gpNextRound(){
+  if(gp.round>=NEGOTIATIONS.length*2){gpEnd();return;}
+  var neg=NEGOTIATIONS[gp.round%NEGOTIATIONS.length];
+  document.getElementById('neg-title').textContent='🌐 '+(gp.round+1)+'. MÜZAKERE: '+neg.title;
+  document.getElementById('neg-situation').textContent=neg.situation;
+  document.getElementById('neg-options').innerHTML=neg.options.map(function(o,i){
+    var effStr=Object.entries(o.effects).filter(function(e){return e[0]!=='pts';}).map(function(e){
+      var v=e[1];
+      return '<span class="effect-tag" style="background:rgba('+(v>0?'0,255,136':'224,21,21')+',.1);color:'+(v>0?'var(--green)':'var(--red2)')+'">'+e[0]+': '+(v>0?'+':'')+v+'</span>';
+    }).join('');
+    return '<div class="neg-option" onclick="gpChoose('+i+')">'+
+      '<div class="neg-opt-name">'+o.name+'</div>'+
+      '<div class="neg-opt-desc">'+o.desc+'</div>'+
+      '<div class="neg-opt-effects">'+effStr+'<span class="effect-tag" style="background:rgba(201,162,75,.1);color:var(--gold)">+'+o.effects.pts+' puan</span></div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('outcome-panel').classList.remove('show');
+  renderDots();
+}
+
+function gpChoose(optIdx){
+  if(!gp.running)return;
+  var neg=NEGOTIATIONS[gp.round%NEGOTIATIONS.length];
+  var opt=neg.options[optIdx];
+  gp.prestige=Math.max(0,Math.min(100,gp.prestige+opt.effects.prestige));
+  gp.stability=Math.max(0,Math.min(100,gp.stability+opt.effects.stability));
+  gp.pts+=opt.effects.pts;
+  // Aktör ilişkileri
+  Object.keys(opt.actorEffects).forEach(function(k){
+    gp.actorRels[k]=Math.max(0,Math.min(100,gp.actorRels[k]+opt.actorEffects[k]));
+  });
+  gp.results.push(opt.effects.pts>100?'win':opt.effects.pts>70?'partial':'lose');
+  // Sonuç
+  var op=document.getElementById('outcome-panel');
+  op.classList.add('show');
+  document.getElementById('outcome-title').textContent='📋 '+opt.name+' — +'+opt.effects.pts+' puan';
+  document.getElementById('outcome-title').style.color=opt.effects.pts>100?'var(--green)':opt.effects.pts>70?'var(--gold)':'var(--red2)';
+  document.getElementById('outcome-chain').textContent='🔍 Gizli sonuç: '+opt.hidden;
+  document.getElementById('neg-options').innerHTML='';
+  updateDisplay();
+  renderActors();
+  opt.effects.pts>100?beepWin():beepFail();
+  gp.round++;
+  if(gp.stability<=0||gp.prestige<=0){gpGameOver();return;}
+  setTimeout(gpNextRound,2000);
+}
+
+function renderDots(){
+  var html=Array(NEGOTIATIONS.length*2).fill(0).map(function(_,i){
+    var r=gp.results[i];
+    return '<div class="rd'+(r?' '+r:'')+'"></div>';
+  }).join('');
+  document.getElementById('round-dots').innerHTML=html;
+}
+
+function updateDisplay(){
+  document.getElementById('gp-pts').textContent=gp.pts;
+  document.getElementById('gp-round').textContent=(gp.round+1)+'/'+(NEGOTIATIONS.length*2);
+  document.getElementById('gp-prestige').textContent=gp.prestige;
+  document.getElementById('gp-prestige').style.color=gp.prestige>60?'var(--gold)':gp.prestige>30?'var(--cyan)':'var(--red2)';
+  document.getElementById('gp-stability').textContent=gp.stability;
+  document.getElementById('gp-stability').style.color=gp.stability>60?'var(--green)':gp.stability>30?'var(--gold)':'var(--red2)';
+  document.getElementById('hdr-pts').textContent='⭐ '+gp.pts;
+}
+
+function gpGameOver(){
+  gp.running=false;
+  document.getElementById('neg-situation').textContent='💀 Prestij veya istikrar çöktü! Toplam: '+gp.pts+' puan';
+  document.getElementById('gp-btn').style.display='';
+  document.getElementById('gp-btn').textContent='🔄 TEKRAR';
+  saveScore();beepFail();
+}
+
+function gpEnd(){
+  gp.running=false;
+  document.getElementById('neg-situation').textContent='🏆 Tüm müzakereler tamamlandı! Toplam: '+gp.pts+' puan';
+  document.getElementById('gp-btn').style.display='';
+  document.getElementById('gp-btn').textContent='🔄 TEKRAR';
+  saveScore();beepWin();
+}
+
+function saveScore(){try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['guc-paradoksu']=(s['guc-paradoksu']||0)+gp.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

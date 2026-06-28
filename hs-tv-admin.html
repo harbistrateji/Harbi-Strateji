@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HS·TV Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060a10;--surface:#0d1117;--card:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--accent:#00e0ff;--red:#e01515;--green:#10b981;--gold:#ffd700;--font-head:'Chakra Petch',sans-serif;--font-sans:'IBM Plex Sans',sans-serif;--font-mono:'IBM Plex Mono',monospace;--radius:8px;}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:var(--accent);text-decoration:none;}
+button{cursor:pointer;border:none;font-family:inherit;}
+input,select,textarea{font-family:var(--font-sans);background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:var(--radius);outline:none;transition:border .2s;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+
+/* LOGIN */
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:40px;width:100%;max-width:380px;text-align:center;}
+.login-box h1{font-family:var(--font-head);font-size:1.4rem;margin-bottom:6px;}
+.login-box p{font-size:.82rem;color:var(--muted);margin-bottom:24px;}
+.login-box .form-group{margin-bottom:14px;text-align:left;}
+.login-box label{font-size:.75rem;color:var(--muted);display:block;margin-bottom:4px;}
+.login-box input{width:100%;}
+.login-box .login-btn{width:100%;padding:12px;background:var(--red);color:#fff;font-weight:600;border-radius:var(--radius);font-size:.9rem;margin-top:8px;transition:all .2s;}
+.login-box .login-btn:hover{background:#ff2020;transform:translateY(-1px);}
+.login-box .login-err{color:var(--red);font-size:.78rem;margin-top:10px;display:none;}
+
+/* MAIN LAYOUT */
+.admin-layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+@media(max-width:768px){.admin-layout{grid-template-columns:1fr;}}
+
+/* SIDEBAR NAV */
+.admin-sidebar{background:var(--surface);border-right:1px solid var(--border);padding:20px 0;display:flex;flex-direction:column;}
+.admin-sidebar .brand{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.admin-sidebar .brand h2{font-family:var(--font-head);font-size:1rem;}
+.admin-sidebar .brand h2 span{color:var(--red);}
+.admin-sidebar .brand p{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.admin-sidebar .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:.82rem;color:var(--muted);cursor:pointer;transition:all .2s;border-left:3px solid transparent;}
+.admin-sidebar .nav-item:hover{color:var(--text);background:rgba(255,255,255,.02);}
+.admin-sidebar .nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(0,224,255,.04);}
+.admin-sidebar .nav-item .nav-icon{font-size:1rem;width:20px;text-align:center;}
+.admin-sidebar .nav-bottom{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);}
+.admin-sidebar .nav-bottom .user-info{font-size:.75rem;color:var(--muted);}
+.admin-sidebar .nav-bottom .user-name{font-weight:600;color:var(--text);}
+.admin-sidebar .logout-btn{margin-top:10px;width:100%;padding:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);font-size:.75rem;transition:all .2s;}
+.admin-sidebar .logout-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* MAIN CONTENT */
+.admin-main{padding:24px;overflow-y:auto;}
+.admin-main h1{font-family:var(--font-head);font-size:1.5rem;margin-bottom:20px;}
+.section-title{font-family:var(--font-head);font-size:1.1rem;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+
+/* STATS CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;}
+.stat-card .stat-val{font-family:var(--font-head);font-size:1.8rem;font-weight:700;color:var(--accent);}
+.stat-card .stat-label{font-size:.72rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;}
+
+/* FORMS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:600px){.form-row{grid-template-columns:1fr;}}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px;font-family:var(--font-mono);}
+.form-group input,.form-group select,.form-group textarea{width:100%;}
+.form-group textarea{min-height:80px;resize:vertical;}
+
+/* BUTTONS */
+.btn{padding:10px 20px;border-radius:var(--radius);font-size:.82rem;font-weight:600;transition:all .2s;}
+.btn-primary{background:var(--accent);color:#000;}
+.btn-primary:hover{background:#33e8ff;transform:translateY(-1px);}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-danger:hover{background:#ff2020;}
+.btn-secondary{background:var(--card);border:1px solid var(--border);color:var(--text);}
+.btn-secondary:hover{border-color:var(--accent);}
+.btn-sm{padding:6px 12px;font-size:.72rem;}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem;}
+.data-table th{text-align:left;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--border);font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--border);}
+.data-table tr:hover td{background:rgba(255,255,255,.02);}
+
+/* UPLOAD AREA */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:40px;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:16px;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(0,224,255,.03);}
+.upload-zone .uz-icon{font-size:2.5rem;margin-bottom:10px;opacity:.5;}
+.upload-zone .uz-text{font-size:.85rem;color:var(--muted);}
+.upload-zone .uz-sub{font-size:.7rem;color:var(--muted);margin-top:4px;}
+
+/* LIVE TOGGLE */
+.live-toggle{display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;}
+.toggle-switch{width:48px;height:24px;background:var(--card);border-radius:12px;position:relative;cursor:pointer;transition:background .3s;}
+.toggle-switch.on{background:var(--green);}
+.toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .3s;}
+.toggle-switch.on::after{transform:translateX(24px);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--green);color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:.82rem;font-weight:500;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.error{background:var(--red);}
+
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>⚙️ HS·TV Admin</h1>
+    <p>Editör girişi yapın (10 editör desteklenir)</p>
+    <div class="form-group">
+      <label>Kullanıcı Adı</label>
+      <input type="text" id="loginUser" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Şifre</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Giriş Yap</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ADMIN LAYOUT -->
+<div class="admin-layout" id="adminLayout" style="display:none;">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <h2>HS·<span>TV</span> Admin</h2>
+      <p>İçerik Yönetim Paneli</p>
+    </div>
+    <div class="nav-item active" data-panel="dashboard"><span class="nav-icon">📊</span> Dashboard</div>
+    <div class="nav-item" data-panel="videos"><span class="nav-icon">🎬</span> Videolar</div>
+    <div class="nav-item" data-panel="playout"><span class="nav-icon">📋</span> Playout</div>
+    <div class="nav-item" data-panel="live"><span class="nav-icon">🔴</span> Canlı Yayın</div>
+    <div class="nav-item" data-panel="youtube"><span class="nav-icon">▶</span> YouTube</div>
+    <div class="nav-item" data-panel="content"><span class="nav-icon">📄</span> İçerik Yükleme</div>
+    <div class="nav-item" data-panel="editors"><span class="nav-icon">👥</span> Editörler</div>
+    <div class="nav-item" data-panel="files"><span class="nav-icon">📁</span> Site Dosyaları</div>
+    <div class="nav-item" data-panel="strateji-karti"><span class="nav-icon">🃏</span> Strateji Kartı</div>
+    <div class="nav-item" data-panel="teknik-kartlar"><span class="nav-icon">🎖️</span> Teknik Kartlar</div>
+    <div class="nav-item" data-panel="gorsel-brifing"><span class="nav-icon">📊</span> Görsel Brifing</div>
+    <div class="nav-item" data-panel="bilgi-merkezi"><span class="nav-icon">📚</span> Bilgi Merkezi</div>
+    <div class="nav-bottom">
+      <div class="user-info">
+        <div class="user-name" id="userName">—</div>
+        <div>Oturum aktif</div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Çıkış Yap</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <h1>Dashboard</h1>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="dVideos">0</div><div class="stat-label">Video</div></div>
+        <div class="stat-card"><div class="stat-val" id="dPlayout">0</div><div class="stat-label">Playout</div></div>
+        <div class="stat-card"><div class="stat-val" id="dContent">0</div><div class="stat-label">İçerik</div></div>
+        <div class="stat-card"><div class="stat-val" id="dLive">—</div><div class="stat-label">Canlı Yayın</div></div>
+        <div class="stat-card"><div class="stat-val" id="dFiles">0</div><div class="stat-label">Site HTML</div></div>
+      </div>
+      <h3 class="section-title">Hızlı İşlemler</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="switchPanel('videos')">🎬 Video Yükle</button>
+        <button class="btn btn-secondary" onclick="switchPanel('live')">🔴 Canlı Yayın Ayarla</button>
+        <button class="btn btn-secondary" onclick="switchPanel('content')">📄 İçerik Yükle</button>
+        <button class="btn btn-secondary" onclick="window.open('hs-tv.html','_blank')">📺 HSTV'yi Görüntüle</button>
+      </div>
+    </div>
+
+    <!-- VIDEOS -->
+    <div class="panel" id="panel-videos">
+      <h1>Video Yönetimi</h1>
+      <h3 class="section-title">Yeni Video Yükle</h3>
+      <div class="upload-zone" id="videoUploadZone">
+        <div class="uz-icon">🎬</div>
+        <div class="uz-text">Video dosyasını sürükleyin veya tıklayın</div>
+        <div class="uz-sub">MP4, WebM, MOV, AVI, MKV — Maks 2GB</div>
+      </div>
+      <input type="file" id="videoFileInput" accept=".mp4,.webm,.mov,.avi,.mkv,.m3u8" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>Başlık</label><input type="text" id="vidTitle" placeholder="Video başlığı"></div>
+        <div class="form-group"><label>Kategori</label><select id="vidCategory"><option>Genel</option><option>Analiz</option><option>Simülasyon</option><option>Doktrin</option><option>Jeopolitik</option><option>Teknoloji</option><option>Tarih</option><option>Eğitim</option></select></div>
+      </div>
+      <div class="form-group"><label>Açıklama</label><textarea id="vidDesc" placeholder="Video açıklaması..."></textarea></div>
+      <div class="form-group"><label>Thumbnail (opsiyonel)</label><input type="file" id="vidThumb" accept=".jpg,.jpeg,.png,.webp,.gif"></div>
+      <button class="btn btn-primary" id="vidUploadBtn" onclick="uploadVideo()">🎬 Yükle</button>
+      <div style="margin-top:8px;font-size:.75rem;color:var(--muted)" id="vidUploadStatus"></div>
+
+      <h3 class="section-title" style="margin-top:28px;">Mevcut Videolar</h3>
+      <table class="data-table">
+        <thead><tr><th>Başlık</th><th>Kategori</th><th>Boyut</th><th>Tarih</th><th>İşlem</th></tr></thead>
+        <tbody id="videoTable"></tbody>
+      </table>
+    </div>
+
+    <!-- PLAYOUT -->
+    <div class="panel" id="panel-playout">
+      <h1>Playout Yönetimi</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Canlı yayın olmadığında sırayla oynatılacak videoları belirleyin. Sürükle-bırak ile sıralayın.</p>
+      <div id="playoutList" style="margin-bottom:16px;"></div>
+      <h3 class="section-title">Playout'a Video Ekle</h3>
+      <select id="playoutSelect" style="width:100%;margin-bottom:10px;"></select>
+      <button class="btn btn-primary btn-sm" onclick="addToPlayout()">+ Playout'a Ekle</button>
+      <button class="btn btn-secondary btn-sm" onclick="savePlayout()" style="margin-left:8px;">💾 Sıralamayı Kaydet</button>
+    </div>
+
+    <!-- LIVE -->
+    <div class="panel" id="panel-live">
+      <h1>Canlı Yayın Ayarları</h1>
+      <div class="live-toggle">
+        <div class="toggle-switch" id="liveToggle" onclick="toggleLive()"></div>
+        <div>
+          <div style="font-weight:600;" id="liveStatusText">Canlı Yayın Kapalı</div>
+          <div style="font-size:.72rem;color:var(--muted);">Açıldığında izleyiciler otomatik bağlanır</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Stream URL (HLS/RTMP/Direct)</label><input type="text" id="liveStreamUrl" placeholder="https://stream.example.com/live.m3u8"></div>
+      <div class="form-group"><label>Stream Türü</label><select id="liveStreamType"><option value="hls">HLS (.m3u8)</option><option value="direct">Direct (MP4/WebM)</option><option value="youtube">YouTube Live</option></select></div>
+      <div class="form-group"><label>YouTube Live URL (opsiyonel)</label><input type="text" id="liveYoutubeUrl" placeholder="https://www.youtube.com/watch?v=..."></div>
+      <div class="form-group"><label>Overlay Yazı</label><input type="text" id="liveOverlay" placeholder="CANLI YAYIN — Harb-i Strateji"></div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
+        <input type="checkbox" id="liveFallback" checked>
+        <label for="liveFallback" style="font-size:.82rem;color:var(--muted);">Yayın kesildiğinde playout'a geri dön</label>
+      </div>
+      <button class="btn btn-primary" onclick="saveLive()">💾 Kaydet</button>
+      <div style="margin-top:20px;padding:16px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);">
+        <h4 style="font-size:.85rem;margin-bottom:8px;">📡 Resim Masası Bağlantısı</h4>
+        <p style="font-size:.78rem;color:var(--muted);line-height:1.6;">OBS/vMix/Wirecast'ten HLS çıkışı alarak canlı yayın yapabilirsiniz. Stream URL'ye HLS endpoint'inizi girin. YouTube Live için YouTube URL'sini girin.</p>
+      </div>
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="panel" id="panel-youtube">
+      <h1>YouTube Entegrasyonu</h1>
+      <div class="form-group"><label>Kanal URL</label><input type="text" id="ytChannelUrl" value="https://www.youtube.com/@harbistratejiTV"></div>
+      <div class="form-group"><label>Kanal ID (opsiyonel, API için)</label><input type="text" id="ytChannelId" placeholder="UCxxxxxxxx"></div>
+      <div class="form-group"><label>YouTube API Key (opsiyonel)</label><input type="text" id="ytApiKey" placeholder="AIzaSy..."></div>
+      <div class="form-group"><label>Gösterilecek Video Sayısı</label><input type="number" id="ytShowCount" value="5" min="1" max="20"></div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
+        <input type="checkbox" id="ytEmbed" checked>
+        <label for="ytEmbed" style="font-size:.82rem;color:var(--muted);">Embed aktif</label>
+      </div>
+      <button class="btn btn-primary" onclick="saveYoutube()">💾 Kaydet</button>
+    </div>
+
+    <!-- CONTENT UPLOAD -->
+    <div class="panel" id="panel-content">
+      <h1>İçerik Yükleme</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Manus/Claude/Gemini'den üretilen HTML, JSON ve diğer dosyaları yükleyin. Site yapısı korunur.</p>
+      <div class="upload-zone" id="contentUploadZone">
+        <div class="uz-icon">📄</div>
+        <div class="uz-text">İçerik dosyalarını sürükleyin veya tıklayın</div>
+        <div class="uz-sub">HTML, JSON, CSS, JS, SVG, PNG, JPG, WebP, MP3 — Çoklu dosya destekli</div>
+      </div>
+      <input type="file" id="contentFileInput" multiple accept=".html,.json,.css,.js,.svg,.png,.jpg,.webp,.gif,.mp3,.wav,.ogg" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>Kategori</label><select id="contentCategory"><option>Genel</option><option>İnfografik</option><option>Simülasyon</option><option>Oyun</option><option>Analiz</option><option>Medeniyet Dinamikleri</option></select></div>
+        <div class="form-group"><label>Siteye Deploy Et</label><select id="contentDeploy"><option value="true">Evet — Hemen yayınla</option><option value="false">Hayır — Sadece depola</option></select></div>
+      </div>
+      <button class="btn btn-primary" id="contentUploadBtn" onclick="uploadContent()">📄 Yükle ve Deploy Et</button>
+      <div style="margin-top:8px;font-size:.75rem;color:var(--muted)" id="contentUploadStatus"></div>
+
+      <h3 class="section-title" style="margin-top:28px;">Doğrudan HTML Deploy</h3>
+      <p style="color:var(--muted);font-size:.82rem;margin-bottom:12px;">AI'dan aldığınız HTML içeriği doğrudan yapıştırıp deploy edin.</p>
+      <div class="form-row">
+        <div class="form-group"><label>Dosya Adı</label><input type="text" id="deployFilename" placeholder="yeni-infografik.html"></div>
+        <div class="form-group"><label>Başlık</label><input type="text" id="deployTitle" placeholder="İçerik başlığı"></div>
+      </div>
+      <div class="form-group"><label>HTML İçerik</label><textarea id="deployHtml" style="min-height:200px;font-family:var(--font-mono);font-size:.75rem;" placeholder="<!DOCTYPE html>..."></textarea></div>
+      <button class="btn btn-primary" onclick="deployContent()">🚀 Deploy Et</button>
+    </div>
+
+    <!-- EDITORS -->
+    <div class="panel" id="panel-editors">
+      <h1>Editör Yönetimi</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">10 editör aynı anda giriş yapabilir. Şifre değiştirmek için ilgili satıra tıklayın.</p>
+      <table class="data-table">
+        <thead><tr><th>Kullanıcı</th><th>Görünen Ad</th><th>Rol</th><th>Son Giriş</th><th>İşlem</th></tr></thead>
+        <tbody id="editorTable"></tbody>
+      </table>
+    </div>
+
+    <!-- SITE FILES -->
+    <div class="panel" id="panel-files">
+      <h1>Site Dosyaları</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Sitedeki tüm HTML/JSON/CSS/JS dosyaları</p>
+      <table class="data-table">
+        <thead><tr><th>Dosya</th><th>Boyut</th><th>Son Değişiklik</th><th>Aç</th></tr></thead>
+        <tbody id="filesTable"></tbody>
+      </table>
+    </div>
+    <!-- STRATEJİ KARTI -->
+    <div class="panel" id="panel-strateji-karti">
+      <h1>Strateji Kartı (Z Kuşağı)</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">OZA altında Z kuşağı için strateji kartları yönetimi</p>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val">1</div><div class="stat-label">Aktif Kart</div></div>
+        <div class="stat-card"><div class="stat-val">OZA</div><div class="stat-label">Konum</div></div>
+      </div>
+      <table class="data-table" style="margin-top:16px;">
+        <thead><tr><th>Kart</th><th>Tür</th><th>Durum</th><th>Aç</th></tr></thead>
+        <tbody>
+          <tr><td>Musk: Strateji Kartı</td><td>İnteraktif HTML</td><td><span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;">Aktif</span></td><td><a href="musk-disruptor-zgen.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- TEKNİK KARTLAR -->
+    <div class="panel" id="panel-teknik-kartlar">
+      <h1>Teknik Kartlar — Veri Özeti</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Türk savunma sistemleri teknik veri kartları</p>
+      <table class="data-table" style="margin-top:16px;">
+        <thead><tr><th>Sistem</th><th>Tür</th><th>Görsel</th><th>Aç</th></tr></thead>
+        <tbody>
+          <tr><td>KAAN (TF-X / MMU)</td><td>5. Nesil Savaş Uçağı</td><td>teknik_kart_kaan.webp</td><td><a href="teknik-kartlar.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>BAYRAKTAR AKINCI</td><td>SİHA MALE</td><td>teknik_kart_akinci.webp</td><td><a href="teknik-kartlar.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>TAYFUN</td><td>Balistik Füze</td><td>teknik_kart_tayfun.webp</td><td><a href="teknik-kartlar.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>SİPER</td><td>Hava Savunma</td><td>teknik_kart_siper.webp</td><td><a href="teknik-kartlar.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- GÖRSEL BRİFİNG -->
+    <div class="panel" id="panel-gorsel-brifing">
+      <h1>Görsel Brifing</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">İnfografik ve görsel analiz yönetimi</p>
+      <table class="data-table" style="margin-top:16px;">
+        <thead><tr><th>İnfografik</th><th>Kategori</th><th>Dosya</th><th>Aç</th></tr></thead>
+        <tbody>
+          <tr><td>Analog: Roma → Starlink</td><td>Analog Serisi</td><td>analog_2_roma_starlink.png</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Analog: Moğol → AI</td><td>Analog Serisi</td><td>analog_3_mogol_ai.png</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Analog: Hitit → UGV</td><td>Analog Serisi</td><td>analog_4_hitit_ugv.png</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Analog: Babil → Siber</td><td>Analog Serisi</td><td>analog_7_babil_siber.png</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Analog: Aztek → Deepfake</td><td>Analog Serisi</td><td>analog_8_aztek_deepfake.png</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Analog: İpek Yolu → Fiber</td><td>Analog Serisi</td><td>analog_9_ipek_yolu_fiber.png</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Analog: Truva → Stuxnet</td><td>Analog Serisi</td><td>analog_10_truva_stuxnet.png</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Hibrit Spektrum</td><td>Veri Özeti</td><td>infografik_hibrit_spektrum.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Maliyet Asimetrisi</td><td>Veri Özeti</td><td>infografik_maliyet_asimetrisi.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Algoritmik Harp</td><td>Veri Özeti</td><td>infografik_algoritmik_harp.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Geleceğin Ordusu</td><td>Veri Özeti</td><td>infografik_gelecegin_ordusu.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Stratejik Eğitim</td><td>Veri Özeti</td><td>infografik_stratejik_egitim.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Hürmüz Jeopolitik</td><td>Veri Özeti</td><td>infografik_hormuz_jeopolitik.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Mühimmat Hiyerarşisi</td><td>Veri Özeti</td><td>infografik_muhimmat_hiyerarsisi.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Yeni Nesil Liderlik</td><td>Veri Özeti</td><td>infografik_yeni_nesil_liderlik.webp</td><td><a href="infografik.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- BİLGİ MERKEZİ -->
+    <div class="panel" id="panel-bilgi-merkezi">
+      <h1>Bilgi Merkezi</h1>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Araştırma dosyaları ve derinlemesine içerik yönetimi</p>
+      <table class="data-table" style="margin-top:16px;">
+        <thead><tr><th>Dosya</th><th>Konu</th><th>Durum</th><th>Aç</th></tr></thead>
+        <tbody>
+          <tr><td>Elon Musk: Disruptor Universe</td><td>Araştırma Dosyası</td><td><span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;">Aktif</span></td><td><a href="elon_musk_disruptor_universe.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Musk İnfografik Serisi (16)</td><td>Görsel Analiz</td><td><span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;">Aktif</span></td><td><a href="musk-infografik-serisi.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Geleceğin Harp Ekosistemi</td><td>Harp Araştırması</td><td><span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;">Aktif</span></td><td><a href="gelecegin-harp-ekosistemi.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+          <tr><td>Lego Propaganda Analiz</td><td>Bilgi Savaşı</td><td><span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;">Aktif</span></td><td><a href="lego-propaganda-analiz.html" target="_blank" style="color:var(--accent);">Görüntüle</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://34.26.23.122:8081/api';
+let token = localStorage.getItem('hstv_token');
+let currentUser = null;
+
+// === AUTH ===
+async function doLogin(){
+  const user = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+  try{
+    const res = await fetch(API+'/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:user,password:pass})});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error);
+    token = data.token;
+    currentUser = data.editor;
+    localStorage.setItem('hstv_token', token);
+    showAdmin();
+    toast('Giriş başarılı!');
+  }catch(e){
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('loginErr').textContent=e.message||'Giriş başarısız';
+  }
+}
+
+function doLogout(){
+  fetch(API+'/logout',{method:'POST',headers:{'Authorization':'Bearer '+token}});
+  token=null;currentUser=null;
+  localStorage.removeItem('hstv_token');
+  document.getElementById('adminLayout').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+}
+
+async function checkAuth(){
+  if(!token)return false;
+  try{
+    const res=await fetch(API+'/me',{headers:{'Authorization':'Bearer '+token}});
+    if(!res.ok)throw new Error();
+    currentUser=await res.json();
+    return true;
+  }catch(e){return false;}
+}
+
+function showAdmin(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminLayout').style.display='grid';
+  document.getElementById('userName').textContent=currentUser?.display_name||'Editör';
+  loadDashboard();
+}
+
+// === NAVIGATION ===
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.onclick=()=>switchPanel(item.dataset.panel);
+});
+
+function switchPanel(panel){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.panel===panel));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+panel));
+  if(panel==='dashboard')loadDashboard();
+  if(panel==='videos')loadVideos();
+  if(panel==='playout')loadPlayout();
+  if(panel==='live')loadLive();
+  if(panel==='youtube')loadYoutube();
+  if(panel==='editors')loadEditors();
+  if(panel==='files')loadFiles();
+}
+
+// === DASHBOARD ===
+async function loadDashboard(){
+  try{
+    const res=await fetch(API+'/stats',{headers:{'Authorization':'Bearer '+token}});
+    const d=await res.json();
+    document.getElementById('dVideos').textContent=d.videos;
+    document.getElementById('dPlayout').textContent=d.playout_items;
+    document.getElementById('dContent').textContent=d.content_pages;
+    document.getElementById('dLive').textContent=d.is_live?'AÇIK':'Kapalı';
+    document.getElementById('dFiles').textContent=d.site_html_files;
+  }catch(e){}
+}
+
+// === VIDEOS ===
+let videosList=[];
+async function loadVideos(){
+  const res=await fetch(API+'/videos',{headers:{'Authorization':'Bearer '+token}});
+  videosList=await res.json();
+  const tb=document.getElementById('videoTable');
+  tb.innerHTML=videosList.map(v=>`<tr>
+    <td>${v.title}</td><td>${v.category}</td>
+    <td>${formatSize(v.file_size)}</td><td>${new Date(v.created_at).toLocaleDateString('tr')}</td>
+    <td><button class="btn btn-danger btn-sm" onclick="deleteVideo(${v.id})">Sil</button></td>
+  </tr>`).join('');
+}
+
+async function uploadVideo(){
+  const fileInput=document.getElementById('videoFileInput');
+  if(!fileInput.files[0])return toast('Lütfen video seçin','error');
+  const fd=new FormData();
+  fd.append('video',fileInput.files[0]);
+  fd.append('title',document.getElementById('vidTitle').value||fileInput.files[0].name);
+  fd.append('description',document.getElementById('vidDesc').value);
+  fd.append('category',document.getElementById('vidCategory').value);
+  const thumbInput=document.getElementById('vidThumb');
+  if(thumbInput.files[0])fd.append('thumbnail',thumbInput.files[0]);
+  
+  document.getElementById('vidUploadStatus').textContent='Yükleniyor...';
+  document.getElementById('vidUploadBtn').disabled=true;
+  try{
+    const res=await fetch(API+'/videos',{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error);
+    toast('Video başarıyla yüklendi!');
+    document.getElementById('vidUploadStatus').textContent='Başarılı!';
+    fileInput.value='';
+    loadVideos();
+  }catch(e){
+    toast(e.message,'error');
+    document.getElementById('vidUploadStatus').textContent='Hata: '+e.message;
+  }
+  document.getElementById('vidUploadBtn').disabled=false;
+}
+
+async function deleteVideo(id){
+  if(!confirm('Bu videoyu silmek istediğinize emin misiniz?'))return;
+  await fetch(API+'/videos/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
+  toast('Video silindi');
+  loadVideos();
+}
+
+// Upload zone interactions
+const vZone=document.getElementById('videoUploadZone');
+const vInput=document.getElementById('videoFileInput');
+vZone.onclick=()=>vInput.click();
+vZone.ondragover=e=>{e.preventDefault();vZone.classList.add('dragover');};
+vZone.ondragleave=()=>vZone.classList.remove('dragover');
+vZone.ondrop=e=>{e.preventDefault();vZone.classList.remove('dragover');vInput.files=e.dataTransfer.files;vZone.querySelector('.uz-text').textContent=e.dataTransfer.files[0]?.name||'Dosya seçildi';};
+vInput.onchange=()=>{if(vInput.files[0])vZone.querySelector('.uz-text').textContent=vInput.files[0].name;};
+
+// === PLAYOUT ===
+let playoutItems=[];
+async function loadPlayout(){
+  const res=await fetch(API+'/playout',{headers:{'Authorization':'Bearer '+token}});
+  playoutItems=await res.json();
+  renderPlayout();
+  // Load video select
+  const vRes=await fetch(API+'/videos',{headers:{'Authorization':'Bearer '+token}});
+  const vids=await vRes.json();
+  document.getElementById('playoutSelect').innerHTML=vids.map(v=>`<option value="${v.id}">${v.title} (${v.category})</option>`).join('');
+}
+
+function renderPlayout(){
+  const list=document.getElementById('playoutList');
+  if(!playoutItems.length){list.innerHTML='<p style="color:var(--muted);font-size:.82rem;">Playout listesi boş. Aşağıdan video ekleyin.</p>';return;}
+  list.innerHTML=playoutItems.map((p,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;">
+    <span style="font-size:.7rem;color:var(--muted);font-family:var(--font-mono);min-width:24px;">#${i+1}</span>
+    <span style="flex:1;font-size:.82rem;">${p.title}</span>
+    <span style="font-size:.7rem;color:var(--muted);">${p.category||''}</span>
+    <button class="btn btn-danger btn-sm" onclick="removeFromPlayout(${i})">×</button>
+  </div>`).join('');
+}
+
+function addToPlayout(){
+  const sel=document.getElementById('playoutSelect');
+  const vid=videosList.find(v=>v.id==sel.value);
+  if(vid)playoutItems.push(vid);
+  renderPlayout();
+}
+
+function removeFromPlayout(idx){
+  playoutItems.splice(idx,1);
+  renderPlayout();
+}
+
+async function savePlayout(){
+  const ids=playoutItems.map(p=>p.video_id||p.id);
+  await fetch(API+'/playout',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({video_ids:ids})});
+  toast('Playout kaydedildi!');
+}
+
+// === LIVE ===
+async function loadLive(){
+  const res=await fetch(API+'/live',{headers:{'Authorization':'Bearer '+token}});
+  const c=await res.json();
+  document.getElementById('liveToggle').classList.toggle('on',!!c.is_live);
+  document.getElementById('liveStatusText').textContent=c.is_live?'Canlı Yayın AÇIK':'Canlı Yayın Kapalı';
+  document.getElementById('liveStreamUrl').value=c.stream_url||'';
+  document.getElementById('liveStreamType').value=c.stream_type||'hls';
+  document.getElementById('liveYoutubeUrl').value=c.youtube_url||'';
+  document.getElementById('liveOverlay').value=c.overlay_text||'';
+  document.getElementById('liveFallback').checked=!!c.fallback_to_playout;
+}
+
+function toggleLive(){
+  const tog=document.getElementById('liveToggle');
+  tog.classList.toggle('on');
+  document.getElementById('liveStatusText').textContent=tog.classList.contains('on')?'Canlı Yayın AÇIK':'Canlı Yayın Kapalı';
+}
+
+async function saveLive(){
+  const body={
+    is_live:document.getElementById('liveToggle').classList.contains('on')?1:0,
+    stream_url:document.getElementById('liveStreamUrl').value,
+    stream_type:document.getElementById('liveStreamType').value,
+    youtube_url:document.getElementById('liveYoutubeUrl').value,
+    overlay_text:document.getElementById('liveOverlay').value,
+    fallback_to_playout:document.getElementById('liveFallback').checked?1:0
+  };
+  await fetch(API+'/live',{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  toast('Canlı yayın ayarları kaydedildi!');
+}
+
+// === YOUTUBE ===
+async function loadYoutube(){
+  const res=await fetch(API+'/youtube',{headers:{'Authorization':'Bearer '+token}});
+  const c=await res.json();
+  document.getElementById('ytChannelUrl').value=c.channel_url||'';
+  document.getElementById('ytChannelId').value=c.channel_id||'';
+  document.getElementById('ytApiKey').value=c.api_key||'';
+  document.getElementById('ytShowCount').value=c.show_latest||5;
+  document.getElementById('ytEmbed').checked=!!c.embed_enabled;
+}
+
+async function saveYoutube(){
+  const body={
+    channel_url:document.getElementById('ytChannelUrl').value,
+    channel_id:document.getElementById('ytChannelId').value,
+    api_key:document.getElementById('ytApiKey').value,
+    show_latest:parseInt(document.getElementById('ytShowCount').value),
+    embed_enabled:document.getElementById('ytEmbed').checked?1:0
+  };
+  await fetch(API+'/youtube',{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  toast('YouTube ayarları kaydedildi!');
+}
+
+// === CONTENT ===
+const cZone=document.getElementById('contentUploadZone');
+const cInput=document.getElementById('contentFileInput');
+cZone.onclick=()=>cInput.click();
+cZone.ondragover=e=>{e.preventDefault();cZone.classList.add('dragover');};
+cZone.ondragleave=()=>cZone.classList.remove('dragover');
+cZone.ondrop=e=>{e.preventDefault();cZone.classList.remove('dragover');cInput.files=e.dataTransfer.files;cZone.querySelector('.uz-text').textContent=`${e.dataTransfer.files.length} dosya seçildi`;};
+cInput.onchange=()=>{if(cInput.files.length)cZone.querySelector('.uz-text').textContent=`${cInput.files.length} dosya seçildi`;};
+
+async function uploadContent(){
+  if(!cInput.files.length)return toast('Dosya seçin','error');
+  const fd=new FormData();
+  for(let f of cInput.files)fd.append('files',f);
+  fd.append('category',document.getElementById('contentCategory').value);
+  fd.append('deploy_to_site',document.getElementById('contentDeploy').value);
+  
+  document.getElementById('contentUploadStatus').textContent='Yükleniyor...';
+  document.getElementById('contentUploadBtn').disabled=true;
+  try{
+    const res=await fetch(API+'/content/upload',{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error);
+    toast(`${data.files.length} dosya başarıyla yüklendi!`);
+    document.getElementById('contentUploadStatus').textContent=`${data.files.length} dosya yüklendi`;
+    cInput.value='';
+    cZone.querySelector('.uz-text').textContent='İçerik dosyalarını sürükleyin veya tıklayın';
+  }catch(e){
+    toast(e.message,'error');
+    document.getElementById('contentUploadStatus').textContent='Hata: '+e.message;
+  }
+  document.getElementById('contentUploadBtn').disabled=false;
+}
+
+async function deployContent(){
+  const filename=document.getElementById('deployFilename').value;
+  const title=document.getElementById('deployTitle').value;
+  const html=document.getElementById('deployHtml').value;
+  if(!filename||!html)return toast('Dosya adı ve HTML gerekli','error');
+  try{
+    const res=await fetch(API+'/content/deploy',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({filename,title,html_content:html,category:'Genel'})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error);
+    toast(`Deploy başarılı: ${data.url}`);
+    document.getElementById('deployHtml').value='';
+  }catch(e){toast(e.message,'error');}
+}
+
+// === EDITORS ===
+async function loadEditors(){
+  try{
+    const res=await fetch(API+'/editors',{headers:{'Authorization':'Bearer '+token}});
+    if(!res.ok)return;
+    const eds=await res.json();
+    document.getElementById('editorTable').innerHTML=eds.map(e=>`<tr>
+      <td>${e.username}</td><td>${e.display_name}</td><td>${e.role}</td>
+      <td>${e.last_login?new Date(e.last_login).toLocaleString('tr'):'—'}</td>
+      <td><button class="btn btn-secondary btn-sm" onclick="editEditor(${e.id},'${e.display_name}')">Düzenle</button></td>
+    </tr>`).join('');
+  }catch(e){}
+}
+
+function editEditor(id,name){
+  const newName=prompt('Yeni görünen ad:',name);
+  if(!newName)return;
+  const newPass=prompt('Yeni şifre (boş bırakırsanız değişmez):','');
+  const body={display_name:newName};
+  if(newPass)body.password=newPass;
+  fetch(API+'/editors/'+id,{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)}).then(()=>{toast('Editör güncellendi');loadEditors();});
+}
+
+// === FILES ===
+async function loadFiles(){
+  const res=await fetch(API+'/site-files',{headers:{'Authorization':'Bearer '+token}});
+  const files=await res.json();
+  document.getElementById('filesTable').innerHTML=files.slice(0,100).map(f=>`<tr>
+    <td>${f.name}</td><td>${formatSize(f.size)}</td>
+    <td>${new Date(f.modified).toLocaleString('tr')}</td>
+    <td><a href="http://34.26.23.122:8080/${f.name}" target="_blank">🔗</a></td>
+  </tr>`).join('');
+}
+
+// === HELPERS ===
+function formatSize(b){if(!b)return'—';if(b<1024)return b+'B';if(b<1024*1024)return(b/1024).toFixed(0)+'KB';return(b/1024/1024).toFixed(1)+'MB';}
+
+function toast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show'+(type==='error'?' error':'');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// === INIT ===
+(async()=>{
+  if(await checkAuth()){showAdmin();}
+  else{document.getElementById('loginScreen').style.display='flex';}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="hs-skip" content="true"><title>Asimetri Topu — OZA · Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Chakra Petch',sans-serif;background:#0a0f17;color:#e8eaed;min-height:100vh;overflow:hidden}
+.header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.back{color:#94a3b8;text-decoration:none;font-size:.85rem}
+.title{font-size:1rem;color:#00E0FF;font-weight:600;letter-spacing:1px}
+.score-display{color:#c9a84c;font-size:.9rem}
+.game-container{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 60px);padding:1rem}
+.arena{width:100%;max-width:500px;aspect-ratio:1;background:radial-gradient(circle,#0d1b2a 0%,#060d16 100%);border:2px solid rgba(0,224,255,.2);border-radius:50%;position:relative;margin-bottom:1.5rem}
+.balance-bar{position:absolute;top:50%;left:10%;right:10%;height:4px;background:#1a2a3a;transform-origin:center;transition:transform .3s}
+.balance-indicator{position:absolute;width:20px;height:20px;background:#00E0FF;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 15px rgba(0,224,255,.5)}
+.threat{position:absolute;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all .2s;animation:pulse 2s infinite}
+.threat.kinetic{background:rgba(187,25,25,.3);border:1.5px solid #bb1919;color:#ff6b6b}
+.threat.cyber{background:rgba(138,43,226,.3);border:1.5px solid #8a2be2;color:#d8b4fe}
+.threat.economic{background:rgba(201,168,76,.3);border:1.5px solid #c9a84c;color:#fde68a}
+.threat.info{background:rgba(0,224,255,.3);border:1.5px solid #00E0FF;color:#67e8f9}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.controls{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;max-width:500px}
+.ctrl-btn{padding:.6rem 1.2rem;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.03);color:#e8eaed;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.8rem;transition:all .2s}
+.ctrl-btn:hover{background:rgba(0,224,255,.1);border-color:#00E0FF}
+.ctrl-btn.active{background:rgba(0,224,255,.15);border-color:#00E0FF;color:#00E0FF}
+.hud{display:flex;gap:2rem;margin-top:1rem;font-size:.8rem;color:#94a3b8}
+.hud span{color:#c9a84c}
+.status{text-align:center;margin-top:1rem;font-size:.85rem;color:#94a3b8;min-height:2rem}
+.legend{display:flex;gap:1rem;margin-top:1rem;font-size:.7rem;color:#94a3b8}
+.legend-item{display:flex;align-items:center;gap:4px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.start-btn{padding:.8rem 2.5rem;background:linear-gradient(135deg,#bb1919,#e02020);color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer;font-family:inherit;margin-top:1rem}
+.start-btn:hover{transform:scale(1.05)}
+</style><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<div class="header">
+  <a class="back" href="oza-hub.html">← OZA</a>
+  <div class="title">ASİMETRİ TOPU</div>
+  <div class="score-display" id="scoreDisplay">0</div>
+</div>
+<div class="game-container">
+  <div class="arena" id="arena">
+    <div class="balance-bar" id="balanceBar"></div>
+    <div class="balance-indicator" id="indicator"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" data-response="kinetic" onclick="respond('kinetic')">Kinetik Yanıt</button>
+    <button class="ctrl-btn" data-response="cyber" onclick="respond('cyber')">Siber Karşılık</button>
+    <button class="ctrl-btn" data-response="economic" onclick="respond('economic')">Ekonomik Baskı</button>
+    <button class="ctrl-btn" data-response="info" onclick="respond('info')">Bilgi Operasyonu</button>
+    <button class="ctrl-btn" data-response="diplomacy" onclick="respond('diplomacy')">Diplomasi</button>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#bb1919"></div>Kinetik</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8a2be2"></div>Siber</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c9a84c"></div>Ekonomik</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#00E0FF"></div>Bilgi</div>
+  </div>
+  <div class="status" id="status">Asimetrik tehditleri dengeleyerek etkisiz hale getirin</div>
+  <div class="hud">
+    <div><span>Tur:</span> <span id="round">0</span>/10</div>
+    <div><span>Denge:</span> <span id="balance">100</span>%</div>
+    <div><span>Skor:</span> <span id="totalScore">0</span></div>
+  </div>
+  <button class="start-btn" id="startBtn" onclick="startGame()">BAŞLAT</button>
+</div>
+<script>
+const arena=document.getElementById('arena'),bar=document.getElementById('balanceBar'),indicator=document.getElementById('indicator');
+let threats=[],balance=100,score=0,round=0,maxRounds=10,gameActive=false,currentThreat=null;
+
+const scenarios=[
+  {type:'kinetic',label:'Drone Saldırısı',correct:'cyber',desc:'Otonom drone sürüsü tespit edildi. Siber karşılık ile kontrol sistemlerini devre dışı bırak.'},
+  {type:'cyber',label:'Altyapı Saldırısı',correct:'cyber',desc:'Enerji şebekesine siber saldırı. Siber savunma ile yanıtla.'},
+  {type:'economic',label:'Ticaret Ambargosu',correct:'diplomacy',desc:'Kritik mineral tedarik zinciri kesildi. Diplomatik çözüm ara.'},
+  {type:'info',label:'Dezenformasyon',correct:'info',desc:'Sosyal medyada koordineli sahte haber kampanyası. Bilgi operasyonu ile karşıla.'},
+  {type:'kinetic',label:'Füze Tehdidi',correct:'kinetic',desc:'Balistik füze rampaları aktif. Kinetik önleme gerekli.'},
+  {type:'cyber',label:'GPS Bozma',correct:'kinetic',desc:'Askeri GPS sinyalleri bozuluyor. Kinetik müdahale ile bozucu kaynağı yok et.'},
+  {type:'economic',label:'Döviz Manipülasyonu',correct:'economic',desc:'Düşman devlet döviz savaşı başlattı. Ekonomik karşı tedbirler uygula.'},
+  {type:'info',label:'Psikolojik Harp',correct:'info',desc:'Moral bozan propaganda yayılıyor. Karşı bilgi operasyonu yürüt.'},
+  {type:'kinetic',label:'Vekalet Saldırısı',correct:'diplomacy',desc:'Vekalet gücü sınır provokasyonu yapıyor. Diplomatik baskı uygula.'},
+  {type:'cyber',label:'Uydu Hacklemesi',correct:'cyber',desc:'İletişim uydusu ele geçirilmeye çalışılıyor. Siber savunma aktifleştir.'},
+  {type:'economic',label:'Enerji Kesintisi',correct:'economic',desc:'Doğalgaz akışı durduruldu. Ekonomik karşılık ver.'},
+  {type:'info',label:'Deepfake Krizi',correct:'info',desc:'Lider deepfake videosu yayıldı. Hızlı bilgi operasyonu başlat.'},
+  {type:'kinetic',label:'Deniz Ablukası',correct:'diplomacy',desc:'Boğaz geçişi engelleniyor. Uluslararası diplomasi devreye sok.'},
+  {type:'cyber',label:'Bankacılık Saldırısı',correct:'economic',desc:'Finansal sistem hedef alındı. Ekonomik savunma tedbirleri al.'},
+  {type:'info',label:'Etnik Provokasyon',correct:'diplomacy',desc:'İç karışıklık çıkarma girişimi. Diplomatik ve toplumsal uyum yanıtı ver.'}
+];
+
+function startGame(){
+  score=0;round=0;balance=100;gameActive=true;threats=[];
+  document.getElementById('startBtn').style.display='none';
+  arena.querySelectorAll('.threat').forEach(t=>t.remove());
+  nextRound();
+}
+
+function nextRound(){
+  if(round>=maxRounds){endGame();return;}
+  round++;
+  document.getElementById('round').textContent=round;
+  const scenario=scenarios[Math.floor(Math.random()*scenarios.length)];
+  currentThreat=scenario;
+  document.getElementById('status').textContent=scenario.desc;
+  // Add visual threat
+  const t=document.createElement('div');
+  t.className='threat '+scenario.type;
+  t.textContent=scenario.type==='kinetic'?'K':scenario.type==='cyber'?'S':scenario.type==='economic'?'E':'B';
+  const angle=Math.random()*Math.PI*2;
+  const r=35+Math.random()*10;
+  t.style.left=`calc(50% + ${Math.cos(angle)*r}% - 15px)`;
+  t.style.top=`calc(50% + ${Math.sin(angle)*r}% - 15px)`;
+  arena.appendChild(t);
+  threats.push(t);
+  updateBalance();
+}
+
+function respond(type){
+  if(!gameActive||!currentThreat)return;
+  const correct=currentThreat.correct===type;
+  if(correct){
+    score+=10+Math.floor(balance/10);
+    balance=Math.min(100,balance+5);
+    document.getElementById('status').innerHTML='<span style="color:#00FF88">Doğru yanıt! +'+Math.floor(10+balance/10)+' puan</span>';
+  } else {
+    balance=Math.max(0,balance-15);
+    document.getElementById('status').innerHTML='<span style="color:#ff6b6b">Yanlış! Denge bozuldu. Doğru yanıt: '+currentThreat.correct+'</span>';
+  }
+  // Remove last threat visual
+  if(threats.length>0){
+    const last=threats.pop();
+    last.style.opacity='0';
+    setTimeout(()=>last.remove(),300);
+  }
+  document.getElementById('totalScore').textContent=score;
+  document.getElementById('scoreDisplay').textContent=score;
+  updateBalance();
+  if(balance<=0){endGame();return;}
+  setTimeout(nextRound,1500);
+}
+
+function updateBalance(){
+  document.getElementById('balance').textContent=balance;
+  const tilt=(100-balance)*0.5;
+  bar.style.transform=`rotate(${tilt-25}deg)`;
+  indicator.style.left=`${50+(50-balance)*0.3}%`;
+}
+
+function endGame(){
+  gameActive=false;
+  currentThreat=null;
+  const msg=balance<=0?'Denge tamamen bozuldu! Oyun bitti.':'Tüm turlar tamamlandı!';
+  document.getElementById('status').innerHTML=`<span style="color:#c9a84c">${msg} Final Skor: ${score}</span>`;
+  document.getElementById('startBtn').style.display='inline-block';
+  document.getElementById('startBtn').textContent='TEKRAR OYNA';
+}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body></html>

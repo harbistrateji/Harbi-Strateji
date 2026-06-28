@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NATO Uzay Teknolojileri 2025 — İnteraktif İnfografik | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+body{background:#0a0f17;margin:0;font-family:'Segoe UI',sans-serif;color:#e0e0e0;}
+.info-container{max-width:1400px;margin:0 auto;padding:2rem 1rem;}
+.info-title{text-align:center;margin-bottom:2rem;}
+.info-title h1{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;background:linear-gradient(135deg,#06b6d4,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem;}
+.info-title p{color:rgba(255,255,255,.5);font-size:.9rem;}
+.domain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
+.domain-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2rem;position:relative;overflow:hidden;transition:all .3s;cursor:pointer;}
+.domain-card:hover{border-color:var(--card-accent,#06b6d4);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.domain-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,#06b6d4);opacity:0;transition:opacity .3s;}
+.domain-card:hover::before{opacity:1;}
+.domain-icon{font-size:2rem;margin-bottom:.8rem;}
+.domain-name{font-size:1rem;font-weight:700;color:#fff;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.03em;}
+.domain-items{list-style:none;padding:0;margin:0;}
+.domain-items li{font-size:.78rem;color:rgba(255,255,255,.6);padding:.25rem 0;padding-left:1.2rem;position:relative;}
+.domain-items li::before{content:'▸';position:absolute;left:0;color:var(--card-accent,#06b6d4);}
+.game-link{display:block;text-align:center;margin:2rem auto;padding:1rem 2rem;background:linear-gradient(135deg,#8b5cf6,#06b6d4);border-radius:8px;color:#fff;text-decoration:none;font-weight:700;max-width:300px;transition:transform .2s;}
+.game-link:hover{transform:scale(1.05);}
+.pro-badge{display:inline-block;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.2rem .6rem;font-size:.85rem;color:rgba(255,255,255,.4);margin-top:1.5rem;text-align:center;width:100%;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="info-container">
+<div class="info-title">
+<h1>NATO UZAY TEKNOLOJİLERİ 2025</h1>
+<p>NATO'nun uzay alanındaki stratejik yetenekleri ve gelecek planları</p>
+</div>
+<div class="domain-grid">
+  <div class="domain-card" style="--card-accent:#38bdf8;">
+    <div class="domain-icon">🛰️</div>
+    <div class="domain-name">İstihbarat Uyduları</div>
+    <ul class="domain-items">
+      <li>Elektro-Optik Gözetleme</li>
+      <li>SAR Radar Görüntüleme</li>
+      <li>SIGINT Uyduları</li>
+      <li>Erken Uyarı Sistemleri</li>
+      <li>Çok Bantlı Hiperspektral</li>
+    </ul>
+  </div>
+  <div class="domain-card" style="--card-accent:#10b981;">
+    <div class="domain-icon">📡</div>
+    <div class="domain-name">Haberleşme Uyduları</div>
+    <ul class="domain-items">
+      <li>SATCOM (NATO IV/V)</li>
+      <li>Lazer İletişim (LCRD)</li>
+      <li>Mesh Uydu Ağları</li>
+      <li>Anti-Jamming Sistemleri</li>
+      <li>Kuantum Anahtar Dağıtımı</li>
+    </ul>
+  </div>
+  <div class="domain-card" style="--card-accent:#f59e0b;">
+    <div class="domain-icon">🌍</div>
+    <div class="domain-name">Navigasyon Sistemleri</div>
+    <ul class="domain-items">
+      <li>GPS III (ABD)</li>
+      <li>Galileo (AB)</li>
+      <li>Türksat 6A (Türkiye)</li>
+      <li>PNT Dayanıklılık</li>
+      <li>Alternatif Navigasyon</li>
+    </ul>
+  </div>
+  <div class="domain-card" style="--card-accent:#ef4444;">
+    <div class="domain-icon">🚀</div>
+    <div class="domain-name">Uzay Savunma (ASAT)</div>
+    <ul class="domain-items">
+      <li>Kinetik Anti-Uydu Silahları</li>
+      <li>Yönlendirilmiş Enerji (DEW)</li>
+      <li>Siber Uzay Saldırıları</li>
+      <li>Yörünge Manevra Araçları</li>
+      <li>Uzay Mayınları Tehdidi</li>
+    </ul>
+  </div>
+  <div class="domain-card" style="--card-accent:#8b5cf6;">
+    <div class="domain-icon">🔭</div>
+    <div class="domain-name">Uzay Durumsal Farkındalık (SSA)</div>
+    <ul class="domain-items">
+      <li>Uzay Gözetleme Ağı</li>
+      <li>Enkaz Takibi (20.000+ nesne)</li>
+      <li>Tehdit Değerlendirme</li>
+      <li>Çarpışma Önleme</li>
+      <li>NATO Space Centre (Ramstein)</li>
+    </ul>
+  </div>
+  <div class="domain-card" style="--card-accent:#06b6d4;">
+    <div class="domain-icon">🏗️</div>
+    <div class="domain-name">Uzay Üsleri & Fırlatma</div>
+    <ul class="domain-items">
+      <li>Vandenberg (ABD)</li>
+      <li>Kourou (Fransa/AB)</li>
+      <li>SpaceX Starship (Ticari)</li>
+      <li>Türkiye Uzay Ajansı (TUA)</li>
+      <li>Hızlı Fırlatma Yeteneği</li>
+    </ul>
+  </div>
+</div>
+<a href="oza-nato-uzay-2025.html" class="game-link">🎮 Uzay Hakimiyeti Oyununu Oyna</a>
+<div class="pro-badge">NATO UZAY TEKNOLOJİLERİ · İnfografik · Harb-i Strateji © 2026</div>
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

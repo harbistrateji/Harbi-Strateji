@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Spektrum <em>Savaşı</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+
+/* === GAME AREA STYLING === */
+.sim-content h1{
+  font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--bone);text-transform:uppercase;letter-spacing:0.05em;
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.score-board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;margin-bottom:28px;
+}
+.score-card{background:var(--deep);padding:16px 14px;text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.4rem;display:block;margin-bottom:4px;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+  transition:opacity 0.3s,transform 0.3s;
+}
+.panel.hidden{display:none;}
+.panel h2,.panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:14px;}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.option-btn{
+  font-family:var(--font-mono);font-size:0.8rem;
+  padding:12px 20px;border:1px solid var(--line);
+  border-radius:6px;background:var(--deep);
+  color:var(--bone);cursor:pointer;transition:all 0.25s;
+  text-align:left;flex:1;min-width:200px;
+}
+.option-btn:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.decision-panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.decision-panel .header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.decision-panel h2,.decision-panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:10px;}
+.decision-panel p{color:var(--bone-dim);line-height:1.7;margin-bottom:16px;}
+
+/* decision sim specific */
+.scenario-box{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.scenario-box.hidden{display:none;}
+.scenario-box .header{font-family:var(--font-mono);font-size:0.7rem;color:var(--signal);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.final-report{
+  background:var(--panel);border:2px solid var(--gold);
+  border-radius:8px;padding:32px;margin-top:24px;
+}
+.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:20px 0;}
+.report-item{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.report-item .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;display:block;margin-bottom:6px;}
+.report-item .value{font-family:var(--font-display);font-size:1.3rem;color:var(--signal);}
+.country-tag{font-family:var(--font-mono);font-size:0.7rem;padding:4px 10px;border-radius:12px;display:inline-block;margin:4px;}
+.country-tag.tag-turkey{background:rgba(224,56,56,0.15);color:#e03838;border:1px solid #e03838;}
+.country-tag.tag-usa{background:rgba(74,158,255,0.15);color:#4a9eff;border:1px solid #4a9eff;}
+.country-tag.tag-russia{background:rgba(255,165,0,0.15);color:#ffa500;border:1px solid #ffa500;}
+.score-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:14px;text-align:center;
+}
+.score-card .value{font-family:var(--font-display);font-size:1.3rem;color:var(--signal);display:block;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;}
+.btn-next{
+  font-family:var(--font-mono);font-size:0.82rem;
+  padding:14px 28px;border:1px solid var(--signal);
+  border-radius:4px;background:var(--signal);
+  color:var(--void);cursor:pointer;font-weight:600;
+  transition:all 0.25s;display:block;margin:20px auto;
+}
+.btn-next:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+
+
+</style>
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Spektrum <em>Savaşı</em></h1>
+  <p class="lead">Elektromanyetik spektrum hâkimiyeti simülasyonu — EW, ECM, ECCM ve frekans çatışması.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">6</span><span class="lbl">Bant</span></div><div class="hero-stat"><span class="num">EW</span><span class="lbl">Sistem</span></div><div class="hero-stat"><span class="num">ECM</span><span class="lbl">Karşı</span></div><div class="hero-stat"><span class="num">4</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+
+    <div class="header">
+        
+        <p>Elektromanyetik Spektrum Komutanı Rolünde Karar Simülasyonu</p>
+    </div>
+    
+        <div class="phase-indicator" id="phaseIndicator">
+            <div class="phase-dot active" data-phase="0"></div>
+            <div class="phase-dot" data-phase="1"></div>
+            <div class="phase-dot" data-phase="2"></div>
+            <div class="phase-dot" data-phase="3"></div>
+            <div class="phase-dot" data-phase="4"></div>
+        </div>
+
+        <div class="scores">
+            <div class="score-card"><div class="label">Spektrum Hakimiyeti</div><div class="value high" id="scoreSpectrum">75</div></div>
+            <div class="score-card"><div class="label">Dron Sağkalımı</div><div class="value mid" id="scoreDrone">60</div></div>
+            <div class="score-card"><div class="label">İletişim Güvenliği</div><div class="value mid" id="scoreComm">65</div></div>
+            <div class="score-card"><div class="label">Düşman Körlüğü</div><div class="value mid" id="scoreBlind">50</div></div>
+        </div>
+
+        <!-- PHASE 0: Briefing -->
+        <div class="scenario-box" id="phase0">
+            <h2>DURUM BRİFİNGİ: Elektronik Harp Komuta Merkezi</h2>
+            <p>Yıl 2026. Siz, bir bölgesel çatışmada Elektronik Harp Komutanısınız. Düşman, cephe hattı boyunca her 10 km'de bir güçlü karıştırıcı (jammer) konuşlandırmış ve devasa bir "elektronik duvar" örmüş durumda.</p>
+            <div class="spectrum-bar"></div>
+            <div class="spectrum-label"><span>9 kHz (VLF)</span><span>30 MHz (HF)</span><span>3 GHz (SHF)</span><span>40 GHz (EHF)</span></div>
+            <p style="margin-top:15px;">Dronlarınız sinyal kaybedip düşüyor, taktik telsizleriniz karıştırılıyor ve GPS'iniz aldatılıyor. 4 kritik karar vermeniz gerekiyor.</p>
+            <p><span class="country-tag tag-turkey">Türkiye</span> <span class="country-tag tag-usa">ABD Doktrini</span> <span class="country-tag tag-russia">Rusya Tehdidi</span></p>
+            <button class="btn-next" onclick="startSim()">Simülasyonu Başlat</button>
+        </div>
+
+        <!-- PHASE 1: Drone Counter-EW -->
+        <div class="scenario-box hidden" id="phase1">
+            <h2>KARAR 1: Dronlar Düşüyor - Ne Yaparsınız?</h2>
+            <p>Düşmanın Krasukha-4 benzeri karıştırıcıları, dronlarınızın kontrol sinyallerini kesiyor. Son 24 saatte 47 dronunuz sinyal kaybedip düştü. Komuta merkezi acil çözüm bekliyor.</p>
+            <div class="decision-panel">
+                <h3>Hangi karşı önlemi uygularsınız?</h3>
+                <button class="option-btn" onclick="selectOption(1, 'fiber')">
+                    <strong>A) Fiber Optik Dronlar:</strong> Arkasından incecik bir kablo çekerek uçan dronlar kullan. Sinyal kablodan gittiği için karıştırılamaz. (Ukrayna modeli)
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'ai')">
+                    <strong>B) Yapay Zekâ Görüşü:</strong> Dronlara makine görüşü (AI) yükle. GPS veya pilot komutu olmadan, hedefin görüntüsünü tanıyıp kendi başına vuran otonom dronlar. 
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'swarm')">
+                    <strong>C) Frekans Atlama Sürüsü:</strong> Dronları sürü halinde gönder. Her biri farklı frekansta, saniyede yüzlerce kez frekans değiştirerek karıştırmayı imkansızlaştır.
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'sacrifice')">
+                    <strong>D) Yem Dronlar:</strong> Ucuz yem dronları gönderip düşmanın karıştırıcı frekanslarını tespit et, sonra o frekanslara özel filtreli dronlarla ikinci dalga gönder.
+                </button>
+            </div>
+            <div class="result-box" id="result1"></div>
+        </div>
+
+        <!-- PHASE 2: Communication Security -->
+        <div class="scenario-box hidden" id="phase2">
+            <h2>KARAR 2: İletişim Ağı Çöküyor</h2>
+            <p>Düşman, taktik telsiz frekanslarınızı tespit edip karıştırmaya başladı. Birlikler arası iletişim %70 oranında kesildi. Komutanlar sahadan bilgi alamıyor, birlikler izole kaldı.</p>
+            <div class="decision-panel">
+                <h3>İletişimi nasıl yeniden kurarsınız?</h3>
+                <button class="option-btn" onclick="selectOption(2, 'mesh')">
+                    <strong>A) Mesh Ağı:</strong> Her birliğe küçük bir röle cihazı ver. Birlikler birbirine bağlanarak merkeze ihtiyaç duymayan dağıtık bir ağ oluştursun.
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'satellite')">
+                    <strong>B) Uydu Haberleşmesi:</strong> Taktik telsizleri bırak, Starlink benzeri LEO uydu terminalleri kullan. Düşman yerdeki sinyali karıştırsa bile uydu bağlantısı devam eder.
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'runner')">
+                    <strong>C) Dijital Ulak Sistemi:</strong> Kritik mesajları şifreli USB belleklere yükle, mini dronlarla birliklere fiziksel olarak taşı. Radyo sessizliğini koru.
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'burst')">
+                    <strong>D) Patlama İletimi (Burst):</strong> Mesajları sıkıştırıp milisaniyeler içinde gönder. Düşman tespit edene kadar iletim bitmiş olur.
+                </button>
+            </div>
+            <div class="result-box" id="result2"></div>
+        </div>
+
+        <!-- PHASE 3: GPS Spoofing -->
+        <div class="scenario-box hidden" id="phase3">
+            <h2>KARAR 3: GPS Aldatması - Füzeler Yanlış Hedefe Gidiyor</h2>
+            <p>Düşman, GPS sinyallerinizi "aldatıyor" (spoofing). Hassas güdümlü mühimmatlarınız (akıllı bombalar) hedeften 300-500 metre sapıyor. Sivil bölgelere isabet riski kritik seviyede.</p>
+            <div class="decision-panel">
+                <h3>Navigasyon sorununu nasıl çözersiniz?</h3>
+                <button class="option-btn" onclick="selectOption(3, 'inertial')">
+                    <strong>A) Atalet Navigasyonu (INS):</strong> GPS'e bağımlılığı kes. Füzelere lazer jiroskop tabanlı atalet navigasyon sistemi yükle. GPS olmadan da hedefe gider ama hassasiyet biraz düşer.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'terrain')">
+                    <strong>B) Arazi Eşleme (TERCOM):</strong> Füzeler, altlarındaki araziyi kamerayla tarayıp önceden yüklenmiş haritayla karşılaştırsın. GPS'e hiç ihtiyaç duymaz.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'multisource')">
+                    <strong>C) Çoklu Kaynak Füzyonu:</strong> GPS + GLONASS + Galileo + BeiDou sinyallerini birlikte kullan. Düşman hepsini aynı anda aldatamaz. Tutarsızlık tespit edilirse otomatik geçiş yap.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'quantum')">
+                    <strong>D) Kuantum Navigasyon:</strong> Atom interferometrisi tabanlı kuantum sensörler kullan. Hiçbir dış sinyale ihtiyaç duymaz, aldatılamaz. Ama çok pahalı ve henüz deneysel.
+                </button>
+            </div>
+            <div class="result-box" id="result3"></div>
+        </div>
+
+        <!-- PHASE 4: Counter-Attack -->
+        <div class="scenario-box hidden" id="phase4">
+            <h2>KARAR 4: Karşı Saldırı - Düşmanı Kör Et</h2>
+            <p>Savunma başarılı. Şimdi karşı saldırı zamanı. Düşmanın komuta-kontrol ağını, radarlarını ve hava savunmasını felç etmeniz gerekiyor. Epic Fury (2026) operasyonundaki gibi "önce spektrumda vur" stratejisi uygulanacak.</p>
+            <div class="decision-panel">
+                <h3>Düşmanı nasıl "kör" edersiniz?</h3>
+                <button class="option-btn" onclick="selectOption(4, 'cyber_ew')">
+                    <strong>A) Siber-Elektronik Entegrasyon:</strong> Önce siber saldırıyla düşmanın iletişim altyapısını (fiber optik hatlar, sunucular) çökert. Sonra elektronik karıştırma ile yedek radyo kanallarını da kes.
+                </button>
+                <button class="option-btn" onclick="selectOption(4, 'decoy')">
+                    <strong>B) Aldatma Operasyonu:</strong> Düşman radarlarına sahte hedefler (hayalet filolar) göster. Gerçek saldırı gücünü farklı bir yönden gönder. İsrail'in 2007 Suriye operasyonu modeli.
+                </button>
+                <button class="option-btn" onclick="selectOption(4, 'sead')">
+                    <strong>C) SEAD (Hava Savunma Bastırma):</strong> Anti-radyasyon füzeleri (HARM) ile düşmanın radarlarını fiziksel olarak yok et. Radar açan her sistem anında vurulur.
+                </button>
+                <button class="option-btn" onclick="selectOption(4, 'emp')">
+                    <strong>D) Yönlendirilmiş EMP:</strong> Yüksek güçlü mikrodalga (HPM) silahıyla düşmanın elektronik sistemlerini kızart. Geniş alan etkisi var ama kendi sistemlerini de etkileyebilir.
+                </button>
+            </div>
+            <div class="result-box" id="result4"></div>
+        </div>
+
+        <!-- FINAL REPORT -->
+        <div class="final-report" id="finalReport">
+            <h2>HAREKÂT SONUÇ RAPORU</h2>
+            <div class="scores" style="margin-bottom:20px;">
+                <div class="score-card"><div class="label">Spektrum Hakimiyeti</div><div class="value" id="finalSpectrum">-</div></div>
+                <div class="score-card"><div class="label">Dron Sağkalımı</div><div class="value" id="finalDrone">-</div></div>
+                <div class="score-card"><div class="label">İletişim Güvenliği</div><div class="value" id="finalComm">-</div></div>
+                <div class="score-card"><div class="label">Düşman Körlüğü</div><div class="value" id="finalBlind">-</div></div>
+            </div>
+            <div class="report-grid" id="reportGrid"></div>
+            <div style="margin-top:25px; padding:15px; background:#0d1b2a; border-radius:8px;">
+                <h4 style="color:#ffab00; margin-bottom:10px;">Tarihsel Karşılaştırma</h4>
+                <p style="color:#b0bec5; font-size:0.9em; line-height:1.6;">
+                    <strong>Epic Fury (2026):</strong> ABD-İsrail, İran operasyonunda önce siber+EW ile İran'ı kör etti, sonra füzelerle vurdu.<br>
+                    <strong>Orchard (2007):</strong> İsrail, Suriye radarlarına sahte veri göndererek nükleer tesisi vurdu.<br>
+                    <strong>Ukrayna (2022-2026):</strong> Rusya'nın elektronik duvarına karşı fiber optik dron ve AI çözümleri geliştirildi.
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        let scores = { spectrum: 75, drone: 60, comm: 65, blind: 50 };
+        let currentPhase = 0;
+        let choices = {};
+
+        const outcomes = {
+            1: {
+                fiber: { spectrum: 10, drone: 25, comm: 5, blind: 0, title: "Fiber Optik Dronlar", text: "Mükemmel seçim! Ukrayna'nın 2024'te geliştirdiği bu çözüm, elektronik karıştırmaya karşı %100 bağışıklık sağlıyor. Sinyal kablodan gittiği için düşman ne yaparsa yapsın kontrol kesilmiyor. Dezavantajı: Menzil kabloyla sınırlı (genellikle 10-15 km) ve kablo kopabilir." },
+                ai: { spectrum: 5, drone: 20, comm: 0, blind: 5, title: "Yapay Zekâ Görüşü", text: "Güçlü bir seçim. Makine görüşü ile dron, hedefin görüntüsünü tanıyıp GPS veya pilot olmadan vurabiliyor. Ancak risk var: AI yanlış hedef tanımlayabilir (sivil araç vs askeri araç). Savaş hukuku açısından 'insan denetimi' sorunu doğuyor." },
+                swarm: { spectrum: 15, drone: 15, comm: 0, blind: 10, title: "Frekans Atlama Sürüsü", text: "Teknik olarak etkili ama karmaşık. Saniyede yüzlerce frekans değiştirmek düşmanı zorlar ancak modern geniş bant karıştırıcılar (barrage jamming) tüm frekansları aynı anda bastırabilir. Kısmen etkili." },
+                sacrifice: { spectrum: 20, drone: 10, comm: 0, blind: 15, title: "Yem Dronlar (ELINT)", text: "Stratejik olarak çok değerli! Yem dronlar düşmanın karıştırıcı frekanslarını ve konumlarını tespit ediyor. Bu istihbarat, ikinci dalga için kritik. Ancak ilk dalga kayıpları yüksek ve zaman kaybı var." }
+            },
+            2: {
+                mesh: { spectrum: 5, drone: 0, comm: 25, blind: 0, title: "Mesh Ağı", text: "Çok dayanıklı bir çözüm! Merkezi bir noktaya bağımlı olmadığı için düşman tek bir noktayı vurarak ağı çökertemez. Her birlik hem alıcı hem verici. Ukrayna'nın Delta sistemi bu mantıkla çalışıyor. Dezavantaj: Bant genişliği sınırlı." },
+                satellite: { spectrum: 0, drone: 0, comm: 20, blind: 0, title: "Uydu Haberleşmesi (LEO)", text: "Starlink modeli! Düşman yerdeki sinyali karıştırsa bile uydu bağlantısı devam eder. Ancak risk var: Düşman uydu terminallerinin konumunu tespit edip fiziksel olarak vurabilir (Ukrayna'da Rusya bunu yaptı). Ayrıca uydu karıştırma (uplink jamming) da mümkün." },
+                runner: { spectrum: 0, drone: 5, comm: 15, blind: 0, title: "Dijital Ulak Sistemi", text: "Yaratıcı ama yavaş. Radyo sessizliği korunuyor, düşman sinyal tespit edemiyor. Ancak gerçek zamanlı komuta-kontrol imkansızlaşıyor. Sadece kritik ve acil olmayan mesajlar için uygun." },
+                burst: { spectrum: 10, drone: 0, comm: 20, blind: 5, title: "Patlama İletimi (Burst)", text: "Klasik ama etkili! Milisaniyeler içinde sıkıştırılmış mesaj gönderildiğinde düşmanın tespit ve karıştırma süresi yetmiyor. Soğuk Savaş'tan beri kullanılan bir teknik. Modern versiyonları AI ile otomatize edilmiş durumda." }
+            },
+            3: {
+                inertial: { spectrum: 5, drone: 5, comm: 0, blind: 10, title: "Atalet Navigasyonu (INS)", text: "Güvenilir ve kanıtlanmış. GPS olmadan da çalışır. Tomahawk füzeleri 1991'den beri INS kullanıyor. Dezavantaj: Uzun mesafelerde sapma artar (drift). Kısa menzilde mükemmel, uzun menzilde TERCOM ile desteklenmeli." },
+                terrain: { spectrum: 0, drone: 0, comm: 0, blind: 15, title: "Arazi Eşleme (TERCOM)", text: "GPS'e hiç ihtiyaç duymayan klasik çözüm. Füze, altındaki araziyi kamerayla tarayıp haritayla eşleştiriyor. Çölde veya denizde (belirgin arazi yok) işe yaramaz. Şehir ve dağlık arazide mükemmel." },
+                multisource: { spectrum: 10, drone: 5, comm: 5, blind: 10, title: "Çoklu Kaynak Füzyonu", text: "En dengeli çözüm! GPS + GLONASS + Galileo + BeiDou sinyallerini birlikte kullanmak, düşmanın hepsini aynı anda aldatmasını neredeyse imkansızlaştırıyor. Tutarsızlık algılandığında otomatik geçiş yapılıyor. Modern hassas mühimmatların standart yaklaşımı." },
+                quantum: { spectrum: 15, drone: 0, comm: 0, blind: 20, title: "Kuantum Navigasyon", text: "Geleceğin teknolojisi! Atom interferometrisi hiçbir dış sinyale ihtiyaç duymaz ve aldatılamaz. Ancak 2026'da hâlâ laboratuvar aşamasında. Çok pahalı, büyük ve hassas. 2030'lardan önce sahada kullanılması zor." }
+            },
+            4: {
+                cyber_ew: { spectrum: 20, drone: 5, comm: 5, blind: 25, title: "Siber-Elektronik Entegrasyon", text: "En etkili modern yaklaşım! Epic Fury (2026) operasyonunda ABD tam olarak bunu yaptı: Önce siber saldırıyla İran'ın fiber optik altyapısını çökertti, sonra EW ile yedek radyo kanallarını bastırdı. Düşman tamamen 'kör ve sağır' kaldı. Dezavantaj: Çok yüksek istihbarat ve planlama gerektirir." },
+                decoy: { spectrum: 10, drone: 0, comm: 0, blind: 20, title: "Aldatma Operasyonu", text: "İsrail'in 2007 Suriye operasyonunda (Orchard) kullandığı taktik. Düşman radarlarına sahte hedefler göstererek gerçek saldırı yönünü gizlemek. Çok etkili ama düşman aldatmayı fark ederse karşı saldırıya geçebilir." },
+                sead: { spectrum: 15, drone: 0, comm: 0, blind: 20, title: "SEAD (Hava Savunma Bastırma)", text: "Klasik ve kanıtlanmış! Anti-radyasyon füzeleri (HARM, AARGM) düşman radarının sinyalini takip edip kaynağına vurur. Radar açan her sistem anında hedef olur. Dezavantaj: Düşman radarı kapatıp 'sessiz' kalırsa füze hedef bulamaz." },
+                emp: { spectrum: 25, drone: -5, comm: -5, blind: 25, title: "Yönlendirilmiş EMP (HPM)", text: "En yıkıcı seçenek! Geniş bir alandaki tüm elektronik sistemleri kızartır. Ancak çift taraflı kılıç: Kendi yakın birliklerinizin elektronik sistemlerini de etkileyebilir. Ayrıca sivil altyapıya (hastaneler, su pompaları) zarar verir. Savaş hukuku açısından sorunlu." }
+            }
+        };
+
+        function startSim() {
+            document.getElementById('phase0').classList.add('hidden');
+            document.getElementById('phase1').classList.remove('hidden');
+            updatePhaseIndicator(1);
+        }
+
+        function selectOption(phase, choice) {
+            choices[phase] = choice;
+            const outcome = outcomes[phase][choice];
+            
+            // Update scores
+            scores.spectrum = Math.min(100, Math.max(0, scores.spectrum + outcome.spectrum));
+            scores.drone = Math.min(100, Math.max(0, scores.drone + outcome.drone));
+            scores.comm = Math.min(100, Math.max(0, scores.comm + outcome.comm));
+            scores.blind = Math.min(100, Math.max(0, scores.blind + outcome.blind));
+            updateScoreDisplay();
+
+            // Show result
+            const resultBox = document.getElementById('result' + phase);
+            resultBox.innerHTML = `<h4>${outcome.title}</h4><p>${outcome.text}</p><button class="btn-next" onclick="nextPhase(${phase})">Sonraki Karar →</button>`;
+            resultBox.classList.add('show');
+
+            // Highlight selected
+            const buttons = document.querySelectorAll(`#phase${phase} .option-btn`);
+            buttons.forEach(b => b.classList.remove('selected'));
+            event.target.closest('.option-btn').classList.add('selected');
+            buttons.forEach(b => b.disabled = true);
+        }
+
+        function nextPhase(currentP) {
+            if (currentP < 4) {
+                document.getElementById('phase' + currentP).classList.add('hidden');
+                document.getElementById('phase' + (currentP + 1)).classList.remove('hidden');
+                updatePhaseIndicator(currentP + 1);
+            } else {
+                document.getElementById('phase4').classList.add('hidden');
+                showFinalReport();
+            }
+        }
+
+        function updatePhaseIndicator(phase) {
+            const dots = document.querySelectorAll('.phase-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('active', 'completed');
+                if (i < phase) dot.classList.add('completed');
+                else if (i === phase) dot.classList.add('active');
+            });
+        }
+
+        function updateScoreDisplay() {
+            updateScore('scoreSpectrum', scores.spectrum);
+            updateScore('scoreDrone', scores.drone);
+            updateScore('scoreComm', scores.comm);
+            updateScore('scoreBlind', scores.blind);
+        }
+
+        function updateScore(id, value) {
+            const el = document.getElementById(id);
+            el.textContent = value;
+            el.className = 'value ' + (value >= 70 ? 'high' : value >= 40 ? 'mid' : 'low');
+        }
+
+        function showFinalReport() {
+            const report = document.getElementById('finalReport');
+            report.classList.add('show');
+            
+            document.getElementById('finalSpectrum').textContent = scores.spectrum;
+            document.getElementById('finalSpectrum').className = 'value ' + (scores.spectrum >= 70 ? 'high' : scores.spectrum >= 40 ? 'mid' : 'low');
+            document.getElementById('finalDrone').textContent = scores.drone;
+            document.getElementById('finalDrone').className = 'value ' + (scores.drone >= 70 ? 'high' : scores.drone >= 40 ? 'mid' : 'low');
+            document.getElementById('finalComm').textContent = scores.comm;
+            document.getElementById('finalComm').className = 'value ' + (scores.comm >= 70 ? 'high' : scores.comm >= 40 ? 'mid' : 'low');
+            document.getElementById('finalBlind').textContent = scores.blind;
+            document.getElementById('finalBlind').className = 'value ' + (scores.blind >= 70 ? 'high' : scores.blind >= 40 ? 'mid' : 'low');
+
+            const total = scores.spectrum + scores.drone + scores.comm + scores.blind;
+            let grade = '';
+            if (total >= 320) grade = 'S - Spektrum Hakimi';
+            else if (total >= 280) grade = 'A - Elektronik Harp Uzmanı';
+            else if (total >= 240) grade = 'B - Yetkin Komutan';
+            else if (total >= 200) grade = 'C - Gelişmekte';
+            else grade = 'D - Yeniden Eğitim Gerekli';
+
+            const grid = document.getElementById('reportGrid');
+            grid.innerHTML = `
+                <div class="report-item"><h4>Genel Değerlendirme</h4><p>Toplam Skor: ${total}/400<br>Derece: <strong>${grade}</strong></p></div>
+                <div class="report-item"><h4>Karar 1: Dron Karşı Önlemi</h4><p>${outcomes[1][choices[1]].title}</p></div>
+                <div class="report-item"><h4>Karar 2: İletişim Çözümü</h4><p>${outcomes[2][choices[2]].title}</p></div>
+                <div class="report-item"><h4>Karar 3: Navigasyon</h4><p>${outcomes[3][choices[3]].title}</p></div>
+                <div class="report-item"><h4>Karar 4: Karşı Saldırı</h4><p>${outcomes[4][choices[4]].title}</p></div>
+                <div class="report-item"><h4>Türkiye İçin Ders</h4><p>Elektromanyetik spektrum hakimiyeti, Türkiye'nin bölgesel caydırıcılığının temel taşıdır. ASELSAN'ın KORAL ve REDET sistemleri bu alanda kritik yetkinlikler sağlamaktadır.</p></div>
+            `;
+            updatePhaseIndicator(5);
+        }
+    
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OODA Döngüsü İnteraktif Simülatör — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root {
+  --bg: #0a0f17;
+  --surface-2: #111827;
+  --border: #1f2937;
+  --border-strong: #374151;
+  --border-accent: #00E0FF;
+  --bg-accent: rgba(0,224,255,.05);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #00E0FF;
+  --text-danger: #ef4444;
+  --bg-danger: rgba(239,68,68,.1);
+  --border-danger: rgba(239,68,68,.3);
+}
+body { background: var(--bg); color: var(--text-primary); font-family: 'IBM Plex Sans', sans-serif; margin: 0; padding: 0; }
+.page-wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+.page-header { text-align: center; padding: 40px 20px 20px; }
+.page-header h1 { font-family: 'Chakra Petch', sans-serif; font-size: 2rem; color: #00E0FF; margin-bottom: 8px; }
+.page-header p { color: var(--text-secondary); font-size: 14px; }
+.back-link { display: inline-block; margin: 16px 0; padding: 8px 16px; background: rgba(0,224,255,.1); border: 1px solid rgba(0,224,255,.3); border-radius: 6px; color: #00E0FF; text-decoration: none; font-size: 13px; }
+.back-link:hover { background: rgba(0,224,255,.2); }
+.source-note { text-align: center; padding: 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 30px; }
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<script src="hs-nav.js?v=11"></script>
+<div class="page-wrap">
+    
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">OODA döngüsü interaktif simülatörü — Gözlem, Yönelim, Karar ve Eylem aşamalarını keşfet, döngü hızının savaş sonucuna etkisini simüle et.</h2>
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rotateCW{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulseRing{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.8}}
+.ow{padding:.5rem 0 1rem;font-size:14px;}
+.ooda-nav{display:flex;gap:4px;margin-bottom:14px;border-bottom:.5px solid var(--border);}
+.otab{padding:7px 14px;font-size:13px;cursor:pointer;color:var(--text-secondary);border-bottom:2px solid transparent;transition:all .15s;}
+.otab.on{color:var(--text-accent);border-bottom-color:var(--text-accent);}
+.otc{display:none;}.otc.on{display:block;}
+.ooda-ring-wrap{position:relative;width:280px;height:280px;margin:0 auto 16px;}
+.ooda-svg{width:280px;height:280px;}
+.ooda-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;}
+.ooda-phase-card{border-radius:10px;border:.5px solid var(--border);background:var(--surface-2);padding:14px;margin-bottom:8px;cursor:pointer;transition:all .2s;animation:fadeUp .3s ease;}
+.ooda-phase-card:hover{border-color:var(--border-strong);}
+.ooda-phase-card.active-phase{border-color:var(--border-accent);background:var(--bg-accent);}
+.opc-header{display:flex;align-items:center;gap:10px;margin-bottom:0;}
+.opc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.opc-title{font-size:13px;font-weight:500;color:var(--text-primary);}
+.opc-body{display:none;margin-top:10px;font-size:12px;color:var(--text-secondary);line-height:1.7;}
+.ooda-phase-card.active-phase .opc-title{color:var(--text-accent);}
+.ooda-phase-card.active-phase .opc-body{display:block;animation:fadeUp .25s ease;color:var(--text-accent);}
+.speed-sim{margin:10px 0;}
+.combatant{border:.5px solid var(--border);border-radius:10px;background:var(--surface-2);padding:12px;margin-bottom:8px;}
+.cb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.cb-name{font-size:13px;font-weight:500;}
+.cb-speed{font-size:12px;color:var(--text-muted);}
+.ooda-bar-track{height:10px;border-radius:5px;background:var(--border);margin-bottom:4px;}
+.ooda-bar-fill{height:10px;border-radius:5px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.phase-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-bottom:8px;}
+.outcome-box{border-radius:8px;padding:10px 14px;font-size:12px;line-height:1.6;margin:8px 0;animation:fadeUp .3s ease;}
+.outcome-box.win{background:var(--bg-success);border:.5px solid var(--border-success);color:var(--text-success);}
+.outcome-box.lose{background:var(--bg-danger);border:.5px solid var(--border-danger);color:var(--text-danger);}
+.outcome-box.neutral{background:var(--bg-warning);border:.5px solid var(--border-warning);color:var(--text-warning);}
+.slider-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-secondary);margin:6px 0;}
+.slider-row label{width:90px;flex-shrink:0;}
+.slider-row input{flex:1;}
+.slider-row span{min-width:40px;text-align:right;font-weight:500;color:var(--text-primary);}
+.disruptor-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.disruptor{border:.5px solid var(--border);border-radius:8px;padding:10px;background:var(--surface-2);cursor:pointer;transition:all .15s;}
+.disruptor:hover{border-color:var(--border-strong);}
+.disruptor.sel{border-color:var(--border-accent);background:var(--bg-accent);}
+.disruptor-name{font-size:12px;font-weight:500;color:var(--text-primary);}
+.disruptor-effect{font-size:11px;color:var(--text-secondary);margin-top:3px;}
+.disruptor.sel .disruptor-name{color:var(--text-accent);}
+</style>
+
+<div class="ow">
+<div style="font-size:16px;font-weight:500;color:var(--text-primary);margin-bottom:4px">OODA Döngüsü — İnteraktif Simülatör</div>
+<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">John Boyd'un savaş karar teorisi: kim daha hızlı döngü yaparsa kazanır.</div>
+
+<div class="ooda-nav">
+  <div class="otab on" onclick="showOTab('model')">Model</div>
+  <div class="otab" onclick="showOTab('speed')">Hız simülasyonu</div>
+  <div class="otab" onclick="showOTab('disrupt')">Döngü bozma</div>
+</div>
+
+<div class="otc on" id="otab-model">
+  <div class="ooda-ring-wrap">
+    <svg class="ooda-svg" viewBox="0 0 280 280" id="oodaSvg">
+      <defs>
+        <marker id="oa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- Outer ring -->
+      <circle cx="140" cy="140" r="118" fill="none" stroke="var(--border)" stroke-width=".5"/>
+      <circle cx="140" cy="140" r="52" fill="var(--surface-1)" stroke="var(--border)" stroke-width=".5"/>
+      <!-- Arcs connecting phases -->
+      <path d="M140 22 A118 118 0 0 1 258 140" fill="none" stroke="var(--border-accent)" stroke-width="1" marker-end="url(#oa)" opacity=".5"/>
+      <path d="M258 140 A118 118 0 0 1 140 258" fill="none" stroke="var(--border-accent)" stroke-width="1" marker-end="url(#oa)" opacity=".5"/>
+      <path d="M140 258 A118 118 0 0 1 22 140" fill="none" stroke="var(--border-accent)" stroke-width="1" marker-end="url(#oa)" opacity=".5"/>
+      <path d="M22 140 A118 118 0 0 1 140 22" fill="none" stroke="var(--border-accent)" stroke-width="1" marker-end="url(#oa)" opacity=".5"/>
+      <!-- Phase circles -->
+      <g id="ph-O" onclick="selectOodaPhase('O')" style="cursor:pointer">
+        <circle cx="140" cy="22" r="26" fill="var(--surface-2)" stroke="var(--border)" stroke-width=".5" class="phase-circle"/>
+        <text x="140" y="18" text-anchor="middle" font-size="12" font-weight="500" fill="var(--text-primary)">O</text>
+        <text x="140" y="30" text-anchor="middle" font-size="9" fill="var(--text-muted)">Gözlem</text>
+      </g>
+      <g id="ph-Y" onclick="selectOodaPhase('Y')" style="cursor:pointer">
+        <circle cx="258" cy="140" r="26" fill="var(--surface-2)" stroke="var(--border)" stroke-width=".5" class="phase-circle"/>
+        <text x="258" y="136" text-anchor="middle" font-size="12" font-weight="500" fill="var(--text-primary)">Y</text>
+        <text x="258" y="148" text-anchor="middle" font-size="9" fill="var(--text-muted)">Yönelim</text>
+      </g>
+      <g id="ph-K" onclick="selectOodaPhase('K')" style="cursor:pointer">
+        <circle cx="140" cy="258" r="26" fill="var(--surface-2)" stroke="var(--border)" stroke-width=".5" class="phase-circle"/>
+        <text x="140" y="254" text-anchor="middle" font-size="12" font-weight="500" fill="var(--text-primary)">K</text>
+        <text x="140" y="266" text-anchor="middle" font-size="9" fill="var(--text-muted)">Karar</text>
+      </g>
+      <g id="ph-E" onclick="selectOodaPhase('E')" style="cursor:pointer">
+        <circle cx="22" cy="140" r="26" fill="var(--surface-2)" stroke="var(--border)" stroke-width=".5" class="phase-circle"/>
+        <text x="22" y="136" text-anchor="middle" font-size="12" font-weight="500" fill="var(--text-primary)">E</text>
+        <text x="22" y="148" text-anchor="middle" font-size="9" fill="var(--text-muted)">Eylem</text>
+      </g>
+      <text x="140" y="135" text-anchor="middle" font-size="11" font-weight="500" fill="var(--text-primary)">OODA</text>
+      <text x="140" y="150" text-anchor="middle" font-size="9" fill="var(--text-muted)">Boyd, 1976</text>
+    </svg>
+  </div>
+
+  <div id="phaseCards"></div>
+</div>
+
+<div class="otc" id="otab-speed">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">İki kuvvetin OODA hızını ayarla ve sonucu gör:</div>
+  <div class="combatant" id="blueForce">
+    <div class="cb-header">
+      <span class="cb-name" style="color:#378ADD"><i class="ti ti-user-military" aria-hidden="true"></i> Mavi kuvvet</span>
+      <span class="cb-speed" id="blueSpeedLbl">Döngü: 8s</span>
+    </div>
+    <div class="slider-row"><label>Gözlem</label><input type="range" min="1" max="10" value="3" id="blueO" oninput="updateSim()"><span id="boV">3s</span></div>
+    <div class="slider-row"><label>Yönelim</label><input type="range" min="1" max="10" value="2" id="blueY" oninput="updateSim()"><span id="byV">2s</span></div>
+    <div class="slider-row"><label>Karar</label><input type="range" min="1" max="10" value="2" id="blueK" oninput="updateSim()"><span id="bkV">2s</span></div>
+    <div class="slider-row"><label>Eylem</label><input type="range" min="1" max="10" value="1" id="blueE" oninput="updateSim()"><span id="beV">1s</span></div>
+    <div class="ooda-bar-track"><div class="ooda-bar-fill" id="blueBar" style="background:#378ADD;width:0%"></div></div>
+    <div class="phase-label"><span>Gözlem</span><span>Yönelim</span><span>Karar</span><span>Eylem</span></div>
+  </div>
+
+  <div class="combatant" id="redForce">
+    <div class="cb-header">
+      <span class="cb-name" style="color:#E24B4A"><i class="ti ti-user-military" aria-hidden="true"></i> Kırmızı kuvvet</span>
+      <span class="cb-speed" id="redSpeedLbl">Döngü: 14s</span>
+    </div>
+    <div class="slider-row"><label>Gözlem</label><input type="range" min="1" max="10" value="5" id="redO" oninput="updateSim()"><span id="roV">5s</span></div>
+    <div class="slider-row"><label>Yönelim</label><input type="range" min="1" max="10" value="4" id="redY" oninput="updateSim()"><span id="ryV">4s</span></div>
+    <div class="slider-row"><label>Karar</label><input type="range" min="1" max="10" value="3" id="redK" oninput="updateSim()"><span id="rkV">3s</span></div>
+    <div class="slider-row"><label>Eylem</label><input type="range" min="1" max="10" value="2" id="redE" oninput="updateSim()"><span id="reV">2s</span></div>
+    <div class="ooda-bar-track"><div class="ooda-bar-fill" id="redBar" style="background:#E24B4A;width:0%"></div></div>
+    <div class="phase-label"><span>Gözlem</span><span>Yönelim</span><span>Karar</span><span>Eylem</span></div>
+  </div>
+
+  <div id="speedOutcome"></div>
+  <button onclick="sendPrompt('F-16 savaş pilotlarının OODA döngüsü eğitimi nasıl yapılır?')" style="margin-top:8px;padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">Pilot OODA eğitimi ↗</button>
+</div>
+
+<div class="otc" id="otab-disrupt">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">Düşmanın OODA döngüsünü bozan teknolojiler:</div>
+  <div class="disruptor-grid" id="disruptorGrid"></div>
+  <div id="disruptDetail"></div>
+  <button onclick="sendPrompt('Elektronik harp sistemleri düşman karar döngüsünü nasıl bozar?')" style="margin-top:10px;padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">EH & OODA bozma ↗</button>
+</div>
+</div>
+
+<script>
+const phases = {
+  O:{label:'Gözlem (Observe)',color:'#378ADD',icon:'ti-eye',body:'Ortamdan ham veri toplama. Sensörler, radar, insansız hava araçları, istihbarat raporları, komşu birlik raporları. Modern savaşta C6ISR sistemleri gözlem hızını devrim niteliğinde artırdı. Mavi kuvvetin yavaş gözlem yapması = düşmanın zaten harekete geçtiği an.'},
+  Y:{label:'Yönelim (Orient)',color:'#1D9E75',icon:'ti-compass',body:'En kritik ve en zaman alıcı aşama. Ham veriyi anlama çevirme: kültürel geçmiş, analiz becerileri, önceki deneyimler, bilişsel önyargılar. Boyd\'a göre bu aşama tüm döngünün kalbidir. YZ burada en büyük avantajı sağlar — saniyeler içinde analiz.'},
+  K:{label:'Karar (Decide)',color:'#BA7517',icon:'ti-brain',body:'Mevcut seçeneklerden en uygununu seçme. Komuta zincirindeki bürokrasi bu aşamayı yavaşlatan en büyük faktördür. Otonom sistemler bu aşamayı milisaniyelere indirebilir — ancak etik ve hukuki sorunlar beraberinde gelir.'},
+  E:{label:'Eylem (Act)',color:'#D85A30',icon:'ti-bolt',body:'Kararın fiziksel dünyaya uygulanması. Ateş emri, manevra, elektronik harp, siber saldırı. Bu aşamanın hızı platform yeteneklerine bağlıdır. Hipersonik silahlar bu aşamayı tamamen değiştiriyor: düşmanın eylem aşamasına karşı tepki süresi sıfıra iniyor.'},
+};
+
+const disruptors = [
+  {name:'Siber saldırı',icon:'ti-bug',color:'#3B8BD4',affects:'Gözlem + Karar',effect:'C2 sistemlerini kör ederek ham veri akışını keser. Komuta-kontrol altyapısı çöker, karar vericiler bilgisiz kalır.',penalty:'+60% döngü süresi'},
+  {name:'Elektronik harp',icon:'ti-radio',color:'#EF9F27',affects:'Gözlem',effect:'Radar ve sensör sistemlerine güçlü parazit yayarak çevresel farkındalığı bozar. Pilot veya komutan yanlış veya hiç veri almaz.',penalty:'+45% döngü süresi'},
+  {name:'Deepfake dezenformasyon',icon:'ti-brain',color:'#7F77DD',affects:'Yönelim',effect:'Sahte istihbarat ve manipüle edilmiş görüntülerle yönelim aşamasını hedef alır. Analiz yanlış sonuçlar üretir.',penalty:'+80% döngü süresi'},
+  {name:'Sürü İHA saldırısı',icon:'ti-drone',color:'#D85A30',affects:'Eylem',effect:'Çok sayıda hedef aynı anda karar kapasitesini aşırı yükler. Eylem aşamasında hangi tehdidi önceliklendireceğini bilemez.',penalty:'+35% döngü süresi'},
+  {name:'GPS bozma',icon:'ti-map-off',color:'#1D9E75',affects:'Gözlem + Eylem',effect:'Navigasyon bağımlı sistemleri kör eder. Kara, deniz ve hava unsurları pozisyon kaybeder; koordineli hareket olanaksızlaşır.',penalty:'+50% döngü süresi'},
+  {name:'Komuta zinciri imhası',icon:'ti-hierarchy-off',color:'#E24B4A',affects:'Karar',effect:'Üst komuta ortadan kalkınca alt birimler bağımsız karar vermek zorunda kalır. Koordinasyonsuz eylemler çelişkili sonuçlar doğurur.',penalty:'+70% döngü süresi'},
+];
+
+let selectedPhase = null;
+
+function selectOodaPhase(ph) {
+  selectedPhase = selectedPhase === ph ? null : ph;
+  renderPhaseCards();
+  const svgPhases = {O:'ph-O',Y:'ph-Y',K:'ph-K',E:'ph-E'};
+  Object.entries(svgPhases).forEach(([key,id]) => {
+    const grp = document.getElementById(id);
+    const circle = grp.querySelector('circle');
+    if(key === selectedPhase) {
+      circle.setAttribute('fill', phases[key].color+'33');
+      circle.setAttribute('stroke', phases[key].color);
+    } else {
+      circle.setAttribute('fill', 'var(--surface-2)');
+      circle.setAttribute('stroke', 'var(--border)');
+    }
+  });
+}
+
+function renderPhaseCards() {
+  const area = document.getElementById('phaseCards');
+  area.innerHTML = Object.entries(phases).map(([key,p]) => `
+    <div class="ooda-phase-card ${selectedPhase===key?'active-phase':''}" onclick="selectOodaPhase('${key}')">
+      <div class="opc-header">
+        <div class="opc-icon" style="background:${p.color}22"><i class="ti ${p.icon}" aria-hidden="true" style="color:${p.color}"></i></div>
+        <div class="opc-title">${p.label}</div>
+        <i class="ti ti-chevron-${selectedPhase===key?'up':'down'}" aria-hidden="true" style="margin-left:auto;font-size:13px;color:var(--text-muted)"></i>
+      </div>
+      <div class="opc-body">${p.body}</div>
+    </div>
+  `).join('');
+}
+
+function showOTab(id) {
+  document.querySelectorAll('.otc').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.otab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('otab-'+id).classList.add('on');
+  event.target.classList.add('on');
+  if(id==='disrupt') renderDisruptors();
+  if(id==='speed') { setTimeout(updateSim, 100); }
+}
+
+function updateSim() {
+  const bO=+document.getElementById('blueO').value, bY=+document.getElementById('blueY').value;
+  const bK=+document.getElementById('blueK').value, bE=+document.getElementById('blueE').value;
+  const rO=+document.getElementById('redO').value, rY=+document.getElementById('redY').value;
+  const rK=+document.getElementById('redK').value, rE=+document.getElementById('redE').value;
+  const bTotal=bO+bY+bK+bE, rTotal=rO+rY+rK+rE;
+
+  document.getElementById('boV').textContent=bO+'s';document.getElementById('byV').textContent=bY+'s';
+  document.getElementById('bkV').textContent=bK+'s';document.getElementById('beV').textContent=bE+'s';
+  document.getElementById('roV').textContent=rO+'s';document.getElementById('ryV').textContent=rY+'s';
+  document.getElementById('rkV').textContent=rK+'s';document.getElementById('reV').textContent=rE+'s';
+  document.getElementById('blueSpeedLbl').textContent=`Döngü: ${bTotal}s`;
+  document.getElementById('redSpeedLbl').textContent=`Döngü: ${rTotal}s`;
+
+  const maxT=Math.max(bTotal,rTotal);
+  document.getElementById('blueBar').style.width=(bTotal/maxT*100)+'%';
+  document.getElementById('redBar').style.width=(rTotal/maxT*100)+'%';
+
+  const ratio = rTotal/bTotal;
+  const outlet = document.getElementById('speedOutcome');
+  if(Math.abs(ratio-1)<0.15){
+    outlet.innerHTML=`<div class="outcome-box neutral"><b>Eşit döngü hızı.</b> ${bTotal}s vs ${rTotal}s — Her iki taraf da benzer hızda karar veriyor. Sonucu belirleyecek olan sayısal üstünlük ve malzeme kalitesidir. Boyd’a göre bu durum uzun ve yıpratıcı bir çatışmaya işaret eder.</div>`;
+  } else if(ratio>1){
+    outlet.innerHTML=`<div class="outcome-box win"><b>Mavi kuvvet avantajlı.</b> ${bTotal}s vs ${rTotal}s (${(ratio).toFixed(1)}× hızlı). Kırmızı kuvvet her döngüde geride kalıyor. Mavi kuvvet kırmızının tepki veremediği hızda durum değiştiriyor — OODA içine girme (inside the loop). Tarihsel örnek: Körfez Savaşı\'nda Koalisyon kuvvetlerinin 100 saatlik kara harekâtı.</div>`;
+  } else {
+    outlet.innerHTML=`<div class="outcome-box lose"><b>Kırmızı kuvvet avantajlı.</b> ${bTotal}s vs ${rTotal}s. Mavi kuvvet durum değişikliklerine yetişemiyor. Her eylemi geç kalıyor — gerçeklikten kopuk kararlar veriyor. Bu durum panik, komuta çöküşü ve düzensiz geri çekilmeye yol açabilir.</div>`;
+  }
+}
+
+function renderDisruptors() {
+  const grid = document.getElementById('disruptorGrid');
+  if(grid.children.length) return;
+  disruptors.forEach((d,i) => {
+    const div = document.createElement('div');
+    div.className='disruptor';
+    div.innerHTML=`<div class="disruptor-name"><i class="ti ${d.icon}" aria-hidden="true" style="color:${d.color};margin-right:6px"></i>${d.name}</div><div class="disruptor-effect">Hedef: ${d.affects}</div>`;
+    div.onclick=()=>{
+      document.querySelectorAll('.disruptor').forEach(x=>x.classList.remove('sel'));
+      div.classList.add('sel');
+      document.getElementById('disruptDetail').innerHTML=`
+        <div class="outcome-box neutral" style="margin-top:8px;animation:fadeUp .3s ease">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <b style="color:var(--text-primary)">${d.name}</b>
+            <span style="font-size:11px;background:var(--bg-danger);color:var(--text-danger);padding:2px 8px;border-radius:4px;border:.5px solid var(--border-danger)">${d.penalty}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px"><b>Etkilenen aşama:</b> ${d.affects}</div>
+          <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">${d.effect}</div>
+        </div>`;
+    };
+    grid.appendChild(div);
+  });
+}
+
+renderPhaseCards();
+setTimeout(updateSim,100);
+</script>
+
+  <div class="source-note">
+    Kaynak: Harb-i Strateji Kanunları (Koyuncu &amp; Ünlü) | Harb-i Strateji — 21. Yüzyıl Savaşları ve Jeopolitik Akademisi | 2026
+  </div>
+</div>
+</body>
+</html>

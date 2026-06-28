@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulut Jeopolitiği: Cloud Geopolitics - İnfografik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --dark-bg: #0F1B3C;
+            --electric-blue: #00D9FF;
+            --gold: #FFB800;
+            --red: #FF4444;
+            --green: #44FF44;
+            --white: #FFFFFF;
+        }
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0a0f1f 100%);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        header {
+            background: rgba(15, 27, 60, 0.95);
+            border-bottom: 3px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--electric-blue), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        .section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        .cloud-providers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .provider-card {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .provider-card:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        .provider-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        .provider-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+        .stat {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 3px solid var(--electric-blue);
+            padding: 0.8rem;
+            border-radius: 5px;
+        }
+        .stat-label {
+            color: #999;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        .stat-value {
+            color: var(--electric-blue);
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 0.3rem;
+        }
+        .strategic-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .point-card {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--red);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .point-card:hover {
+            border-color: var(--gold);
+            background: rgba(255, 68, 68, 0.1);
+            transform: scale(1.05);
+        }
+        .point-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .point-card h3 {
+            color: var(--red);
+            margin-bottom: 0.5rem;
+        }
+        .point-card p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 27, 60, 0.98);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
+        }
+        .popup.active { display: block; }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        .popup-overlay.active { display: block; }
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--electric-blue);
+            background: transparent;
+            color: var(--electric-blue);
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.5rem;
+        }
+        .popup-close:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+        }
+        .popup h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        .popup p {
+            color: #ccc;
+            margin-bottom: 0.8rem;
+        }
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            gap: 1rem;
+        }
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--electric-blue);
+            background: rgba(15, 27, 60, 0.9);
+            color: var(--electric-blue);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .control-btn:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+        }
+        footer {
+            background: rgba(15, 27, 60, 0.95);
+            border-top: 2px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            color: #999;
+        }
+    
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+    <header>
+        <h1>☁️ Bulut Jeopolitiği: Cloud Geopolitics</h1>
+        <p>Veri Merkezleri, Stratejik Boğazlar, Dijital Egemenlik | Tıklayarak detayları keşfedin</p>
+    </header>
+
+    <main>
+        <!-- Cloud Providers -->
+        <div class="section">
+            <h2>🌐 Dünya Bulut Sağlayıcıları</h2>
+            <div class="cloud-providers">
+                <div class="provider-card" onclick="showPopup('aws')">
+                    <div class="provider-name">AWS</div>
+                    <div class="provider-stats">
+                        <div class="stat">
+                            <div class="stat-label">Market Share</div>
+                            <div class="stat-value">33%</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">33+</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Bölge</div>
+                            <div class="stat-value">15+</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Kontrol</div>
+                            <div class="stat-value">ABD</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="provider-card" onclick="showPopup('azure')">
+                    <div class="provider-name">Azure</div>
+                    <div class="provider-stats">
+                        <div class="stat">
+                            <div class="stat-label">Market Share</div>
+                            <div class="stat-value">23%</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">24+</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Bölge</div>
+                            <div class="stat-value">60+</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Kontrol</div>
+                            <div class="stat-value">ABD</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="provider-card" onclick="showPopup('gcp')">
+                    <div class="provider-name">Google Cloud</div>
+                    <div class="provider-stats">
+                        <div class="stat">
+                            <div class="stat-label">Market Share</div>
+                            <div class="stat-value">11%</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">40+</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Bölge</div>
+                            <div class="stat-value">40+</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Kontrol</div>
+                            <div class="stat-value">ABD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategic Chokepoints -->
+        <div class="section">
+            <h2>⚠️ Stratejik Boğazlar</h2>
+            <div class="strategic-points">
+                <div class="point-card" onclick="showPopup('hormuz')">
+                    <div class="point-icon">🌊</div>
+                    <h3>Hormuç Boğazı</h3>
+                    <p>Enerji akışı. Veri merkezi bağlantısı.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('suez')">
+                    <div class="point-icon">📍</div>
+                    <h3>Süveyş Kanalı</h3>
+                    <p>Deniz trafiği. Fiber optik kabloları.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('malacca')">
+                    <div class="point-icon">🚢</div>
+                    <h3>Malakka Boğazı</h3>
+                    <p>Ticaret yolu. Kablo geçişi.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('gibraltar')">
+                    <div class="point-icon">🏔️</div>
+                    <h3>Cibraltar Boğazı</h3>
+                    <p>Atlantik-Akdeniz. Veri akışı.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('panama')">
+                    <div class="point-icon">🌉</div>
+                    <h3>Panama Kanalı</h3>
+                    <p>Pasifik-Atlantik. Ticaret.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('singapore')">
+                    <div class="point-icon">🏙️</div>
+                    <h3>Singapur</h3>
+                    <p>Veri merkezi hub. Kablo merkezi.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="section">
+            <h2>💡 Bulut Jeopolitiğinin Kritik Noktaları</h2>
+            <div class="strategic-points">
+                <div class="point-card" onclick="showPopup('insight1')">
+                    <div class="point-icon">📊</div>
+                    <h3>Veri Trafiği</h3>
+                    <p>Dünya veri trafiğinin %66\'sı AWS, Azure, GCP\'den geçer. Bulut sağlayıcılar = Yeni boğazlar.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('insight2')">
+                    <div class="point-icon">🔐</div>
+                    <h3>Veri Egemenliği</h3>
+                    <p>Veriler ABD bulutlarında depolanıyor. GDPR, veri lokalizasyonu: Devletler karşı koyuyor.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('insight3')">
+                    <div class="point-icon">⚡</div>
+                    <h3>Kritik Altyapı</h3>
+                    <p>Bulut kesintisi = Ülke kesintisi. AWS kesintisi 2021: Milyarlar etkilendi.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('insight4')">
+                    <div class="point-icon">🌍</div>
+                    <h3>Undersea Cables</h3>
+                    <p>Denizaltı fiber optik kabloları: Tüm uluslararası veri akışı. Kesinti = Savaş.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('insight5')">
+                    <div class="point-icon">🛡️</div>
+                    <h3>Siber Savaş</h3>
+                    <p>Bulut altyapısı = Yeni savaş alanı. DDoS, veri hırsızlığı, ransomware.</p>
+                </div>
+                
+                <div class="point-card" onclick="showPopup('insight6')">
+                    <div class="point-icon">🎯</div>
+                    <h3>Stratejik Kontrol</h3>
+                    <p>Bulut kontrolü = Dijital egemenlik. ABD bulutları = ABD kontrolü.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="popup" id="popup">
+        <button class="popup-close" onclick="closePopup()">×</button>
+        <h3 id="popupTitle">Başlık</h3>
+        <p id="popupContent">İçerik</p>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" id="soundToggle" title="Ses Aç/Kapat">🔊</button>
+        <button class="control-btn" id="scrollToTop" title="Başa Dön">⬆️</button>
+    </div>
+
+    <footer>
+        <p><strong>© 2026 Selahaddin Koyuncu | Harb-i Strateji</strong></p>
+        <p>Bulut Jeopolitiği: Cloud Geopolitics - İnteraktif İnfografik</p>
+    </footer>
+
+    <script>
+        const popupData = {
+            aws: { title: 'AWS', content: 'Amazon Web Services. Dünya bulut pazarının %33\'ü. 33+ veri merkezi. Tüm şirketler AWS\'ye bağımlı. AWS kesintisi = Küresel kesinti. ABD kontrolü altında.' },
+            azure: { title: 'Microsoft Azure', content: 'Microsoft Azure. Dünya bulut pazarının %23\'ü. 60+ bölge. Kurumsal dünyayı kontrol eder. Office 365, Teams, GitHub. ABD kontrolü altında.' },
+            gcp: { title: 'Google Cloud', content: 'Google Cloud Platform. Dünya bulut pazarının %11\'i. 40+ bölge. Veri analizi ve AI\'de güçlü. ABD kontrolü altında.' },
+            hormuz: { title: 'Hormuç Boğazı', content: 'Dünya petrolünün %30\'u geçer. Enerji akışı kesintisi = Küresel kriz. Veri merkezleri enerji gerektirir. Enerji boğazı = Veri boğazı.' },
+            suez: { title: 'Süveyş Kanalı', content: 'Atlantik-Hint Okyanusu. Deniz trafiğinin %12\'i. Fiber optik kabloları geçer. Kesinti = Veri akışı kesintisi.' },
+            malacca: { title: 'Malakka Boğazı', content: 'Dünyanın en önemli deniz boğazı. Ticaretin %25\'i geçer. Fiber optik kabloları geçer. Kesinti = Veri akışı kesintisi.' },
+            gibraltar: { title: 'Cibraltar Boğazı', content: 'Atlantik-Akdeniz. Avrupa-Afrika bağlantısı. Fiber optik kabloları. Kesinti = Avrupa veri akışı kesintisi.' },
+            panama: { title: 'Panama Kanalı', content: 'Pasifik-Atlantik. Ticaretin %5\'i geçer. Veri merkezi bağlantısı. Kesinti = Pasifik veri akışı kesintisi.' },
+            singapore: { title: 'Singapur', content: 'Asya\'nın veri merkezi hub\'ı. Denizaltı kablo merkezi. Tüm Asya veri akışı Singapur\'dan geçer. Singapur kesintisi = Asya kesintisi.' },
+            'insight1': { title: 'Veri Trafiği', content: 'Dünya veri trafiğinin %66\'sı AWS, Azure, GCP\'den geçer. Bulut sağlayıcılar = Yeni boğazlar. Boğaz kontrolü = Veri kontrolü.' },
+            'insight2': { title: 'Veri Egemenliği', content: 'Veriler ABD bulutlarında depolanıyor. Tüm Avrupa verisi ABD\'de. GDPR, veri lokalizasyonu: Devletler karşı koyuyor ama başaramıyor.' },
+            'insight3': { title: 'Kritik Altyapı', content: 'Bulut kesintisi = Ülke kesintisi. AWS kesintisi 2021: Netflix, Airbnb, Spotify, Slack kesintiye uğradı. Milyarlar etkilendi.' },
+            'insight4': { title: 'Undersea Cables', content: 'Denizaltı fiber optik kabloları: Tüm uluslararası veri akışı. 400+ kablo. Kesinti = Savaş. Kablo kesme = Siber savaş.' },
+            'insight5': { title: 'Siber Savaş', content: 'Bulut altyapısı = Yeni savaş alanı. DDoS saldırıları. Veri hırsızlığı. Ransomware. Bulut kesintisi = Ülke kesintisi.' },
+            'insight6': { title: 'Stratejik Kontrol', content: 'Bulut kontrolü = Dijital egemenlik. ABD bulutları = ABD kontrolü. Tüm Avrupa verisi ABD\'de. ABD isterse, tüm Avrupa veri akışını kesebilir.' }
+        };
+        
+        function showPopup(key) {
+            const data = popupData[key];
+            if (data) {
+                document.getElementById('popupTitle').textContent = data.title;
+                document.getElementById('popupContent').textContent = data.content;
+                document.getElementById('popup').classList.add('active');
+                document.getElementById('popupOverlay').classList.add('active');
+                playSound(523, 0.1);
+            }
+        }
+        
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+            document.getElementById('popupOverlay').classList.remove('active');
+            playSound(440, 0.1);
+        }
+        
+        let soundEnabled = true;
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(frequency, duration = 0.1) {
+            if (!soundEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        
+        document.getElementById('soundToggle').addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            this.textContent = soundEnabled ? '🔊' : '🔇';
+            playSound(523, 0.2);
+        });
+        
+        document.getElementById('scrollToTop').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            playSound(659, 0.15);
+        });
+        
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                playSound(523, 0.1);
+                playSound(659, 0.1);
+                playSound(784, 0.1);
+            }, 500);
+        });
+    </script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>16 Büyük Türk Devleti — İnteraktif Zaman Çizelgesi</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#080c14;color:#e8ecf0;overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(201,162,75,0.08) 0%,transparent 60%);pointer-events:none}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:#C9A24B;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;text-shadow:0 0 40px rgba(201,162,75,0.2)}
+.hero .sub{color:#8a9ab0;font-size:1rem;max-width:550px;line-height:1.6;margin-bottom:25px}
+.hero .badge{display:inline-flex;gap:15px;flex-wrap:wrap;justify-content:center}
+.hero .badge span{padding:6px 16px;border:1px solid rgba(201,162,75,0.3);border-radius:20px;font-size:0.8rem;color:#C9A24B}
+.start-btn{margin-top:30px;padding:14px 40px;background:linear-gradient(135deg,#C9A24B,#8B6914);border:none;border-radius:8px;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase;letter-spacing:1px}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(201,162,75,0.4)}
+.content{display:none;max-width:1100px;margin:0 auto;padding:40px 20px}
+.timeline{position:relative;padding:20px 0}
+.timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#C9A24B,#5865f2,#E01515,#2a9d8f);transform:translateX(-50%)}
+.state-card{position:relative;width:45%;padding:20px;margin-bottom:40px;background:rgba(201,162,75,0.03);border:1px solid rgba(201,162,75,0.12);border-radius:14px;cursor:pointer;transition:all .4s ease;opacity:0;transform:translateY(30px)}
+.state-card.visible{opacity:1;transform:translateY(0)}
+.state-card:nth-child(odd){margin-left:5%}
+.state-card:nth-child(even){margin-left:50%}
+.state-card::before{content:'';position:absolute;top:25px;width:15px;height:15px;background:#C9A24B;border-radius:50%;border:3px solid #080c14;z-index:2}
+.state-card:nth-child(odd)::before{right:-32px}
+.state-card:nth-child(even)::before{left:-32px}
+.state-card:hover{background:rgba(201,162,75,0.08);border-color:#C9A24B;transform:translateY(-3px) scale(1.01)}
+.state-card.expanded{background:rgba(201,162,75,0.06);border-color:#C9A24B}
+.card-header{display:flex;align-items:center;gap:12px}
+.card-icon{font-size:1.8rem}
+.card-info h3{font-size:1.1rem;color:#C9A24B;font-weight:700}
+.card-info .dates{font-size:0.8rem;color:#6a8ab0}
+.card-info .founder{font-size:0.82rem;color:#8a9ab0;margin-top:2px}
+.card-details{max-height:0;overflow:hidden;transition:max-height .5s ease;margin-top:0}
+.state-card.expanded .card-details{max-height:500px;margin-top:15px}
+.card-details p{font-size:0.88rem;color:#a0b8d0;line-height:1.6;padding-top:12px;border-top:1px solid rgba(201,162,75,0.1)}
+.card-details .stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.card-details .stat-tag{padding:4px 10px;background:rgba(201,162,75,0.08);border:1px solid rgba(201,162,75,0.2);border-radius:12px;font-size:0.75rem;color:#C9A24B}
+.music-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:rgba(201,162,75,0.12);border:2px solid #C9A24B;color:#C9A24B;font-size:1.5rem;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.music-btn:hover{background:rgba(201,162,75,0.25)}
+.back-btn{position:fixed;top:20px;left:20px;padding:8px 16px;background:rgba(201,162,75,0.1);border:1px solid rgba(201,162,75,0.3);border-radius:6px;color:#C9A24B;text-decoration:none;font-size:0.85rem;z-index:99}
+@media(max-width:768px){
+.timeline::before{left:20px}
+.state-card{width:calc(100% - 50px);margin-left:50px!important}
+.state-card::before{left:-38px!important;right:auto!important}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<a href="oza-turk-savas-tarihi-hub.html" class="back-btn">← Savaş Tarihi</a>
+
+<div class="hero" id="hero">
+<h1>🏛️ 16 Büyük Türk Devleti</h1>
+<p class="sub">MÖ 220'den 1922'ye — Bozkırlardan imparatorluklara, 2.000 yıllık Türk devlet geleneğinin interaktif zaman çizelgesi.</p>
+<div class="badge">
+<span>MÖ 220 — MS 1922</span>
+<span>16 Devlet</span>
+<span>3 Kıta</span>
+<span>2.142 Yıl</span>
+</div>
+<button class="start-btn" onclick="startContent()">Keşfet</button>
+</div>
+
+<div class="content" id="content">
+<div class="timeline" id="timeline"></div>
+</div>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">♪</button>
+
+<script>
+const states=[
+{icon:'🐺',name:'Büyük Hun İmparatorluğu',dates:'MÖ 220 — MS 216',founder:'Teoman',desc:'Tarihte bilinen ilk büyük Türk devleti. Mete Han döneminde onlu sistem ve turan taktiği geliştirildi. Çin Seddi bu devlete karşı inşa edildi. Orta Asya\'dan Kore\'ye kadar hakimiyet.',stats:['Onlu Sistem','Turan Taktiği','Çin Seddi','İpek Yolu']},
+{icon:'🌙',name:'Batı Hun İmparatorluğu',dates:'MÖ 48 — MS 216',founder:'Pi',desc:'Büyük Hun İmparatorluğu\'nun batı kolu. Çin ile sürekli mücadele. Batıya göç hareketlerinin başlangıcı. Kavimler Göçü\'nün tetikleyicisi.',stats:['Batı kolu','Çin mücadelesi','Göç başlangıcı']},
+{icon:'⚡',name:'Avrupa Hun İmparatorluğu',dates:'375 — 469',founder:'Balamir',desc:'Kavimler Göçü\'nü başlatan güç. Attila döneminde Roma İmparatorluğu\'nu titreten süper güç. Avrupa\'nın siyasi haritasını yeniden çizdi. "Tanrının Kırbacı" lakabı.',stats:['Kavimler Göçü','Attila','Roma\'yı dize getirdi','Avrupa hakimiyeti']},
+{icon:'🐎',name:'Ak Hun İmparatorluğu (Eftalitler)',dates:'420 — 552',founder:'Aksuvar',desc:'Orta Asya\'dan Hindistan\'a uzanan geniş coğrafyada hakimiyet. Sasani İmparatorluğu ile mücadele. Gandhara bölgesinde kültürel miras.',stats:['Hindistan','Sasani mücadelesi','Gandhara']},
+{icon:'🦅',name:'Göktürk Kağanlığı',dates:'552 — 745',founder:'Bumin Kağan',desc:'İlk kez "Türk" adını kullanan devlet. Orhun Yazıtları ile Türk tarihinin ilk yazılı belgeleri. Çin\'den Bizans\'a uzanan İpek Yolu hakimiyeti. Bilge Kağan ve Kül Tigin dönemleri.',stats:['İlk "Türk" adı','Orhun Yazıtları','İpek Yolu','Demir işçiliği']},
+{icon:'🏹',name:'Avar Kağanlığı',dates:'565 — 835',founder:'I. Bayan',desc:'Orta Avrupa\'da kurulan güçlü Türk devleti. Bizans\'ı kuşatan, Slavları örgütleyen askeri güç. Üzengi teknolojisini Avrupa\'ya taşıdı.',stats:['Orta Avrupa','Bizans kuşatması','Üzengi','Slav örgütlenmesi']},
+{icon:'🔱',name:'Hazar Kağanlığı',dates:'651 — 983',founder:'Böri Şad',desc:'Kafkasya ve Doğu Avrupa\'da ticaret imparatorluğu. İslam ordularının kuzey ilerleyişini durduran güç. Çok dinli, çok kültürlü yapı. İpek Yolu\'nun kuzey kolunu kontrol etti.',stats:['Kafkasya','Ticaret imparatorluğu','Çok dinli','Arap ilerleyişini durdurdu']},
+{icon:'📜',name:'Uygur Kağanlığı',dates:'745 — 1368',founder:'Kutluk Bilge Kül Kağan',desc:'Yerleşik hayata geçen ilk Türk devleti. Matbaa, kağıt ve kitap kültürünün öncüsü. Uygur alfabesi birçok Türk devletinde kullanıldı. Budizm ve Maniheizm etkisi.',stats:['Yerleşik hayat','Matbaa','Uygur alfabesi','Kültür merkezi']},
+{icon:'📖',name:'Karahanlı Devleti',dates:'840 — 1212',founder:'Bilge Kül Kadir Han',desc:'İslamiyet\'i resmi din olarak kabul eden ilk Türk devleti. Kaşgarlı Mahmud\'un Divanü Lügati\'t-Türk eseri. Yusuf Has Hacib\'in Kutadgu Bilig\'i. Türk-İslam sentezinin temeli.',stats:['İlk Müslüman Türk devleti','Divanü Lügati\'t-Türk','Kutadgu Bilig','Medrese sistemi']},
+{icon:'🗡️',name:'Gazne Devleti',dates:'962 — 1183',founder:'Alp Tigin',desc:'Hindistan\'a 17 sefer düzenleyen Sultan Mahmud ile ünlü. İslam\'ın Güney Asya\'ya yayılmasında kilit rol. Firdevsi\'nin Şehname\'si bu dönemde yazıldı.',stats:['17 Hindistan seferi','Sultan Mahmud','Şehname','İslam yayılımı']},
+{icon:'🦁',name:'Büyük Selçuklu Devleti',dates:'1040 — 1157',founder:'Tuğrul Bey',desc:'Malazgirt Zaferi (1071) ile Anadolu\'nun kapılarını açan devlet. Nizamiye Medreseleri ile eğitim devrimi. Abbasi halifesinin koruyucusu. Sultan unvanını ilk kullanan Türk devleti.',stats:['Malazgirt 1071','Nizamiye Medreseleri','Anadolu\'nun kapısı','Sultan unvanı']},
+{icon:'🌊',name:'Harezmşahlar Devleti',dates:'1097 — 1231',founder:'Kutbeddin Muhammed',desc:'Orta Asya\'nın en güçlü devletlerinden. Moğol istilasına karşı direnen son büyük Türk-İslam devleti. Celaleddin Harezmşah\'ın efsanevi direnişi.',stats:['Orta Asya hakimiyeti','Moğol direnişi','Celaleddin','İpek Yolu']},
+{icon:'🏇',name:'Altın Orda Devleti',dates:'1236 — 1502',founder:'Batu Han',desc:'Cengiz Han\'ın torunu Batu Han tarafından kurulan devlet. Rusya\'yı 250 yıl yönetti. "Tatar Boyunduruğu" dönemi. Moskova\'nın yükselişini kontrol etti.',stats:['Rusya hakimiyeti','250 yıl','Tatar Boyunduruğu','Batu Han']},
+{icon:'⚔️',name:'Timur İmparatorluğu',dates:'1368 — 1501',founder:'Timur',desc:'Semerkand merkezli, Hindistan\'dan Osmanlı sınırına uzanan imparatorluk. Ankara Savaşı\'nda Yıldırım Bayezid\'i yenen güç. Uluğ Bey\'in astronomi çalışmaları.',stats:['Semerkand','Ankara Savaşı','Uluğ Bey','3 kıta']},
+{icon:'🕌',name:'Babür İmparatorluğu',dates:'1526 — 1858',founder:'Babür',desc:'Hindistan\'da kurulan Türk-Moğol imparatorluğu. Tac Mahal\'in inşa edildiği dönem. 300 yılı aşkın Hint hakimiyeti. Dünya\'nın en zengin devletlerinden.',stats:['Tac Mahal','Hindistan','300+ yıl','Dünya\'nın en zengini']},
+{icon:'🏰',name:'Osmanlı İmparatorluğu',dates:'1299 — 1922',founder:'Osman Gazi',desc:'623 yıl hüküm süren, 3 kıtaya yayılan cihan devleti. İstanbul\'un Fethi, Preveze, Mohaç zaferleri. 36 padişah, devlet-i ebed-müddet ideali. Modern Türkiye\'nin temeli.',stats:['623 yıl','3 kıta','36 padişah','İstanbul Fethi','Cihan devleti']}
+];
+
+let audioCtx,musicPlaying=false,musicInterval;
+
+function startContent(){
+document.getElementById('hero').style.display='none';
+document.getElementById('content').style.display='block';
+renderTimeline();
+}
+
+function renderTimeline(){
+const tl=document.getElementById('timeline');
+states.forEach((s,i)=>{
+const card=document.createElement('div');
+card.className='state-card';
+card.innerHTML=`
+<div class="card-header">
+<div class="card-icon">${s.icon}</div>
+<div class="card-info">
+<h3>${s.name}</h3>
+<div class="dates">${s.dates}</div>
+<div class="founder">Kurucu: ${s.founder}</div>
+</div>
+</div>
+<div class="card-details">
+<p>${s.desc}</p>
+<div class="stats">${s.stats.map(t=>`<span class="stat-tag">${t}</span>`).join('')}</div>
+</div>`;
+card.addEventListener('click',()=>{
+card.classList.toggle('expanded');
+if(audioCtx&&musicPlaying)playClick();
+});
+tl.appendChild(card);
+setTimeout(()=>card.classList.add('visible'),i*150);
+});
+}
+
+function playClick(){
+if(!audioCtx)return;
+const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+osc.type='sine';osc.frequency.value=600;
+gain.gain.setValueAtTime(0.08,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.15);
+osc.start();osc.stop(audioCtx.currentTime+0.15);
+}
+
+function toggleMusic(){
+if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+if(musicPlaying){clearInterval(musicInterval);musicPlaying=false;document.getElementById('musicBtn').style.opacity='0.5';}
+else{playEpicMusic();musicPlaying=true;document.getElementById('musicBtn').style.opacity='1';}
+}
+
+function playEpicMusic(){
+const scale=[146.83,164.81,196,220,246.94,293.66,329.63,392];
+let step=0;
+function play(){
+if(!musicPlaying)return;
+const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+osc.type=step%3===0?'triangle':'sine';
+osc.frequency.value=scale[step%scale.length];
+gain.gain.setValueAtTime(0.04,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+1.2);
+osc.start();osc.stop(audioCtx.currentTime+1.2);
+// Bass
+if(step%4===0){
+const b=audioCtx.createOscillator(),bg=audioCtx.createGain();
+b.connect(bg);bg.connect(audioCtx.destination);
+b.type='triangle';b.frequency.value=scale[step%scale.length]/2;
+bg.gain.setValueAtTime(0.03,audioCtx.currentTime);
+bg.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+1.5);
+b.start();b.stop(audioCtx.currentTime+1.5);
+}
+step++;
+}
+musicInterval=setInterval(play,700);play();
+}
+
+// Scroll observer
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+setTimeout(()=>{
+document.querySelectorAll('.state-card').forEach(el=>obs.observe(el));
+},500);
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üretilmiş Kaos'un Stratejik Anatomisi - İnteraktif İnfografik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --dark-bg: #0F1B3C;
+            --electric-blue: #00D9FF;
+            --gold: #FFB800;
+            --red: #FF4444;
+            --green: #44FF44;
+            --white: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0a0f1f 100%);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: rgba(15, 27, 60, 0.95);
+            border-bottom: 3px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            color: var(--electric-blue);
+            font-size: 0.9rem;
+        }
+        
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Strategic Actors */
+        .actors-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .actors-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .actors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .actor-card {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .actor-card:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .actor-flag {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .actor-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .actor-card p {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .actor-card strong {
+            color: var(--electric-blue);
+        }
+        
+        /* Weapons Section */
+        .weapons-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--red);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .weapons-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--red);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--red);
+            padding-bottom: 1rem;
+        }
+        
+        .weapons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .weapon-card {
+            background: rgba(15, 27, 60, 0.8);
+            border-left: 4px solid var(--red);
+            border-radius: 5px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .weapon-card:hover {
+            background: rgba(255, 68, 68, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .weapon-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .weapon-card h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--red);
+            margin-bottom: 0.5rem;
+        }
+        
+        .weapon-card p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Chokepoints */
+        .chokepoints-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .chokepoints-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .chokepoint-item {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chokepoint-item:hover {
+            background: rgba(255, 184, 0, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .chokepoint-item h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .chokepoint-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 3px solid var(--electric-blue);
+            padding: 1rem;
+            border-radius: 5px;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--electric-blue);
+        }
+        
+        .stat-label {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+        
+        /* Strategic Objectives */
+        .objectives-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .objectives-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .objectives-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .objective {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .objective:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+        }
+        
+        .objective-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .objective h4 {
+            color: var(--electric-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .objective p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Turkey Section */
+        .turkey-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .turkey-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .turkey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .turkey-item {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .turkey-item:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+        }
+        
+        .turkey-item h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .turkey-item p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 27, 60, 0.98);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
+            animation: popupIn 0.3s ease-out;
+        }
+        
+        @keyframes popupIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .popup.active {
+            display: block;
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .popup-overlay.active {
+            display: block;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--electric-blue);
+            background: transparent;
+            color: var(--electric-blue);
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-close:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+        }
+        
+        .popup h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .popup p {
+            color: #ccc;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+        
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--electric-blue);
+            background: rgba(15, 27, 60, 0.9);
+            color: var(--electric-blue);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+        }
+        
+        footer {
+            background: rgba(15, 27, 60, 0.95);
+            border-top: 2px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.3rem; }
+            .actors-grid { grid-template-columns: 1fr; }
+            .weapons-grid { grid-template-columns: 1fr; }
+            .objectives-list { grid-template-columns: 1fr; }
+            .popup { max-width: 90%; }
+        }
+    
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+    <header>
+        <h1>🌍 Üretilmiş Kaos'un Stratejik Anatomisi</h1>
+        <p>İran, NATO, Enerji ve Gıda Silahları | Tıklayarak detayları keşfedin</p>
+    </header>
+
+    <main>
+        <!-- Strategic Actors -->
+        <div class="actors-section">
+            <h2>🎭 Stratejik Aktörler</h2>
+            <div class="actors-grid">
+                <div class="actor-card" onclick="showPopup('usa')">
+                    <div class="actor-flag">🇺🇸</div>
+                    <h3>ABD</h3>
+                    <p><strong>Strateji:</strong> Kaos yaratarak NATO'yu felç etme</p>
+                    <p><strong>Amaç:</strong> Tek küresel güvenlik sağlayıcısı olma</p>
+                </div>
+                
+                <div class="actor-card" onclick="showPopup('israel')">
+                    <div class="actor-flag">🇮🇱</div>
+                    <h3>İsrail</h3>
+                    <p><strong>Strateji:</strong> Bölgesel hegemonya kurma</p>
+                    <p><strong>Amaç:</strong> Direniş eksenini kırma</p>
+                </div>
+                
+                <div class="actor-card" onclick="showPopup('iran')">
+                    <div class="actor-flag">🇮🇷</div>
+                    <h3>İran</h3>
+                    <p><strong>Strateji:</strong> Bölgesel denge oluşturma</p>
+                    <p><strong>Amaç:</strong> Varlığını koruma</p>
+                </div>
+                
+                <div class="actor-card" onclick="showPopup('turkey')">
+                    <div class="actor-flag">🇹🇷</div>
+                    <h3>Türkiye</h3>
+                    <p><strong>Strateji:</strong> Bölgesel denge oyuncusu</p>
+                    <p><strong>Amaç:</strong> Stratejik otonomi</p>
+                </div>
+                
+                <div class="actor-card" onclick="showPopup('china')">
+                    <div class="actor-flag">🇨🇳</div>
+                    <h3>Çin</h3>
+                    <p><strong>Strateji:</strong> Enerji güvenliğini koruma</p>
+                    <p><strong>Amaç:</strong> Hormuç Boğazı kontrolü</p>
+                </div>
+                
+                <div class="actor-card" onclick="showPopup('russia')">
+                    <div class="actor-flag">🇷🇺</div>
+                    <h3>Rusya</h3>
+                    <p><strong>Strateji:</strong> Bölgesel nüfuz artırma</p>
+                    <p><strong>Amaç:</strong> NATO zayıflatma</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategic Weapons -->
+        <div class="weapons-section">
+            <h2>⚔️ Stratejik Silahlar</h2>
+            <div class="weapons-grid">
+                <div class="weapon-card" onclick="showPopup('energy')">
+                    <div class="weapon-icon">⚡</div>
+                    <h4>Enerji Silahı</h4>
+                    <p><strong>Hormuç Boğazı:</strong> Küresel enerji akışının %20'si</p>
+                    <p>Çin'in enerji ithalatının %80'i deniz yoluyla</p>
+                </div>
+                
+                <div class="weapon-card" onclick="showPopup('food')">
+                    <div class="weapon-icon">🌾</div>
+                    <h4>Gıda Silahı</h4>
+                    <p><strong>Küresel Arz:</strong> ABD tarım devi</p>
+                    <p>Kaloriler = Diplomasi kaldıracı</p>
+                </div>
+                
+                <div class="weapon-card" onclick="showPopup('nato')">
+                    <div class="weapon-icon">🛡️</div>
+                    <h4>NATO Felç Etme</h4>
+                    <p><strong>Strateji:</strong> Madde 5 uygulanamaz hale getirme</p>
+                    <p>Avrupa'yı bağımlı hale getirme</p>
+                </div>
+                
+                <div class="weapon-card" onclick="showPopup('dependency')">
+                    <div class="weapon-icon">🔗</div>
+                    <h4>Bağımlılık Yaratma</h4>
+                    <p><strong>LNG Bağımlılığı:</strong> Avrupa'yı tutsak pazar haline getirme</p>
+                    <p>Enerji = Kontrol</p>
+                </div>
+                
+                <div class="weapon-card" onclick="showPopup('blackmail')">
+                    <div class="weapon-icon">🕵️</div>
+                    <h4>Epstein Faktörü</h4>
+                    <p><strong>Kompromit Diplomasi:</strong> Liderler kontrol altında</p>
+                    <p>Kişisel çıkar > Ulusal çıkar</p>
+                </div>
+                
+                <div class="weapon-card" onclick="showPopup('narrative')">
+                    <div class="weapon-icon">📢</div>
+                    <h4>Anlatı Kontrolü</h4>
+                    <p><strong>Propaganda:</strong> "Bölgesel sorun" olarak çerçeveleme</p>
+                    <p>Madde 5 uygulanamaz hale getirme</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Critical Chokepoints -->
+        <div class="chokepoints-section">
+            <h2>🎯 Kritik Boğazlar</h2>
+            
+            <div class="chokepoint-item" onclick="showPopup('hormuz')">
+                <h4>Hormuç Boğazı</h4>
+                <p>Dünya enerji akışının en kritik noktası. Destabilizasyon = Küresel ekonomik şok</p>
+                <div class="chokepoint-stats">
+                    <div class="stat">
+                        <div class="stat-value">20%</div>
+                        <div class="stat-label">Küresel Petrol</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">25%</div>
+                        <div class="stat-label">Küresel LNG</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1/3</div>
+                        <div class="stat-label">Deniz Ticareti</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chokepoint-item" onclick="showPopup('suez')">
+                <h4>Süveyş Kanalı</h4>
+                <p>Avrupa-Asya ticaret yolunun kilit noktası. Kapatılırsa Avrupa tecrit edilir</p>
+                <div class="chokepoint-stats">
+                    <div class="stat">
+                        <div class="stat-value">12%</div>
+                        <div class="stat-label">Küresel Ticaret</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">30 Gün</div>
+                        <div class="stat-label">Alternatif Rota</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chokepoint-item" onclick="showPopup('bosphorus')">
+                <h4>Boğazlar (Türkiye)</h4>
+                <p>Karadeniz'e erişimin tek yolu. Türkiye tam kontrol sahibi</p>
+                <div class="chokepoint-stats">
+                    <div class="stat">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Kontrol</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Montrö</div>
+                        <div class="stat-label">Anlaşması</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategic Objectives -->
+        <div class="objectives-section">
+            <h2>🎯 Stratejik Hedefler</h2>
+            <div class="objectives-list">
+                <div class="objective" onclick="showPopup('obj1')">
+                    <div class="objective-number">1️⃣</div>
+                    <h4>NATO'yu Felç Etme</h4>
+                    <p>Madde 5'i uygulanamaz hale getirme</p>
+                </div>
+                
+                <div class="objective" onclick="showPopup('obj2')">
+                    <div class="objective-number">2️⃣</div>
+                    <h4>ABD Merkezlilik</h4>
+                    <p>Tek güvenlik sağlayıcısı olma</p>
+                </div>
+                
+                <div class="objective" onclick="showPopup('obj3')">
+                    <div class="objective-number">3️⃣</div>
+                    <h4>Avrupa Bağımlılığı</h4>
+                    <p>LNG ve enerji kontrolü</p>
+                </div>
+                
+                <div class="objective" onclick="showPopup('obj4')">
+                    <div class="objective-number">4️⃣</div>
+                    <h4>Çin'i Zayıflatma</h4>
+                    <p>Hormuç kontrolü = Ekonomik kontrol</p>
+                </div>
+                
+                <div class="objective" onclick="showPopup('obj5')">
+                    <div class="objective-number">5️⃣</div>
+                    <h4>Bölgesel Hegemonya</h4>
+                    <p>İsrail'i bölgesel yönetici yapma</p>
+                </div>
+                
+                <div class="objective" onclick="showPopup('obj6')">
+                    <div class="objective-number">6️⃣</div>
+                    <h4>Dolar Hegemonyası</h4>
+                    <p>Küresel finansal kontrol</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Turkey's Strategic Position -->
+        <div class="turkey-section">
+            <h2>🇹🇷 Türkiye'nin Stratejik Konumu</h2>
+            <div class="turkey-grid">
+                <div class="turkey-item" onclick="showPopup('turkey-pivot')">
+                    <h4>Bölgesel Pivot</h4>
+                    <p>Türkiye, Rusya ve Orta Doğu'yu fiziksel olarak bloke edebilecek tek NATO üyesi</p>
+                </div>
+                
+                <div class="turkey-item" onclick="showPopup('turkey-test')">
+                    <h4>Sınav Noktası</h4>
+                    <p>ABD, Türkiye'yi NATO yükümlülükleri vs bölgesel çıkarları arasında seçmeye zorlayacak</p>
+                </div>
+                
+                <div class="turkey-item" onclick="showPopup('turkey-danger')">
+                    <h4>Tehlike</h4>
+                    <p>Türkiye oyunu doğru okursa, "Baskılanmışlar Koalisyonu" (Türkiye, Rusya, Çin, İran) oluşabilir</p>
+                </div>
+                
+                <div class="turkey-item" onclick="showPopup('turkey-choice')">
+                    <h4>Türkiye'nin Seçimi</h4>
+                    <p>Eski düzeni kurtarmaya mı, yoksa yeni dünyada lider olmaya mı çalışacak?</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Popup -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="popup" id="popup">
+        <button class="popup-close" onclick="closePopup()">×</button>
+        <h3 id="popupTitle">Başlık</h3>
+        <p id="popupContent">İçerik</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="control-btn" id="soundToggle" title="Ses Aç/Kapat">🔊</button>
+        <button class="control-btn" id="scrollToTop" title="Başa Dön">⬆️</button>
+    </div>
+
+    <footer>
+        <p><strong>© 2026 Selahaddin Koyuncu | Harb-i Strateji</strong></p>
+        <p>Üretilmiş Kaos'un Stratejik Anatomisi - İnteraktif İnfografik</p>
+    </footer>
+
+    <script>
+        const popupData = {
+            usa: { title: '🇺🇸 ABD Stratejisi', content: 'Trump\'s yaklaşımı: "Kaos yarat → NATO\'yu felç et → ABD\'yi merkeze koy". Amaç: NATO\'yu savunma ittifakı olarak çerçeveleyip, sonra çekilmek. Bu, Avrupa\'yı bağımlı hale getirirken, ABD\'yi tek güvenlik sağlayıcısı yapar. Dolar hegemonyası korunur, küresel nüfuz maksimize edilir.' },
+            israel: { title: '🇮🇱 İsrail Stratejisi', content: 'Direniş eksenini kırma: Hizbullah, Hamas, Houthiler ve Irak Şii militanlarını kontrol altına alma. Amaç: Bölgesel hegemonya ve "Yeni Orta Doğu" vizyonu. Normalleştirilmiş Körfez devletleri (Suudi Arabistan, BAE) ile birlikte bölgeyi yönetme.' },
+            iran: { title: '🇮🇷 İran\'ın Konumu', content: 'İran, Çin\'in Kuşak ve Yol İnisiyatifi\'nin kara köprüsü. Eğer İran zayıflatılırsa veya kilitlenirse, Çin\'in Asya-Avrupa ticaret yolu kesilir. Bu, ABD\'nin Çin\'i ekonomik olarak kontrol etmesine olanak tanır. İran\'ın nükleer ve füze tehdidi zayıflatılmalı.' },
+            turkey: { title: '🇹🇷 Türkiye\'nin Rolü', content: 'Türkiye, NATO\'nun tek üyesi olarak Rusya ve Orta Doğu\'yu fiziksel olarak bloke edebilir. Montrö Anlaşması ile Boğazlar\'ı kontrol eder. ABD, Türkiye\'yi NATO yükümlülükleri ile bölgesel çıkarları arasında seçmeye zorlayacak. Bu, Türkiye\'nin stratejik otonomi kazanmasına yol açabilir.' },
+            china: { title: '🇨🇳 Çin\'in Zayıflığı', content: 'Çin, enerji ithalatının %80\'ini deniz yoluyla Hormuç Boğazı\'ndan yapıyor. Bölgeyi destabilize ederek, ABD Çin\'in ekonomisine "boğaz kısması" yapabilir. Hiç bir atış yapmadan, ekonomik kontrol sağlanır. Kuşak ve Yol İnisiyatifi\'nin kara köprüsü (İran) zayıflatılırsa, Çin\'in jeopolitik gücü azalır.' },
+            russia: { title: '🇷🇺 Rusya\'nın Konumu', content: 'Rusya, Karadeniz\'de güç kazanmaya çalışıyor. Türkiye\'nin Boğazlar\'ı kontrol etmesi, Rusya\'yı sınırlandırıyor. Ancak, Türkiye\'nin NATO\'dan uzaklaşması, Rusya\'ya fırsat yaratabilir. Kaos ortamında, Rusya ve Çin, "Baskılanmışlar Koalisyonu" oluşturabilir.' },
+            energy: { title: '⚡ Enerji Silahı', content: 'Hormuç Boğazı, küresel enerji akışının %20\'sini kontrol eder. Bölgeyi destabilize ederek, enerji fiyatları patlar. Avrupa\'nın tek alternatifi ABD\'nin LNG\'si. Bu, Avrupa\'yı tutsak pazar haline getirirken, ABD\'nin jeopolitik gücü maksimize edilir. Çin\'in enerji ithalatı kesintiye uğrar.' },
+            food: { title: '🌾 Gıda Silahı', content: 'ABD, küresel tarım devi. Orta Doğu ve Karadeniz\'deki çatışmalar, gıda arz zincirini bozar. Kıtlık yaşanırsa, ABD tarımsal ihracatını diplomasi kaldıracı olarak kullanır. "Bize sadık kalırsan yemek verim, yoksa açlıktan ölürsün" mesajı. Kaloriler = Kontrol.' },
+            nato: { title: '🛡️ NATO Felç Etme', content: 'Strateji: İran\'a saldırıyı "bölgesel sorun" olarak çerçekeleme. Madde 5 (Kolektif Savunma) uygulanamaz hale getirme. Avrupa müttefikleri "Bu bizim savaşımız değil, İran bize saldırmadı" diyerek çekilir. NATO zayıflar, ABD\'nin çekilme gerekçesi oluşur.' },
+            dependency: { title: '🔗 Bağımlılık Yaratma', content: 'Avrupa\'nın enerji alternatifi, ABD\'nin LNG\'si. Hormuç destabilizasyonu → Enerji krizı → Avrupa LNG\'ye bağımlı hale gelir. Avrupa, stratejik ortaktan tutsak pazara dönüşür. ABD, Avrupa\'nın enerji politikasını, dolayısıyla dış politikasını kontrol eder.' },
+            blackmail: { title: '🕵️ Epstein Faktörü', content: 'Epstein skandalı, kompromit diplomasinin mekanizmasını gösterir. Eğer küresel liderler kişisel skandallarla kontrol altındaysa, ulusal çıkarları ikinci plana alırlar. Kişisel hayatta yönetilen liderler, ülkelerini de yönetilenlerin çıkarlarına feda edebilir. Gizli dosyalar = Gizli kontrol.' },
+            narrative: { title: '📢 Anlatı Kontrolü', content: 'İran\'a saldırıyı "bölgesel sorun" olarak çerçekele. Böylece NATO\'nun Madde 5\'i teknik olarak uygulanamaz hale gelir. Avrupa müttefikleri "NATO\'ya dahil değiliz" diye çekilir. Anlatı = Gerçeklik. Gerçekliği kontrol eden, savaşı kontrol eder.' },
+            hormuz: { title: '🎯 Hormuç Boğazı', content: 'Dünya enerji akışının en kritik noktası. Küresel petrolün %20\'si, LNG\'nin %25\'i buradan geçer. Destabilizasyon = Enerji şoku = Ekonomik kriz. Çin\'in enerji ithalatının %80\'i buradan. Kontrol = Ekonomik güç. Boğaz kapatılırsa, Asya\'nın ekonomisi çöker.' },
+            suez: { title: '🎯 Süveyş Kanalı', content: 'Avrupa-Asya ticaret yolunun kilit noktası. Kapatılırsa, Avrupa Asya\'dan tecrit edilir. Küresel ticareti %12 etkileyecek alternatif rota 30 gün daha uzun. Enerji + Gıda + Ticaret kesintileri = Avrupa felç olur.' },
+            bosphorus: { title: '🎯 Boğazlar', content: 'Türkiye, Karadeniz\'e erişimin tek yolunu kontrol eder. Montrö Anlaşması, Türkiye\'ye tam kontrol yetkisi verir. Rusya\'nın Karadeniz filosu sınırlandırılır. Türkiye\'nin stratejik değeri burada yatıyor. Boğazlar = Türkiye\'nin jeopolitik kaldıracı.' },
+            obj1: { title: '🎯 NATO\'yu Felç Etme', content: 'Madde 5\'i uygulanamaz hale getirerek, NATO\'yu savunma ittifakından çıkar. Avrupa müttefikleri birbirini savunmaz. Bireysel ülkeler, ABD\'yle doğrudan anlaşmak zorunda kalır. NATO\'nun kolektif güvenlik garantisi ortadan kalkar.' },
+            obj2: { title: '🎯 ABD Merkezlilik', content: 'NATO çöktüğünde, Polonya, Almanya, Baltikler ABD\'yle bireysel koruma anlaşmaları yapar. Nakit ve siyasi egemenlik karşılığında güvenlik. ABD, "Güvenlik Sağlayıcısı Kiralama" modeline geçer. Daha karlı, daha kontrollü.' },
+            obj3: { title: '🎯 Avrupa Bağımlılığı', content: 'Enerji krizinde, Avrupa\'nın tek seçeneği ABD\'nin LNG\'si. Fiyat ve miktar ABD tarafından belirlenir. Avrupa\'nın enerji politikası = ABD\'nin politikası. Stratejik özerklik kaybolur, bağımlılık oluşur.' },
+            obj4: { title: '🎯 Çin\'i Zayıflatma', content: 'Hormuç\'u kontrol ederek, Çin\'in enerji ithalatını kesmek. Çin\'in ekonomisi enerji ithalatına bağlı. Boğaz kısması = Ekonomik kriz. Kuşak ve Yol İnisiyatifi\'nin kara köprüsü (İran) zayıflatılırsa, Çin\'in jeopolitik gücü azalır.' },
+            obj5: { title: '🎯 Bölgesel Hegemonya', content: 'İsrail, bölgesel yönetici olarak Körfez devletlerini yönetir. Normalleştirilmiş Suudi Arabistan ve BAE, İsrail\'in güvenlik ortağı olur. Direniş ekseninin kırılması, İsrail\'in bölgesel hegemonyasını sağlar.' },
+            obj6: { title: '🎯 Dolar Hegemonyası', content: 'Enerji ve gıda kontrolü, dolar hegemonyasını güçlendirir. Tüm ülkeler, enerji ve gıda için dolar gerektirir. Dolar = Küresel para. Dolar kontrolü = Küresel ekonomik kontrol. ABD\'nin finansal gücü maksimize edilir.' },
+            'turkey-pivot': { title: '🇹🇷 Bölgesel Pivot', content: 'Türkiye, coğrafi olarak Rusya, Orta Doğu ve Avrupa\'nın kesişim noktasında. Montrö Anlaşması ile Boğazlar\'ı kontrol eder. Karadeniz\'e erişim, Türkiye\'nin izni ile mümkün. Bu, Türkiye\'yi bölgesel oyunun merkezi yapar.' },
+            'turkey-test': { title: '🇹🇷 Sınav Noktası', content: 'ABD, Türkiye\'yi NATO yükümlülükleri (İran\'a karşı savaş) ile bölgesel çıkarları (Rusya ve İran ile işbirliği) arasında seçmeye zorlayacak. Eğer Türkiye NATO\'yu seçerse, bölgesel gücünü kaybeder. Eğer bölgesel çıkarları seçerse, NATO\'dan çıkabilir.' },
+            'turkey-danger': { title: '🇹🇷 Tehlike', content: 'Eğer Türkiye oyunu doğru okursa, "Baskılanmışlar Koalisyonu" (Türkiye, Rusya, Çin, İran) oluşabilir. Bu koalisyon, dolar hegemonyasını kırabilir. ABD\'nin en büyük korkusu budur. Büyük güçlerin çökmesi, yeni dünya düzeninin başlangıcı olur.' },
+            'turkey-choice': { title: '🇹🇷 Türkiye\'nin Seçimi', content: 'Tarih gösterir: Büyük güçler, en güçlü olduklarını düşündükleri zaman çökerler. Türkiye\'nin seçimi: Eski düzeni kurtarmaya çalışmak mı, yoksa yeni dünyada lider olmaya mı çalışmak? Cevap, Türkiye\'nin geleceğini belirleyecek.' }
+        };
+        
+        function showPopup(key) {
+            const data = popupData[key];
+            if (data) {
+                document.getElementById('popupTitle').textContent = data.title;
+                document.getElementById('popupContent').textContent = data.content;
+                document.getElementById('popup').classList.add('active');
+                document.getElementById('popupOverlay').classList.add('active');
+                playSound(523, 0.1);
+            }
+        }
+        
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+            document.getElementById('popupOverlay').classList.remove('active');
+            playSound(440, 0.1);
+        }
+        
+        // Sound Effects
+        let soundEnabled = true;
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(frequency, duration = 0.1) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        
+        // Sound Toggle
+        document.getElementById('soundToggle').addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            this.textContent = soundEnabled ? '🔊' : '🔇';
+            playSound(523, 0.2);
+        });
+        
+        // Scroll to Top
+        document.getElementById('scrollToTop').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            playSound(659, 0.15);
+        });
+        
+        // Page load sound
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                playSound(523, 0.1);
+                playSound(659, 0.1);
+                playSound(784, 0.1);
+            }, 500);
+        });
+    </script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

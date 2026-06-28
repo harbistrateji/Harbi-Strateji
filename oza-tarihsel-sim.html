@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Tarihsel Simülasyon — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--purple:#c41e3a;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red2),var(--cyan))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-gold{background:var(--gold);color:#000}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* Kriz seçim */
+.crisis-select{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.cs-btn{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:16px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:14px}
+.cs-btn:active{transform:scale(.98)}
+.cs-icon{font-size:36px;flex-shrink:0}
+.cs-info{flex:1}
+.cs-year{font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.cs-name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
+.cs-desc{font-size:10px;color:var(--dim);line-height:1.5}
+.cs-diff{font-size:9px;padding:2px 8px;border-radius:4px;margin-top:6px;display:inline-block}
+/* Senaryo paneli */
+.scenario-header{background:rgba(201,162,75,.06);border:2px solid rgba(201,162,75,.3);border-radius:14px;padding:16px;margin-bottom:14px}
+.sh-year{font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.sh-title{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px}
+.sh-context{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:10px}
+.sh-role{background:var(--panel2);border-radius:8px;padding:10px;font-size:11px;color:var(--cyan)}
+/* Karar aşamaları */
+.phase-indicator{display:flex;gap:6px;margin-bottom:12px}
+.pi-dot{flex:1;height:6px;border-radius:3px;background:var(--panel2);transition:.3s}
+.pi-dot.done{background:var(--green)}.pi-dot.active{background:var(--gold)}.pi-dot.pending{background:var(--panel2)}
+.decision-card{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px;margin-bottom:12px}
+.dc-phase{font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.dc-question{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.4}
+.dc-context{font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:10px}
+.decision-options{display:flex;flex-direction:column;gap:8px}
+.do-btn{background:var(--panel);border:2px solid var(--line2);border-radius:10px;padding:12px;cursor:pointer;transition:.2s;text-align:left}
+.do-btn:active{transform:scale(.98)}
+.do-btn.chosen-good{border-color:var(--green);background:rgba(0,255,136,.06)}
+.do-btn.chosen-bad{border-color:var(--red2);background:rgba(224,21,21,.06)}
+.do-btn.chosen-neutral{border-color:var(--gold);background:rgba(201,162,75,.06)}
+.do-letter{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;color:var(--gold);margin-right:8px}
+.do-text{font-size:12px;line-height:1.5}
+/* Sonuç */
+.outcome-panel{background:rgba(0,224,255,.04);border:1px solid rgba(0,224,255,.2);border-radius:12px;padding:14px;margin-bottom:12px;display:none}
+.outcome-panel.show{display:block}
+.op-title{font-family:'Chakra Petch',sans-serif;font-size:13px;margin-bottom:8px}
+.op-body{font-size:11px;color:var(--dim);line-height:1.8}
+.op-lesson{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--gold);margin-top:8px;padding-top:8px;border-top:1px solid var(--line2)}
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.tl-entry{display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.6}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.tl-dot.good{background:var(--green)}.tl-dot.bad{background:var(--red2)}.tl-dot.neutral{background:var(--gold)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🕰️ TARİHSEL SİMÜLASYON</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">🕰️ Tarihsel Simülasyon</div>
+  <div class="card-sub">Gerçek kriz anlarını yeniden oyna, farklı kararlar ver. Küba Füze Krizi, Körfez Savaşı, Ukrayna — tarihin dönüm noktalarında sen karar veriyorsun!</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="ts-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="ts-phase" style="color:var(--cyan)">-</div><div class="stat-lbl">AŞAMA</div></div>
+    <div class="stat-box"><div class="stat-val" id="ts-outcome" style="color:var(--green)">-</div><div class="stat-lbl">SONUÇ</div></div>
+  </div>
+  <div id="ts-select">
+    <div style="font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);margin-bottom:10px">📚 TARİHSEL KRİZ SEÇ:</div>
+    <div class="crisis-select" id="crisis-select"></div>
+  </div>
+  <div id="ts-game" style="display:none">
+    <div class="scenario-header" id="scenario-header">
+      <div class="sh-year" id="sh-year"></div>
+      <div class="sh-title" id="sh-title"></div>
+      <div class="sh-context" id="sh-context"></div>
+      <div class="sh-role" id="sh-role"></div>
+    </div>
+    <div class="phase-indicator" id="phase-indicator"></div>
+    <div class="decision-card" id="decision-card">
+      <div class="dc-phase" id="dc-phase"></div>
+      <div class="dc-question" id="dc-question"></div>
+      <div class="dc-context" id="dc-context"></div>
+      <div class="decision-options" id="decision-options"></div>
+    </div>
+    <div class="outcome-panel" id="outcome-panel">
+      <div class="op-title" id="op-title"></div>
+      <div class="op-body" id="op-body"></div>
+      <div class="op-lesson" id="op-lesson"></div>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+  <div id="ts-end" style="display:none">
+    <div style="font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;text-align:center;margin-bottom:16px" id="ts-final-title"></div>
+    <div style="font-size:12px;color:var(--dim);line-height:2;margin-bottom:14px" id="ts-final-body"></div>
+    <div style="font-size:11px;color:var(--cyan);line-height:1.8;padding:12px;background:var(--panel2);border-radius:10px;margin-bottom:12px" id="ts-final-lesson"></div>
+  </div>
+  <button class="btn btn-gold" id="ts-btn" onclick="tsShowSelect()">🕰️ TARİHSEL SİMÜLASYONU BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var CRISES=[
+  {id:'cuba',icon:'☢️',year:'EKİM 1962',name:'Küba Füze Krizi',
+   desc:'ABD ve SSCB nükleer savaşın eşiğinde. Sovyet füzeleri Küba\'da.',
+   diff:'UZMAN',diffColor:'var(--red2)',
+   role:'🎖️ Sen ABD Başkanı John F. Kennedy\'sin. 13 gün içinde kararlar vereceksin.',
+   phases:[
+     {phase:'GÜN 1',question:'İstihbarat Küba\'da Sovyet füzelerini tespit etti. İlk adım ne olmalı?',
+      context:'U-2 uçağı fotoğrafları net. Füzeler 2 haftada hazır olabilir. Dünya nükleer savaşın eşiğinde.',
+      options:[
+        {text:'Hava saldırısıyla füzeleri hemen imha et',outcome:'bad',pts:50,result:'Sovyetler karşılık verir. Nükleer savaş riski maksimum.'},
+        {text:'Deniz ablukası uygula, müzakere için zaman kazan',outcome:'good',pts:150,result:'Kennedy\'nin gerçek kararı. Zaman kazanıldı, diplomasi işe yaradı.'},
+        {text:'BM\'ye başvur, uluslararası baskı oluştur',outcome:'neutral',pts:100,result:'Zaman kaybı riski var ama diplomatik zemin güçleniyor.'},
+        {text:'Sovyetler\'le doğrudan müzakere başlat',outcome:'neutral',pts:90,result:'Khrushchev\'in niyeti belirsiz, risk var ama diyalog açık.'}
+      ]},
+     {phase:'GÜN 7',question:'Sovyet gemileri abluka hattına yaklaşıyor. Komutanlar ateş emri istiyor.',
+      context:'Denizde gerilim dorukta. Sovyet denizaltısı B-59 nükleer torpido hazırladı. Bir hata felakete yol açabilir.',
+      options:[
+        {text:'Ateş emri ver, ablukayı zorla uygulat',outcome:'bad',pts:40,result:'Denizaltı B-59 nükleer torpidoyu ateşler. Üçüncü Dünya Savaşı başlar.'},
+        {text:'Sovyet gemilerine güvenli geçiş izni ver, müzakereye devam et',outcome:'good',pts:160,result:'Gerçek karar. Vasili Arkhipov nükleer torpido emrini reddetti, savaş önlendi.'},
+        {text:'Geri çekil, ablukayı geçici kaldır',outcome:'neutral',pts:80,result:'Zayıflık işareti ama savaş riski azaldı.'},
+        {text:'BM acil toplantısı talep et',outcome:'neutral',pts:100,result:'Diplomatik süreç kazanıyor, ama Sovyetler baskıyı hissediyor.'}
+      ]},
+     {phase:'GÜN 13',question:'Khrushchev gizli mesaj gönderdi: Küba\'yı işgal etmeyeceğinize söz verin, füzeleri çekeceğiz.',
+      context:'Türkiye\'deki ABD füzelerini de çekmemizi istiyor. Kamuoyuna açıklamadan gizli anlaşma yapılabilir.',
+      options:[
+        {text:'Teklifi reddet, Küba\'ya askeri müdahale yap',outcome:'bad',pts:30,result:'Nükleer savaş kaçınılmaz hale gelir.'},
+        {text:'Gizli anlaşmayı kabul et: Küba\'ya saldırmayacağız + Türkiye füzelerini çekeceğiz',outcome:'good',pts:200,result:'Kennedy\'nin gerçek kararı. Kriz çözüldü, nükleer savaş önlendi.'},
+        {text:'Sadece Küba taahhüdünü kabul et, Türkiye\'yi reddet',outcome:'neutral',pts:120,result:'Khrushchev baskıyı artırıyor, kriz uzuyor.'},
+        {text:'Kamuoyu önünde açık müzakere iste',outcome:'neutral',pts:80,result:'Khrushchev\'i köşeye sıkıştırır, tehlikeli.'}
+      ]}
+     ]},
+  {id:'ukraine',icon:'🇺🇦',year:'ŞUBAT 2022',name:'Ukrayna Krizi',
+   desc:'Rusya Ukrayna\'ya saldırdı. NATO ve Batı tepkisini belirliyor.',
+   diff:'ZOR',diffColor:'var(--gold)',
+   role:'🌐 Sen NATO Genel Sekreteri\'sin. İttifakın tutumunu belirleyeceksin.',
+   phases:[
+     {phase:'GÜN 1',question:'Rusya Ukrayna\'ya tam ölçekli saldırı başlattı. NATO\'nun ilk tepkisi ne olmalı?',
+      context:'Ukrayna NATO üyesi değil. Madde 5 devreye girmiyor. Ama Avrupa güvenliği tehdit altında.',
+      options:[
+        {text:'NATO kuvvetlerini Ukrayna\'ya gönder',outcome:'bad',pts:40,result:'Rusya ile doğrudan çatışma. Nükleer eskalasyon riski.'},
+        {text:'Ukrayna\'ya silah desteği + Rusya\'ya kapsamlı yaptırım',outcome:'good',pts:160,result:'Batı\'nın gerçek kararı. Ukrayna direniyor, Rusya izole oluyor.'},
+        {text:'Diplomatik çözüm ara, ateşkes talep et',outcome:'neutral',pts:90,result:'Rusya ateşkesi reddediyor, Ukrayna toprak kaybediyor.'},
+        {text:'Ekonomik yaptırım uygula, askeri destek verme',outcome:'neutral',pts:100,result:'Kısmi etki. Ukrayna zayıflıyor ama Rusya da zorlanıyor.'}
+      ]},
+     {phase:'AY 3',question:'Ukrayna Rus kuvvetlerini geri püskürttü. Rusya nükleer tehdit savurdu.',
+      context:'Putin taktik nükleer silah kullanabileceğini ima etti. Batı\'nın desteği devam etmeli mi?',
+      options:[
+        {text:'Nükleer tehdide boyun eğ, desteği kes',outcome:'bad',pts:30,result:'Rusya\'nın nükleer şantajı işe yarıyor. Tehlikeli emsal.'},
+        {text:'Desteği sürdür, nükleer tehdidi ciddiye al ama geri adım atma',outcome:'good',pts:180,result:'Batı\'nın kararı. Rusya\'nın blöfü ortaya çıktı.'},
+        {text:'Nükleer silah kullanılırsa karşılık vereceğimizi açıkla',outcome:'neutral',pts:110,result:'Caydırıcılık mesajı güçlü ama eskalasyon riski var.'},
+        {text:'Gizli müzakere başlat',outcome:'neutral',pts:80,result:'Rusya zayıflık işareti olarak yorumlayabilir.'}
+      ]},
+     {phase:'AY 12',question:'Savaş durma noktasına geldi. Müzakere masası kurulabilir.',
+      context:'Ukrayna topraklarının %20\'si işgal altında. Uzun savaş her iki tarafı da yıpratıyor.',
+      options:[
+        {text:'Ukrayna\'yı toprak tavizine zorla',outcome:'bad',pts:20,result:'Ukrayna\'nın egemenliği çiğneniyor. Uluslararası hukuk zedeleniyor.'},
+        {text:'Ukrayna\'nın kendi şartlarıyla müzakere etmesini destekle',outcome:'good',pts:170,result:'Egemenlik korunuyor, uzun vadeli barış zemini oluşuyor.'},
+        {text:'Ateşkes + dondurulmuş çatışma',outcome:'neutral',pts:100,result:'Kısa vadeli çözüm ama sorun çözülmüyor.'},
+        {text:'NATO üyeliği teklif et',outcome:'neutral',pts:120,result:'Rusya\'yı provoke edebilir ama Ukrayna\'yı güvence altına alır.'}
+      ]}
+     ]},
+  {id:'gulf',icon:'🛢️',year:'AĞUSTOS 1990',name:'Körfez Krizi',
+   desc:'Irak Kuveyt\'i işgal etti. BM kararı: geri çekilme ya da savaş.',
+   diff:'ORTA',diffColor:'var(--cyan)',
+   role:'⚔️ Sen ABD Başkanı George H.W. Bush\'sun. Koalisyon kuvvetlerini yönetiyorsun.',
+   phases:[
+     {phase:'HAFTA 1',question:'Irak Kuveyt\'i işgal etti. Uluslararası tepki ne olmalı?',
+      context:'Saddam Hüseyin 100.000 askerle Kuveyt\'i işgal etti. Suudi Arabistan tehdit altında. Petrol fiyatları fırladı.',
+      options:[
+        {text:'Hemen askeri müdahale başlat',outcome:'bad',pts:50,result:'Koalisyon hazır değil. Erken müdahale başarısız olabilir.'},
+        {text:'BM kararı al, koalisyon kur, diplomatik baskı uygula',outcome:'good',pts:160,result:'Bush\'un gerçek stratejisi. 34 ülkeli koalisyon kuruldu.'},
+        {text:'Ekonomik yaptırım uygula, askeri seçeneği açık tut',outcome:'neutral',pts:110,result:'Zaman kazanıyor ama Irak çekilmiyor.'},
+        {text:'Bölgesel güçlere bırak',outcome:'neutral',pts:70,result:'Suudi Arabistan ve Mısır tek başına yeterli değil.'}
+      ]},
+     {phase:'OCAK 1991',question:'BM son tarihi geçti. Irak çekilmedi. Operasyon başlatılmalı mı?',
+      context:'500.000 koalisyon askeri hazır. Hava saldırısı mı, kara harekâtı mı, yoksa daha fazla baskı mı?',
+      options:[
+        {text:'Doğrudan kara harekâtı başlat',outcome:'neutral',pts:90,result:'Kayıplar fazla olabilir. Hava üstünlüğü sağlanmadan riskli.'},
+        {text:'Önce hava saldırısı, sonra kara harekâtı',outcome:'good',pts:170,result:'Gerçek plan. 38 gün hava harekâtı, 100 saatte kara zaferi.'},
+        {text:'Daha fazla yaptırım uygula',outcome:'bad',pts:40,result:'Irak çekilmiyor, koalisyon dağılıyor.'},
+        {text:'Saddam\'la doğrudan müzakere',outcome:'neutral',pts:80,result:'Zayıflık işareti. Irak taviz vermiyor.'}
+      ]},
+     {phase:'ŞUBAT 1991',question:'Kara harekâtı başarılı. Irak ordusu çöküyor. Bağdat\'a ilerlenmeli mi?',
+      context:'100 saatte Kuveyt kurtarıldı. Irak ordusu kaçıyor. Saddam hâlâ iktidarda.',
+      options:[
+        {text:'Bağdat\'a ilerle, Saddam\'ı devir',outcome:'bad',pts:30,result:'BM mandası aşılıyor. Irak\'ın parçalanması, bölgesel istikrarsızlık.'},
+        {text:'Kuveyt\'in kurtarılmasıyla dur, ateşkes ilan et',outcome:'good',pts:180,result:'Bush\'un gerçek kararı. BM mandası korundu, koalisyon dağılmadı.'},
+        {text:'Irak\'ın kuzeyine ilerle, Kürt bölgesini koru',outcome:'neutral',pts:100,result:'İnsani gerekçe var ama BM mandası tartışmalı.'},
+        {text:'Saddam\'ı devirme şartıyla ateşkes',outcome:'neutral',pts:90,result:'Saddam kabul etmez, savaş uzar.'}
+      ]}
+     ]}
+];
+
+var ts={pts:0,crisisIdx:0,phaseIdx:0,running:false,timeline:[],outcomes:[]};
+
+function tsShowSelect(){
+  document.getElementById('ts-btn').style.display='none';
+  document.getElementById('ts-select').style.display='';
+  document.getElementById('ts-game').style.display='none';
+  document.getElementById('ts-end').style.display='none';
+  document.getElementById('crisis-select').innerHTML=CRISES.map(function(c,i){
+    return '<div class="cs-btn" onclick="tsStart('+i+')">'+
+      '<div class="cs-icon">'+c.icon+'</div>'+
+      '<div class="cs-info">'+
+        '<div class="cs-year">'+c.year+'</div>'+
+        '<div class="cs-name">'+c.name+'</div>'+
+        '<div class="cs-desc">'+c.desc+'</div>'+
+        '<div class="cs-diff" style="background:rgba(0,0,0,.3);color:'+c.diffColor+'">'+c.diff+'</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function tsStart(idx){
+  ts={pts:0,crisisIdx:idx,phaseIdx:0,running:true,timeline:[],outcomes:[]};
+  document.getElementById('ts-select').style.display='none';
+  document.getElementById('ts-game').style.display='';
+  document.getElementById('ts-end').style.display='none';
+  var crisis=CRISES[idx];
+  document.getElementById('sh-year').textContent=crisis.year;
+  document.getElementById('sh-title').textContent=crisis.name;
+  document.getElementById('sh-context').textContent=crisis.desc;
+  document.getElementById('sh-role').textContent=crisis.role;
+  renderPhaseIndicator();
+  tsLoadPhase();
+}
+
+function tsLoadPhase(){
+  var crisis=CRISES[ts.crisisIdx];
+  if(ts.phaseIdx>=crisis.phases.length){tsEnd();return;}
+  var phase=crisis.phases[ts.phaseIdx];
+  document.getElementById('dc-phase').textContent='⚡ '+phase.phase;
+  document.getElementById('dc-question').textContent=phase.question;
+  document.getElementById('dc-context').textContent=phase.context;
+  document.getElementById('decision-options').innerHTML=phase.options.map(function(o,i){
+    return '<div class="do-btn" id="do-'+i+'" onclick="tsDecide('+i+')">'+
+      '<span class="do-letter">'+['A','B','C','D'][i]+')</span>'+
+      '<span class="do-text">'+o.text+'</span>'+
+    '</div>';
+  }).join('');
+  document.getElementById('outcome-panel').classList.remove('show');
+  renderPhaseIndicator();
+  updateDisplay();
+}
+
+function tsDecide(optIdx){
+  var crisis=CRISES[ts.crisisIdx];
+  var phase=crisis.phases[ts.phaseIdx];
+  var opt=phase.options[optIdx];
+  // Seçimi göster
+  document.querySelectorAll('.do-btn').forEach(function(el){el.style.pointerEvents='none';});
+  document.getElementById('do-'+optIdx).classList.add('chosen-'+opt.outcome);
+  ts.pts+=opt.pts;
+  ts.outcomes.push(opt.outcome);
+  ts.timeline.push({phase:phase.phase,decision:opt.text,result:opt.result,outcome:opt.outcome});
+  // Sonuç göster
+  var op=document.getElementById('outcome-panel');
+  op.classList.add('show');
+  var titles={good:'✅ DOĞRU KARAR — Tarihle örtüşüyor!',bad:'❌ YANLIŞ KARAR — Tarih farklı gelişti.',neutral:'⚠️ NÖTR KARAR — Makul ama optimal değil.'};
+  var colors={good:'var(--green)',bad:'var(--red2)',neutral:'var(--gold)'};
+  document.getElementById('op-title').textContent=titles[opt.outcome];
+  document.getElementById('op-title').style.color=colors[opt.outcome];
+  document.getElementById('op-body').textContent=opt.result;
+  document.getElementById('op-lesson').textContent='📚 Tarihsel Ders: '+opt.result;
+  renderTimeline();
+  updateDisplay();
+  opt.outcome==='good'?beepWin():opt.outcome==='bad'?beepFail():null;
+  ts.phaseIdx++;
+  setTimeout(tsLoadPhase,2500);
+}
+
+function renderPhaseIndicator(){
+  var crisis=CRISES[ts.crisisIdx];
+  document.getElementById('phase-indicator').innerHTML=crisis.phases.map(function(_,i){
+    var cls='pi-dot'+(i<ts.phaseIdx?' done':i===ts.phaseIdx?' active':' pending');
+    return '<div class="'+cls+'"></div>';
+  }).join('');
+  document.getElementById('ts-phase').textContent=(ts.phaseIdx+1)+'/'+crisis.phases.length;
+}
+
+function renderTimeline(){
+  document.getElementById('timeline').innerHTML=ts.timeline.map(function(t){
+    return '<div class="tl-entry">'+
+      '<div class="tl-dot '+t.outcome+'"></div>'+
+      '<div><strong>'+t.phase+':</strong> '+t.decision+'<br><span style="color:var(--dim)">→ '+t.result+'</span></div>'+
+    '</div>';
+  }).join('');
+}
+
+function updateDisplay(){
+  document.getElementById('ts-pts').textContent=ts.pts;
+  var good=ts.outcomes.filter(function(o){return o==='good';}).length;
+  var total=ts.outcomes.length;
+  document.getElementById('ts-outcome').textContent=total>0?good+'/'+total:'-';
+  document.getElementById('ts-outcome').style.color=good===total&&total>0?'var(--green)':good>total/2?'var(--gold)':'var(--red2)';
+  document.getElementById('hdr-pts').textContent='⭐ '+ts.pts;
+}
+
+function tsEnd(){
+  ts.running=false;
+  document.getElementById('ts-game').style.display='none';
+  document.getElementById('ts-end').style.display='';
+  document.getElementById('ts-btn').style.display='';
+  document.getElementById('ts-btn').textContent='🔄 YENİ KRİZ';
+  var good=ts.outcomes.filter(function(o){return o==='good';}).length;
+  var total=ts.outcomes.length;
+  var pct=Math.round(good/total*100);
+  var grade=pct===100?'🏆 TARİHSEL DEHA':pct>=66?'✅ BAŞARILI KARAR VERİCİ':pct>=33?'📚 ÖĞRENCİ STRATEJİST':'⚠️ TARİH FARKLI GELİŞTİ';
+  document.getElementById('ts-final-title').textContent=grade+' — '+ts.pts+' puan';
+  document.getElementById('ts-final-title').style.color=pct===100?'var(--gold)':pct>=66?'var(--green)':'var(--red2)';
+  document.getElementById('ts-final-body').textContent=good+'/'+total+' kararın tarihle örtüştü. (%'+pct+')';
+  document.getElementById('ts-final-lesson').textContent='📚 Tarihsel krizlerin ortak dersi: Sabır, diplomasi ve çok taraflı yaklaşım, tek taraflı güç kullanımından genellikle daha etkilidir.';
+  saveScore();
+  pct>=66?beepWin():beepFail();
+}
+
+function saveScore(){try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['tarihsel-sim']=(s['tarihsel-sim']||0)+ts.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

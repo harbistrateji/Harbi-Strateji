@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Tarihin Akışını Değiştir | Harb-i Strateji OZA</title>
+<meta name="hs-skip" content="true">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;900&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0d0d0d;--card:#1a1a1a;--card2:#222;--red:#c41e3a;--red2:#ff2d55;--white:#f0f0f0;--gray:#888;--gray2:#555;--border:rgba(255,255,255,.1);}
+html,body{height:100%;overflow:hidden;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--white);}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#111;border-bottom:2px solid var(--red);position:fixed;top:0;left:0;right:0;z-index:100;}
+.tb-back{color:var(--red);text-decoration:none;font-size:.75rem;font-weight:700;font-family:'Chakra Petch',monospace;}
+.tb-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:900;color:var(--white);text-transform:uppercase;}
+.tb-stats{display:flex;gap:12px;font-size:.7rem;font-family:'IBM Plex Mono',monospace;}
+.tb-stats span{color:var(--gray);}
+.tb-stats b{color:var(--red2);}
+.main{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 50px);margin-top:50px;}
+.left-panel{overflow-y:auto;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.left-panel::-webkit-scrollbar{width:4px;}
+.left-panel::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px;}
+.scenario-card{width:100%;max-width:500px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;}
+.sc-era{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.sc-title{font-family:'Chakra Petch',monospace;font-size:1.3rem;font-weight:900;color:var(--white);margin-bottom:12px;}
+.sc-desc{font-size:.8rem;color:var(--gray);line-height:1.7;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.sc-question{font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:14px;}
+.sc-choices{display:flex;flex-direction:column;gap:10px;}
+.choice{padding:14px 18px;background:var(--card2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;}
+.choice:hover{border-color:var(--red);background:rgba(196,30,58,.08);}
+.choice .ch-title{font-size:.8rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.choice .ch-desc{font-size:.65rem;color:var(--gray);}
+.right-panel{overflow-y:auto;padding:20px;background:#111;display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--border);}
+.right-panel::-webkit-scrollbar{width:4px;}
+.right-panel::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
+.info-card h3{font-family:'Chakra Petch',monospace;font-size:.75rem;font-weight:700;color:var(--red);margin-bottom:8px;text-transform:uppercase;}
+.info-card p{font-size:.7rem;color:var(--gray);line-height:1.7;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat-item{background:var(--card2);border-radius:6px;padding:10px;text-align:center;}
+.stat-item .val{font-family:'Chakra Petch',monospace;font-size:1.1rem;font-weight:900;color:var(--red2);}
+.stat-item .lbl{font-size:.55rem;color:var(--gray);margin-top:2px;text-transform:uppercase;}
+.timeline{display:flex;flex-direction:column;gap:6px;}
+.tl-item{display:flex;align-items:center;gap:8px;font-size:.65rem;padding:6px 0;border-bottom:1px solid var(--border);}
+.tl-item:last-child{border:none;}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;}
+.tl-dot.future{background:var(--gray2);border:1px dashed var(--gray);}
+.tl-year{font-family:'IBM Plex Mono',monospace;color:var(--red2);width:40px;flex-shrink:0;}
+.tl-text{color:var(--gray);flex:1;}
+.result-box{background:rgba(196,30,58,.05);border:1px solid rgba(196,30,58,.3);border-radius:8px;padding:14px;margin-top:8px;}
+.result-box h4{font-family:'Chakra Petch',monospace;font-size:.75rem;color:var(--red);margin-bottom:6px;}
+.result-box p{font-size:.7rem;color:var(--gray);line-height:1.6;}
+.intro-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}
+.intro-overlay.hidden{display:none;}
+.intro-overlay h1{font-family:'Chakra Petch',monospace;font-size:2rem;font-weight:900;color:var(--white);text-transform:uppercase;}
+.intro-overlay .sub{font-size:.85rem;color:var(--red);font-family:'IBM Plex Mono',monospace;margin:8px 0 20px;}
+.intro-overlay p{font-size:.8rem;color:var(--gray);max-width:500px;line-height:1.8;margin-bottom:24px;}
+.intro-overlay button{background:var(--red);color:var(--white);border:none;border-radius:6px;padding:14px 40px;font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;cursor:pointer;text-transform:uppercase;}
+.intro-overlay button:hover{background:var(--red2);}
+.nation-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0;max-width:500px;}
+.nation{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;text-align:center;transition:all .2s;}
+.nation:hover{border-color:var(--red);}
+.nation .flag{font-size:1.5rem;margin-bottom:4px;}
+.nation .name{font-size:.75rem;font-weight:700;color:var(--white);}
+.nation .bonus{font-size:.6rem;color:var(--gray);}
+@media(max-width:900px){.main{grid-template-columns:1fr;}.left-panel{min-height:65vh;}.right-panel{border-top:2px solid var(--red);border-left:none;max-height:50vh;}}
+</style><link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<div class="intro-overlay" id="intro">
+<h1>Tarihin Akışını Değiştir</h1>
+<div class="sub">Alternatif Tarih Simülasyonu | CK + Civ</div>
+<p>Ya Fatih İstanbul'u fethedemeseydi? Ya Çanakkale düşseydi? Tarihsel dönüm noktalarında farklı kararlar ver, alternatif zaman çizgilerini keşfet.</p>
+<button onclick="selectNation()">Devleti Seç</button>
+</div>
+<div class="top-bar" id="topBar" style="display:none;padding-left:150px;">
+<a href="oza-harbi-strateji-evren.html" class="tb-back">&#8592; OZA</a>
+<div class="tb-title">Alternatif Tarih</div>
+<div class="tb-stats"><span>Yil: <b id="yearTop">1453</b></span><span>Guc: <b id="powerTop">70</b></span><span>Tur: <b id="turnTop">1</b>/10</span></div>
+</div>
+<div class="main" id="mainArea" style="display:none;">
+<div class="left-panel" id="leftP"></div>
+<div class="right-panel" id="rightP">
+<div class="info-card"><h3>Devlet Durumu</h3><div class="stat-grid" id="statsGrid"><div class="stat-item"><div class="val" id="stPower">70</div><div class="lbl">Guc</div></div><div class="stat-item"><div class="val" id="stPrest">50</div><div class="lbl">Prestij</div></div><div class="stat-item"><div class="val" id="stEcon">60</div><div class="lbl">Ekonomi</div></div><div class="stat-item"><div class="val" id="stMoral">80</div><div class="lbl">Moral</div></div></div></div>
+<div class="info-card"><h3>Zaman Cizgisi</h3><div class="timeline" id="timeline"></div></div>
+<div class="info-card" id="resultCard" style="display:none;"><h3>Sonuc</h3><div id="resultContent"></div></div>
+</div>
+</div>
+<script>
+const NATIONS=[
+{id:'ottoman',flag:'\u{1F3F4}',name:'Osmanlı Devleti',bonus:'Askerî +20%',power:80,prestige:70,economy:60,morale:90},
+{id:'byzantine',flag:'\u{1F7E3}',name:'Bizans İmparatorluğu',bonus:'Savunma +25%',power:40,prestige:60,economy:50,morale:30},
+{id:'timur',flag:'\u{1F40E}',name:'Timur İmparatorluğu',bonus:'Süvari +30%',power:90,prestige:80,economy:70,morale:85},
+{id:'mamluk',flag:'\u2694\uFE0F',name:'Memlûk Sultanlığı',bonus:'Ticaret +20%',power:60,prestige:55,economy:80,morale:60},
+{id:'safavid',flag:'\u{1F981}',name:'Safevî Devleti',bonus:'Diplomasi +15%',power:65,prestige:50,economy:55,morale:70},
+{id:'habsburg',flag:'\u{1F985}',name:'Habsburg İmparatorluğu',bonus:'Ekonomi +20%',power:70,prestige:75,economy:85,morale:65}
+];
+const SCENARIOS=[
+{year:1453,title:'İstanbul Kuşatması',desc:'53 günlük kuşatma. Surlar dayanıyor. Haliç zincirle kapalı. Fatih karar vermeli.',choices:[
+{title:'Gemileri karadan yürüt',desc:'72 kadırgayı Galata sırtlarından Halic\'e indir.',effect:{power:10,prestige:15,morale:10},result:'Gemiler bir gecede Halic\'e indi. Bizans şoka girdi. Kuşatma tamamlandı.'},
+{title:'Şahi topunu yoğunlaştır',desc:'Tüm topçu ateşini tek noktaya odakla.',effect:{power:5,prestige:5,morale:-5},result:'Surda gedik açıldı ama kayıplar yüksek. Moral düştü.'},
+{title:'Diplomatik teslim teklifi',desc:'Konstantinos\'a onurlu teslim öner.',effect:{power:-10,prestige:10,morale:-10},result:'Teklif reddedildi. Zaman kaybedildi ama Avrupa\'da iyi izlenim bıraktı.'}
+]},
+{year:1514,title:'Çaldıran Kararı',desc:'Yavuz doğuya yürüyor. Safevî Şah İsmail bekliyor. Ordu yorgun.',choices:[
+{title:'Hemen saldır — top üstünlüğü',desc:'Ateşli silahlarla frontal taarruz.',effect:{power:15,prestige:10,morale:5},result:'Safevî süvarisi Osmanlı topçu hattına çarptı ve eridi. Kesin zafer.'},
+{title:'Kışı bekle, lojistik güçlendir',desc:'Ordunun dinlenmesini sağla.',effect:{power:-5,prestige:-5,morale:15},result:'Ordu guclendi ama Safeviler de hazirlandi.'},
+{title:'Diplomasi ile böl',desc:'Kürt beylerini Safevîden kopar.',effect:{power:5,prestige:10,morale:0},result:'İdris-i Bitlisî ile Kürt beyleri Osmanlıya katıldı. Doğu sınırı güvende.'}
+]},
+{year:1538,title:'Preveze Öncesi',desc:'Barbaros 122 gemiyle Haçlı donanmasına karşı. Andrea Doria 600 gemilik filo ile geliyor.',choices:[
+{title:'Rüzgarı bekle, hilal formasyonu',desc:'Sabırlı ol, doğru an gelince saldır.',effect:{power:15,prestige:20,morale:10},result:'Rüzgar döndü. Hilal formasyonuyla saldiri. Haçlı donanması dağıldı. Akdeniz 33 yil Osmanlı gölü.'},
+{title:'Gece baskını',desc:'Karanlıkta düşman filosuna saldır.',effect:{power:10,prestige:5,morale:5},result:'Bazı gemiler batırıldı ama filo dağılmadı. Kısmi başarı.'},
+{title:'Limana çekil, savunmacı ol',desc:'Üstün sayıya karşı savunma.',effect:{power:-5,prestige:-15,morale:-10},result:'Haçlılar moral kazandı. Osmanli deniz hakimiyeti sorgulandı.'}
+]},
+{year:1571,title:'İnebahtı Sonrası',desc:'Donanma yenildi. Sokullu karar vermeli: Yeni donanma mı, barış mı?',choices:[
+{title:'6 ayda 150 gemi inşa et',desc:'Tüm tersaneleri seferber et.',effect:{power:10,prestige:15,morale:20},result:'6 ayda yeni donanma denize indi. Akdeniz kontrolü yeniden sağlandı.'},
+{title:'Kara ordusuna odaklan',desc:'Denizi bırak, kara hakimiyetini güçlendir.',effect:{power:5,prestige:-10,morale:0},result:'Kara ordusu güçlendi ama Akdeniz kontrolü zayıfladı.'},
+{title:'Venedik ile baris',desc:'Ticaret anlaşması yap.',effect:{power:-5,prestige:-5,morale:5},result:'Ekonomi düzeldi ama askeri prestij düştü.'}
+]},
+{year:1683,title:'Viyana Kuşatması',desc:'Kara Mustafa Pasa Viyana önünde. Leh ordusu yaklaşıyor.',choices:[
+{title:'Hızlı taarruz - şehri al',desc:'Leh ordusu gelmeden surları aş.',effect:{power:10,prestige:20,morale:15},result:'Surlar aşıldı! Viyana düştü. Osmanli Avrupa\'nin kalbinde.'},
+{title:'Savunma hattı kur',desc:'Leh ordusuna karşı hazırlan.',effect:{power:5,prestige:0,morale:-5},result:'Leh süvarisi durduruldu ama Viyana alınamadı. Statuko.'},
+{title:'Geri çekil',desc:'Kayıpları minimize et.',effect:{power:-10,prestige:-20,morale:-15},result:'Gerileme dönemi başladı. Karlofça kaçınılmaz.'}
+]},
+{year:1915,title:'Çanakkale Kararı',desc:'Itilaf donanmasi Bogaz\'a girdi. Enver Paşa karar vermeli.',choices:[
+{title:'Mayın hattını güçlendir',desc:'Nusret\'i gece gorevine gonder.',effect:{power:15,prestige:20,morale:20},result:'Nusret 26 mayın döşedi. 3 zırhlı battı. Çanakkale geçilemez!'},
+{title:'Kıyı topçusunu yoğunlaştır',desc:'Tüm bataryaları aktif et.',effect:{power:10,prestige:10,morale:10},result:'Topçu etkili oldu ama donanma geçebilirdi. Kısmi başarı.'},
+{title:'Bogaz\'i terk et, İstanbul\'u savun',desc:'Stratejik geri çekilme.',effect:{power:-15,prestige:-25,morale:-20},result:'Boğaz düştü. İstanbul tehdit altında. Felaket senaryosu.'}
+]},
+{year:1919,title:'Millî Mücadele Başlangıcı',desc:'İmparatorluk çöktü. Mustafa Kemal Samsun\'a cikti.',choices:[
+{title:'Kongre topla, millî irade',desc:'Erzurum ve Sivas kongreleri.',effect:{power:10,prestige:15,morale:20},result:'Millî irade tecelli etti. TBMM kuruldu. Kurtuluş Savaşı başladı.'},
+{title:'Hemen askerî direniş',desc:'Düzenli ordu kur, saldir.',effect:{power:15,prestige:5,morale:10},result:'Erken saldırı. Bazı başarılar ama uluslararası destek yok.'},
+{title:'İngilizlerle müzakere',desc:'Diplomatik çözüm ara.',effect:{power:-10,prestige:-15,morale:-20},result:'Sevr dayatıldı. Millî onur zedelendi.'}
+]},
+{year:1922,title:'Büyük Taarruz Planı',desc:'26 Agustos. Yunan ordusu Afyon hattında. M. Kemal Kocatepe\'de.',choices:[
+{title:'Kuşatma manevrasıyla çevir',desc:'Süvari birlikleriyle arkadan sar.',effect:{power:15,prestige:20,morale:20},result:'Yunan ordusu kuşatıldı. Trikoupis esir alındı. 15 gunde Izmir\'e ulasildi.'},
+{title:'Cepheden genel taarruz',desc:'Tüm hatlardan aynı anda saldır.',effect:{power:10,prestige:10,morale:10},result:'İlerleme yavaş ama etkili. Kayıplar yüksek.'},
+{title:'Yıpratma savaşına devam',desc:'Savunmada kal, düşmanı yor.',effect:{power:-5,prestige:-10,morale:-10},result:'Savaş uzadı. Uluslararası baskı arttı.'}
+]},
+{year:1952,title:'NATO Üyeliği',desc:'Kore Savaşı\'nda Türk tugayı kahramanlık gösterdi. NATO kapısı açıldı.',choices:[
+{title:'NATO\'ya kâtil',desc:'Batı ittifakına dahil ol.',effect:{power:15,prestige:10,morale:10},result:'Türkiye NATO üyesi oldu. Soğuk Savaş\'ta Batı bloğunda. Güvenlik garantisi.'},
+{title:'Tarafsız kal',desc:'Isvec/Isvicre modeli.',effect:{power:0,prestige:5,morale:0},result:'Bağımsız dış politika ama güvenlik riski.'},
+{title:'Sovyetlerle yakınlaş',desc:'Doğu bloğuna yönel.',effect:{power:5,prestige:-10,morale:-5},result:'Sovyet desteği geldi ama Batı ile ilişkiler koptu.'}
+]},
+{year:2023,title:'Küresel Güç Dengesi',desc:'Çok kutuplu dünya. Türkiye stratejik konumda. Hangi yol?',choices:[
+{title:'Stratejik özerklik',desc:'Ne Dogu ne Bati, kendi ekseni.',effect:{power:10,prestige:15,morale:10},result:'Bağımsız savunma sanayii, çok yönlü diplomasi. Bölgesel güç statüsü.'},
+{title:'Batı entegrasyonunu derinleştir',desc:'AB + NATO tam uyum.',effect:{power:5,prestige:10,morale:-5},result:'Ekonomik avantaj ama egemenlik tartışmaları.'},
+{title:'Avrasya ekseni',desc:'Rusya-Cin-Türkiye ucgeni.',effect:{power:10,prestige:5,morale:5},result:'Enerji güvenliği ama Batı yaptırım riski.'}
+]}
+];
+let G={nation:null,turn:0,power:70,prestige:50,economy:60,morale:80,timeline:[]};
+function selectNation(){
+document.getElementById('intro').innerHTML='<h1 style="font-family:Chakra Petch,monospace;font-size:1.5rem;color:var(--white);margin-bottom:20px;">DEVLETİNİ SEÇ</h1><div class="nation-grid">'+NATIONS.map(function(n,i){return '<div class="nation" onclick="pickNation('+i+')"><div class="flag">'+n.flag+'</div><div class="name">'+n.name+'</div><div class="bonus">'+n.bonus+'</div></div>';}).join('')+'</div>';
+}
+function pickNation(i){
+G.nation=NATIONS[i];G.power=G.nation.power;G.prestige=G.nation.prestige;G.economy=G.nation.economy;G.morale=G.nation.morale;
+document.getElementById('intro').classList.add('hidden');
+document.getElementById('topBar').style.display='flex';
+document.getElementById('mainArea').style.display='grid';
+showScenario();
+}
+function showScenario(){
+if(G.turn>=SCENARIOS.length){endGame();return;}
+var s=SCENARIOS[G.turn];
+document.getElementById('leftP').innerHTML='<div class="scenario-card"><div class="sc-era">Tur '+(G.turn+1)+'/10</div><div class="sc-title">'+s.year+' - '+s.title+'</div><div class="sc-desc">'+s.desc+'</div><div class="sc-question">Kararin nedir?</div><div class="sc-choices">'+s.choices.map(function(c,i){return '<div class="choice" onclick="makeChoice('+i+')"><div class="ch-title">'+c.title+'</div><div class="ch-desc">'+c.desc+'</div></div>';}).join('')+'</div></div>';
+updateStats();updateTimeline();
+}
+function makeChoice(i){
+var s=SCENARIOS[G.turn];var c=s.choices[i];
+G.power=Math.max(0,Math.min(100,G.power+(c.effect.power||0)));
+G.prestige=Math.max(0,Math.min(100,G.prestige+(c.effect.prestige||0)));
+G.economy=Math.max(0,Math.min(100,G.economy+(c.effect.power||0)));
+G.morale=Math.max(0,Math.min(100,G.morale+(c.effect.morale||0)));
+G.timeline.push({year:s.year,text:c.title});
+document.getElementById('resultCard').style.display='block';
+document.getElementById('resultContent').innerHTML='<div class="result-box"><h4>'+c.title+'</h4><p>'+c.result+'</p></div>';
+updateStats();updateTimeline();
+G.turn++;
+setTimeout(function(){document.getElementById('resultCard').style.display='none';showScenario();},3000);
+}
+function updateStats(){
+document.getElementById('stPower').textContent=G.power;
+document.getElementById('stPrest').textContent=G.prestige;
+document.getElementById('stEcon').textContent=G.economy;
+document.getElementById('stMoral').textContent=G.morale;
+document.getElementById('yearTop').textContent=G.turn<SCENARIOS.length?SCENARIOS[G.turn].year:'-';
+document.getElementById('powerTop').textContent=G.power;
+document.getElementById('turnTop').textContent=(G.turn+1)+'/10';
+}
+function updateTimeline(){
+var html='';
+G.timeline.forEach(function(t){html+='<div class="tl-item"><div class="tl-dot"></div><div class="tl-year">'+t.year+'</div><div class="tl-text">'+t.text+'</div></div>';});
+SCENARIOS.slice(G.turn).forEach(function(s){html+='<div class="tl-item"><div class="tl-dot future"></div><div class="tl-year">'+s.year+'</div><div class="tl-text">???</div></div>';});
+document.getElementById('timeline').innerHTML=html;
+}
+function endGame(){
+var total=G.power+G.prestige+G.economy+G.morale;
+var rank='';if(total>=300)rank='IMPARATORLUK';else if(total>=250)rank='BUYUK GUC';else if(total>=200)rank='BOLGESEL GUC';else rank='KUCUK DEVLET';
+document.getElementById('leftP').innerHTML='<div style="text-align:center;max-width:400px;"><h2 style="font-family:Chakra Petch,monospace;font-size:1.5rem;color:var(--red);margin-bottom:12px;">SİMÜLASYON TAMAMLANDI</h2><div style="font-size:.9rem;color:var(--gray);margin-bottom:16px;">Alternatif zaman çizgini oluşturdun</div><div style="font-size:2rem;font-weight:900;color:var(--white);margin-bottom:8px;">'+rank+'</div><div style="font-size:.8rem;color:var(--gray);margin-bottom:20px;">Toplam Skor: '+total+'/400</div><button onclick="location.reload()" style="background:var(--red);color:var(--white);border:none;border-radius:6px;padding:12px 30px;font-family:Chakra Petch,monospace;font-weight:700;cursor:pointer;">Tekrar Oyna</button></div>';
+}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body></html>

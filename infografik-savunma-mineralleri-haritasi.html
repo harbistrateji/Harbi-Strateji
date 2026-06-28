@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Savunma Mineralleri Küresel Tedarik Haritası | Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0f17;color:#e8e8e8;font-family:'IBM Plex Sans',sans-serif;overflow-x:hidden}
+.back-btn{position:fixed;top:20px;left:20px;z-index:100;color:#00e0ff;text-decoration:none;font-size:14px;opacity:.8}
+.back-btn:hover{opacity:1}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 20px;background:radial-gradient(ellipse at center,#0f1a2e 0%,#0a0f17 70%)}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(28px,5vw,52px);color:#fff;margin-bottom:16px;letter-spacing:-1px}
+.hero h1 span{color:#c41e3a}
+.hero p{font-size:18px;color:#a0a8b4;max-width:700px;line-height:1.6}
+.stats-bar{display:flex;gap:30px;margin-top:40px;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat .num{font-family:'Chakra Petch',sans-serif;font-size:36px;color:#00e0ff;font-weight:700}
+.stat .label{font-size:12px;color:#7a8290;text-transform:uppercase;letter-spacing:1px}
+.section{padding:80px 20px;max-width:1200px;margin:0 auto}
+.section h2{font-family:'Chakra Petch',sans-serif;font-size:32px;color:#fff;margin-bottom:40px;text-align:center}
+.section h2 span{color:#c41e3a}
+
+/* Tedarik Zinciri Haritası */
+.supply-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.country-card{background:linear-gradient(135deg,#111827,#1a2332);border:1px solid #1e293b;border-radius:16px;padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.country-card:hover{border-color:#c41e3a;transform:translateY(-4px);box-shadow:0 12px 40px rgba(196,30,58,.15)}
+.country-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)}
+.country-flag{font-size:36px;margin-bottom:12px}
+.country-name{font-family:'Chakra Petch',sans-serif;font-size:22px;color:#fff;margin-bottom:8px}
+.country-share{font-size:14px;color:#c41e3a;font-weight:600;margin-bottom:16px}
+.mineral-tags{display:flex;flex-wrap:wrap;gap:6px}
+.mineral-tag{background:rgba(0,224,255,.1);color:#00e0ff;padding:4px 10px;border-radius:20px;font-size:13px;font-family:'IBM Plex Mono',monospace}
+.risk-bar{margin-top:16px;height:6px;background:#1e293b;border-radius:3px;overflow:hidden}
+.risk-fill{height:100%;border-radius:3px;transition:width 1.5s ease}
+
+/* Silah Sistemleri Bağımlılık */
+.weapon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.weapon-card{background:#111827;border:1px solid #1e293b;border-radius:12px;padding:24px;text-align:center;transition:all .3s}
+.weapon-card:hover{border-color:#00e0ff;transform:scale(1.02)}
+.weapon-icon{font-size:48px;margin-bottom:12px}
+.weapon-name{font-family:'Chakra Petch',sans-serif;font-size:18px;color:#fff;margin-bottom:8px}
+.weapon-minerals{font-size:13px;color:#a0a8b4;line-height:1.5}
+.dep-level{display:inline-block;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600;margin-top:12px}
+.dep-critical{background:rgba(196,30,58,.2);color:#c41e3a}
+.dep-high{background:rgba(255,165,0,.2);color:#ffa500}
+.dep-medium{background:rgba(0,224,255,.2);color:#00e0ff}
+
+/* Animasyonlar */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.animate{animation:fadeInUp .8s ease forwards;opacity:0}
+.pulse{animation:pulse 2s infinite}
+
+/* Jeopolitik Risk Matrisi */
+.risk-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:30px}
+.risk-item{background:#111827;border-left:4px solid;padding:20px;border-radius:0 12px 12px 0}
+.risk-item.extreme{border-color:#c41e3a}
+.risk-item.high{border-color:#ffa500}
+.risk-item.moderate{border-color:#00e0ff}
+.risk-title{font-family:'Chakra Petch',sans-serif;font-size:16px;color:#fff;margin-bottom:6px}
+.risk-desc{font-size:13px;color:#a0a8b4;line-height:1.5}
+
+@media(max-width:768px){
+  .stats-bar{gap:15px}
+  .stat .num{font-size:24px}
+  .supply-map,.weapon-grid{grid-template-columns:1fr}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<a href="infografik.html" class="back-btn">← İnfografiklere Dön</a>
+
+<section class="hero">
+  <h1>Savunma Mineralleri<br><span>Küresel Tedarik Haritası</span></h1>
+  <p>SFA-Oxford verilerine göre modern savunma sanayinin bağımlı olduğu 24 kritik mineral, üretici ülkeler ve jeopolitik risk analizi</p>
+  <div class="stats-bar">
+    <div class="stat"><div class="num pulse">24</div><div class="label">Kritik Mineral</div></div>
+    <div class="stat"><div class="num pulse">7</div><div class="label">Savunma Sektörü</div></div>
+    <div class="stat"><div class="num pulse">%85</div><div class="label">Çin İşleme Payı</div></div>
+    <div class="stat"><div class="num pulse">$2.7T</div><div class="label">Etkilenen Savunma Bütçesi</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Tedarik Zinciri <span>Kritik Ülkeler</span></h2>
+  <div class="supply-map">
+    <div class="country-card animate" style="--accent:#c41e3a">
+      <div class="country-flag">🇨🇳</div>
+      <div class="country-name">Çin</div>
+      <div class="country-share">Küresel nadir toprak işlemenin %85\'i</div>
+      <div class="mineral-tags">
+        <span class="mineral-tag">Galyum %80+</span>
+        <span class="mineral-tag">Germanyum %60</span>
+        <span class="mineral-tag">Tungsten %85</span>
+        <span class="mineral-tag">Neodimyum %85+</span>
+        <span class="mineral-tag">Disprosyum %99</span>
+        <span class="mineral-tag">Terbiyum %90+</span>
+        <span class="mineral-tag">Grafit %65</span>
+      </div>
+      <div class="risk-bar"><div class="risk-fill" style="width:95%;background:linear-gradient(90deg,#c41e3a,#ff4444)"></div></div>
+    </div>
+    <div class="country-card animate" style="--accent:#ffa500;animation-delay:.2s">
+      <div class="country-flag">🇨🇩</div>
+      <div class="country-name">Kongo (DRC)</div>
+      <div class="country-share">Küresel kobalt üretiminin %70\'i</div>
+      <div class="mineral-tags">
+        <span class="mineral-tag">Kobalt %70</span>
+        <span class="mineral-tag">Tantal %40</span>
+        <span class="mineral-tag">Bakır</span>
+      </div>
+      <div class="risk-bar"><div class="risk-fill" style="width:82%;background:linear-gradient(90deg,#ffa500,#ffcc00)"></div></div>
+    </div>
+    <div class="country-card animate" style="--accent:#00e0ff;animation-delay:.4s">
+      <div class="country-flag">🇧🇷</div>
+      <div class="country-name">Brezilya</div>
+      <div class="country-share">Küresel niyobyum üretiminin %90\'ı</div>
+      <div class="mineral-tags">
+        <span class="mineral-tag">Niyobyum %90</span>
+        <span class="mineral-tag">Gadolinyum</span>
+        <span class="mineral-tag">Lutesyum</span>
+      </div>
+      <div class="risk-bar"><div class="risk-fill" style="width:65%;background:linear-gradient(90deg,#00e0ff,#00ff88)"></div></div>
+    </div>
+    <div class="country-card animate" style="--accent:#9b59b6;animation-delay:.6s">
+      <div class="country-flag">🇿🇦</div>
+      <div class="country-name">Güney Afrika</div>
+      <div class="country-share">Küresel platin grubunun %70\'i</div>
+      <div class="mineral-tags">
+        <span class="mineral-tag">Platin %70</span>
+        <span class="mineral-tag">Krom %40</span>
+        <span class="mineral-tag">Vanadyum</span>
+        <span class="mineral-tag">Hafniyum</span>
+      </div>
+      <div class="risk-bar"><div class="risk-fill" style="width:75%;background:linear-gradient(90deg,#9b59b6,#c39bd3)"></div></div>
+    </div>
+    <div class="country-card animate" style="--accent:#1abc9c;animation-delay:.8s">
+      <div class="country-flag">🇹🇷</div>
+      <div class="country-name">Türkiye</div>
+      <div class="country-share">Dünya bor rezervlerinin %73\'ü</div>
+      <div class="mineral-tags">
+        <span class="mineral-tag">Bor %73</span>
+        <span class="mineral-tag">Krom</span>
+        <span class="mineral-tag">Feldspat</span>
+      </div>
+      <div class="risk-bar"><div class="risk-fill" style="width:30%;background:linear-gradient(90deg,#1abc9c,#2ecc71)"></div></div>
+    </div>
+    <div class="country-card animate" style="--accent:#e67e22;animation-delay:1s">
+      <div class="country-flag">🇦🇺</div>
+      <div class="country-name">Avustralya</div>
+      <div class="country-share">Lityum, zirkonyum, hafniyum üreticisi</div>
+      <div class="mineral-tags">
+        <span class="mineral-tag">Lityum</span>
+        <span class="mineral-tag">Zirkonyum %35</span>
+        <span class="mineral-tag">Hafniyum</span>
+        <span class="mineral-tag">Uranyum</span>
+      </div>
+      <div class="risk-bar"><div class="risk-fill" style="width:40%;background:linear-gradient(90deg,#e67e22,#f39c12)"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Silah Sistemleri <span>Mineral Bağımlılığı</span></h2>
+  <div class="weapon-grid">
+    <div class="weapon-card">
+      <div class="weapon-icon">🚀</div>
+      <div class="weapon-name">Hassas Güdümlü Füzeler</div>
+      <div class="weapon-minerals">Berilyum · Tungsten · Neodimyum · Samaryum · Prometyum · Tantal · Disprosyum</div>
+      <div class="dep-level dep-critical">Kritik Bağımlılık</div>
+    </div>
+    <div class="weapon-card">
+      <div class="weapon-icon">📡</div>
+      <div class="weapon-name">Radar & Sonar Sistemleri</div>
+      <div class="weapon-minerals">Berilyum · Titanyum · Kobalt · İtriyum · Neodimyum · Samaryum · Gadolinyum</div>
+      <div class="dep-level dep-critical">Kritik Bağımlılık</div>
+    </div>
+    <div class="weapon-card">
+      <div class="weapon-icon">🌙</div>
+      <div class="weapon-name">Gece Görüş Sistemleri</div>
+      <div class="weapon-minerals">Germanyum · İtriyum · Lantan · Europiyum</div>
+      <div class="dep-level dep-high">Yüksek Bağımlılık</div>
+    </div>
+    <div class="weapon-card">
+      <div class="weapon-icon">✈️</div>
+      <div class="weapon-name">Savaş Uçağı Motorları</div>
+      <div class="weapon-minerals">Renyum · Niyobyum · Kobalt · Nikel · Titanyum · Hafniyum</div>
+      <div class="dep-level dep-critical">Kritik Bağımlılık</div>
+    </div>
+    <div class="weapon-card">
+      <div class="weapon-icon">🛡️</div>
+      <div class="weapon-name">Zırhlı Araçlar</div>
+      <div class="weapon-minerals">Tungsten · Titanyum · Vanadyum · Krom · Germanyum · Terbiyum</div>
+      <div class="dep-level dep-high">Yüksek Bağımlılık</div>
+    </div>
+    <div class="weapon-card">
+      <div class="weapon-icon">🔋</div>
+      <div class="weapon-name">İHA & Drone Bataryaları</div>
+      <div class="weapon-minerals">Lityum · Kobalt · Grafit · Nikel</div>
+      <div class="dep-level dep-medium">Orta Bağımlılık</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Jeopolitik <span>Risk Matrisi</span></h2>
+  <div class="risk-matrix">
+    <div class="risk-item extreme">
+      <div class="risk-title">Çin İhracat Kısıtlaması (2023-2025)</div>
+      <div class="risk-desc">Galyum, germanyum ve nadir toprak ihracatına lisans zorunluluğu. NATO tedarik zincirini doğrudan tehdit ediyor.</div>
+    </div>
+    <div class="risk-item extreme">
+      <div class="risk-title">Disprosyum Tek Kaynak Riski</div>
+      <div class="risk-desc">Dünya üretiminin %99\'u Çin\'de. F-35, KAAN ve tüm 5. nesil uçak motorları için vazgeçilmez.</div>
+    </div>
+    <div class="risk-item high">
+      <div class="risk-title">Kongo İstikrarsızlığı</div>
+      <div class="risk-desc">Kobalt üretiminin %70\'i iç savaş bölgesinde. Drone ve İHA bataryaları doğrudan etkileniyor.</div>
+    </div>
+    <div class="risk-item high">
+      <div class="risk-title">Rusya-Ukrayna Savaşı Etkisi</div>
+      <div class="risk-desc">Paladyum, nikel ve titanyum tedarik zincirleri aksıyor. Jet motoru üretimi yavaşlıyor.</div>
+    </div>
+    <div class="risk-item moderate">
+      <div class="risk-title">Brezilya Niyobyum Monopolü</div>
+      <div class="risk-desc">Tek ülke %90 pazar payı. Jet motoru türbin kanatçıkları için alternatif sınırlı.</div>
+    </div>
+    <div class="risk-item moderate">
+      <div class="risk-title">Türkiye Bor Stratejik Avantajı</div>
+      <div class="risk-desc">Dünya rezervlerinin %73\'ü. Radar kubbe, nükleer kalkan ve zırh uygulamalarında kritik.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="text-align:center;padding-bottom:120px">
+  <p style="color:#7a8290;font-size:13px">Kaynak: SFA-Oxford · Critical Minerals in Defence and National Security (2024-2025)<br>Harb-i Strateji Külliyatı · Stratejik Mineraller Araştırma Grubu</p>
+</section>
+
+<script src="hs-nav.js?v=11"></script>
+<script>
+// Scroll animasyonu
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.1});
+document.querySelectorAll('.animate,.country-card,.weapon-card,.risk-item').forEach(el => observer.observe(el));
+
+// Risk bar animasyonu
+setTimeout(() => {
+  document.querySelectorAll('.risk-fill').forEach(bar => {
+    bar.style.width = bar.style.width;
+  });
+}, 500);
+</script>
+</body>
+</html>

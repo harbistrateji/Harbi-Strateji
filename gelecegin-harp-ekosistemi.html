@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geleceğin Harp Ekosistemi — Harb-i Strateji</title>
+<meta name="description" content="Mekanikten Sibernetiğe: Otonom & Robotik, Siber Savaş, Kuantum, Blockchain, Bilişsel Savaş ve OODA-X interaktif modülleri.">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--surface-0:#0d1420;--surface-1:#111927;--surface-2:#151f2e;--border:#1e2a3a;--border-strong:#2a3a4e;--text-primary:#e8ecf0;--text-secondary:#8b9bb4;--text-muted:#5a6a80;--text-accent:#378ADD;--red:#E01515;--cyan:#00E0FF;--gold:#C9A24B;--radius:8px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+.hero{background:linear-gradient(135deg,#0d1420 0%,#1a0a2e 30%,#0a1a2e 70%,#0d1420 100%);padding:48px 20px 40px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 80%,rgba(55,138,221,.08) 0%,transparent 60%);pointer-events:none;}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(22px,5vw,40px);font-weight:700;background:linear-gradient(90deg,var(--gold),#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
+.hero .subtitle{font-size:15px;color:var(--text-secondary);max-width:700px;margin:0 auto 12px;line-height:1.6;}
+.hero .meta{font-size:12px;color:var(--text-muted);}
+.container{max-width:1100px;margin:0 auto;padding:32px 16px;}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:40px;}
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .3s;cursor:pointer;text-decoration:none;color:inherit;display:block;position:relative;overflow:hidden;}
+.card:hover{border-color:var(--border-strong);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity .3s;}
+.card:hover::before{opacity:1;}
+.card-icon{font-size:32px;margin-bottom:12px;}
+.card-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;}
+.card-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;}
+.card-badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:500;margin-top:10px;}
+.infografik-section{margin-bottom:40px;}
+.infografik-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.infografik-thumb{border-radius:8px;overflow:hidden;border:1px solid var(--border);transition:all .3s;cursor:pointer;}
+.infografik-thumb:hover{border-color:var(--gold);transform:scale(1.02);}
+.infografik-thumb img{width:100%;height:160px;object-fit:cover;display:block;}
+.infografik-thumb .caption{padding:8px;font-size:11px;color:var(--text-secondary);text-align:center;background:var(--surface-2);}
+.footer{text-align:center;padding:24px 16px;border-top:1px solid var(--border);margin-top:32px;font-size:11px;color:var(--text-muted);}
+.footer a{color:var(--text-accent);text-decoration:none;}
+@media(max-width:600px){.grid{grid-template-columns:1fr;}.infografik-grid{grid-template-columns:repeat(2,1fr);}}
+
+.lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px;}
+.lb-overlay.active{display:flex;}
+.lb-overlay img{max-width:90vw;max-height:85vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.6);}
+.lb-close{position:absolute;top:20px;right:30px;font-size:32px;color:#fff;cursor:pointer;z-index:10000;}
+.lb-caption{color:#ccc;font-size:14px;margin-top:12px;text-align:center;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<div class="hero">
+  <h1>GELECEĞİN HARP EKOSİSTEMİ</h1>
+  <div class="subtitle">Mekanikten Sibernetiğe — Klavye, Joystick ve Algoritmalar: Savaş sadece başlangıçta değil, tedarik zincirine bakılarak kazanılıyor!</div>
+  <div class="meta">Selahaddin Koyuncu · Harb-i Strateji Külliyatı · 2025-2026</div>
+</div>
+
+<div class="container">
+
+<!-- İNTERAKTİF MODÜLLER -->
+<div class="section-title">İnteraktif Simülatörler &amp; Modüller</div>
+<div class="grid">
+
+  <a href="ooda-x-super-dongu.html" class="card" style="--accent:var(--cyan)">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">OODA-X Süper Döngü Simülatörü</div>
+    <div class="card-desc">Klasik OODA vs OODA-X karşılaştırması. YZ-Kuantum-Blockchain entegrasyonu, hipersonik tehdit senaryoları, matematiksel modeller ve risk analizi.</div>
+    <div class="card-badge" style="background:#378ADD22;color:#378ADD;border:1px solid #378ADD44">YENİ · 5 Sekme · İnteraktif</div>
+  </a>
+
+  <a href="sim2-plazma-korlugu.html" class="card" style="--accent:#E24B4A">
+    <div class="card-icon">🚀</div>
+    <div class="card-title">Plazma Körlüğü Simülasyonu</div>
+    <div class="card-desc">Hipersonik füzelerin plazma kılıfı radar etkileşimi. Mach 5-10 hızlarda elektron yoğunluğu ve radar zayıflaması hesaplamaları.</div>
+    <div class="card-badge" style="background:#E24B4A22;color:#E24B4A;border:1px solid #E24B4A44">Fizik Modeli</div>
+  </a>
+
+  <a href="sim4-maliyet-terazisi.html" class="card" style="--accent:var(--gold)">
+    <div class="card-icon">⚖️</div>
+    <div class="card-title">Maliyet Terazisi</div>
+    <div class="card-desc">Asimetrik maliyet analizi: Shahed drone vs Patriot PAC-3. Yıpratma savaşı ekonomisi ve DEW çözümü.</div>
+    <div class="card-badge" style="background:#C9A24B22;color:#C9A24B;border:1px solid #C9A24B44">Ekonomi Modeli</div>
+  </a>
+
+  <a href="sim11-kuantum-lazer-siber.html" class="card" style="--accent:#7F77DD">
+    <div class="card-icon">⚛️</div>
+    <div class="card-title">Kuantum · Lazer · Siber</div>
+    <div class="card-desc">Kuantum kriptografi (QKD), yönlendirilmiş enerji silahları (DEW) ve siber savaş entegrasyonu simülasyonu.</div>
+    <div class="card-badge" style="background:#7F77DD22;color:#7F77DD;border:1px solid #7F77DD44">Kuantum Çağı</div>
+  </a>
+
+  <a href="sim3-bilissel-kalkan.html" class="card" style="--accent:#1D9E75">
+    <div class="card-icon">🧠</div>
+    <div class="card-title">Bilişsel Kalkan</div>
+    <div class="card-desc">Bilişsel savaş simülasyonu: Deepfake tespit, dezenformasyon analizi, yankı odası mekanizmaları ve propaganda taktikleri.</div>
+    <div class="card-badge" style="background:#1D9E7522;color:#1D9E75;border:1px solid #1D9E7544">Bilişsel Savaş</div>
+  </a>
+
+  <a href="sim8-siber-casusluk-ai.html" class="card" style="--accent:#E01515">
+    <div class="card-icon">🔐</div>
+    <div class="card-title">Siber Casusluk &amp; AI</div>
+    <div class="card-desc">Siber savaş ve elektronik harp operasyonları. Stuxnet vaka çalışması, C6ISR bağlantıları, saldırı vektörleri.</div>
+    <div class="card-badge" style="background:#E0151522;color:#E01515;border:1px solid #E0151544">Siber/EH</div>
+  </a>
+
+  <a href="sim13-gelecegin-askeri.html" class="card" style="--accent:var(--cyan)">
+    <div class="card-icon">🤖</div>
+    <div class="card-title">Geleceğin Askeri</div>
+    <div class="card-desc">Otonom & Robotik Kuvvetler (RAS & LAWS). Loyal Wingman, sürü zekası, insansız sistemler ve karar alma otomasyonu.</div>
+    <div class="card-badge" style="background:#00E0FF22;color:#00E0FF;border:1px solid #00E0FF44">Otonom Sistemler</div>
+  </a>
+
+  <a href="infografik-mineral-agi.html" class="card" style="--accent:var(--gold)">
+    <div class="card-icon">⚗️</div>
+    <div class="card-title">Stratejik Mineraller Periyodik Tablosu</div>
+    <div class="card-desc">Savunma sanayiinin kritik mineralleri: Galyum, Germanyum, Neodimyum, Disprozyum, Tantal, Kobalt, Lityum. Jeopolitik risk skorları.</div>
+    <div class="card-badge" style="background:#C9A24B22;color:#C9A24B;border:1px solid #C9A24B44">Periyodik Tablo</div>
+  </a>
+
+  <a href="oyun-fabrika-zinciri.html" class="card" style="--accent:#1D9E75">
+    <div class="card-icon">🏭</div>
+    <div class="card-title">Blockchain Askeri Lojistik</div>
+    <div class="card-desc">Tedarik zinciri güvenliği: Akıllı sözleşme akış diyagramı, IoT sensör entegrasyonu, blok zinciri tahrifat testi.</div>
+    <div class="card-badge" style="background:#1D9E7522;color:#1D9E75;border:1px solid #1D9E7544">Blockchain</div>
+  </a>
+
+</div>
+
+<!-- İNFOGRAFİKLER -->
+<div class="section-title">Stratejik İnfografikler</div>
+<div class="infografik-grid">
+  <div class="infografik-thumb" onclick="openLB('tez-infografikleri/tez-gen-12-kuantum-askeri.png',this.querySelector('.caption').textContent)">
+    <img src="tez-infografikleri/tez-gen-12-kuantum-askeri.png" alt="Kuantum Askeri" loading="lazy">
+    <div class="caption">Kuantum Teknolojilerinin Askeri Uygulamaları</div>
+  </div>
+  <div class="infografik-thumb" onclick="openLB('tez-infografikleri/tez-gen-15-kritik-mineraller.png',this.querySelector('.caption').textContent)">
+    <img src="tez-infografikleri/tez-gen-15-kritik-mineraller.png" alt="Kritik Mineraller" loading="lazy">
+    <div class="caption">Kritik Mineraller ve Kullanım Alanları</div>
+  </div>
+  <div class="infografik-thumb" onclick="openLB('tez-infografikleri/tez-gen-16-savas-ucagi-nadir.png',this.querySelector('.caption').textContent)">
+    <img src="tez-infografikleri/tez-gen-16-savas-ucagi-nadir.png" alt="Savaş Uçağı" loading="lazy">
+    <div class="caption">Savaş Uçağında Nadir Metaller</div>
+  </div>
+  <div class="infografik-thumb" onclick="openLB('tez-infografikleri/tez-gen-09-hibrit-tehdit.png',this.querySelector('.caption').textContent)">
+    <img src="tez-infografikleri/tez-gen-09-hibrit-tehdit.png" alt="Hibrit Tehdit" loading="lazy">
+    <div class="caption">Hibrit Tehdit Kavramsal Modeli</div>
+  </div>
+  <div class="infografik-thumb" onclick="openLB('tez-infografikleri/avrupa-stratejik-ikilem-TR.png',this.querySelector('.caption').textContent)">
+    <img src="tez-infografikleri/avrupa-stratejik-ikilem-TR.png" alt="Avrupa İkilemi" loading="lazy">
+    <div class="caption">Avrupa'nın Stratejik İkilemi</div>
+  </div>
+  <div class="infografik-thumb" onclick="openLB('tez-infografikleri/nato-ankara-summit-2026-EN.png',this.querySelector('.caption').textContent)">
+    <img src="tez-infografikleri/nato-ankara-summit-2026-EN.png" alt="NATO Ankara" loading="lazy">
+    <div class="caption">NATO Ankara Summit 2026</div>
+  </div>
+</div>
+
+<!-- MAKALE BÖLÜMÜ -->
+<div style="margin-top:40px">
+<div class="section-title">Makale Bölümleri — Algoritma Savaşları ve OODA-X Çağı</div>
+<div class="grid" style="grid-template-columns:1fr;">
+  <div class="card" style="--accent:var(--text-accent);cursor:default;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:6px;">Bölüm 1 — OODA'dan OODA-X'e Geçiş</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Boyd'un OODA döngüsünden YZ-Kuantum-Blockchain entegrasyonlu OODA-X'e evrim. t_OODA = 60s → t_X < 100ms hedefi.</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:6px;">Bölüm 2 — Matematiksel Sınırlar</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Wilkening sızma modeli, plazma fiziği, kinematik yetersizlik ve enkaz felaketi hesaplamaları.</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:6px;">Bölüm 3 — Teknoloji Devlerinin Savaşı</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Musk (SpaceX/xAI/Starshield) ve Amazon (AWS/Kuiper) ekosistemlerinin askeri entegrasyonu.</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:6px;">Bölüm 4 — 2026 Savaş Alanı Raporu</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">İsrail, ABD ve Körfez savunmalarının ortak çöküşü. Maliyet asimetrisi ve yıpratma analizi.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+
+
+<div class="lb-overlay" id="imgLB" onclick="this.classList.remove('active')">
+<span class="lb-close">&times;</span>
+<img id="lbImg" src="" alt="">
+<div class="lb-caption" id="lbCap"></div>
+</div>
+
+<div class="footer">
+  <p><strong>HARB-İ STRATEJİ</strong> · Bilim · Teknoloji · Güvenlik · Strateji · Yenilik · Gelecek</p>
+  <p style="margin-top:4px"><a href="index.html">Ana Sayfa</a> · <a href="oza-hub.html">OZA Hub</a> · <a href="ooda-x-super-dongu.html">OODA-X Simülatörü</a></p>
+</div>
+
+<script>
+function openLB(src,cap){
+  document.getElementById('lbImg').src=src;
+  document.getElementById('lbCap').textContent=cap;
+  document.getElementById('imgLB').classList.add('active');
+}
+</script>
+</body>
+</html>

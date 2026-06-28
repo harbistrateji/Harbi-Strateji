@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dünya Kaynakları: İnteraktif Jeopolitik Atlası</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap');
+
+  :root {
+    --ink: #0f1117;
+    --paper: #f5f2eb;
+    --gold: #d4a017;
+    --gold-light: #f0d060;
+    --teal: #1a7a6e;
+    --teal-light: #2ebfa5;
+    --red: #c0392b;
+    --red-light: #e74c3c;
+    --blue: #1a3a5c;
+    --blue-light: #2980b9;
+    --orange: #e67e22;
+    --purple: #7b2d8b;
+    --grid: rgba(15,17,23,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* === HERO === */
+  .hero {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(212,160,23,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(26,122,110,0.15) 0%, transparent 60%);
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.05;
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--gold-light); font-style: italic; }
+  .hero-sub {
+    font-size: 16px;
+    opacity: 0.7;
+    max-width: 520px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+    position: relative;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--gold-light);
+    display: block;
+  }
+  .hero-stat .lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; }
+
+  /* animated counter */
+  .counter { display: inline-block; }
+
+  /* === NAV TABS === */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 28px 20px 0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 22px;
+    border: 2px solid var(--ink);
+    background: transparent;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tab-btn.active { border-color: var(--gold); background: var(--gold); color: var(--ink); }
+
+  /* === SECTIONS === */
+  .section { display: none; padding: 48px 24px 64px; max-width: 1100px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .section-desc { color: #555; margin-bottom: 40px; line-height: 1.7; max-width: 680px; }
+
+  /* === RESOURCE BARS === */
+  .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 48px; }
+  @media(max-width:600px){ .resource-grid { grid-template-columns: 1fr; } }
+
+  .resource-card {
+    background: white;
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-top: 4px solid var(--gold);
+  }
+  .resource-card.teal { border-top-color: var(--teal); }
+  .resource-card.red { border-top-color: var(--red); }
+  .resource-card.blue { border-top-color: var(--blue-light); }
+  .resource-card.purple { border-top-color: var(--purple); }
+
+  .resource-card h3 { font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #777; margin-bottom: 4px; }
+  .resource-card .big-num {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .bar-wrap { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin: 6px 0 4px; }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    width: 0%;
+    transition: width 1.4s cubic-bezier(.22,1,.36,1);
+  }
+  .bar-fill.gold { background: var(--gold); }
+  .bar-fill.teal { background: var(--teal-light); }
+  .bar-fill.red { background: var(--red-light); }
+  .bar-fill.blue { background: var(--blue-light); }
+  .bar-fill.purple { background: var(--purple); }
+  .bar-label { display: flex; justify-content: space-between; font-size: 11px; color: #999; }
+
+  /* === WORLD MAP SVG === */
+  .world-map-container {
+    background: white;
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .world-map-container h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+
+  .map-svg { width: 100%; height: auto; cursor: default; }
+  .map-region { transition: opacity 0.2s; cursor: pointer; }
+  .map-region:hover { opacity: 0.75; }
+
+  .map-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
+  .tooltip {
+    position: fixed;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 9999;
+    max-width: 220px;
+    line-height: 1.5;
+    display: none;
+  }
+  .tooltip strong { color: var(--gold-light); display: block; margin-bottom: 4px; }
+
+  /* === TIMELINE === */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--ink);
+    opacity: 0.15;
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 36px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease;
+  }
+  .tl-item.visible { opacity: 1; transform: none; }
+  .tl-dot {
+    position: absolute;
+    left: -27px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--ink);
+  }
+  .tl-date { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+  .tl-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .tl-body { font-size: 13px; color: #555; line-height: 1.6; }
+
+  /* === DONUT CHARTS === */
+  .donut-row { display: flex; flex-wrap: wrap; gap: 28px; margin-bottom: 40px; }
+  .donut-card {
+    background: white;
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .donut-card h4 { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #777; margin-bottom: 12px; text-align: center; }
+  .donut-svg { width: 120px; height: 120px; }
+  .donut-value { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; margin-top: 10px; }
+  .donut-sub { font-size: 11px; color: #999; text-align: center; margin-top: 2px; }
+
+  /* === KIDS GAME === */
+  .game-hero {
+    background: linear-gradient(135deg, #1a3a5c 0%, #1a7a6e 100%);
+    border-radius: 8px;
+    padding: 36px;
+    color: white;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .game-hero h2 { font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 8px; }
+  .game-hero p { opacity: 0.85; font-size: 15px; }
+
+  .game-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:580px){ .game-board { grid-template-columns: 1fr; } }
+
+  .game-panel {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  .game-panel h3 { font-size: 14px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Quiz */
+  .quiz-question { font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 16px; min-height: 60px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-btn {
+    padding: 12px 16px;
+    border: 2px solid #e0ddd5;
+    background: var(--paper);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    text-align: left;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .quiz-btn:hover { border-color: var(--gold); background: #fdf8ec; }
+  .quiz-btn.correct { border-color: var(--teal); background: #e8f7f5; color: var(--teal); }
+  .quiz-btn.wrong { border-color: var(--red); background: #fdf0ef; color: var(--red); }
+  .quiz-feedback { margin-top: 12px; font-size: 13px; font-weight: 600; min-height: 20px; }
+  .quiz-feedback.ok { color: var(--teal); }
+  .quiz-feedback.err { color: var(--red); }
+  .quiz-next {
+    margin-top: 14px;
+    padding: 10px 20px;
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    display: none;
+  }
+  .quiz-score { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; text-align: center; color: var(--gold); margin: 8px 0; }
+  .quiz-total { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #999; text-align: center; }
+
+  /* Matching game */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .match-card {
+    padding: 12px 10px;
+    background: var(--paper);
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .match-card:hover { border-color: var(--blue-light); background: #eaf4fd; }
+  .match-card.selected { border-color: var(--gold); background: #fdf8ec; }
+  .match-card.matched { border-color: var(--teal); background: #e8f7f5; color: var(--teal); cursor: default; }
+  .match-card.wrong-flash { border-color: var(--red); background: #fdf0ef; animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .match-score { text-align: center; font-weight: 700; font-size: 13px; margin-top: 12px; color: var(--teal); }
+
+  /* Resource drag */
+  .resource-game { }
+  .resource-items { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .res-chip {
+    padding: 8px 14px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: grab;
+    user-select: none;
+    transition: opacity 0.2s;
+  }
+  .res-chip.placed { opacity: 0.35; cursor: default; }
+  .country-slots { display: flex; flex-direction: column; gap: 8px; }
+  .country-slot {
+    border: 2px dashed #ccc;
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    min-height: 44px;
+    transition: all 0.2s;
+  }
+  .country-slot.drag-over { border-color: var(--gold); background: #fdf8ec; }
+  .country-slot.filled { border-color: var(--teal); background: #e8f7f5; border-style: solid; }
+  .country-slot .flag { font-size: 20px; }
+  .country-slot .slot-name { font-weight: 700; min-width: 80px; }
+  .slot-answer { font-size: 12px; color: var(--teal); font-weight: 600; }
+
+  /* Score bar top */
+  .score-bar {
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    padding: 12px 20px;
+    flex-wrap: wrap;
+  }
+  .score-item { text-align: center; }
+  .score-item .s-num { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--gold-light); }
+  .score-item .s-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; }
+
+  /* === GRID BG DECORATION === */
+  .section::after {
+    content: none;
+  }
+
+  /* Pulse animation */
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.05);opacity:0.8} }
+  .pulse { animation: pulse 2s infinite; }
+
+  /* Fade in */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+  .fade-up { animation: fadeUp 0.6s ease forwards; }
+
+  .note-box {
+    background: #f0f8f5;
+    border-left: 4px solid var(--teal);
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 28px;
+    color: #333;
+  }
+
+  /* Animated globe */
+  .globe-wrap { text-align: center; margin: 32px 0; }
+  .globe-svg { width: 180px; height: 180px; animation: spin 18s linear infinite; }
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<div class="tooltip" id="tooltip"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">🌍 Harb-i Strateji · İnteraktif Atlas</div>
+  <h1>Dünyamızın <span>Kaynakları</span><br>ve Jeopolitik Denge</h1>
+  <p class="hero-sub">Venezuela'dan İran'a, petrolden nadir toprak elementlerine — verilerle, oyunlarla ve haritalarla interaktif bir dünya turu</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="num"><span class="counter" data-target="303">0</span>B</span>
+      <span class="lbl">Varil Venezuela Petrolü</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num"><span class="counter" data-target="300">0</span>K+</span>
+      <span class="lbl">Ton NTE Potansiyeli</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num"><span class="counter" data-target="90">0</span>%</span>
+      <span class="lbl">NTE Çin Kontrolünde</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num"><span class="counter" data-target="7000">0</span>T</span>
+      <span class="lbl">Ton Altın Potansiyeli</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCORE BAR -->
+<div class="score-bar">
+  <div class="score-item">
+    <div class="s-num" id="total-score">0</div>
+    <div class="s-lbl">Toplam Puan</div>
+  </div>
+  <div class="score-item">
+    <div class="s-num" id="quiz-correct">0</div>
+    <div class="s-lbl">Doğru Cevap</div>
+  </div>
+  <div class="score-item">
+    <div class="s-num" id="matches-done">0</div>
+    <div class="s-lbl">Eşleşme</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('kaynaklar')">📊 Kaynaklar</button>
+  <button class="tab-btn" onclick="showTab('harita')">🗺️ Dünya Haritası</button>
+  <button class="tab-btn" onclick="showTab('strateji')">⚔️ Strateji</button>
+  <button class="tab-btn" onclick="showTab('oyun')">🎮 Çocuk Oyunları</button>
+</div>
+
+<!-- SECTION: KAYNAKLAR -->
+<div class="section active" id="sec-kaynaklar">
+  <div class="section-title">Dünya'nın Kritik Kaynakları</div>
+  <p class="section-desc">Venezuela, Latin Amerika'nın kaynak devi. Petrolden nadir toprak elementlerine kadar jeo-ekonomik dengeleri şekillendiren veriler:</p>
+
+  <div class="resource-grid">
+    <div class="resource-card">
+      <h3>🛢️ Petrol Rezervi</h3>
+      <div class="big-num">303,8 Milyar Varil</div>
+      <div class="bar-wrap"><div class="bar-fill gold" data-width="100"></div></div>
+      <div class="bar-label"><span>Venezuela (Dünya 1.)</span><span>100%</span></div>
+      <div class="bar-wrap" style="margin-top:10px"><div class="bar-fill gold" data-width="80" style="background:#2980b9"></div></div>
+      <div class="bar-label"><span>Suudi Arabistan</span><span>~80%</span></div>
+      <div class="bar-wrap" style="margin-top:6px"><div class="bar-fill gold" data-width="60" style="background:#7b2d8b"></div></div>
+      <div class="bar-label"><span>Kanada</span><span>~60%</span></div>
+    </div>
+
+    <div class="resource-card teal">
+      <h3>🌱 Nadir Toprak Elementleri (NTE)</h3>
+      <div class="big-num">300.000+ Met. Ton</div>
+      <div style="margin-top:12px">
+        <div style="font-size:12px;margin-bottom:6px;font-weight:600;color:#555">Küresel Kontrol (NTE)</div>
+        <div class="bar-wrap"><div class="bar-fill teal" data-width="90"></div></div>
+        <div class="bar-label"><span>🇨🇳 Çin hâkimiyeti</span><span>~90%</span></div>
+        <div class="bar-wrap" style="margin-top:8px"><div class="bar-fill" data-width="10" style="background:#e67e22"></div></div>
+        <div class="bar-label"><span>🌍 Diğer ülkeler</span><span>~10%</span></div>
+      </div>
+    </div>
+
+    <div class="resource-card red">
+      <h3>⚡ Latin Amerika Mineral Üretimi</h3>
+      <div class="big-num">Dünya Lideri</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+        <div>
+          <div class="bar-label" style="margin-bottom:3px"><span>🥇 Bakır</span><span>%45</span></div>
+          <div class="bar-wrap"><div class="bar-fill red" data-width="45"></div></div>
+        </div>
+        <div>
+          <div class="bar-label" style="margin-bottom:3px"><span>🥈 Gümüş</span><span>%50</span></div>
+          <div class="bar-wrap"><div class="bar-fill red" data-width="50"></div></div>
+        </div>
+        <div>
+          <div class="bar-label" style="margin-bottom:3px"><span>🥇 Çinko</span><span>%21</span></div>
+          <div class="bar-wrap"><div class="bar-fill red" data-width="21"></div></div>
+        </div>
+        <div>
+          <div class="bar-label" style="margin-bottom:3px"><span>🌟 Altın</span><span>%20</span></div>
+          <div class="bar-wrap"><div class="bar-fill red" data-width="20"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resource-card blue">
+      <h3>🔋 Stratejik Mineraller (Venezuela)</h3>
+      <div class="big-num">~7.000 Ton Altın</div>
+      <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:#f0f5ff;border-radius:4px;padding:10px;text-align:center">
+          <div style="font-size:20px">⚗️</div>
+          <div style="font-size:11px;font-weight:700;margin-top:4px">Koltan</div>
+          <div style="font-size:10px;color:#777">Elektronik</div>
+        </div>
+        <div style="background:#f0f5ff;border-radius:4px;padding:10px;text-align:center">
+          <div style="font-size:20px">🧲</div>
+          <div style="font-size:11px;font-weight:700;margin-top:4px">Neodimyum</div>
+          <div style="font-size:10px;color:#777">F-35 / Füze</div>
+        </div>
+        <div style="background:#f0f5ff;border-radius:4px;padding:10px;text-align:center">
+          <div style="font-size:20px">💎</div>
+          <div style="font-size:11px;font-weight:700;margin-top:4px">Elmas</div>
+          <div style="font-size:10px;color:#777">Endüstri</div>
+        </div>
+        <div style="background:#f0f5ff;border-radius:4px;padding:10px;text-align:center">
+          <div style="font-size:20px">⚡</div>
+          <div style="font-size:11px;font-weight:700;margin-top:4px">Toryum</div>
+          <div style="font-size:10px;color:#777">Enerji</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="donut-row">
+    <div class="donut-card">
+      <h4>🛢️ Petrol Hâkimiyeti</h4>
+      <svg class="donut-svg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#f0ede6" stroke-width="16"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#d4a017" stroke-width="16"
+          stroke-dasharray="301.6 0" stroke-dashoffset="75.4" stroke-linecap="round"
+          class="donut-arc" data-pct="100" style="stroke-dasharray:0 301.6;transition:stroke-dasharray 1.5s ease"/>
+        <text x="60" y="65" text-anchor="middle" font-family="Fraunces,serif" font-size="18" font-weight="700" fill="#0f1117">#1</text>
+      </svg>
+      <div class="donut-value">303,8B</div>
+      <div class="donut-sub">Varil · Dünya Birincisi</div>
+    </div>
+    <div class="donut-card">
+      <h4>🌱 NTE Küresel Çin Payı</h4>
+      <svg class="donut-svg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#f0ede6" stroke-width="16"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#1a7a6e" stroke-width="16"
+          stroke-dasharray="271 30.2" stroke-dashoffset="75.4" stroke-linecap="round"
+          class="donut-arc" data-pct="90" style="stroke-dasharray:0 301.6;transition:stroke-dasharray 1.5s ease"/>
+        <text x="60" y="65" text-anchor="middle" font-family="Fraunces,serif" font-size="18" font-weight="700" fill="#0f1117">90%</text>
+      </svg>
+      <div class="donut-value">~90%</div>
+      <div class="donut-sub">Çin NTE Hâkimiyeti</div>
+    </div>
+    <div class="donut-card">
+      <h4>🌏 LA Bakır Üretimi</h4>
+      <svg class="donut-svg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#f0ede6" stroke-width="16"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#c0392b" stroke-width="16"
+          stroke-dasharray="135.7 165.9" stroke-dashoffset="75.4" stroke-linecap="round"
+          class="donut-arc" data-pct="45" style="stroke-dasharray:0 301.6;transition:stroke-dasharray 1.5s ease"/>
+        <text x="60" y="65" text-anchor="middle" font-family="Fraunces,serif" font-size="18" font-weight="700" fill="#0f1117">45%</text>
+      </svg>
+      <div class="donut-value">%45</div>
+      <div class="donut-sub">Küresel Bakır · Latin Amerika</div>
+    </div>
+    <div class="donut-card">
+      <h4>💉 Orinoco Alanı</h4>
+      <svg class="donut-svg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#f0ede6" stroke-width="16"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#7b2d8b" stroke-width="16"
+          stroke-dasharray="241.3 60.3" stroke-dashoffset="75.4" stroke-linecap="round"
+          class="donut-arc" data-pct="80" style="stroke-dasharray:0 301.6;transition:stroke-dasharray 1.5s ease"/>
+        <text x="60" y="65" text-anchor="middle" font-family="Fraunces,serif" font-size="18" font-weight="700" fill="#0f1117">112K</text>
+      </svg>
+      <div class="donut-value">112.000 km²</div>
+      <div class="donut-sub">Orinoco Madencilik Yayı</div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    📌 <strong>Not:</strong> Venezuela'nın 112.000 km²'lik Orinoco Madencilik Yayı, ülkenin hidroelektrik kapasitesinin %60'ını sağlayan Caroní Havzası'nı da kapsamaktadır. Bu bölgedeki yasadışı madencilik faaliyetleri çevresel ve insani kriz yaratmaktadır.
+  </div>
+</div>
+
+<!-- SECTION: HARITA -->
+<div class="section" id="sec-harita">
+  <div class="section-title">Dünya Kaynak Haritası</div>
+  <p class="section-desc">Kritik bölgeler ve stratejik kaynaklar — üzerine tıklayarak detayları görün:</p>
+
+  <div class="world-map-container">
+    <h3>🗺️ Stratejik Bölgeler ve Kaynaklar</h3>
+    <svg class="map-svg" viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background ocean -->
+      <rect width="900" height="450" fill="#dbeeff" rx="6"/>
+      <!-- Grid lines -->
+      <g stroke="#b0d0e8" stroke-width="0.5" opacity="0.6">
+        <line x1="0" y1="150" x2="900" y2="150"/>
+        <line x1="0" y1="225" x2="900" y2="225"/>
+        <line x1="0" y1="300" x2="900" y2="300"/>
+        <line x1="225" y1="0" x2="225" y2="450"/>
+        <line x1="450" y1="0" x2="450" y2="450"/>
+        <line x1="675" y1="0" x2="675" y2="450"/>
+      </g>
+
+      <!-- North America -->
+      <path class="map-region" fill="#5b8dd9" opacity="0.85"
+        d="M60,60 L180,55 L200,80 L210,120 L190,150 L170,160 L150,155 L130,170 L120,195 L105,200 L90,185 L80,165 L65,150 L55,120 Z"
+        data-country="ABD & Kanada" data-info="NATO'nun çekirdeği. Savunma harcamaları 800B$+. Golden Dome füze kalkanı. Grönland stratejisi aktif." />
+
+      <!-- Mexico / Central America -->
+      <path class="map-region" fill="#4a7abf" opacity="0.7"
+        d="M105,200 L130,195 L145,210 L140,230 L125,235 L110,225 Z"
+        data-country="Meksika & Orta Amerika" data-info="Kartel sorunu. ABD-Meksika sınır politikası. Fentanil kaçakçılığı stratejik tehdit." />
+
+      <!-- Venezuela / Colombia -->
+      <path class="map-region" fill="#d4a017" opacity="0.9"
+        d="M145,235 L175,225 L200,230 L205,255 L185,270 L165,265 L150,255 Z"
+        data-country="🇻🇪 Venezuela" data-info="🛢️ 303,8 Milyar Varil Petrol (Dünya 1.)\n🌱 300K+ Ton NTE Potansiyeli\n💰 7.000 Ton Altın\n⚡ Orinoco Madencilik Yayı: 112.000 km²\n🔴 Maduro operasyonu: Ocak 2026" />
+
+      <!-- Brazil -->
+      <path class="map-region" fill="#27ae60" opacity="0.75"
+        d="M165,265 L215,250 L250,265 L255,310 L230,340 L195,335 L170,310 L160,285 Z"
+        data-country="🇧🇷 Brezilya" data-info="Amazon koruyucusu. Kritik mineral kaynağı. NTE rezervleri. Lityum alternatifi." />
+
+      <!-- Europe -->
+      <path class="map-region" fill="#8e44ad" opacity="0.75"
+        d="M380,55 L460,50 L490,70 L480,110 L450,120 L410,115 L385,95 Z"
+        data-country="Avrupa & NATO" data-info="Savunma harcamaları baskısı artıyor. Demografik dönüşüm. Rusya cephesi: Ukrayna. ABD stratejisine göre kendi güvenliğini finanse etmeli." />
+
+      <!-- Russia -->
+      <path class="map-region" fill="#c0392b" opacity="0.75"
+        d="M490,50 L720,45 L730,100 L700,120 L600,130 L520,125 L490,110 Z"
+        data-country="🇷🇺 Rusya" data-info="Ukrayna savaşı devam ediyor. Venezuela'da askeri varlık azalıyor. S-300 sistemleri bölgeye ihraç. Çin ile stratejik yakınlaşma." />
+
+      <!-- Middle East -->
+      <path class="map-region" fill="#e67e22" opacity="0.85"
+        d="M520,155 L580,150 L610,165 L615,195 L590,210 L560,205 L530,190 L515,175 Z"
+        data-country="Orta Doğu" data-info="İran operasyonu: Şubat 2026\n🎯 Fordow, Natanz, Isfahan vuruldu\n🛢️ Enerji akışı kritik\n🤝 ABD-İsrail koordinasyonu güçlendi\nBahreyn: ABD 5. Filosu üssü" />
+
+      <!-- Iran specific -->
+      <path class="map-region" fill="#c0392b" opacity="0.9"
+        d="M555,160 L595,155 L608,172 L605,195 L580,205 L558,195 Z"
+        data-country="🇮🇷 İran" data-info="🔴 'Operation Midnight Hammer' – Şub 2026\n⚛️ Nükleer tesisler: Fordow, Natanz, Isfahan\n💣 Füze endüstrisi hedeflendi\n📵 İnternet karartması uygulandı\n🦁 İsrail: 'Operation Roar of the Lion'" />
+
+      <!-- China -->
+      <path class="map-region" fill="#c0392b" opacity="0.7"
+        d="M670,100 L760,90 L790,120 L775,165 L740,175 L695,165 L668,140 Z"
+        data-country="🇨🇳 Çin" data-info="NTE kontrolü: ~%90 global\nTayvan baskısı artıyor\nVenezuela & İran'a destek\nBorç diplomasisi: Global altyapı yatırımı\nStratejik rakip olarak tanımlandı (2025 ABD Stratejisi)" />
+
+      <!-- Taiwan -->
+      <circle class="map-region" cx="762" cy="168" r="8" fill="#f39c12" opacity="0.9"
+        data-country="🇹🇼 Tayvan" data-info="Çin'in baskısı tırmanıyor. ABD taahhüdü: First Island Chain savunması. Yarı iletken üretiminin merkezi. TSMC global kritik altyapı." />
+
+      <!-- Africa -->
+      <path class="map-region" fill="#27ae60" opacity="0.65"
+        d="M415,175 L490,165 L510,190 L505,270 L475,300 L440,300 L415,275 L405,230 Z"
+        data-country="Afrika" data-info="BM Güvenlik Konseyi'nde daimi koltuk yok. 1,3 Milyar nüfus. 'Ezulwini Mutabakatı': 2 veto isteniyor. Kritik mineral rezervleri zengin." />
+
+      <!-- Greenland -->
+      <path class="map-region" fill="#85c1e9" opacity="0.9"
+        d="M230,20 L290,15 L300,50 L270,65 L235,60 Z"
+        data-country="🇬🇱 Grönland" data-info="Trump stratejisinde 'stratejik ihtiyaç' olarak tanımlandı. Arktik rotalar. ABD ulusal güvenlik söylemi merkezi. Danimarka ile gerilim tırmandı." />
+
+      <!-- Panama -->
+      <circle class="map-region" cx="140" cy="232" r="6" fill="#f39c12" opacity="0.9"
+        data-country="🚢 Panama Kanalı" data-info="Trump: Çin etkisi geri püskürtülmeli. Kritik deniz yolu. ABD hegemonyası için stratejik öncelik. 2025 ABD Ulusal Güvenlik Stratejisi'nde yer alıyor." />
+
+      <!-- Labels -->
+      <text x="100" y="120" font-family="Space Grotesk,sans-serif" font-size="9" fill="white" font-weight="700" opacity="0.9">ABD</text>
+      <text x="160" y="247" font-family="Space Grotesk,sans-serif" font-size="9" fill="white" font-weight="700">VNZ</text>
+      <text x="195" y="305" font-family="Space Grotesk,sans-serif" font-size="8" fill="white" font-weight="600">BREZİLYA</text>
+      <text x="415" y="85" font-family="Space Grotesk,sans-serif" font-size="8" fill="white" font-weight="600">AVRUPA</text>
+      <text x="580" y="80" font-family="Space Grotesk,sans-serif" font-size="9" fill="white" font-weight="700">RUSYA</text>
+      <text x="530" y="188" font-family="Space Grotesk,sans-serif" font-size="8" fill="white" font-weight="600">İRAN</text>
+      <text x="700" y="135" font-family="Space Grotesk,sans-serif" font-size="9" fill="white" font-weight="700">ÇİN</text>
+      <text x="437" y="245" font-family="Space Grotesk,sans-serif" font-size="8" fill="white" font-weight="600">AFRİKA</text>
+      <text x="245" y="40" font-family="Space Grotesk,sans-serif" font-size="8" fill="#1a3a5c" font-weight="700">GRÖNLAND</text>
+
+      <!-- Pulse dots for key locations -->
+      <circle cx="175" cy="248" r="12" fill="none" stroke="#d4a017" stroke-width="2" opacity="0.6">
+        <animate attributeName="r" values="8;16;8" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8;0;0.8" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="570" cy="177" r="12" fill="none" stroke="#c0392b" stroke-width="2" opacity="0.6">
+        <animate attributeName="r" values="8;16;8" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8;0;0.8" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#d4a017"></div> Kaynak Zenginliği</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div> Çatışma / Gerilim</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5b8dd9"></div> ABD ve Müttefikleri</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Doğa & Mineraller</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8e44ad"></div> Avrupa Bloğu</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div> Kritik Nokta</div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    🖱️ <strong>Haritadaki bölgelere tıklayın</strong> — her bölge için stratejik veri ve analiz görüntülenir.
+  </div>
+</div>
+
+<!-- SECTION: STRATEJİ -->
+<div class="section" id="sec-strateji">
+  <div class="section-title">Kronoloji & Stratejik Analiz</div>
+  <p class="section-desc">2025–2026 jeopolitik dönüşümünün zaman çizelgesi:</p>
+
+  <div class="timeline" id="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Ağustos 2025</div>
+      <div class="tl-title">🏛️ BM Meşruiyet Krizi</div>
+      <div class="tl-body">Birleşmiş Milletler'in yapısal krizi derinleşiyor. Afrika Birliği, 1,3 milyarlık nüfusuna rağmen Güvenlik Konseyi'nde daimi koltuk olmadığını "kolonyal dönemin kalıntısı" olarak nitelendiriyor. BM artık kriz çözücü değil, "sahne dekoruna" dönüşüyor.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#2980b9"></div>
+      <div class="tl-date">Aralık 2025</div>
+      <div class="tl-title">⚓ ABD Venezuela'ya Yığınak</div>
+      <div class="tl-body">ABD, 13.000 deniz piyadesi ve 3 uçak gemisiyle Venezuela açıklarına yerleşiyor. USS Gerald R. Ford komuta merkezi konumuna geçiyor. Bu hamle, Harb-i Strateji terminolojisinde "rejim değişikliği hedefli ileri konuşlanma" olarak tanımlanıyor.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#c0392b"></div>
+      <div class="tl-date">3 Ocak 2026</div>
+      <div class="tl-title">🎯 Operation Delta Force</div>
+      <div class="tl-body">Amerikan özel kuvvetleri Nicolás Maduro ve eşi Cilia Flores'i yakalayarak ABD'ye götürüyor. Washington "De Facto" yönetim ilan ediyor. "Darbe 3.0" modelinin ilk gerçek hayat uygulaması.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#8e44ad"></div>
+      <div class="tl-date">Ocak 2026</div>
+      <div class="tl-title">📜 2025 ABD Ulusal Güvenlik Stratejisi</div>
+      <div class="tl-body">"America First" + egemenlikçi realizm. Liberal uluslararası düzen fiilen terk ediliyor. Ekonomik güvenlik ulusal güvenliğin kalbi olarak yeniden tanımlanıyor. Monroe Doktrini canlanıyor: Batı Yarımküre'de sıfır tolerans.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#e67e22"></div>
+      <div class="tl-date">Şubat 2026</div>
+      <div class="tl-title">💥 Operation Midnight Hammer / Roar of the Lion</div>
+      <div class="tl-body">ABD ve İsrail, İran'a yönelik "Operation Midnight Hammer" ve "Operation Roar of the Lion" operasyonlarını başlatıyor. Fordow, Natanz ve Isfahan vuruldu. BM onayı yok. İnternet karartması uygulandı. Bilişsel harp boyutu: algoritmik içerik ve psikolojik baskı.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#1a7a6e"></div>
+      <div class="tl-date">Şubat 2026 Sonu</div>
+      <div class="tl-title">🧠 Darbe 3.0 & State-Merchant Paradigması</div>
+      <div class="tl-body">Geleneksel askeri doktrinlerin yerini "Merchant-Cesar" modeli alıyor. OODA-X karar döngüsü: yapay zeka destekli, gerçek zamanlı. Hedef: "Savaş ilan etmeden savaş kazanmak." Sıradaki cephe: Panama, Grönland, Çin ekseni.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px">
+    <div class="section-title" style="font-size:24px">📐 State-Merchant Model: Pazarlık mı, Tasfiye mi?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+      <div style="background:#e8f7f5;border-radius:8px;padding:24px;border-top:4px solid #1a7a6e">
+        <div style="font-size:24px;margin-bottom:8px">🤝</div>
+        <h3 style="color:#1a7a6e;margin-bottom:10px">El Sıkışma (Handshake)</h3>
+        <p style="font-size:13px;line-height:1.7;color:#333">Güçlü lider masaya oturur, hızlı anlaşma. Erdoğan, Bin Selman, Modi modeli. ABD bu seçeneği tercih eder çünkü güçlü lider çözümü hızlandırır.</p>
+      </div>
+      <div style="background:#fdf0ef;border-radius:8px;padding:24px;border-top:4px solid #c0392b">
+        <div style="font-size:24px;margin-bottom:8px">⛓️</div>
+        <h3 style="color:#c0392b;margin-bottom:10px">Kelepçe (Handcuffs)</h3>
+        <p style="font-size:13px;line-height:1.7;color:#333">Masadan kalkılırsa "Maduro Modeli" devreye girer. BM koruması yok. Hukuk devre dışı. Kinetik + bilişsel savaş eş zamanlı.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: OYUN -->
+<div class="section" id="sec-oyun">
+  <div class="game-hero">
+    <div style="font-size:40px;margin-bottom:8px">🎮</div>
+    <h2>Dünya Kaynakları Oyunları</h2>
+    <p>Harika! Dünya hakkında ne kadar bilgi sahibisin? Test edelim! 🌍</p>
+  </div>
+
+  <div class="game-board">
+    <!-- QUIZ -->
+    <div class="game-panel">
+      <h3>🧩 Bilgi Yarışması</h3>
+      <div class="quiz-score" id="quiz-display-score">0</div>
+      <div class="quiz-total" id="quiz-progress">0 / 8 Soru</div>
+      <div style="margin:16px 0;height:4px;background:#eee;border-radius:2px">
+        <div id="quiz-progress-bar" style="height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width 0.4s"></div>
+      </div>
+      <div class="quiz-question" id="quiz-q">Hazır mısın? Başlayalım!</div>
+      <div class="quiz-options" id="quiz-opts"></div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+      <button class="quiz-next" id="quiz-next-btn" onclick="nextQuestion()">Sonraki Soru ▶</button>
+      <button style="margin-top:10px;padding:8px 16px;background:var(--teal);color:white;border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-weight:600;font-size:12px;display:none" id="quiz-restart" onclick="startQuiz()">🔄 Tekrar Oyna</button>
+    </div>
+
+    <!-- MATCHING -->
+    <div class="game-panel">
+      <h3>🔗 Eşleştirme Oyunu</h3>
+      <p style="font-size:12px;color:#777;margin-bottom:12px">Ülkeyi kaynağıyla eşleştir! Bir ülke, bir kaynak seç.</p>
+      <div class="match-grid" id="match-grid"></div>
+      <div class="match-score" id="match-score">0 / 5 eşleşti</div>
+      <button onclick="resetMatch()" style="margin-top:10px;padding:8px 16px;background:var(--ink);color:white;border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-weight:600;font-size:12px">🔄 Yenile</button>
+    </div>
+  </div>
+
+  <!-- DRAG GAME -->
+  <div class="game-panel" style="margin-bottom:24px">
+    <h3>🌍 Kaynak-Ülke Yerleştirme</h3>
+    <p style="font-size:12px;color:#777;margin-bottom:16px">Her ülkenin en önemli stratejik kaynağını sürükle bırak (veya tıkla)!</p>
+    <div class="resource-items" id="res-chips"></div>
+    <div class="country-slots" id="country-slots"></div>
+    <div id="drag-score" style="margin-top:12px;font-weight:700;color:var(--teal);font-size:13px"></div>
+    <button onclick="resetDrag()" style="margin-top:10px;padding:8px 16px;background:var(--ink);color:white;border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-weight:600;font-size:12px">🔄 Sıfırla</button>
+  </div>
+
+  <div class="note-box" style="background:#fff8e8;border-color:var(--gold)">
+    🏆 <strong>Öğrenme Hedefi:</strong> Bu oyunlar sana dünya kaynaklarını, ülkelerin stratejik konumunu ve jeopolitik önemi eğlenceli biçimde öğretir. Her doğru cevap seni stratejist yapan bir bilgi!
+  </div>
+</div>
+
+<script>
+// ===== TABS =====
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if(id === 'kaynaklar') animateBars();
+  if(id === 'strateji') animateTimeline();
+  if(id === 'harita') animateDonutsH();
+}
+
+// ===== COUNTER =====
+function animateCounter(el, target, suffix) {
+  let start = 0;
+  const dur = 2000;
+  const step = target / (dur / 16);
+  const iv = setInterval(() => {
+    start += step;
+    if(start >= target) { start = target; clearInterval(iv); }
+    el.textContent = Math.floor(start).toLocaleString('tr');
+  }, 16);
+}
+window.addEventListener('load', () => {
+  document.querySelectorAll('.counter').forEach(el => {
+    animateCounter(el, +el.dataset.target);
+  });
+  animateBars();
+  animateDonuts();
+  startQuiz();
+  initMatch();
+  initDrag();
+  initMapTooltips();
+});
+
+// ===== BARS =====
+function animateBars() {
+  document.querySelectorAll('.bar-fill[data-width]').forEach(b => {
+    setTimeout(() => { b.style.width = b.dataset.width + '%'; }, 200);
+  });
+}
+
+// ===== DONUTS =====
+function animateDonuts() {
+  document.querySelectorAll('.donut-arc').forEach(arc => {
+    const pct = +arc.dataset.pct / 100;
+    const circ = 301.6;
+    setTimeout(() => {
+      arc.style.strokeDasharray = (circ * pct) + ' ' + (circ * (1-pct));
+    }, 400);
+  });
+}
+function animateDonutsH() { animateDonuts(); }
+
+// ===== TIMELINE =====
+function animateTimeline() {
+  document.querySelectorAll('.tl-item').forEach((item, i) => {
+    setTimeout(() => item.classList.add('visible'), i * 200);
+  });
+}
+
+// ===== MAP TOOLTIP =====
+function initMapTooltips() {
+  const tooltip = document.getElementById('tooltip');
+  document.querySelectorAll('.map-region').forEach(r => {
+    r.addEventListener('click', (e) => {
+      tooltip.innerHTML = '<strong>' + r.dataset.country + '</strong>' +
+        r.dataset.info.replace(/\n/g, '<br>');
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+    });
+    r.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if(!e.target.classList.contains('map-region')) tooltip.style.display = 'none';
+  });
+}
+
+// ===== SCORE SYSTEM =====
+let totalScore = 0, quizCorrect = 0, matchesDone = 0;
+function addScore(pts) {
+  totalScore += pts;
+  document.getElementById('total-score').textContent = totalScore;
+}
+function updateGlobalScore() {
+  document.getElementById('quiz-correct').textContent = quizCorrect;
+  document.getElementById('matches-done').textContent = matchesDone;
+}
+
+// ===== QUIZ =====
+const questions = [
+  { q: "Venezuela hangi mineral kaynağında dünya birincisidir?", opts:["Altın","Petrol","Bakır","Lityum"], ans:1, exp:"✅ Doğru! 303,8 milyar varil ile Venezuela kanıtlanmış petrol rezervlerinde dünya birincisidir." },
+  { q: "Küresel Nadir Toprak Elementleri (NTE) üretiminin yaklaşık yüzde kaçını Çin kontrol ediyor?", opts:["%45","%60","%75","~%90"], ans:3, exp:"✅ Harika! Çin, küresel NTE tedarik zincirinin yaklaşık %90'ını kontrol ediyor." },
+  { q: "Orinoco Madencilik Yayı kaç km² alana yayılmaktadır?", opts:["55.000 km²","112.000 km²","200.000 km²","45.000 km²"], ans:1, exp:"✅ Doğru! 112.000 km²'lik Orinoco Yayı Venezuela'nın hidroelektrik kapasitesinin %60'ını da barındırıyor." },
+  { q: "ABD'nin Maduro'yu yakaladığı operasyonun adı nedir?", opts:["Operation Midnight Hammer","Operation Delta Force","Operation Roar of the Lion","Operation Eagle Strike"], ans:1, exp:"✅ Evet! 'Operation Delta Force' ile Maduro ve eşi Ocak 2026'da yakalandı." },
+  { q: "İran'a yönelik ABD-İsrail operasyonunda hangi tesisler hedef alındı?", opts:["Tahran & Şiraz","Fordow, Natanz, Isfahan","Arak & Bushehr","Bandar Abbas & Kish"], ans:1, exp:"✅ Doğru! Fordow, Natanz ve Isfahan'daki nükleer ve askeri tesisler hedef alındı." },
+  { q: "Latin Amerika, dünya bakır üretiminin yüzde kaçını sağlar?", opts:["%20","%30","%45","%60"], ans:2, exp:"✅ Süper! Latin Amerika dünya bakır üretiminin yaklaşık %45'ini gerçekleştiriyor." },
+  { q: "Harb-i Strateji'nin 'State-Merchant' modeline göre ABD'nin temel stratejisi nedir?", opts:["İdeolojik yayılma","Pazarlık ya da Tasfiye","Çok taraflı diplomasi","BM ile koordinasyon"], ans:1, exp:"✅ Harika! 'Bargain or Liquidation' (Pazarlık veya Tasfiye) modeli Trump döneminin temel stratejisi." },
+  { q: "Afrika Birliği'nin BM Güvenlik Konseyi için talep ettiği şey nedir?", opts:["Tek bir daimi koltuk","Veto yetkili en az 2 daimi sandalye","Genel Kurul'da daha fazla oy","BM'nin Afrikalı ülkeye taşınması"], ans:1, exp:"✅ Doğru! Ezulwini Mutabakatı çerçevesinde veto yetkili en az 2 daimi sandalye talep ediyorlar." },
+];
+
+let qIdx = 0, qScore = 0, answered = false;
+function startQuiz() {
+  qIdx = 0; qScore = 0; quizCorrect = 0; answered = false;
+  document.getElementById('quiz-restart').style.display = 'none';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  renderQuestion();
+}
+function renderQuestion() {
+  if(qIdx >= questions.length) {
+    document.getElementById('quiz-q').textContent = '🎉 Tebrikler! Tüm soruları tamamladın!';
+    document.getElementById('quiz-opts').innerHTML = '';
+    document.getElementById('quiz-fb').innerHTML = `<span class="ok">Toplam: ${qScore} / ${questions.length} doğru! 🌟</span>`;
+    document.getElementById('quiz-next-btn').style.display = 'none';
+    document.getElementById('quiz-restart').style.display = 'inline-block';
+    document.getElementById('quiz-display-score').textContent = qScore;
+    updateGlobalScore();
+    return;
+  }
+  const q = questions[qIdx];
+  answered = false;
+  document.getElementById('quiz-fb').textContent = '';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-q').textContent = (qIdx+1) + '. ' + q.q;
+  document.getElementById('quiz-progress').textContent = (qIdx+1) + ' / ' + questions.length + ' Soru';
+  document.getElementById('quiz-progress-bar').style.width = ((qIdx / questions.length) * 100) + '%';
+  document.getElementById('quiz-opts').innerHTML = q.opts.map((o,i) =>
+    `<button class="quiz-btn" onclick="answerQ(${i})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+}
+function answerQ(idx) {
+  if(answered) return;
+  answered = true;
+  const q = questions[qIdx];
+  const btns = document.querySelectorAll('.quiz-btn');
+  btns[q.ans].classList.add('correct');
+  const fb = document.getElementById('quiz-fb');
+  if(idx === q.ans) {
+    qScore++; quizCorrect++;
+    fb.className = 'quiz-feedback ok';
+    fb.textContent = q.exp;
+    addScore(10);
+  } else {
+    btns[idx].classList.add('wrong');
+    fb.className = 'quiz-feedback err';
+    fb.textContent = '❌ Yanlış. ' + q.exp;
+  }
+  document.getElementById('quiz-display-score').textContent = qScore;
+  document.getElementById('quiz-next-btn').style.display = 'inline-block';
+  updateGlobalScore();
+}
+function nextQuestion() { qIdx++; renderQuestion(); }
+
+// ===== MATCHING GAME =====
+const matchPairs = [
+  { country:'🇻🇪 Venezuela', resource:'🛢️ Petrol #1', id:'a'},
+  { country:'🇨🇳 Çin', resource:'🌱 NTE %90', id:'b'},
+  { country:'🇷🇺 Rusya', resource:'❄️ S-300', id:'c'},
+  { country:'🇺🇸 ABD', resource:'🛡️ Golden Dome', id:'d'},
+  { country:'🇧🇷 Brezilya', resource:'🌿 Amazon', id:'e'},
+];
+let matchSelected = null, matchDone = new Set();
+
+function initMatch() {
+  matchDone = new Set(); matchSelected = null;
+  const grid = document.getElementById('match-grid');
+  const left = [...matchPairs].sort(()=>Math.random()-0.5);
+  const right = [...matchPairs].sort(()=>Math.random()-0.5);
+  grid.innerHTML = left.map(p =>
+    `<div class="match-card" data-id="${p.id}" data-type="country" onclick="selectMatch(this)">${p.country}</div>`
+  ).join('') + right.map(p =>
+    `<div class="match-card" data-id="${p.id}" data-type="resource" onclick="selectMatch(this)">${p.resource}</div>`
+  ).join('');
+  document.getElementById('match-score').textContent = '0 / 5 eşleşti';
+}
+function resetMatch() { initMatch(); }
+
+function selectMatch(el) {
+  if(el.classList.contains('matched')) return;
+  if(matchSelected === el) { el.classList.remove('selected'); matchSelected = null; return; }
+  if(matchSelected && matchSelected.dataset.type === el.dataset.type) {
+    matchSelected.classList.remove('selected');
+    matchSelected = el;
+    el.classList.add('selected');
+    return;
+  }
+  if(!matchSelected) { matchSelected = el; el.classList.add('selected'); return; }
+  // check match
+  if(matchSelected.dataset.id === el.dataset.id) {
+    matchSelected.classList.remove('selected'); matchSelected.classList.add('matched');
+    el.classList.add('matched');
+    matchDone.add(el.dataset.id); matchSelected = null;
+    matchesDone++;
+    document.getElementById('match-score').textContent = matchDone.size + ' / 5 eşleşti';
+    addScore(15); updateGlobalScore();
+    if(matchDone.size === 5) {
+      document.getElementById('match-score').textContent = '🎉 Tüm eşleşmeler tamam! +75 puan!';
+    }
+  } else {
+    el.classList.add('wrong-flash'); matchSelected.classList.add('wrong-flash');
+    const prev = matchSelected; matchSelected = null;
+    setTimeout(() => { el.classList.remove('wrong-flash'); prev.classList.remove('wrong-flash'); prev.classList.remove('selected'); el.classList.remove('selected'); }, 500);
+  }
+}
+
+// ===== DRAG/CLICK GAME =====
+const dragData = [
+  { resource:'🛢️ Petrol', country:'🇻🇪 Venezuela', flag:'🇻🇪', id:'drag-a'},
+  { resource:'🌱 NTE', country:'🇨🇳 Çin', flag:'🇨🇳', id:'drag-b'},
+  { resource:'💎 Elmas', country:'🇦🇴 Angola', flag:'🇦🇴', id:'drag-c'},
+  { resource:'🥇 Bakır', country:'🇨🇱 Şili', flag:'🇨🇱', id:'drag-d'},
+  { resource:'❄️ Arktik', country:'🇬🇱 Grönland', flag:'🇬🇱', id:'drag-e'},
+];
+let dragSelected = null, dragPlaced = new Set();
+
+function initDrag() {
+  dragSelected = null; dragPlaced = new Set();
+  const shuffledRes = [...dragData].sort(()=>Math.random()-0.5);
+  document.getElementById('res-chips').innerHTML = shuffledRes.map(d =>
+    `<div class="res-chip" data-id="${d.id}" onclick="selectChip(this)" draggable="true" ondragstart="onDragStart(event)">${d.resource}</div>`
+  ).join('');
+  document.getElementById('country-slots').innerHTML = dragData.map(d =>
+    `<div class="country-slot" data-id="${d.id}" onclick="dropOnSlot(this)" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="onDrop(event,this)">
+      <span class="flag">${d.flag}</span><span class="slot-name">${d.country}</span><span class="slot-answer" id="ans-${d.id}"></span>
+    </div>`
+  ).join('');
+  document.getElementById('drag-score').textContent = '';
+}
+function resetDrag() { initDrag(); }
+function selectChip(el) {
+  if(el.classList.contains('placed')) return;
+  document.querySelectorAll('.res-chip').forEach(c => c.style.outline='');
+  dragSelected = el;
+  el.style.outline = '2px solid var(--gold)';
+}
+function dropOnSlot(el) {
+  if(!dragSelected || dragPlaced.has(el.dataset.id)) return;
+  placeOnSlot(el, dragSelected);
+}
+function onDragStart(e) { dragSelected = e.target; }
+function onDrop(e, el) {
+  e.preventDefault(); el.classList.remove('drag-over');
+  if(!dragSelected || dragPlaced.has(el.dataset.id)) return;
+  placeOnSlot(el, dragSelected);
+}
+function placeOnSlot(slot, chip) {
+  const slotId = slot.dataset.id;
+  const chipId = chip.dataset.id;
+  const ansEl = document.getElementById('ans-' + slotId);
+  if(slotId === chipId) {
+    slot.classList.add('filled');
+    ansEl.textContent = chip.textContent + ' ✅';
+    chip.classList.add('placed');
+    chip.style.outline = '';
+    dragPlaced.add(slotId);
+    addScore(20); updateGlobalScore();
+    const done = dragPlaced.size;
+    document.getElementById('drag-score').textContent = done + ' / ' + dragData.length + ' doğru yerleştirildi! 🌟';
+    if(done === dragData.length) document.getElementById('drag-score').textContent = '🎉 Tümünü doğru yerleştirdin! Harika! +100 puan!';
+  } else {
+    slot.classList.add('drag-over');
+    setTimeout(()=>slot.classList.remove('drag-over'), 400);
+    ansEl.textContent = '❌ Yanlış!';
+    setTimeout(()=>{ ansEl.textContent = ''; }, 700);
+  }
+  dragSelected = null;
+}
+
+// auto-animate on section visit
+document.querySelector('#sec-kaynaklar').addEventListener('animationend', animateBars);
+// initial timeline animate
+setTimeout(animateTimeline, 100);
+</script>
+</body>
+</html>

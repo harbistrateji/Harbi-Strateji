@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>DİPLOMASİ POKER — OZA Arcade</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c14;--panel:#0f1722;--accent:#ec4899;--text:#eaf0f7;--dim:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace}
+.game-wrap{display:grid;grid-template-columns:1fr 360px;height:100vh}
+@media(max-width:900px){.game-wrap{grid-template-columns:1fr;grid-template-rows:60vh 40vh}}
+.canvas-panel{position:relative;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)}
+.game-hud{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.06)}
+.hud-item{text-align:center}
+.hud-label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.hud-val{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:var(--accent)}
+canvas{flex:1;display:block;width:100%}
+.info-panel{background:var(--panel);padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.info-title{font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:800;color:var(--accent);text-transform:uppercase}
+.info-subtitle{font-size:11px;color:var(--dim);margin-top:4px}
+.info-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px}
+.info-section h3{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.info-section li{font-size:12px;line-height:1.8;color:var(--dim);list-style:none}
+.info-section li::before{content:'▸ ';color:var(--accent)}
+.info-section p{font-size:12px;line-height:1.7;color:var(--dim)}
+.back-btn{position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-size:12px;border:1px solid rgba(0,224,255,.2)}
+.overlay{position:absolute;inset:0;background:rgba(8,12,20,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50}
+.overlay.hidden{opacity:0;pointer-events:none;transition:opacity .3s}
+.start-btn{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:14px 40px;border-radius:10px;cursor:pointer;margin-top:16px;transition:.2s}
+.start-btn:hover{transform:scale(1.05)}
+.game-grid{flex:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);gap:2px;padding:12px;background:rgba(0,0,0,.3)}
+.grid-cell{background:var(--panel);border:1px solid rgba(255,255,255,.04);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,2.5vw,24px);cursor:pointer;transition:.15s;position:relative}
+.grid-cell:hover{background:rgba(255,255,255,.05);transform:scale(1.05)}
+.grid-cell.placed{border-color:var(--accent);background:rgba(0,224,255,.05)}
+.grid-cell.enemy{animation:enemyMove 2s linear}
+@keyframes enemyMove{from{opacity:.5}to{opacity:1}}
+.wave-bar{height:4px;background:var(--panel);margin:0 12px}
+.wave-fill{height:100%;background:var(--accent);transition:width 1s linear}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" class="back-btn">← OZA Hub</a>
+<div class="game-wrap">
+  <div class="canvas-panel">
+    <div class="game-hud">
+      <div class="hud-item"><div class="hud-label">DALGA</div><div class="hud-val" id="wave">1</div></div>
+      <div class="hud-item"><div class="hud-label">SKOR</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">KAYNAK</div><div class="hud-val" id="resource">100</div></div>
+      <div class="hud-item"><div class="hud-label">CAN</div><div class="hud-val" id="hp">10</div></div>
+    </div>
+    <div class="wave-bar"><div class="wave-fill" id="waveBar" style="width:0%"></div></div>
+    <div class="game-grid" id="grid"></div>
+    <div class="overlay" id="overlay">
+      <div style="font-family:Chakra Petch;font-size:26px;font-weight:800;color:var(--accent)">🃏 DİPLOMASİ POKER</div>
+      <div style="font-size:11px;color:var(--dim);margin-top:8px;text-align:center;max-width:300px">5 büyük güç masada. Kartlarını oyna: yaptırım, ittifak, tehdit, uzlaşma. En iyi eli kur!</div>
+      <button class="start-btn" onclick="startGame()">BAŞLAT</button>
+    </div>
+  </div>
+  <div class="info-panel">
+    <div>
+      <div class="info-title">🃏 DİPLOMASİ POKER</div>
+      <div class="info-subtitle">Uluslararası Blöf Masası</div>
+    </div>
+    <div class="info-section">
+      <h3>Nasıl Oynanır</h3>
+      <ul><li>5 kart dağıtılır: Yaptırım, İttifak, Tehdit, Uzlaşma, Veto</li><li>Rakip ülkelere karşı doğru kartı oyna</li><li>Blöf yap veya çağır</li><li>En çok diplomatik puan toplayan kazanır</li></ul>
+    </div>
+    <div class="info-section">
+      <h3>İçerik</h3>
+      <ul><li>ABD: NATO kartı güçlü, yaptırım etkili</li><li>Çin: Ekonomik kaldıraç, Kuşak-Yol</li><li>Rusya: Enerji silahı, veto gücü</li><li>Türkiye: Köprü rolü, dengeleme</li><li>AB: Normatif güç, yumuşak yaptırım</li></ul>
+    </div>
+    <div class="info-section">
+      <h3>Mekanik</h3>
+      <p>Kart oyunu mekaniği ile diplomasi simülasyonu. 5 büyük güç masada!</p>
+    </div>
+  </div>
+</div>
+<script>
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+const grid=document.getElementById('grid');
+let score=0,wave=1,resource=100,hp=10,running=false,enemies=[],towers=[];
+const GRID_SIZE=8;
+
+function playTone(f,d,t='sine',v=.1){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+
+// Build grid
+for(let i=0;i<GRID_SIZE*GRID_SIZE;i++){
+  const cell=document.createElement('div');
+  cell.className='grid-cell';
+  cell.dataset.idx=i;
+  cell.addEventListener('click',()=>placeOrAttack(i));
+  grid.appendChild(cell);
+}
+
+function placeOrAttack(idx){
+  if(!running)return;
+  audioCtx.resume();
+  const cell=grid.children[idx];
+  
+  if(cell.classList.contains('enemy')){
+    // Attack enemy
+    score+=50*wave;resource+=10;
+    cell.classList.remove('enemy');cell.textContent='💥';
+    playTone(600,.1,'sine',.15);
+    setTimeout(()=>{cell.textContent=''},300);
+    enemies=enemies.filter(e=>e!==idx);
+  } else if(!cell.classList.contains('placed')&&resource>=20){
+    // Place tower
+    resource-=20;
+    cell.classList.add('placed');cell.textContent='🗼';
+    playTone(440,.05,'triangle',.1);
+    towers.push(idx);
+  }
+  
+  document.getElementById('score').textContent=score;
+  document.getElementById('resource').textContent=resource;
+}
+
+function spawnEnemies(){
+  const count=2+wave;
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{
+      let idx;
+      do{idx=Math.floor(Math.random()*GRID_SIZE*GRID_SIZE)}while(grid.children[idx].classList.contains('placed')||grid.children[idx].classList.contains('enemy'));
+      grid.children[idx].classList.add('enemy');
+      grid.children[idx].textContent=['⚠️','💣','🚀','☠️','🦠'][Math.floor(Math.random()*5)];
+      enemies.push(idx);
+      playTone(200,.05,'square',.08);
+    },i*500);
+  }
+}
+
+function towerAttack(){
+  towers.forEach(t=>{
+    const adj=[t-1,t+1,t-GRID_SIZE,t+GRID_SIZE,t-GRID_SIZE-1,t-GRID_SIZE+1,t+GRID_SIZE-1,t+GRID_SIZE+1];
+    adj.forEach(a=>{
+      if(a>=0&&a<GRID_SIZE*GRID_SIZE&&grid.children[a].classList.contains('enemy')){
+        grid.children[a].classList.remove('enemy');grid.children[a].textContent='✨';
+        score+=25;enemies=enemies.filter(e=>e!==a);
+        playTone(800,.05,'sine',.08);
+        setTimeout(()=>{if(grid.children[a])grid.children[a].textContent=''},200);
+      }
+    });
+  });
+  document.getElementById('score').textContent=score;
+}
+
+function checkWave(){
+  if(enemies.length===0){
+    wave++;resource+=50;
+    document.getElementById('wave').textContent=wave;
+    document.getElementById('resource').textContent=resource;
+    [440,660,880].forEach((f,i)=>setTimeout(()=>playTone(f,.1,'sine',.12),i*80));
+    setTimeout(spawnEnemies,1500);
+  } else {
+    // Enemies that survive damage HP
+    if(Math.random()<.3){hp--;document.getElementById('hp').textContent=hp;playTone(150,.2,'sawtooth',.15)}
+    if(hp<=0)gameOver();
+  }
+}
+
+function gameLoop(){
+  if(!running)return;
+  towerAttack();
+  setTimeout(()=>{checkWave();if(running)setTimeout(gameLoop,3000-wave*100)},1000);
+}
+
+function startGame(){
+  audioCtx.resume();
+  document.getElementById('overlay').classList.add('hidden');
+  running=true;score=0;wave=1;resource=100;hp=10;enemies=[];towers=[];
+  Array.from(grid.children).forEach(c=>{c.className='grid-cell';c.textContent=''});
+  document.getElementById('score').textContent='0';
+  document.getElementById('wave').textContent='1';
+  document.getElementById('resource').textContent='100';
+  document.getElementById('hp').textContent='10';
+  spawnEnemies();
+  setTimeout(gameLoop,3000);
+}
+
+function gameOver(){
+  running=false;
+  document.getElementById('overlay').classList.remove('hidden');
+  document.getElementById('overlay').querySelector('div').textContent='HAT KIRILDI!';
+  playTone(100,.5,'sawtooth',.2);
+}
+</script>
+</body>
+</html>

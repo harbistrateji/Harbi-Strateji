@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İlginç Bilgiler — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root{--pri:#f59e0b;--sec:#8b5cf6;--bg:#0a0f17;--text:#e8e6e3;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;}
+.hero{text-align:center;padding:80px 20px 40px;background:linear-gradient(180deg,rgba(10,15,23,0.9),var(--bg)),radial-gradient(ellipse at 50% 0%,#f59e0b22,transparent 70%);}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 12px;}
+.hero h1 span{color:var(--pri);}
+.hero p{max-width:700px;margin:0 auto;opacity:0.8;}
+.filter-bar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:20px;}
+.filter-btn{padding:8px 18px;border:1px solid #374151;border-radius:20px;background:transparent;color:#9ca3af;cursor:pointer;font-size:0.8rem;transition:all 0.2s;}
+.filter-btn.active,.filter-btn:hover{border-color:var(--pri);color:var(--pri);background:#f59e0b10;}
+.facts-grid{max-width:1100px;margin:0 auto;padding:0 20px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+.fact-card{background:#111827;border:1px solid #1f2937;border-radius:16px;padding:24px;transition:all 0.3s;animation:fadeUp 0.5s ease both;}
+.fact-card:hover{border-color:var(--pri);transform:translateY(-4px);box-shadow:0 8px 30px rgba(245,158,11,0.1);}
+.fact-icon{font-size:2.5rem;margin-bottom:12px;}
+.fact-title{font-family:'Chakra Petch',sans-serif;font-size:1rem;margin-bottom:8px;color:#fff;}
+.fact-text{font-size:0.9rem;line-height:1.7;opacity:0.8;margin-bottom:12px;}
+.fact-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.fact-tag{font-size:0.7rem;padding:3px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace;}
+.tag-z{background:#8b5cf620;color:#8b5cf6;border:1px solid #8b5cf640;}
+.tag-xy{background:#06b6d420;color:#06b6d4;border:1px solid #06b6d440;}
+.tag-all{background:#f59e0b20;color:#f59e0b;border:1px solid #f59e0b40;}
+.source{text-align:center;padding:40px 20px;opacity:0.5;font-size:0.8rem;border-top:1px solid #ffffff10;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.facts-grid{grid-template-columns:1fr;}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><a href="index.html" style="position:fixed;top:12px;left:12px;color:#00E0FF;text-decoration:none;font-size:14px;z-index:9999;background:rgba(0,0,0,0.7);padding:6px 14px;border-radius:20px;">← Ana Sayfa</a>
+<script src="hs-nav.js?v=11"></script>
+<div class="hero">
+  <h1><span>İlginç Bilgiler</span></h1>
+  <p>Savaş tarihinden şaşırtıcı gerçekler — kuşağına göre keşfet!</p>
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterFacts('all')">Tümü</button>
+  <button class="filter-btn" onclick="filterFacts('z')">Z + Alfa Kuşağı</button>
+  <button class="filter-btn" onclick="filterFacts('xy')">X + Y Kuşağı</button>
+  <button class="filter-btn" onclick="filterFacts('silah')">Silah</button>
+  <button class="filter-btn" onclick="filterFacts('ekonomi')">Ekonomi</button>
+  <button class="filter-btn" onclick="filterFacts('osmanli')">Osmanlı</button>
+  <button class="filter-btn" onclick="filterFacts('modern')">Modern</button>
+</div>
+<div class="facts-grid" id="factsGrid">
+</div>
+<div class="source">Kaynak: Prof. Dr. Zeki Tez · Harb-i Strateji Külliyatı · SFA-Oxford · SIPRI 2024</div>
+<script>
+const facts=[
+  {icon:"🔥",title:"Suda Yanan Silah",text:"Grek Ateşi suda bile yanmaya devam ediyordu! Bileşimindeki sönmemiş kireç suyla temas edince kuvvetle ısınarak karışımı tutuşturuyordu. 7 yüzyıl boyunca formülü gizli kaldı.",tags:["z","silah"],cat:"silah"},
+  {icon:"🏹",title:"800 Metrelik Ok",text:"Türk kompozit yayı 800 metreye kadar ok atabiliyordu. Boynuz, sinir ve ahşap katmanlarından yapılırdı. Okçu eğitimi 7 yaşında başlıyordu!",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"💰",title:"Savaşın Gerçek Maliyeti",text:"18. yüzyılda silah ve mühimmat, toplam savaş giderinin sadece %1'ini oluşturuyordu. Asıl maliyet lojistik ve erzaktaydı (%12).",tags:["xy","ekonomi"],cat:"ekonomi"},
+  {icon:"⚗",title:"107 Barut Formülü",text:"Suriyeli Hasan el-Rammah 1280'de yazdığı kitapta 107 farklı barut formülü ve 22 roket tasarımı sundu. Dünyada ilk matematiksel roket yakıtı hesabı!",tags:["z","silah"],cat:"silah"},
+  {icon:"💣",title:"680 Kiloluk Mermi",text:"Fatih’in İstanbul kuşatmasında kullandığı Şahi topları 680 kg ağırlığında mermi atıyordu. Top 8 metre uzunluğundaydı ve 1.5 km menzile sahipti.",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"🏭",title:"Krupp: 400 Yıllık Silah İmparatorluğu",text:"Alman Krupp ailesi 400 yıl boyunca Avrupa’nın yarısını silahlandırdı. I. Dünya Savaşı’nda fabrikada 70.000 işçi çalışıyordu.",tags:["xy","ekonomi"],cat:"ekonomi"},
+  {icon:"☢",title:"2 Milyar Dolarlık Gizli Proje",text:"Manhattan Projesi: 130.000 kişi çalıştı, 2 milyar $ harcandı (bugün 28 milyar $). Çoğu çalışan ne yaptığını bilmiyordu!",tags:["z","modern"],cat:"modern"},
+  {icon:"🗡",title:"Nanotüp Kılıç",text:"Şam çeliği (wootz) modern analizlerde karbon nanotüp benzeri yapı gösterdi. Bu yüzden olağanüstü keskin ve dayanıklıydı!",tags:["z","silah"],cat:"silah"},
+  {icon:"🚀",title:"100 Milyon AK-47",text:"Kalaşnikov AK-47 dünyada 100 milyondan fazla üretildi. 106 ülke ordusunda kullanılıyor. Kalaşnikov: 'Keşke çim biçme makinesi yapsaydım.'",tags:["z","modern"],cat:"modern"},
+  {icon:"💸",title:"1.7 Trilyon Dolarlık Uçak",text:"F-35 programı 1.7 trilyon dolarla tarihin en pahalı silah programı. Tek bir uçağın maliyeti 80-100 milyon dolar.",tags:["xy","modern"],cat:"modern"},
+  {icon:"⚔",title:"Şövalye Zırhı = 1 Köy",text:"Ortaçağ’da tam bir şövalye donanımı (zırh, at, silah) bir köyün yıllık geliri kadardı. Bu yüzden sadece soylular savaşabiliyordu.",tags:["z","ekonomi"],cat:"ekonomi"},
+  {icon:"🧪",title:"Nobel’in Pişmanlığı",text:"Alfred Nobel bir gazetede kendi ölüm ilanını okudu: 'Ölüm taciri öldü.' Bu olay onu Nobel Barış Ödülü’nü kurmaya itti.",tags:["z","silah"],cat:"silah"},
+  {icon:"🏰",title:"53 Gün 53 Gece",text:"İstanbul’un fethi 53 gün sürdü. Fatih 21 yaşındaydı. 80.000-100.000 asker, 69 top, 126 gemi. Tarihin en büyük kuşatmalarından.",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"🌍",title:"Barut 1200 Yılda 3 Kıta Geçti",text:"Barut 9. yüzyılda Çin’de keşfedildi, 13. yüzyılda İslam dünyasına, 14. yüzyılda Avrupa’ya ulaştı. Her kıtada farklı geliştirildi.",tags:["xy","silah"],cat:"silah"},
+  {icon:"🛢",title:"Napalm = Grek Ateşi 2.0",text:"1942'de geliştirilen Napalm, Grek Ateşi’nin modern versiyonu. İkisi de nafta bazlı, ikisi de yapışkan ve söndürülmesi zor.",tags:["z","modern"],cat:"modern"},
+  {icon:"💎",title:"70.000 Nükleer Başlık",text:"Soğuk Savaş’ın zirvesinde dünyada 70.000'den fazla nükleer başlık vardı. Dünyayı birçok kez yok edecek güçteydi.",tags:["xy","modern"],cat:"modern"},
+  {icon:"⛵",title:"Osmanlı Deniz Mayını",text:"Osmanlılar deniz mayınının erken formlarını kullandı. Barut dolu fıçılar su altına yerleştirilerek düşman gemileri batırılıyordu.",tags:["z","osmanli"],cat:"osmanli"},
+  {icon:"📐",title:"Leonardo’nun 200+ Silah Tasarımı",text:"Leonardo da Vinci Codex Atlanticus’ta 200'den fazla askeri tasarım çizdi: tank, helikopter, makineli tüfek, zırhlı araç. Çoğu 400 yıl ilerisindeydi.",tags:["z","silah"],cat:"silah"},
+  {icon:"🏦",title:"Roma’nın Askeri Bütçesi",text:"Roma İmparatorluğu MÖ 406'da askerlere düzenli maaş ödemeye başladı. Savunma harcamaları vergiyle finanse edildi — bugünkü sistemin kökeni!",tags:["xy","ekonomi"],cat:"ekonomi"},
+  {icon:"🎆",title:"Osmanlı Şenlik Roketleri",text:"Osmanlı şenliklerinde havai fişek gösterileri yapılırdı. Roketler sarayda eğlence aracıydı. Aynı teknoloji savaşta da kullanıldı.",tags:["z","osmanli"],cat:"osmanli"}
+];
+
+function renderFacts(list){
+  const grid=document.getElementById('factsGrid');
+  grid.innerHTML='';
+  list.forEach((f,i)=>{
+    const tagHtml=f.tags.map(t=>t==='z'?'<span class="fact-tag tag-z">Z+Alfa</span>':t==='xy'?'<span class="fact-tag tag-xy">X+Y</span>':'<span class="fact-tag tag-all">'+t+'</span>').join('');
+    grid.innerHTML+=`<div class="fact-card" style="animation-delay:${i*0.05}s"><div class="fact-icon">${f.icon}</div><div class="fact-title">${f.title}</div><div class="fact-text">${f.text}</div><div class="fact-tags">${tagHtml}</div></div>`;
+  });
+}
+
+function filterFacts(cat){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  if(cat==='all') renderFacts(facts);
+  else if(cat==='z') renderFacts(facts.filter(f=>f.tags.includes('z')));
+  else if(cat==='xy') renderFacts(facts.filter(f=>f.tags.includes('xy')));
+  else renderFacts(facts.filter(f=>f.cat===cat));
+}
+
+renderFacts(facts);
+</script>
+</body>
+</html>

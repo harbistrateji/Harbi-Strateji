@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TSK Hava Kuvvetleri Tarihçesi — 1911'den KAAN'a</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0a1a;color:#e0e8f0;overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;pointer-events:none;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(100,181,246,0.1) 0%,transparent 50%)}
+.stars{position:absolute;top:0;left:0;right:0;bottom:0}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle 3s infinite}
+@keyframes twinkle{0%,100%{opacity:0.3}50%{opacity:1}}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#64B5F6;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;text-shadow:0 0 30px rgba(100,181,246,0.3)}
+.hero .subtitle{font-size:1.1rem;color:#8ab4d8;max-width:650px;line-height:1.6}
+.hero .year-badge{display:inline-block;margin-top:20px;padding:8px 24px;border:2px solid #64B5F6;border-radius:30px;font-size:1.4rem;font-weight:700;color:#64B5F6}
+.start-btn{margin-top:30px;padding:14px 40px;background:linear-gradient(135deg,#42A5F5,#1565C0);border:none;border-radius:8px;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase;letter-spacing:1px}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(66,165,245,0.4)}
+.content{display:none;max-width:1000px;margin:0 auto;padding:40px 20px}
+.flight-path{position:relative;padding-left:40px}
+.flight-path::before{content:'';position:absolute;left:18px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#64B5F6,#1565C0,#0D47A1)}
+.era-block{margin-bottom:50px;opacity:0;transform:translateX(-20px);transition:all .7s ease}
+.era-block.visible{opacity:1;transform:translateX(0)}
+.era-block h2{color:#64B5F6;font-size:1.5rem;margin-bottom:5px;position:relative}
+.era-block h2::before{content:'✈';position:absolute;left:-35px;top:0;font-size:1.2rem}
+.era-block .period{color:#5a8ab0;font-size:0.85rem;margin-bottom:15px}
+.flight-card{background:rgba(100,181,246,0.04);border:1px solid rgba(100,181,246,0.15);border-radius:10px;padding:18px;margin-bottom:12px;transition:all .3s;cursor:default}
+.flight-card:hover{background:rgba(100,181,246,0.08);border-color:#64B5F6;transform:translateX(5px)}
+.flight-card h3{color:#90CAF9;font-size:1rem;margin-bottom:6px}
+.flight-card .year{color:#42A5F5;font-weight:700;font-size:0.85rem}
+.flight-card p{color:#a0b8d0;font-size:0.88rem;line-height:1.5;margin-top:5px}
+.highlight{background:linear-gradient(135deg,rgba(100,181,246,0.08),rgba(21,101,192,0.08));border:1px solid rgba(100,181,246,0.25);border-radius:12px;padding:25px;margin:30px 0;text-align:center}
+.highlight .quote{font-style:italic;font-size:1.05rem;color:#90CAF9;line-height:1.6}
+.highlight .author{margin-top:10px;color:#64B5F6;font-weight:700}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:30px 0}
+.stat{text-align:center;padding:15px;background:rgba(100,181,246,0.04);border:1px solid rgba(100,181,246,0.12);border-radius:10px}
+.stat .num{font-size:1.7rem;font-weight:900;color:#42A5F5}
+.stat .lbl{font-size:0.72rem;color:#5a8ab0;margin-top:3px}
+.music-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:rgba(100,181,246,0.15);border:2px solid #64B5F6;color:#64B5F6;font-size:1.5rem;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.music-btn:hover{background:rgba(100,181,246,0.3)}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}.flight-path{padding-left:30px}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div class="hero" id="hero">
+<div class="stars" id="stars"></div>
+<h1>✈ Hava Kuvvetleri Tarihçesi</h1>
+<p class="subtitle">1911'de ilk uçuş eğitiminden 5. nesil KAAN savaş uçağına — göklerdeki 115 yıllık Türk hakimiyeti.</p>
+<div class="year-badge">1911 — 2026</div>
+<button class="start-btn" onclick="startContent()">Göklere Yüksel</button>
+</div>
+
+<div class="content" id="content">
+<div class="stats-grid">
+<div class="stat"><div class="num">115</div><div class="lbl">Yıllık Tarih</div></div>
+<div class="stat"><div class="num">1100+</div><div class="lbl">Uçak</div></div>
+<div class="stat"><div class="num">KAAN</div><div class="lbl">5. Nesil</div></div>
+<div class="stat"><div class="num">NATO #3</div><div class="lbl">Hava Gücü</div></div>
+</div>
+
+<div class="flight-path">
+<div class="era-block" data-era="1">
+<h2>Osmanlı Havacılığı</h2><div class="period">1911 — 1918</div>
+<div class="flight-card"><div class="year">1911</div><h3>İlk Uçuş Eğitimi — Fransa</h3><p>Yüzbaşı Fesa Bey ve Yüzbaşı Yusuf Kenan Bey, Fransa'da uçuş eğitimi aldı. Osmanlı havacılığının temeli atıldı.</p></div>
+<div class="flight-card"><div class="year">1 Haziran 1911</div><h3>İlk Türk Pilotu</h3><p>Fesa Bey, Bleriot XI tipi uçakla ilk solo uçuşunu gerçekleştirdi. Osmanlı İmparatorluğu'nun ilk pilotu oldu.</p></div>
+<div class="flight-card"><div class="year">1912</div><h3>Hava Okulu Kuruluşu</h3><p>Yeşilköy'de (Ayastefanos) ilk Hava Okulu açıldı. İlk yerli uçuş eğitimi başladı.</p></div>
+<div class="flight-card"><div class="year">1914-1918</div><h3>I. Dünya Savaşı Hava Harekâtı</h3><p>Çanakkale, Kafkas, Filistin cephelerinde hava keşif ve bombardıman görevleri. Vecihi Hürkuş ilk hava muharebelerinde yer aldı.</p></div>
+</div>
+
+<div class="era-block" data-era="2">
+<h2>Millî Mücadele & Erken Cumhuriyet</h2><div class="period">1920 — 1950</div>
+<div class="flight-card"><div class="year">1920</div><h3>Kuva-yı Havaiye</h3><p>Millî Mücadele'de mevcut birkaç uçakla keşif ve irtibat görevleri yapıldı. Havacılık ruhu cephede yaşatıldı.</p></div>
+<div class="flight-card"><div class="year">1925</div><h3>Türk Hava Kurumu</h3><p>"Bir millet ki göklere sahip değilse, o millet yok olmaya mahkumdur." — Atatürk. THK kurularak havacılık bilinci yaygınlaştırıldı.</p></div>
+<div class="flight-card"><div class="year">1925-1930</div><h3>Vecihi Hürkuş — İlk Yerli Uçak</h3><p>Vecihi K-VI uçağı tasarlandı ve uçuruldu. Türk havacılık sanayiinin ilk adımı.</p></div>
+<div class="flight-card"><div class="year">1926</div><h3>Kayseri Uçak Fabrikası</h3><p>Türkiye'nin ilk uçak fabrikası kuruldu. Lisans altında üretim başladı.</p></div>
+</div>
+
+<div class="era-block" data-era="3">
+<h2>Jet Çağı & NATO</h2><div class="period">1950 — 2000</div>
+<div class="flight-card"><div class="year">1951</div><h3>Kore Savaşı — İlk Jet Muharebesi</h3><p>Türk pilotlar F-84 Thunderjet ile Kore'de savaştı. Jet çağına geçiş.</p></div>
+<div class="flight-card"><div class="year">1952</div><h3>NATO Entegrasyonu</h3><p>F-86 Sabre, ardından F-100, F-104, F-4 Phantom envantere girdi. Pilot eğitimi NATO standartlarına yükseltildi.</p></div>
+<div class="flight-card"><div class="year">1974</div><h3>Kıbrıs Hava Harekâtı</h3><p>Türk Hava Kuvvetleri, Kıbrıs Barış Harekâtı'nda hava üstünlüğü sağladı. F-100 ve F-104 uçakları görev aldı.</p></div>
+<div class="flight-card"><div class="year">1987</div><h3>F-16 Üretimi — TAI</h3><p>Türk Havacılık ve Uzay Sanayii (TAI) kuruldu. F-16 Block 30/40/50 uçakları Türkiye'de üretilmeye başlandı. 270+ F-16 envantere katıldı.</p></div>
+</div>
+
+<div class="highlight">
+<div class="quote">"İstikbal göklerdedir."</div>
+<div class="author">— Mustafa Kemal Atatürk, 1925</div>
+</div>
+
+<div class="era-block" data-era="4">
+<h2>Yerli & Millî Dönem</h2><div class="period">2000 — Günümüz</div>
+<div class="flight-card"><div class="year">2007</div><h3>ANKA İHA</h3><p>Türkiye'nin ilk yerli MALE sınıfı insansız hava aracı. Keşif ve gözetleme görevleri için tasarlandı.</p></div>
+<div class="flight-card"><div class="year">2014</div><h3>Bayraktar TB2</h3><p>Taktik İHA devrimi. Suriye, Libya, Karabağ, Ukrayna'da oyun değiştirici etki. Drone savaşının yeni çağını başlattı.</p></div>
+<div class="flight-card"><div class="year">2016</div><h3>HÜRKUŞ — Yerli Eğitim Uçağı</h3><p>TAI'nin tasarladığı temel eğitim uçağı. Vecihi Hürkuş'un adını taşıyor.</p></div>
+<div class="flight-card"><div class="year">2023</div><h3>Bayraktar KIZILELMA</h3><p>İnsansız savaş uçağı (UCAV). Jet motorlu, süpersonik kapasiteli. Uçak gemisinden kalkış yeteneği.</p></div>
+<div class="flight-card"><div class="year">21 Şubat 2024</div><h3>KAAN — 5. Nesil Savaş Uçağı</h3><p>Türkiye'nin ilk 5. nesil stealth savaş uçağı ilk uçuşunu gerçekleştirdi. Çift motorlu, süpersonik, düşük gözlenebilirlik. Dünyada bu kapasiteye sahip 4. ülke.</p></div>
+<div class="flight-card"><div class="year">2024+</div><h3>AKSUNGUR, AKINCI, TB3</h3><p>Yüksek irtifa uzun menzil İHA'lar, yapay zeka destekli sürü teknolojisi, TCG Anadolu'dan kalkış kapasitesi. Türkiye İHA/SİHA'da dünya liderleri arasında.</p></div>
+</div>
+</div>
+</div>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">♪</button>
+
+<script>
+// Stars
+const starsEl=document.getElementById('stars');
+for(let i=0;i<80;i++){
+const s=document.createElement('div');s.className='star';
+s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
+s.style.animationDelay=Math.random()*3+'s';
+starsEl.appendChild(s);
+}
+
+let audioCtx,musicPlaying=false,musicInterval;
+
+function startContent(){
+document.getElementById('hero').style.display='none';
+document.getElementById('content').style.display='block';
+setTimeout(()=>{
+document.querySelectorAll('.era-block').forEach((el,i)=>{
+setTimeout(()=>el.classList.add('visible'),i*500);
+});
+},200);
+}
+
+function toggleMusic(){
+if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+if(musicPlaying){clearInterval(musicInterval);musicPlaying=false;document.getElementById('musicBtn').style.opacity='0.5';}
+else{playSkyMusic();musicPlaying=true;document.getElementById('musicBtn').style.opacity='1';}
+}
+
+function playSkyMusic(){
+const notes=[329.63,392,440,523.25,587.33,659.25,783.99,880];
+let step=0;
+function playNote(){
+if(!musicPlaying)return;
+const osc=audioCtx.createOscillator();
+const gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+osc.type='sine';
+osc.frequency.value=notes[step%notes.length];
+gain.gain.setValueAtTime(0.05,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.8);
+osc.start();osc.stop(audioCtx.currentTime+0.8);
+step++;
+}
+musicInterval=setInterval(playNote,600);
+playNote();
+}
+
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.15});
+document.querySelectorAll('.era-block').forEach(el=>obs.observe(el));
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

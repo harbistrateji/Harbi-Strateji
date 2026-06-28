@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Şeffaf Savaş Alanı — Harb-i Strateji İnfografik</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:5px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;color:var(--cyan)}
+.hdr-sub{font-size:13px;color:var(--dim);margin-left:auto}
+.hero{text-align:center;padding:40px 20px 20px;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-block;padding:4px 14px;border:1px solid var(--red);border-radius:20px;font-size:13px;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(22px,5vw,38px);font-weight:700;line-height:1.2;margin-bottom:10px}
+.hero h1 span{color:var(--cyan)}
+.hero p{font-size:13px;color:var(--dim);line-height:1.8;max-width:620px;margin:0 auto}
+/* Battlefield Canvas */
+.canvas-wrap{position:relative;max-width:900px;margin:30px auto;padding:0 16px}
+canvas#battlefield{width:100%;border-radius:14px;border:1px solid var(--line);background:#060d14;display:block}
+.canvas-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:13px}
+.leg-item{display:flex;align-items:center;gap:6px}
+.leg-dot{width:10px;height:10px;border-radius:50%}
+/* Stats */
+.stats-section{max-width:900px;margin:0 auto;padding:0 16px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.stat-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,224,255,.04),transparent);pointer-events:none}
+.stat-num{font-family:'Chakra Petch',sans-serif;font-size:32px;font-weight:700;line-height:1}
+.stat-unit{font-size:13px;color:var(--dim);margin-top:4px}
+.stat-label{font-size:13px;color:var(--dim);margin-top:6px;text-transform:uppercase;letter-spacing:1px}
+/* Timeline */
+.timeline-section{max-width:900px;margin:0 auto;padding:0 16px 30px}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--line)}
+.timeline{position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--cyan),var(--red))}
+.tl-item{position:relative;margin-bottom:20px;opacity:0;transform:translateX(-20px);transition:all .5s}
+.tl-item.visible{opacity:1;transform:translateX(0)}
+.tl-dot{position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;border:2px solid var(--cyan);background:var(--bg)}
+.tl-year{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--cyan);font-weight:700;margin-bottom:4px}
+.tl-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.tl-text{font-size:13px;color:var(--dim);line-height:1.7}
+.tl-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:6px;text-transform:uppercase}
+/* Cost comparison */
+.cost-section{max-width:900px;margin:0 auto;padding:0 16px 30px}
+.cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:500px){.cost-grid{grid-template-columns:1fr}}
+.cost-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.cost-icon{font-size:32px;margin-bottom:8px}
+.cost-name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
+.cost-price{font-size:22px;font-weight:700;font-family:'Chakra Petch',sans-serif;margin-bottom:6px}
+.cost-bar-wrap{height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.cost-bar{height:100%;border-radius:4px;transition:width 1.5s ease}
+.cost-desc{font-size:13px;color:var(--dim);line-height:1.6}
+.ratio-box{grid-column:1/-1;background:rgba(224,21,21,.08);border:1px solid rgba(224,21,21,.3);border-radius:12px;padding:16px;text-align:center}
+.ratio-num{font-family:'Chakra Petch',sans-serif;font-size:48px;font-weight:700;color:var(--red)}
+.ratio-label{font-size:12px;color:var(--dim);margin-top:4px}
+/* Doctrine cards */
+.doctrine-section{max-width:900px;margin:0 auto;padding:0 16px 40px}
+.doctrine-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer;transition:.2s}
+.doc-card:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.doc-icon{font-size:28px;margin-bottom:8px}
+.doc-title{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;margin-bottom:6px}
+.doc-text{font-size:13px;color:var(--dim);line-height:1.7}
+.doc-source{font-size:12px;color:var(--gold);margin-top:8px;text-transform:uppercase}
+.play-btn{display:block;max-width:320px;margin:0 auto 40px;padding:14px 28px;background:var(--red);border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;text-align:center;text-decoration:none}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">👁️ ŞEFFAF SAVAŞ ALANI</div>
+  <div class="hdr-sub">linkedinyazılar9 · Drone Savaşı Analizi 2026</div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">İnteraktif İnfografik</div>
+  <h1>"Görünmek = <span>Ölmek</span>"<br>Şeffaf Savaş Alanının Yeni Fiziği</h1>
+  <p>Ukrayna cephesinden çıkan en kritik ders: Ubiquitous sensörler, uydulardan insansız hava araçlarına kadar, her şeyi gözlemlenebilir kılıyor. Gözlemlenebilen her şey hedef alınabiliyor.</p>
+</div>
+
+<div class="canvas-wrap">
+  <canvas id="battlefield" height="420"></canvas>
+  <div class="canvas-legend">
+    <div class="leg-item"><div class="leg-dot" style="background:#c41e3a"></div><span>Keşif Dronu</span></div>
+    <div class="leg-item"><div class="leg-dot" style="background:#E01515"></div><span>FPV Saldırı</span></div>
+    <div class="leg-item"><div class="leg-dot" style="background:#C9A24B"></div><span>Hedef</span></div>
+    <div class="leg-item"><div class="leg-dot" style="background:rgba(0,255,136,.6)"></div><span>Radar Tarama</span></div>
+    <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div><span>EH Sistemi</span></div>
+  </div>
+</div>
+
+<div class="stats-section">
+  <div class="stat-card"><div class="stat-num" style="color:var(--cyan)" data-target="4500000">0</div><div class="stat-unit">drone</div><div class="stat-label">Ukrayna 2025 Üretimi</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--gold)" data-target="183">0</div><div class="stat-unit">üretici firma</div><div class="stat-label">Ukrayna Drone Ekosistemi</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--red)" data-target="200">0</div><div class="stat-unit">:1 oran</div><div class="stat-label">FPV vs Patriot Maliyet</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--green)" data-target="50">0</div><div class="stat-unit">+ teknoloji</div><div class="stat-label">NATO Flytrap 5.0</div></div>
+</div>
+
+<div class="timeline-section">
+  <div class="section-title">📅 DRONE SAVAŞI EVRİMİ 2022–2026</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--green)"></div>
+      <div class="tl-badge" style="background:rgba(0,255,136,.15);color:var(--green)">2022</div>
+      <div class="tl-title">Sovyet Mirası + TB2 Dönemi</div>
+      <div class="tl-text">Ukrayna, Sovyet dönemi ekipmanları ve Türk yapımı TB2 Bayraktar'larla başladı. 41 yerli drone üreticisi mevcut. Cephe hareketli, drone ekonomisi henüz emekleme aşamasında.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--cyan)"></div>
+      <div class="tl-badge" style="background:rgba(0,224,255,.15);color:var(--cyan)">2023</div>
+      <div class="tl-title">FPV Devrimi — Cephe Donuyor</div>
+      <div class="tl-text">Her iki taraf da FPV drone'ları ölçekli biçimde benimsedi. Cephe dondu ama drone ekonomisi hızlandı. Ukrayna üretici sayısı 41'den 132'ye çıktı. Büyük zırhlı hücumlar artık son derece riskli.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--gold)"></div>
+      <div class="tl-badge" style="background:rgba(201,162,75,.15);color:var(--gold)">2024 Sonu</div>
+      <div class="tl-title">Fiber-Optik Drone + Otonom Hedefleme</div>
+      <div class="tl-text">Ukrayna, jammer-proof fiber-optik kablolu drone'ları ve YZ destekli otonom hedefleme sistemlerini konuşlandırdı. Rusya, Rubicon Merkezi'ni kurarak yanıt verdi. Kill-chain saniyeler içinde tamamlanıyor.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--red)"></div>
+      <div class="tl-badge" style="background:rgba(224,21,21,.15);color:var(--red)">2025</div>
+      <div class="tl-title">Robotic Combined Arms — Tarihsel İlk</div>
+      <div class="tl-text">Ukrayna, tamamen insansız sistemlerle Rus mevzii ele geçirdi: FPV drone'lar + insansız kara araçları + keşif drone'ları. 4,5 milyon drone üretildi. 183 üretici. İhracat başladı.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#8b5cf6"></div>
+      <div class="tl-badge" style="background:rgba(139,92,246,.15);color:#8b5cf6">2026</div>
+      <div class="tl-title">NATO LEAP + Avrupa 5G Radar Ağı</div>
+      <div class="tl-text">Fransa, Almanya, İtalya, Polonya, İngiltere LEAP programını başlattı. AB, 350.000+ 5G baz istasyonunu erken uyarı radar sistemi olarak planladı. Savunma ve sivil altyapı yapısal olarak birleşiyor.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cost-section">
+  <div class="section-title">⚖️ MALİYET ASİMETRİSİ TERAZİSİ</div>
+  <div class="cost-grid">
+    <div class="cost-card">
+      <div class="cost-icon">🚁</div>
+      <div class="cost-name">FPV DRONE</div>
+      <div class="cost-price" style="color:var(--green)">$500–$5.000</div>
+      <div class="cost-bar-wrap"><div class="cost-bar" style="width:0%;background:var(--green)" data-width="2"></div></div>
+      <div class="cost-desc">Ucuz, hızlı üretilen, tek kullanımlık saldırı dronu. Zırhlı araç, radar sistemi veya hava savunma bataryasını tehdit edebilir.</div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-icon">🛡️</div>
+      <div class="cost-name">PATRİOT FÜZE</div>
+      <div class="cost-price" style="color:var(--red)">$3–4 MİLYON</div>
+      <div class="cost-bar-wrap"><div class="cost-bar" style="width:0%;background:var(--red)" data-width="100"></div></div>
+      <div class="cost-desc">Gelişmiş hava savunma füzesi. Yüksek hassasiyet, uzun menzil. Ancak maliyet oranı savunmacının aleyhine çalışıyor.</div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-icon">✈️</div>
+      <div class="cost-name">SHAHED DRONE (İRAN)</div>
+      <div class="cost-price" style="color:var(--gold)">$20.000–$50.000</div>
+      <div class="cost-bar-wrap"><div class="cost-bar" style="width:0%;background:var(--gold)" data-width="15"></div></div>
+      <div class="cost-desc">Yaptırımlar altında gölge ticaret ağlarıyla üretilen intihar dronu. Küresel elektronik tedarik zincirinin %80'i Çin'de.</div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-icon">🏭</div>
+      <div class="cost-name">DÜŞÜK MALİYETLİ EH DRONE PİYASASI</div>
+      <div class="cost-price" style="color:var(--cyan)">$1,63 Milyar</div>
+      <div class="cost-bar-wrap"><div class="cost-bar" style="width:0%;background:var(--cyan)" data-width="55"></div></div>
+      <div class="cost-desc">2026 piyasa değeri. 2030'a kadar $3,02 milyara ulaşması bekleniyor. CAGR: %16,7. Gerçek savaş talebiyle büyüyen endüstriyel segment.</div>
+    </div>
+    <div class="ratio-box">
+      <div class="ratio-num" id="ratio-counter">0</div>
+      <div class="ratio-label">Shahed / Patriot Maliyet Oranı (60:1 ile 200:1 arası)</div>
+      <div style="font-size:13px;color:var(--dim);margin-top:8px">Her savunma bakanlığı platform maliyeti yerine ağ etkisine göre organize olmazsa bir önceki savaşa hazırlanıyor demektir.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine-section">
+  <div class="section-title">🧠 STRATEJİK DERSLER</div>
+  <div class="doctrine-grid">
+    <div class="doc-card">
+      <div class="doc-icon">👁️</div>
+      <div class="doc-title">Görünmek = Ölmek</div>
+      <div class="doc-text">West Point Modern Savaş Enstitüsü: "Şeffaf savaş alanı" — her şey gözlemlenebilir, her şey hedeflenebilir. NATO Hedgehog 2025 tatbikatında İngiliz ve Estonya birlikleri, 10 Ukraynalı drone uzmanı tarafından hareket eder etmez imha edildi.</div>
+      <div class="doc-source">Kaynak: West Point MWI, Mayıs 2026</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon">⚡</div>
+      <div class="doc-title">Kill-Chain Sıkışması</div>
+      <div class="doc-text">Hedef tespitinden vurma işlemine geçiş eskiden saatler alıyordu. Artık saniyeler içinde tamamlanıyor. Savaş artık planlanmıyor; gerçek zamanlı fırsat avı haline geldi. AEBOCODE operasyonel analizi bu değişimi teyit ediyor.</div>
+      <div class="doc-source">Kaynak: AEBOCODE Operasyonel Analiz</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon">🔄</div>
+      <div class="doc-title">Adaptasyon Döngüsü</div>
+      <div class="doc-text">Klasik savunma sanayiinde sistem geliştirme yıllar alır. Ukrayna-Rusya cephesinde aynı süreç günler veya haftalar içinde tamamlanıyor. Yazılım güncellemeleri, EH önlemleri, YZ hedefleme algoritmaları sürekli revize ediliyor.</div>
+      <div class="doc-source">Kaynak: Reuters, Mayıs 2026</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon">🌐</div>
+      <div class="doc-title">Tekel Sona Erdi</div>
+      <div class="doc-text">Egmont Enstitüsü: Uzaktan savaş artık Batı'nın stratejik avantajı değil. Ucuz insansız sistemler devlet dışı aktörlere ve önceden bu teknolojiye erişimi olmayan devletlere yayıldı. Mimarların hiç niyetlemediği ortak bir şiddet grameri oluştu.</div>
+      <div class="doc-source">Kaynak: Egmont Institute, Nisan 2026</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon">🔗</div>
+      <div class="doc-title">Tedarik Zinciri Krizi</div>
+      <div class="doc-text">Küresel drone elektronik tedarik zincirinin tahminen %80'i Çin'de yoğunlaşmış durumda. "Nearshoring" çözümü — Avrupa ve müttefik üretim kapasitesi inşası — hem endüstriyel hem de güvenlik politikası aciliyeti taşıyor.</div>
+      <div class="doc-source">Kaynak: Egmont Institute / Ukrayna-Avrupa Ortak Üretim</div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon">🎯</div>
+      <div class="doc-title">Bağlam Belirleyicidir</div>
+      <div class="doc-text">IPSS Addis Dr. Mercy Fekadu: Drone sonuçları hakkındaki teknodeterminizm stratejik hata. Topografya, silahlı grupların örgütsel uyumu, lojistik derinlik, siyasi irade — bunlar belirleyici olmaya devam ediyor.</div>
+      <div class="doc-source">Kaynak: IPSS Addis, Mayıs 2026</div>
+    </div>
+  </div>
+</div>
+
+<a href="oza-kill-chain.html" class="play-btn">🎮 Kill-Chain Yarışı Oyununu Oyna →</a>
+
+<script>
+// Battlefield Canvas Animation
+var canvas = document.getElementById('battlefield');
+var ctx = canvas.getContext('2d');
+var W, H;
+function resize() {
+  W = canvas.offsetWidth; H = 420;
+  canvas.width = W; canvas.height = H;
+}
+resize(); window.addEventListener('resize', resize);
+
+var entities = [];
+var explosions = [];
+var radarAngle = 0;
+
+function createDrone(type) {
+  return {
+    x: Math.random() * W, y: Math.random() * H,
+    vx: (Math.random() - 0.5) * (type === 'fpv' ? 3 : 1.5),
+    vy: (Math.random() - 0.5) * (type === 'fpv' ? 3 : 1.5),
+    type: type,
+    size: type === 'fpv' ? 4 : type === 'recon' ? 5 : 8,
+    color: type === 'fpv' ? '#E01515' : type === 'recon' ? '#c41e3a' : type === 'target' ? '#C9A24B' : '#8b5cf6',
+    trail: [],
+    alive: true,
+    ttl: 200 + Math.random() * 300
+  };
+}
+
+for (var i = 0; i < 6; i++) entities.push(createDrone('recon'));
+for (var i = 0; i < 4; i++) entities.push(createDrone('fpv'));
+for (var i = 0; i < 5; i++) entities.push(createDrone('target'));
+for (var i = 0; i < 2; i++) entities.push(createDrone('ew'));
+
+function addExplosion(x, y, color) {
+  explosions.push({ x: x, y: y, r: 0, maxR: 30 + Math.random() * 20, color: color, alpha: 1 });
+}
+
+var frame = 0;
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  // Grid
+  ctx.strokeStyle = 'rgba(0,224,255,0.04)';
+  ctx.lineWidth = 1;
+  for (var x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (var y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // Radar sweep
+  radarAngle += 0.015;
+  var cx = W * 0.15, cy = H * 0.5, rr = 80;
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(0,255,136,0.2)'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy);
+  ctx.arc(cx, cy, rr, radarAngle, radarAngle + 0.4);
+  ctx.closePath();
+  var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr);
+  grad.addColorStop(0, 'rgba(0,255,136,0)');
+  grad.addColorStop(1, 'rgba(0,255,136,0.15)');
+  ctx.fillStyle = grad; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + Math.cos(radarAngle) * rr, cy + Math.sin(radarAngle) * rr);
+  ctx.strokeStyle = 'rgba(0,255,136,0.6)'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.restore();
+
+  // Entities
+  entities.forEach(function(e) {
+    if (!e.alive) return;
+    e.x += e.vx; e.y += e.vy;
+    if (e.x < 0 || e.x > W) e.vx *= -1;
+    if (e.y < 0 || e.y > H) e.vy *= -1;
+    e.trail.push({ x: e.x, y: e.y });
+    if (e.trail.length > 12) e.trail.shift();
+    e.ttl--;
+    if (e.ttl <= 0) {
+      if (e.type === 'fpv') { addExplosion(e.x, e.y, '#E01515'); e.alive = false; }
+      else { e.x = Math.random() * W; e.y = Math.random() * H; e.ttl = 200 + Math.random() * 300; }
+    }
+    // Trail
+    for (var t = 0; t < e.trail.length; t++) {
+      var alpha = (t / e.trail.length) * 0.4;
+      ctx.beginPath(); ctx.arc(e.trail[t].x, e.trail[t].y, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = e.color.replace(')', ','+alpha+')').replace('rgb', 'rgba');
+      ctx.fill();
+    }
+    // Entity
+    ctx.beginPath(); ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+    ctx.fillStyle = e.color; ctx.fill();
+    if (e.type === 'recon') {
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.size + 6, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(0,224,255,0.2)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    if (e.type === 'target') {
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.size + 4, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(201,162,75,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+  });
+
+  // FPV targeting lines
+  var fpvs = entities.filter(function(e) { return e.type === 'fpv' && e.alive; });
+  var targets = entities.filter(function(e) { return e.type === 'target' && e.alive; });
+  fpvs.forEach(function(f, i) {
+    if (targets[i % targets.length]) {
+      var t = targets[i % targets.length];
+      ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(t.x, t.y);
+      ctx.strokeStyle = 'rgba(224,21,21,0.15)'; ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
+    }
+  });
+
+  // Explosions
+  explosions = explosions.filter(function(ex) { return ex.alpha > 0; });
+  explosions.forEach(function(ex) {
+    ex.r += 2; ex.alpha -= 0.04;
+    ctx.beginPath(); ctx.arc(ex.x, ex.y, ex.r, 0, Math.PI * 2);
+    ctx.strokeStyle = ex.color.replace(')', ','+ex.alpha+')').replace('#', 'rgba(').replace('E01515', '224,21,21,');
+    ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(ex.x, ex.y, ex.r * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,100,0,' + (ex.alpha * 0.3) + ')'; ctx.fill();
+  });
+
+  // Respawn dead FPVs
+  if (frame % 120 === 0) {
+    entities.push(createDrone('fpv'));
+    if (entities.length > 25) entities = entities.filter(function(e) { return e.alive; });
+  }
+
+  // HUD text
+  ctx.fillStyle = 'rgba(0,224,255,0.6)';
+  ctx.font = '10px IBM Plex Mono';
+  ctx.fillText('CANLI SAVAŞ ALANI SİMÜLASYONU', 10, 16);
+  ctx.fillStyle = 'rgba(224,21,21,0.6)';
+  ctx.fillText('GÖRÜNMEK = ÖLMEK', W - 140, 16);
+
+  frame++;
+  requestAnimationFrame(draw);
+}
+draw();
+
+// Respawn dead FPVs periodically
+setInterval(function() {
+  var dead = entities.filter(function(e) { return !e.alive; }).length;
+  for (var i = 0; i < dead; i++) entities.push(createDrone('fpv'));
+  entities = entities.filter(function(e) { return e.alive; });
+}, 3000);
+
+// Stat counter animation
+function animateCounter(el, target, duration) {
+  var start = 0, step = target / (duration / 16);
+  var timer = setInterval(function() {
+    start += step;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.textContent = Math.floor(start).toLocaleString('tr-TR');
+  }, 16);
+}
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      var el = entry.target;
+      animateCounter(el, parseInt(el.dataset.target), 1500);
+      observer.unobserve(el);
+    }
+  });
+});
+document.querySelectorAll('[data-target]').forEach(function(el) { observer.observe(el); });
+
+// Ratio counter
+var ratioObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      animateCounter(document.getElementById('ratio-counter'), 200, 2000);
+      ratioObs.unobserve(entry.target);
+    }
+  });
+});
+ratioObs.observe(document.getElementById('ratio-counter'));
+
+// Cost bar animation
+var barObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.cost-bar').forEach(function(bar) {
+        bar.style.width = bar.dataset.width + '%';
+      });
+      barObs.unobserve(entry.target);
+    }
+  });
+});
+barObs.observe(document.querySelector('.cost-grid'));
+
+// Timeline scroll animation
+var tlObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('.tl-item').forEach(function(el) { tlObs.observe(el); });
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Türk Havacılık Tarihi — Harb-i Strateji</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700;900&family=IBM+Plex+Sans:wght@400;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#141414;--border:#2a2a2a;--red2:#c41e3a;--gold:#d4a843;--red:#c41e3a;--green:#4caf50;--txt:#f0f0f0;--dim:#888;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;}
+/* TIMELINE */
+#timeline{position:absolute;top:60px;bottom:80px;left:0;right:260px;overflow-y:auto;overflow-x:hidden;padding:20px 20px 20px 30px;}
+.era{margin-bottom:28px;}
+.era-title{font-family:'Chakra Petch',monospace;font-size:.85rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:2px;border-left:3px solid var(--gold);padding-left:10px;margin-bottom:12px;}
+.planes{display:flex;flex-wrap:wrap;gap:10px;}
+.plane-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;width:160px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.plane-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--card-color,rgba(196,30,58,.05)),transparent);pointer-events:none;}
+.plane-card:hover,.plane-card.unlocked{border-color:var(--card-color,var(--red2));transform:translateY(-2px);}
+.plane-card.locked{opacity:.5;cursor:not-allowed;}
+.plane-icon{font-size:2rem;display:block;margin-bottom:6px;}
+.plane-name{font-size:.78rem;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.plane-year{font-size:.65rem;color:var(--dim);}
+.plane-stats{margin-top:8px;display:flex;flex-direction:column;gap:2px;}
+.stat-bar{height:4px;background:#1a2a4a;border-radius:2px;overflow:hidden;}
+.stat-fill{height:100%;border-radius:2px;transition:width .5s;}
+.stat-lbl{font-size:.55rem;color:var(--dim);display:flex;justify-content:space-between;}
+.plane-cost{position:absolute;top:8px;right:8px;font-size:.6rem;color:var(--gold);background:rgba(0,0,0,.5);border-radius:4px;padding:2px 5px;}
+.plane-badge{position:absolute;bottom:8px;right:8px;font-size:.6rem;color:var(--green);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:4px;padding:2px 5px;display:none;}
+.plane-card.unlocked .plane-badge{display:block;}
+/* HUD */
+#hud{position:fixed;top:0;left:0;right:0;z-index:20;padding:8px 12px;background:linear-gradient(180deg,rgba(5,10,21,.95),transparent);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;pointer-events:none;}
+.hb{background:rgba(5,10,21,.9);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-family:monospace;font-size:.7rem;color:var(--txt);text-align:center;min-width:65px;}
+.hv{font-size:.95rem;font-weight:900;display:block;}
+.hl{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+/* SIDE PANEL */
+#sidePanel{position:fixed;right:0;top:60px;bottom:80px;width:260px;background:rgba(5,10,21,.95);border-left:1px solid var(--border);z-index:20;overflow-y:auto;padding:14px;}
+.sp-title{font-family:'Chakra Petch',monospace;font-size:.8rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:10px;}
+#detailBox{background:rgba(196,30,58,.06);border:1px solid rgba(196,30,58,.2);border-radius:8px;padding:12px;font-size:.72rem;color:var(--dim);line-height:1.7;min-height:120px;}
+#detailBox .fact{color:var(--red2);font-weight:700;}
+#detailBox .highlight{color:var(--gold);}
+.action-btn{background:rgba(196,30,58,.1);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:.72rem;color:var(--txt);transition:all .2s;width:100%;text-align:left;margin-bottom:6px;display:flex;justify-content:space-between;}
+.action-btn:hover{border-color:var(--red2);color:var(--red2);}
+.action-btn .cost{color:var(--gold);}
+/* BOTTOM BAR */
+#bottomBar{position:fixed;bottom:0;left:0;right:260px;background:rgba(5,10,21,.95);border-top:1px solid var(--border);padding:8px 16px;z-index:20;display:flex;gap:8px;align-items:center;overflow-x:auto;}
+.era-btn{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:5px 12px;cursor:pointer;font-size:.65rem;color:var(--dim);white-space:nowrap;transition:all .2s;}
+.era-btn.active{border-color:var(--red2);color:var(--red2);}
+/* OVERLAY */
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;font-family:'Segoe UI',sans-serif;overflow-y:auto;}
+.ov-t1{font-size:clamp(1.2rem,4vw,2.2rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;color:var(--red2);margin-bottom:4px;}
+.ov-t2{font-size:clamp(.9rem,3vw,1.4rem);font-weight:700;color:var(--txt);margin-bottom:12px;}
+.ov-hist{background:rgba(196,30,58,.06);border:1px solid rgba(196,30,58,.25);border-radius:10px;padding:14px 20px;max-width:500px;margin-bottom:16px;text-align:left;}
+.ov-hist h3{color:var(--red2);font-size:.85rem;margin-bottom:8px;}
+.ov-hist p{font-size:.75rem;color:var(--dim);line-height:1.7;}
+.ov-hist .fact{color:var(--gold);font-weight:700;}
+.ov-btn{background:linear-gradient(135deg,#1a6aff,#0a3a8a);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:.9rem;font-weight:900;cursor:pointer;letter-spacing:2px;text-transform:uppercase;margin:5px;}
+.ov-btn.sec{background:transparent;color:var(--red2);border:2px solid var(--red2);}
+@media(max-width:600px){#sidePanel{width:100%;top:auto;bottom:60px;height:220px;right:0;left:0;border-left:none;border-top:1px solid var(--border);}#timeline{right:0;bottom:280px;}#bottomBar{right:0;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<div id="hud">
+  <div style="display:flex;gap:6px;">
+    <div class="hb"><span class="hv" id="yilV" style="color:var(--gold)">1911</span><span class="hl">📅 YIL</span></div>
+    <div class="hb"><span class="hv" id="butceV" style="color:var(--gold)">1000</span><span class="hl">💰 BÜTÇE</span></div>
+  </div>
+  <div style="display:flex;gap:6px;">
+    <div class="hb"><span class="hv" id="ucakV" style="color:var(--red2)">0</span><span class="hl">✈️ UÇAK</span></div>
+    <div class="hb"><span class="hv" id="pilotV" style="color:var(--green)">0</span><span class="hl">👨‍✈️ PİLOT</span></div>
+    <div class="hb"><span class="hv" id="scV" style="color:var(--red)">0</span><span class="hl">🏆 PUAN</span></div>
+  </div>
+</div>
+
+<div id="timeline"></div>
+
+<div id="sidePanel">
+  <div class="sp-title">✈️ Seçili Uçak</div>
+  <div id="detailBox">
+    Bir uçak kartına tıklayarak detayları gör ve satın al!<br><br>
+    <span class="fact">İstikbal göklerdedir!</span> — Mustafa Kemal Atatürk
+  </div>
+  <div style="margin-top:12px;">
+    <button class="action-btn" onclick="trainPilot()">👨‍✈️ Pilot Yetiştir <span class="cost">💰 150</span></button>
+    <button class="action-btn" onclick="nextDecade()">⏭️ Sonraki On Yıl <span class="cost">+300💰</span></button>
+    <button class="action-btn" onclick="doMission()">🎯 Görev Uçuşu <span class="cost">Puan kazan</span></button>
+  </div>
+</div>
+
+<div id="bottomBar">
+  <span style="font-size:.65rem;color:var(--dim);white-space:nowrap;">Dönem:</span>
+</div>
+
+<div id="ov">
+  <div class="ov-t1">✈️ TÜRK HAVACILIK TARİHİ</div>
+  <div class="ov-t2">1911'den KAAN'a — 110 Yıllık Destan</div>
+  <div class="ov-hist">
+    <h3>📜 Tarihi Bağlam</h3>
+    <p>
+      <span class="fact">1911 — Trablusgarp:</span> Osmanlı subayları ilk kez hava keşfi yaptı.<br>
+      <span class="fact">1912 — Balkan Harbi:</span> İlk Türk askeri havacılık birliği kuruldu.<br>
+      <span class="fact">1925 — Türk Hava Kuvvetleri:</span> Cumhuriyet'in ilk modern hava kuvvetleri.<br>
+      <span class="fact">1944 — F-84 Thunderjet:</span> Jet çağına geçiş.<br>
+      <span class="fact">1974 — Kıbrıs Harekâtı:</span> F-100 Super Sabre ile ilk savaş görevi.<br>
+      <span class="fact">2023 — KAAN:</span> Türkiye'nin yerli 5. nesil savaş uçağı ilk uçuşunu yaptı!
+    </p>
+  </div>
+  <button class="ov-btn" onclick="startGame()">✈️ UÇUŞA GEÇ</button>
+  <button class="ov-btn sec" onclick="window.location.href='oza-turk-savas-tarihi-hub.html'">← Geri</button>
+</div>
+
+<script>
+const PLANES=[
+  // 1911-1920 — Osmanlı Dönemi
+  {id:'bleriot',name:'Blériot XI',year:1911,era:'1911-1920',icon:'🛩️',color:'#8b6914',cost:100,speed:75,range:200,firepower:0,desc:'İlk Osmanlı keşif uçağı. Trablusgarp\'ta hava keşfi için kullanıldı. Fransız yapımı monoplan.',unlocked:false,stats:{hiz:30,menzil:20,silah:0,dayaniklilik:20}},
+  {id:'farman',name:'Farman MF.7',year:1912,era:'1911-1920',icon:'✈️',color:'#8b6914',cost:120,desc:'Balkan Harbi\'nde kullanılan çift kanatlı keşif uçağı. İlk Türk askeri havacılık birliğinin uçağı.',unlocked:false,stats:{hiz:25,menzil:25,silah:5,dayaniklilik:25}},
+  {id:'albatros',name:'Albatros D.III',year:1916,era:'1911-1920',icon:'⚔️',color:'#c0392b',cost:180,desc:'I. Dünya Savaşı\'nda Osmanlı Hava Kuvvetleri\'nin ana avcı uçağı. Alman yapımı.',unlocked:false,stats:{hiz:55,menzil:35,silah:60,dayaniklilik:45}},
+  // 1920-1950 — Cumhuriyet Dönemi
+  {id:'breguet14',name:'Breguet 14',year:1923,era:'1920-1950',icon:'✈️',color:'#1a6aff',cost:200,desc:'Kurtuluş Savaşı\'nda kullanılan ve Cumhuriyet\'in ilk uçaklarından. Fransız bombardıman uçağı.',unlocked:false,stats:{hiz:45,menzil:50,silah:40,dayaniklilik:50}},
+  {id:'curtiss',name:'Curtiss Hawk',year:1932,era:'1920-1950',icon:'🦅',color:'#1a6aff',cost:280,desc:'1930\'larda Türk Hava Kuvvetleri\'nin ana avcı uçağı. Amerikan yapımı.',unlocked:false,stats:{hiz:65,menzil:45,silah:65,dayaniklilik:55}},
+  {id:'spitfire',name:'Supermarine Spitfire',year:1944,era:'1920-1950',icon:'⚡',color:'#2980b9',cost:350,desc:'II. Dünya Savaşı\'nın efsanevi İngiliz avcı uçağı. Türkiye 1944\'te teslim aldı.',unlocked:false,stats:{hiz:80,menzil:55,silah:80,dayaniklilik:65}},
+  // 1950-1980 — Jet Çağı
+  {id:'f84',name:'F-84 Thunderjet',year:1950,era:'1950-1980',icon:'🚀',color:'#e74c3c',cost:500,desc:'Türk Hava Kuvvetleri\'nin jet çağına geçişi. NATO üyeliğiyle birlikte teslim alındı.',unlocked:false,stats:{hiz:85,menzil:60,silah:75,dayaniklilik:70}},
+  {id:'f86',name:'F-86 Sabre',year:1954,era:'1950-1980',icon:'🛸',color:'#e74c3c',cost:600,desc:'Kore Savaşı\'nın efsanevi jet avcısı. Türk pilotları bu uçakla NATO\'da sivrildi.',unlocked:false,stats:{hiz:88,menzil:65,silah:80,dayaniklilik:72}},
+  {id:'f100',name:'F-100 Super Sabre',year:1958,era:'1950-1980',icon:'⚡',color:'#c0392b',cost:700,desc:'Türkiye\'nin ilk süpersonik uçağı. 1974 Kıbrıs Harekâtı\'nda görev yaptı.',unlocked:false,stats:{hiz:92,menzil:70,silah:85,dayaniklilik:75}},
+  // 1980-2010 — Modern Dönem
+  {id:'f104',name:'F-104 Starfighter',year:1963,era:'1980-2010',icon:'🌟',color:'#9b59b6',cost:800,desc:'"Uçan Tabut" lakaplı yüksek performanslı avcı. Türk pilotları bu uçakla efsaneleşti.',unlocked:false,stats:{hiz:95,menzil:65,silah:82,dayaniklilik:60}},
+  {id:'f4',name:'F-4 Phantom II',year:1974,era:'1980-2010',icon:'👻',color:'#8e44ad',cost:900,desc:'Vietnam Savaşı\'nın simgesi. Türkiye 200\'den fazla F-4 kullandı, bir kısmı modernize edildi.',unlocked:false,stats:{hiz:90,menzil:80,silah:90,dayaniklilik:80}},
+  {id:'f16',name:'F-16 Fighting Falcon',year:1987,era:'1980-2010',icon:'🦅',color:'#1a6aff',cost:1200,desc:'Türk Hava Kuvvetleri\'nin omurgası. 1987\'de teslim alındı, TUSAŞ tarafından lisans üretimi yapıldı.',unlocked:false,stats:{hiz:93,menzil:85,silah:92,dayaniklilik:85}},
+  // 2010-Günümüz — Yerli Dönem
+  {id:'hürkuş',name:'HÜRKUŞ',year:2013,era:'2010-Günümüz',icon:'🇹🇷',color:'#00ff88',cost:1000,desc:'Türkiye\'nin ilk yerli eğitim uçağı. TUSAŞ tarafından geliştirildi. "Özgür Kuş" anlamına gelir.',unlocked:false,stats:{hiz:60,menzil:70,silah:20,dayaniklilik:75}},
+  {id:'akinci',name:'AKINCI TIHA',year:2019,era:'2010-Günümüz',icon:'🤖',color:'#00ff88',cost:1500,desc:'Türkiye\'nin en büyük ve en gelişmiş insansız hava aracı. Baykar tarafından üretildi.',unlocked:false,stats:{hiz:70,menzil:95,silah:88,dayaniklilik:80}},
+  {id:'kaan',name:'KAAN (TF-X)',year:2023,era:'2010-Günümüz',icon:'🌟',color:'#C9A24B',cost:2500,desc:'Türkiye\'nin 5. nesil yerli savaş uçağı! 21 Şubat 2023\'te ilk uçuşunu yaptı. Stealth teknolojisi, yerli motor hedefi.',unlocked:false,stats:{hiz:99,menzil:95,silah:98,dayaniklilik:95}},
+];
+
+const ERAS=['1911-1920','1920-1950','1950-1980','1980-2010','2010-Günümüz'];
+
+const G={
+  yil:1911,butce:1000,ucaklar:[],pilotlar:0,puan:0,
+  selectedPlane:null,currentEra:0,
+};
+
+function updateHUD(){
+  document.getElementById('yilV').textContent=G.yil;
+  document.getElementById('butceV').textContent=G.butce;
+  document.getElementById('ucakV').textContent=G.ucaklar.length;
+  document.getElementById('pilotV').textContent=G.pilotlar;
+  document.getElementById('scV').textContent=G.score;
+}
+
+function renderTimeline(){
+  const tl=document.getElementById('timeline');
+  tl.innerHTML='';
+  ERAS.forEach(era=>{
+    const eraPlanes=PLANES.filter(p=>p.era===era);
+    const div=document.createElement('div');
+    div.className='era';
+    div.innerHTML=`<div class="era-title">✈️ ${era}</div><div class="planes" id="era-${era.replace(/[^a-z0-9]/gi,'_')}"></div>`;
+    tl.appendChild(div);
+    const planesDiv=div.querySelector('.planes');
+    eraPlanes.forEach(plane=>{
+      const card=document.createElement('div');
+      card.className='plane-card'+(plane.unlocked?' unlocked':' locked');
+      card.style.setProperty('--card-color',plane.color);
+      card.innerHTML=`
+        <div class="plane-cost">💰${plane.cost}</div>
+        <span class="plane-icon">${plane.icon}</span>
+        <div class="plane-name">${plane.name}</div>
+        <div class="plane-year">${plane.year} · ${plane.era}</div>
+        <div class="plane-stats">
+          <div class="stat-lbl"><span>Hız</span><span>${plane.stats.hiz}%</span></div>
+          <div class="stat-bar"><div class="stat-fill" style="width:${plane.stats.hiz}%;background:${plane.color}"></div></div>
+          <div class="stat-lbl"><span>Silah</span><span>${plane.stats.silah}%</span></div>
+          <div class="stat-bar"><div class="stat-fill" style="width:${plane.stats.silah}%;background:#e74c3c"></div></div>
+          <div class="stat-lbl"><span>Menzil</span><span>${plane.stats.menzil}%</span></div>
+          <div class="stat-bar"><div class="stat-fill" style="width:${plane.stats.menzil}%;background:#00ff88"></div></div>
+        </div>
+        <div class="plane-badge">✓ Aktif</div>
+      `;
+      card.onclick=()=>selectPlane(plane);
+      planesDiv.appendChild(card);
+    });
+  });
+  // Era butonları
+  const bb=document.getElementById('bottomBar');
+  bb.innerHTML='<span style="font-size:.65rem;color:var(--dim);white-space:nowrap;">Dönem:</span>';
+  ERAS.forEach((era,i)=>{
+    const btn=document.createElement('button');
+    btn.className='era-btn'+(i===G.currentEra?' active':'');
+    btn.textContent=era;
+    btn.onclick=()=>{
+      G.currentEra=i;
+      document.getElementById('timeline').scrollTo(0,i*200);
+      document.querySelectorAll('.era-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+    };
+    bb.appendChild(btn);
+  });
+}
+
+function selectPlane(plane){
+  G.selectedPlane=plane;
+  const db=document.getElementById('detailBox');
+  db.innerHTML=`
+    <div style="font-size:1.5rem;margin-bottom:6px;">${plane.icon}</div>
+    <div style="font-weight:700;color:${plane.color};margin-bottom:4px;">${plane.name} (${plane.year})</div>
+    <div style="color:var(--dim);margin-bottom:8px;">${plane.desc}</div>
+    ${plane.unlocked?
+      '<div style="color:var(--green);font-weight:700;">✓ Aktif Filoda</div>':
+      `<button onclick="buyPlane('${plane.id}')" style="background:linear-gradient(135deg,${plane.color},${plane.color}88);color:#000;border:none;border-radius:8px;padding:8px 16px;font-size:.75rem;font-weight:900;cursor:pointer;width:100%;margin-top:8px;">💰 ${plane.cost} — SATIN AL</button>`
+    }
+  `;
+}
+
+function buyPlane(id){
+  const plane=PLANES.find(p=>p.id===id);
+  if(!plane)return;
+  if(G.butce<plane.cost){
+    document.getElementById('detailBox').innerHTML+='<div style="color:var(--red);margin-top:6px;">❌ Yetersiz bütçe!</div>';
+    return;
+  }
+  if(G.yil<plane.year){
+    document.getElementById('detailBox').innerHTML+=`<div style="color:var(--red);margin-top:6px;">❌ Bu uçak henüz üretilmedi! (${plane.year})</div>`;
+    return;
+  }
+  G.butce-=plane.cost;
+  plane.unlocked=true;
+  G.ucaklar.push(plane.id);
+  G.score+=plane.stats.hiz+plane.stats.silah+plane.stats.menzil;
+  renderTimeline();
+  selectPlane(plane);
+  updateHUD();
+}
+
+function trainPilot(){
+  if(G.butce<150){alert('Yetersiz bütçe!');return;}
+  G.butce-=150;G.pilotlar++;G.score+=20;
+  updateHUD();
+}
+
+function nextDecade(){
+  G.yil=Math.min(2024,G.yil+10);
+  G.butce+=300;
+  if(G.yil>=1950&&G.currentEra<2)G.currentEra=2;
+  if(G.yil>=1980&&G.currentEra<3)G.currentEra=3;
+  if(G.yil>=2010&&G.currentEra<4)G.currentEra=4;
+  renderTimeline();updateHUD();
+}
+
+function doMission(){
+  const aktifUcaklar=PLANES.filter(p=>p.unlocked);
+  if(aktifUcaklar.length===0){alert('Önce uçak satın al!');return;}
+  if(G.pilotlar===0){alert('Önce pilot yetiştir!');return;}
+  const best=aktifUcaklar.reduce((a,b)=>b.stats.silah>a.stats.silah?b:a);
+  const puan=Math.round((best.stats.silah+best.stats.hiz)/2*G.pilotlar*.5);
+  G.score+=puan;
+  const missions=['Keşif uçuşu','Hava savunma görevi','Sınır devriyesi','Tatbikat uçuşu','Stratejik bombardıman'];
+  const mission=missions[Math.floor(Math.random()*missions.length)];
+  document.getElementById('detailBox').innerHTML=`
+    <div style="color:var(--green);font-weight:700;">✓ GÖREV TAMAMLANDI</div>
+    <div style="margin-top:6px;">${best.icon} ${best.name} ile ${mission}</div>
+    <div style="color:var(--gold);margin-top:4px;">+${puan} puan</div>
+  `;
+  updateHUD();
+}
+
+function startGame(){
+  document.getElementById('ov').style.display='none';
+  renderTimeline();updateHUD();
+}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

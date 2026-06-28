@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Türklerde Ekonomi — Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#0a0f17;--bg2:#0f1520;--gold:#C9A24B;--cyan:#00E0FF;--red:#E01515;--text:#e8e6e3;--muted:#8a9bb0;--card:#141c2b;--border:#1e2a3a}body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.8;overflow-x:hidden}#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .1s}.back-btn{position:fixed;top:20px;left:20px;z-index:1000;color:var(--gold);text-decoration:none;font-family:'Chakra Petch',monospace;font-size:.85rem;opacity:.8;transition:.3s}.back-btn:hover{opacity:1;transform:translateX(-3px)}.container{max-width:900px;margin:0 auto;padding:0 24px;position:relative;z-index:1}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 24px}.hero-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:1rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--gold);line-height:1.2;margin-bottom:24px}.hero-sub{font-size:1.1rem;color:var(--muted);max-width:600px;line-height:1.7}.scene{padding:80px 0;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.19,1,.22,1)}.scene.visible{opacity:1;transform:translateY(0)}.scene-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.95rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}.scene h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--gold);margin-bottom:20px;line-height:1.3}.scene p{margin-bottom:16px;color:var(--muted);font-size:1rem}.scene p strong{color:var(--text)}.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:40px 0}.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:24px 0}.grid-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:.3s}.grid-card:hover{border-color:var(--gold);transform:translateY(-4px)}.grid-card .label{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.9rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}.grid-card .value{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:6px}.grid-card .desc{font-size:.85rem;color:var(--muted);line-height:1.6}.timeline{position:relative;padding-left:40px;margin:32px 0}.timeline::before{content:'';position:absolute;left:16px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan))}.timeline-item{position:relative;margin-bottom:32px;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:10px}.timeline-item::before{content:'';position:absolute;left:-32px;top:24px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}.timeline-item .date{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.95rem;letter-spacing:1px;margin-bottom:6px}.timeline-item h3{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;margin-bottom:8px}.timeline-item p{font-size:.9rem;color:var(--muted)}.formula-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:24px 0;font-family:'IBM Plex Mono',monospace;color:var(--cyan);font-size:.9rem;text-align:center;line-height:2}.ref-section{padding:60px 0;border-top:1px solid var(--border)}.ref-section h3{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.85rem;letter-spacing:2px;margin-bottom:20px}.ref-section p{font-size:.85rem;color:var(--muted);margin-bottom:8px;padding-left:20px;text-indent:-20px}@media(max-width:600px){.hero h1{font-size:1.8rem}.grid-3{grid-template-columns:1fr}}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div id="progress" style="width:0%"></div>
+<a href="medeniyet-dinamikleri.html" class="back-btn">← Medeniyet Dinamikleri</a>
+<section class="hero">
+<span class="hero-tag">Medeniyet Dinamikleri // Ekonomi Tarihi</span>
+<h1>Türklerde Ekonomi: İpek Yolu'ndan Vakıf Sistemine</h1>
+<p class="hero-sub">Bozkır ticaretinden küresel ticaret ağlarına, Tımar'dan Vakıf ekonomisine — Türk ekonomik organizasyonunun 2500 yıllık evrimi.</p>
+</section>
+<div class="container">
+
+<section class="scene">
+<span class="scene-tag">Bölüm 1 — Bozkır Ekonomisi</span>
+<h2>Göçebe Ekonominin Temelleri</h2>
+<p>İlk Türk devletlerinde ekonominin temelini <strong>hayvancılık</strong> oluşturuyordu. At, koyun, sığır ve deve yetiştiren Türkler, hayvan ürünlerinden et, süt, deri, yün ve keçe elde ederek hem kendi ihtiyaçlarını karşılıyor hem de ticaret yapıyorlardı. <strong>Kımız</strong> (kısrak sütünden), <strong>kurut</strong> (kurutulmuş süt ürünü) ve <strong>pastırma</strong> gibi dayanıklı gıdalar üretiliyordu.</p>
+<p>Bozkır ekonomisinin ikinci ayağı <strong>ticaret</strong>ti. İpek Yolu üzerindeki stratejik konumları sayesinde Türkler, Çin ipeği, Hint baharatları ve Bizans altınının taşıyıcıları oldular. <strong>Göktürk Kağanlığı</strong>, İpek Yolu ticaretini kontrol altına almak için Bizans ile ittifak kurarak Sasani İmparatorluğu'nu devre dışı bırakmaya çalıştı.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Birincil Sektör</div><div class="value">Hayvancılık</div><div class="desc">At, koyun, sığır, deve — et, süt, deri, yün üretimi</div></div>
+  <div class="grid-card"><div class="label">Ticaret Ağı</div><div class="value">İpek Yolu</div><div class="desc">Çin-Bizans hattında transit ticaret ve vergilendirme</div></div>
+  <div class="grid-card"><div class="label">Para Birimi</div><div class="value">Yarmak</div><div class="desc">Göktürk ve Uygur dönemlerinde kullanılan metal sikkeler</div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 2 — İslami Dönem</span>
+<h2>Karahanlı-Selçuklu Ekonomik Modeli</h2>
+<p><strong>Karahanlılar</strong> (840-1212), Türk-İslam sentezinin ilk ekonomik modelini oluşturdular. Tarım ve ticarete dayalı yerleşik ekonomiye geçiş bu dönemde hızlandı. <strong>İkta sistemi</strong> (toprak gelirinin askeri hizmet karşılığı tahsisi) ilk kez bu dönemde uygulandı.</p>
+<p><strong>Büyük Selçuklular</strong>, İkta sistemini geliştirerek <strong>Tımar</strong> sisteminin temellerini attılar. Nizam'ül-Mülk'ün <em>Siyasetnâme</em>'sinde tarif ettiği ekonomik düzen, merkezi devlet gelirlerinin askeri-sivil dengesini kuruyordu. <strong>Vakıf</strong> müessesesi bu dönemde kurumsallaştı ve eğitim, sağlık, sosyal hizmetlerin finansmanını üstlendi.</p>
+<div class="formula-box">
+İKTA MODELİ: Toprak Geliri → Askerî Hizmet → Devlet Güvenliği → Ticaret Güvenliği → Ekonomik Büyüme
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 3 — Osmanlı Ekonomisi</span>
+<h2>Tımar, Lonca ve Vakıf: Üçlü Ekonomik Mimari</h2>
+<p>Osmanlı ekonomisi üç temel kurumun üzerine inşa edildi:</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Tarımsal Üretim</div><div class="value">Tımar Sistemi</div><div class="desc">Devlet topraklarının sipahi'ye tahsisi. Karşılığında asker besler, vergi toplar. 16. yüzyılda 50.000+ tımarlı sipahi.</div></div>
+  <div class="grid-card"><div class="label">Zanaat & Ticaret</div><div class="value">Lonca Teşkilatı</div><div class="desc">Ahi geleneğinden gelen esnaf birlikleri. Kalite kontrolü, fiyat standardizasyonu, mesleki eğitim.</div></div>
+  <div class="grid-card"><div class="label">Sosyal Hizmet</div><div class="value">Vakıf Sistemi</div><div class="desc">Külliye, medrese, hastane, çeşme, köprü — toplumsal altyapının sivil finansmanı.</div></div>
+</div>
+<p>Osmanlı'nın <strong>narh sistemi</strong> (fiyat kontrolü) ve <strong>ihtisab</strong> (piyasa denetimi) mekanizmaları, modern regülasyon kurumlarının öncüsüydü. <strong>Kanuni Sultan Süleyman</strong> döneminde imparatorluk, küresel ticaret hacminin yaklaşık %15'ini kontrol ediyordu.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 4 — Vakıf Ekonomisi</span>
+<h2>Dünyanın İlk Sosyal Güvenlik Ağı</h2>
+<p>Osmanlı vakıf sistemi, modern sosyal devlet anlayışının 500 yıl öncesinden prototipidir. 17. yüzyılda İstanbul'daki <strong>vakıf sayısı 36.000'i</strong> aşmıştı. Toplam Osmanlı topraklarının yaklaşık <strong>%33'ü</strong> vakıf arazisiydi.</p>
+<div class="timeline">
+  <div class="timeline-item"><div class="date">1326</div><h3>Orhan Gazi Vakfı</h3><p>İlk Osmanlı vakfı — İznik'te medrese, imaret ve zaviye.</p></div>
+  <div class="timeline-item"><div class="date">1459</div><h3>Fatih Külliyesi</h3><p>8 medrese, hastane, kütüphane, imaret — İstanbul'un yeniden inşası.</p></div>
+  <div class="timeline-item"><div class="date">1557</div><h3>Süleymaniye Külliyesi</h3><p>Mimar Sinan'ın şaheseri — tıp medresesi, darüşşifa, hamam, kervansaray.</p></div>
+  <div class="timeline-item"><div class="date">1748</div><h3>Para Vakıfları</h3><p>Nakit sermaye vakıfları — İslam dünyasının ilk kredi kurumları.</p></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 5 — Modernleşme</span>
+<h2>Tanzimat'tan Cumhuriyet'e Ekonomik Dönüşüm</h2>
+<p>19. yüzyılda Osmanlı ekonomisi, Sanayi Devrimi'nin yarattığı küresel rekabete uyum sağlamaya çalıştı. <strong>1838 Balta Limanı Antlaşması</strong> ile serbest ticaret rejimi kabul edildi; ancak bu, yerli sanayinin çöküşünü hızlandırdı.</p>
+<p>Cumhuriyet döneminde <strong>İzmir İktisat Kongresi</strong> (1923), millî ekonomi politikasının temellerini attı. <strong>Devletçilik</strong> ilkesi çerçevesinde kurulan KİT'ler (Sümerbank, Etibank, MKE) ile sanayileşme hamlesi başlatıldı.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">1923</div><div class="value">İzmir İktisat Kongresi</div><div class="desc">Millî burjuvazi yaratma hedefi, yerli üretim teşviki</div></div>
+  <div class="grid-card"><div class="label">1934</div><div class="value">I. Beş Yıllık Plan</div><div class="desc">Ağır sanayi yatırımları: demir-çelik, tekstil, kağıt</div></div>
+  <div class="grid-card"><div class="label">1980</div><div class="value">24 Ocak Kararları</div><div class="desc">Serbest piyasa ekonomisine geçiş, ihracata dayalı büyüme</div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="ref-section">
+<h3>Kaynakça</h3>
+<p>Genç, M. (2000). <em>Osmanlı İmparatorluğunda Devlet ve Ekonomi</em>. Ötüken Neşriyat.</p>
+<p>İnalcık, H. (1994). <em>An Economic and Social History of the Ottoman Empire</em>. Cambridge University Press.</p>
+<p>Pamuk, Ş. (2004). <em>Osmanlı-Türkiye İktisadî Tarihi 1500-1914</em>. İletişim Yayınları.</p>
+<p>Tabakoğlu, A. (2005). <em>Türk İktisat Tarihi</em>. Dergâh Yayınları.</p>
+</section>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progress').style.width=(s/h*100)+'%'});
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.15});
+document.querySelectorAll('.scene').forEach(s=>obs.observe(s));
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

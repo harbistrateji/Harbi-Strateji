@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Savaşın Akıllaşma Evrimi — Harb-i Strateji Scrollytelling</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--purple:#8b5cf6;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:5px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;color:var(--purple)}
+/* Progress bar */
+.progress-bar{position:fixed;top:54px;left:0;right:0;height:3px;background:rgba(255,255,255,.05);z-index:99}
+.progress-fill{height:100%;background:linear-gradient(to right,var(--purple),var(--cyan));width:0%;transition:width .1s}
+/* Hero */
+.hero{text-align:center;padding:60px 20px 40px;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-block;padding:4px 14px;border:1px solid var(--purple);border-radius:20px;font-size:13px;color:var(--purple);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(22px,5vw,40px);font-weight:700;line-height:1.2;margin-bottom:12px}
+.hero h1 span{color:var(--cyan)}
+.hero p{font-size:13px;color:var(--dim);line-height:1.8;max-width:620px;margin:0 auto 20px}
+.scroll-hint{font-size:13px;color:var(--dim);animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+/* Timeline nav */
+.timeline-nav{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:8px}
+@media(max-width:600px){.timeline-nav{display:none}}
+.tn-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--dim);cursor:pointer;transition:.2s}
+.tn-dot.active{background:var(--cyan);border-color:var(--cyan);transform:scale(1.4)}
+.tn-dot:hover{border-color:var(--cyan)}
+/* Era sections */
+.era{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px;position:relative;overflow:hidden}
+.era-inner{max-width:900px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+@media(max-width:600px){.era-inner{grid-template-columns:1fr}}
+.era-content{opacity:0;transform:translateX(-40px);transition:all .8s ease}
+.era-content.visible{opacity:1;transform:translateX(0)}
+.era-visual{opacity:0;transform:translateX(40px);transition:all .8s ease .2s}
+.era-visual.visible{opacity:1;transform:translateX(0)}
+.era-year{font-family:'Chakra Petch',sans-serif;font-size:clamp(48px,10vw,80px);font-weight:700;line-height:1;margin-bottom:8px;opacity:.15;position:absolute;right:20px;top:20px}
+.era-tag{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;font-weight:700}
+.era-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(18px,4vw,28px);font-weight:700;line-height:1.3;margin-bottom:12px}
+.era-desc{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:14px}
+.era-doctrine{background:rgba(255,255,255,.04);border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px}
+.era-icons{display:flex;gap:10px;flex-wrap:wrap}
+.era-icon-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);min-width:60px}
+.era-icon-item span:first-child{font-size:24px}
+.era-icon-item span:last-child{font-size:12px;color:var(--dim);text-align:center}
+/* Canvas visual */
+.era-canvas-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#060d14}
+canvas.era-canvas{display:block;width:100%}
+/* Connecting line */
+.era-connector{position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--line),transparent);transform:translateX(-50%)}
+@media(max-width:600px){.era-connector{display:none}}
+/* Stats strip */
+.stats-strip{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 20px;display:flex;gap:20px;overflow-x:auto;justify-content:center;flex-wrap:wrap}
+.ss-item{text-align:center;min-width:100px}
+.ss-num{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.ss-label{font-size:12px;color:var(--dim);text-transform:uppercase;margin-top:2px}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">📜 SAVAŞIN AKILLLAŞMA EVRİMİ</div>
+  <div style="font-size:13px;color:var(--dim);margin-left:auto">Scrollytelling · 19.yy → 2040</div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div class="timeline-nav">
+  <div class="tn-dot active" onclick="scrollToEra(0)" title="19. Yüzyıl"></div>
+  <div class="tn-dot" onclick="scrollToEra(1)" title="20. Yüzyıl"></div>
+  <div class="tn-dot" onclick="scrollToEra(2)" title="Günümüz"></div>
+  <div class="tn-dot" onclick="scrollToEra(3)" title="2040"></div>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">Scrollytelling İnfografik</div>
+  <h1>Savaşın <span>Akıllaşma</span> Evrimi<br>19. Yüzyıldan 2040'a</h1>
+  <p>Her çağ kendi savaş paradigmasını getirdi. Buharlı trenlerden kuantum radarlarına, telgraftan yapay zekâya — savaşın anatomisi nasıl değişti?</p>
+  <div class="scroll-hint">↓ Aşağı kaydır</div>
+</div>
+
+<!-- ERA 1: 19. Yüzyıl -->
+<div class="era" id="era-0" style="background:linear-gradient(135deg,rgba(201,162,75,.03),transparent)">
+  <div class="era-year" style="color:var(--gold)">1800</div>
+  <div class="era-connector"></div>
+  <div class="era-inner">
+    <div class="era-content">
+      <div class="era-tag" style="background:rgba(201,162,75,.15);color:var(--gold);border:1px solid rgba(201,162,75,.3)">19. Yüzyıl · Sanayi Savaşı</div>
+      <div class="era-title">Buharlı Tren,<br>Telgraf ve Kitlesel Ordu</div>
+      <div class="era-desc">Napolyon Savaşları'ndan Kırım Savaşı'na uzanan dönem, savaşın endüstrileşmesini getirdi. Demiryolları lojistik devrimi yarattı; telgraf, komuta-kontrol paradigmasını kökten değiştirdi. Kitlesel ordu, bireysel kahramanlığın yerini aldı.</div>
+      <div class="era-doctrine" style="border-color:var(--gold)">
+        <strong style="color:var(--gold)">Clausewitz Doktrini:</strong> "Savaş, politikanın başka araçlarla sürdürülmesidir." Merkezi komuta, sürtünme ve sis kavramları bu dönemde doğdu.
+      </div>
+      <div class="era-icons">
+        <div class="era-icon-item"><span>🚂</span><span>Demiryolu</span></div>
+        <div class="era-icon-item"><span>📡</span><span>Telgraf</span></div>
+        <div class="era-icon-item"><span>🏭</span><span>Sanayi</span></div>
+        <div class="era-icon-item"><span>⚔️</span><span>Kitlesel Ordu</span></div>
+      </div>
+    </div>
+    <div class="era-visual">
+      <div class="era-canvas-wrap"><canvas class="era-canvas" id="canvas-0" height="220"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ERA 2: 20. Yüzyıl -->
+<div class="era" id="era-1" style="background:linear-gradient(135deg,rgba(224,21,21,.03),transparent)">
+  <div class="era-year" style="color:var(--red)">1900</div>
+  <div class="era-connector"></div>
+  <div class="era-inner">
+    <div class="era-content">
+      <div class="era-tag" style="background:rgba(224,21,21,.15);color:var(--red);border:1px solid rgba(224,21,21,.3)">20. Yüzyıl · Endüstriyel Savaş</div>
+      <div class="era-title">Tanklar, Uçaklar<br>ve Nükleer Caydırıcılık</div>
+      <div class="era-desc">İki Dünya Savaşı ve Soğuk Savaş, savaşın endüstriyel boyutunu zirveye taşıdı. Blitzkrieg, hava hakimiyeti ve nükleer caydırıcılık yeni paradigmalar yarattı. MAD (Karşılıklı Garantili Yıkım) doktrini, büyük güçler arasındaki savaşı "imkânsız" kıldı.</div>
+      <div class="era-doctrine" style="border-color:var(--red)">
+        <strong style="color:var(--red)">Liddell Hart — Dolaylı Yaklaşım:</strong> Düşmanın en az beklediği yönden saldır. Psikolojik baskı, fiziksel yıkımdan önce gelir. Blitzkrieg bu doktrinin zirvesidir.
+      </div>
+      <div class="era-icons">
+        <div class="era-icon-item"><span>🛡️</span><span>Tank</span></div>
+        <div class="era-icon-item"><span>✈️</span><span>Hava Kuvveti</span></div>
+        <div class="era-icon-item"><span>☢️</span><span>Nükleer</span></div>
+        <div class="era-icon-item"><span>📻</span><span>Radyo Harp</span></div>
+      </div>
+    </div>
+    <div class="era-visual">
+      <div class="era-canvas-wrap"><canvas class="era-canvas" id="canvas-1" height="220"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ERA 3: Günümüz -->
+<div class="era" id="era-2" style="background:linear-gradient(135deg,rgba(0,224,255,.03),transparent)">
+  <div class="era-year" style="color:var(--cyan)">2024</div>
+  <div class="era-connector"></div>
+  <div class="era-inner">
+    <div class="era-content">
+      <div class="era-tag" style="background:rgba(0,224,255,.15);color:var(--cyan);border:1px solid rgba(0,224,255,.3)">Günümüz · Hibrit & Siber Savaş</div>
+      <div class="era-title">Siber Ağlar, Uydular<br>ve Hibrit Çatışma</div>
+      <div class="era-desc">Ukrayna cephesi, modern savaşın anatomisini ortaya koydu: Şeffaf savaş alanı, drone sürüleri, siber saldırılar ve dezenformasyon kampanyaları aynı anda yürütülüyor. "Görünmek = Ölmek" paradigması her şeyi değiştirdi.</div>
+      <div class="era-doctrine" style="border-color:var(--cyan)">
+        <strong style="color:var(--cyan)">OODA Döngüsü (Boyd):</strong> Gözle → Yönlen → Karar ver → Hareket et. Düşmanın OODA döngüsünü kır. Kill-chain artık saniyeler içinde tamamlanıyor.
+      </div>
+      <div class="era-icons">
+        <div class="era-icon-item"><span>🚁</span><span>FPV Drone</span></div>
+        <div class="era-icon-item"><span>💻</span><span>Siber Harp</span></div>
+        <div class="era-icon-item"><span>🛰️</span><span>Uydu İstihbarat</span></div>
+        <div class="era-icon-item"><span>📱</span><span>Dezenformasyon</span></div>
+      </div>
+    </div>
+    <div class="era-visual">
+      <div class="era-canvas-wrap"><canvas class="era-canvas" id="canvas-2" height="220"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ERA 4: 2040 -->
+<div class="era" id="era-3" style="background:linear-gradient(135deg,rgba(139,92,246,.03),transparent)">
+  <div class="era-year" style="color:var(--purple)">2040</div>
+  <div class="era-connector"></div>
+  <div class="era-inner">
+    <div class="era-content">
+      <div class="era-tag" style="background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.3)">2040 · Otonom & Kuantum Savaş</div>
+      <div class="era-title">Tam Otonom Sistemler,<br>Kuantum Radar ve HAT</div>
+      <div class="era-desc">İnsan-Makine Takımları (HAT), kuantum radarlar, otonom swarm'lar ve bilişsel savaş araçları. Savaş alanında insan kararı milisaniyelerle sınırlı. Etik sınırlar tartışmalı, uluslararası hukuk geride kalıyor.</div>
+      <div class="era-doctrine" style="border-color:var(--purple)">
+        <strong style="color:var(--purple)">6-Outs Doktrini:</strong> Outpace (Hız), Outthink (Düşünce), Outmaneuver (Manevra), Outrange (Menzil), Outprotect (Koruma), Outsustain (Sürdürülebilirlik). NATO'nun 2040 vizyonu.
+      </div>
+      <div class="era-icons">
+        <div class="era-icon-item"><span>🤖</span><span>Otonom Silah</span></div>
+        <div class="era-icon-item"><span>⚛️</span><span>Kuantum Radar</span></div>
+        <div class="era-icon-item"><span>🧠</span><span>HAT (İnsan-Makine)</span></div>
+        <div class="era-icon-item"><span>🌐</span><span>Bilişsel Harp</span></div>
+      </div>
+    </div>
+    <div class="era-visual">
+      <div class="era-canvas-wrap"><canvas class="era-canvas" id="canvas-3" height="220"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-strip">
+  <div class="ss-item"><div class="ss-num" style="color:var(--gold)">1800</div><div class="ss-label">Sanayi Savaşı Başlangıcı</div></div>
+  <div class="ss-item"><div class="ss-num" style="color:var(--red)">1945</div><div class="ss-label">Nükleer Çağ</div></div>
+  <div class="ss-item"><div class="ss-num" style="color:var(--cyan)">2022</div><div class="ss-label">Drone Devrimi</div></div>
+  <div class="ss-item"><div class="ss-num" style="color:var(--purple)">2040</div><div class="ss-label">Otonom Savaş</div></div>
+  <div class="ss-item"><div class="ss-num" style="color:var(--green)">300ms</div><div class="ss-label">2040 Kill-Chain Süresi</div></div>
+</div>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', function() {
+  var scrollTop = window.scrollY;
+  var docHeight = document.body.scrollHeight - window.innerHeight;
+  var progress = (scrollTop / docHeight) * 100;
+  document.getElementById('progress-fill').style.width = progress + '%';
+  // Update nav dots
+  var eras = ['era-0','era-1','era-2','era-3'];
+  eras.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    var rect = el.getBoundingClientRect();
+    var dots = document.querySelectorAll('.tn-dot');
+    if (rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5) {
+      dots.forEach(function(d) { d.classList.remove('active'); });
+      dots[i].classList.add('active');
+    }
+  });
+});
+
+function scrollToEra(i) {
+  document.getElementById('era-' + i).scrollIntoView({behavior:'smooth'});
+}
+
+// Intersection observer for animations
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, {threshold:0.2});
+document.querySelectorAll('.era-content,.era-visual').forEach(function(el) { obs.observe(el); });
+
+// Canvas drawings
+function initCanvas(id, drawFn) {
+  var c = document.getElementById(id);
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  c.width = c.offsetWidth; c.height = 220;
+  drawFn(ctx, c.width, c.height);
+}
+
+// Era 0: Steam/Telegraph
+function drawEra0(ctx, W, H) {
+  ctx.fillStyle = '#060d14'; ctx.fillRect(0,0,W,H);
+  // Rails
+  ctx.strokeStyle = 'rgba(201,162,75,0.3)'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, H*0.7); ctx.lineTo(W, H*0.7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, H*0.75); ctx.lineTo(W, H*0.75); ctx.stroke();
+  for (var x = 0; x < W; x += 20) {
+    ctx.beginPath(); ctx.moveTo(x, H*0.7); ctx.lineTo(x, H*0.75);
+    ctx.strokeStyle = 'rgba(201,162,75,0.2)'; ctx.lineWidth = 2; ctx.stroke();
+  }
+  // Train
+  ctx.font = '40px serif'; ctx.textAlign = 'center';
+  ctx.fillText('🚂', W*0.4, H*0.68);
+  // Telegraph poles
+  for (var px = 50; px < W; px += 80) {
+    ctx.strokeStyle = 'rgba(201,162,75,0.3)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(px, H*0.3); ctx.lineTo(px, H*0.65); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px-15, H*0.35); ctx.lineTo(px+15, H*0.35); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px-15, H*0.4); ctx.lineTo(px+15, H*0.4); ctx.stroke();
+  }
+  // Telegraph wire
+  ctx.strokeStyle = 'rgba(201,162,75,0.2)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, H*0.35);
+  for (var wx = 0; wx < W; wx += 5) { ctx.lineTo(wx, H*0.35 + Math.sin(wx*0.1)*3); }
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(201,162,75,0.6)'; ctx.font = '11px Chakra Petch'; ctx.textAlign = 'center';
+  ctx.fillText('BUHARLY TREN + TELGRAF', W/2, H-10);
+}
+
+// Era 1: WW2
+function drawEra1(ctx, W, H) {
+  ctx.fillStyle = '#060d14'; ctx.fillRect(0,0,W,H);
+  ctx.font = '36px serif'; ctx.textAlign = 'center';
+  ctx.fillText('🛡️', W*0.2, H*0.45);
+  ctx.fillText('✈️', W*0.5, H*0.25);
+  ctx.fillText('☢️', W*0.8, H*0.45);
+  // Nuclear explosion
+  var grad = ctx.createRadialGradient(W*0.8, H*0.45, 0, W*0.8, H*0.45, 50);
+  grad.addColorStop(0, 'rgba(224,21,21,0.3)');
+  grad.addColorStop(1, 'transparent');
+  ctx.beginPath(); ctx.arc(W*0.8, H*0.45, 50, 0, Math.PI*2);
+  ctx.fillStyle = grad; ctx.fill();
+  // Ground
+  ctx.fillStyle = 'rgba(224,21,21,0.1)'; ctx.fillRect(0, H*0.7, W, H*0.3);
+  ctx.strokeStyle = 'rgba(224,21,21,0.2)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, H*0.7); ctx.lineTo(W, H*0.7); ctx.stroke();
+  ctx.fillStyle = 'rgba(224,21,21,0.6)'; ctx.font = '11px Chakra Petch'; ctx.textAlign = 'center';
+  ctx.fillText('ENDÜSTRİYEL SAVAŞ · MAD', W/2, H-10);
+}
+
+// Era 2: Hybrid
+function drawEra2(ctx, W, H) {
+  ctx.fillStyle = '#060d14'; ctx.fillRect(0,0,W,H);
+  // Network nodes
+  var nodes = [{x:.2,y:.3},{x:.5,y:.2},{x:.8,y:.3},{x:.15,y:.6},{x:.5,y:.7},{x:.85,y:.6},{x:.5,y:.45}];
+  nodes.forEach(function(n, i) {
+    nodes.forEach(function(m, j) {
+      if (i < j) {
+        ctx.beginPath(); ctx.moveTo(n.x*W, n.y*H); ctx.lineTo(m.x*W, m.y*H);
+        ctx.strokeStyle = 'rgba(0,224,255,0.08)'; ctx.lineWidth = 1; ctx.stroke();
+      }
+    });
+    ctx.beginPath(); ctx.arc(n.x*W, n.y*H, i===6?14:8, 0, Math.PI*2);
+    ctx.fillStyle = i===6 ? 'rgba(0,224,255,0.3)' : 'rgba(0,224,255,0.15)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,224,255,0.5)'; ctx.lineWidth = 1; ctx.stroke();
+  });
+  ctx.font = '16px serif'; ctx.textAlign = 'center';
+  ctx.fillText('🚁', nodes[0].x*W, nodes[0].y*H+5);
+  ctx.fillText('💻', nodes[1].x*W, nodes[1].y*H+5);
+  ctx.fillText('🛰️', nodes[2].x*W, nodes[2].y*H+5);
+  ctx.fillStyle = 'rgba(0,224,255,0.6)'; ctx.font = '11px Chakra Petch'; ctx.textAlign = 'center';
+  ctx.fillText('HİBRİT SAVAŞ · OODA', W/2, H-10);
+}
+
+// Era 3: Autonomous
+function drawEra3(ctx, W, H) {
+  ctx.fillStyle = '#060d14'; ctx.fillRect(0,0,W,H);
+  // Quantum radar rings
+  for (var r = 20; r < 100; r += 20) {
+    ctx.beginPath(); ctx.arc(W*0.5, H*0.5, r, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(139,92,246,' + (0.3 - r/400) + ')'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  // AI nodes
+  var aiNodes = [{x:.5,y:.5,icon:'🤖'},{x:.2,y:.25,icon:'⚛️'},{x:.8,y:.25,icon:'🧠'},{x:.15,y:.7,icon:'🌐'},{x:.85,y:.7,icon:'🚁'}];
+  aiNodes.forEach(function(n) {
+    ctx.beginPath(); ctx.moveTo(n.x*W, n.y*H); ctx.lineTo(W*0.5, H*0.5);
+    ctx.strokeStyle = 'rgba(139,92,246,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.font = '20px serif'; ctx.textAlign = 'center';
+    ctx.fillText(n.icon, n.x*W, n.y*H+7);
+  });
+  ctx.fillStyle = 'rgba(139,92,246,0.6)'; ctx.font = '11px Chakra Petch'; ctx.textAlign = 'center';
+  ctx.fillText('OTONOM SAVAŞ · HAT · 2040', W/2, H-10);
+}
+
+// Init all canvases after layout
+setTimeout(function() {
+  initCanvas('canvas-0', drawEra0);
+  initCanvas('canvas-1', drawEra1);
+  initCanvas('canvas-2', drawEra2);
+  initCanvas('canvas-3', drawEra3);
+}, 200);
+window.addEventListener('resize', function() {
+  setTimeout(function() {
+    initCanvas('canvas-0', drawEra0);
+    initCanvas('canvas-1', drawEra1);
+    initCanvas('canvas-2', drawEra2);
+    initCanvas('canvas-3', drawEra3);
+  }, 200);
+});
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barut Simyacısı — OZA</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root{--pri:#ff6b35;--bg:#0a0f17;--text:#e8e6e3;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.game-container{max-width:500px;width:90%;padding:20px;}
+h1{font-family:'Chakra Petch',sans-serif;text-align:center;color:var(--pri);font-size:1.8rem;}
+.subtitle{text-align:center;opacity:0.7;margin-bottom:30px;}
+.lab{background:#111827;border:2px solid #1f2937;border-radius:16px;padding:30px;margin:20px 0;text-align:center;}
+.formula{font-family:'IBM Plex Mono',monospace;font-size:1.2rem;color:var(--pri);margin:15px 0;}
+.ingredients{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:20px 0;}
+.ingredient{background:#1f2937;border:2px solid #374151;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all 0.3s;user-select:none;}
+.ingredient:hover{border-color:var(--pri);transform:scale(1.05);}
+.ingredient.selected{border-color:#10b981;background:#10b98120;}
+.ingredient.wrong{border-color:#ef4444;background:#ef444420;animation:shake 0.5s;}
+.ingredient .icon{font-size:2rem;margin-bottom:8px;}
+.ingredient .name{font-size:0.85rem;font-weight:600;}
+.btn{display:block;width:100%;padding:14px;background:var(--pri);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px;font-family:'Chakra Petch',sans-serif;}
+.btn:hover{opacity:0.9;}
+.score-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;}
+.result{text-align:center;padding:40px 20px;display:none;}
+.result h2{color:var(--pri);font-family:'Chakra Petch',sans-serif;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+</style>
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<script src="hs-nav.js?v=11"></script>
+<div class="game-container">
+<h1>⚗ Barut Simyacısı</h1>
+<p class="subtitle">Doğru malzemeleri seçerek tarihi patlayıcıları yeniden yarat!</p>
+<div class="score-bar"><span id="level">Seviye: 1/8</span><span id="score">Puan: 0</span></div>
+<div class="lab" id="lab">
+  <div id="question"></div>
+  <div class="ingredients" id="ingredients"></div>
+  <button class="btn" id="checkBtn" onclick="checkAnswer()">Karıştır!</button>
+</div>
+<div class="result" id="result">
+  <h2 id="resultTitle"></h2>
+  <p id="resultText"></p>
+  <button class="btn" onclick="location.reload()">Tekrar Oyna</button>
+  <a href="oza-hub.html" style="display:block;text-align:center;margin-top:15px;color:var(--pri);">← OZA'ya Dön</a>
+</div>
+</div>
+<script>
+const levels = [
+  {name:"Grek Ateşi (671)",formula:"Nafta + Kükürt + Sönmemiş Kireç",correct:["nafta","kukurt","kirec"],options:[
+    {id:"nafta",icon:"🛢",name:"Nafta (Ham Petrol)"},{id:"kukurt",icon:"🟡",name:"Kükürt"},{id:"kirec",icon:"�ite",name:"Sönmemiş Kireç"},{id:"tuz",icon:"🧂",name:"Kaya Tuzu"},{id:"komur",icon:"⚫",name:"Kömür"},{id:"demir",icon:"🔩",name:"Demir Tozu"}
+  ]},
+  {name:"Karabarut (13. yy)",formula:"Güherçile + Kükürt + Kömür",correct:["guher","kukurt2","komur2"],options:[
+    {id:"guher",icon:"💎",name:"Güherçile (KNO₃)"},{id:"kukurt2",icon:"🟡",name:"Kükürt"},{id:"komur2",icon:"⚫",name:"Kömür Tozu"},{id:"su",icon:"💧",name:"Su"},{id:"recine",icon:"🌲",name:"Reçine"},{id:"kum",icon:"🏜",name:"Kum"}
+  ]},
+  {name:"Dinamit (1867)",formula:"Nitrogliserin + Kizelgur",correct:["nitro","kizel"],options:[
+    {id:"nitro",icon:"💣",name:"Nitrogliserin"},{id:"kizel",icon:"ite",name:"Kizelgur (Toprak)"},{id:"barut",icon:"⚫",name:"Barut"},{id:"asit",icon:"🧪",name:"Sülfürik Asit"},{id:"pamuk",icon:"☁",name:"Pamuk"},{id:"yag",icon:"🫒",name:"Zeytinyağı"}
+  ]},
+  {name:"TNT (1863)",formula:"Toluen + Nitrik Asit + Sülfürik Asit",correct:["toluen","nitrik","sulfurik"],options:[
+    {id:"toluen",icon:"🧴",name:"Toluen"},{id:"nitrik",icon:"🧪",name:"Nitrik Asit"},{id:"sulfurik",icon:"⚗",name:"Sülfürik Asit"},{id:"su2",icon:"💧",name:"Su"},{id:"etanol",icon:"🍶",name:"Etanol"},{id:"gliserin",icon:"🫧",name:"Gliserin"}
+  ]},
+  {name:"Balistit (1888)",formula:"Nitrogliserin + Nitroselüloz",correct:["nitro2","nitrosel"],options:[
+    {id:"nitro2",icon:"💣",name:"Nitrogliserin"},{id:"nitrosel",icon:"📄",name:"Nitroselüloz"},{id:"karbon",icon:"⚫",name:"Karbon"},{id:"fosfor",icon:"🟢",name:"Fosfor"},{id:"magnezyum",icon:"✨",name:"Magnezyum"},{id:"aluminyum",icon:"🔲",name:"Alüminyum"}
+  ]},
+  {name:"C-4 Plastik Patlayıcı",formula:"RDX + Plastikleştirici + Yağ",correct:["rdx","plastik","yag2"],options:[
+    {id:"rdx",icon:"💥",name:"RDX"},{id:"plastik",icon:"🧱",name:"Plastikleştirici"},{id:"yag2",icon:"🫒",name:"Motor Yağı"},{id:"tnt2",icon:"💣",name:"TNT"},{id:"kum2",icon:"🏜",name:"Silika"},{id:"bor",icon:"🔵",name:"Bor"}
+  ]},
+  {name:"Roket Yakıtı (el-Rammah)",formula:"Güherçile + Kükürt + Kömür + Nafta",correct:["guher2","kukurt3","komur3","nafta2"],options:[
+    {id:"guher2",icon:"💎",name:"Güherçile"},{id:"kukurt3",icon:"🟡",name:"Kükürt"},{id:"komur3",icon:"⚫",name:"Kömür"},{id:"nafta2",icon:"🛢",name:"Nafta"},{id:"su3",icon:"💧",name:"Su"},{id:"tuz2",icon:"🧂",name:"Tuz"}
+  ]},
+  {name:"Termobarik Silah",formula:"Etilen Oksit + Alüminyum Tozu + Oksitleyici",correct:["etilen","alu","oksit"],options:[
+    {id:"etilen",icon:"⛽",name:"Etilen Oksit"},{id:"alu",icon:"✨",name:"Alüminyum Tozu"},{id:"oksit",icon:"🌬",name:"Oksitleyici"},{id:"uranyum",icon:"☢",name:"Uranyum"},{id:"pluton",icon:"⚛",name:"Plütonyum"},{id:"hidrojen",icon:"💨",name:"Hidrojen"}
+  ]}
+];
+let currentLevel=0, score=0, selected=[];
+
+function loadLevel(){
+  if(currentLevel>=levels.length){showResult();return;}
+  const lv=levels[currentLevel];
+  selected=[];
+  document.getElementById('level').textContent=`Seviye: ${currentLevel+1}/${levels.length}`;
+  document.getElementById('question').innerHTML=`<h3>${lv.name}</h3><div class="formula">${lv.formula}</div><p style="opacity:0.6;font-size:0.85rem">Doğru malzemeleri seç:</p>`;
+  const ing=document.getElementById('ingredients');
+  ing.innerHTML='';
+  lv.options.sort(()=>Math.random()-0.5).forEach(o=>{
+    const d=document.createElement('div');
+    d.className='ingredient';d.dataset.id=o.id;
+    d.innerHTML=`<div class="icon">${o.icon}</div><div class="name">${o.name}</div>`;
+    d.onclick=()=>{
+      if(d.classList.contains('selected')){d.classList.remove('selected');selected=selected.filter(s=>s!==o.id);}
+      else{d.classList.add('selected');selected.push(o.id);}
+    };
+    ing.appendChild(d);
+  });
+}
+
+function checkAnswer(){
+  const lv=levels[currentLevel];
+  const correct=lv.correct.sort().join(',');
+  const answer=selected.sort().join(',');
+  if(correct===answer){
+    score+=100+(8-currentLevel)*10;
+    document.getElementById('score').textContent=`Puan: ${score}`;
+    currentLevel++;
+    loadLevel();
+  } else {
+    document.querySelectorAll('.ingredient').forEach(el=>{
+      if(selected.includes(el.dataset.id)&&!lv.correct.includes(el.dataset.id)) el.classList.add('wrong');
+    });
+    setTimeout(()=>{document.querySelectorAll('.wrong').forEach(el=>el.classList.remove('wrong'));selected=[];document.querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));},1000);
+    score=Math.max(0,score-20);
+    document.getElementById('score').textContent=`Puan: ${score}`;
+  }
+}
+
+function showResult(){
+  document.getElementById('lab').style.display='none';
+  const r=document.getElementById('result');r.style.display='block';
+  const pct=Math.round(score/(levels.length*180)*100);
+  document.getElementById('resultTitle').textContent=pct>=80?'Usta Simyacı!':pct>=50?'Çırak Simyacı':'Denemeye Devam!';
+  document.getElementById('resultText').textContent=`${score} puan · ${levels.length} seviye tamamlandı · Başarı: %${pct}`;
+}
+
+loadLevel();
+</script>
+</body>
+</html>

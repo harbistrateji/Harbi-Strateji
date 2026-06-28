@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Evrenin Ayarı Kaçarsa Ne Olur — Ekolojik Mizan</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060d18;--gold:#c9a24b;--green:#2ecc71;--red:#e74c3c;--blue:#3498db;--purple:#9b59b6;--text:#eaf0f7;--dim:#6a8a9e}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif}
+#app{width:100%;height:100%;position:relative}
+canvas#cosmos{position:fixed;inset:0;z-index:1}
+
+/* Sections */
+.section{position:absolute;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.section.active{display:flex}
+
+/* Section 1: Shock */
+#shock{background:var(--bg)}
+.shock-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,4vw,2.8rem);font-weight:700;color:var(--red);text-align:center;text-shadow:0 0 30px rgba(231,76,60,0.5);opacity:0;animation:fadeIn 1s ease 0.5s forwards}
+.shock-sub{font-size:1rem;color:var(--dim);margin-top:10px;text-align:center;opacity:0;animation:fadeIn 1s ease 1.5s forwards}
+.earth-canvas{width:300px;height:300px;margin:20px auto;position:relative}
+.earth-sphere{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#4a9eff,#1a5276 40%,#0d2f4f 70%,#051a2e);box-shadow:0 0 60px rgba(52,152,219,0.3),inset -20px -20px 40px rgba(0,0,0,0.5);animation:rotate3d 20s linear infinite;position:relative;overflow:hidden}
+.earth-sphere::before{content:'';position:absolute;top:20%;left:15%;width:30%;height:25%;background:rgba(46,204,113,0.6);border-radius:40% 60% 50% 40%;filter:blur(2px)}
+.earth-sphere::after{content:'';position:absolute;top:50%;left:45%;width:25%;height:20%;background:rgba(46,204,113,0.5);border-radius:50% 40% 60% 40%;filter:blur(2px)}
+@keyframes rotate3d{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+.scenario-text{font-size:clamp(0.9rem,2.5vw,1.1rem);color:var(--text);text-align:center;max-width:600px;line-height:1.7;margin-top:15px;opacity:0;transition:opacity 0.5s}
+.scenario-text.show{opacity:1}
+.timer-bar{width:80%;max-width:400px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:20px;overflow:hidden}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));width:0%;transition:width 0.1s linear}
+
+/* Section 2: Sliders */
+#sliders{background:var(--bg)}
+.slider-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.2rem,3vw,1.8rem);color:var(--gold);text-align:center;margin-bottom:20px}
+.slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-width:700px;width:100%}
+@media(max-width:600px){.slider-grid{grid-template-columns:1fr}}
+.slider-card{background:rgba(255,255,255,0.03);border:1px solid rgba(201,162,75,0.15);border-radius:12px;padding:15px}
+.slider-card label{display:block;font-size:0.8rem;color:var(--gold);margin-bottom:8px;font-weight:600}
+.slider-card input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer}
+.slider-card .val{font-size:0.75rem;color:var(--dim);margin-top:5px;text-align:center}
+.earth-result{margin-top:20px;padding:15px;border:1px solid rgba(255,255,255,0.1);border-radius:12px;background:rgba(0,0,0,0.3);max-width:700px;width:100%;min-height:80px;font-size:0.9rem;line-height:1.6;color:var(--text);text-align:center}
+.earth-result.danger{border-color:var(--red);color:var(--red)}
+.earth-result.safe{border-color:var(--green);color:var(--green)}
+
+/* Section 3: Society */
+#society{background:var(--bg)}
+.society-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.2rem,3vw,1.8rem);color:var(--purple);text-align:center;margin-bottom:15px}
+.society-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-width:600px;width:100%}
+@media(max-width:500px){.society-grid{grid-template-columns:1fr}}
+.soc-slider{background:rgba(155,89,182,0.05);border:1px solid rgba(155,89,182,0.2);border-radius:12px;padding:15px}
+.soc-slider label{display:block;font-size:0.8rem;color:var(--purple);margin-bottom:8px;font-weight:600}
+.soc-slider input[type=range]{width:100%;accent-color:var(--purple)}
+.soc-slider .val{font-size:0.75rem;color:var(--dim);margin-top:5px;text-align:center}
+.society-result{margin-top:15px;padding:15px;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(155,89,182,0.2);max-width:600px;width:100%;min-height:100px}
+.soc-indicator{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:0.85rem}
+.soc-bar{flex:1;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+.soc-bar-fill{height:100%;border-radius:4px;transition:width 0.3s}
+
+/* Section 4: Mizan */
+#mizan{background:var(--bg)}
+.mizan-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.3rem,3.5vw,2rem);color:var(--gold);text-align:center;margin-bottom:20px}
+.mizan-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;max-width:800px;width:100%}
+.mizan-card{background:rgba(201,162,75,0.04);border:1px solid rgba(201,162,75,0.15);border-radius:12px;padding:15px;text-align:center;opacity:0;transform:translateY(20px);transition:all 0.5s ease}
+.mizan-card.show{opacity:1;transform:translateY(0)}
+.mizan-card .icon{font-size:2rem;margin-bottom:8px}
+.mizan-card h4{color:var(--gold);font-size:0.9rem;margin-bottom:6px}
+.mizan-card p{color:var(--dim);font-size:0.78rem;line-height:1.5}
+
+/* Section 5: City Game */
+#citygame{background:var(--bg)}
+.city-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.1rem,3vw,1.6rem);color:var(--green);text-align:center;margin-bottom:10px}
+.city-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:15px}
+.city-stat{padding:8px 14px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:8px;text-align:center}
+.city-stat .num{font-size:1.2rem;font-weight:700;color:var(--green)}
+.city-stat .lbl{font-size:0.65rem;color:var(--dim)}
+.city-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:500px;width:100%}
+@media(max-width:400px){.city-actions{grid-template-columns:1fr}}
+.city-btn{padding:12px;border:1px solid rgba(46,204,113,0.3);border-radius:10px;background:rgba(46,204,113,0.05);color:var(--text);font-size:0.8rem;cursor:pointer;transition:all 0.3s;text-align:center}
+.city-btn:hover{background:rgba(46,204,113,0.15);border-color:var(--green);transform:scale(1.02)}
+.city-btn .emoji{font-size:1.5rem;display:block;margin-bottom:4px}
+.city-btn .effect{font-size:0.65rem;color:var(--dim);margin-top:4px}
+.city-log{margin-top:12px;max-width:500px;width:100%;max-height:100px;overflow-y:auto;padding:10px;background:rgba(0,0,0,0.3);border-radius:8px;font-size:0.75rem;color:var(--dim)}
+.city-log p{margin:3px 0}
+.game-over{color:var(--red);font-weight:700;font-size:1.1rem;margin-top:10px;display:none}
+
+/* Section 6: Final */
+#finale{background:var(--bg)}
+.finale-text{font-family:'Chakra Petch',sans-serif;font-size:clamp(1rem,3vw,1.6rem);color:var(--gold);text-align:center;max-width:700px;line-height:1.8;opacity:0;transform:scale(0.9);transition:all 1s ease}
+.finale-text.show{opacity:1;transform:scale(1)}
+.finale-quote{margin-top:25px;font-size:clamp(0.9rem,2.5vw,1.2rem);color:var(--text);text-align:center;font-style:italic;max-width:600px;line-height:1.7;opacity:0;transition:opacity 1s ease 1s}
+.finale-quote.show{opacity:1}
+
+/* Navigation */
+.nav-btns{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:10px}
+.nav-btn{padding:10px 20px;border:1px solid var(--gold);border-radius:8px;background:rgba(201,162,75,0.1);color:var(--gold);font-size:0.8rem;cursor:pointer;transition:all 0.3s;font-weight:600}
+.nav-btn:hover{background:rgba(201,162,75,0.25);transform:scale(1.05)}
+.nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+.progress-dots{position:fixed;top:15px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:8px}
+.p-dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--gold);transition:all 0.3s}
+.p-dot.active{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.music-toggle{position:fixed;top:15px;right:15px;z-index:100;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,0.6);border:1px solid var(--gold);color:var(--gold);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.3s}
+.music-toggle:hover{background:rgba(201,162,75,0.2)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<div id="app">
+<canvas id="cosmos"></canvas>
+<div class="music-toggle" id="musicBtn" onclick="toggleMusic()">♪</div>
+<div class="progress-dots" id="dots"></div>
+
+<!-- SECTION 1: SHOCK -->
+<div class="section active" id="shock">
+<div class="shock-title">EVRENİN AYARI KAÇARSA NE OLUR?</div>
+<div class="shock-sub">Dünya'nın hassas dengesini keşfet...</div>
+<div class="earth-canvas"><div class="earth-sphere"></div></div>
+<div class="scenario-text" id="scenarioText"></div>
+<div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+</div>
+
+<!-- SECTION 2: EARTH SLIDERS -->
+<div class="section" id="sliders">
+<div class="slider-title">🌍 Dünya'nın Parametrelerini Değiştir</div>
+<div class="slider-grid">
+<div class="slider-card">
+<label>Eksen Eğikliği</label>
+<input type="range" min="0" max="90" value="23" id="tiltSlider" oninput="updateEarth()">
+<div class="val" id="tiltVal">23.5°</div>
+</div>
+<div class="slider-card">
+<label>Güneş Mesafesi</label>
+<input type="range" min="50" max="300" value="150" id="distSlider" oninput="updateEarth()">
+<div class="val" id="distVal">150 milyon km</div>
+</div>
+<div class="slider-card">
+<label>Atmosfer Yoğunluğu</label>
+<input type="range" min="0" max="200" value="100" id="atmoSlider" oninput="updateEarth()">
+<div class="val" id="atmoVal">%100 (Normal)</div>
+</div>
+<div class="slider-card">
+<label>Okyanus Miktarı</label>
+<input type="range" min="0" max="100" value="71" id="oceanSlider" oninput="updateEarth()">
+<div class="val" id="oceanVal">%71</div>
+</div>
+</div>
+<div class="earth-result" id="earthResult">Parametreleri değiştirerek Dünya'nın kaderini belirle...</div>
+</div>
+
+<!-- SECTION 3: SOCIETY SIMULATOR -->
+<div class="section" id="society">
+<div class="society-title">⚖️ Toplum Simülatörü</div>
+<div class="society-grid">
+<div class="soc-slider">
+<label>Adalet Seviyesi</label>
+<input type="range" min="0" max="100" value="70" id="justiceSlider" oninput="updateSociety()">
+<div class="val" id="justiceVal">%70</div>
+</div>
+<div class="soc-slider">
+<label>Güven Seviyesi</label>
+<input type="range" min="0" max="100" value="65" id="trustSlider" oninput="updateSociety()">
+<div class="val" id="trustVal">%65</div>
+</div>
+<div class="soc-slider">
+<label>Eğitim Kalitesi</label>
+<input type="range" min="0" max="100" value="60" id="eduSlider" oninput="updateSociety()">
+<div class="val" id="eduVal">%60</div>
+</div>
+<div class="soc-slider">
+<label>Gelir Dağılımı Adaleti</label>
+<input type="range" min="0" max="100" value="50" id="incomeSlider" oninput="updateSociety()">
+<div class="val" id="incomeVal">%50</div>
+</div>
+</div>
+<div class="society-result" id="socResult"></div>
+</div>
+
+<!-- SECTION 4: MIZAN CONCEPT -->
+<div class="section" id="mizan">
+<div class="mizan-title">⚖️ MİZAN — Evrensel Denge Kavramı</div>
+<div class="mizan-cards" id="mizanCards">
+<div class="mizan-card"><div class="icon">🔬</div><h4>Bilim = Denge</h4><p>Fizik yasaları, kimyasal denge, termodinamik... Evren matematiksel bir mizanla işler.</p></div>
+<div class="mizan-card"><div class="icon">⚙️</div><h4>Mühendislik = Ayar</h4><p>Her sistem bir ayar gerektirir. Tolerans dışına çıkan makine bozulur, köprü çöker.</p></div>
+<div class="mizan-card"><div class="icon">🌿</div><h4>Ekoloji = Ekosistem Dengesi</h4><p>Bir türün yok olması zincirleme çöküşe neden olur. Doğa kendi mizanını korur.</p></div>
+<div class="mizan-card"><div class="icon">🏛️</div><h4>Medeniyet = Adalet</h4><p>Toplumların ayakta kalması adaletle mümkündür. Zulüm arttıkça medeniyetler çöker.</p></div>
+<div class="mizan-card"><div class="icon">☪️</div><h4>İslâm = Mizan</h4><p>"Göğü O yükseltti ve mizanı O koydu. Sakın mizanda taşkınlık etmeyin." (Rahmân, 55/7-8)</p></div>
+</div>
+</div>
+
+<!-- SECTION 5: CITY MANAGEMENT GAME -->
+<div class="section" id="citygame">
+<div class="city-title">🏗️ Şehir Yönetimi — Mizan Oyunu</div>
+<div class="city-stats" id="cityStats">
+<div class="city-stat"><div class="num" id="cGold">500</div><div class="lbl">Altın</div></div>
+<div class="city-stat"><div class="num" id="cPop">1000</div><div class="lbl">Nüfus</div></div>
+<div class="city-stat"><div class="num" id="cHappy">70</div><div class="lbl">Mutluluk</div></div>
+<div class="city-stat"><div class="num" id="cEco">80</div><div class="lbl">Ekoloji</div></div>
+<div class="city-stat"><div class="num" id="cTurn">1</div><div class="lbl">Tur</div></div>
+</div>
+<div class="city-actions" id="cityActions">
+<div class="city-btn" onclick="cityAction('forest')"><span class="emoji">🪓</span>Orman Kes<span class="effect">+150 Altın, -15 Ekoloji</span></div>
+<div class="city-btn" onclick="cityAction('mine')"><span class="emoji">⛏️</span>Maden Aç<span class="effect">+200 Altın, -10 Ekoloji, -5 Mutluluk</span></div>
+<div class="city-btn" onclick="cityAction('school')"><span class="emoji">🏫</span>Okul Yap<span class="effect">-100 Altın, +10 Mutluluk</span></div>
+<div class="city-btn" onclick="cityAction('park')"><span class="emoji">🌳</span>Park Yap<span class="effect">-80 Altın, +10 Ekoloji, +5 Mutluluk</span></div>
+<div class="city-btn" onclick="cityAction('tax')"><span class="emoji">💰</span>Vergi Artır<span class="effect">+100 Altın, -15 Mutluluk</span></div>
+<div class="city-btn" onclick="cityAction('justice')"><span class="emoji">⚖️</span>Adalet Yatırımı<span class="effect">-120 Altın, +15 Mutluluk, +5 Ekoloji</span></div>
+<div class="city-btn" onclick="cityAction('factory')"><span class="emoji">🏭</span>Fabrika Kur<span class="effect">+250 Altın, -20 Ekoloji, +100 Nüfus</span></div>
+<div class="city-btn" onclick="cityAction('hospital')"><span class="emoji">🏥</span>Hastane Yap<span class="effect">-150 Altın, +200 Nüfus, +5 Mutluluk</span></div>
+</div>
+<div class="city-log" id="cityLog"></div>
+<div class="game-over" id="gameOver"></div>
+</div>
+
+<!-- SECTION 6: FINALE -->
+<div class="section" id="medyen">
+<div style="text-align:center;max-width:700px;">
+<div style="font-size:3rem;margin-bottom:12px;animation:pulse 2s infinite;">🏜️</div>
+<h2 style="font-family:'Chakra Petch',monospace;font-size:1.5rem;color:var(--gold);margin-bottom:16px;">TARİHSEL GEÇİŞ</h2>
+<p style="font-size:.85rem;color:var(--dim);margin-bottom:20px;font-style:italic;">"Bu ilk kez yaşanmıyor."</p>
+<div style="background:rgba(201,162,75,.08);border:1px solid rgba(201,162,75,.3);border-radius:12px;padding:24px;margin-bottom:20px;">
+<div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+<span style="font-size:2rem;">🐪</span><span style="font-size:2rem;">⚖️</span><span style="font-size:2rem;">🏺</span><span style="font-size:2rem;">📜</span>
+</div>
+<h3 style="color:var(--gold);font-family:'Chakra Petch',monospace;margin-bottom:12px;">MEDYEN — Ticaretin Çöküşü</h3>
+<div id="medyenStory" style="font-size:.8rem;color:var(--white);line-height:2;text-align:left;">
+<p>🏪 <b>Başlangıçta bolluk vardı.</b> Kervanlar gelir, pazarlar dolardı.</p>
+<p style="margin-top:10px;">⚖️ Sonra <span style="color:var(--red);">eksik tartı</span> başladı...</p>
+<p>🏺 <span style="color:var(--red);">Hileli ölçü</span> kapları yayıldı...</p>
+<p>🤝 <span style="color:var(--red);">Güven kaybı</span> toplumu sardı...</p>
+<p style="margin-top:12px;">📉 İnsanlar birbirine güvenmez oldu.</p>
+<p>💔 Ticaret bozuldu. Toplum çözüldü.</p>
+</div>
+</div>
+<div style="background:rgba(196,30,58,.08);border:1px solid rgba(196,30,58,.3);border-radius:12px;padding:20px;">
+<p style="font-size:1rem;color:var(--white);line-height:2;font-weight:700;">
+"Bir medeniyet önce <span style="color:var(--gold);">vicdanında</span> çöker.<br>
+Sonra <span style="color:var(--red);">ekonomisinde</span>.<br>
+Sonunda <span style="color:var(--dim);">sokaklarında</span>."
+</p>
+</div>
+<p style="font-size:.7rem;color:var(--dim);margin-top:16px;">Bütün evrenlerde ortak sorun teknoloji değil — <b style="color:var(--red);">adaletsizliktir.</b></p>
+</div>
+</div>
+
+<div class="section" id="finale">
+<div class="finale-text" id="finaleText">
+Galaksiden Dünya'ya...<br>
+Ormanlardan şehirlere...<br>
+Şehirlerden insanlara...<br><br>
+Her şey bir denge üzerine kurulu.
+</div>
+<div class="finale-quote" id="finaleQuote">
+"Evrenin ayarı mizanla durur.<br>İnsanlığın ayarı da adaletle."
+</div>
+</div>
+
+<!-- Navigation -->
+<div class="nav-btns">
+<button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Geri</button>
+<button class="nav-btn" id="nextBtn" onclick="navigate(1)">İleri →</button>
+</div>
+</div>
+
+<script>
+// ===== COSMOS CANVAS =====
+const canvas=document.getElementById('cosmos');
+const ctx=canvas.getContext('2d');
+let stars=[];
+function initCosmos(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+stars=[];
+for(let i=0;i<150;i++){
+stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.3,a:Math.random(),da:Math.random()*0.02-0.01});
+}
+animateCosmos();
+}
+function animateCosmos(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+stars.forEach(s=>{
+s.a+=s.da;
+if(s.a>1||s.a<0.2)s.da*=-1;
+ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+ctx.fillStyle=`rgba(201,162,75,${s.a*0.6})`;ctx.fill();
+});
+requestAnimationFrame(animateCosmos);
+}
+window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
+initCosmos();
+
+// ===== NAVIGATION =====
+const sections=['shock','sliders','society','mizan','citygame','medyen','finale'];
+let currentSection=0;
+
+function buildDots(){
+const dotsEl=document.getElementById('dots');
+sections.forEach((_,i)=>{
+const d=document.createElement('div');
+d.className='p-dot'+(i===0?' active':'');
+d.onclick=()=>goTo(i);
+dotsEl.appendChild(d);
+});
+}
+buildDots();
+
+function goTo(idx){
+if(idx<0||idx>=sections.length)return;
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(sections[idx]).classList.add('active');
+document.querySelectorAll('.p-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+currentSection=idx;
+document.getElementById('prevBtn').disabled=idx===0;
+document.getElementById('nextBtn').disabled=idx===sections.length-1;
+if(idx===3)showMizanCards();
+if(idx===6)showFinale();
+}
+
+function navigate(dir){goTo(currentSection+dir);}
+
+// ===== SECTION 1: SHOCK SCENARIOS =====
+const scenarios=[
+{text:'Dünya\'nın ekseni 0° olsaydı → Mevsimler olmazdı. Ekvator kavrulucu sıcak, kutuplar ebedi buz. Tarım imkânsız.',delay:0},
+{text:'Eksen 45° olsaydı → 6 ay gündüz, 6 ay gece. Bir yarıküre yanarken diğeri donar. Yaşam alanı %80 daralır.',delay:5000},
+{text:'Güneş %10 yakın olsaydı → Okyanuslar buharlaşır. Sera etkisi kontrolden çıkar. Venüs benzeri cehennem.',delay:10000},
+{text:'Atmosfer %50 daha yoğun olsaydı → Basınç altında ezilirdik. Gökyüzünü göremezdik. Güneş ışığı yüzeye ulaşamazdı.',delay:15000},
+{text:'Okyanus olmasaydı → Isı dengeleyici yok. Gece -60°C, gündüz +80°C. Hiçbir canlı dayanamaz.',delay:20000},
+{text:'Ay olmasaydı → Eksen salınımı kaotik. Mevsimler öngörülemez. Gelgitler yok, kıyı ekosistemleri çöker.',delay:25000}
+];
+
+let shockTimer;
+function startShock(){
+let idx=0;
+const textEl=document.getElementById('scenarioText');
+const timerEl=document.getElementById('timerFill');
+let elapsed=0;
+const total=30000;
+
+function showScenario(){
+if(idx>=scenarios.length)return;
+textEl.classList.remove('show');
+setTimeout(()=>{
+textEl.textContent=scenarios[idx].text;
+textEl.classList.add('show');
+idx++;
+},300);
+}
+showScenario();
+const scenarioInterval=setInterval(()=>{
+if(idx<scenarios.length)showScenario();
+},5000);
+
+shockTimer=setInterval(()=>{
+elapsed+=100;
+timerEl.style.width=(elapsed/total*100)+'%';
+if(elapsed>=total){
+clearInterval(shockTimer);
+clearInterval(scenarioInterval);
+}
+},100);
+}
+startShock();
+
+// ===== SECTION 2: EARTH PARAMETERS =====
+function updateEarth(){
+const tilt=+document.getElementById('tiltSlider').value;
+const dist=+document.getElementById('distSlider').value;
+const atmo=+document.getElementById('atmoSlider').value;
+const ocean=+document.getElementById('oceanSlider').value;
+document.getElementById('tiltVal').textContent=tilt+'°';
+document.getElementById('distVal').textContent=dist+' milyon km';
+document.getElementById('atmoVal').textContent='%'+atmo;
+document.getElementById('oceanVal').textContent='%'+ocean;
+
+const resultEl=document.getElementById('earthResult');
+let problems=[];
+let danger=0;
+
+if(tilt<10)problems.push('Mevsimler neredeyse yok — tarım verimsiz.');
+if(tilt>40)problems.push('Aşırı mevsim farkları — yaşanabilir alan daralır.');
+if(tilt>60){problems.push('6 aylık gece/gündüz döngüsü — yaşam tehlikede!');danger++;}
+if(dist<100){problems.push('Güneş\'e çok yakın — yüzey sıcaklığı 200°C+');danger++;}
+if(dist>200){problems.push('Güneş\'ten çok uzak — buzul çağı, -50°C');danger++;}
+if(atmo<30){problems.push('Atmosfer çok ince — radyasyon koruması yok');danger++;}
+if(atmo>150){problems.push('Atmosfer çok yoğun — sera etkisi kontrolden çıktı');danger++;}
+if(ocean<20){problems.push('Okyanus yetersiz — iklim dengesizliği, çölleşme');danger++;}
+if(ocean>90){problems.push('Su dünyası — kara yüzeyi yetersiz, medeniyet kurulamaz');}
+
+if(problems.length===0){
+resultEl.textContent='✅ Mükemmel denge! Dünya yaşanabilir durumda. İşte bu "mizan" — her parametre tam yerinde.';
+resultEl.className='earth-result safe';
+}else{
+resultEl.innerHTML='⚠️ '+problems.join('<br>⚠️ ');
+resultEl.className='earth-result'+(danger>1?' danger':'');
+}
+}
+
+// ===== SECTION 3: SOCIETY SIMULATOR =====
+function updateSociety(){
+const justice=+document.getElementById('justiceSlider').value;
+const trust=+document.getElementById('trustSlider').value;
+const edu=+document.getElementById('eduSlider').value;
+const income=+document.getElementById('incomeSlider').value;
+document.getElementById('justiceVal').textContent='%'+justice;
+document.getElementById('trustVal').textContent='%'+trust;
+document.getElementById('eduVal').textContent='%'+edu;
+document.getElementById('incomeVal').textContent='%'+income;
+
+const stability=Math.round((justice*0.35+trust*0.25+edu*0.2+income*0.2));
+const protest=Math.max(0,100-stability);
+const brainDrain=Math.max(0,Math.round((100-edu)*0.4+(100-justice)*0.3+(100-income)*0.3));
+const corruption=Math.max(0,Math.round((100-justice)*0.5+(100-trust)*0.3+(100-edu)*0.2));
+
+const resultEl=document.getElementById('socResult');
+resultEl.innerHTML=`
+<div class="soc-indicator"><span style="width:80px;color:${stability>60?'var(--green)':'var(--red)'}">İstikrar</span><div class="soc-bar"><div class="soc-bar-fill" style="width:${stability}%;background:${stability>60?'var(--green)':'var(--red)'}"></div></div><span style="width:30px;font-size:0.75rem">${stability}%</span></div>
+<div class="soc-indicator"><span style="width:80px;color:${protest<40?'var(--green)':'var(--red)'}">Protesto</span><div class="soc-bar"><div class="soc-bar-fill" style="width:${protest}%;background:var(--red)"></div></div><span style="width:30px;font-size:0.75rem">${protest}%</span></div>
+<div class="soc-indicator"><span style="width:80px;color:${brainDrain<30?'var(--green)':'var(--red)'}">Beyin Göçü</span><div class="soc-bar"><div class="soc-bar-fill" style="width:${brainDrain}%;background:#e67e22"></div></div><span style="width:30px;font-size:0.75rem">${brainDrain}%</span></div>
+<div class="soc-indicator"><span style="width:80px;color:${corruption<30?'var(--green)':'var(--red)'}">Yolsuzluk</span><div class="soc-bar"><div class="soc-bar-fill" style="width:${corruption}%;background:var(--purple)"></div></div><span style="width:30px;font-size:0.75rem">${corruption}%</span></div>
+<p style="margin-top:10px;font-size:0.8rem;color:var(--dim);text-align:center">${stability>70?'Toplum dengede — mizan korunuyor.':stability>40?'Tehlike sinyalleri — denge bozulmaya başlıyor!':'KRİZ! Toplumsal çöküş kapıda. Mizan tamamen bozuldu.'}</p>
+`;
+}
+updateSociety();
+
+// ===== SECTION 4: MIZAN CARDS =====
+function showMizanCards(){
+document.querySelectorAll('.mizan-card').forEach((c,i)=>{
+setTimeout(()=>c.classList.add('show'),i*300);
+});
+}
+
+// ===== SECTION 5: CITY GAME =====
+let city={gold:500,pop:1000,happy:70,eco:80,turn:1,alive:true};
+
+function cityAction(action){
+if(!city.alive)return;
+let msg='';
+switch(action){
+case 'forest':city.gold+=150;city.eco-=15;msg='🪓 Orman kesildi: +150 Altın, -15 Ekoloji';break;
+case 'mine':city.gold+=200;city.eco-=10;city.happy-=5;msg='⛏️ Maden açıldı: +200 Altın, -10 Ekoloji, -5 Mutluluk';break;
+case 'school':if(city.gold<100){msg='❌ Yeterli altın yok!';break;}city.gold-=100;city.happy+=10;msg='🏫 Okul yapıldı: -100 Altın, +10 Mutluluk';break;
+case 'park':if(city.gold<80){msg='❌ Yeterli altın yok!';break;}city.gold-=80;city.eco+=10;city.happy+=5;msg='🌳 Park yapıldı: -80 Altın, +10 Ekoloji, +5 Mutluluk';break;
+case 'tax':city.gold+=100;city.happy-=15;msg='💰 Vergi artırıldı: +100 Altın, -15 Mutluluk';break;
+case 'justice':if(city.gold<120){msg='❌ Yeterli altın yok!';break;}city.gold-=120;city.happy+=15;city.eco+=5;msg='⚖️ Adalet yatırımı: -120 Altın, +15 Mutluluk, +5 Ekoloji';break;
+case 'factory':city.gold+=250;city.eco-=20;city.pop+=100;msg='🏭 Fabrika kuruldu: +250 Altın, -20 Ekoloji, +100 Nüfus';break;
+case 'hospital':if(city.gold<150){msg='❌ Yeterli altın yok!';break;}city.gold-=150;city.pop+=200;city.happy+=5;msg='🏥 Hastane yapıldı: -150 Altın, +200 Nüfus, +5 Mutluluk';break;
+}
+city.turn++;
+city.happy=Math.max(0,Math.min(100,city.happy));
+city.eco=Math.max(0,Math.min(100,city.eco));
+
+// Natural events
+if(city.eco<20&&Math.random()>0.5){msg+=' | 🏜️ KURAKLK! Ekoloji çok düşük.';city.pop-=100;city.happy-=10;}
+if(city.happy<20&&Math.random()>0.4){msg+=' | 🔥 İSYAN! Halk ayaklandı.';city.gold-=100;}
+
+updateCityUI();
+addLog(msg);
+
+// Game over checks
+if(city.eco<=0){endCity('💀 Ekolojik çöküş! Şehir yaşanılamaz hâle geldi. Mizan bozuldu.');}
+else if(city.happy<=0){endCity('💀 Toplumsal çöküş! Halk isyan etti, şehir terk edildi.');}
+else if(city.pop<=0){endCity('💀 Nüfus sıfırlandı! Şehir hayalet kente dönüştü.');}
+else if(city.turn>15&&city.eco>50&&city.happy>50){endCity('🏆 TEBRİKLER! 15 tur boyunca mizanı korudun. Şehrin sürdürülebilir!');}
+}
+
+function updateCityUI(){
+document.getElementById('cGold').textContent=city.gold;
+document.getElementById('cPop').textContent=city.pop;
+document.getElementById('cHappy').textContent=city.happy;
+document.getElementById('cEco').textContent=city.eco;
+document.getElementById('cTurn').textContent=city.turn;
+}
+
+function addLog(msg){
+const log=document.getElementById('cityLog');
+const p=document.createElement('p');
+p.textContent='Tur '+city.turn+': '+msg;
+log.prepend(p);
+}
+
+function endCity(msg){
+city.alive=false;
+const el=document.getElementById('gameOver');
+el.textContent=msg;
+el.style.display='block';
+el.style.color=msg.includes('TEBRİK')?'var(--green)':'var(--red)';
+}
+
+// ===== SECTION 6: FINALE =====
+function showFinale(){
+setTimeout(()=>document.getElementById('finaleText').classList.add('show'),300);
+setTimeout(()=>document.getElementById('finaleQuote').classList.add('show'),2000);
+}
+
+// ===== MUSIC =====
+let audioCtx,musicPlaying=false,musicInterval;
+function toggleMusic(){
+if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+if(musicPlaying){clearInterval(musicInterval);musicPlaying=false;document.getElementById('musicBtn').style.opacity='0.4';}
+else{playAmbient();musicPlaying=true;document.getElementById('musicBtn').style.opacity='1';}
+}
+function playAmbient(){
+const scale=[130.81,146.83,164.81,196,220,261.63,293.66,329.63];
+let step=0;
+function play(){
+if(!musicPlaying)return;
+const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+osc.type='sine';
+osc.frequency.value=scale[step%scale.length]*(currentSection<3?1:0.5);
+gain.gain.setValueAtTime(0.025,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+2);
+osc.start();osc.stop(audioCtx.currentTime+2);
+// Pad
+const pad=audioCtx.createOscillator(),pg=audioCtx.createGain();
+pad.connect(pg);pg.connect(audioCtx.destination);
+pad.type='triangle';pad.frequency.value=scale[(step+4)%scale.length]/2;
+pg.gain.setValueAtTime(0.015,audioCtx.currentTime);
+pg.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+3);
+pad.start();pad.stop(audioCtx.currentTime+3);
+step++;
+}
+musicInterval=setInterval(play,1500);play();
+}
+
+// Touch/swipe support
+let touchStartX=0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{
+const diff=e.changedTouches[0].clientX-touchStartX;
+if(Math.abs(diff)>50){
+if(diff<0)navigate(1);
+else navigate(-1);
+}
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

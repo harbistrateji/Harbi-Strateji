@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BM Reform ya da İflas - Simülasyon | Harb-i Strateji</title>
+    <link rel="icon" href="logo-icon-64.png">
+    <style>
+        :root {
+            --bg-color: #0b111e;
+            --panel-color: #151f32;
+            --text-color: #e2e8f0;
+            --accent-color: #38bdf8;
+            --hover-color: #1e293b;
+            --border-color: #334155;
+            --success-color: #22c55e;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .back-link {
+            align-self: flex-start;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            transition: opacity 0.3s;
+        }
+        .back-link:hover { opacity: 0.7; }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--panel-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .title {
+            color: var(--accent-color);
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .question-number {
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .score-display {
+            color: var(--warning-color);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+        }
+
+        .progress-bar {
+            background-color: #475569;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-stabilite { background: linear-gradient(90deg, #22c55e, #4ade80); }
+        .progress-guc { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .progress-butce { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
+
+        .overall-progress {
+            margin-bottom: 20px;
+        }
+        .overall-progress-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .overall-progress-bar {
+            background-color: #1e293b;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .overall-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #a78bfa);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .question-box {
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            margin: 30px 0;
+            line-height: 1.7;
+            padding: 0 10px;
+        }
+
+        .context-box {
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: rgba(21, 31, 50, 0.5);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.5;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background-color: var(--hover-color);
+            border-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .option-btn:active {
+            transform: translateX(3px);
+        }
+
+        .option-btn.selected-correct {
+            border-color: var(--success-color);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        .option-btn.selected-wrong {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .log-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .game-over h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .game-over p {
+            color: #94a3b8;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .final-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .final-stat {
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .final-stat-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .final-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, var(--accent-color), #a78bfa);
+            color: #000;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            .stats-container { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .question-box { font-size: 15px; margin: 20px 0; }
+            .option-btn { padding: 14px; font-size: 13px; }
+            .final-stats { grid-template-columns: 1fr; }
+        }
+    </style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+
+
+<div class="container" id="game-container">
+    <div class="header">
+        <div class="question-number" id="question-number">Soru: 1/25</div>
+        <div class="title">BM Reform Konferansı</div>
+        <div class="score-display" id="score-display">Skor: 0</div>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-box">
+            <div class="stat-label">Küresel İstikrar</div>
+            <div class="stat-value" id="stabilite-val">50</div>
+            <div class="progress-bar"><div id="stabilite-bar" class="progress progress-stabilite" style="width:50%"></div></div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Süper Güçlerin Desteği</div>
+            <div class="stat-value" id="guc-val">50</div>
+            <div class="progress-bar"><div id="guc-bar" class="progress progress-guc" style="width:50%"></div></div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">BM Bütçesi & Meşruiyet</div>
+            <div class="stat-value" id="butce-val">50</div>
+            <div class="progress-bar"><div id="butce-bar" class="progress progress-butce" style="width:50%"></div></div>
+        </div>
+    </div>
+
+    <div class="overall-progress">
+        <div class="overall-progress-label">
+            <span>İlerleme</span>
+            <span id="progress-pct">0%</span>
+        </div>
+        <div class="overall-progress-bar">
+            <div class="overall-progress-fill" id="overall-bar" style="width:0%"></div>
+        </div>
+    </div>
+
+    <div id="game-body">
+        <div class="context-box" id="context-text"></div>
+        <div class="question-box" id="question-text"></div>
+        <div class="options-container" id="options-box"></div>
+    </div>
+
+    <div class="log-box" id="log-box"></div>
+</div>
+
+<script>
+const questions = [
+    {
+        question: "Güvenlik Konseyi veto hakkı kaldırılsın mı?",
+        context: "P5 ülkeleri (ABD, Rusya, Çin, İngiltere, Fransa) veto haklarını korumak istiyor. Küresel Güney ise eşit temsil talep ediyor.",
+        options: [
+            { text: "Evet, demokratik reform yapalım — her ülkeye eşit oy.", effects: { stabilite: 15, guc: -30, butce: -10, score: 20 }, log: "Reform kabul edildi! Küçük ülkeler seviniyor ama ABD ve Rusya fonları keseceğini açıkladı. BM bütçesinde %20 daralma bekleniyor." },
+            { text: "Hayır, mevcut düzen ve denge korunsun.", effects: { stabilite: -10, guc: 20, butce: 10, score: 5 }, log: "Statüko korundu. Büyük güçler memnun ancak küresel güneyde BM'ye güven sarsılıyor. Afrika Birliği alternatif platform arayışına girdi." },
+            { text: "Kısmi reform: Çifte veto sistemi gelsin (2 veto gerekli).", effects: { stabilite: 5, guc: -5, butce: 5, score: 15 }, log: "Orta yol bulundu. Sistem şimdilik stabil, ancak büyük krizleri çözmekte yetersiz kalabilir." }
+        ]
+    },
+    {
+        question: "X ülkesi komşusunu işgale başladı ve nükleer tehdit savuruyor. Ne yapacaksınız?",
+        context: "Güvenlik Konseyi acil toplantıda. İşgalci ülke P5 üyesi ve veto kullanabilir. Sivil kayıplar artıyor.",
+        options: [
+            { text: "Askeri müdahale kararı çıkartın — 'Koruma Sorumluluğu' doktrini.", effects: { stabilite: -25, guc: 10, butce: -20, score: 10 }, log: "Savaş büyüdü! Küresel istikrar ciddi darbe aldı ama BM caydırıcılığını gösterdi. Nükleer gerilim tırmanıyor." },
+            { text: "Sadece ekonomik ambargo ve diplomatik izolasyon uygulayın.", effects: { stabilite: -5, guc: -10, butce: 10, score: 15 }, log: "Savaş yavaşladı ancak ambargolar küresel ticareti vurdu. İşgalci ülke BM'den çekilme tehdidinde bulundu." },
+            { text: "Genel Kurul'da 'Barış için Birleşme' kararı alın.", effects: { stabilite: 5, guc: -15, butce: 5, score: 12 }, log: "Genel Kurul kararı sembolik kaldı ama uluslararası kamuoyunu harekete geçirdi. İşgalci ülke masaya oturmayı kabul etti." }
+        ]
+    },
+    {
+        question: "İklim krizi için zengin ülkelerden zorunlu karbon vergisi alınması oylanıyor.",
+        context: "Küçük ada devletleri yok olma tehlikesiyle karşı karşıya. G7 ülkeleri gönüllü taahhüt istiyor. BM İklim Fonu boş.",
+        options: [
+            { text: "Zorunlu karbon vergisi — uymayanı sistemden atın.", effects: { stabilite: 20, guc: -25, butce: -15, score: 30 }, log: "Dünya yeşilleniyor ama endüstri devleri BM'yi tanımadığını ilan etti! ABD ve Çin paralel iklim platformu kurdu." },
+            { text: "Gönüllü hibe sistemi — teşvik mekanizması kurun.", effects: { stabilite: -15, guc: 15, butce: 20, score: 5 }, log: "Büyük devletlerin cüzdanı güvende ama iklim krizine bağlı iç savaşlar ve göç dalgaları kapıda." },
+            { text: "Kademeli geçiş: 5 yıl gönüllü, sonra zorunlu.", effects: { stabilite: 10, guc: 5, butce: 5, score: 18 }, log: "Uzlaşmacı yaklaşım kabul gördü. Ancak bilim insanları 5 yılın çok geç olabileceği konusunda uyarıyor." }
+        ]
+    },
+    {
+        question: "Afrika ve Güney Amerika'dan Güvenlik Konseyi'ne daimi üyelik talebi geldi.",
+        context: "Hindistan, Brezilya, Nijerya ve Güney Afrika daimi üyelik istiyor. G4 grubu reform paketi sundu.",
+        options: [
+            { text: "Konseyi 10 daimi üyeye genişletin (veto hakkı olmadan).", effects: { stabilite: 10, guc: -20, butce: -5, score: 20 }, log: "Genişleme kabul edildi! Ancak yeni üyeler veto hakkı olmadan 'ikinci sınıf' muamelesi görmekten şikayetçi." },
+            { text: "Mevcut yapıyı koruyun, dönemsel üyelik süresini uzatın.", effects: { stabilite: -10, guc: 15, butce: 5, score: 5 }, log: "Reform engellendi. Afrika Birliği BM'yi 'sömürgeci yapı' olarak nitelendirdi. Meşruiyet krizi derinleşiyor." },
+            { text: "Bölgesel temsil sistemi: Her kıtadan 1 dönemsel daimi üye.", effects: { stabilite: 15, guc: -5, butce: 0, score: 22 }, log: "Yaratıcı çözüm! Bölgesel rotasyon sistemi pilot olarak başlatıldı. İlk sonuçlar umut verici." }
+        ]
+    },
+    {
+        question: "Yapay zekâ silahları için küresel düzenleme talebi BM gündemine geldi.",
+        context: "Otonom silah sistemleri 47 ülkede aktif. Sivil kayıplar artıyor. Teknoloji şirketleri düzenlemeye karşı lobi yapıyor.",
+        options: [
+            { text: "Tam yasak: Otonom öldürme kararı her zaman insanda olmalı.", effects: { stabilite: 15, guc: -20, butce: -10, score: 25 }, log: "Yasak kabul edildi ama ABD, Çin ve Rusya 'ulusal güvenlik istisnası' talep etti. Denetim mekanizması yetersiz." },
+            { text: "Sınırlı düzenleme: Sadece sivil alanlarda otonom silah yasağı.", effects: { stabilite: 5, guc: 10, butce: 5, score: 12 }, log: "Orta yol bulundu. Ancak 'sivil alan' tanımı muğlak kaldı. Gri bölgeler istismara açık." },
+            { text: "Gönüllü etik kodeks — bağlayıcılığı yok.", effects: { stabilite: -15, guc: 20, butce: 10, score: 3 }, log: "Silah yarışı hızlandı. 2 yıl içinde 3 otonom silah kazası yaşandı. BM prestiji sarsıldı." }
+        ]
+    },
+    {
+        question: "Küresel salgın hazırlık antlaşması müzakereleri çıkmaza girdi.",
+        context: "COVID-19 sonrası DSÖ reform talepleri artıyor. Aşı adaletsizliği küresel güneyi kızdırdı. İlaç şirketleri patent koruması istiyor.",
+        options: [
+            { text: "Zorunlu patent paylaşımı — salgında fikri mülkiyet askıya alınsın.", effects: { stabilite: 20, guc: -15, butce: -10, score: 22 }, log: "Gelişmekte olan ülkeler memnun! Ancak ilaç şirketleri Ar-Ge yatırımlarını azaltma tehdidinde bulundu." },
+            { text: "Gönüllü lisanslama ve teknoloji transferi teşviki.", effects: { stabilite: 5, guc: 10, butce: 5, score: 10 }, log: "Ilımlı yaklaşım. Ancak bir sonraki salgında aynı adaletsizlik yaşanma riski devam ediyor." },
+            { text: "Küresel Salgın Fonu kurulsun — zengin ülkeler %0.1 GSYİH katkı yapsın.", effects: { stabilite: 10, guc: -5, butce: 15, score: 18 }, log: "Fon kuruldu ama hedeflenen bütçenin sadece %40'ı toplandı. Yine de önemli bir adım." }
+        ]
+    },
+    {
+        question: "Uzay militarizasyonu konusunda uluslararası antlaşma teklifi sunuldu.",
+        context: "ABD, Çin ve Rusya uzay silahları geliştiriyor. Uydu savaşı riski artıyor. 1967 Uzay Antlaşması yetersiz kalıyor.",
+        options: [
+            { text: "Kapsamlı uzay silahsızlanma antlaşması — denetim mekanizmasıyla.", effects: { stabilite: 20, guc: -25, butce: -15, score: 28 }, log: "Antlaşma imzalandı ama büyük güçler gizli programlarını sürdürüyor. Denetim uyduları yetersiz." },
+            { text: "Sadece anti-uydu silahlarını yasaklayın.", effects: { stabilite: 10, guc: -5, butce: 0, score: 15 }, log: "Kısmi başarı. Anti-uydu testleri durdu ama yörüngesel silah platformları gri alanda kaldı." },
+            { text: "Mevcut antlaşmaları güçlendirmekle yetinin.", effects: { stabilite: -10, guc: 15, butce: 5, score: 5 }, log: "Uzay silahlanma yarışı hızlandı. 2028'de ilk uzay çatışması riski %60'a yükseldi." }
+        ]
+    },
+    {
+        question: "Küresel göç krizi: 100 milyon mülteci için kalıcı çözüm aranıyor.",
+        context: "İklim göçü, savaşlar ve ekonomik çöküş nedeniyle rekor mülteci sayısı. Avrupa ve Kuzey Amerika sınırlarını kapatıyor.",
+        options: [
+            { text: "Zorunlu mülteci kotası — her ülke nüfusunun %1'i kadar kabul etsin.", effects: { stabilite: 15, guc: -20, butce: -15, score: 22 }, log: "Kota sistemi kabul edildi ama 30+ ülke uygulamayı reddetti. BM yaptırım mekanizması yetersiz." },
+            { text: "Gönüllü yeniden yerleşim programı — mali teşvikle.", effects: { stabilite: 0, guc: 10, butce: -5, score: 10 }, log: "Program başladı ama gönüllü katılım düşük. Mülteci kampları büyümeye devam ediyor." },
+            { text: "Kaynak ülkelere yatırım — göçün kök nedenlerini çözün.", effects: { stabilite: 10, guc: 5, butce: -10, score: 18 }, log: "Uzun vadeli strateji doğru ama kısa vadede milyonlarca insan hâlâ çaresiz. Sonuçlar 10-15 yıl sonra görülecek." }
+        ]
+    },
+    {
+        question: "BM Barış Gücü operasyonları başarısızlıkla suçlanıyor. Reform önerisi masada.",
+        context: "Son 5 yılda 3 barış gücü operasyonu başarısız oldu. Asker katkısı yapan ülkeler çekiliyor. Bütçe yetersiz.",
+        options: [
+            { text: "Daimi BM Ordusu kurun — profesyonel, hızlı müdahale.", effects: { stabilite: 20, guc: -30, butce: -25, score: 25 }, log: "Devrimsel karar! Ancak hiçbir büyük güç egemenlik devri konusunda istekli değil. Uygulama belirsiz." },
+            { text: "Bölgesel güvenlik örgütleriyle ortaklık — NATO, AU, ASEAN.", effects: { stabilite: 10, guc: 5, butce: 5, score: 15 }, log: "Pragmatik çözüm. Bölgesel aktörler daha hızlı müdahale ediyor ama tarafsızlık sorgulanıyor." },
+            { text: "Mevcut sistemi iyileştirin — eğitim, teçhizat, yetki artışı.", effects: { stabilite: 5, guc: 10, butce: -10, score: 12 }, log: "Kademeli iyileştirme başladı. Sonuçlar yavaş ama istikrarlı. Radikal değişim bekleyenler hayal kırıklığına uğradı." }
+        ]
+    },
+    {
+        question: "Siber savaş için uluslararası hukuk çerçevesi oluşturulması teklif edildi.",
+        context: "Devlet destekli siber saldırılar kritik altyapıyı hedef alıyor. Hastaneler, enerji şebekeleri, bankalar risk altında.",
+        options: [
+            { text: "Siber Cenevre Sözleşmesi — sivil altyapıya saldırı savaş suçu sayılsın.", effects: { stabilite: 15, guc: -15, butce: -5, score: 22 }, log: "Sözleşme imzalandı! Ancak atıf (attribution) sorunu çözülmedi. Saldırganı tespit etmek hâlâ çok zor." },
+            { text: "Gönüllü siber normlar — güven artırıcı önlemler.", effects: { stabilite: 0, guc: 10, butce: 5, score: 8 }, log: "Normlar kağıt üzerinde kaldı. Büyük güçler birbirini suçlamaya devam ediyor." },
+            { text: "BM Siber Güvenlik Ajansı kurun — izleme ve uyarı sistemi.", effects: { stabilite: 10, guc: -5, butce: -10, score: 18 }, log: "Ajans kuruldu ve erken uyarı sistemi çalışıyor. Ancak yetki sınırları tartışmalı." }
+        ]
+    },
+    {
+        question: "Küresel vergi adaleti: Çok uluslu şirketlerin vergi kaçırmasını önleme teklifi.",
+        context: "Teknoloji devleri vergi cennetlerinde trilyon dolar saklıyor. Gelişmekte olan ülkeler vergi gelirlerinden mahrum kalıyor.",
+        options: [
+            { text: "Küresel minimum kurumlar vergisi %25 — BM denetiminde.", effects: { stabilite: 10, guc: -20, butce: 20, score: 22 }, log: "Vergi reformu kabul edildi! BM bütçesi güçlendi ama vergi cennetleri ve şirketler yoğun lobi yapıyor." },
+            { text: "OECD modelini genişletin — %15 minimum vergi yeterli.", effects: { stabilite: 5, guc: 10, butce: 10, score: 12 }, log: "Mevcut sistem korundu. Gelişmekte olan ülkeler 'yetersiz' diye protesto etti." },
+            { text: "Dijital hizmet vergisi — sadece teknoloji şirketlerine.", effects: { stabilite: 0, guc: -5, butce: 15, score: 15 }, log: "Kısmi çözüm. Teknoloji devleri fiyatları tüketiciye yansıttı. Adalet algısı tartışmalı." }
+        ]
+    },
+    {
+        question: "Su krizi: Uluslararası nehirler üzerinde egemenlik anlaşmazlığı büyüyor.",
+        context: "Nil, Fırat, Mekong nehirlerinde baraj savaşları. 2 milyar insan su kıtlığı riski altında. Savaş tehditleri artıyor.",
+        options: [
+            { text: "Su hakkını temel insan hakkı ilan edin — paylaşım zorunlu.", effects: { stabilite: 15, guc: -15, butce: -5, score: 20 }, log: "Tarihi karar! Ancak yukarı havza ülkeleri 'egemenlik ihlali' diye itiraz etti. Uygulama mekanizması zayıf." },
+            { text: "İkili/bölgesel su anlaşmalarını teşvik edin.", effects: { stabilite: 5, guc: 10, butce: 5, score: 12 }, log: "Bazı bölgelerde başarılı anlaşmalar yapıldı ama en kritik nehirlerde çıkmaz devam ediyor." },
+            { text: "BM Su Mahkemesi kurun — bağlayıcı kararlar alsın.", effects: { stabilite: 10, guc: -10, butce: -10, score: 18 }, log: "Mahkeme kuruldu ama büyük güçler yargı yetkisini tanımıyor. Küçük ülkeler için umut ışığı." }
+        ]
+    },
+    {
+        question: "Nükleer silahsızlanma: Yeni START antlaşması sona erdi, yenileme müzakereleri başladı.",
+        context: "ABD-Rusya nükleer diyaloğu koptu. Çin arsenal genişletme programında. Kuzey Kore ve İran nükleer eşikte.",
+        options: [
+            { text: "Kapsamlı nükleer silahsızlanma — tüm ülkelere sıfır hedefi.", effects: { stabilite: 20, guc: -30, butce: -10, score: 28 }, log: "Tarihi hedef belirlendi! Ancak hiçbir nükleer güç somut adım atmıyor. 'Güzel söz' eleştirisi yapılıyor." },
+            { text: "Yeni START'ı yenileyin — Çin'i de dahil edin.", effects: { stabilite: 10, guc: -5, butce: 0, score: 18 }, log: "Üçlü müzakereler başladı. Çin 'önce ABD ve Rusya azaltsın' diyor. Süreç yavaş ama umutlu." },
+            { text: "Nükleer caydırıcılık doktrinini kabul edin — yayılmayı önleyin.", effects: { stabilite: -5, guc: 20, butce: 10, score: 8 }, log: "Statüko korundu. Ancak 5 yeni ülke nükleer program başlattı. Yayılma riski arttı." }
+        ]
+    },
+    {
+        question: "Gıda güvenliği krizi: Tahıl koridoru anlaşması çöktü.",
+        context: "Savaş nedeniyle küresel tahıl arzı %30 düştü. Afrika'da kıtlık alarmı. Gıda fiyatları rekor seviyede.",
+        options: [
+            { text: "BM Gıda Güvenliği Konseyi kurun — acil müdahale yetkisiyle.", effects: { stabilite: 15, guc: -10, butce: -15, score: 20 }, log: "Konsey kuruldu ve ilk 6 ayda 3 kıtlık önlendi. Ancak kalıcı finansman sorunu devam ediyor." },
+            { text: "Savaşan tarafları masaya oturtun — yeni tahıl anlaşması.", effects: { stabilite: 5, guc: 5, butce: 5, score: 15 }, log: "Müzakereler başladı ama güven eksikliği nedeniyle 3 kez çöktü. Sonunda kısmi anlaşma sağlandı." },
+            { text: "Stratejik gıda stokları oluşturun — kriz tamponu.", effects: { stabilite: 10, guc: 5, butce: -20, score: 12 }, log: "Stoklar oluşturuldu ama maliyeti çok yüksek. Bazı ülkeler 'BM süpermarket mi?' diye eleştirdi." }
+        ]
+    },
+    {
+        question: "Dijital bölünme: İnternet erişimi temel hak mı yoksa lüks mü?",
+        context: "3.5 milyar insan hâlâ internetsiz. Dijital ekonomide eşitsizlik derinleşiyor. Otoriter rejimler internet kesintisi uyguluyor.",
+        options: [
+            { text: "İnternet erişimini temel insan hakkı ilan edin — kesinti savaş suçu.", effects: { stabilite: 10, guc: -20, butce: -10, score: 22 }, log: "Tarihi karar! Ancak Çin, Rusya ve 15+ ülke 'iç işlerine müdahale' diye karşı çıktı." },
+            { text: "Küresel Dijital Fon kurun — altyapı yatırımı.", effects: { stabilite: 10, guc: 5, butce: -15, score: 18 }, log: "Fon kuruldu ve 500 milyon kişiye erişim sağlandı. Ancak hedefin sadece %15'i." },
+            { text: "Özel sektör ortaklığı — Starlink/OneWeb modelini destekleyin.", effects: { stabilite: 5, guc: 10, butce: 5, score: 10 }, log: "Hızlı sonuç alındı ama veri egemenliği endişeleri arttı. Kim kontrol ediyor?" }
+        ]
+    },
+    {
+        question: "Okyanus yönetimi: Uluslararası sularda madencilik izni tartışması.",
+        context: "Derin deniz madenciliği nadir metallere erişim sağlıyor ama ekosistemi tehdit ediyor. Teknoloji şirketleri baskı yapıyor.",
+        options: [
+            { text: "10 yıl moratoryum — bilimsel araştırma öncelikli.", effects: { stabilite: 15, guc: -10, butce: -5, score: 20 }, log: "Moratoryum kabul edildi! Çevreciler kutluyor ama teknoloji sektörü alternatif kaynak arayışına girdi." },
+            { text: "Sınırlı izin — çevresel etki değerlendirmesi zorunlu.", effects: { stabilite: 5, guc: 5, butce: 10, score: 12 }, log: "Orta yol bulundu. Ancak denetim kapasitesi yetersiz. Kaçak madencilik riski yüksek." },
+            { text: "Serbest piyasa — ilk gelen alır, vergi BM'ye.", effects: { stabilite: -15, guc: 15, butce: 20, score: 5 }, log: "Altına hücum başladı! Okyanus tabanı hızla tahrip ediliyor. 5 tür yok olma tehlikesinde." }
+        ]
+    },
+    {
+        question: "Terörle mücadele: BM terör tanımı üzerinde uzlaşı sağlanamıyor.",
+        context: "30 yıldır terör tanımı yapılamıyor. 'Birinin teröristi diğerinin özgürlük savaşçısı' ikilemi. Devlet terörü tartışması.",
+        options: [
+            { text: "Kapsamlı terör sözleşmesi — devlet terörünü de kapsasın.", effects: { stabilite: 10, guc: -25, butce: -5, score: 25 }, log: "Sözleşme kabul edildi ama P5 ülkeleri 'devlet terörü' maddesine çekince koydu. Uygulama seçici olacak." },
+            { text: "Mevcut sektörel sözleşmeleri güçlendirin.", effects: { stabilite: 5, guc: 10, butce: 5, score: 10 }, log: "Parçalı yaklaşım devam ediyor. Boşluklar istismara açık. Terör örgütleri gri alanları kullanıyor." },
+            { text: "Kök neden yaklaşımı — radikalleşmeyi önleme programları.", effects: { stabilite: 10, guc: 0, butce: -10, score: 15 }, log: "Önleme programları başladı. Uzun vadede etkili ama kısa vadede terör tehdidi devam ediyor." }
+        ]
+    },
+    {
+        question: "BM Genel Sekreterlik seçim reformu: Şeffaflık talebi.",
+        context: "Genel Sekreter hâlâ kapalı kapılar ardında P5 uzlaşısıyla seçiliyor. Şeffaf, rekabetçi seçim talebi artıyor.",
+        options: [
+            { text: "Genel Kurul'da açık oylama — kampanya süreci olsun.", effects: { stabilite: 10, guc: -20, butce: 0, score: 20 }, log: "Demokratik reform! İlk açık seçimde 7 aday yarıştı. Ancak P5 ülkeleri 'veto hakkımız var' diye direnmeye devam ediyor." },
+            { text: "Mevcut sistemi koruyun — P5 uzlaşısı gerekli.", effects: { stabilite: -5, guc: 15, butce: 5, score: 5 }, log: "Eski sistem devam ediyor. Meşruiyet sorgulanıyor ama büyük güçler memnun." },
+            { text: "Hibrit model: P5 veto + Genel Kurul onayı.", effects: { stabilite: 5, guc: 0, butce: 0, score: 12 }, log: "Uzlaşmacı yaklaşım. Her iki taraf da 'yarım reform' diye eleştirdi ama sistem çalışıyor." }
+        ]
+    },
+    {
+        question: "Biyolojik silahlar: Gen düzenleme teknolojisi (CRISPR) silah olarak kullanılabilir.",
+        context: "CRISPR teknolojisi ucuzladı ve yaygınlaştı. Biyoterörizm riski arttı. Çifte kullanım (dual-use) sorunu.",
+        options: [
+            { text: "Biyolojik Silahlar Sözleşmesi'ni güçlendirin — zorunlu denetim.", effects: { stabilite: 15, guc: -10, butce: -10, score: 22 }, log: "Denetim mekanizması kuruldu! Ancak laboratuvar sayısı çok fazla. %100 kontrol imkansız." },
+            { text: "Bilim camiasıyla öz-düzenleme — etik kodeks.", effects: { stabilite: 0, guc: 10, butce: 5, score: 8 }, log: "Bilim insanları etik kodeksi imzaladı ama bağlayıcılığı yok. Karanlık laboratuvarlar denetim dışı." },
+            { text: "BM Biyogüvenlik Ajansı kurun — erken uyarı sistemi.", effects: { stabilite: 10, guc: -5, butce: -15, score: 18 }, log: "Ajans kuruldu ve 2 potansiyel biyoterör saldırısı önlendi. Başarılı ama maliyetli." }
+        ]
+    },
+    {
+        question: "İnsan hakları mekanizması: İnsan Hakları Konseyi'ne güvenilirlik krizi.",
+        context: "İnsan hakları ihlalcisi ülkeler Konsey'e seçiliyor. Çifte standart eleştirisi yaygın. ABD daha önce çekilmişti.",
+        options: [
+            { text: "Üyelik kriterleri sıkılaştırılsın — ihlalciler seçilemesin.", effects: { stabilite: 10, guc: -15, butce: 0, score: 20 }, log: "Kriterler belirlendi ama 'kim değerlendirecek?' sorusu çözülmedi. Siyasi manipülasyon riski devam ediyor." },
+            { text: "Evrensel Periyodik İnceleme'yi güçlendirin — yaptırım ekleyin.", effects: { stabilite: 5, guc: -5, butce: -5, score: 15 }, log: "İnceleme mekanizması güçlendi. İlk kez bir ülkeye somut yaptırım uygulandı. Emsal karar." },
+            { text: "Mevcut sistemi koruyun — diyalog platformu olarak kalsın.", effects: { stabilite: -10, guc: 15, butce: 5, score: 3 }, log: "Statüko devam ediyor. İnsan hakları örgütleri BM'yi 'işlevsiz' ilan etti." }
+        ]
+    },
+    {
+        question: "Küresel eğitim krizi: 250 milyon çocuk okula gidemiyor.",
+        context: "Savaş, yoksulluk ve COVID sonrası eğitim kaybı. Dijital eşitsizlik derinleşiyor. Öğretmen açığı 69 milyon.",
+        options: [
+            { text: "Küresel Eğitim Vergisi — silah harcamalarının %1'i eğitime.", effects: { stabilite: 15, guc: -10, butce: -5, score: 22 }, log: "Vergi kabul edildi! Yıllık 20 milyar dolar toplandı. Ancak hedefin sadece %30'u. Yine de tarihi adım." },
+            { text: "Dijital eğitim platformu — BM açık kaynak sistemi.", effects: { stabilite: 10, guc: 5, butce: -10, score: 15 }, log: "Platform 40 dilde yayında. 50 milyon çocuğa ulaştı ama internet erişimi sorunu devam ediyor." },
+            { text: "Özel sektör ortaklığı — şirketler okul inşa etsin.", effects: { stabilite: 5, guc: 10, butce: 5, score: 10 }, log: "Şirketler 10.000 okul inşa etti ama müfredat kontrolü tartışması başladı. Kim ne öğretiyor?" }
+        ]
+    },
+    {
+        question: "Uzay kaynakları: Ay ve asteroit madenciliği kimin hakkı?",
+        context: "Artemis Anlaşmaları vs Ay Antlaşması çatışması. Özel şirketler uzay madenciliğine milyarlarca yatırım yapıyor.",
+        options: [
+            { text: "Uzay kaynakları insanlığın ortak mirası — BM paylaşım sistemi.", effects: { stabilite: 15, guc: -20, butce: 10, score: 22 }, log: "İlkesel karar alındı! Ancak ABD ve Çin 'uzayda komünizm olmaz' diye karşı çıktı. Uygulama belirsiz." },
+            { text: "Artemis modeli — ilk gelen alır, BM'ye %5 vergi.", effects: { stabilite: -5, guc: 15, butce: 15, score: 10 }, log: "Uzay yarışı hızlandı. Zengin ülkeler avantajlı. Eşitsizlik uzaya taşındı." },
+            { text: "Moratoryum — hukuki çerçeve oluşana kadar madencilik yasak.", effects: { stabilite: 10, guc: -10, butce: -5, score: 15 }, log: "Moratoryum ilan edildi ama özel şirketler 'BM'nin yetkisi yok' diye devam ediyor." }
+        ]
+    },
+    {
+        question: "Dezenformasyon krizi: Seçimlere müdahale ve deepfake tehdidi.",
+        context: "50+ ülkede seçimlere yabancı müdahale tespit edildi. Deepfake teknolojisi demokratik süreçleri tehdit ediyor.",
+        options: [
+            { text: "Küresel Dijital Doğrulama Ajansı kurun — seçim güvenliği.", effects: { stabilite: 15, guc: -15, butce: -10, score: 22 }, log: "Ajans kuruldu! İlk yılda 200+ deepfake kampanya tespit edildi. Ancak 'sansür' eleştirisi de var." },
+            { text: "Platform şirketlerini sorumlu tutun — ceza mekanizması.", effects: { stabilite: 10, guc: -5, butce: 5, score: 18 }, log: "Şirketler milyarlarca ceza ödedi ama algoritmaları değiştirmeye yanaşmıyor. Kedi-fare oyunu." },
+            { text: "Medya okuryazarlığı eğitimi — uzun vadeli çözüm.", effects: { stabilite: 5, guc: 10, butce: -5, score: 10 }, log: "Eğitim programları başladı ama sonuçlar 10+ yıl sonra görülecek. Şu an acil tehdit devam ediyor." }
+        ]
+    },
+    {
+        question: "Deniz hukuku: Güney Çin Denizi'nde gerilim tırmanıyor.",
+        context: "Çin yapay adalar inşa ediyor. ASEAN ülkeleri BM'ye başvurdu. ABD donanması 'seyir serbestisi' operasyonları yapıyor.",
+        options: [
+            { text: "UNCLOS kararlarını zorunlu kılın — uymayana yaptırım.", effects: { stabilite: 10, guc: -25, butce: -5, score: 22 }, log: "Karar alındı ama Çin 'tanımıyoruz' dedi. Yaptırım uygulanamıyor. Hukuk-güç çatışması." },
+            { text: "Çok taraflı müzakere — ASEAN+Çin diyaloğu.", effects: { stabilite: 5, guc: 5, butce: 5, score: 12 }, log: "Müzakereler başladı ama Çin ikili görüşme istiyor. ASEAN bölünmüş durumda." },
+            { text: "Ortak kalkınma bölgesi — kaynakları paylaşın.", effects: { stabilite: 10, guc: -5, butce: 10, score: 18 }, log: "Yaratıcı çözüm! Pilot bölgede ortak balıkçılık başladı. Ancak askeri gerilim devam ediyor." }
+        ]
+    },
+    {
+        question: "BM bütçe krizi: Üye ülkelerin %40'ı aidatlarını ödemiyor.",
+        context: "BM nakit sıkıntısında. Personel maaşları gecikiyor. Barış operasyonları askıya alınma riski taşıyor.",
+        options: [
+            { text: "Ödeme yapmayana oy hakkı askıya alınsın.", effects: { stabilite: 5, guc: -15, butce: 20, score: 18 }, log: "Yaptırım uygulandı! Ödeme oranı %60'tan %80'e çıktı. Ancak bazı fakir ülkeler mağdur oldu." },
+            { text: "Alternatif gelir kaynakları — küresel işlem vergisi.", effects: { stabilite: 10, guc: -10, butce: 25, score: 22 }, log: "İşlem vergisi kabul edildi! BM bütçesi %50 arttı. Finans sektörü şiddetle karşı çıkıyor." },
+            { text: "Bütçeyi küçültün — önceliklendirme yapın.", effects: { stabilite: -10, guc: 15, butce: 15, score: 8 }, log: "Bütçe kesildi. 3 barış operasyonu sonlandırıldı. Çatışma bölgelerinde kaos arttı." }
+        ]
+    },
+    {
+        question: "Son karar: BM'nin geleceği için hangi vizyonu benimsiyorsunuz?",
+        context: "Tüm kararlarınızın sonuçları ortaya çıktı. BM ya güçlenecek ya da tarihin tozlu sayfalarına karışacak.",
+        options: [
+            { text: "Federalist vizyon: BM'yi küresel hükümet yapın.", effects: { stabilite: 20, guc: -30, butce: -20, score: 30 }, log: "En cesur seçim! Ütopik ama ilham verici. Tarih sizi ya kahraman ya da hayalperest olarak anacak." },
+            { text: "Realist vizyon: BM'yi güçlü bir koordinasyon platformu yapın.", effects: { stabilite: 10, guc: 10, butce: 10, score: 20 }, log: "Dengeli ve uygulanabilir. BM güçlendi ama devletler egemenliklerini korudu. Pragmatik başarı." },
+            { text: "Minimalist vizyon: BM sadece insani yardım ve diyalog forumu olsun.", effects: { stabilite: -10, guc: 20, butce: 15, score: 8 }, log: "BM küçüldü ama hayatta kaldı. Büyük güçler memnun, küçük ülkeler çaresiz." }
+        ]
+    }
+];
+
+let currentIdx = 0;
+let score = 0;
+let stats = { stabilite: 50, guc: 50, butce: 50 };
+
+const questionNumberEl = document.getElementById('question-number');
+const scoreDisplayEl = document.getElementById('score-display');
+const questionTextEl = document.getElementById('question-text');
+const contextTextEl = document.getElementById('context-text');
+const optionsBoxEl = document.getElementById('options-box');
+const logBoxEl = document.getElementById('log-box');
+const overallBar = document.getElementById('overall-bar');
+const progressPct = document.getElementById('progress-pct');
+
+const stabiliteBar = document.getElementById('stabilite-bar');
+const gucBar = document.getElementById('guc-bar');
+const butceBar = document.getElementById('butce-bar');
+const stabiliteVal = document.getElementById('stabilite-val');
+const gucVal = document.getElementById('guc-val');
+const butceVal = document.getElementById('butce-val');
+
+function updateBars() {
+    for (let key in stats) {
+        stats[key] = Math.max(0, Math.min(100, stats[key]));
+    }
+    stabiliteBar.style.width = stats.stabilite + '%';
+    gucBar.style.width = stats.guc + '%';
+    butceBar.style.width = stats.butce + '%';
+    stabiliteVal.textContent = stats.stabilite;
+    gucVal.textContent = stats.guc;
+    butceVal.textContent = stats.butce;
+
+    const pct = Math.round((currentIdx / questions.length) * 100);
+    overallBar.style.width = pct + '%';
+    progressPct.textContent = pct + '%';
+
+    if (stats.stabilite <= 0 || stats.guc <= 0 || stats.butce <= 0) {
+        endGame(false);
+    }
+}
+
+function loadQuestion() {
+    if (currentIdx >= questions.length) {
+        endGame(true);
+        return;
+    }
+
+    logBoxEl.style.display = 'none';
+    const currentQ = questions[currentIdx];
+    questionNumberEl.textContent = 'Soru: ' + (currentIdx + 1) + '/' + questions.length;
+    questionTextEl.textContent = currentQ.question;
+    contextTextEl.textContent = currentQ.context;
+    optionsBoxEl.innerHTML = '';
+
+    currentQ.options.forEach(function(opt) {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.text;
+        btn.onclick = function() { handleChoice(opt, btn); };
+        optionsBoxEl.appendChild(btn);
+    });
+}
+
+function handleChoice(option, btnEl) {
+    var allBtns = optionsBoxEl.querySelectorAll('.option-btn');
+    allBtns.forEach(function(b) { b.style.pointerEvents = 'none'; b.style.opacity = '0.6'; });
+    btnEl.style.opacity = '1';
+
+    if (option.effects.score >= 18) {
+        btnEl.classList.add('selected-correct');
+    } else if (option.effects.score <= 5) {
+        btnEl.classList.add('selected-wrong');
+    }
+
+    stats.stabilite += option.effects.stabilite;
+    stats.guc += option.effects.guc;
+    stats.butce += option.effects.butce;
+    score += option.effects.score;
+
+    scoreDisplayEl.textContent = 'Skor: ' + score;
+    updateBars();
+
+    logBoxEl.textContent = option.log;
+    logBoxEl.style.display = 'block';
+
+    setTimeout(function() {
+        if (stats.stabilite > 0 && stats.guc > 0 && stats.butce > 0) {
+            currentIdx++;
+            loadQuestion();
+        }
+    }, 3500);
+}
+
+function endGame(isWin) {
+    var gameBody = document.getElementById('game-body');
+    logBoxEl.style.display = 'none';
+
+    var maxScore = questions.length * 30;
+    var percentage = Math.round((score / maxScore) * 100);
+
+    var grade = '';
+    var gradeColor = '';
+    if (percentage >= 80) { grade = 'Efsanevi Diplomat'; gradeColor = '#fbbf24'; }
+    else if (percentage >= 60) { grade = 'Başarılı Reformcu'; gradeColor = '#22c55e'; }
+    else if (percentage >= 40) { grade = 'Temkinli Bürokrat'; gradeColor = '#38bdf8'; }
+    else { grade = 'Başarısız Genel Sekreter'; gradeColor = '#ef4444'; }
+
+    var message = '';
+    if (isWin) {
+        message = '<h2 style="color:' + gradeColor + '">Dönemi Tamamladınız!</h2>' +
+                   '<p style="font-size:18px;color:' + gradeColor + ';font-weight:700;margin:10px 0;">' + grade + '</p>' +
+                   '<p>BM\'yi ' + questions.length + ' kritik karardan geçirdiniz.</p>';
+    } else {
+        var failReason = '';
+        if (stats.stabilite <= 0) failReason = 'Küresel istikrar çöktü!';
+        else if (stats.guc <= 0) failReason = 'Süper güçler BM\'yi terk etti!';
+        else failReason = 'BM iflas etti!';
+
+        message = '<h2 style="color:#ef4444">İFLAS VE KAOS!</h2>' +
+                   '<p style="color:#f87171;font-weight:600;">' + failReason + '</p>' +
+                   '<p>Dengeleri koruyamadınız. BM meşruiyetini yitirdi.</p>';
+    }
+
+    gameBody.innerHTML = '<div class="game-over">' + message +
+        '<div class="final-stats">' +
+            '<div class="final-stat"><div class="final-stat-label">Toplam Skor</div><div class="final-stat-value" style="color:var(--warning-color)">' + score + ' / ' + maxScore + '</div></div>' +
+            '<div class="final-stat"><div class="final-stat-label">Başarı Oranı</div><div class="final-stat-value">' + percentage + '%</div></div>' +
+            '<div class="final-stat"><div class="final-stat-label">Küresel İstikrar</div><div class="final-stat-value" style="color:#4ade80">' + stats.stabilite + '/100</div></div>' +
+            '<div class="final-stat"><div class="final-stat-label">Tamamlanan Sorular</div><div class="final-stat-value">' + currentIdx + '/' + questions.length + '</div></div>' +
+        '</div>' +
+        '<button class="restart-btn" onclick="window.location.reload()">Yeniden Başla</button>' +
+        '<br><br><a href="oza-hub.html" style="color:var(--accent-color);font-size:13px;">← OZA\'ya Dön</a>' +
+    '</div>';
+}
+
+// Start
+updateBars();
+loadQuestion();
+</script>
+</body>
+</html>

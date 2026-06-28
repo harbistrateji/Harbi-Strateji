@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>İstihbarat Ağı — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--green))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-cyan{background:var(--cyan);color:#000}
+.btn-outline{background:transparent;color:var(--gold);border:2px solid var(--gold)}
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* İstihbarat parçaları */
+.intel-pieces{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.intel-piece{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px;cursor:pointer;transition:.2s;position:relative}
+.intel-piece:active{transform:scale(.98)}
+.intel-piece.selected{border-color:var(--cyan);background:rgba(0,224,255,.06)}
+.intel-piece.decoy{border-color:rgba(224,21,21,.3)}
+.intel-piece.decoy.selected{border-color:var(--red2);background:rgba(224,21,21,.06)}
+.ip-source{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.ip-content{font-size:12px;line-height:1.7;margin-bottom:6px}
+.ip-reliability{font-size:10px}
+.ip-tag{position:absolute;top:10px;right:10px;font-size:9px;padding:3px 8px;border-radius:4px;font-family:'Chakra Petch',sans-serif}
+/* Bağlantı ağı */
+.network-area{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px;margin-bottom:14px;min-height:120px}
+.network-title{font-size:10px;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.network-nodes{display:flex;flex-wrap:wrap;gap:8px}
+.network-node{background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:8px 12px;font-size:11px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+.network-node:active{transform:scale(.97)}
+.network-node.connected{border-color:var(--cyan);background:rgba(0,224,255,.08)}
+.network-node.threat{border-color:var(--red2);background:rgba(224,21,21,.06)}
+/* Analiz */
+.analysis-panel{background:rgba(0,224,255,.04);border:1px solid rgba(0,224,255,.2);border-radius:12px;padding:14px;margin-bottom:14px;display:none}
+.analysis-panel.show{display:block}
+.analysis-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--cyan);margin-bottom:8px}
+.analysis-body{font-size:11px;color:var(--dim);line-height:1.8}
+.analysis-verdict{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;margin-top:10px}
+/* Timer */
+.timer-bar{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.timer-fill{height:100%;border-radius:3px;background:var(--cyan);transition:width 1s linear}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🔍 İSTİHBARAT AĞI</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">🔍 İstihbarat Ağı</div>
+  <div class="card-sub">Farklı kaynaklardan gelen istihbarat parçalarını birleştir, gerçek tehdidi tespit et. Yanlış bağlantılar seni yanıltmak için yerleştirilmiş. 60 saniyede karar ver!</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="ia-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="ia-case" style="color:var(--cyan)">1/8</div><div class="stat-lbl">OPERASYON</div></div>
+    <div class="stat-box"><div class="stat-val" id="ia-acc" style="color:var(--green)">100%</div><div class="stat-lbl">DOĞRULUK</div></div>
+  </div>
+  <div class="timer-bar"><div class="timer-fill" id="ia-timer" style="width:100%"></div></div>
+  <div id="ia-mission" style="font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);margin-bottom:12px;min-height:20px">Operasyon yükleniyor...</div>
+  <div class="intel-pieces" id="intel-pieces"></div>
+  <div class="network-area">
+    <div class="network-title">🕸️ Bağlantı Ağı — Seçili parçaları birleştir:</div>
+    <div class="network-nodes" id="network-nodes"></div>
+  </div>
+  <div class="analysis-panel" id="analysis-panel">
+    <div class="analysis-title">📊 ANALİZ SONUCU</div>
+    <div class="analysis-body" id="analysis-body"></div>
+    <div class="analysis-verdict" id="analysis-verdict"></div>
+  </div>
+  <button class="btn btn-cyan" id="ia-submit" onclick="iaSubmit()" style="display:none">🔍 TEHDİDİ TESPİT ET</button>
+  <button class="btn btn-outline" id="ia-btn" onclick="iaStart()">🔍 OPERASYonu BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var OPERATIONS=[
+  {mission:'Operasyon KUZGUN: Şehirde bombalı araç saldırısı planlanıyor. Gerçek parçaları bul.',
+   pieces:[
+     {source:'HUMINT — Muhbir',content:'Kuzey semtte yabancı plakalı beyaz kamyonet görüldü.',reliability:85,real:true},
+     {source:'SİGINT — Telefon',content:'Şifreli mesaj: "Paket hazır, teslim yarın."',reliability:90,real:true},
+     {source:'OSINT — Sosyal Medya',content:'Bölgede büyük kalabalık toplanması bekleniyor.',reliability:60,real:true},
+     {source:'DEZENFORMASYON',content:'Polis tatbikat yapıyor, tehlike yok.',reliability:30,real:false,decoy:true},
+     {source:'DEZENFORMASYON',content:'Kamyonet bir inşaat firmasına ait.',reliability:40,real:false,decoy:true}
+   ],
+   threat:'Kuzey semtte beyaz kamyonetle bombalı araç saldırısı',
+   realCount:3},
+  {mission:'Operasyon KARTAL: Kritik altyapıya siber saldırı hazırlığı tespit edildi.',
+   pieces:[
+     {source:'SİBER İSTİHBARAT',content:'Enerji şirketinin SCADA sistemine 47 başarısız giriş denemesi.',reliability:95,real:true},
+     {source:'HUMINT — Ajan',content:'Yabancı istihbarat elemanı yazılım şirketine sızdı.',reliability:80,real:true},
+     {source:'SİGINT',content:'Şifreli veri transferi: 2.3 GB kritik sistem verisi dışarı çıktı.',reliability:88,real:true},
+     {source:'DEZENFORMASYON',content:'Sistem güncellemesi yapılıyor, normal süreç.',reliability:35,real:false,decoy:true},
+     {source:'YANILTICI',content:'Saldırı batı bölgesini hedef alıyor.',reliability:45,real:false,decoy:true}
+   ],
+   threat:'Enerji altyapısına koordineli siber saldırı',
+   realCount:3},
+  {mission:'Operasyon ŞAHIN: Yabancı ajan ağı kritik tesise sızmaya çalışıyor.',
+   pieces:[
+     {source:'HUMINT',content:'Yeni personel arasında kimliği doğrulanamayan 2 kişi.',reliability:75,real:true},
+     {source:'FİZİKSEL GÜVENLİK',content:'Güvenlik kartı kopyalama girişimi tespit edildi.',reliability:92,real:true},
+     {source:'SİGINT',content:'Tesis yakınında şifreli iletişim sinyali.',reliability:85,real:true},
+     {source:'DEZENFORMASYON',content:'Personel devir hızı bu dönem normalin altında.',reliability:50,real:false,decoy:true},
+     {source:'YANILTICI',content:'Güvenlik açığı başka bir tesiste.',reliability:40,real:false,decoy:true}
+   ],
+   threat:'Tesis içine yabancı ajan sızması',
+   realCount:3}
+];
+
+var ia={pts:0,opIdx:0,running:false,selected:[],timer:null,secs:60,correct:0,total:0};
+
+function iaStart(){
+  ia={pts:0,opIdx:0,running:true,selected:[],timer:null,secs:60,correct:0,total:0};
+  document.getElementById('ia-btn').style.display='none';
+  document.getElementById('ia-submit').style.display='';
+  updateDisplay();
+  iaLoadOp();
+}
+
+function iaLoadOp(){
+  if(ia.opIdx>=OPERATIONS.length){iaEnd();return;}
+  var op=OPERATIONS[ia.opIdx];
+  ia.selected=[];
+  document.getElementById('ia-mission').textContent='🎯 '+op.mission;
+  document.getElementById('analysis-panel').classList.remove('show');
+  // Parçaları karıştır
+  var shuffled=op.pieces.slice().sort(function(){return Math.random()-.5;});
+  document.getElementById('intel-pieces').innerHTML=shuffled.map(function(p,i){
+    var relColor=p.reliability>75?'var(--green)':p.reliability>50?'var(--gold)':'var(--red2)';
+    return '<div class="intel-piece'+(p.decoy?' decoy':'')+'" id="ip-'+i+'" onclick="iaToggle('+i+','+p.real+')">'+
+      '<div class="ip-source">'+p.source+'</div>'+
+      '<div class="ip-content">'+p.content+'</div>'+
+      '<div class="ip-reliability" style="color:'+relColor+'">Güvenilirlik: '+p.reliability+'%</div>'+
+    '</div>';
+  }).join('');
+  // Ağ düğümleri
+  var nodes=['Saldırgan','Ajan','Araç','Hedef','Zaman','Konum','Yöntem','Finansman'];
+  document.getElementById('network-nodes').innerHTML=nodes.slice(0,5+ia.opIdx).map(function(n,i){
+    return '<div class="network-node" id="nn-'+i+'" onclick="nnToggle('+i+')">🔗 '+n+'</div>';
+  }).join('');
+  updateDisplay();
+  startTimer();
+}
+
+function iaToggle(idx,isReal){
+  var el=document.getElementById('ip-'+idx);
+  var pos=ia.selected.indexOf(idx);
+  if(pos>=0){ia.selected.splice(pos,1);el.classList.remove('selected');}
+  else{ia.selected.push(idx);el.classList.add('selected');}
+}
+
+function nnToggle(idx){
+  var el=document.getElementById('nn-'+idx);
+  el.classList.toggle('connected');
+}
+
+function startTimer(){
+  ia.secs=60;
+  if(ia.timer)clearInterval(ia.timer);
+  var fill=document.getElementById('ia-timer');
+  fill.style.transition='none';fill.style.width='100%';
+  setTimeout(function(){
+    fill.style.transition='width 1s linear';
+    ia.timer=setInterval(function(){
+      ia.secs--;
+      fill.style.width=(ia.secs/60*100)+'%';
+      fill.style.background=ia.secs>30?'var(--cyan)':ia.secs>15?'var(--gold)':'var(--red2)';
+      if(ia.secs<=0){clearInterval(ia.timer);iaSubmit();}
+    },1000);
+  },50);
+}
+
+function iaSubmit(){
+  if(!ia.running)return;
+  if(ia.timer)clearInterval(ia.timer);
+  var op=OPERATIONS[ia.opIdx];
+  // Seçilen parçaların doğruluğunu hesapla
+  var pieces=op.pieces.slice().sort(function(){return Math.random()-.5;});
+  var correctSelected=ia.selected.filter(function(i){
+    var p=pieces[i];
+    return p&&p.real;
+  }).length;
+  var wrongSelected=ia.selected.filter(function(i){
+    var p=pieces[i];
+    return p&&!p.real;
+  }).length;
+  var missed=op.realCount-correctSelected;
+  var score=Math.max(0,(correctSelected*100)-(wrongSelected*50)-(missed*30)+ia.secs*2);
+  ia.pts+=score;
+  ia.total++;
+  if(correctSelected===op.realCount&&wrongSelected===0)ia.correct++;
+  var ap=document.getElementById('analysis-panel');
+  ap.classList.add('show');
+  document.getElementById('analysis-body').innerHTML=
+    '✅ Doğru parça: '+correctSelected+'/'+op.realCount+'<br>'+
+    '❌ Yanlış bağlantı: '+wrongSelected+'<br>'+
+    '⏱️ Kalan süre: '+ia.secs+'s<br>'+
+    '🎯 Gerçek tehdit: '+op.threat;
+  var verdict=correctSelected===op.realCount&&wrongSelected===0?'🏆 MÜKEMMEL ANALİZ':correctSelected>=2?'✅ BAŞARILI':' ❌ BAŞARISIZ';
+  document.getElementById('analysis-verdict').textContent=verdict+' +'+score+' puan';
+  document.getElementById('analysis-verdict').style.color=correctSelected>=2?'var(--green)':'var(--red2)';
+  updateDisplay();
+  correctSelected>=2?beepWin():beepFail();
+  ia.opIdx++;
+  setTimeout(iaLoadOp,2500);
+}
+
+function iaEnd(){
+  ia.running=false;
+  document.getElementById('ia-submit').style.display='none';
+  document.getElementById('ia-btn').style.display='';
+  document.getElementById('ia-btn').textContent='🔍 TEKRAR';
+  document.getElementById('ia-mission').textContent='🏆 Operasyon tamamlandı! Toplam: '+ia.pts+' puan';
+  saveScore();
+}
+
+function updateDisplay(){
+  document.getElementById('ia-pts').textContent=ia.pts;
+  document.getElementById('ia-case').textContent=(ia.opIdx+1)+'/'+OPERATIONS.length;
+  var acc=ia.total>0?Math.round(ia.correct/ia.total*100):100;
+  document.getElementById('ia-acc').textContent=acc+'%';
+  document.getElementById('ia-acc').style.color=acc>70?'var(--green)':acc>40?'var(--gold)':'var(--red2)';
+  document.getElementById('hdr-pts').textContent='⭐ '+ia.pts;
+}
+
+function saveScore(){try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['istihbarat-agi']=(s['istihbarat-agi']||0)+ia.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

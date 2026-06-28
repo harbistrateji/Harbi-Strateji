@@ -1,0 +1,21 @@
+{
+  "title": "📺 HS-TV — Harbi Strateji Televizyonu",
+  "channels": [
+    {
+      "name": "Ana Kanal",
+      "live": true
+    },
+    {
+      "name": "Analiz",
+      "live": false
+    },
+    {
+      "name": "Simülasyon",
+      "live": false
+    },
+    {
+      "name": "Haber",
+      "live": true
+    }
+  ]
+}

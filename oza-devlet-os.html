@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="hs-skip" content="true">
+<title>Devlet İşletim Sistemi — Harb-i Strateji OZA</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#3b82f6;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:54px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none;padding:5px 12px;border:1px solid var(--line);border-radius:6px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;flex:1;text-align:center;color:var(--blue)}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.main{max-width:720px;margin:0 auto;padding:70px 16px 80px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
+.sv{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700}
+.sl{font-size:9px;color:var(--dim);text-transform:uppercase;margin-top:2px}
+/* OS Layers */
+.os-layers{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.os-layer{border-radius:12px;border:2px solid;padding:14px;transition:.3s;cursor:pointer;position:relative;overflow:hidden}
+.os-layer.active{animation:layer-pulse .8s infinite alternate}
+.os-layer.damaged{opacity:.6;filter:grayscale(.5)}
+.os-layer.critical{border-color:var(--red)!important;animation:critical-flash .5s infinite alternate}
+@keyframes layer-pulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,.3)}100%{box-shadow:0 0 0 12px rgba(59,130,246,0)}}
+@keyframes critical-flash{0%{background:rgba(224,21,21,.05)}100%{background:rgba(224,21,21,.15)}}
+.layer-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.layer-icon{font-size:24px}
+.layer-name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700}
+.layer-status{margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;font-weight:700}
+.layer-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.layer-fill{height:100%;border-radius:3px;transition:width .4s}
+.layer-nodes{display:flex;gap:6px;flex-wrap:wrap}
+.layer-node{padding:4px 10px;border-radius:6px;font-size:10px;border:1px solid;cursor:pointer;transition:.15s}
+.layer-node:hover{opacity:.8}
+.layer-node.offline{opacity:.4;text-decoration:line-through}
+/* Action panel */
+.action-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.ap-title{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--gold);margin-bottom:8px}
+.ap-desc{font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:10px}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.action-btn{padding:12px 10px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--tx);font-size:11px;cursor:pointer;transition:.15s;text-align:left;font-family:'IBM Plex Mono',monospace;position:relative}
+.action-btn:hover{border-color:var(--blue);background:rgba(59,130,246,.08)}
+.action-btn:active{transform:scale(.97)}
+.action-btn.used{opacity:.4;cursor:not-allowed}
+.action-btn .cost{position:absolute;top:6px;right:8px;font-size:9px;color:var(--gold)}
+/* Timer */
+.timer-bar{height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.timer-fill{height:100%;background:var(--blue);border-radius:3px;transition:width .1s linear}
+/* Feedback */
+.feedback{min-height:36px;padding:10px 14px;border-radius:10px;font-size:12px;line-height:1.6;margin-bottom:12px;border:1px solid transparent}
+.feedback.success{background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.2);color:var(--green)}
+.feedback.fail{background:rgba(224,21,21,.08);border-color:rgba(224,21,21,.2);color:var(--red)}
+.feedback.warn{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2);color:var(--blue)}
+/* Overlay */
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,15,23,.95);z-index:200;align-items:center;justify-content:center;padding:20px}
+.overlay.show{display:flex}
+.ov-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;max-width:480px;width:100%;text-align:center}
+.ov-title{font-family:'Chakra Petch',sans-serif;font-size:24px;font-weight:700;margin-bottom:8px}
+.ov-sub{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:20px}
+.ov-score{font-family:'Chakra Petch',sans-serif;font-size:48px;font-weight:700;color:var(--blue);margin-bottom:6px}
+.btn-main{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff;margin-bottom:8px}
+.btn-sec{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:13px;cursor:pointer;background:transparent;color:var(--dim);margin-bottom:8px;text-decoration:none;display:block}
+.phase-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:20px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;border:1px solid;margin-bottom:12px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">💻 DEVLET İŞLETİM SİSTEMİ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+
+<div class="main">
+  <div class="stats">
+    <div class="sbox"><div class="sv" id="s-pts" style="color:var(--blue)">0</div><div class="sl">PUAN</div></div>
+    <div class="sbox"><div class="sv" id="s-stage" style="color:var(--gold)">1/3</div><div class="sl">AŞAMA</div></div>
+    <div class="sbox"><div class="sv" id="s-integrity" style="color:var(--green)">100%</div><div class="sl">BÜTÜNLÜK</div></div>
+    <div class="sbox"><div class="sv" id="s-otonomi" style="color:var(--cyan)">100%</div><div class="sl">OTONOMİ</div></div>
+  </div>
+
+  <div style="text-align:center;margin-bottom:12px" id="phase-badge"></div>
+
+  <!-- OS Layers -->
+  <div class="os-layers">
+    <div class="os-layer" id="layer-hw" style="border-color:var(--gold);background:rgba(201,162,75,.05)">
+      <div class="layer-header">
+        <div class="layer-icon">🏗️</div>
+        <div>
+          <div class="layer-name" style="color:var(--gold)">DONANIM KATMANI</div>
+          <div style="font-size:10px;color:var(--dim)">Fiziksel altyapı, toprak, enerji, askeri güç</div>
+        </div>
+        <div class="layer-status" id="ls-hw" style="background:rgba(201,162,75,.15);color:var(--gold)">AKTİF</div>
+      </div>
+      <div class="layer-bar"><div class="layer-fill" id="lf-hw" style="width:90%;background:var(--gold)"></div></div>
+      <div class="layer-nodes">
+        <div class="layer-node" style="border-color:var(--gold);color:var(--gold)" id="ln-enerji">⚡ Enerji</div>
+        <div class="layer-node" style="border-color:var(--gold);color:var(--gold)" id="ln-ordu">⚔️ Ordu</div>
+        <div class="layer-node" style="border-color:var(--gold);color:var(--gold)" id="ln-toprak">🗺️ Toprak</div>
+        <div class="layer-node" style="border-color:var(--gold);color:var(--gold)" id="ln-altyapi">🏭 Altyapı</div>
+      </div>
+    </div>
+    <div class="os-layer" id="layer-cpu" style="border-color:var(--cyan);background:rgba(0,224,255,.05)">
+      <div class="layer-header">
+        <div class="layer-icon">⚙️</div>
+        <div>
+          <div class="layer-name" style="color:var(--cyan)">İŞLEMCİ KATMANI</div>
+          <div style="font-size:10px;color:var(--dim)">Teknoloji, YZ, siber, veri, iletişim</div>
+        </div>
+        <div class="layer-status" id="ls-cpu" style="background:rgba(0,224,255,.15);color:var(--cyan)">AKTİF</div>
+      </div>
+      <div class="layer-bar"><div class="layer-fill" id="lf-cpu" style="width:85%;background:var(--cyan)"></div></div>
+      <div class="layer-nodes">
+        <div class="layer-node" style="border-color:var(--cyan);color:var(--cyan)" id="ln-yz">🤖 YZ</div>
+        <div class="layer-node" style="border-color:var(--cyan);color:var(--cyan)" id="ln-siber">🔐 Siber</div>
+        <div class="layer-node" style="border-color:var(--cyan);color:var(--cyan)" id="ln-veri">📊 Veri</div>
+        <div class="layer-node" style="border-color:var(--cyan);color:var(--cyan)" id="ln-iletisim">📡 İletişim</div>
+      </div>
+    </div>
+    <div class="os-layer" id="layer-sw" style="border-color:var(--green);background:rgba(0,255,136,.05)">
+      <div class="layer-header">
+        <div class="layer-icon">🧠</div>
+        <div>
+          <div class="layer-name" style="color:var(--green)">YAZILIM KATMANI</div>
+          <div style="font-size:10px;color:var(--dim)">Bilişsel güvenlik, meşruiyet, kültür, anlam</div>
+        </div>
+        <div class="layer-status" id="ls-sw" style="background:rgba(0,255,136,.15);color:var(--green)">AKTİF</div>
+      </div>
+      <div class="layer-bar"><div class="layer-fill" id="lf-sw" style="width:80%;background:var(--green)"></div></div>
+      <div class="layer-nodes">
+        <div class="layer-node" style="border-color:var(--green);color:var(--green)" id="ln-mesruiyet">⚖️ Meşruiyet</div>
+        <div class="layer-node" style="border-color:var(--green);color:var(--green)" id="ln-kultur">🎭 Kültür</div>
+        <div class="layer-node" style="border-color:var(--green);color:var(--green)" id="ln-guven">🤝 Güven</div>
+        <div class="layer-node" style="border-color:var(--green);color:var(--green)" id="ln-kimlik">🏛️ Kimlik</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+  <div class="action-panel" id="action-panel"></div>
+  <div class="feedback" id="feedback"></div>
+</div>
+
+<!-- Start overlay -->
+<div class="overlay show" id="ov-start">
+  <div class="ov-box">
+    <div style="font-size:36px;margin-bottom:12px">💻</div>
+    <div class="ov-title" style="color:var(--blue)">DEVLET İŞLETİM SİSTEMİ</div>
+    <div class="ov-sub">Devlet artık bir toprak parçası değil, üç katmanlı bir sistem: Donanım (fiziksel güç), İşlemci (teknoloji), Yazılım (bilişsel güvenlik). Tüm katmanları koruyun, saldırılara karşı savunun ve stratejik özerkliği sürdürün.<br><br>
+    <strong>3 Aşama:</strong><br>
+    💙 Aşama 1 — Sistem Kurulumu: Katmanları güçlendir<br>
+    💙 Aşama 2 — Siber Saldırı: Katmanları savun<br>
+    💙 Aşama 3 — Karar Üstünlüğü: OODA-X döngüsünü tamamla</div>
+    <button class="btn-main" onclick="startGame()">💻 SİSTEMİ BAŞLAT</button>
+    <a href="oza-hub.html" class="btn-sec">← OZA Hub</a>
+  </div>
+</div>
+
+<!-- End overlay -->
+<div class="overlay" id="ov-end">
+  <div class="ov-box">
+    <div class="ov-score" id="end-score">0</div>
+    <div style="font-size:14px;color:var(--gold);margin-bottom:12px" id="end-rank">—</div>
+    <div class="ov-sub" id="end-desc"></div>
+    <button class="btn-main" onclick="yenidenBaslatGame()">🔄 Tekrar Oyna</button>
+    <a href="oza-hub.html" class="btn-sec">← OZA Hub</a>
+  </div>
+</div>
+
+<script>
+var STAGES=[
+  {label:'AŞAMA 1 — SİSTEM KURULUMU',color:'var(--blue)',timeLimit:25,
+   title:'Katmanları Güçlendir',desc:'Devlet OS\'nin üç katmanını güçlendirin. Her katman diğerini destekler. Zayıf katman tüm sistemi çökertir.',
+   actions:[
+     {label:'⚡ Enerji Bağımsızlığı',desc:'Yenilenebilir enerji altyapısı kur',layer:'hw',effect:15,pts:200},
+     {label:'🤖 YZ Entegrasyonu',desc:'Karar destek sistemlerine YZ ekle',layer:'cpu',effect:18,pts:220},
+     {label:'⚖️ Meşruiyet Güçlendir',desc:'Kurumsal güveni artır',layer:'sw',effect:15,pts:200},
+     {label:'🔐 Siber Kalkan',desc:'Kritik altyapıyı siber saldırıya karşı koru',layer:'cpu',effect:20,pts:240}
+   ]},
+  {label:'AŞAMA 2 — SİBER SALDIRI',color:'var(--red)',timeLimit:20,
+   title:'Katmanları Savun',desc:'Düşman tüm katmanları hedef alıyor. Hangi katmanı önce savunacaksınız? Yanlış öncelik sistemi çökertir.',
+   actions:[
+     {label:'🛡️ Donanım Savun',desc:'Fiziksel altyapıyı koru',layer:'hw',effect:10,pts:180,defend:true},
+     {label:'🔒 İşlemci Savun',desc:'Siber saldırıyı durdur',layer:'cpu',effect:12,pts:200,defend:true},
+     {label:'🧠 Yazılım Savun',desc:'Dezenformasyona karşı koy',layer:'sw',effect:10,pts:180,defend:true},
+     {label:'⚡ Acil Protokol',desc:'Tüm katmanlara eş zamanlı savunma',layer:'all',effect:8,pts:250,defend:true}
+   ]},
+  {label:'AŞAMA 3 — KARAR ÜSTÜNLÜĞÜ',color:'var(--cyan)',timeLimit:18,
+   title:'OODA-X Döngüsünü Tamamla',desc:'Stratejik otonomiyi sağlayın. Rakiplerinizden daha hızlı karar verin, kritik düğümleri kontrol edin.',
+   actions:[
+     {label:'🎯 Karar Üstünlüğü',desc:'OODA döngüsünü hızlandır',layer:'cpu',effect:20,pts:300},
+     {label:'🌐 Stratejik Otonomi',desc:'Dış bağımlılıkları azalt',layer:'hw',effect:18,pts:280},
+     {label:'🏛️ Meşruiyet Yazılımı',desc:'Toplumsal güveni maksimize et',layer:'sw',effect:22,pts:320},
+     {label:'🚀 Tam Entegrasyon',desc:'Üç katmanı tam senkronize et',layer:'all',effect:25,pts:400}
+   ]}
+];
+
+var stage=0,pts=0,actionCount=0;
+var hw=90,cpu=85,sw=80;
+var timer=null,timeLeft=0;
+
+function startGame(){
+  document.getElementById('ov-start').classList.remove('show');
+  stage=0;pts=0;actionCount=0;hw=90;cpu=85;sw=80;
+  loadStage();
+}
+
+function loadStage(){
+  var s=STAGES[stage];
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  document.getElementById('phase-badge').innerHTML=
+    '<div class="phase-pill" style="border-color:'+s.color+';color:'+s.color+'">'+s.label+'</div>';
+  timeLeft=s.timeLimit;
+  document.getElementById('timer-fill').style.width='100%';
+  clearInterval(timer);
+  // Simulate attacks in stage 2
+  if(stage===1){
+    var attackInterval=setInterval(function(){
+      hw=Math.max(20,hw-3);cpu=Math.max(20,cpu-4);sw=Math.max(20,sw-2);
+      updateLayers();
+      if(hw<30||cpu<30||sw<30){
+        var fb=document.getElementById('feedback');
+        fb.className='feedback fail';
+        fb.textContent='⚠️ Kritik katman saldırı altında!';
+      }
+    },2000);
+    timer=setInterval(function(){
+      timeLeft--;
+      document.getElementById('timer-fill').style.width=(timeLeft/s.timeLimit*100)+'%';
+      if(timeLeft<=0){clearInterval(timer);clearInterval(attackInterval);nextStage();}
+    },1000);
+  }else{
+    timer=setInterval(function(){
+      timeLeft--;
+      document.getElementById('timer-fill').style.width=(timeLeft/s.timeLimit*100)+'%';
+      if(timeLeft<=0){clearInterval(timer);nextStage();}
+    },1000);
+  }
+  var html='<div class="ap-title">⚡ '+s.title+'</div>';
+  html+='<div class="ap-desc">'+s.desc+'</div>';
+  html+='<div class="action-grid">';
+  s.actions.forEach(function(a,i){
+    html+='<button class="action-btn" onclick="doAction('+i+',this)"><div>'+a.label+'</div><div style="font-size:10px;color:var(--dim);margin-top:4px">'+a.desc+'</div><div class="cost">+'+a.pts+'</div></button>';
+  });
+  html+='</div>';
+  document.getElementById('action-panel').innerHTML=html;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('feedback').textContent='';
+}
+
+function doAction(idx,btn){
+  if(btn.classList.contains('used'))return;
+  btn.classList.add('used');
+  var s=STAGES[stage];
+  var a=s.actions[idx];
+  if(a.layer==='hw'||a.layer==='all')hw=Math.min(100,hw+a.effect);
+  if(a.layer==='cpu'||a.layer==='all')cpu=Math.min(100,cpu+a.effect);
+  if(a.layer==='sw'||a.layer==='all')sw=Math.min(100,sw+a.effect);
+  pts+=a.pts;actionCount++;
+  updateLayers();
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+  var fb=document.getElementById('feedback');
+  fb.className='feedback success';
+  fb.textContent='✅ '+a.label+' uygulandı! +'+a.pts+' puan';
+  var integrity=Math.round((hw+cpu+sw)/3);
+  document.getElementById('s-integrity').textContent=integrity+'%';
+  document.getElementById('s-otonomi').textContent=Math.min(100,integrity+5)+'%';
+}
+
+function updateLayers(){
+  document.getElementById('lf-hw').style.width=hw+'%';
+  document.getElementById('lf-cpu').style.width=cpu+'%';
+  document.getElementById('lf-sw').style.width=sw+'%';
+  ['hw','cpu','sw'].forEach(function(l){
+    var val=l==='hw'?hw:l==='cpu'?cpu:sw;
+    var status=document.getElementById('ls-'+l);
+    if(val<30){status.textContent='KRİTİK';status.style.color='var(--red)';status.style.background='rgba(224,21,21,.15)';}
+    else if(val<60){status.textContent='ZAYIF';status.style.color='var(--gold)';status.style.background='rgba(201,162,75,.15)';}
+    else{status.textContent='AKTİF';status.style.color='var(--green)';status.style.background='rgba(0,255,136,.15)';}
+  });
+  var integrity=Math.round((hw+cpu+sw)/3);
+  document.getElementById('s-integrity').textContent=integrity+'%';
+}
+
+function nextStage(){stage++;if(stage>=STAGES.length){endGame();}else{loadStage();}}
+
+function endGame(){
+  clearInterval(timer);
+  var integrity=Math.round((hw+cpu+sw)/3);
+  var rank=pts>=2500?'🎖️ Devlet Mimarı':pts>=1200?'⭐ Sistem Yöneticisi':pts>=500?'🔰 Operatör':'📋 Stajyer';
+  document.getElementById('end-score').textContent=pts;
+  document.getElementById('end-rank').textContent=rank;
+  document.getElementById('end-desc').textContent='Sistem Bütünlüğü: '+integrity+'% | Donanım: '+Math.round(hw)+'% | İşlemci: '+Math.round(cpu)+'% | Yazılım: '+Math.round(sw)+'%';
+  document.getElementById('ov-end').classList.add('show');
+  try{var best=parseInt(localStorage.getItem('hs_devlet_os')||'0');if(pts>best)localStorage.setItem('hs_devlet_os',pts);}catch(e){}
+}
+
+function yenidenBaslatGame(){document.getElementById('ov-end').classList.remove('show');startGame();}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

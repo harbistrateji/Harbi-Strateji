@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Taktik Nişancı — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0f17;color:#eaf0f7;font-family:'Segoe UI',system-ui,sans-serif;touch-action:manipulation;user-select:none}
+#app{width:100%;height:100%;display:flex;flex-direction:column}
+#topBar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(10,15,23,.95);border-bottom:1px solid rgba(0,224,255,.15);flex-shrink:0;z-index:10}
+#topBar a{color:#00e0ff;text-decoration:none;font-size:.8rem}
+#topBar .title{font-size:.85rem;font-weight:700;color:#fff}
+#topBar .stats{display:flex;gap:12px;font-size:.75rem}
+#topBar .stats span{color:#c9a24b}
+#gameArea{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+canvas{display:block;background:#0a0f17}
+#hud{position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none;font-size:.75rem}
+#hud .badge{background:rgba(0,0,0,.6);border:1px solid rgba(0,224,255,.3);border-radius:6px;padding:3px 8px}
+#controls{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:12px}
+#controls button{width:52px;height:52px;border-radius:50%;border:2px solid rgba(0,224,255,.4);background:rgba(0,0,0,.5);color:#fff;font-size:1.2rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#controls button:active{background:rgba(0,224,255,.2);transform:scale(.9)}
+#overlay{position:absolute;inset:0;background:rgba(10,15,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;text-align:center;padding:20px}
+#overlay h2{color:#00e0ff;font-size:1.4rem;margin-bottom:8px}
+#overlay p{color:#aaa;font-size:.85rem;margin-bottom:16px;max-width:320px}
+#overlay button{padding:12px 32px;border:2px solid #00e0ff;background:transparent;color:#00e0ff;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:700}
+#overlay button:hover{background:rgba(0,224,255,.1)}
+@media(min-width:769px){#controls{display:none}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div id="app">
+<div id="topBar">
+<a href="oza-hub.html">← OZA</a>
+<span class="title">🎯 Taktik Nişancı</span>
+<div class="stats"><span id="scoreDisp">0</span> puan</div>
+</div>
+<div id="gameArea">
+<canvas id="gc"></canvas>
+<div id="hud"><div class="badge" id="hudL"></div><div class="badge" id="hudR"></div></div>
+<div id="controls"><button id="btnL">←</button><button id="btnU">↑</button><button id="btnD">↓</button><button id="btnR">→</button><button id="btnF" style="background:rgba(255,50,50,.3);border-color:#ff3a4a">🔫</button>
+</div>
+<div id="overlay">
+<h2 id="ovTitle">BAŞLA</h2>
+<p id="ovDesc">Dokunarak veya tıklayarak başla</p>
+<button id="ovBtn" onclick="startGame()">▶ BAŞLA</button>
+</div>
+</div>
+</div>
+<script>
+// Audio context
+let audioCtx;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playTone(freq,dur,type){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type||'square';o.frequency.value=freq;g.gain.value=0.08;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur)}
+// Canvas setup
+const canvas=document.getElementById('gc');
+const ctx=canvas.getContext('2d');
+let W,H,gameRunning=false,score=0,level=1;
+function resize(){
+  const area=document.getElementById('gameArea');
+  W=canvas.width=area.clientWidth;
+  H=canvas.height=area.clientHeight;
+}
+window.addEventListener('resize',resize);
+resize();
+function updateScore(v){score+=v;document.getElementById('scoreDisp').textContent=score}
+function showOverlay(t,d,btn){
+  document.getElementById('overlay').style.display='flex';
+  document.getElementById('ovTitle').textContent=t;
+  document.getElementById('ovDesc').textContent=d;
+  document.getElementById('ovBtn').textContent=btn||'▶ TEKRAR';
+}
+function hideOverlay(){document.getElementById('overlay').style.display='none'}
+
+let player={x:0,y:0,angle:0,speed:3};
+let bullets=[],enemies=[],particles=[];
+let keys={},wave=1,kills=0,hp=100;
+function startGame(){initAudio();hideOverlay();gameRunning=true;score=0;wave=1;kills=0;hp=100;
+  player.x=W/2;player.y=H/2;enemies=[];bullets=[];spawnWave();loop()}
+function spawnWave(){for(let i=0;i<wave*3+2;i++){let side=Math.random()*4|0;let ex,ey;
+  if(side===0){ex=Math.random()*W;ey=-20}else if(side===1){ex=W+20;ey=Math.random()*H}
+  else if(side===2){ex=Math.random()*W;ey=H+20}else{ex=-20;ey=Math.random()*H}
+  enemies.push({x:ex,y:ey,hp:1+wave*0.5,speed:1+wave*0.2,r:12})}}
+function shoot(){if(!gameRunning)return;playTone(200,.1,'sawtooth');
+  bullets.push({x:player.x,y:player.y,vx:Math.cos(player.angle)*8,vy:Math.sin(player.angle)*8})}
+function loop(){if(!gameRunning)return;requestAnimationFrame(loop);update();draw()}
+function update(){
+  let dx=0,dy=0;
+  if(keys.ArrowLeft||keys.a)dx=-1;if(keys.ArrowRight||keys.d)dx=1;
+  if(keys.ArrowUp||keys.w)dy=-1;if(keys.ArrowDown||keys.s)dy=1;
+  if(mobileDir.l)dx=-1;if(mobileDir.r)dx=1;if(mobileDir.u)dy=-1;if(mobileDir.d)dy=1;
+  player.x+=dx*player.speed;player.y+=dy*player.speed;
+  player.x=Math.max(15,Math.min(W-15,player.x));
+  player.y=Math.max(15,Math.min(H-15,player.y));
+  if(mousePos.x!==undefined)player.angle=Math.atan2(mousePos.y-player.y,mousePos.x-player.x);
+  // Bullets
+  for(let i=bullets.length-1;i>=0;i--){let b=bullets[i];b.x+=b.vx;b.y+=b.vy;
+    if(b.x<0||b.x>W||b.y<0||b.y>H){bullets.splice(i,1);continue}
+    for(let j=enemies.length-1;j>=0;j--){let e=enemies[j];
+      if(Math.hypot(b.x-e.x,b.y-e.y)<e.r+4){e.hp-=1;bullets.splice(i,1);
+        if(e.hp<=0){enemies.splice(j,1);kills++;updateScore(10*wave);playTone(400,.15,'sine');
+          for(let k=0;k<5;k++)particles.push({x:e.x,y:e.y,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,life:20})}
+        break}}}
+  // Enemies move toward player
+  enemies.forEach(e=>{let a=Math.atan2(player.y-e.y,player.x-e.x);e.x+=Math.cos(a)*e.speed;e.y+=Math.sin(a)*e.speed;
+    if(Math.hypot(e.x-player.x,e.y-player.y)<e.r+12){hp-=0.5;if(hp<=0){gameRunning=false;showOverlay('GAME OVER','Dalga: '+wave+' | Skor: '+score,'▶ TEKRAR')}}});
+  // Particles
+  particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life--});
+  particles=particles.filter(p=>p.life>0);
+  // Wave clear
+  if(enemies.length===0){wave++;spawnWave();playTone(800,.2,'sine')}
+  document.getElementById('hudL').textContent='❤️ '+Math.round(hp);
+  document.getElementById('hudR').textContent='Dalga '+wave;
+}
+function draw(){
+  ctx.fillStyle='#0a0f17';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(0,224,255,.05)';ctx.lineWidth=1;
+  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  // Player
+  ctx.save();ctx.translate(player.x,player.y);ctx.rotate(player.angle);
+  ctx.fillStyle='#00e0ff';ctx.beginPath();ctx.moveTo(15,0);ctx.lineTo(-10,-8);ctx.lineTo(-10,8);ctx.closePath();ctx.fill();
+  ctx.restore();
+  // Bullets
+  ctx.fillStyle='#ffdd00';bullets.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,3,0,Math.PI*2);ctx.fill()});
+  // Enemies
+  enemies.forEach(e=>{ctx.fillStyle='#ff3a4a';ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='8px sans-serif';ctx.textAlign='center';ctx.fillText(Math.ceil(e.hp),e.x,e.y+3)});
+  // Particles
+  particles.forEach(p=>{ctx.globalAlpha=p.life/20;ctx.fillStyle='#ff6600';ctx.fillRect(p.x,p.y,3,3)});
+  ctx.globalAlpha=1;
+}
+let mousePos={},mobileDir={l:0,r:0,u:0,d:0};
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mousePos.x=e.clientX-r.left;mousePos.y=e.clientY-r.top});
+canvas.addEventListener('click',e=>{if(gameRunning)shoot()});
+canvas.addEventListener('touchstart',e=>{if(gameRunning){const r=canvas.getBoundingClientRect();const t=e.touches[0];mousePos.x=t.clientX-r.left;mousePos.y=t.clientY-r.top;shoot()}});
+document.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' ')shoot()});
+document.addEventListener('keyup',e=>{keys[e.key]=false});
+// Mobile buttons
+['btnL','btnR','btnU','btnD'].forEach(id=>{const el=document.getElementById(id);if(!el)return;
+  el.addEventListener('touchstart',e=>{e.preventDefault();mobileDir[id.slice(3).toLowerCase()]=1});
+  el.addEventListener('touchend',e=>{mobileDir[id.slice(3).toLowerCase()]=0})});
+document.getElementById('btnF')?.addEventListener('touchstart',e=>{e.preventDefault();shoot()});
+
+</script>
+</body>
+</html>

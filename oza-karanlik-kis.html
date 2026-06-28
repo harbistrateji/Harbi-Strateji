@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Karanlık Kış — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0f17;color:#eaf0f7;font-family:'Segoe UI',system-ui,sans-serif;touch-action:manipulation;user-select:none}
+#app{width:100%;height:100%;display:flex;flex-direction:column}
+#topBar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(10,15,23,.95);border-bottom:1px solid rgba(0,224,255,.15);flex-shrink:0;z-index:10}
+#topBar a{color:#00e0ff;text-decoration:none;font-size:.8rem}
+#topBar .title{font-size:.85rem;font-weight:700;color:#fff}
+#topBar .stats{display:flex;gap:12px;font-size:.75rem}
+#topBar .stats span{color:#c9a24b}
+#gameArea{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+canvas{display:block;background:#0a0f17}
+#hud{position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none;font-size:.75rem}
+#hud .badge{background:rgba(0,0,0,.6);border:1px solid rgba(0,224,255,.3);border-radius:6px;padding:3px 8px}
+#controls{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:12px}
+#controls button{width:52px;height:52px;border-radius:50%;border:2px solid rgba(0,224,255,.4);background:rgba(0,0,0,.5);color:#fff;font-size:1.2rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#controls button:active{background:rgba(0,224,255,.2);transform:scale(.9)}
+#overlay{position:absolute;inset:0;background:rgba(10,15,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;text-align:center;padding:20px}
+#overlay h2{color:#00e0ff;font-size:1.4rem;margin-bottom:8px}
+#overlay p{color:#aaa;font-size:.85rem;margin-bottom:16px;max-width:320px}
+#overlay button{padding:12px 32px;border:2px solid #00e0ff;background:transparent;color:#00e0ff;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:700}
+#overlay button:hover{background:rgba(0,224,255,.1)}
+@media(min-width:769px){#controls{display:none}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div id="app">
+<div id="topBar">
+<a href="oza-hub.html">← OZA</a>
+<span class="title">❄️ Karanlık Kış</span>
+<div class="stats"><span id="scoreDisp">0</span> puan</div>
+</div>
+<div id="gameArea">
+<canvas id="gc"></canvas>
+<div id="hud"><div class="badge" id="hudL"></div><div class="badge" id="hudR"></div></div>
+<div id="controls"><button id="kL">←</button><button id="kU">↑</button><button id="kD">↓</button><button id="kR">→</button>
+</div>
+<div id="overlay">
+<h2 id="ovTitle">BAŞLA</h2>
+<p id="ovDesc">Dokunarak veya tıklayarak başla</p>
+<button id="ovBtn" onclick="startGame()">▶ BAŞLA</button>
+</div>
+</div>
+</div>
+<script>
+// Audio context
+let audioCtx;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playTone(freq,dur,type){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type||'square';o.frequency.value=freq;g.gain.value=0.08;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur)}
+// Canvas setup
+const canvas=document.getElementById('gc');
+const ctx=canvas.getContext('2d');
+let W,H,gameRunning=false,score=0,level=1;
+function resize(){
+  const area=document.getElementById('gameArea');
+  W=canvas.width=area.clientWidth;
+  H=canvas.height=area.clientHeight;
+}
+window.addEventListener('resize',resize);
+resize();
+function updateScore(v){score+=v;document.getElementById('scoreDisp').textContent=score}
+function showOverlay(t,d,btn){
+  document.getElementById('overlay').style.display='flex';
+  document.getElementById('ovTitle').textContent=t;
+  document.getElementById('ovDesc').textContent=d;
+  document.getElementById('ovBtn').textContent=btn||'▶ TEKRAR';
+}
+function hideOverlay(){document.getElementById('overlay').style.display='none'}
+
+let pX,pY,mapW=20,mapH=15,tileSize,map2=[],items=[],fog=[],hp2=100,food=50,day=1,enemies3=[];
+function startGame(){initAudio();hideOverlay();gameRunning=true;score=0;hp2=100;food=50;day=1;generateMap();loop6()}
+function generateMap(){map2=[];fog=[];items=[];enemies3=[];
+  for(let y=0;y<mapH;y++){map2[y]=[];fog[y]=[];for(let x=0;x<mapW;x++){
+    map2[y][x]=Math.random()>.15?0:1;fog[y][x]=true}}
+  pX=Math.floor(mapW/2);pY=Math.floor(mapH/2);map2[pY][pX]=0;revealAround(pX,pY);
+  for(let i=0;i<5;i++){let ix,iy;do{ix=Math.floor(Math.random()*mapW);iy=Math.floor(Math.random()*mapH)}while(map2[iy][ix]!==0);
+    items.push({x:ix,y:iy,type:['🍖','💊','🔫','🛡️'][Math.floor(Math.random()*4)]})}
+  for(let i=0;i<3+day;i++){let ex,ey;do{ex=Math.floor(Math.random()*mapW);ey=Math.floor(Math.random()*mapH)}while(map2[ey][ex]!==0||(ex===pX&&ey===pY));
+    enemies3.push({x:ex,y:ey,hp:20+day*5})}}
+function revealAround(x,y){for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
+  let nx=x+dx,ny=y+dy;if(nx>=0&&nx<mapW&&ny>=0&&ny<mapH)fog[ny][nx]=false}}
+function movePlayer(dx,dy){if(!gameRunning)return;
+  let nx=pX+dx,ny=pY+dy;if(nx<0||nx>=mapW||ny<0||ny>=mapH||map2[ny][nx]===1)return;
+  // Check enemy
+  let eIdx=enemies3.findIndex(e=>e.x===nx&&e.y===ny);
+  if(eIdx>=0){enemies3[eIdx].hp-=15;playTone(200,.1,'sawtooth');
+    if(enemies3[eIdx].hp<=0){enemies3.splice(eIdx,1);updateScore(20);playTone(600,.15,'sine')}return}
+  pX=nx;pY=ny;revealAround(pX,pY);food-=1;
+  // Pick items
+  let iIdx=items.findIndex(it=>it.x===pX&&it.y===pY);
+  if(iIdx>=0){let it=items[iIdx];if(it.type==='🍖')food+=20;if(it.type==='💊')hp2=Math.min(100,hp2+30);
+    updateScore(10);playTone(523,.1,'sine');items.splice(iIdx,1)}
+  // Enemy turn
+  enemies3.forEach(e=>{let edx=Math.sign(pX-e.x),edy=Math.sign(pY-e.y);
+    if(Math.random()>.5&&map2[e.y][e.x+edx]!==1)e.x+=edx;
+    else if(map2[e.y+edy]&&map2[e.y+edy][e.x]!==1)e.y+=edy;
+    if(e.x===pX&&e.y===pY){hp2-=10;playTone(150,.2,'square')}});
+  if(food<=0)hp2-=2;
+  if(hp2<=0){gameRunning=false;showOverlay('DONARAK ÖLDÜN','Gün: '+day+' | Skor: '+score,'▶ TEKRAR')}
+  // New day check
+  if(score>day*50){day++;generateMap();playTone(800,.2,'sine')}
+  draw6()}
+function draw6(){
+  ctx.fillStyle='#0a0f17';ctx.fillRect(0,0,W,H);
+  tileSize=Math.min(W/mapW,H/mapH);
+  let ox=(W-mapW*tileSize)/2,oy=(H-mapH*tileSize)/2;
+  for(let y=0;y<mapH;y++)for(let x=0;x<mapW;x++){
+    let px=ox+x*tileSize,py=oy+y*tileSize;
+    if(fog[y][x]){ctx.fillStyle='#111';ctx.fillRect(px,py,tileSize,tileSize);continue}
+    ctx.fillStyle=map2[y][x]===1?'#1a2a3a':'#0d1520';ctx.fillRect(px,py,tileSize,tileSize);
+    ctx.strokeStyle='rgba(100,150,200,.08)';ctx.strokeRect(px,py,tileSize,tileSize)}
+  // Items
+  items.forEach(it=>{if(!fog[it.y][it.x]){ctx.font=(tileSize*0.6)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(it.type,ox+(it.x+0.5)*tileSize,oy+(it.y+0.5)*tileSize)}});
+  // Enemies
+  enemies3.forEach(e=>{if(!fog[e.y][e.x]){ctx.fillStyle='#ff3a4a';ctx.font=(tileSize*0.6)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('👹',ox+(e.x+0.5)*tileSize,oy+(e.y+0.5)*tileSize)}});
+  // Player
+  ctx.fillStyle='#00e0ff';ctx.font=(tileSize*0.7)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🧑‍✈️',ox+(pX+0.5)*tileSize,oy+(pY+0.5)*tileSize);
+  document.getElementById('hudL').textContent='❤️'+hp2+' 🍖'+food;
+  document.getElementById('hudR').textContent='Gün '+day;
+}
+function loop6(){if(!gameRunning)return;draw6()}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='a')movePlayer(-1,0);
+  if(e.key==='ArrowRight'||e.key==='d')movePlayer(1,0);
+  if(e.key==='ArrowUp'||e.key==='w')movePlayer(0,-1);
+  if(e.key==='ArrowDown'||e.key==='s')movePlayer(0,1)});
+['kL','kR','kU','kD'].forEach(id=>{document.getElementById(id)?.addEventListener('touchstart',e=>{e.preventDefault();
+  if(id==='kL')movePlayer(-1,0);if(id==='kR')movePlayer(1,0);if(id==='kU')movePlayer(0,-1);if(id==='kD')movePlayer(0,1)})});
+resize();
+
+</script>
+</body>
+</html>

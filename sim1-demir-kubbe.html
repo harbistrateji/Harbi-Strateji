@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Demir Kubbe <em>Çöküşü</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Demir Kubbe <em>Çöküşü</em></h1>
+  <p class="lead">Doygunluk Krizi Simülatörü — Bernoulli ve Wilkening modellerini kullanarak hava savunma sistemlerinin doygunluk noktasını analiz edin.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">3</span><span class="lbl">Dalga</span></div><div class="hero-stat"><span class="num">100</span><span class="lbl">Maks Füze</span></div><div class="hero-stat"><span class="num">0.99</span><span class="lbl">Maks P</span></div><div class="hero-stat"><span class="num">3</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+        
+        
+        <div class="phase-indicator">
+            <div class="phase-dot active" id="pd1"></div>
+            <div class="phase-dot" id="pd2"></div>
+            <div class="phase-dot" id="pd3"></div>
+        </div>
+        
+        <!-- AŞAMA 1: Ayarlar -->
+        <div id="phase-setup" class="panel">
+            <div class="panel-title">⚙️ SENARYO AYARLARI</div>
+            <p style="font-size:0.85em; color:#8899aa; margin-bottom:15px;">Hava savunma komutanı olarak parametrelerinizi belirleyin.</p>
+            
+            <div class="slider-group">
+                <label>Önleyici Füze Sayısı (N): <span id="n-val" style="color:#00E0FF;">50</span></label>
+                <input type="range" id="interceptor-count" min="10" max="100" value="50">
+            </div>
+            <div class="slider-group">
+                <label>Tek Füze Önleme Olasılığı (P): <span id="p-val" style="color:#00E0FF;">0.90</span></label>
+                <input type="range" id="intercept-prob" min="50" max="99" value="90">
+            </div>
+            <div class="slider-group">
+                <label>Senaryo Seçimi:</label>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                    <button class="btn btn-secondary scenario-btn active" data-scenario="classic">Klasik Saldırı</button>
+                    <button class="btn btn-secondary scenario-btn" data-scenario="swarm">Dron Sürüsü</button>
+                    <button class="btn btn-secondary scenario-btn" data-scenario="hypersonic">Hipersonik + Sürü</button>
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <strong>Bernoulli Modeli:</strong> P_success = 1 − (1 − P)^N<br>
+                <strong>Wilkening (Doygunluk):</strong> P_leak = Σ e^(-λ) × (λ^k / k!) | k > N
+            </div>
+            
+            <button class="btn btn-primary" onclick="startSimulation()">🚀 SİMÜLASYONU BAŞLAT</button>
+        </div>
+        
+        <!-- AŞAMA 2: Simülasyon -->
+        <div id="phase-sim" class="panel" style="display:none;">
+            <div class="panel-title">📡 CANLI RADAR - <span id="wave-label">Dalga 1/3</span></div>
+            
+            <div class="radar-container">
+                <div class="radar-screen" id="radar">
+                    <div class="radar-grid"></div>
+                    <div class="radar-sweep"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="stat-box">
+                    <div class="stat-label">Gelen Tehdit</div>
+                    <div class="stat-value" id="threat-count">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Kalan Önleyici</div>
+                    <div class="stat-value success" id="interceptor-remaining">50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Önlenen</div>
+                    <div class="stat-value" id="intercepted-count">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Sızan (Hasar)</div>
+                    <div class="stat-value danger" id="leaked-count">0</div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom:10px;">
+                <span style="font-size:0.8em; color:#8899aa;">Savunma Kapasitesi:</span>
+                <div class="progress-bar">
+                    <div class="progress-fill green" id="defense-bar" style="width:100%"></div>
+                </div>
+            </div>
+            <div>
+                <span style="font-size:0.8em; color:#8899aa;">Sızıntı Oranı (P_leak):</span>
+                <div class="progress-bar">
+                    <div class="progress-fill red" id="leak-bar" style="width:0%"></div>
+                </div>
+            </div>
+            
+            <div class="log-area" id="battle-log"></div>
+            
+            <button class="btn btn-danger" id="fire-btn" onclick="fireInterceptors()" style="margin-top:15px;">🎯 ATEŞ! (Önleyici Fırlat)</button>
+        </div>
+        
+        <!-- AŞAMA 3: Sonuç -->
+        <div id="phase-result" class="panel" style="display:none;">
+            <div class="panel-title">📊 SAVAŞ SONU ANALİZİ</div>
+            <div id="result-content"></div>
+        </div>
+    </div>
+    
+    <!-- Sonuç Overlay -->
+    <div class="result-overlay" id="result-overlay">
+        <div class="result-card">
+            <div class="result-title" id="overlay-title">SİSTEM ÇÖKTÜ</div>
+            <div class="result-text" id="overlay-text"></div>
+            <div class="formula-box" id="overlay-formula"></div>
+            <button class="btn btn-primary" onclick="resetSimulation()">🔄 YENİDEN DENE</button>
+            <button class="btn btn-secondary" style="margin-top:10px;" onclick="showAlternatives()">📋 ALTERNATİF STRATEJİLER</button>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        // Simülasyon Değişkenleri
+        let config = { N: 50, P: 0.9, scenario: 'classic' };
+        let state = { wave: 0, totalThreats: 0, intercepted: 0, leaked: 0, remaining: 50, running: false };
+        
+        // Senaryo Tanımları
+        const scenarios = {
+            classic: { name: 'Klasik Saldırı', waves: [
+                { threats: 8, type: 'Balistik Füze', speed: 'Mach 3', desc: 'Konvansiyonel balistik saldırı' },
+                { threats: 15, type: 'Cruise Füze', speed: 'Mach 1.5', desc: 'Orta yoğunluklu saldırı' },
+                { threats: 25, type: 'Karışık', speed: 'Çeşitli', desc: 'Koordineli çoklu saldırı' }
+            ]},
+            swarm: { name: 'Dron Sürüsü', waves: [
+                { threats: 30, type: 'Şahid-136 Dron', speed: '185 km/h', desc: 'İlk sürü dalgası' },
+                { threats: 60, type: 'Şahid Sürüsü', speed: '185 km/h', desc: 'Doygunluk saldırısı' },
+                { threats: 120, type: 'Sürü + Balistik', speed: 'Çeşitli', desc: 'Tam doygunluk - sistem çöküşü' }
+            ]},
+            hypersonic: { name: 'Hipersonik + Sürü', waves: [
+                { threats: 20, type: 'Fattah-1 Hipersonik', speed: 'Mach 13', desc: 'Plazma karartması aktif' },
+                { threats: 50, type: 'Dron + Hipersonik', speed: 'Karışık', desc: 'Çok katmanlı saldırı' },
+                { threats: 150, type: 'Tam Spektrum', speed: 'Mach 1-13', desc: 'Toplam doygunluk + hipersonik' }
+            ]}
+        };
+        
+        // UI Güncellemeleri
+        document.getElementById('interceptor-count').addEventListener('input', function() {
+            config.N = parseInt(this.value);
+            document.getElementById('n-val').textContent = this.value;
+        });
+        document.getElementById('intercept-prob').addEventListener('input', function() {
+            config.P = parseInt(this.value) / 100;
+            document.getElementById('p-val').textContent = (parseInt(this.value) / 100).toFixed(2);
+        });
+        document.querySelectorAll('.scenario-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                config.scenario = this.dataset.scenario;
+            });
+        });
+        
+        function startSimulation() {
+            state = { wave: 0, totalThreats: 0, intercepted: 0, leaked: 0, remaining: config.N, running: true };
+            document.getElementById('phase-setup').style.display = 'none';
+            document.getElementById('phase-sim').style.display = 'block';
+            document.getElementById('pd1').classList.remove('active');
+            document.getElementById('pd1').classList.add('completed');
+            document.getElementById('pd2').classList.add('active');
+            document.getElementById('interceptor-remaining').textContent = config.N;
+            nextWave();
+        }
+        
+        function nextWave() {
+            const scenario = scenarios[config.scenario];
+            if (state.wave >= scenario.waves.length) {
+                endSimulation();
+                return;
+            }
+            const wave = scenario.waves[state.wave];
+            document.getElementById('wave-label').textContent = `Dalga ${state.wave + 1}/${scenario.waves.length} - ${wave.type}`;
+            document.getElementById('threat-count').textContent = wave.threats;
+            state.totalThreats += wave.threats;
+            
+            addLog(`⚠️ DALGA ${state.wave + 1}: ${wave.threats}x ${wave.type} (${wave.speed}) tespit edildi!`, 'info');
+            addLog(`📋 ${wave.desc}`, 'info');
+            
+            // Radar'a tehditleri ekle
+            clearRadar();
+            for (let i = 0; i < Math.min(wave.threats, 30); i++) {
+                setTimeout(() => addThreatToRadar(), i * 100);
+            }
+            
+            document.getElementById('fire-btn').disabled = false;
+        }
+        
+        function fireInterceptors() {
+            const scenario = scenarios[config.scenario];
+            const wave = scenario.waves[state.wave];
+            const threats = wave.threats;
+            
+            document.getElementById('fire-btn').disabled = true;
+            
+            // Hesaplama
+            let available = Math.min(state.remaining, threats);
+            let intercepted = 0;
+            let effectiveP = config.P;
+            
+            // Hipersonik senaryoda P düşer
+            if (config.scenario === 'hypersonic' && state.wave >= 1) {
+                effectiveP *= 0.4; // Plazma karartması etkisi
+                addLog(`⚡ PLAZMA KARARTMASI: Önleme olasılığı ${(effectiveP*100).toFixed(0)}%'e düştü!`, 'miss');
+            }
+            
+            // Doygunluk etkisi
+            if (threats > state.remaining) {
+                addLog(`🔴 DOYGUNLUK: ${threats} tehdit > ${state.remaining} önleyici! Sistem kapasitesi aşıldı!`, 'miss');
+                effectiveP *= (state.remaining / threats); // Doygunluk penaltısı
+            }
+            
+            // Monte Carlo simülasyonu
+            for (let i = 0; i < Math.min(available, threats); i++) {
+                if (Math.random() < effectiveP) {
+                    intercepted++;
+                }
+            }
+            
+            let leaked = threats - intercepted;
+            state.intercepted += intercepted;
+            state.leaked += leaked;
+            state.remaining -= available;
+            
+            // UI Güncelle
+            document.getElementById('interceptor-remaining').textContent = state.remaining;
+            document.getElementById('intercepted-count').textContent = state.intercepted;
+            document.getElementById('leaked-count').textContent = state.leaked;
+            
+            let defensePercent = (state.remaining / config.N) * 100;
+            document.getElementById('defense-bar').style.width = defensePercent + '%';
+            if (defensePercent < 30) document.getElementById('defense-bar').classList.replace('green', 'red');
+            
+            let leakPercent = (state.leaked / state.totalThreats) * 100;
+            document.getElementById('leak-bar').style.width = leakPercent + '%';
+            
+            addLog(`🎯 Ateş açıldı: ${available} önleyici fırlatıldı`, 'info');
+            addLog(`✅ Önlenen: ${intercepted}/${threats}`, 'hit');
+            if (leaked > 0) addLog(`💥 SIZAN: ${leaked} tehdit hedefe ulaştı!`, 'miss');
+            
+            // Renk güncelle
+            let remEl = document.getElementById('interceptor-remaining');
+            remEl.className = 'stat-value ' + (state.remaining < 10 ? 'danger' : state.remaining < 25 ? 'warning' : 'success');
+            
+            // Sonraki dalga
+            state.wave++;
+            setTimeout(() => {
+                if (state.remaining <= 0) {
+                    addLog(`🚨 ÖNLEYICI STOKU TÜKENDI! Savunma çöktü!`, 'miss');
+                    endSimulation();
+                } else {
+                    nextWave();
+                }
+            }, 2000);
+        }
+        
+        function endSimulation() {
+            state.running = false;
+            document.getElementById('pd2').classList.remove('active');
+            document.getElementById('pd2').classList.add('completed');
+            document.getElementById('pd3').classList.add('active');
+            
+            let leakRate = ((state.leaked / state.totalThreats) * 100).toFixed(1);
+            let interceptRate = ((state.intercepted / state.totalThreats) * 100).toFixed(1);
+            
+            let title, text, formula;
+            if (leakRate > 50) {
+                title = '🚨 SİSTEM ÇÖKTÜ - DOYGUNLUK KRİZİ';
+                text = `Toplam ${state.totalThreats} tehdide karşı savunmanız yetersiz kaldı. Sızıntı oranı %${leakRate}. Bu, Trump'ın "yarın biter" vaadinin neden gerçekleşmediğinin matematiksel kanıtıdır. Teknolojik üstünlük, doygunluk sınırını aştığında çöker.`;
+            } else if (leakRate > 20) {
+                title = '⚠️ AĞIR HASAR - KISMİ ÇÖKÜŞ';
+                text = `Sızıntı oranı %${leakRate}. Savunma kısmen ayakta kaldı ancak sivil hasar kabul edilemez seviyede. "Yenilmez kalkan" söylemi, fiziksel gerçeklikle çelişiyor.`;
+            } else {
+                title = '✅ SAVUNMA BAŞARILI - AMA...';
+                text = `Sızıntı oranı %${leakRate}. Klasik senaryoda başarılı oldunuz. Ancak gerçek savaşta İran, dron sürüsü ve hipersonik füzeleri birlikte kullanıyor. "Dron Sürüsü" veya "Hipersonik + Sürü" senaryolarını deneyin.`;
+            }
+            
+            formula = `Sonuç Formülü:\nP_leak = ${leakRate}% | Önlenen: ${state.intercepted}/${state.totalThreats}\nKalan Önleyici: ${state.remaining}/${config.N}\nWilkening Modeli: λ(tehdit) = ${state.totalThreats}, N(önleyici) = ${config.N}\nλ > N → Doygunluk Çöküşü ${state.totalThreats > config.N ? '✓ GERÇEKLEŞTİ' : '✗ Henüz değil'}`;
+            
+            document.getElementById('overlay-title').textContent = title;
+            document.getElementById('overlay-text').textContent = text;
+            document.getElementById('overlay-formula').textContent = formula;
+            document.getElementById('result-overlay').style.display = 'flex';
+        }
+        
+        function showAlternatives() {
+            document.getElementById('result-overlay').style.display = 'none';
+            document.getElementById('phase-sim').style.display = 'none';
+            document.getElementById('phase-result').style.display = 'block';
+            
+            document.getElementById('result-content').innerHTML = `
+                <h3 style="color:#C9A24B; margin-bottom:15px;">ALTERNATİF STRATEJİLER (Koyuncu Doktrini)</h3>
+                
+                <div style="background:#1a2535; padding:15px; border-radius:8px; margin-bottom:12px; border-left:4px solid #00C48C;">
+                    <strong style="color:#00C48C;">1. Asimetrik Caydırıcılık</strong>
+                    <p style="font-size:0.85em; margin-top:5px;">Savunma yerine saldırı: Fırlatma noktalarını vurmak, dron sürüsünü kaynağında yok etmek. Maliyet: 1 cruise füze = 100 dron imhası.</p>
+                </div>
+                
+                <div style="background:#1a2535; padding:15px; border-radius:8px; margin-bottom:12px; border-left:4px solid #00E0FF;">
+                    <strong style="color:#00E0FF;">2. Elektronik Harp (EH) Katmanı</strong>
+                    <p style="font-size:0.85em; margin-top:5px;">Dronların GPS/navigasyon sinyallerini bozmak. Maliyet: Füze başına $2M yerine EH sistemi $50K/operasyon. Koyuncu'nun "Spektrum Savaşı" konsepti.</p>
+                </div>
+                
+                <div style="background:#1a2535; padding:15px; border-radius:8px; margin-bottom:12px; border-left:4px solid #ff9a3c;">
+                    <strong style="color:#ff9a3c;">3. Otonom Karşı-Sürü (Counter-Swarm)</strong>
+                    <p style="font-size:0.85em; margin-top:5px;">Düşman sürüsüne karşı kendi dron sürünüzü göndermek. Birim maliyet: $500 vs $30.000. Asimetriyi tersine çevirmek.</p>
+                </div>
+                
+                <div style="background:#1a2535; padding:15px; border-radius:8px; margin-bottom:12px; border-left:4px solid #C9A24B;">
+                    <strong style="color:#C9A24B;">4. Bilişsel Katman (Diplomasi + Algı)</strong>
+                    <p style="font-size:0.85em; margin-top:5px;">Savaşı fiziksel alanda kazanamıyorsanız, bilişsel alanda bitirin. Trump'ın 37 vaadi bu katmanda çalışıyor - ancak sahadaki fizikle uyumsuz olduğu için başarısız.</p>
+                </div>
+                
+                <div class="formula-box">
+                    <strong>Koyuncu Kanunu:</strong><br>
+                    "Teknoloji tek başına savaş kazanmaz. Savaşı kazanan; OODA döngüsünü en hızlı tamamlayan, maliyet asimetrisini lehine çeviren ve bilişsel alanı kontrol eden taraftır."
+                </div>
+                
+                <button class="btn btn-primary" onclick="resetSimulation()" style="margin-top:15px;">🔄 FARKLI SENARYO DENE</button>
+            `;
+        }
+        
+        function resetSimulation() {
+            document.getElementById('result-overlay').style.display = 'none';
+            document.getElementById('phase-sim').style.display = 'none';
+            document.getElementById('phase-result').style.display = 'none';
+            document.getElementById('phase-setup').style.display = 'block';
+            document.querySelectorAll('.phase-dot').forEach(d => { d.classList.remove('active', 'completed'); });
+            document.getElementById('pd1').classList.add('active');
+            document.getElementById('battle-log').innerHTML = '';
+            clearRadar();
+        }
+        
+        function addLog(msg, type) {
+            const log = document.getElementById('battle-log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function addThreatToRadar() {
+            const radar = document.getElementById('radar');
+            const threat = document.createElement('div');
+            threat.className = 'threat';
+            threat.style.left = (15 + Math.random() * 70) + '%';
+            threat.style.top = (15 + Math.random() * 70) + '%';
+            radar.appendChild(threat);
+        }
+        
+        function clearRadar() {
+            document.querySelectorAll('.threat, .interceptor').forEach(el => el.remove());
+        }
+    
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Musk İmparatorluğu — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Chakra Petch',system-ui;background:#0a0f17;color:#e8e8e8;min-height:100vh;padding:20px;display:flex;flex-direction:column;align-items:center}
+h1{font-size:2rem;color:#f4a261;margin:20px 0 10px;text-align:center}
+.subtitle{color:#888;margin-bottom:20px;text-align:center;max-width:500px}
+.empire{max-width:700px;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.company{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .3s}
+.company:hover{border-color:#f4a261;transform:translateY(-2px)}
+.company.active{border-color:#f4a261;box-shadow:0 0 20px #f4a26133}
+.company .icon{font-size:2rem;margin-bottom:8px}
+.company .name{font-weight:700;margin-bottom:4px}
+.company .val{color:#f4a261;font-size:1.2rem;font-weight:700}
+.event-box{max-width:700px;width:100%;background:#111827;border:1px solid #1f2937;border-radius:16px;padding:24px;margin-bottom:20px}
+.event-box h3{color:#f4a261;margin-bottom:12px}
+.event-box p{line-height:1.7;margin-bottom:16px}
+.actions{display:flex;flex-direction:column;gap:10px}
+.act-btn{background:#1f2937;border:1px solid #374151;color:#e8e8e8;padding:12px 16px;border-radius:8px;cursor:pointer;font-size:.9rem;text-align:left;transition:all .2s;font-family:inherit}
+.act-btn:hover{border-color:#f4a261;background:#0a0f17}
+.year-display{text-align:center;font-size:1.5rem;color:#f4a261;margin-bottom:10px}
+.net-worth{text-align:center;font-size:2.5rem;font-weight:900;color:#C9A24B;margin-bottom:20px}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-size:13px;border:1px solid #00E0FF33;">← OZA Hub</a>
+<h1>🚀 Musk İmparatorluğu</h1>
+<p class="subtitle">Teknoloji imparatorluğunu yönet — her karar servetini ve gücünü etkiler</p>
+<div class="year-display" id="year">2024</div>
+<div class="net-worth" id="networth">$180M</div>
+<div class="empire" id="empire"></div>
+<div class="event-box" id="eventbox"></div>
+<script>
+const companies=[
+{id:'tesla',icon:'🚗',name:'Tesla',val:0},
+{id:'spacex',icon:'🚀',name:'SpaceX',val:0},
+{id:'xai',icon:'🧠',name:'xAI',val:0},
+{id:'neuralink',icon:'🧬',name:'Neuralink',val:0},
+{id:'starlink',icon:'📡',name:'Starlink',val:0},
+{id:'x',icon:'📱',name:'X Platform',val:0}
+];
+const events=[
+{year:2024,text:"PayPal satışından 180M$ elde ettin. İlk yatırımını yap!",opts:[
+{t:"Tesla'ya 100M$ yatır — elektrikli araç devrimi",eff:{tesla:50,networth:80}},
+{t:"SpaceX'e 100M$ yatır — uzay keşfi",eff:{spacex:50,networth:60}},
+{t:"İkisine eşit böl",eff:{tesla:25,spacex:25,networth:70}}]},
+{year:2025,text:"Tesla hisseleri %400 yükseldi! Ama Çin rekabeti artıyor.",opts:[
+{t:"FSD (Tam Otonom Sürüş) geliştir",eff:{tesla:30,xai:10,networth:120}},
+{t:"Optimus robot üretimine başla",eff:{tesla:20,neuralink:15,networth:90}},
+{t:"Çin pazarından çekil, ABD'ye odaklan",eff:{tesla:-10,networth:50}}]},
+{year:2026,text:"Starlink 6000 uyduya ulaştı. Askeri sözleşme teklifi geldi.",opts:[
+{t:"Starshield askeri versiyonu geliştir",eff:{starlink:40,spacex:20,networth:150}},
+{t:"Sivil internet odaklı kal",eff:{starlink:20,networth:80}},
+{t:"Orbital hesaplama merkezleri kur",eff:{starlink:30,xai:25,networth:130}}]},
+{year:2027,text:"xAI'nin Grok modeli GPT-5'i geçti! Ama düzenleyiciler endişeli.",opts:[
+{t:"Açık kaynak yap — topluluk güvenini kazan",eff:{xai:20,x:15,networth:60}},
+{t:"Kapalı tut — rekabet avantajı koru",eff:{xai:35,networth:100}},
+{t:"X platformuna entegre et — veri avantajı",eff:{xai:25,x:30,networth:120}}]},
+{year:2028,text:"Neuralink ilk 1000 hastaya implant taktı. Askeri ilgi büyük.",opts:[
+{t:"Askeri BCI programı başlat",eff:{neuralink:40,networth:200}},
+{t:"Tıbbi odaklı kal — felçli hastalar öncelik",eff:{neuralink:25,networth:80}},
+{t:"Optimus robotlara Neuralink entegre et",eff:{neuralink:30,tesla:20,networth:150}}]},
+{year:2029,text:"Twitter/X değeri 9M$'a düştü. Platform karar anında.",opts:[
+{t:"Yapay zekâ odaklı süper uygulama yap",eff:{x:35,xai:15,networth:90}},
+{t:"Sat ve xAI'ye odaklan",eff:{x:-50,xai:30,networth:120}},
+{t:"Grok'u X'in çekirdeği yap — her şey YZ",eff:{x:25,xai:20,networth:100}}]},
+{year:2030,text:"Tüm şirketler birleşik ekosistem oldu. Son hamle!",opts:[
+{t:"Mars kolonisi başlat — insanlığın sigortası",eff:{spacex:50,networth:300}},
+{t:"Medeniyet İşletim Sistemi ilan et",eff:{tesla:20,spacex:20,xai:20,neuralink:20,starlink:20,x:20,networth:500}},
+{t:"Emekli ol — kontrolü YZ'ye bırak",eff:{xai:50,networth:200}}]}
+];
+let turn=0,networth=180;
+function renderEmpire(){
+  const el=document.getElementById('empire');
+  el.innerHTML='';
+  companies.forEach(c=>{
+    el.innerHTML+=`<div class="company ${c.val>0?'active':''}"><div class="icon">${c.icon}</div><div class="name">${c.name}</div><div class="val">${c.val>0?c.val+'B$':'—'}</div></div>`;
+  });
+}
+function renderEvent(){
+  if(turn>=events.length){showEnd();return;}
+  const e=events[turn];
+  document.getElementById('year').textContent=e.year;
+  document.getElementById('networth').textContent='$'+networth+'M';
+  const box=document.getElementById('eventbox');
+  let html=`<h3>📰 Olay</h3><p>${e.text}</p><div class="actions">`;
+  e.opts.forEach((o,i)=>{
+    html+=`<button class="act-btn" onclick="choose(${i})">${o.t}</button>`;
+  });
+  html+='</div>';
+  box.innerHTML=html;
+}
+function choose(i){
+  const eff=events[turn].opts[i].eff;
+  Object.keys(eff).forEach(k=>{
+    if(k==='networth')networth+=eff[k];
+    else{
+      const c=companies.find(x=>x.id===k);
+      if(c)c.val+=eff[k];
+    }
+  });
+  turn++;
+  renderEmpire();
+  renderEvent();
+}
+function showEnd(){
+  const total=companies.reduce((s,c)=>s+c.val,0);
+  document.getElementById('eventbox').innerHTML=`<div style="text-align:center;padding:20px"><h2 style="color:#f4a261;margin-bottom:16px">İmparatorluk Tamamlandı!</h2><p style="font-size:2rem;color:#C9A24B;font-weight:900">$${networth}M Net Değer</p><p style="margin:12px 0;color:#888">Toplam Şirket Değeri: ${total}B$</p><button onclick="location.reload()" style="margin-top:16px;padding:12px 24px;background:#f4a261;color:#0a0f17;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:700">Tekrar Oyna</button></div>`;
+}
+renderEmpire();
+renderEvent();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

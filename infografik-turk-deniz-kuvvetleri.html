@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Türk Deniz Kuvvetleri — İnteraktif İnfografik | Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--deep:#030a14;--navy:#0a1a30;--blue:#0ea5e9;--gold:#C9A24B;--red:#E01515;--white:#f0f4f8;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--deep);color:var(--white);overflow-x:hidden;}
+a{color:var(--blue);text-decoration:none;}
+
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:.8rem 1.5rem;background:rgba(3,10,20,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(14,165,233,.15);}
+.top-bar a{font-size:.85rem;font-weight:600;letter-spacing:1px;color:var(--blue);}
+#soundToggle{background:none;border:1px solid rgba(14,165,233,.3);color:var(--blue);padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-size:.8rem;}
+
+.hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.hero canvas{position:absolute;inset:0;z-index:0;}
+.hero-content{position:relative;z-index:2;text-align:center;}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:900;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(135deg,var(--blue),#7dd3fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero .sub{font-size:clamp(.9rem,2vw,1.3rem);color:rgba(240,244,248,.5);margin-top:1rem;letter-spacing:2px;}
+.hero .motto{font-size:.9rem;color:var(--gold);margin-top:1.5rem;font-style:italic;letter-spacing:1px;}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.4);font-size:.8rem;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);}}
+
+.section{padding:5rem 2rem;max-width:1200px;margin:0 auto;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.19,1,.22,1);}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-title{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:800;margin-bottom:2rem;position:relative;padding-left:1.5rem;}
+.section-title::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue);border-radius:2px;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem;margin:2rem 0;}
+.stat-card{background:rgba(14,165,233,.03);border:1px solid rgba(14,165,233,.15);border-radius:12px;padding:1.5rem;text-align:center;transition:all .3s;}
+.stat-card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 10px 30px rgba(14,165,233,.1);}
+.stat-num{font-size:2.2rem;font-weight:900;color:var(--blue);font-family:'Courier New',monospace;}
+.stat-label{font-size:.95rem;color:rgba(255,255,255,.6);margin-top:.5rem;text-transform:uppercase;letter-spacing:1px;}
+
+.timeline{position:relative;padding-left:3rem;margin:2rem 0;}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--blue),var(--gold),var(--red));}
+.tl-item{position:relative;margin-bottom:2rem;opacity:0;transform:translateX(-20px);transition:all .6s;}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-item::before{content:'';position:absolute;left:-2.4rem;top:.5rem;width:12px;height:12px;border-radius:50%;background:var(--blue);border:2px solid var(--deep);box-shadow:0 0 10px var(--blue);}
+.tl-year{font-size:.95rem;color:var(--gold);font-weight:700;letter-spacing:2px;}
+.tl-title{font-size:1rem;font-weight:700;margin:.2rem 0;}
+.tl-desc{font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.4;}
+
+.fleet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:2rem 0;}
+.fleet-card{background:linear-gradient(135deg,rgba(14,165,233,.03),rgba(0,50,100,.05));border:1px solid rgba(14,165,233,.12);border-radius:12px;padding:1.5rem;transition:all .4s;position:relative;overflow:hidden;}
+.fleet-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity .3s;}
+.fleet-card:hover{border-color:var(--blue);transform:translateY(-3px);}
+.fleet-card:hover::before{opacity:1;}
+.fleet-icon{font-size:2.5rem;margin-bottom:1rem;}
+.fleet-name{font-size:1.1rem;font-weight:700;color:var(--blue);margin-bottom:.3rem;}
+.fleet-type{font-size:.9rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:.8rem;}
+.fleet-specs{list-style:none;font-size:.8rem;color:rgba(255,255,255,.7);}
+.fleet-specs li{padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.fleet-specs li span{color:var(--blue);font-weight:600;}
+
+/* Mavi Vatan Map */
+.mavi-vatan{background:rgba(14,165,233,.02);border:1px solid rgba(14,165,233,.1);border-radius:16px;padding:2rem;margin:2rem 0;text-align:center;}
+.mavi-vatan h3{color:var(--blue);font-size:1.5rem;margin-bottom:1rem;}
+.mv-stats{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;margin:1.5rem 0;}
+.mv-stat{text-align:center;}
+.mv-stat .num{font-size:2rem;font-weight:900;color:var(--blue);}
+.mv-stat .lbl{font-size:.9rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;}
+
+.compare-bar{display:flex;align-items:center;margin:.8rem 0;gap:1rem;}
+.compare-label{width:120px;font-size:.95rem;color:rgba(255,255,255,.7);text-align:right;}
+.compare-track{flex:1;height:20px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;}
+.compare-fill{height:100%;border-radius:10px;transition:width 1.5s cubic-bezier(.19,1,.22,1);width:0;}
+.compare-val{font-size:.9rem;font-weight:700;position:absolute;right:8px;top:50%;transform:translateY(-50%);color:white;text-shadow:0 1px 3px rgba(0,0,0,.5);}
+
+.footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(14,165,233,.1);font-size:.95rem;color:rgba(255,255,255,.4);}
+
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .fleet-grid{grid-template-columns:1fr;}
+  .mv-stats{gap:1rem;}
+  .compare-label{width:80px;font-size:.85rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+
+<div class="top-bar">
+  <a href="index.html">← Harb-i Strateji</a>
+  <button id="soundToggle">🔇</button>
+</div>
+
+<section class="hero">
+  <canvas id="oceanCanvas"></canvas>
+  <div class="hero-content">
+    <div style="font-size:.8rem;letter-spacing:4px;color:var(--gold);margin-bottom:1rem;">TÜRK SİLAHLI KUVVETLERİ</div>
+    <h1>DENİZ KUVVETLERİ</h1>
+    <div class="sub">1081 Çaka Bey'den Mavi Vatan'a — Denizlerin Efendisi</div>
+    <div class="motto">"Denize hâkim olan cihana hâkim olur."</div>
+  </div>
+  <div class="scroll-hint">▼ Keşfetmek için kaydırın</div>
+</section>
+
+<div class="section" id="stats">
+  <div class="section-title">Donanma Profili 2026</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" data-target="194">0</div><div class="stat-label">Savaş Gemisi</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="12">0</div><div class="stat-label">Denizaltı</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="16">0</div><div class="stat-label">Fırkateyn</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="10">0</div><div class="stat-label">Korvet</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="50000">0</div><div class="stat-label">Personel</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="462">0</div><div class="stat-label">Mavi Vatan (bin km²)</div></div>
+  </div>
+</div>
+
+<div class="section" id="mavivatan">
+  <div class="mavi-vatan">
+    <h3>🌊 MAVİ VATAN DOKTRİNİ</h3>
+    <p style="color:rgba(255,255,255,.6);font-size:.9rem;max-width:700px;margin:0 auto 1.5rem;">Türkiye'nin Karadeniz, Ege ve Akdeniz'deki deniz yetki alanlarını kapsayan stratejik doktrin.</p>
+    <div class="mv-stats">
+      <div class="mv-stat"><div class="num" data-target="462">0</div><div class="lbl">Bin km² Alan</div></div>
+      <div class="mv-stat"><div class="num" data-target="8333">0</div><div class="lbl">km Kıyı Şeridi</div></div>
+      <div class="mv-stat"><div class="num" data-target="3">0</div><div class="lbl">Deniz (Karadeniz, Ege, Akdeniz)</div></div>
+      <div class="mv-stat"><div class="num" data-target="7">0</div><div class="lbl">Deniz Üssü</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="timeline">
+  <div class="section-title">Denizcilik Tarihi</div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-year">1081</div><div class="tl-title">Çaka Bey — İlk Türk Donanması</div><div class="tl-desc">İzmir'de ilk Türk deniz kuvvetini kurdu. Ege adalarını fethetti.</div></div>
+    <div class="tl-item"><div class="tl-year">1470</div><div class="tl-title">Fatih'in Donanması</div><div class="tl-desc">400 gemilik donanma ile Ege ve Karadeniz'de hakimiyet.</div></div>
+    <div class="tl-item"><div class="tl-year">1538</div><div class="tl-title">Preveze Deniz Zaferi</div><div class="tl-desc">Barbaros Hayreddin Paşa, Haçlı donanmasını yenilgiye uğrattı. Akdeniz Türk gölü oldu.</div></div>
+    <div class="tl-item"><div class="tl-year">1571</div><div class="tl-title">İnebahtı — Dönüm Noktası</div><div class="tl-desc">Büyük kayıp, ama 6 ayda donanma yeniden inşa edildi.</div></div>
+    <div class="tl-item"><div class="tl-year">1770</div><div class="tl-title">Çeşme Faciası</div><div class="tl-desc">Osmanlı donanması Rus ateşiyle yok edildi. Modernizasyon zorunluluğu.</div></div>
+    <div class="tl-item"><div class="tl-year">1915</div><div class="tl-title">Çanakkale Deniz Savaşı</div><div class="tl-desc">Nusret Mayın Gemisi'nin döşediği mayınlar İtilaf donanmasını durdurdu.</div></div>
+    <div class="tl-item"><div class="tl-year">2019</div><div class="tl-title">Mavi Vatan Tatbikatı</div><div class="tl-desc">Türkiye'nin en büyük deniz tatbikatı. 131 gemi, 57 uçak, 33 helikopter.</div></div>
+    <div class="tl-item"><div class="tl-year">2023</div><div class="tl-title">TCG ANADOLU — LHD</div><div class="tl-desc">Dünyanın ilk SİHA gemisi. İnsansız hava aracı taşıyıcı amiral gemisi.</div></div>
+    <div class="tl-item"><div class="tl-year">2024</div><div class="tl-title">TCG İSTANBUL Fırkateyni</div><div class="tl-desc">MİLGEM projesinin en büyük gemisi. Tam yerli savaş yönetim sistemi.</div></div>
+    <div class="tl-item"><div class="tl-year">2028+</div><div class="tl-title">TF-2000 Hava Savunma Muhribi</div><div class="tl-desc">Yerli muhrip projesi. Filo hava savunması yeteneği.</div></div>
+  </div>
+</div>
+
+<div class="section" id="fleet">
+  <div class="section-title">Aktif Filo</div>
+  <div class="fleet-grid">
+    <div class="fleet-card">
+      <div class="fleet-icon">🚢</div>
+      <div class="fleet-name">TCG ANADOLU (L-408)</div>
+      <div class="fleet-type">Çok Maksatlı Amfibi Hücum Gemisi</div>
+      <ul class="fleet-specs">
+        <li><span>Deplasman:</span> 27.436 ton</li>
+        <li><span>Uzunluk:</span> 231 m</li>
+        <li><span>Uçak:</span> TB3, Kızılelma, helikopter</li>
+        <li><span>Araç:</span> 13 AAV + 27 tank</li>
+        <li><span>Özellik:</span> Dünyanın ilk SİHA gemisi</li>
+      </ul>
+    </div>
+    <div class="fleet-card">
+      <div class="fleet-icon">⚓</div>
+      <div class="fleet-name">TCG İSTANBUL (F-515)</div>
+      <div class="fleet-type">İ-Sınıfı Fırkateyn</div>
+      <ul class="fleet-specs">
+        <li><span>Deplasman:</span> 3.000 ton</li>
+        <li><span>Silah:</span> 16x ATMACA + VLS</li>
+        <li><span>Radar:</span> ÇAFRAD (yerli AESA)</li>
+        <li><span>EH:</span> ARES-2N</li>
+        <li><span>CMS:</span> GENESİS-ADVENT (yerli)</li>
+      </ul>
+    </div>
+    <div class="fleet-card">
+      <div class="fleet-icon">🦈</div>
+      <div class="fleet-name">REİS Sınıfı Denizaltı</div>
+      <div class="fleet-type">Tip 214TN AIP Denizaltı</div>
+      <ul class="fleet-specs">
+        <li><span>Deplasman:</span> 1.850 ton</li>
+        <li><span>AIP:</span> Yakıt hücresi (14 gün)</li>
+        <li><span>Silah:</span> 8 torpido + ATMACA</li>
+        <li><span>Derinlik:</span> 250+ m</li>
+        <li><span>Adet:</span> 6 (inşa halinde)</li>
+      </ul>
+    </div>
+    <div class="fleet-card">
+      <div class="fleet-icon">🎯</div>
+      <div class="fleet-name">ATMACA Gemisavar Füze</div>
+      <div class="fleet-type">Yerli Seyir Füzesi</div>
+      <ul class="fleet-specs">
+        <li><span>Menzil:</span> 250+ km</li>
+        <li><span>Güdüm:</span> INS + GPS + IIR + RF</li>
+        <li><span>Başlık:</span> 250 kg</li>
+        <li><span>Profil:</span> Deniz sathı (sea-skimming)</li>
+        <li><span>Durum:</span> Seri üretimde</li>
+      </ul>
+    </div>
+    <div class="fleet-card">
+      <div class="fleet-icon">🛡️</div>
+      <div class="fleet-name">ADA Sınıfı Korvet</div>
+      <div class="fleet-type">MİLGEM Korvet</div>
+      <ul class="fleet-specs">
+        <li><span>Deplasman:</span> 2.400 ton</li>
+        <li><span>Silah:</span> 8x Harpoon + RAM</li>
+        <li><span>Hız:</span> 29+ knot</li>
+        <li><span>Adet:</span> 4 aktif</li>
+        <li><span>İhracat:</span> Pakistan (4 adet)</li>
+      </ul>
+    </div>
+    <div class="fleet-card">
+      <div class="fleet-icon">💣</div>
+      <div class="fleet-name">MİLDEN — Milli Denizaltı</div>
+      <div class="fleet-type">Yerli Tasarım Denizaltı</div>
+      <ul class="fleet-specs">
+        <li><span>Deplasman:</span> 2.700 ton</li>
+        <li><span>AIP:</span> Lityum-iyon batarya</li>
+        <li><span>Silah:</span> Torpido + ATMACA + SOM</li>
+        <li><span>Özellik:</span> %100 yerli tasarım</li>
+        <li><span>Hedef:</span> 2030 denize iniş</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="compare">
+  <div class="section-title">Bölgesel Deniz Gücü (Toplam Gemi)</div>
+  <div style="margin:2rem 0;">
+    <div class="compare-bar"><div class="compare-label">Türkiye</div><div class="compare-track"><div class="compare-fill" data-width="78" style="background:linear-gradient(90deg,var(--blue),#0369a1);"><span class="compare-val">194</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">Yunanistan</div><div class="compare-track"><div class="compare-fill" data-width="52" style="background:linear-gradient(90deg,#60a5fa,#2563eb);"><span class="compare-val">115</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">Mısır</div><div class="compare-track"><div class="compare-fill" data-width="90" style="background:linear-gradient(90deg,#fbbf24,#d97706);"><span class="compare-val">245</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">İsrail</div><div class="compare-track"><div class="compare-fill" data-width="28" style="background:linear-gradient(90deg,#34d399,#059669);"><span class="compare-val">67</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">İran</div><div class="compare-track"><div class="compare-fill" data-width="85" style="background:linear-gradient(90deg,#f87171,#dc2626);"><span class="compare-val">230</span></div></div></div>
+  </div>
+</div>
+
+<div class="footer">HARB-İ STRATEJİ · TÜRK DENİZ KUVVETLERİ ANALİZİ · 2026</div>
+
+<script>
+let audioCtx, soundEnabled = false;
+document.getElementById('soundToggle').addEventListener('click', function(){
+  soundEnabled = !soundEnabled;
+  this.textContent = soundEnabled ? '🔊' : '🔇';
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+});
+function playTone(freq, dur){
+  if(!soundEnabled || !audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = 'sine'; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+
+// Ocean canvas - waves
+const canvas = document.getElementById('oceanCanvas');
+const ctx = canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+
+let t = 0;
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Waves
+  for(let w=0;w<5;w++){
+    ctx.beginPath();
+    const baseY = canvas.height * 0.5 + w * 40;
+    const alpha = 0.08 - w * 0.012;
+    for(let x=0;x<=canvas.width;x+=3){
+      const y = baseY + Math.sin((x + t * (1 + w*0.3)) * 0.008) * 20 + Math.sin((x + t * 0.5) * 0.015) * 10;
+      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(14,165,233,${alpha})`;
+    ctx.fill();
+  }
+  // Bubbles
+  for(let i=0;i<8;i++){
+    const bx = (i * 170 + t * 0.3) % canvas.width;
+    const by = canvas.height * 0.6 + Math.sin(t * 0.02 + i) * 30;
+    ctx.beginPath();ctx.arc(bx,by,3,0,Math.PI*2);
+    ctx.fillStyle='rgba(14,165,233,0.2)';ctx.fill();
+  }
+  t++;
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Scroll observer
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      playTone(500 + Math.random()*300, 0.4);
+      e.target.querySelectorAll('.stat-num[data-target],.num[data-target]').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let current = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+          current += step;
+          if(current >= target){current = target; clearInterval(timer);}
+          el.textContent = Math.floor(current).toLocaleString('tr-TR');
+        }, 25);
+      });
+      e.target.querySelectorAll('.compare-fill').forEach(el => {
+        setTimeout(() => {el.style.width = el.dataset.width + '%';}, 300);
+      });
+    }
+  });
+}, {threshold: 0.15});
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+const tlObserver = new IntersectionObserver((entries) => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting) setTimeout(() => {e.target.classList.add('visible');playTone(700,0.15);}, i*100);
+  });
+}, {threshold: 0.3});
+document.querySelectorAll('.tl-item').forEach(t => tlObserver.observe(t));
+</script>
+</body>
+</html>

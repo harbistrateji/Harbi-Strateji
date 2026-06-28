@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>OZA∞ — Geçmişten Geleceğe Bilgi...</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#060a10;--surface:#0d1117;--card:#161b22;--border:#21262d;--text:#e6edf3;--muted:#8b949e;--accent:#00ff88;--accent2:#00bfff;--red:#ff4757;--gold:#ffd700;--purple:#a855f7;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+a{color:var(--accent);text-decoration:none;}
+/* === TOP NAV === */
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(6,10,16,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px;}
+.top-nav .logo{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);}
+.top-nav .logo span{color:var(--accent);}
+.top-nav .nav-links{display:flex;gap:16px;margin-left:auto;}
+.top-nav .nav-links a{color:var(--muted);font-size:.85rem;transition:color .2s;}
+.top-nav .nav-links a:hover{color:var(--text);}
+.live-badge{background:var(--red);color:#fff;font-size:.65rem;padding:2px 8px;border-radius:4px;font-weight:700;animation:livePulse 2s infinite;}
+@keyframes livePulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+/* === MAIN LAYOUT === */
+.main-container{margin-top:56px;display:grid;grid-template-columns:1fr 360px;min-height:calc(100vh - 56px);}
+@media(max-width:1024px){.main-container{grid-template-columns:1fr;}}
+/* === TV SCREEN === */
+.tv-screen{position:relative;background:#000;aspect-ratio:16/9;max-height:65vh;overflow:hidden;}
+.tv-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px;transition:opacity .6s ease;}
+.tv-content.fade-out{opacity:0;}
+.tv-content.fade-in{opacity:1;}
+.scene-category{font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;font-weight:600;}
+.scene-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;text-align:center;margin-bottom:16px;text-shadow:0 2px 20px rgba(0,255,136,.3);}
+.scene-desc{font-size:1rem;color:var(--muted);text-align:center;max-width:700px;line-height:1.6;margin-bottom:24px;}
+.scene-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;max-width:800px;width:100%;}
+.fact-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:14px;text-align:center;transition:transform .3s,border-color .3s;}
+.fact-card:hover{transform:translateY(-2px);border-color:var(--accent);}
+.fact-icon{font-size:1.5rem;margin-bottom:6px;}
+.fact-value{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;font-weight:700;color:var(--accent);}
+.fact-label{font-size:.72rem;color:var(--muted);margin-top:4px;}
+/* Floating icons */
+.scene-visual{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.floating-icon{position:absolute;font-size:2rem;opacity:.12;animation:floatAround 20s linear infinite;}
+@keyframes floatAround{0%{transform:translate(0,0) rotate(0deg);}25%{transform:translate(100px,-50px) rotate(90deg);}50%{transform:translate(50px,100px) rotate(180deg);}75%{transform:translate(-80px,50px) rotate(270deg);}100%{transform:translate(0,0) rotate(360deg);}}
+
+/* ===== TIMELINE PROGRESS BAR ===== */
+.timeline-container{background:var(--surface);border-bottom:1px solid var(--border);padding:0;}
+.timeline-bar{position:relative;height:40px;display:flex;cursor:pointer;overflow:hidden;}
+.timeline-segment{position:relative;height:100%;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.05);transition:all .3s;overflow:hidden;}
+.timeline-segment:hover{background:rgba(255,255,255,.08);}
+.timeline-segment.active{background:rgba(0,255,136,.1);}
+.timeline-segment.played{background:rgba(0,255,136,.03);}
+.timeline-segment-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,rgba(0,255,136,.3),rgba(0,191,255,.3));pointer-events:none;transition:width .1s linear;}
+.timeline-segment-label{font-size:.6rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px;z-index:1;pointer-events:none;max-width:100%;}
+.timeline-segment.active .timeline-segment-label{color:var(--accent);font-weight:600;}
+.timeline-segment-tooltip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.95);color:#fff;padding:6px 12px;border-radius:6px;font-size:.72rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;z-index:100;border:1px solid var(--border);}
+.timeline-segment:hover .timeline-segment-tooltip{opacity:1;}
+/* Timeline controls row */
+.timeline-controls{display:flex;align-items:center;gap:12px;padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border);}
+.tl-btn{background:none;border:none;color:var(--text);font-size:1.1rem;cursor:pointer;padding:6px 8px;border-radius:6px;transition:all .2s;}
+.tl-btn:hover{background:rgba(255,255,255,.08);color:var(--accent);}
+.tl-btn.active{color:var(--accent);}
+.tl-time{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted);}
+.tl-info{font-size:.78rem;color:var(--text);margin-left:auto;display:flex;align-items:center;gap:8px;}
+.tl-info .ep-name{font-weight:600;color:var(--accent);max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tl-speed{display:flex;gap:2px;}
+.tl-speed button{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:2px 8px;font-size:.65rem;border-radius:4px;cursor:pointer;transition:all .2s;}
+.tl-speed button:hover,.tl-speed button.active{background:var(--accent);color:#000;border-color:var(--accent);}
+.tl-volume{display:flex;align-items:center;gap:4px;}
+.vol-slider{width:60px;height:4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.2);border-radius:2px;outline:none;cursor:pointer;}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--accent);border-radius:50%;cursor:pointer;}
+
+/* === SIDEBAR PLAYLIST === */
+.sidebar{background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px;}
+@media(max-width:1024px){.sidebar{max-height:50vh;border-left:none;border-top:1px solid var(--border);}}
+.sidebar-header{padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:10;}
+.sidebar-title{font-family:'Chakra Petch',sans-serif;font-size:.9rem;font-weight:600;margin-bottom:8px;}
+.sidebar-stats{font-size:.75rem;color:var(--muted);}
+.cat-filters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 20px;border-bottom:1px solid var(--border);}
+.cat-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:12px;font-size:.7rem;cursor:pointer;transition:all .2s;}
+.cat-btn:hover,.cat-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
+/* Playlist items */
+.playlist{padding:8px 0;}
+.pl-item{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;padding:10px 20px;cursor:pointer;transition:background .2s;border-left:3px solid transparent;}
+.pl-item:hover{background:rgba(255,255,255,.03);}
+.pl-item.active{background:rgba(0,255,136,.05);border-left-color:var(--accent);}
+.pl-item.watched{opacity:.6;}
+.pl-num{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);text-align:center;}
+.pl-info{padding:0 10px;}
+.pl-title{font-size:.82rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pl-cat{font-size:.65rem;color:var(--muted);margin-top:2px;}
+.pl-dur{font-size:.7rem;color:var(--muted);text-align:right;}
+/* === BELOW TV: EPISODE DETAILS === */
+.episode-details{padding:30px 40px;max-width:1200px;}
+@media(max-width:1024px){.episode-details{padding:20px;}}
+.ep-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:24px;}
+.ep-icon{font-size:2.5rem;}
+.ep-title{font-family:'Chakra Petch',sans-serif;font-size:1.5rem;font-weight:700;}
+.ep-category{font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+.ep-body{line-height:1.8;color:rgba(255,255,255,.8);margin-bottom:24px;}
+.ep-body p{margin-bottom:12px;}
+.ep-bullets{list-style:none;margin-bottom:24px;}
+.ep-bullets li{padding:8px 0 8px 24px;position:relative;color:rgba(255,255,255,.75);border-bottom:1px solid rgba(255,255,255,.05);}
+.ep-bullets li::before{content:'▸';position:absolute;left:0;color:var(--accent);}
+/* Info cards grid */
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:transform .3s,border-color .3s;}
+.info-card:hover{transform:translateY(-3px);border-color:var(--accent);}
+.info-card-icon{font-size:1.8rem;margin-bottom:8px;}
+.info-card-title{font-weight:600;font-size:.9rem;margin-bottom:6px;}
+.info-card-text{font-size:.8rem;color:var(--muted);line-height:1.5;}
+/* Related links */
+.ep-related{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
+.ep-related h4{font-size:.85rem;color:var(--muted);margin-bottom:12px;}
+.ep-related-links{display:flex;flex-wrap:wrap;gap:8px;}
+.ep-related-links a{background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:6px;font-size:.8rem;transition:all .2s;}
+.ep-related-links a:hover{border-color:var(--accent);background:rgba(0,255,136,.05);}
+/* Music toggle */
+.music-btn{position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--border);color:var(--text);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem;z-index:999;transition:all .3s;}
+.music-btn:hover{border-color:var(--accent);transform:scale(1.1);}
+.music-btn.playing{border-color:var(--accent);box-shadow:0 0 20px rgba(0,255,136,.3);}
+/* Total progress indicator */
+.total-progress{height:3px;background:rgba(255,255,255,.05);position:relative;}
+.total-progress-fill{height:100%;background:var(--accent);transition:width .5s;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="logo">OZA·<span>∞</span> <span style="font-size:.6rem;color:#64748b;font-weight:400;margin-left:8px;font-style:italic">Geçmişten geleceğe bilgi...</span></div>
+  
+  <div class="nav-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+  </div>
+</nav>
+<!-- MAIN LAYOUT -->
+<div class="main-container">
+  <div>
+    <!-- TV SCREEN -->
+    <div class="tv-screen" id="tvScreen">
+      <div class="scene-visual" id="sceneVisual"></div>
+      <div class="tv-content" id="tvContent"></div>
+    </div>
+    <!-- TIMELINE PROGRESS BAR -->
+    <div class="timeline-container">
+      <div class="timeline-bar" id="timelineBar"></div>
+      <div class="total-progress"><div class="total-progress-fill" id="totalProgressFill"></div></div>
+      <div class="timeline-controls">
+        <button class="tl-btn" id="btnPrev" title="Önceki Bölüm">⏮</button>
+        <button class="tl-btn" id="btnPlay" title="Oynat/Duraklat">▶</button>
+        <button class="tl-btn" id="btnNext" title="Sonraki Bölüm">⏭</button>
+        <span class="tl-time" id="tlTime">00:00 / 00:00</span>
+        <div class="tl-info">
+          <span>Şimdi:</span>
+          <span class="ep-name" id="tlEpName">—</span>
+        </div>
+        <div class="tl-speed" id="speedBtns">
+          <button data-speed="0.5">0.5x</button>
+          <button data-speed="1" class="active">1x</button>
+          <button data-speed="2">2x</button>
+          <button data-speed="3">3x</button>
+        </div>
+        <div class="tl-volume">
+          <button class="tl-btn" id="volBtn">🔊</button>
+          <input type="range" id="volSlider" min="0" max="100" value="50" class="vol-slider">
+        </div>
+        <button class="tl-btn" id="btnFullscreen" title="Tam Ekran">⛶</button>
+      </div>
+    </div>
+    <!-- EPISODE DETAILS BELOW TV -->
+    <div class="episode-details" id="episodeDetails"></div>
+  </div>
+  <!-- SIDEBAR PLAYLIST -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">∞ OZA∞ İÇERİK</div>
+      <div class="sidebar-stats" id="sidebarStats"></div>
+    </div>
+    <div class="cat-filters" id="catFilters"></div>
+    <div class="playlist" id="playlist"></div>
+  </aside>
+</div>
+<!-- MUSIC BUTTON -->
+<button class="music-btn" id="musicBtn" title="Müzik Aç/Kapa">🎵</button>
+<script>
+// ===== EPISODE DATA — REAL EDUCATIONAL CONTENT =====
+const episodes = [
+  {id:1,cat:"Doktrin",icon:"⚔️",title:"Sun Tzu'nun Beş Faktörü",dur:35,desc:"MÖ 5. yüzyılda yazılan Savaş Sanatı, tarihin en etkili askeri tezlerinden biridir. Sun Tzu'ya göre savaşın sonucunu belirleyen beş temel faktör vardır.",bullets:["Tao (Yol): Halkın liderle uyumu — moral ve meşruiyet","Gök: Hava, mevsim, zamanlama — doğa koşulları","Yer: Arazi, mesafe, tehlike — coğrafi avantaj","Komutan: Bilgelik, güvenilirlik, cesaret, disiplin","Yöntem: Organizasyon, lojistik, tedarik zinciri"],cards:[{icon:"📜",title:"MÖ 512",text:"Çin Wu Devleti döneminde yazıldı"},{icon:"🌍",title:"2500+ Yıl",text:"Tüm dünya ordularını etkiledi"},{icon:"🎯",title:"Ana Prensip",text:"Savaşmadan kazanmak en yüce strateji"},{icon:"📊",title:"13 Bölüm",text:"Planlama, savaş, taktik, enerji..."}],related:[{text:"OODA Döngüsü",href:"ooda-x-super-dongu-simulatoru.html"},{text:"Doktrin Testi",href:"oza-doktrin-testi.html"}]},
+  {id:2,cat:"Doktrin",icon:"🌫️",title:"Clausewitz: Savaş Sisi",dur:30,desc:"Carl von Clausewitz'in 'Savaş Üzerine' eseri, modern askeri düşüncenin temelini oluşturur. 'Savaş sisi' kavramı, muharebe alanındaki belirsizliği tanımlar.",bullets:["Savaş, politikanın başka araçlarla devamıdır","Sürtünme (Friction): Planla gerçeklik arasındaki fark","Ağırlık Merkezi (Schwerpunkt): Düşmanın kritik noktası","Mutlak Savaş vs Gerçek Savaş ayrımı","Savunmanın doğal üstünlüğü prensibi"],cards:[{icon:"📖",title:"Vom Kriege",text:"1832'de yayınlandı, tamamlanmadan kaldı"},{icon:"🇩🇪",title:"Prusya Ekolü",text:"Alman Genelkurmay geleneğinin temeli"},{icon:"⚡",title:"Sürtünme",text:"Basit olan bile savaşta zordur"},{icon:"🎯",title:"Schwerpunkt",text:"Kuvvet yoğunlaştırma noktası"}],related:[{text:"Bilişsel Kalkan",href:"sim3-bilissel-kalkan.html"},{text:"Algoritmik Harp",href:"sim01-algoritmik-harp.html"}]},
+  {id:3,cat:"Doktrin",icon:"🔄",title:"OODA Döngüsü Analizi",dur:35,desc:"John Boyd'un OODA döngüsü (Observe-Orient-Decide-Act), modern savaşın en etkili karar alma modelidir. Rakipten daha hızlı döngü = stratejik üstünlük.",bullets:["Observe (Gözle): İstihbarat toplama, sensör füzyonu","Orient (Yönel): Analiz, kültürel filtreler, önceki deneyim","Decide (Karar Ver): Seçenekleri değerlendir, plan seç","Act (Harekete Geç): Uygula ve sonucu gözle","Hız çarpanı: 250ms fark = %40 avantaj"],cards:[{icon:"✈️",title:"John Boyd",text:"F-16 tasarımcısı, 'Fighter Mafia' lideri"},{icon:"⚡",title:"Tempo",text:"Rakibin OODA'sını bozarak kaos yarat"},{icon:"🤖",title:"YZ Entegrasyonu",text:"Makine öğrenmesi ile 10ms OODA mümkün"},{icon:"🎮",title:"Simülasyon",text:"OODA-X: İnteraktif hız testi"}],related:[{text:"OODA-X Simülatörü",href:"ooda-x-super-dongu-simulatoru.html"},{text:"OODA-X Speed",href:"oza-ooda-x-speed.html"}]},
+  {id:4,cat:"Teknoloji",icon:"🚀",title:"Hipersonik Füze Yarışı",dur:35,desc:"Mach 5+ hızlarda uçan hipersonik silahlar, mevcut hava savunma sistemlerini geçersiz kılıyor. ABD, Rusya ve Çin arasındaki yarış küresel güç dengesini değiştiriyor.",bullets:["Hipersonik = Mach 5+ (6.174+ km/sa)","Boost-Glide: Balistik fırlatma + atmosferde kayma","Scramjet: Hava soluyan motor, sürekli hipersonik uçuş","Plazma kılıfı: İletişim kaybı problemi","Mevcut savunma: Tespit süresi yetersiz (30-60sn)"],cards:[{icon:"🇷🇺",title:"Avangard",text:"Mach 27, nükleer başlık taşıyabilir"},{icon:"🇨🇳",title:"DF-ZF",text:"Mach 10, manevra kabiliyetli"},{icon:"🇺🇸",title:"LRHW",text:"Dark Eagle, 2023'te IOC"},{icon:"🇹🇷",title:"Tayfun",text:"Mach 4-5, 1000+ km menzil"}],related:[{text:"Plazma Körlüğü Sim",href:"sim2-plazma-korlugu.html"},{text:"Hipersonik Yarış Oyunu",href:"oza-hipersonik-yaris.html"}]},
+  {id:5,cat:"Teknoloji",icon:"💎",title:"Kuantum Bilgisayar Tehdidi",dur:30,desc:"Kuantum bilgisayarlar, mevcut şifreleme sistemlerini kırabilecek güce ulaşıyor. 'Q-Day' — kuantum bilgisayarların RSA-2048'i kıracağı gün — 2030'dan önce gelebilir.",bullets:["Shor Algoritması: RSA/ECC şifrelemeyi kırar","Grover Algoritması: Simetrik şifreleri zayıflatır","Q-Day tahmini: 2028-2035 arası","Post-Quantum Kriptografi: NIST standartları (2024)","Harvest Now, Decrypt Later: Bugünkü veri yarın kırılır"],cards:[{icon:"🔐",title:"RSA-2048",text:"4096 qubit ile kırılabilir"},{icon:"🏢",title:"IBM Condor",text:"1121 qubit (2023)"},{icon:"🇨🇳",title:"Jiuzhang",text:"Foton tabanlı kuantum üstünlüğü"},{icon:"🛡️",title:"QKD",text:"Kuantum anahtar dağıtımı — kırılamaz"}],related:[{text:"Kuantum Kriptografi Sim",href:"kuantum-kriptografi-qkd-simulatoru.html"},{text:"Kuantum Lazer Siber",href:"sim11-kuantum-lazer-siber.html"}]},
+  {id:6,cat:"Jeopolitik",icon:"🛢️",title:"Hürmüz Boğazı Krizi",dur:35,desc:"Dünya petrol ticaretinin %20'si Hürmüz Boğazı'ndan geçiyor. İran'ın boğazı kapatma tehdidi, küresel enerji güvenliğinin en kritik kırılganlığıdır.",bullets:["Günlük geçiş: 21 milyon varil petrol","Genişlik: En dar nokta 33 km","İran'ın kapasitesi: Mayın, anti-gemi füze, hücumbot","ABD 5. Filo: Bahreyn merkezli caydırıcılık","Alternatif: Suudi Arabistan boru hattı (5M varil/gün)"],cards:[{icon:"🛢️",title:"21M Varil/Gün",text:"Küresel petrolün %20'si"},{icon:"⚓",title:"5. Filo",text:"ABD Deniz Kuvvetleri, Bahreyn"},{icon:"🚀",title:"İran Füzeleri",text:"Noor, Khalij Fars anti-gemi"},{icon:"💰",title:"Petrol Fiyatı",text:"Kapatılırsa +$50-100/varil"}],related:[{text:"Hürmüz Sim",href:"sim14-hurmuz-petrodolar.html"},{text:"Emtia İmparatorluğu",href:"oza-emtia-imparatorlugu.html"}]},
+  {id:7,cat:"Siber",icon:"🕷️",title:"Stuxnet: İlk Siber Silah",dur:30,desc:"2010'da keşfedilen Stuxnet, İran'ın Natanz nükleer tesisindeki santrifüjleri fiziksel olarak tahrip eden ilk siber silahtır. ABD-İsrail ortak operasyonu.",bullets:["Hedef: Siemens S7-315 PLC kontrolörleri","Etki: 1000+ santrifüj tahrip edildi","Yayılma: USB + 4 adet zero-day exploit","Boyut: 500KB — olağanüstü karmaşık","Miras: Siber savaş doktrininin doğuşu"],cards:[{icon:"🇮🇷",title:"Natanz",text:"İran'ın uranyum zenginleştirme tesisi"},{icon:"💻",title:"500KB",text:"Tarihin en karmaşık malware'i"},{icon:"🔧",title:"PLC",text:"Endüstriyel kontrol sistemi hedeflendi"},{icon:"🇺🇸",title:"Olympic Games",text:"ABD-İsrail gizli operasyon kodu"}],related:[{text:"Siber/EH Simülatörü",href:"siber-eh-simulatoru.html"},{text:"Siber Casusluk",href:"sim8-siber-casusluk-ai.html"}]},
+  {id:8,cat:"Dron Çağı",icon:"🛸",title:"FPV Kamikaze Dronları",dur:35,desc:"Ukrayna savaşı, $500'lık FPV dronların $500.000'lık zırhlı araçları imha edebildiğini kanıtladı. Maliyet asimetrisi savaşın doğasını değiştiriyor.",bullets:["Maliyet: $300-500 (FPV drone + patlayıcı)","Hedef değeri: $500K-$5M (tank, APC)","Maliyet oranı: 1:1000 — 1:10.000","İsabet oranı: %60-70 (deneyimli pilot)","Üretim: Günde 10.000+ (Ukrayna kapasitesi)"],cards:[{icon:"💰",title:"$500",text:"Bir FPV kamikaze drone maliyeti"},{icon:"🎯",title:"%65",text:"Ortalama isabet oranı"},{icon:"🏭",title:"10K/Gün",text:"Ukrayna üretim kapasitesi"},{icon:"📉",title:"1:1000",text:"Maliyet asimetrisi oranı"}],related:[{text:"Drone Koşusu",href:"oza-drone-kosusu.html"},{text:"Sürü İHA Tasarım",href:"suru-iha-tasarim-simulatoru.html"}]},
+  {id:9,cat:"Dron Çağı",icon:"🐝",title:"Sürü İHA Teknolojisi",dur:30,desc:"Otonom sürü dronları, merkezi komuta olmadan koordineli hareket edebiliyor. 1000+ drone'un eşzamanlı saldırısı, mevcut hava savunmalarını doyurabilir.",bullets:["Sürü zekâsı: Merkezi kontrol yok, yerel kurallar","Doyurma saldırısı: Savunma kapasitesini aşma","Maliyet: 1000 drone < 1 cruise füze","Otonom karar: YZ ile hedef tanıma ve atama","Karşı önlem: EW, mikro-dalga, lazer"],cards:[{icon:"🐝",title:"Sürü",text:"1000+ drone koordineli hareket"},{icon:"🧠",title:"YZ",text:"Otonom hedef tanıma ve atama"},{icon:"📡",title:"Mesh",text:"Drone-drone iletişim ağı"},{icon:"⚡",title:"EW",text:"Elektronik harp ile karşı önlem"}],related:[{text:"Sürü İHA Sim",href:"suru-iha-tasarim-simulatoru.html"},{text:"Sürü Savunması",href:"oza-suru-savunmasi.html"}]},
+  {id:10,cat:"Türkiye",icon:"🇹🇷",title:"Mavi Vatan Doktrini",dur:35,desc:"Mavi Vatan, Türkiye'nin deniz yetki alanlarını (462.000 km²) tanımlayan stratejik doktrindir. Ege, Akdeniz ve Karadeniz'deki hakları savunur.",bullets:["Toplam alan: 462.000 km² (kara yüzölçümünün %60'ı)","Ege: Adalar sorunu, kıta sahanlığı","Doğu Akdeniz: Doğalgaz, MEB ihtilafları","Karadeniz: Sakarya sahası, 710 BCM gaz","TCG Anadolu: Dünyanın ilk SİHA gemisi"],cards:[{icon:"🗺️",title:"462K km²",text:"Kara yüzölçümünün %60'ı kadar"},{icon:"⛽",title:"Doğalgaz",text:"Sakarya sahası: 710 BCM"},{icon:"🚢",title:"TCG Anadolu",text:"Dünyanın ilk SİHA gemisi"},{icon:"⚓",title:"Deniz Kuvvetleri",text:"16 fırkateyn, 12 denizaltı hedefi"}],related:[{text:"Deniz Kuvvetleri",href:"tsk-deniz-kuvvetleri-tarihce.html"},{text:"Hürmüz Sim",href:"sim14-hurmuz-petrodolar.html"}]},
+  {id:11,cat:"Türkiye",icon:"✈️",title:"KAAN: 5. Nesil Savaş Uçağı",dur:35,desc:"KAAN (TF-X), Türkiye'nin yerli 5. nesil savaş uçağı projesidir. İlk uçuşunu 21 Şubat 2024'te gerçekleştirdi. 2028'de envantere girmesi planlanıyor.",bullets:["İlk uçuş: 21 Şubat 2024","Stealth: Düşük RCS tasarımı","Hız: Mach 1.8+ (süpersonik cruise)","Menzil: 1.100+ km savaş yarıçapı","Silah: İç silah yuvaları + AESA radar"],cards:[{icon:"✈️",title:"İlk Uçuş",text:"21 Şubat 2024, Ankara"},{icon:"🔇",title:"Stealth",text:"Düşük radar kesit alanı"},{icon:"🎯",title:"AESA",text:"Yerli AESA radar geliştirmesi"},{icon:"🏭",title:"TUSAŞ",text:"Tasarım ve üretim merkezi"}],related:[{text:"Hava Kuvvetleri",href:"tsk-hava-kuvvetleri-tarihce.html"},{text:"Hipersonik Yarış",href:"oza-hipersonik-yaris.html"}]},
+  {id:12,cat:"Teknoloji",icon:"⚡",title:"Yönlendirilmiş Enerji Silahları",dur:30,desc:"Lazer ve mikrodalga silahlar, drone tehdidine karşı devrim niteliğinde çözüm sunuyor. Atış başına maliyet $1-10 — füzeye göre 100.000x ucuz.",bullets:["Lazer: Işık hızında, sınırsız mühimmat","Mikrodalga: Geniş alan etkisi, elektronik tahrip","Maliyet: $1-10/atış (vs $100K+ füze)","Güç sorunu: 100+ kW için büyük jeneratör","Hava koşulları: Sis, yağmur performansı düşürür"],cards:[{icon:"🔦",title:"100kW+",text:"DragonFire lazer sistemi"},{icon:"💰",title:"$1/Atış",text:"Füzeye göre 100.000x ucuz"},{icon:"🇹🇷",title:"ALKA",text:"Roketsan lazer silahı"},{icon:"⚡",title:"Sınırsız",text:"Enerji oldukça mühimmat bitmez"}],related:[{text:"Maliyet Terazisi",href:"sim4-maliyet-terazisi.html"},{text:"Spektrum Savaşı",href:"sim12-spektrum-savasi.html"}]},
+  {id:13,cat:"Jeopolitik",icon:"🌍",title:"NATO Genişlemesi ve Türkiye",dur:35,desc:"NATO'nun doğuya genişlemesi, Rusya ile gerilimi artırırken Türkiye'nin stratejik konumunu güçlendiriyor. Ankara Zirvesi 2026 kritik kararlar içeriyor.",bullets:["32 üye ülke (Finlandiya + İsveç dahil)","Türkiye: NATO'nun 2. büyük ordusu","Boğazlar: Montrö Sözleşmesi kontrolü","S-400 krizi: ABD-Türkiye gerilimi","Ankara Zirvesi 2026: Yeni stratejik konsept"],cards:[{icon:"🗺️",title:"32 Üye",text:"Finlandiya ve İsveç ile genişledi"},{icon:"🇹🇷",title:"2. Ordu",text:"NATO'nun en büyük 2. silahlı kuvveti"},{icon:"🌊",title:"Boğazlar",text:"Montrö ile stratejik kontrol"},{icon:"🤝",title:"2026",text:"Ankara Zirvesi: Yeni dönem"}],related:[{text:"NATO Ankara Sim",href:"nato-ankara-zirvesi-2026.html"},{text:"NATO Genişlemesi",href:"infografik-nato-genislemesi.html"}]},
+  {id:14,cat:"Siber",icon:"🔒",title:"Zero-Day Pazarı",dur:30,desc:"Zero-day açıkları, yazılım üreticisinin bilmediği güvenlik zafiyetleridir. Devletler ve siber silah şirketleri bu açıkları milyonlarca dolara alıp satıyor.",bullets:["Fiyat: iOS zero-day $2M+, Android $2.5M+","Alıcılar: NSA, Mossad, FSB, MSS","Satıcılar: NSO Group, Zerodium, Crowdfense","Etik: Sivil hedeflere kullanım tartışması","Savunma: Bug bounty programları"],cards:[{icon:"💰",title:"$2.5M+",text:"Bir Android zero-day fiyatı"},{icon:"🕵️",title:"NSO Group",text:"Pegasus casus yazılımı üreticisi"},{icon:"📱",title:"Pegasus",text:"50+ ülkede gazeteci/aktivist hedef"},{icon:"🛡️",title:"Bug Bounty",text:"Google: $12M+ ödül (2023)"}],related:[{text:"Siber/EH Sim",href:"siber-eh-simulatoru.html"},{text:"Siber Casusluk",href:"sim8-siber-casusluk-ai.html"}]},
+  {id:15,cat:"Dron Çağı",icon:"🎯",title:"Bayraktar TB2 Etkisi",dur:35,desc:"Bayraktar TB2, modern savaşta SİHA'ların oyun değiştirici rolünü kanıtladı. Libya, Suriye, Karabağ ve Ukrayna'da konvansiyonel kuvvetleri etkisiz hale getirdi.",bullets:["Karabağ 2020: Ermeni zırhlı birliklerini imha","Libya 2020: Hafter güçlerini geri püskürttü","Ukrayna 2022: İlk haftalarda Rus konvoylarını vurdu","Maliyet: $5M (vs $100M+ savaş uçağı)","İhracat: 30+ ülkeye satıldı"],cards:[{icon:"🇹🇷",title:"Baykar",text:"Selçuk ve Haluk Bayraktar"},{icon:"🎯",title:"MAM-L",text:"Akıllı mühimmat entegrasyonu"},{icon:"🌍",title:"30+ Ülke",text:"Küresel ihracat başarısı"},{icon:"💰",title:"$5M",text:"Savaş uçağına göre 20x ucuz"}],related:[{text:"Drone Koşusu",href:"oza-drone-kosusu.html"},{text:"Sürü İHA",href:"suru-iha-tasarim-simulatoru.html"}]},
+  {id:16,cat:"Ekonomi",icon:"💎",title:"Nadir Toprak Elementleri Savaşı",dur:30,desc:"Nadir toprak elementleri, modern silah sistemlerinin vazgeçilmez bileşenleridir. Çin dünya üretiminin %60'ını kontrol ediyor — bu stratejik bir koz.",bullets:["Çin: Dünya üretiminin %60'ı, rafinerinin %90'ı","Kullanım: F-35 motoru, füze güdüm, lazer","ABD bağımlılığı: %80 Çin'den ithalat","Alternatifler: Avustralya, Kanada, Grönland","Geri dönüşüm: E-atıktan %30 kurtarma potansiyeli"],cards:[{icon:"🇨🇳",title:"%60",text:"Çin'in dünya üretim payı"},{icon:"✈️",title:"F-35",text:"920+ lb nadir toprak elementi"},{icon:"🔋",title:"Lityum",text:"EV ve askeri batarya kritik"},{icon:"🏔️",title:"Grönland",text:"Keşfedilmemiş dev rezervler"}],related:[{text:"Emtia İmparatorluğu",href:"oza-emtia-imparatorlugu.html"},{text:"Venezuela NTE",href:"infografik-venezuela-nte.html"}]},
+  {id:17,cat:"EMS",icon:"📡",title:"Elektronik Harp: Görünmez Savaş",dur:35,desc:"Elektromanyetik spektrum, modern savaşın 'görünmez' boyutudur. Radar karıştırma, GPS aldatma ve iletişim kesme ile düşman kör ve sağır bırakılır.",bullets:["EA (Elektronik Taarruz): Jamming, aldatma","EP (Elektronik Koruma): Anti-jam, frekans atlama","ES (Elektronik Destek): SIGINT, ELINT","DRFM: Dijital RF bellek — sahte hedef","Krasukha-4: Rusya'nın mobil EW sistemi"],cards:[{icon:"📡",title:"EA",text:"Elektronik Taarruz: Düşmanı kör et"},{icon:"🛡️",title:"EP",text:"Elektronik Koruma: Kendini koru"},{icon:"👁️",title:"ES",text:"Elektronik Destek: Dinle ve analiz et"},{icon:"🇷🇺",title:"Krasukha",text:"300km menzil, uydu karıştırma"}],related:[{text:"Spektrum Savaşı Sim",href:"sim12-spektrum-savasi.html"},{text:"EMS İnfografik",href:"infografik-ems-spektrum.html"}]},
+  {id:18,cat:"Bilişsel",icon:"🧠",title:"Bilişsel Savaş ve Deepfake",dur:30,desc:"Bilişsel savaş, düşmanın düşünce ve karar alma süreçlerini hedef alır. Deepfake teknolojisi ile sahte lider açıklamaları, toplumsal panik yaratabilir.",bullets:["Deepfake: GAN ile gerçekçi sahte video","Hedef: Kamuoyu, asker morali, karar alıcılar","Zelenski deepfake: 2022'de teslim ol çağrısı","Savunma: Dijital imza, blockchain doğrulama","NATO: Bilişsel savaş 6. operasyon alanı"],cards:[{icon:"🎭",title:"Deepfake",text:"GAN ile yüz ve ses klonlama"},{icon:"📱",title:"Viral",text:"Sosyal medyada saniyeler içinde yayılır"},{icon:"🛡️",title:"Savunma",text:"C2PA dijital içerik doğrulama"},{icon:"🧪",title:"NATO",text:"6. operasyon alanı olarak tanındı"}],related:[{text:"Bilişsel Kalkan Sim",href:"sim3-bilissel-kalkan.html"},{text:"Slopaganda",href:"oza-slopaganda-dedektor.html"}]},
+  {id:19,cat:"Türkiye",icon:"🛡️",title:"Türk Savunma Sanayii Yükselişi",dur:35,desc:"Türkiye, 2000'lerin başından bu yana savunma sanayiinde devrim yaşadı. Yerlilik oranı %20'den %80'e çıktı. İhracat 2026'da $8.5 milyar rekor kırdı.",bullets:["Yerlilik: %20 (2002) → %80 (2026)","İhracat: $8.5 milyar (2026 rekor)","Bayraktar: Küresel SİHA pazarının lideri","KAAN: 5. nesil savaş uçağı","Altay, Anka, Akıncı, Hisar, Atmaca..."],cards:[{icon:"📈",title:"%80",text:"Savunmada yerlilik oranı"},{icon:"💰",title:"$8.5B",text:"2026 ihracat rekoru"},{icon:"🏭",title:"2000+",text:"Savunma sanayi şirketi"},{icon:"🌍",title:"30+",text:"SİHA ihracat ülkesi"}],related:[{text:"Caydırıcılık Piramidi",href:"infografik-caydiricilik-piramidi.html"},{text:"Türk Hava Kuvvetleri",href:"tsk-hava-kuvvetleri-tarihce.html"}]},
+  {id:20,cat:"Jeopolitik",icon:"🇮🇷",title:"İran Nükleer Krizi",dur:35,desc:"İran'ın nükleer programı, Orta Doğu'nun en kritik güvenlik meselesidir. %60 zenginleştirme seviyesi, silah eşiğine yakınlık anlamına geliyor.",bullets:["%60 zenginleştirme (silah için %90 gerekli)","Breakout süresi: 1-2 hafta (tahmini)","Tesisler: Natanz, Fordow (yer altı)","İsrail tehdidi: Askeri opsiyon masada","JCPOA: 2018'de ABD çekildi"],cards:[{icon:"☢️",title:"%60",text:"Uranyum zenginleştirme seviyesi"},{icon:"⏱️",title:"1-2 Hafta",text:"Nükleer silah breakout süresi"},{icon:"🏔️",title:"Fordow",text:"80m yer altında, bomba dayanıklı"},{icon:"🇮🇱",title:"İsrail",text:"Askeri müdahale tehdidi"}],related:[{text:"İran-İsrail Sim",href:"sim-iran-israel.html"},{text:"Hürmüz Sim",href:"sim14-hurmuz-petrodolar.html"}]},
+  {id:21,cat:"Teknoloji",icon:"🤖",title:"Otonom Silah Sistemleri",dur:30,desc:"Yapay zekâ destekli otonom silahlar, insan müdahalesi olmadan hedef tespit edip angaje edebiliyor. 'Katil robotlar' tartışması BM gündeminde.",bullets:["LAWS: Lethal Autonomous Weapon Systems","Kargu-2: İlk otonom saldırı (Libya 2020)","Etik: 'Kill decision' insanda mı kalmalı?","BM: Yasaklama müzakereleri devam","Loitering munition: Harop, Switchblade"],cards:[{icon:"🤖",title:"LAWS",text:"Ölümcül Otonom Silah Sistemleri"},{icon:"🇹🇷",title:"Kargu-2",text:"İlk otonom saldırı raporu"},{icon:"⚖️",title:"Etik",text:"İnsan döngüde mi kalmalı?"},{icon:"🇺🇳",title:"BM",text:"CCW çerçevesinde müzakereler"}],related:[{text:"Sürü İHA",href:"suru-iha-tasarim-simulatoru.html"},{text:"Algoritmik Harp",href:"sim01-algoritmik-harp.html"}]},
+  {id:22,cat:"Siber",icon:"🏴‍☠️",title:"Ransomware: Dijital Fidye",dur:30,desc:"Ransomware saldırıları, kritik altyapıları hedef alarak ulusal güvenlik tehdidi haline geldi. Colonial Pipeline saldırısı ABD'nin doğu yakasını felç etti.",bullets:["Colonial Pipeline (2021): $4.4M fidye, yakıt krizi","Toplam hasar: $20B+ (2021 küresel)","RaaS: Ransomware-as-a-Service modeli","Hedefler: Hastane, enerji, ulaşım","Savunma: Zero-trust, yedekleme, segmentasyon"],cards:[{icon:"💰",title:"$20B+",text:"2021 küresel ransomware hasarı"},{icon:"🏥",title:"Hastaneler",text:"Hayati risk: Ameliyat iptalleri"},{icon:"🇷🇺",title:"REvil",text:"Rusya merkezli hacker grubu"},{icon:"🛡️",title:"Zero Trust",text:"Güvenme, her zaman doğrula"}],related:[{text:"Siber/EH Sim",href:"siber-eh-simulatoru.html"},{text:"Siber Operasyon",href:"siber-operasyon-odasi.html"}]},
+  {id:23,cat:"Dron Çağı",icon:"🌊",title:"Deniz Dronları Devrimi",dur:30,desc:"Ukrayna'nın deniz dronları, Rusya Karadeniz Filosu'nu Kırım'dan çekilmeye zorladı. $10K'lık drone, $750M'lık savaş gemisini batırabiliyor.",bullets:["Sea Baby: 850kg patlayıcı, 1000km menzil","Moskva kruvazörü batırıldı ($750M)","Rusya kayıpları: 20+ gemi hasarlı/batık","Maliyet oranı: 1:75.000","Karşı önlem: Ağ bariyeri, CIWS, EW"],cards:[{icon:"🇺🇦",title:"Sea Baby",text:"850kg TNT, GPS+otonom"},{icon:"💥",title:"Moskva",text:"$750M kruvazör battı"},{icon:"📉",title:"Filo",text:"Karadeniz Filosu Kırım'dan çekildi"},{icon:"🏭",title:"Üretim",text:"Garaj atölyelerinde seri üretim"}],related:[{text:"Deniz Kuvvetleri",href:"tsk-deniz-kuvvetleri-tarihce.html"},{text:"Drone Koşusu",href:"oza-drone-kosusu.html"}]},
+  {id:24,cat:"Ekonomi",icon:"💵",title:"Dolar Silahlaştırması",dur:30,desc:"ABD doları, küresel finans sisteminin temel taşıdır. SWIFT'ten çıkarma ve yaptırımlar, doları bir silaha dönüştürdü. De-dolarizasyon hareketi güçleniyor.",bullets:["SWIFT: 11.000+ banka, 200+ ülke","Rusya SWIFT'ten çıkarıldı (2022)","Çin CIPS: Alternatif ödeme sistemi","BRICS: Ortak para birimi tartışması","Kripto: Yaptırım kaçınma aracı mı?"],cards:[{icon:"💵",title:"SWIFT",text:"Küresel bankacılık mesajlaşma ağı"},{icon:"🇷🇺",title:"Rusya",text:"SWIFT'ten çıkarma = ekonomik savaş"},{icon:"🇨🇳",title:"CIPS",text:"Çin'in alternatif ödeme sistemi"},{icon:"🪙",title:"BRICS",text:"De-dolarizasyon çabaları"}],related:[{text:"Emtia İmparatorluğu",href:"oza-emtia-imparatorlugu.html"},{text:"Hürmüz Sim",href:"sim14-hurmuz-petrodolar.html"}]},
+  {id:25,cat:"Uzay",icon:"🛰️",title:"Uzay Silahlanması",dur:35,desc:"Uzay, askeri operasyonların kritik altyapısıdır. GPS, istihbarat uyduları ve iletişim uyduları olmadan modern savaş yürütülemez. Anti-uydu silahları bu bağımlılığı hedef alıyor.",bullets:["GPS: Hassas güdümlü mühimmatın temeli","ASAT: Anti-uydu silahları (Çin, Rusya, Hindistan)","Starlink: Ukrayna'da askeri iletişim","Uzay enkazı: Kessler sendromu riski","Space Force: ABD Uzay Kuvvetleri (2019)"],cards:[{icon:"🛰️",title:"GPS",text:"31 uydu, cm hassasiyetinde konum"},{icon:"🇨🇳",title:"ASAT",text:"2007'de kendi uydusunu vurdu"},{icon:"🌐",title:"Starlink",text:"5400+ uydu, askeri kullanım"},{icon:"🇺🇸",title:"Space Force",text:"ABD'nin 6. kuvvet komutanlığı"}],related:[{text:"Uzay Hakimiyeti",href:"oza-uzay-hakimiyeti.html"},{text:"Qianfan vs Starlink",href:"infografik-qianfan-starlink.html"}]},
+  {id:26,cat:"Bilişsel",icon:"📰",title:"Dezenformasyon Operasyonları",dur:30,desc:"Devlet destekli dezenformasyon, seçimleri manipüle etmek, toplumları bölmek ve karar alıcıları yanıltmak için sistematik olarak kullanılıyor.",bullets:["IRA (Rusya): 2016 ABD seçim müdahalesi","Troll çiftlikleri: 7/24 sahte içerik üretimi","Bot ağları: Otomatik amplifikasyon","Mikro-hedefleme: Kişiye özel propaganda","Fact-checking: Hız sorunu — yalan daha hızlı"],cards:[{icon:"🇷🇺",title:"IRA",text:"Internet Research Agency, St. Petersburg"},{icon:"🤖",title:"Bot",text:"Twitter'da %15 sahte hesap"},{icon:"📊",title:"Veri",text:"Cambridge Analytica: 87M profil"},{icon:"🛡️",title:"Savunma",text:"Medya okuryazarlığı eğitimi"}],related:[{text:"Bilişsel Kalkan",href:"sim3-bilissel-kalkan.html"},{text:"Slopaganda",href:"oza-slopaganda-dedektor.html"}]},
+  {id:27,cat:"Türkiye",icon:"🚀",title:"Türk Uzay Programı",dur:30,desc:"Türkiye'nin uzay programı hızla gelişiyor. İMECE gözlem uydusu, Ay görevi planı ve yerli fırlatma aracı projeleri stratejik bağımsızlık hedefliyor.",bullets:["İMECE: Yerli gözlem uydusu (2023)","İMECE-2: 2026 fırlatma planı","Ay görevi: 2028 hedefi","Yerli roket: Mikro uydu fırlatıcı","TUA: Türkiye Uzay Ajansı (2018)"],cards:[{icon:"🛰️",title:"İMECE",text:"Yerli EO uydusu, 0.5m çözünürlük"},{icon:"🌙",title:"Ay",text:"2028 Ay yüzeyi görevi"},{icon:"🚀",title:"Roket",text:"Yerli fırlatma aracı geliştirme"},{icon:"🏛️",title:"TUA",text:"Türkiye Uzay Ajansı"}],related:[{text:"Uzay Hakimiyeti",href:"oza-uzay-hakimiyeti.html"},{text:"Uzay Kuvvetleri",href:"#"}]},
+  {id:28,cat:"Tarih",icon:"🏰",title:"İstanbul'un Fethi 1453",dur:35,desc:"Sultan II. Mehmed, 53 günlük kuşatma sonunda Konstantinopolis'i fethetti. Orta Çağ'ın sonu, Yeni Çağ'ın başlangıcı olarak kabul edilir.",bullets:["Kuşatma: 6 Nisan — 29 Mayıs 1453","Osmanlı ordusu: ~80.000 + 126 gemi","Bizans savunması: ~7.000 asker, Theodosius surları","Şahi Topu: 8m uzunluk, 600kg gülle","Haliç zinciri: Gemiler karadan çekilerek aşıldı"],cards:[{icon:"💣",title:"Şahi Topu",text:"Urban'ın dev topu, surları yıktı"},{icon:"🚢",title:"72 Gemi",text:"Karadan Haliç'e çekildi"},{icon:"👑",title:"Fatih",text:"21 yaşında, 'Fatih' unvanı"},{icon:"🌍",title:"Etki",text:"Orta Çağ bitti, keşifler başladı"}],related:[{text:"16 Türk Devleti",href:"oza-16-turk-devleti.html"},{text:"Osmanlı Deniz İmp.",href:"oza-osmanli-deniz-imparatorlugu.html"}]},
+  {id:29,cat:"Ekonomi",icon:"🔥",title:"Enerji Silahlaştırması",dur:30,desc:"Enerji kaynakları bir silah olarak kullanılıyor. Rusya'nın Avrupa'ya gaz kesintisi, enerji bağımlılığının stratejik riskini gösterdi.",bullets:["Nord Stream sabotajı (2022): $20B altyapı imhası","Rusya: Avrupa gazının %40'ını sağlıyordu","LNG devrimi: ABD, Katar, Avustralya","Yenilenebilir: Enerji bağımsızlığı aracı","Türkiye: TürkAkım, TANAP, nükleer (Akkuyu)"],cards:[{icon:"🇷🇺",title:"Gazprom",text:"Enerjiyi siyasi silah olarak kullandı"},{icon:"💨",title:"LNG",text:"Küresel LNG ticareti %50 arttı"},{icon:"☀️",title:"Yenilenebilir",text:"Enerji bağımsızlığı = güvenlik"},{icon:"🇹🇷",title:"Türkiye",text:"Enerji hub'ı stratejisi"}],related:[{text:"Hürmüz Sim",href:"sim14-hurmuz-petrodolar.html"},{text:"Emtia İmparatorluğu",href:"oza-emtia-imparatorlugu.html"}]},
+  {id:30,cat:"Bilişsel",icon:"📱",title:"Propaganda 4.0",dur:30,desc:"Dijital çağda propaganda, yapay zekâ ve büyük veri ile kişiselleştirildi. Her bireye özel mesaj, mikro-hedefleme ile toplumlar bölünüyor.",bullets:["Cambridge Analytica: 87M Facebook profili","Mikro-hedefleme: Kişilik analizi + reklam","Bot ağları: Twitter'da %15 sahte hesap","Deepfake: Gerçekçi sahte video üretimi","Savunma: Dijital okuryazarlık, fact-checking"],cards:[{icon:"🎯",title:"Mikro-hedefleme",text:"OCEAN modeli ile kişilik analizi"},{icon:"🤖",title:"GPT Bot",text:"YZ ile sınırsız içerik üretimi"},{icon:"📊",title:"Veri",text:"Sosyal medya = istihbarat kaynağı"},{icon:"🛡️",title:"Savunma",text:"Eleştirel düşünme eğitimi"}],related:[{text:"Slopaganda Dedektör",href:"oza-slopaganda-dedektor.html"},{text:"Bilişsel Kalkan",href:"sim3-bilissel-kalkan.html"}]},
+  {id:31,cat:"Deniz",icon:"🚤",title:"Deniz Dronu Tehdidi",dur:30,desc:"Ukrayna'nın deniz dronları, Rusya Karadeniz Filosu'nu Kırım'dan çekilmeye zorladı. $10K'lık drone, $750M'lık savaş gemisini batırabiliyor.",bullets:["Ukrayna Sea Baby: 850kg patlayıcı, 1000km menzil","Moskva kruvazörü: Neptün füzesi ile batırıldı","Rusya kayıpları: 20+ gemi hasarlı/batık","Maliyet oranı: 1:75.000","Karşı önlem: Ağ bariyeri, CIWS, EW"],cards:[{icon:"🇺🇦",title:"Sea Baby",text:"850kg TNT, GPS+otonom"},{icon:"💥",title:"Moskva",text:"$750M kruvazör battı"},{icon:"📉",title:"Filo",text:"Karadeniz Filosu Kırım'dan çekildi"},{icon:"🏭",title:"Üretim",text:"Garaj atölyelerinde seri üretim"}],related:[{text:"Deniz Kuvvetleri",href:"tsk-deniz-kuvvetleri-tarihce.html"},{text:"Drone Koşusu",href:"oza-drone-kosusu.html"}]},
+  {id:32,cat:"Uzay",icon:"🌙",title:"Ay Üssü Rekabeti",dur:35,desc:"ABD Artemis ve Çin Chang'e programları, Ay'da kalıcı üs kurmak için yarışıyor. Ay'ın güney kutbundaki su buzu ve Helium-3, stratejik kaynaklardır.",bullets:["Artemis III: 2025-2026 insanlı Ay inişi","Çin: 2030'da insanlı Ay inişi hedefi","Ay güney kutbu: Su buzu = roket yakıtı","Helium-3: Füzyon enerjisi yakıtı","Lunar Gateway: Ay yörünge istasyonu"],cards:[{icon:"🇺🇸",title:"Artemis",text:"SLS + Orion + Starship HLS"},{icon:"🇨🇳",title:"Chang'e",text:"Ay'ın karanlık yüzüne iniş (2019)"},{icon:"💧",title:"Su Buzu",text:"Shackleton krateri, 600M ton"},{icon:"⚛️",title:"He-3",text:"1 ton = 1 yıllık küresel enerji"}],related:[{text:"Uzay Hakimiyeti Oyunu",href:"oza-uzay-hakimiyeti.html"},{text:"Uzay Kuvvetleri",href:"#"}]},
+  {id:33,cat:"Strateji",icon:"🎴",title:"Strateji Reels: 30sn Tarih",dur:35,desc:"TikTok hızında tarih öğrenme. Her kart bir tarihi olay, her seçim bir strateji dersi. Malazgirt'ten Çanakkale'ye 30 saniyede karar ver.",bullets:["1000+ tarihi olay kartı","Savaş, Diplomasi, Teknoloji, Casusluk, Ekonomi","Her 15 saniye ödül, her 5 kart rozet","Sahte ricat, kuşatma, hile — gerçek taktikler","XP + Strateji Puanı sistemi"],cards:[{icon:"🎯",title:"Karar",text:"Her kartta 3 seçenek"},{icon:"⏱️",title:"30sn",text:"Mikro öğrenme formatı"},{icon:"🏆",title:"Rozet",text:"Her 5 kartta yeni rozet"},{icon:"📊",title:"1000+",text:"Olay veritabanı"}],related:[{text:"Harbi Quiz",href:"oza-harbi-quiz.html"},{text:"Türk Savaş Zekâsı",href:"oza-turk-savas-zekasi.html"}]},
+  {id:34,cat:"Tarih",icon:"🔄",title:"Tarihin Akışını Değiştir",dur:40,desc:"Alternatif tarih simülasyonu. 1914: Osmanlı savaşa girecek mi? Tarafsız kalsa ne olurdu? AI motoru hesaplar, parametreler değişir.",bullets:["Osmanlı, Roma, Göktürk, ABD, Çin seçilebilir","6 parametre: Ekonomi, Askerî, Teknoloji, Nüfus, Diplomasi, Meşruiyet","Her karar 10 yıllık sonuç üretir","Civilization + Crusader Kings hissi","5 dakikada bir çağ simülasyonu"],cards:[{icon:"🏛️",title:"Devlet",text:"5 farklı devlet seçimi"},{icon:"📈",title:"Parametre",text:"6 değişken, 100 üzerinden"},{icon:"🤖",title:"AI",text:"Yapay zekâ sonuç hesaplar"},{icon:"🔮",title:"Gelecek",text:"Alternatif zaman çizelgesi"}],related:[{text:"Alternatif Tarih Oyunu",href:"oza-alternatif-tarih.html"},{text:"Diplomasi Masası",href:"oza-diplomasi-masasi.html"}]},
+  {id:35,cat:"Strateji",icon:"🗺️",title:"Diplomasi Masası: 5 Devlet",dur:35,desc:"Harita üzerinde 5 devlet. Ticaret, ambargo, ittifak, casusluk veya savaş. Rakip AI'lar kişilik sahibi — Bismarck temkinli, Napolyon risk alır.",bullets:["5 devlet, her biri farklı AI kişiliği","Bismarck tipi: agresif değil, denge politikası","Napolyon tipi: risk alır, hızlı genişler","Ticaret, Ambargo, İttifak, Casusluk, Savaş","En bağımlılık yapan strateji modu"],cards:[{icon:"🤝",title:"Diplomasi",text:"İttifak ve ticaret"},{icon:"🕵️",title:"Casusluk",text:"Gizli operasyonlar"},{icon:"⚔️",title:"Savaş",text:"Son çare olarak"},{icon:"🧠",title:"AI",text:"Kişilikli rakipler"}],related:[{text:"Kriz Masası",href:"oza-kriz-masasi.html"},{text:"BM Reform",href:"oza-bm-reform.html"}]},
+  {id:36,cat:"Teknoloji",icon:"🌳",title:"Teknoloji Ağacı: Bozkırdan YZ'ye",dur:35,desc:"Medeniyetlerin teknolojik evrimi. Bozkır atlısından yapay zekâya, demir işlemeden otonom sistemlere. İlerledikçe yeni teknoloji aç.",bullets:["Bozkır Atlısı → Demir → Kompozit Yay → Barut","Sanayi → Radar → Uydu → Yapay Zekâ → Otonom","Her teknoloji bir sonrakini açar","Dallanma: Farklı yollar, farklı sonuçlar","Medeniyet seçimi teknoloji ağacını etkiler"],cards:[{icon:"🏹",title:"Antik",text:"Yay, mızrak, süvari"},{icon:"💣",title:"Barut",text:"Top, tüfek, mayın"},{icon:"📡",title:"Modern",text:"Radar, füze, uydu"},{icon:"🤖",title:"Gelecek",text:"YZ, kuantum, otonom"}],related:[{text:"Teknoloji Ağacı Oyunu",href:"oza-teknoloji-agaci.html"},{text:"Savaşın Evrimi",href:"infografik-savas-evrimi.html"}]},
+  {id:37,cat:"Bilişsel",icon:"🧱",title:"Lego Propaganda Analizi",dur:30,desc:"İran'ın AI destekli Lego Trump kampanyası. 70+ video, 128M+ görüntüleme. Çocuk estetiğiyle propaganda — slopaganda ve epistemik çöküş.",bullets:["Explosive Media: <10 kişi, 19-25 yaş","X: 45M, TikTok: 32M, Instagram: 28M görüntüleme","Lego estetiği: Sansür aşma + viral paylaşım","Slopaganda: Hacim > Kalite stratejisi","Empati erozyonu: Gerçek acıyı oyuncaklaştırma"],cards:[{icon:"🧱",title:"Lego",text:"%96 marka bilinirliği"},{icon:"🤖",title:"AI",text:"Dakikalar içinde üretim"},{icon:"📱",title:"Viral",text:"5 platformda yayılım"},{icon:"🧠",title:"Psikoloji",text:"Nostalji + güven = kabul"}],related:[{text:"Lego Propaganda Makale",href:"lego-propaganda-analiz.html"},{text:"Bilişsel Kalkan",href:"oza-bilissel-kalkan.html"}]},
+  {id:38,cat:"Teknoloji",icon:"🚀",title:"Musk Ekosistemi: Stratejik Analiz",dur:40,desc:"Elon Musk'ın Tesla, SpaceX, Neuralink, xAI, Starlink imparatorluğu. Tek bir kişinin küresel güç projeksiyonu — medeniyet işletim sistemi.",bullets:["SpaceX: Uzay erişim maliyetini %97 düşürdü","Starlink: 6000+ uydu, küresel internet","Tesla: Enerji + ulaşım + YZ entegrasyonu","xAI + Grok: Veri imparatorluğu","DOGE: Siyasi etki, devlet yapısına müdahale"],cards:[{icon:"🚀",title:"SpaceX",text:"Mars kolonisi vizyonu"},{icon:"🛰️",title:"Starlink",text:"Küresel iletişim ağı"},{icon:"🧠",title:"Neuralink",text:"Beyin-bilgisayar arayüzü"},{icon:"⚡",title:"Tesla",text:"Enerji devrimi"}],related:[{text:"Musk İnfografikleri",href:"musk-infografik-serisi.html"},{text:"YZ Savaşın Geleceği",href:"infografik-yz-savas.html"}]},
+  {id:39,cat:"Strateji",icon:"🎖️",title:"Geleceğin Harp Ekosistemi",dur:40,desc:"2030-2040 savaş alanı: Otonom sürüler, kuantum şifreleme, uzay silahları, bilişsel savaş, enerji silahları. Hibrit tehditler ve çok-alan operasyonları.",bullets:["Otonom drone sürüleri: Koordineli saldırı","Kuantum bilgisayar: Şifre kırma tehdidi","Uzay silahları: Anti-uydu, yörünge bombalama","Directed Energy: Lazer, mikrodalga silahlar","Çok-Alan Operasyonları: Kara+Deniz+Hava+Uzay+Siber"],cards:[{icon:"🤖",title:"Otonom",text:"İnsansız karar verme"},{icon:"⚛️",title:"Kuantum",text:"Kriptografi çöküşü"},{icon:"🛸",title:"Uzay",text:"Yörünge silahları"},{icon:"⚡",title:"Enerji",text:"Yönlendirilmiş enerji"}],related:[{text:"Harp Ekosistemi Detay",href:"gelecegin-harp-ekosistemi.html"},{text:"Kill-Chain Yarışı",href:"oza-kill-chain.html"}]}
+];
+// ===== CATEGORY COLORS =====
+const catColors = {"Doktrin":"#ff6b6b","Teknoloji":"#4ecdc4","Jeopolitik":"#45b7d1","Siber":"#96f","Dron Çağı":"#f7b731","Ekonomi":"#26de81","Türkiye":"#fc5c65","Tarih":"#a55eea","Uzay":"#778ca3","Bilişsel":"#fd9644","EMS":"#2bcbba","Deniz":"#4b7bec","Strateji":"#e056fd"};
+// ===== STATE =====
+let currentIdx = 0;
+let isPlaying = false;
+let timer = null;
+let elapsed = 0;
+let activeFilter = "Tümü";
+let filteredEps = [...episodes];
+let musicCtx = null;
+let musicPlaying = false;
+let playbackSpeed = 1;
+let watchedSet = new Set();
+
+// ===== INIT =====
+function init(){
+  buildFilters();
+  buildPlaylist();
+  buildTimeline();
+  renderScene(0);
+  renderDetails(0);
+  updateTimelineInfo();
+  // Controls
+  document.getElementById('btnPlay').onclick = togglePlay;
+  document.getElementById('btnPrev').onclick = ()=>{goTo(currentIdx-1);};
+  document.getElementById('btnNext').onclick = ()=>{goTo(currentIdx+1);};
+  document.getElementById('musicBtn').onclick = toggleMusic;
+  // Speed buttons
+  document.querySelectorAll('#speedBtns button').forEach(btn=>{
+    btn.onclick = ()=>{
+      playbackSpeed = parseFloat(btn.dataset.speed);
+      document.querySelectorAll('#speedBtns button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      if(isPlaying){clearInterval(timer);startTimer();}
+    };
+  });
+  // Fullscreen
+  document.getElementById('btnFullscreen').onclick = ()=>{
+    const el = document.getElementById('tvScreen');
+    if(!document.fullscreenElement){el.requestFullscreen().catch(()=>{});}
+    else{document.exitFullscreen();}
+  };
+  // Volume
+  document.getElementById('volSlider').oninput = (e)=>{
+    const v = e.target.value / 100;
+    if(musicCtx && musicCtx.gainNode){musicCtx.gainNode.gain.value = v * 0.05;}
+  };
+}
+
+// ===== TIMELINE BAR =====
+function buildTimeline(){
+  const bar = document.getElementById('timelineBar');
+  const totalDur = filteredEps.reduce((s,e)=>s+e.dur,0);
+  bar.innerHTML = filteredEps.map((ep,i)=>{
+    const widthPct = (ep.dur / totalDur) * 100;
+    const color = catColors[ep.cat] || '#00ff88';
+    return `<div class="timeline-segment${i===currentIdx?' active':''}" data-idx="${i}" style="width:${widthPct}%;border-bottom:3px solid ${color};" onclick="goTo(${i})">
+      <div class="timeline-segment-fill" id="tsFill${i}"></div>
+      <span class="timeline-segment-label">${widthPct > 4 ? ep.icon+' '+ep.title : ep.icon}</span>
+      <div class="timeline-segment-tooltip">${ep.icon} ${ep.title}<br><small>${ep.cat} · ${ep.dur}s</small></div>
+    </div>`;
+  }).join('');
+}
+
+function updateTimeline(){
+  const ep = filteredEps[currentIdx];
+  if(!ep) return;
+  // Update segment fills
+  filteredEps.forEach((e,i)=>{
+    const fill = document.getElementById('tsFill'+i);
+    if(!fill) return;
+    const seg = fill.parentElement;
+    seg.classList.remove('active','played');
+    if(i < currentIdx){
+      fill.style.width = '100%';
+      seg.classList.add('played');
+    } else if(i === currentIdx){
+      fill.style.width = (elapsed/ep.dur*100)+'%';
+      seg.classList.add('active');
+    } else {
+      fill.style.width = '0%';
+    }
+  });
+  // Total progress
+  const totalDur = filteredEps.reduce((s,e)=>s+e.dur,0);
+  const playedDur = filteredEps.slice(0,currentIdx).reduce((s,e)=>s+e.dur,0) + elapsed;
+  document.getElementById('totalProgressFill').style.width = (playedDur/totalDur*100)+'%';
+  // Time display
+  const mm = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss = String(elapsed%60).padStart(2,'0');
+  const tmm = String(Math.floor(ep.dur/60)).padStart(2,'0');
+  const tss = String(ep.dur%60).padStart(2,'0');
+  // Total elapsed
+  const totalElapsed = filteredEps.slice(0,currentIdx).reduce((s,e)=>s+e.dur,0) + elapsed;
+  const teMM = String(Math.floor(totalElapsed/60)).padStart(2,'0');
+  const teSS = String(totalElapsed%60).padStart(2,'0');
+  const tdMM = String(Math.floor(totalDur/60)).padStart(2,'0');
+  const tdSS = String(totalDur%60).padStart(2,'0');
+  document.getElementById('tlTime').textContent = `${mm}:${ss}/${tmm}:${tss} — Toplam: ${teMM}:${teSS}/${tdMM}:${tdSS}`;
+}
+
+function updateTimelineInfo(){
+  const ep = filteredEps[currentIdx];
+  if(!ep) return;
+  document.getElementById('tlEpName').textContent = `${ep.icon} ${ep.title}`;
+  document.getElementById('tlEpName').style.color = catColors[ep.cat] || '#00ff88';
+}
+
+// ===== FILTERS & PLAYLIST =====
+function buildFilters(){
+  const cats = ["Tümü",...new Set(episodes.map(e=>e.cat))];
+  const el = document.getElementById('catFilters');
+  el.innerHTML = cats.map(c=>`<button class="cat-btn${c==='Tümü'?' active':''}" data-cat="${c}">${c} (${c==='Tümü'?episodes.length:episodes.filter(e=>e.cat===c).length})</button>`).join('');
+  el.querySelectorAll('.cat-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      activeFilter = btn.dataset.cat;
+      el.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      filteredEps = activeFilter==='Tümü'?[...episodes]:episodes.filter(e=>e.cat===activeFilter);
+      buildPlaylist();
+      buildTimeline();
+      goTo(0);
+    };
+  });
+}
+function buildPlaylist(){
+  const el = document.getElementById('playlist');
+  el.innerHTML = filteredEps.map((ep,i)=>`
+    <div class="pl-item${i===currentIdx?' active':''}${watchedSet.has(ep.id)?' watched':''}" data-idx="${i}" onclick="goTo(${i})">
+      <div class="pl-num">${i+1}</div>
+      <div class="pl-info">
+        <div class="pl-title">${ep.icon} ${ep.title}</div>
+        <div class="pl-cat">${ep.cat} · ${ep.dur}s</div>
+      </div>
+      <div class="pl-dur">${Math.floor(ep.dur/60)}:${String(ep.dur%60).padStart(2,'0')}</div>
+    </div>
+  `).join('');
+  const totalDur = filteredEps.reduce((s,e)=>s+e.dur,0);
+  document.getElementById('sidebarStats').textContent = `${filteredEps.length} bölüm · ${new Set(filteredEps.map(e=>e.cat)).size} kategori · ~${Math.round(totalDur/60)}dk`;
+}
+
+// ===== RENDER SCENE =====
+function renderScene(idx){
+  const ep = filteredEps[idx];
+  if(!ep) return;
+  const tv = document.getElementById('tvContent');
+  tv.classList.add('fade-out');
+  setTimeout(()=>{
+    tv.innerHTML = `
+      <div class="scene-category" style="color:${catColors[ep.cat]||'#00ff88'}">${ep.cat}</div>
+      <div class="scene-title">${ep.icon} ${ep.title}</div>
+      <div class="scene-desc">${ep.desc}</div>
+      <div class="scene-facts">
+        ${ep.cards.map(c=>`<div class="fact-card"><div class="fact-icon">${c.icon}</div><div class="fact-value">${c.title}</div><div class="fact-label">${c.text}</div></div>`).join('')}
+      </div>
+    `;
+    tv.classList.remove('fade-out');
+    tv.classList.add('fade-in');
+    // Floating icons
+    const vis = document.getElementById('sceneVisual');
+    vis.innerHTML = '';
+    const icons = ep.cards.map(c=>c.icon);
+    for(let i=0;i<6;i++){
+      const span = document.createElement('span');
+      span.className='floating-icon';
+      span.textContent = icons[i%icons.length];
+      span.style.left = Math.random()*90+'%';
+      span.style.top = Math.random()*80+'%';
+      span.style.animationDelay = (Math.random()*8)+'s';
+      span.style.animationDuration = (15+Math.random()*10)+'s';
+      vis.appendChild(span);
+    }
+  },300);
+}
+
+function renderDetails(idx){
+  const ep = filteredEps[idx];
+  if(!ep) return;
+  const el = document.getElementById('episodeDetails');
+  el.innerHTML = `
+    <div class="ep-header">
+      <div class="ep-icon">${ep.icon}</div>
+      <div>
+        <div class="ep-title">${ep.title}</div>
+        <div class="ep-category" style="color:${catColors[ep.cat]||'#00ff88'}">${ep.cat} · Bölüm ${idx+1}/${filteredEps.length} · ${ep.dur} saniye</div>
+      </div>
+    </div>
+    <div class="ep-body"><p>${ep.desc}</p></div>
+    <ul class="ep-bullets">${ep.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+    <div class="info-cards">
+      ${ep.cards.map(c=>`<div class="info-card"><div class="info-card-icon">${c.icon}</div><div class="info-card-title">${c.title}</div><div class="info-card-text">${c.text}</div></div>`).join('')}
+    </div>
+    ${ep.related?`<div class="ep-related"><h4>🔗 İlgili İçerikler — Tıklayarak Keşfet</h4><div class="ep-related-links">${ep.related.map(r=>`<a href="${r.href}">${r.text} →</a>`).join('')}</div></div>`:''}
+  `;
+}
+
+// ===== NAVIGATION =====
+function goTo(idx){
+  if(idx<0) idx = filteredEps.length-1;
+  if(idx>=filteredEps.length) idx = 0;
+  watchedSet.add(filteredEps[currentIdx]?.id);
+  currentIdx = idx;
+  elapsed = 0;
+  renderScene(idx);
+  renderDetails(idx);
+  buildPlaylist();
+  updateTimeline();
+  updateTimelineInfo();
+  // Scroll playlist to active
+  const activeItem = document.querySelector('.pl-item.active');
+  if(activeItem) activeItem.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ===== PLAYBACK =====
+function togglePlay(){
+  isPlaying = !isPlaying;
+  document.getElementById('btnPlay').textContent = isPlaying?'⏸':'▶';
+  if(isPlaying) startTimer();
+  else clearInterval(timer);
+}
+function startTimer(){
+  clearInterval(timer);
+  const interval = Math.round(1000 / playbackSpeed);
+  timer = setInterval(()=>{
+    elapsed++;
+    const ep = filteredEps[currentIdx];
+    if(!ep) return;
+    updateTimeline();
+    if(elapsed >= ep.dur){
+      elapsed = 0;
+      goTo(currentIdx+1);
+    }
+  }, interval);
+}
+
+// ===== MUSIC =====
+function toggleMusic(){
+  if(!musicCtx){
+    musicCtx = new (window.AudioContext||window.webkitAudioContext)();
+    musicCtx.gainNode = musicCtx.createGain();
+    musicCtx.gainNode.gain.value = 0.03;
+    musicCtx.gainNode.connect(musicCtx.destination);
+  }
+  musicPlaying = !musicPlaying;
+  document.getElementById('musicBtn').classList.toggle('playing',musicPlaying);
+  if(musicPlaying) playAmbient();
+}
+function playAmbient(){
+  if(!musicCtx||!musicPlaying) return;
+  const osc = musicCtx.createOscillator();
+  const gain = musicCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 60 + Math.random()*80;
+  gain.gain.value = 0.02;
+  gain.gain.exponentialRampToValueAtTime(0.001,musicCtx.currentTime+5);
+  osc.connect(gain).connect(musicCtx.gainNode);
+  osc.start();
+  osc.stop(musicCtx.currentTime+5);
+  setTimeout(()=>{if(musicPlaying)playAmbient();},3000+Math.random()*3000);
+}
+
+// ===== START =====
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Küresel Enerji Savaşları — İnteraktif İnfografik | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Sans',sans-serif;background:#050a12;color:#e2e8f0;overflow-x:hidden;}
+:root{--oil:#ff6b00;--gas:#00bfff;--nuclear:#a855f7;--green-e:#22c55e;--gold:#c9a24b;--red:#c41e3a;--bg:#050a12;--card:#0c1524;}
+
+.sound-toggle{position:fixed;top:12px;right:12px;z-index:9999;background:rgba(5,10,18,0.95);border:1px solid rgba(255,107,0,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;cursor:pointer;font-size:14px;backdrop-filter:blur(8px);border:none;}
+.sound-toggle.active{color:var(--oil);}
+
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.particle{position:absolute;width:3px;height:3px;border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh);opacity:0;}50%{opacity:0.6;}100%{transform:translateY(-10vh);opacity:0;}}
+
+/* HERO */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 70%,#1a0800 0%,#050a12 70%);}
+.hero-content{position:relative;z-index:10;text-align:center;}
+.hero-icon{font-size:4rem;margin-bottom:1rem;opacity:0;animation:fadeUp 1s 0.3s forwards;}
+.hero-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,7vw,4rem);font-weight:700;background:linear-gradient(135deg,var(--oil),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0.5rem 0;opacity:0;animation:fadeUp 1s 0.6s forwards;}
+.hero-desc{font-size:clamp(0.9rem,2vw,1.1rem);color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto;opacity:0;animation:fadeUp 1s 1s forwards;}
+.hero-price{margin-top:2rem;opacity:0;animation:fadeUp 1s 1.4s forwards;}
+.hero-price-val{font-family:'IBM Plex Mono',monospace;font-size:3rem;font-weight:700;color:var(--oil);}
+.hero-price-lbl{font-size:0.8rem;color:rgba(255,255,255,0.4);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.3);font-size:0.75rem;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+/* SECTIONS */
+.section{padding:6rem 1.5rem;max-width:1200px;margin:0 auto;position:relative;z-index:10;}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#fff;margin-bottom:0.5rem;opacity:0;transform:translateY(40px);transition:all 0.8s;}
+.section-title.visible{opacity:1;transform:translateY(0);}
+.section-subtitle{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:2rem;opacity:0;transform:translateY(20px);transition:all 0.8s 0.2s;}
+.section-subtitle.visible{opacity:1;transform:translateY(0);}
+
+/* GAUGE */
+.gauge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:2rem;}
+.gauge-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:1.5rem;text-align:center;opacity:0;transform:scale(0.9);transition:all 0.6s;}
+.gauge-card.visible{opacity:1;transform:scale(1);}
+.gauge-svg{width:120px;height:70px;margin:0 auto;}
+.gauge-arc{fill:none;stroke-width:8;stroke-linecap:round;stroke-dasharray:157;stroke-dashoffset:157;transition:stroke-dashoffset 2s cubic-bezier(0.16,1,0.3,1);}
+.gauge-arc.visible{stroke-dashoffset:var(--offset);}
+.gauge-val{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:700;margin-top:0.5rem;}
+.gauge-lbl{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:0.3rem;}
+
+/* ENERGY MIX */
+.mix-bar{display:flex;height:40px;border-radius:8px;overflow:hidden;margin-top:2rem;opacity:0;transition:opacity 1s;}
+.mix-bar.visible{opacity:1;}
+.mix-segment{display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:#fff;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);width:0;}
+.mix-segment.visible{width:var(--w);}
+.mix-legend{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1rem;justify-content:center;}
+.mix-legend-item{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:rgba(255,255,255,0.6);}
+.mix-legend-dot{width:10px;height:10px;border-radius:2px;}
+
+/* CONFLICT CARDS */
+.conflict-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem;}
+.conflict-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:1.5rem;opacity:0;transform:translateY(25px);transition:all 0.6s;cursor:pointer;}
+.conflict-card.visible{opacity:1;transform:translateY(0);}
+.conflict-card:hover{border-color:var(--oil);box-shadow:0 8px 30px rgba(255,107,0,0.1);}
+.conflict-icon{font-size:2rem;margin-bottom:0.8rem;}
+.conflict-title{font-family:'Chakra Petch',sans-serif;font-size:1rem;font-weight:600;color:#fff;margin-bottom:0.3rem;}
+.conflict-region{font-size:0.7rem;color:var(--oil);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.conflict-desc{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.6;}
+
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--oil),transparent);opacity:0.2;}
+
+@media(max-width:768px){
+  .gauge-grid{grid-template-columns:repeat(2,1fr);}
+  .conflict-grid{grid-template-columns:1fr;}
+  .mix-segment{font-size:0.6rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="particles" id="particles"></div>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</button>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-icon">⚡</div>
+    <h1 class="hero-title">KÜRESEL ENERJİ<br>SAVAŞLARI</h1>
+    <p class="hero-desc">Petrol, doğal gaz, uranyum ve nadir metaller — enerji kaynaklarının kontrolü için süren küresel mücadele</p>
+    <div class="hero-price">
+      <div class="hero-price-val">$<span data-count="85">0</span>/varil</div>
+      <div class="hero-price-lbl">Brent Ham Petrol (2026)</div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ Keşfetmek için kaydırın</div>
+</section>
+
+<!-- ENERJİ BAĞIMLILIĞI -->
+<section class="section">
+  <h2 class="section-title" data-anim>Enerji Bağımlılığı Göstergeleri</h2>
+  <p class="section-subtitle" data-anim>Büyük güçlerin enerji ithalat bağımlılığı</p>
+  
+  <div class="gauge-grid">
+    <div class="gauge-card" data-anim>
+      <svg class="gauge-svg" viewBox="0 0 120 70">
+        <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+        <path class="gauge-arc" d="M10,60 A50,50 0 0,1 110,60" stroke="var(--oil)" style="--offset:47;"/>
+      </svg>
+      <div class="gauge-val" style="color:var(--oil);">%70</div>
+      <div class="gauge-lbl">Çin Petrol İthalatı</div>
+    </div>
+    <div class="gauge-card" data-anim>
+      <svg class="gauge-svg" viewBox="0 0 120 70">
+        <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+        <path class="gauge-arc" d="M10,60 A50,50 0 0,1 110,60" stroke="var(--gas)" style="--offset:55;"/>
+      </svg>
+      <div class="gauge-val" style="color:var(--gas);">%65</div>
+      <div class="gauge-lbl">AB Gaz İthalatı</div>
+    </div>
+    <div class="gauge-card" data-anim>
+      <svg class="gauge-svg" viewBox="0 0 120 70">
+        <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+        <path class="gauge-arc" d="M10,60 A50,50 0 0,1 110,60" stroke="var(--nuclear)" style="--offset:63;"/>
+      </svg>
+      <div class="gauge-val" style="color:var(--nuclear);">%60</div>
+      <div class="gauge-lbl">Hindistan Enerji İthalatı</div>
+    </div>
+    <div class="gauge-card" data-anim>
+      <svg class="gauge-svg" viewBox="0 0 120 70">
+        <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+        <path class="gauge-arc" d="M10,60 A50,50 0 0,1 110,60" stroke="var(--green-e)" style="--offset:126;"/>
+      </svg>
+      <div class="gauge-val" style="color:var(--green-e);">%20</div>
+      <div class="gauge-lbl">ABD Enerji İthalatı</div>
+    </div>
+    <div class="gauge-card" data-anim>
+      <svg class="gauge-svg" viewBox="0 0 120 70">
+        <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+        <path class="gauge-arc" d="M10,60 A50,50 0 0,1 110,60" stroke="var(--red)" style="--offset:39;"/>
+      </svg>
+      <div class="gauge-val" style="color:var(--red);">%75</div>
+      <div class="gauge-lbl">Türkiye Enerji İthalatı</div>
+    </div>
+    <div class="gauge-card" data-anim>
+      <svg class="gauge-svg" viewBox="0 0 120 70">
+        <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+        <path class="gauge-arc" d="M10,60 A50,50 0 0,1 110,60" stroke="var(--oil)" style="--offset:31;"/>
+      </svg>
+      <div class="gauge-val" style="color:var(--oil);">%80</div>
+      <div class="gauge-lbl">Japonya Enerji İthalatı</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ENERJİ MİKSİ -->
+<section class="section">
+  <h2 class="section-title" data-anim>Küresel Enerji Miksi (2025)</h2>
+  <p class="section-subtitle" data-anim>Dünya birincil enerji tüketiminin kaynaklara göre dağılımı</p>
+  
+  <div class="mix-bar" data-anim>
+    <div class="mix-segment" style="background:var(--oil);--w:30%;">Petrol 30%</div>
+    <div class="mix-segment" style="background:#2563eb;--w:23%;">Doğal Gaz 23%</div>
+    <div class="mix-segment" style="background:#374151;--w:26%;">Kömür 26%</div>
+    <div class="mix-segment" style="background:var(--nuclear);--w:4%;">Nükleer</div>
+    <div class="mix-segment" style="background:var(--green-e);--w:7%;">Hidro 7%</div>
+    <div class="mix-segment" style="background:#eab308;--w:10%;">Yenilenebilir 10%</div>
+  </div>
+  <div class="mix-legend">
+    <div class="mix-legend-item"><div class="mix-legend-dot" style="background:var(--oil);"></div>Petrol</div>
+    <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#2563eb;"></div>Doğal Gaz</div>
+    <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#374151;"></div>Kömür</div>
+    <div class="mix-legend-item"><div class="mix-legend-dot" style="background:var(--nuclear);"></div>Nükleer</div>
+    <div class="mix-legend-item"><div class="mix-legend-dot" style="background:var(--green-e);"></div>Hidroelektrik</div>
+    <div class="mix-legend-item"><div class="mix-legend-dot" style="background:#eab308;"></div>Yenilenebilir</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ÇATIŞMA ALANLARI -->
+<section class="section">
+  <h2 class="section-title" data-anim>Enerji Çatışma Alanları</h2>
+  <p class="section-subtitle" data-anim>Enerji kaynaklarının kontrolü için süren jeopolitik mücadeleler</p>
+  
+  <div class="conflict-grid">
+    <div class="conflict-card" data-anim>
+      <div class="conflict-icon">🛢️</div>
+      <div class="conflict-title">Hürmüz Boğazı Krizi</div>
+      <div class="conflict-region">Ortadoğu</div>
+      <div class="conflict-desc">Dünya petrolünün %20'si bu darboğazdan geçiyor. İran'ın kapatma tehdidi küresel enerji güvenliğinin en büyük riski.</div>
+    </div>
+    <div class="conflict-card" data-anim>
+      <div class="conflict-icon">🔥</div>
+      <div class="conflict-title">Doğu Akdeniz Gaz Sahası</div>
+      <div class="conflict-region">Akdeniz</div>
+      <div class="conflict-desc">Türkiye, Yunanistan, Kıbrıs, Mısır, İsrail arasında deniz yetki alanı ve gaz çıkarma hakları mücadelesi.</div>
+    </div>
+    <div class="conflict-card" data-anim>
+      <div class="conflict-icon">❄️</div>
+      <div class="conflict-title">Kuzey Kutbu Yarışı</div>
+      <div class="conflict-region">Arktik</div>
+      <div class="conflict-desc">Eriyen buzullar yeni enerji kaynakları ve ticaret rotaları açıyor. Rusya, ABD, Kanada, Norveç, Danimarka rekabeti.</div>
+    </div>
+    <div class="conflict-card" data-anim>
+      <div class="conflict-icon">⚡</div>
+      <div class="conflict-title">Lityum Üçgeni</div>
+      <div class="conflict-region">Güney Amerika</div>
+      <div class="conflict-desc">Bolivya, Arjantin, Şili — dünya lityum rezervinin %60'ı. Elektrikli araç devrimi bu kaynağa bağımlı.</div>
+    </div>
+    <div class="conflict-card" data-anim>
+      <div class="conflict-icon">🌍</div>
+      <div class="conflict-title">Afrika Nadir Toprak Yarışı</div>
+      <div class="conflict-region">Afrika</div>
+      <div class="conflict-desc">Kongo kobaltı, Güney Afrika platini, Mozambik gazı. Çin, ABD, AB arasında Afrika'da enerji diplomasisi.</div>
+    </div>
+    <div class="conflict-card" data-anim>
+      <div class="conflict-icon">🔌</div>
+      <div class="conflict-title">Rusya-AB Gaz Savaşı</div>
+      <div class="conflict-region">Avrupa</div>
+      <div class="conflict-desc">Nord Stream sabotajı, Ukrayna transit krizi. AB'nin Rusya'dan bağımsızlaşma çabası ve LNG dönüşümü.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:4rem 1rem;border-top:1px solid rgba(255,255,255,0.05);position:relative;z-index:10;">
+  <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace;">HARB-İ STRATEJİ · ENERJİ JEOPOLİTİĞİ ANALİZİ · 2026</p>
+  <a href="infografik-hurmuz-bogazi.html" style="display:inline-block;margin-top:1rem;padding:10px 20px;background:var(--oil);color:#fff;text-decoration:none;border-radius:8px;font-size:0.85rem;font-weight:600;">Hürmüz Boğazı Detaylı Analiz →</a>
+</div>
+
+<script>
+// PARTICLES (oil/gas colored)
+(function(){const c=document.getElementById('particles');const colors=['rgba(255,107,0,0.3)','rgba(0,191,255,0.2)','rgba(168,85,247,0.2)'];for(let i=0;i<20;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.background=colors[Math.floor(Math.random()*colors.length)];p.style.setProperty('--dur',(8+Math.random()*12)+'s');p.style.animationDelay=Math.random()*12+'s';c.appendChild(p);}})();
+
+// SCROLL OBSERVER
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.querySelectorAll('.gauge-arc').forEach(a=>a.classList.add('visible'));e.target.querySelectorAll('.mix-segment').forEach(s=>s.classList.add('visible'));e.target.querySelectorAll('[data-count]').forEach(c=>animateCounter(c,parseInt(c.dataset.count)));}});},{threshold:0.15});
+document.querySelectorAll('[data-anim]').forEach(el=>obs.observe(el));
+
+// Hero counter
+setTimeout(()=>{document.querySelectorAll('[data-count]').forEach(el=>{if(el.closest('.hero'))animateCounter(el,parseInt(el.dataset.count));});},1500);
+
+function animateCounter(el,target){
+  if(el.dataset.animated)return;el.dataset.animated='1';
+  let current=0;const step=Math.max(1,target/40);
+  const iv=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(iv);}el.textContent=Math.round(current);},40);
+}
+
+// SOUND
+let audioCtx=null,isPlaying=false;
+function toggleSound(){
+  const btn=document.getElementById('soundToggle');
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(!isPlaying){
+    const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+    osc.type='sine';osc.frequency.value=65;gain.gain.value=0.03;
+    const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=120;
+    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start();
+    const lfo=audioCtx.createOscillator();const lg=audioCtx.createGain();
+    lfo.frequency.value=0.15;lg.gain.value=15;lfo.connect(lg);lg.connect(osc.frequency);lfo.start();
+    window._nodes={osc,lfo};
+    btn.textContent='🔊';btn.classList.add('active');isPlaying=true;
+  }else{
+    window._nodes.osc.stop();window._nodes.lfo.stop();
+    btn.textContent='🔇';btn.classList.remove('active');isPlaying=false;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Strateji Sözlüğü — 2000+ Terim | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--black:#111;--red:#c41e3a;--orange:#f4a261;--bg:#fff;--border:#e5e7eb;--muted:#888;--font-head:'Chakra Petch',sans-serif;--font-mono:'IBM Plex Mono',monospace;--font-sans:'IBM Plex Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:#0a0f17;color:#e8e6e3;line-height:1.6}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1280px;margin:0 auto;background:var(--bg);min-height:100vh}
+.nav{height:52px;background:var(--black);display:flex;align-items:center;padding:0 20px;position:sticky;top:0;z-index:100}
+.nav .logo{display:flex;align-items:center;gap:8px;padding-right:18px;border-right:1px solid rgba(255,255,255,.1)}
+.nav .logo img{height:24px}
+.nav .logo span{font-size:16px;font-weight:800;color:#fff;font-family:var(--font-head)}
+.nav .logo span b{color:var(--red)}
+.nav-links{display:flex;flex:1;align-items:center}
+.nav-links a{font-size:13px;color:rgba(255,255,255,.45);padding:0 14px;height:52px;display:flex;align-items:center;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.04em}
+.nav-links a:hover{color:rgba(255,255,255,.8)}
+.nav-links a.active{color:var(--orange)}
+.hero{background:var(--black);padding:28px 24px}
+.hero .label{font-size:12px;color:var(--orange);font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px;font-family:var(--font-mono)}
+.hero h1{font-size:28px;font-weight:800;color:#fff;font-family:var(--font-head);margin-bottom:8px}
+.hero .sub{font-size:13px;color:rgba(255,255,255,.5)}
+.search-bar{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap;position:sticky;top:52px;background:#0f1520;z-index:50}
+.search-input{flex:1;min-width:200px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;font-size:15px;font-family:var(--font-sans);outline:none}
+.search-input:focus{border-color:var(--red)}
+.cat-btns{display:flex;gap:6px;flex-wrap:wrap}
+.cat-btn{font-size:13px;padding:5px 12px;border-radius:4px;border:1px solid var(--border);color:#8a9bb0;cursor:pointer;font-family:var(--font-mono)}
+.cat-btn.on{background:var(--black);color:#fff;border-color:var(--black)}
+.stats-bar{padding:8px 20px;background:#141c2b;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted);font-family:var(--font-mono)}
+.dict-content{padding:20px}
+.letter-section{margin-bottom:24px}
+.letter-header{font-family:var(--font-head);font-size:24px;font-weight:700;color:var(--red);padding:8px 0;border-bottom:2px solid var(--red);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.letter-header .count{font-size:13px;color:var(--muted);font-family:var(--font-mono);font-weight:400}
+.term-item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 12px;border-bottom:1px solid #f0f0f0;transition:background .15s}
+.term-item:hover{background:#141c2b}
+.term-name{font-weight:600;font-size:13px;color:#222}
+.term-eng{font-size:13px;color:var(--muted);font-family:var(--font-mono);margin-top:2px}
+.term-def{font-size:12px;color:#8a9bb0;margin-top:4px;line-height:1.5}
+.term-cat{font-size:12px;padding:3px 8px;border-radius:3px;background:#f3f4f6;color:var(--muted);font-family:var(--font-mono);white-space:nowrap;align-self:start}
+.footer{padding:20px;text-align:center;font-size:13px;color:var(--muted);font-family:var(--font-mono);border-top:1px solid var(--border)}
+.footer a{color:var(--red)}
+@media(max-width:768px){.term-item{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+<div class="wrap">
+<nav class="nav">
+  <a href="index.html" class="logo"><img src="logo-icon-64.png" alt="HS"><span>HARB<b>·</b>STR</span></a>
+  <div class="nav-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="infografik.html">İnfografik</a>
+    <a href="gorsel-galeri.html">Galeri</a>
+    <a class="active" href="kesfet.html">Külliyat</a>
+    <a href="hs-tv.html">HS·TV</a>
+    <a href="oza-hub.html" style="color:#5865f2">OZA ▸</a>
+  </div>
+</nav>
+<section class="hero">
+  <div class="label">Strateji Sözlüğü · 2000+ Terim</div>
+  <h1>Askerî ve Stratejik Terminoloji</h1>
+  <div class="sub">Türkçe-İngilizce askeri, stratejik, jeopolitik, siber, denizcilik ve havacılık terimleri. Harb-i Strateji Külliyatı.</div>
+</section>
+<div class="search-bar">
+  <input type="text" class="search-input" id="searchInput" placeholder="Terim ara... (ör: caydırıcılık, SIHA, NATO)">
+  <div class="cat-btns">
+    <span class="cat-btn on" data-cat="all">Tümü</span>
+    <span class="cat-btn" data-cat="askeri">Askerî</span>
+    <span class="cat-btn" data-cat="strateji">Strateji</span>
+    <span class="cat-btn" data-cat="deniz">Deniz</span>
+    <span class="cat-btn" data-cat="hava">Hava</span>
+    <span class="cat-btn" data-cat="siber">Siber</span>
+    <span class="cat-btn" data-cat="jeopolitik">Jeopolitik</span>
+    <span class="cat-btn" data-cat="tarih">Tarih</span>
+    <span class="cat-btn" data-cat="teknoloji">Teknoloji</span>
+  </div>
+</div>
+<div class="stats-bar"><span id="termCount">2000+</span> terim gösteriliyor</div>
+<div class="dict-content" id="dictContent"></div>
+<footer class="footer"><a href="index.html">Ana Sayfa</a> · <a href="infografik.html">İnfografik</a> · <a href="gorsel-galeri.html">Galeri</a> · <a href="kesfet.html">Külliyat</a> · <a href="hs-tv.html">HS·TV</a> · <a href="oza-hub.html">OZA</a> · © 2026 Harb-i Strateji</footer>
+</div>
+<script>
+const TERMS=[
+// A
+["Abluka","Blockade","Bir ülkenin deniz veya kara yollarının kapatılarak dış dünyayla bağlantısının kesilmesi.","askeri"],
+["Alay","Regiment","Genellikle 2-4 taburdan oluşan askeri birlik. Komutanı albay.","askeri"],
+["Amfibi Harekât","Amphibious Operation","Denizden karaya çıkarma operasyonu. Kara ve deniz kuvvetlerinin koordineli eylemi.","deniz"],
+["Angajman Kuralları","Rules of Engagement (ROE)","Askerî kuvvetlerin ne zaman ve nasıl güç kullanabileceğini belirleyen kurallar.","askeri"],
+["Anti-Erişim/Alan İnkârı","Anti-Access/Area Denial (A2/AD)","Düşmanın belirli bir bölgeye erişimini veya bölgede hareket etmesini engelleyen strateji.","strateji"],
+["Arazi Hâkimiyeti","Terrain Dominance","Savaş alanında yüksek noktaları ve stratejik mevzileri kontrol etme.","askeri"],
+["Asimetrik Savaş","Asymmetric Warfare","Güç dengesizliği olan taraflar arasındaki çatışma. Zayıf tarafın konvansiyonel olmayan yöntemler kullanması.","strateji"],
+["Ateş Desteği","Fire Support","Manevra birliklerine topçu, hava veya deniz ateşiyle sağlanan destek.","askeri"],
+["Ateşkes","Ceasefire","Çatışan tarafların geçici veya kalıcı olarak ateşi durdurması.","askeri"],
+["Atılım","Breakthrough","Düşman savunma hattının yarılması ve gerisine sızılması.","askeri"],
+["Avangard","Vanguard","Ana kuvvetin önünde ilerleyen keşif ve güvenlik birliği.","askeri"],
+// B
+["Balistik Füze","Ballistic Missile","Fırlatıldıktan sonra balistik yörünge izleyen güdümsüz veya yarı güdümlü füze.","teknoloji"],
+["Barış Gücü","Peacekeeping Force","BM veya bölgesel örgütler tarafından çatışma bölgelerine gönderilen askeri güç.","jeopolitik"],
+["Bastırma","Suppression","Düşmanın ateş gücünü veya hareket kabiliyetini geçici olarak etkisiz hale getirme.","askeri"],
+["Biyolojik Silah","Biological Weapon","Hastalık yapıcı mikroorganizmaların silah olarak kullanılması. Kitle imha silahı.","teknoloji"],
+["Blöf","Bluff","Gerçekte sahip olunmayan bir güç veya niyetin gösterilmesi.","strateji"],
+["Bombardıman","Bombardment","Hedeflerin yoğun ateş altına alınması. Hava, deniz veya kara topçusuyla.","askeri"],
+["Borda Savaşı","Boarding Action","Deniz savaşında düşman gemisine yanaşıp ele geçirme.","deniz"],
+["Boğaz Kontrolü","Strait Control","Stratejik deniz geçişlerinin askeri kontrolü.","deniz"],
+["Bölge Savunması","Area Defense","Belirli bir coğrafi alanın savunulması stratejisi.","strateji"],
+["Brinkmanship","Brinkmanship","Savaşın eşiğine kadar giderek karşı tarafı geri adım atmaya zorlama.","strateji"],
+// C-Ç
+["Caydırıcılık","Deterrence","Potansiyel saldırganı, saldırının maliyetinin faydasından fazla olacağına ikna ederek saldırıdan vazgeçirme.","strateji"],
+["Cephe","Front","İki düşman kuvvetinin karşı karşıya geldiği hat veya bölge.","askeri"],
+["Çevirme Manevrası","Envelopment","Düşmanın yan veya arkasına dolanarak kuşatma altına alma.","askeri"],
+["Çıkarma","Landing","Denizden veya havadan kara hedefine asker indirme operasyonu.","askeri"],
+["Çift Kullanımlı Teknoloji","Dual-Use Technology","Hem sivil hem askeri amaçlarla kullanılabilen teknoloji.","teknoloji"],
+// D
+["Derinlik Savunması","Defense in Depth","Birden fazla savunma hattı oluşturarak düşmanı yıpratma stratejisi.","strateji"],
+["Deniz Hâkimiyeti","Sea Control","Belirli bir deniz alanında serbestçe hareket edebilme ve düşmanın hareketini engelleme.","deniz"],
+["Denizaltı Savaşı","Submarine Warfare","Denizaltıların kullanıldığı deniz muharebesi.","deniz"],
+["Devlet Dışı Aktör","Non-State Actor","Devlet olmayan ancak uluslararası ilişkilerde etkili olan örgüt veya grup.","jeopolitik"],
+["Drone/İHA","Unmanned Aerial Vehicle (UAV)","İnsansız hava aracı. Keşif, gözetleme veya saldırı amaçlı kullanılır.","teknoloji"],
+["Düşük Yoğunluklu Çatışma","Low-Intensity Conflict","Tam ölçekli savaşın altında kalan silahlı çatışma.","askeri"],
+// E
+["Elektronik Harp","Electronic Warfare (EW)","Elektromanyetik spektrumun askeri amaçlarla kullanılması, karıştırılması veya korunması.","teknoloji"],
+["Emniyet Bölgesi","Buffer Zone","İki düşman güç arasında oluşturulan tarafsız bölge.","jeopolitik"],
+["Enformasyon Savaşı","Information Warfare","Bilgi ve iletişim sistemlerinin saldırı veya savunma amaçlı kullanılması.","siber"],
+["Erken Uyarı","Early Warning","Olası saldırı veya tehditlerin önceden tespit edilmesi sistemi.","teknoloji"],
+["Eskalasyon","Escalation","Çatışmanın şiddetinin veya kapsamının artması.","strateji"],
+["Ezici Güç","Overwhelming Force","Düşmana karşı ezici üstünlük sağlayacak kuvvet kullanımı.","strateji"],
+// F
+["Filo","Fleet","Bir deniz kuvvetinin tamamı veya büyük bir bölümü.","deniz"],
+["Fırkateyn","Frigate","Orta büyüklükte savaş gemisi. Konvoy koruma ve deniz güvenliği.","deniz"],
+["Füze Savunması","Missile Defense","Balistik veya seyir füzelerinin havada imha edilmesi sistemi.","teknoloji"],
+// G
+["Gayri Nizami Harp","Irregular Warfare","Konvansiyonel olmayan savaş yöntemleri. Gerilla, sabotaj, propaganda.","askeri"],
+["Genel Kurmay","General Staff","Silahlı kuvvetlerin en üst komuta ve planlama organı.","askeri"],
+["Gerilla Savaşı","Guerrilla Warfare","Küçük grupların düzensiz saldırılarla düşmanı yıpratması.","askeri"],
+["Güç Projeksiyonu","Power Projection","Bir devletin kendi sınırları dışında askeri güç kullanabilme kapasitesi.","strateji"],
+["Güvenlik İkilemi","Security Dilemma","Bir devletin güvenliğini artırma çabasının diğer devletleri tehdit etmesi.","jeopolitik"],
+// H
+["Harp Akademisi","War College","Üst düzey askeri eğitim kurumu. Strateji ve operatif sanat öğretimi.","askeri"],
+["Hava Üstünlüğü","Air Superiority","Belirli bir bölgede hava kuvvetlerinin kontrolü.","hava"],
+["Hava Savunma","Air Defense","Hava tehditlerine karşı koruma sağlayan sistemler bütünü.","hava"],
+["Hibrit Savaş","Hybrid Warfare","Konvansiyonel, düzensiz, siber ve bilgi savaşının birlikte kullanılması.","strateji"],
+["Hipersonik Silah","Hypersonic Weapon","Ses hızının 5 katından (Mach 5+) hızlı hareket eden silah sistemi.","teknoloji"],
+["Hücum Gemisi","Assault Ship","Amfibi hücum operasyonları için tasarlanmış büyük savaş gemisi.","deniz"],
+// I-İ
+["İleri Üs","Forward Base","Ana üsten uzakta, düşmana yakın konuşlandırılmış askeri tesis.","askeri"],
+["İstihbarat","Intelligence","Karar vericilere sunulmak üzere toplanan, işlenen ve analiz edilen bilgi.","askeri"],
+["İnsansız Deniz Aracı","Unmanned Surface Vehicle (USV)","İnsansız su üstü veya su altı aracı.","deniz"],
+["İnsansız Kara Aracı","Unmanned Ground Vehicle (UGV)","İnsansız kara platformu. Keşif, mayın temizleme, lojistik.","teknoloji"],
+// J-K
+["Jeopolitik","Geopolitics","Coğrafyanın siyaset ve uluslararası ilişkiler üzerindeki etkisini inceleyen bilim dalı.","jeopolitik"],
+["Kadırga","Galley","Kürekle hareket eden eski savaş gemisi. Akdeniz'de yaygın.","tarih"],
+["Kamuflaj","Camouflage","Askerî unsurların çevreye uyum sağlayarak gizlenmesi.","askeri"],
+["Karşı İstihbarat","Counter-Intelligence","Düşman istihbarat faaliyetlerinin tespit edilmesi ve engellenmesi.","askeri"],
+["Karşı Taarruz","Counterattack","Savunma pozisyonundan düşmana karşı yapılan saldırı.","askeri"],
+["Kitle İmha Silahı","Weapon of Mass Destruction (WMD)","Nükleer, biyolojik veya kimyasal silahlar.","teknoloji"],
+["Kolordu","Corps","2-5 tümenden oluşan büyük askeri birlik. Komutanı korgeneral.","askeri"],
+["Komuta-Kontrol","Command and Control (C2)","Askerî operasyonların yönetilmesi için kullanılan sistem ve süreçler.","askeri"],
+["Konvansiyonel Savaş","Conventional Warfare","Düzenli ordular arasında, kitle imha silahları kullanılmadan yapılan savaş.","askeri"],
+["Konvoy","Convoy","Koruma altında birlikte hareket eden gemi veya araç grubu.","deniz"],
+["Korvet","Corvette","Küçük, hızlı savaş gemisi. Kıyı savunması ve devriye.","deniz"],
+["Kuşatma","Siege","Bir kale veya şehrin çevrelenerek teslim olmaya zorlanması.","tarih"],
+["Küresel Güç","Global Power","Dünya genelinde askeri, ekonomik ve siyasi etki uygulayabilen devlet.","jeopolitik"],
+// L
+["Lağım","Mine (Tunnel)","Kale veya surların altına kazılan tünel. Patlayıcıyla yıkım.","tarih"],
+["Lojistik","Logistics","Askerî kuvvetlerin ihtiyaçlarının (yiyecek, mühimmat, yakıt) karşılanması.","askeri"],
+["Lozan Antlaşması","Treaty of Lausanne","1923'te imzalanan, Türkiye Cumhuriyeti'nin uluslararası tanınmasını sağlayan antlaşma.","tarih"],
+// M
+["Manevra Savaşı","Maneuver Warfare","Düşmanın zayıf noktalarına hızlı hareketle saldırarak çökertme stratejisi.","strateji"],
+["Mayın","Mine","Deniz veya karada yerleştirilen patlayıcı tuzak.","askeri"],
+["Meydan Muharebesi","Pitched Battle","İki ordunun açık alanda karşı karşıya geldiği büyük çaplı muharebe.","tarih"],
+["Muharebe","Battle","İki veya daha fazla silahlı gücün belirli bir alanda çatışması.","askeri"],
+["Müttefik","Ally","Ortak düşmana karşı birlikte hareket eden devlet veya güç.","jeopolitik"],
+// N
+["NATO","North Atlantic Treaty Organization","1949'da kurulan Kuzey Atlantik savunma ittifakı. 32 üye ülke.","jeopolitik"],
+["Nükleer Caydırıcılık","Nuclear Deterrence","Nükleer silahlarla karşı tarafı saldırıdan caydırma stratejisi.","strateji"],
+["Nükleer Kış","Nuclear Winter","Büyük çaplı nükleer savaş sonrası oluşacak küresel soğuma senaryosu.","strateji"],
+// O-Ö
+["Operasyon","Operation","Belirli bir stratejik hedefe yönelik koordineli askeri eylemler bütünü.","askeri"],
+["Operatif Sanat","Operational Art","Stratejik hedeflere ulaşmak için taktik eylemlerin planlanması ve yönetilmesi.","strateji"],
+["Öncü Kuvvet","Advance Guard","Ana birliğin önünde hareket eden keşif ve güvenlik unsuru.","askeri"],
+["Özel Kuvvetler","Special Forces","Özel eğitimli, konvansiyonel olmayan görevler için yetiştirilmiş birlikler.","askeri"],
+// P
+["Piyade","Infantry","Yaya olarak savaşan temel kara kuvveti unsuru.","askeri"],
+["Propaganda","Propaganda","Kamuoyunu etkilemek için bilgi veya fikirlerin sistematik yayılması.","strateji"],
+["Provokasyon","Provocation","Karşı tarafı tepki vermeye kışkırtmak amacıyla yapılan eylem.","strateji"],
+["Proxy Savaşı","Proxy War","İki büyük gücün üçüncü taraflar aracılığıyla dolaylı olarak çatışması.","jeopolitik"],
+// R
+["Radar","Radar","Radyo dalgalarıyla hedeflerin tespit edilmesi ve izlenmesi sistemi.","teknoloji"],
+["Rampa","Boarding Ramp","Deniz savaşında düşman gemisine geçiş için kullanılan köprü veya kanca.","tarih"],
+["Realpolitik","Realpolitik","İdeoloji yerine güç dengesine dayanan pragmatik dış politika.","jeopolitik"],
+["Rejim Değişikliği","Regime Change","Bir ülkenin yönetim yapısının dış müdahaleyle değiştirilmesi.","jeopolitik"],
+// S-Ş
+["Savaş Gemisi","Warship","Deniz muharebesi için tasarlanmış ve donatılmış gemi.","deniz"],
+["Savaş Hukuku","Law of War","Silahlı çatışmalarda uyulması gereken uluslararası kurallar.","jeopolitik"],
+["Savunma Sanayii","Defense Industry","Askerî malzeme, silah ve teçhizat üreten endüstri.","teknoloji"],
+["Seyir Füzesi","Cruise Missile","Atmosfer içinde uçan, güdümlü, uzun menzilli füze.","teknoloji"],
+["SIHA","Armed UAV (UCAV)","Silahlı İnsansız Hava Aracı. Keşif ve saldırı kapasiteli.","teknoloji"],
+["Siber Saldırı","Cyber Attack","Bilgisayar ağları üzerinden gerçekleştirilen saldırı.","siber"],
+["Siber Caydırıcılık","Cyber Deterrence","Siber saldırıları caydırmak için karşılık verme kapasitesinin gösterilmesi.","siber"],
+["Siber Espiyonaj","Cyber Espionage","Bilgisayar ağları üzerinden istihbarat toplama.","siber"],
+["Siper","Trench","Askerlerin korunması için kazılan uzun, dar hendek.","askeri"],
+["Stratejik Derinlik","Strategic Depth","Bir devletin coğrafi büyüklüğünün sağladığı savunma avantajı.","strateji"],
+["Stratejik Bombalama","Strategic Bombing","Düşmanın savaş kapasitesini yok etmek için endüstriyel hedeflerin bombalanması.","hava"],
+["Süngü","Bayonet","Tüfek namlusuna takılan bıçak. Yakın dövüş silahı.","tarih"],
+["Şahi Topu","Great Bombard","Fatih Sultan Mehmed'in İstanbul kuşatmasında kullandığı dev top. 762mm.","tarih"],
+// T
+["Tabur","Battalion","3-5 bölükten oluşan askeri birlik. Komutanı yarbay.","askeri"],
+["Taarruz","Offensive","Düşmana karşı yapılan planlı saldırı harekâtı.","askeri"],
+["Taktik","Tactics","Muharebede birliklerin düzenlenmesi ve kullanılması sanatı.","strateji"],
+["Tank","Tank","Zırhlı, paletli, topla donatılmış kara savaş aracı.","askeri"],
+["Terörle Mücadele","Counter-Terrorism","Terör örgütlerine karşı yürütülen askeri ve istihbarat operasyonları.","askeri"],
+["Topçu","Artillery","Uzun menzilli ateş desteği sağlayan ağır silah sistemleri.","askeri"],
+["Torpido","Torpedo","Su altından hedefe yönelen güdümlü patlayıcı silah.","deniz"],
+["Tümen","Division","3-4 alaydan oluşan büyük askeri birlik. Komutanı tümgeneral.","askeri"],
+// U-Ü
+["Uçak Gemisi","Aircraft Carrier","Savaş uçaklarının kalkış ve iniş yapabildiği büyük savaş gemisi.","deniz"],
+["Uluslararası Hukuk","International Law","Devletler arası ilişkileri düzenleyen kurallar bütünü.","jeopolitik"],
+["Uzay Kuvvetleri","Space Force","Uzay ortamında askeri operasyonlar yürüten kuvvet.","hava"],
+// V-Y-Z
+["Vekâlet Savaşı","Proxy War","Büyük güçlerin üçüncü taraflar aracılığıyla dolaylı çatışması.","jeopolitik"],
+["Yeniçeri","Janissary","Osmanlı İmparatorluğu'nun elit piyade birliği. Devşirme sistemiyle yetiştirilir.","tarih"],
+["Yıldırım Savaşı","Blitzkrieg","Hızlı zırhlı birlikler ve hava desteğiyle düşmanı çökertme taktiği.","strateji"],
+["Yıpratma Savaşı","War of Attrition","Düşmanı sürekli kayıp verdirerek zayıflatma stratejisi.","strateji"],
+["Zırhlı Birlik","Armored Unit","Tank ve zırhlı araçlardan oluşan mekanize kuvvet.","askeri"],
+["Zırhlı Muharebe Aracı","Infantry Fighting Vehicle (IFV)","Piyade taşıyan ve ateş desteği sağlayan zırhlı araç.","askeri"],
+// Ek terimler - Siber
+["APT","Advanced Persistent Threat","Gelişmiş, sürekli ve hedefli siber saldırı kampanyası.","siber"],
+["Botnet","Botnet","Uzaktan kontrol edilen ele geçirilmiş bilgisayar ağı.","siber"],
+["DDoS","Distributed Denial of Service","Dağıtık hizmet engelleme saldırısı.","siber"],
+["Deepfake","Deepfake","Yapay zeka ile üretilen sahte görüntü veya ses kaydı.","siber"],
+["Fidye Yazılımı","Ransomware","Verileri şifreleyerek fidye talep eden kötücül yazılım.","siber"],
+["Güvenlik Duvarı","Firewall","Ağ trafiğini kontrol eden güvenlik sistemi.","siber"],
+["Kimlik Avı","Phishing","Sahte iletişimlerle hassas bilgileri çalma yöntemi.","siber"],
+["Kripto Savaş","Crypto War","Şifreleme teknolojilerinin kontrolü üzerine devlet-birey çatışması.","siber"],
+["Sıfır Gün Açığı","Zero-Day Exploit","Henüz yaması bulunmayan yazılım güvenlik açığı.","siber"],
+["Siber Silah","Cyber Weapon","Bilgisayar sistemlerine zarar vermek için tasarlanmış yazılım.","siber"],
+// Ek terimler - Havacılık
+["Aviyonik","Avionics","Hava araçlarında kullanılan elektronik sistemlerin tümü.","hava"],
+["Dogfight","Dogfight","İki savaş uçağı arasındaki yakın hava muharebesi.","hava"],
+["AWACS","Airborne Warning and Control System","Havadan erken uyarı ve kontrol sistemi.","hava"],
+["Stealth","Stealth","Radar ve diğer algılama sistemlerinden gizlenme teknolojisi.","hava"],
+["Savaş Uçağı","Fighter Aircraft","Hava-hava ve hava-yer muharebesi için tasarlanmış uçak.","hava"],
+["Hava İkmal","Aerial Refueling","Uçuş halindeki uçağa yakıt transferi.","hava"],
+["Paraşüt İndirme","Airborne Operation","Paraşütle asker indirme operasyonu.","hava"],
+["Stratejik Bombardıman","Strategic Bombing","Düşman ülkenin savaş kapasitesini hedef alan uzun menzilli hava saldırısı.","hava"],
+// Ek terimler - Tarih
+["Akıncı","Raider","Osmanlı hafif süvari birliği. Keşif ve baskın görevi.","tarih"],
+["Azap","Azap","Osmanlı gönüllü piyade birliği. Sınır savunması.","tarih"],
+["Cebeci","Armorer","Osmanlı silah yapım ve bakım birliği.","tarih"],
+["Devşirme","Devshirme","Osmanlı'da Hristiyan çocukların asker olarak yetiştirilmesi sistemi.","tarih"],
+["Enderun","Enderun","Osmanlı saray okulu. Devlet adamı ve asker yetiştirme.","tarih"],
+["Fatih","Conqueror","İstanbul'u fetheden Sultan II. Mehmed'in unvanı.","tarih"],
+["Gazi","Veteran/Warrior","Savaşta yararlılık gösteren askere verilen unvan.","tarih"],
+["Hilal Taktiği","Crescent Formation","Türk-Moğol savaş taktiği. Düşmanı çevreleme.","tarih"],
+["Kaptan-ı Derya","Grand Admiral","Osmanlı donanma komutanı. En yüksek deniz rütbesi.","tarih"],
+["Kılıçarslan","Kilij Arslan","Anadolu Selçuklu sultanlarının kullandığı isim.","tarih"],
+["Mehter","Military Band","Osmanlı askeri bandosu. Dünyanın en eski askeri müzik geleneği.","tarih"],
+["Nusret","Nusret","1915'te Çanakkale Boğazı'na mayın döşeyen tarihi gemi.","tarih"],
+["Sipahi","Sipahi","Osmanlı tımarlı süvari askeri. Toprak karşılığı askerlik.","tarih"],
+["Tımarlı Sipahi","Timar Cavalry","Tımar toprak geliri karşılığında askerlik yapan süvari.","tarih"],
+["Topkapı","Topkapi","İstanbul'un fethinde top ateşiyle açılan kapı. Saray adı.","tarih"],
+["Yeniçeri Ocağı","Janissary Corps","Osmanlı'nın elit piyade teşkilatı. 1363-1826.","tarih"],
+// Ek terimler - Jeopolitik
+["Bölgesel Güç","Regional Power","Belirli bir coğrafi bölgede baskın etkiye sahip devlet.","jeopolitik"],
+["Çevreleme","Containment","Bir gücün yayılmasını engellemek için uygulanan strateji.","jeopolitik"],
+["Denge Politikası","Balance of Power","Güçler arasında dengeyi korumaya yönelik dış politika.","jeopolitik"],
+["Enerji Güvenliği","Energy Security","Enerji kaynaklarına kesintisiz erişimin sağlanması.","jeopolitik"],
+["Heartland Teorisi","Heartland Theory","Mackinder'in Avrasya'nın kalbini kontrol edenin dünyayı kontrol edeceği teorisi.","jeopolitik"],
+["İttifak","Alliance","Ortak çıkarlar doğrultusunda devletler arası resmi işbirliği.","jeopolitik"],
+["Karadeniz Stratejisi","Black Sea Strategy","Karadeniz bölgesindeki güç dengesi ve kontrol stratejileri.","jeopolitik"],
+["Mavi Vatan","Blue Homeland","Türkiye'nin deniz yetki alanlarını ifade eden doktrin.","jeopolitik"],
+["Rimland Teorisi","Rimland Theory","Spykman'ın kıyı kuşağını kontrol edenin dünyayı kontrol edeceği teorisi.","jeopolitik"],
+["Silah Ambargosu","Arms Embargo","Bir ülkeye silah satışının yasaklanması.","jeopolitik"],
+["Soft Power","Soft Power","Askerî güç yerine kültür, değerler ve diplomasiyle etki.","jeopolitik"],
+["Tampon Devlet","Buffer State","İki büyük güç arasında yer alan küçük devlet.","jeopolitik"],
+// Ek terimler - Strateji
+["Clausewitz","Clausewitz","Prusyalı askeri teorisyen. 'Savaş, politikanın başka araçlarla devamıdır.'","strateji"],
+["Sun Tzu","Sun Tzu","Çinli askeri stratejist. 'Savaş Sanatı' kitabının yazarı.","strateji"],
+["Machiavelli","Machiavelli","İtalyan siyaset filozofu. 'Prens' kitabının yazarı.","strateji"],
+["Jomini","Jomini","İsviçreli askeri teorisyen. Napolyon savaşları analisti.","strateji"],
+["Mahan","Mahan","Amerikalı deniz stratejisti. Deniz gücü teorisyeni.","strateji"],
+["Douhet","Douhet","İtalyan hava gücü teorisyeni. Stratejik bombalama doktrini.","strateji"],
+["Boyd Döngüsü","OODA Loop","Gözle-Yönel-Karar Ver-Harekete Geç karar döngüsü.","strateji"],
+["Schwerpunkt","Schwerpunkt","Ağırlık merkezi. Kuvvetin yoğunlaştırılacağı kritik nokta.","strateji"],
+["Auftragstaktik","Mission Command","Görev tipi komuta. Alt kademelere inisiyatif verme.","strateji"],
+["Savaş Sisi","Fog of War","Savaşta belirsizlik ve bilgi eksikliği durumu.","strateji"],
+["Sürtünme","Friction","Savaşta planların uygulanmasını zorlaştıran beklenmedik engeller.","strateji"],
+["Ağırlık Merkezi","Center of Gravity","Düşmanın gücünün ve iradesinin kaynağı olan kritik unsur.","strateji"],
+["Dolaylı Yaklaşım","Indirect Approach","Liddell Hart'ın düşmanın güçlü noktalarından kaçınma stratejisi.","strateji"],
+["Toplam Savaş","Total War","Tüm ulusal kaynakların savaş için seferber edilmesi.","strateji"],
+// Ek terimler - Teknoloji
+["5. Nesil Savaş Uçağı","5th Generation Fighter","Stealth, süpersonik seyir, gelişmiş aviyonik. F-35, Su-57.","teknoloji"],
+["Yapay Zeka","Artificial Intelligence (AI)","İnsan zekasını taklit eden bilgisayar sistemleri.","teknoloji"],
+["Kuantum Bilgisayar","Quantum Computer","Kuantum mekaniği prensipleriyle çalışan süper bilgisayar.","teknoloji"],
+["Lazer Silah","Directed Energy Weapon","Yoğunlaştırılmış enerji ışını ile hedefi yok eden silah.","teknoloji"],
+["Nanosilah","Nano Weapon","Nanoteknoloji ile üretilmiş mikro ölçekli silah sistemi.","teknoloji"],
+["Otonom Silah","Autonomous Weapon","İnsan müdahalesi olmadan hedef seçip ateş açabilen silah.","teknoloji"],
+["Robotik Savaş","Robotic Warfare","Robot ve otonom sistemlerin savaşta kullanılması.","teknoloji"],
+["Uzay Silahı","Space Weapon","Uzayda veya uzaydan kullanılan silah sistemi.","teknoloji"],
+["Elektromanyetik Darbe","Electromagnetic Pulse (EMP)","Elektronik cihazları devre dışı bırakan elektromanyetik dalga.","teknoloji"],
+["Hipersonik Planör","Hypersonic Glide Vehicle","Mach 5+ hızda atmosferde süzülen manevra yapabilen araç.","teknoloji"],
+// Daha fazla terim ekle - Deniz
+["Amiral","Admiral","Donanmanın en üst rütbeli komutanı.","deniz"],
+["Çıkarma Gemisi","Landing Ship","Asker ve araç çıkarmak için tasarlanmış gemi.","deniz"],
+["Destroyer","Destroyer","Hızlı, çok amaçlı savaş gemisi. Filo koruma.","deniz"],
+["Deniz Piyade","Marine","Amfibi harekâtlar için eğitilmiş deniz askeri.","deniz"],
+["Hücumbot","Fast Attack Craft","Küçük, hızlı, füze veya torpido taşıyan savaş botu.","deniz"],
+["Karakol Gemisi","Patrol Vessel","Kıyı güvenliği ve devriye görevi yapan gemi.","deniz"],
+["Kruvaziyer","Cruiser","Büyük, ağır silahlı savaş gemisi.","deniz"],
+["Mayın Tarama","Minesweeping","Deniz mayınlarının tespit edilip temizlenmesi.","deniz"],
+["Nükleer Denizaltı","Nuclear Submarine","Nükleer reaktörle çalışan denizaltı. Sınırsız menzil.","deniz"],
+["Zırhlı","Battleship","En büyük ve en ağır silahlı savaş gemisi türü (tarihi).","deniz"],
+// Ek Askerî Terimler
+["Aksiyon Raporu","After Action Report (AAR)","Operasyon sonrası değerlendirme raporu. Dersler çıkarılır.","askeri"],
+["Alay Sancağı","Regimental Colors","Alayın kimliğini temsil eden bayrak. Kaybedilmesi büyük utanc.","askeri"],
+["Artçı Birlik","Rear Guard","Geri çekilen ana kuvveti koruyan birlik.","askeri"],
+["Ateş Desteği","Fire Support","Piyade birliklerine topçu veya hava ateş desteği sağlanması.","askeri"],
+["Balistik Füze","Ballistic Missile","Balistik yörünge izleyen, genellikle nükleer başlık taşıyabilen füze.","teknoloji"],
+["Başkomutanlık","Supreme Command","Silahlı kuvvetlerin en üst komuta makamı.","askeri"],
+["Bayrak Gemisi","Flagship","Filo komutanının bulunduğu gemi.","deniz"],
+["Biyolojik Silah","Biological Weapon","Hastalık yayan mikroorganizmaların silah olarak kullanılması.","teknoloji"],
+["Blitzkrieg","Lightning War","Hızlı zırhlı ilerleme ve hava desteğiyle düşmanı çökertme taktiği.","strateji"],
+["Cephe Gerisinde","Behind Enemy Lines","Düşman kontrolündeki bölgede operasyon yapma.","askeri"],
+["Cephe Hattı","Front Line","Düşmanla doğrudan temas halindeki hat.","askeri"],
+["Çapraz Ateş","Crossfire","Birden fazla yönden aynı hedefe ateş açılması.","askeri"],
+["Çevirme Manevrası","Envelopment","Düşmanın yan veya arkasından kuşatma hareketi.","strateji"],
+["Darbeci","Coup Plotter","Hükümeti silah zoruyla devirmeye çalışan kişi.","jeopolitik"],
+["Derinlik Bombası","Depth Charge","Denizaltılara karşı kullanılan su altı bombası.","deniz"],
+["Devlet Dışı Aktör","Non-State Actor","Devlet olmayan ama uluslararası etkisi olan örgüt (terör, NGO vb.).","jeopolitik"],
+["Dijital İkiz","Digital Twin","Fiziksel bir sistemin dijital kopyası. Simülasyon ve test için.","teknoloji"],
+["Dış Politika","Foreign Policy","Bir devletin diğer devletlerle ilişkilerini yöneten politikalar bütünü.","jeopolitik"],
+["Doktrin","Doctrine","Askerî kuvvetlerin nasıl savaşacağını belirleyen temel ilkeler.","strateji"],
+["Drone Sürüsü","Drone Swarm","Koordineli hareket eden çok sayıda insansız hava aracı.","teknoloji"],
+["Düşman Hattı","Enemy Line","Düşman kuvvetlerinin konuşlandığı hat.","askeri"],
+["Ekonomik Savaş","Economic Warfare","Düşmanın ekonomisini çökertmeye yönelik stratejiler.","strateji"],
+["Elektronik Harp","Electronic Warfare (EW)","Elektromanyetik spektrumun askeri amaçlı kullanımı ve engellemesi.","siber"],
+["Enerji Güvenliği","Energy Security","Bir ülkenin enerji kaynaklarına kesintisiz erişimini sağlama.","jeopolitik"],
+["Enformasyon Savaşı","Information Warfare","Bilgi ve dezenformasyonun silah olarak kullanılması.","siber"],
+["Erkın Savaş","Attrition Warfare","Düşmanı kaynak tüketerek yıpratma stratejisi.","strateji"],
+["Etki Alanı","Sphere of Influence","Bir devletin siyasi/ekonomik kontrolü altındaki bölge.","jeopolitik"],
+["Filo","Fleet","Bir komutan altında toplanan savaş gemileri grubu.","deniz"],
+["Fırsat Hedefi","Target of Opportunity","Planlanmamış ama değerli bir hedefin ortaya çıkması.","askeri"],
+["Gayri Nizami Harp","Irregular Warfare","Konvansiyonel olmayan savaş yöntemleri (gerilla, sabotaj vb.).","strateji"],
+["Gemi İnşa","Shipbuilding","Savaş gemilerinin tasarım ve üretim süreci.","deniz"],
+["Gizli Operasyon","Covert Operation","Resmi olarak inkar edilebilen gizli askeri/istihbarat operasyonu.","askeri"],
+["Gözetleme","Surveillance","Düşman faaliyetlerinin sürekli izlenmesi.","siber"],
+["Güc Projeksiyonu","Power Projection","Askerî gücü uzak bölgelere ulaştırma kapasitesi.","strateji"],
+["Güvenlik İkilemi","Security Dilemma","Bir devletin güvenliğini artırmasının diğerlerini tehdit etmesi.","jeopolitik"],
+["Harp Akademisi","War College","Üst düzey askeri eğitim kurumu.","askeri"],
+["Harp Oyunu","War Game","Askerî senaryoların simülasyonla test edilmesi.","strateji"],
+["Hassas Güdümlü Mühimmat","Precision-Guided Munition (PGM)","Hedefe yönlendirilmiş akıllı bomba veya füze.","teknoloji"],
+["Hibrit Rejim","Hybrid Regime","Demokratik ve otoriter unsurları bir arada barındıran yönetim.","jeopolitik"],
+["Hızında Savaş","Maneuver Warfare","Hız ve sürprizle düşmanın karar döngüsünü bozma.","strateji"],
+["İHA Filosu","UAV Fleet","İnsansız hava aracı filosu.","teknoloji"],
+["İkmal Hattı","Supply Line","Cepheye malzeme taşıyan lojistik hattı.","askeri"],
+["İleri Karakol","Forward Operating Base (FOB)","Ana üsten uzakta, düşmana yakın konumlanan üs.","askeri"],
+["İstihbarat Analizi","Intelligence Analysis","Ham istihbarat verilerinin işlenerek karar vericilere sunulması.","siber"],
+["İşgal","Occupation","Bir ülkenin topraklarının yabancı askeri güç tarafından kontrol edilmesi.","askeri"],
+["Jeostratejik","Geostrategic","Coğrafi faktörlerin askeri strateji üzerindeki etkisi.","jeopolitik"],
+["Kademeli Tırmanma","Escalation Ladder","Çatışmanın kontrollü şekilde yoğunlaştırılması.","strateji"],
+["Kamikaze","Kamikaze","Japonca 'ilahi rüzgâr'. İntihar saldırısı taktiği.","tarih"],
+["Kaptan-ı Derya","Grand Admiral","Osmanlı donanma komutanı. Deniz kuvvetlerinin en üst rütbesi.","tarih"],
+["Karşı İstihbarat","Counterintelligence","Düşman casusluğunu tespit ve engelleme faaliyeti.","siber"],
+["Kıta Sahanlığı","Continental Shelf","Kıyı devletinin deniz tabanı üzerindeki egemenlik hakları.","deniz"],
+["Kitle İmha Silahı","Weapon of Mass Destruction (WMD)","Nükleer, biyolojik, kimyasal silahlar.","teknoloji"],
+["Koalisyon","Coalition","Ortak hedefe yönelik geçici askeri/siyasi ittifak.","jeopolitik"],
+["Komando","Commando","Özel eğitimli, baskın ve sabotaj yapan elit asker.","askeri"],
+["Kontr-Gerilla","Counter-Guerrilla","Gerilla savaşına karşı geliştirilen taktikler.","strateji"],
+["Konvoy","Convoy","Korumalı gemi veya araç kafilesi.","deniz"],
+["Korvet","Corvette","Küçük, hızlı savaş gemisi. Kıyı savunması.","deniz"],
+["Kuşatma","Siege","Bir kale veya şehrin çevrelenerek teslim alınması.","tarih"],
+["Lağım","Mine/Tunnel","Osmanlı'da surları çökertmek için kazılan tünel.","tarih"],
+["Lojistik Üs","Logistics Base","İkmal ve bakım hizmetlerinin verildiği tesis.","askeri"],
+["Mancınık","Trebuchet","Ortaçağ kuşatma silahı. Ağır taşları fırlatır.","tarih"],
+["Manevra Alanı","Maneuver Space","Birliklerin hareket edebileceği taktik alan.","askeri"],
+["Mekanize Piyade","Mechanized Infantry","Zırhlı araçlarla taşınan piyade birliği.","askeri"],
+["Menzil","Range","Bir silahın etkili ateş mesafesi.","askeri"],
+["Merkez Komutanlığı","Central Command (CENTCOM)","ABD'nin Ortadoğu sorumlu askeri komutanlığı.","jeopolitik"],
+["Meydan Muharebesi","Pitched Battle","İki ordunun açık alanda karşı karşıya geldiği büyük savaş.","tarih"],
+["Muharebe Sahası","Battlefield","Savaşın gerçekleştiği fiziksel alan.","askeri"],
+["Muhasara","Siege","Osmanlıca kuşatma. Kale veya şehrin ablukaya alınması.","tarih"],
+["Münferit Harekât","Unilateral Action","Tek başına, müttefik desteği olmadan yapılan operasyon.","strateji"],
+["NATO Madde 5","NATO Article 5","Bir üyeye saldırı tüm üyelere saldırı sayılır.","jeopolitik"],
+["Nüfuz Alanı","Zone of Influence","Bir devletin dolaylı kontrolü altındaki bölge.","jeopolitik"],
+["Operasyonel Sanat","Operational Art","Taktik ile strateji arasındaki planlama seviyesi.","strateji"],
+["Otonom Silah","Autonomous Weapon","İnsan müdahalesi olmadan hedef seçip ateş eden silah sistemi.","teknoloji"],
+["Öncü Kuvvet","Vanguard","Ana kuvvetin önünde ilerleyen keşif/güvenlik birliği.","askeri"],
+["Psikolojik Harekât","Psychological Operations (PSYOP)","Düşman moral ve iradesini kırmaya yönelik bilgi operasyonları.","siber"],
+["Radar Kesit Alanı","Radar Cross Section (RCS)","Bir nesnenin radarda ne kadar görünür olduğunun ölçüsü.","teknoloji"],
+["Rampa","Boarding","Düşman gemisine çıkarak ele geçirme taktiği.","deniz"],
+["Realpolitik","Realpolitik","İdeoloji yerine güç dengesine dayalı pragmatik dış politika.","jeopolitik"],
+["Rejim Değişikliği","Regime Change","Bir ülkenin yönetiminin dışarıdan müdahaleyle değiştirilmesi.","jeopolitik"],
+["Roket Atar","Rocket Launcher","Roketleri fırlatan taşınabilir veya araç üstü silah sistemi.","teknoloji"],
+["Sahte Ricat","Feigned Retreat","Geri çekilir gibi yaparak düşmanı tuzağa çekme taktiği.","tarih"],
+["Savaş Hukuku","Law of Armed Conflict","Savaşta uyulması gereken uluslararası kurallar.","jeopolitik"],
+["Savaş Sisi","Fog of War","Savaşta belirsizlik ve bilgi eksikliği durumu.","strateji"],
+["Sefer","Campaign","Belirli bir stratejik hedefe yönelik askeri operasyonlar dizisi.","askeri"],
+["Seferberlik","Mobilization","Silahlı kuvvetlerin savaş hazırlığına geçirilmesi.","askeri"],
+["Siber Caydırıcılık","Cyber Deterrence","Siber saldırıları caydırmaya yönelik strateji.","siber"],
+["Siber Silah","Cyber Weapon","Bilgisayar sistemlerine zarar veren yazılım (Stuxnet vb.).","siber"],
+["Sipahi","Sipahi","Osmanlı tımarlı süvari askeri.","tarih"],
+["Stratejik Bombalama","Strategic Bombing","Düşmanın endüstriyel/sivil altyapısını hedef alan hava saldırısı.","hava"],
+["Stratejik Derinlik","Strategic Depth","Bir ülkenin coğrafi büyüklüğünün savunmaya katkısı.","strateji"],
+["Stratejik Hammadde","Strategic Material","Savunma sanayii için kritik öneme sahip hammadde.","jeopolitik"],
+["Süper Güç","Superpower","Küresel ölçekte askeri, ekonomik ve siyasi hakimiyet kurabilen devlet.","jeopolitik"],
+["Şahi Topu","Great Bombard","Fatih'in İstanbul kuşatmasında kullandığı dev top. 762mm çap.","tarih"],
+["Tabur","Battalion","3-5 bölükten oluşan askeri birlik. Komutanı yarbay.","askeri"],
+["Taarruz","Offensive","Düşmana karşı aktif saldırı hareketi.","askeri"],
+["Taktik Nükleer Silah","Tactical Nuclear Weapon","Savaş alanında kullanılmak üzere tasarlanmış küçük nükleer silah.","teknoloji"],
+["Tedarik Zinciri","Supply Chain","Hammaddeden nihai ürüne kadar üretim ve dağıtım ağı.","jeopolitik"],
+["Tehdit Değerlendirmesi","Threat Assessment","Potansiyel tehditlerin analiz edilmesi.","strateji"],
+["Tersane","Shipyard","Gemi inşa ve onarım tesisi.","deniz"],
+["Tımar Sistemi","Timar System","Osmanlı'da toprak karşılığı asker besleme sistemi.","tarih"],
+["Topçu Mevzii","Artillery Position","Topların konuşlandırıldığı savunmalı alan.","askeri"],
+["Torpido","Torpedo","Su altından hedefe yönelen patlayıcı silah.","deniz"],
+["Tümgeneral","Major General","İki yıldızlı general. Tümen komutanı.","askeri"],
+["Uçak Gemisi","Aircraft Carrier","Uçakların kalkış ve iniş yapabildiği büyük savaş gemisi.","deniz"],
+["Uluslararası Hukuk","International Law","Devletler arası ilişkileri düzenleyen kurallar bütünü.","jeopolitik"],
+["Uzay Kuvvetleri","Space Force","Uzay ortamında askeri operasyonlar yürüten kuvvet.","teknoloji"],
+["Vekalet Savaşı","Proxy War","Büyük güçlerin üçüncü ülkelerdeki gruplar üzerinden savaşması.","jeopolitik"],
+["Yaptırım","Sanction","Bir devlete uygulanan ekonomik veya diplomatik ceza.","jeopolitik"],
+["Yeniçeri","Janissary","Osmanlı'nın elit piyade birliği. Devşirme sistemiyle yetiştirilir.","tarih"],
+["Yıldırım Savaşı","Blitzkrieg","Hızlı zırhlı ilerleme ve hava desteğiyle düşmanı çökertme.","strateji"],
+["Yüzer Üs","Floating Base","Denizde konuşlanan askeri üs (uçak gemisi vb.).","deniz"],
+["Zırhlı Muharebe Aracı","Infantry Fighting Vehicle (IFV)","Piyade taşıyan silahlı zırhlı araç.","teknoloji"],
+// Ek Siber Terimler
+["APT (Gelişmiş Kalıcı Tehdit)","Advanced Persistent Threat","Devlet destekli, uzun süreli siber casusluk operasyonu.","siber"],
+["Botnet","Botnet","Ele geçirilmiş bilgisayarlardan oluşan zombi ağı.","siber"],
+["DDoS Saldırısı","Distributed Denial of Service","Hedef sistemi aşırı trafikle çökertme saldırısı.","siber"],
+["Deepfake","Deepfake","Yapay zeka ile üretilmiş sahte video/ses içeriği.","siber"],
+["Fidye Yazılımı","Ransomware","Dosyaları şifreleyip fidye talep eden kötücül yazılım.","siber"],
+["Güvenlik Duvarı","Firewall","Ağ trafiğini filtreleyerek yetkisiz erişimi engelleyen sistem.","siber"],
+["Honeypot","Honeypot","Saldırganları çekmek için kurulan sahte sistem/tuzak.","siber"],
+["Kripto Savaşı","Crypto War","Şifreleme teknolojisinin kullanımı üzerine devlet-vatandaş çatışması.","siber"],
+["Sıfır Gün Açığı","Zero-Day Exploit","Henüz yaması olmayan güvenlik açığının kullanılması.","siber"],
+["Siber Ordu","Cyber Army","Devletin siber saldırı ve savunma kapasitesi.","siber"],
+["Sosyal Mühendislik","Social Engineering","İnsanları manipüle ederek bilgi elde etme tekniği.","siber"],
+["Stuxnet","Stuxnet","İran nükleer tesislerini hedef alan ilk bilinen siber silah (2010).","siber"],
+// Ek Tarih Terimleri
+["Akıncı","Raider","Osmanlı hafif süvari birliği. Keşif ve baskın görevi.","tarih"],
+["Azap","Azap","Osmanlı gönüllü piyade askeri. İlk savaş hattında.","tarih"],
+["Cebeci","Armorer","Osmanlı silah yapım ve bakım birliği.","tarih"],
+["Devşirme","Devshirme","Osmanlı'da Hristiyan çocukların asker olarak yetiştirilmesi sistemi.","tarih"],
+["Enderun","Palace School","Osmanlı saray okulu. Devlet adamı ve asker yetiştirme.","tarih"],
+["Gaza","Holy War","İslam'da savaş ideolojisi. Osmanlı'nın genişleme motivasyonu.","tarih"],
+["Humbaracı","Grenadier","Osmanlı el bombası atan asker.","tarih"],
+["İmparatorluk","Empire","Birden fazla halkı ve toprak parçasını kontrol eden büyük devlet.","tarih"],
+["Kapıkulu","Household Troops","Osmanlı padişahına bağlı merkezi ordu birlikleri.","tarih"],
+["Kızılelma","Red Apple","Türk mitolojisinde fetih hedefi. Roma, Viyana, İstanbul.","tarih"],
+["Lağımcı","Sapper","Osmanlı'da tünel kazarak surları çökerten mühendis askeri.","tarih"],
+["Mehter","Janissary Band","Osmanlı askeri bandosu. Dünyanın ilk askeri müzik birliği.","tarih"],
+["Nusret","Nusret Minelayer","Çanakkale'de 26 mayın döşeyen efsanevi Osmanlı gemisi.","tarih"],
+["Ordu-yu Hümayun","Imperial Army","Osmanlı padişah ordusu. Sefere padişah komutasında çıkar.","tarih"],
+["Pençik","War Tax","Osmanlı'da savaş ganimetinden alınan beşte bir vergi.","tarih"],
+["Rumeli","Rumelia","Osmanlı'nın Avrupa toprakları.","tarih"],
+["Sadrazam","Grand Vizier","Osmanlı başbakanı. Padişahtan sonra en yetkili kişi.","tarih"],
+["Serdar-ı Ekrem","Commander-in-Chief","Osmanlı'da padişah sefere çıkmadığında ordunun başkomutanı.","tarih"],
+["Topçu Ocağı","Artillery Corps","Osmanlı topçu birliği. Avrupa'nın en güçlü topçusu.","tarih"],
+["Turgut Reis","Turgut Reis","Osmanlı'nın büyük denizcisi. Barbaros'un halefi.","tarih"],
+["Ulak","Courier","Osmanlı'da hızlı haberleşme sistemi. At sırtında mektup taşıma.","tarih"],
+["Vakıf","Endowment","Osmanlı'da hayır kurumu. Eğitim, sağlık, altyapı finanse eder.","tarih"],
+// Ek Hava Terimleri
+["Hava Üstünlüğü","Air Superiority","Bir bölgede düşman hava gücünü etkisiz hale getirme.","hava"],
+["Stealth","Stealth Technology","Radar ve sensörlerden kaçınma teknolojisi.","hava"],
+["AWACS","Airborne Warning and Control","Havadan erken uyarı ve komuta kontrol uçağı.","hava"],
+["Dogfight","Aerial Combat","İki savaş uçağı arasındaki yakın hava muharebesi.","hava"],
+["KAAN","TF-X KAAN","Türkiye'nin 5. nesil yerli savaş uçağı projesi.","hava"],
+["Akıncı TİHA","Akinci UCAV","Baykar'ın ağır sınıf insansız savaş uçağı.","hava"],
+["Bayraktar TB2","Bayraktar TB2","Türk yapımı taktik İHA. Karabağ ve Ukrayna'da devrim yarattı.","hava"],
+["Cruise Füze","Cruise Missile","Alçak irtifada uçarak hedefe ulaşan güdümlü füze.","hava"],
+["F-35","F-35 Lightning II","ABD'nin 5. nesil çok rollü stealth savaş uçağı.","hava"],
+["Hava Savunma","Air Defense","Düşman hava araçlarını tespit ve imha etme sistemi.","hava"],
+["ICBM","Intercontinental Ballistic Missile","Kıtalararası balistik füze. Nükleer caydırıcılığın temeli.","hava"],
+["İnsansız Savaş Uçağı","UCAV","Silahlı insansız hava aracı. Pilota ihtiyaç duymaz.","hava"],
+["Kamikaze Drone","Loitering Munition","Hedef bölgede bekleyip intihar dalışı yapan drone.","hava"],
+["S-400","S-400 Triumf","Rusya'nın uzun menzilli hava savunma sistemi.","hava"],
+["Stratejik Bombardıman Uçağı","Strategic Bomber","Uzun menzilli, ağır yük kapasiteli bombardıman uçağı.","hava"],
+// Ek Ekonomi/Jeopolitik
+["Bretton Woods","Bretton Woods System","1944'te kurulan uluslararası para sistemi. IMF ve Dünya Bankası.","jeopolitik"],
+["BRICS","BRICS","Brezilya, Rusya, Hindistan, Çin, G. Afrika ittifakı.","jeopolitik"],
+["Dolarizasyon","Dollarization","Bir ülkenin kendi para birimi yerine ABD dolarını kullanması.","jeopolitik"],
+["Kuşak ve Yol","Belt and Road Initiative","Çin'in küresel altyapı ve ticaret projesi.","jeopolitik"],
+["Marshall Planı","Marshall Plan","ABD'nin II. Dünya Savaşı sonrası Avrupa'yı yeniden inşa programı.","jeopolitik"],
+["Nadir Toprak Elementi","Rare Earth Element","Yüksek teknoloji için kritik 17 element. Çin %60 üretir.","jeopolitik"],
+["Petrodolar","Petrodollar","Petrol ticaretinin ABD doları ile yapılması sistemi.","jeopolitik"],
+["Silah Ambargosu","Arms Embargo","Bir ülkeye silah satışının yasaklanması.","jeopolitik"],
+["SWIFT","SWIFT","Uluslararası bankalar arası ödeme mesajlaşma sistemi.","jeopolitik"],
+["Thucydides Tuzağı","Thucydides Trap","Yükselen gücün mevcut güçle çatışmasının kaçınılmazlığı teorisi.","jeopolitik"],
+// Ek Strateji ve Modern Savaş
+["A2/AD Bölgesi","A2/AD Zone","Düşmanın erişiminin engellendiği kontrollü alan.","strateji"],
+["Asimetrik Savaş","Asymmetric Warfare","Güç dengesizliği olan taraflar arasındaki çatışma.","strateji"],
+["Başarısız Devlet","Failed State","Temel devlet fonksiyonlarını yerine getiremeyen ülke.","jeopolitik"],
+["Bayrak Operasyonu","False Flag","Başka bir devlet/grubun üzerine yıkılan gizli operasyon.","strateji"],
+["Bilgi Savaşı","Information War","Bilgi ve algı yönetiminin silah olarak kullanılması.","siber"],
+["Bor","Boron","Türkiye'nin dünya rezervinin %73'üne sahip olduğu stratejik mineral.","jeopolitik"],
+["Büyük Oyun","Great Game","19. yy'da İngiltere-Rusya arasındaki Orta Asya rekabeti.","tarih"],
+["Caydırıcılık Teorisi","Deterrence Theory","Düşmanı saldırıdan vazgeçirmek için güç gösterisi.","strateji"],
+["Çatışma Yönetimi","Conflict Management","Çatışmayı kontrol altında tutma stratejileri.","strateji"],
+["Çok Kutuplu Dünya","Multipolar World","Birden fazla süper gücün varlığı ile şekillenen dünya düzeni.","jeopolitik"],
+["Dar Boğaz","Chokepoint","Stratejik öneme sahip dar geçiş noktası (Boğazlar, Süveyş vb.).","jeopolitik"],
+["Değişken Geometrili İttifak","Variable Geometry Alliance","Konuya göre değişen esnek ittifak yapısı.","jeopolitik"],
+["Deniz Hakimiyeti","Sea Power","Deniz yollarını kontrol etme kapasitesi (Mahan Doktrini).","deniz"],
+["Dijital Egemenlik","Digital Sovereignty","Bir devletin dijital altyapısı üzerindeki kontrolü.","siber"],
+["Domino Teorisi","Domino Theory","Bir ülkenin düşmesi halinde komşularının da düşeceği teorisi.","strateji"],
+["Drone Savaşı","Drone Warfare","İnsansız hava araçlarıyla yürütülen askeri operasyonlar.","teknoloji"],
+["Düşük Yoğunluklu Çatışma","Low-Intensity Conflict","Tam savaş eşiğinin altındaki askeri çatışma.","strateji"],
+["EMP Bombası","Electromagnetic Pulse Bomb","Elektronik cihazları devre dışı bırakan elektromanyetik darbe.","teknoloji"],
+["Enerji Silahı","Directed Energy Weapon","Lazer veya mikrodalga ile hedefi etkisiz hale getiren silah.","teknoloji"],
+["Etnik Temizlik","Ethnic Cleansing","Bir etnik grubun zorla bölgeden çıkarılması.","jeopolitik"],
+["Filo Diplomasisi","Gunboat Diplomacy","Deniz gücünü göstererek diplomatik baskı yapma.","deniz"],
+["Gıda Güvenliği","Food Security","Nüfusun yeterli gıdaya erişiminin garanti altına alınması.","jeopolitik"],
+["Göç Silahlaştırma","Weaponization of Migration","Göç akımlarının siyasi baskı aracı olarak kullanılması.","jeopolitik"],
+["Gri Bölge","Gray Zone","Savaş ve barış arasındaki belirsiz çatışma alanı.","strateji"],
+["Hibrit Tehdit","Hybrid Threat","Konvansiyonel ve konvansiyonel olmayan tehditlerin birleşimi.","strateji"],
+["Hipersonik Silah","Hypersonic Weapon","Ses hızının 5 katından hızlı hareket eden füze/planlör.","teknoloji"],
+["İklim Savaşları","Climate Wars","İklim değişikliğinin tetiklediği kaynak çatışmaları.","jeopolitik"],
+["İnsani Müdahale","Humanitarian Intervention","İnsan hakları ihlallerini durdurmak için askeri müdahale.","jeopolitik"],
+["İstihbarat Döngüsü","Intelligence Cycle","Bilgi toplama, analiz, dağıtım süreci.","siber"],
+["Kalkınma Bankası","Development Bank","Gelişmekte olan ülkelere kredi sağlayan uluslararası kurum.","jeopolitik"],
+["Kaos Teorisi","Chaos Theory","Küçük değişikliklerin büyük sonuçlar doğurması (kelebek etkisi).","strateji"],
+["Karşı Taarruz","Counterattack","Düşman saldırısını durdurduktan sonra yapılan karşı saldırı.","askeri"],
+["Kendi Kaderini Tayin","Self-Determination","Bir halkın kendi yönetim biçimini seçme hakkı.","jeopolitik"],
+["Kıbrıs Barış Harekâtı","Cyprus Peace Operation","1974'te Türkiye'nin Kıbrıs'a askeri müdahalesi.","tarih"],
+["Kobalt","Cobalt","Pil ve jet motoru için kritik metal. Kongo %70 üretir.","jeopolitik"],
+["Kolektif Güvenlik","Collective Security","Tüm üyelerin birbirine güvenlik garantisi vermesi sistemi.","jeopolitik"],
+["Kozmik Oda","Cosmic Room","NATO gizli belgelerin saklandığı en yüksek güvenlikli alan.","askeri"],
+["Küresel Isınma","Global Warming","Sera gazı emisyonlarının dünya sıcaklığını artırması.","jeopolitik"],
+["Küresel Tedarik Zinciri","Global Supply Chain","Dünya genelindeki üretim ve dağıtım ağı.","jeopolitik"],
+["Lityum","Lithium","Pil teknolojisi için kritik element. '21. yy'nın petrolü'.","jeopolitik"],
+["MAD Doktrini","Mutually Assured Destruction","Karşılıklı kesin imha — nükleer caydırıcılığın temeli.","strateji"],
+["Mavi Vatan","Blue Homeland","Türkiye'nin deniz yetki alanları doktrini.","deniz"],
+["Milli Güvenlik Kurulu","National Security Council","Devletin güvenlik politikalarını belirleyen üst kurul.","jeopolitik"],
+["Milli Savunma Sanayii","National Defense Industry","Yerli silah ve savunma sistemi üretim kapasitesi.","teknoloji"],
+["Montrö Sözleşmesi","Montreux Convention","Türk Boğazları'ndan geçişi düzenleyen 1936 antlaşması.","deniz"],
+["Muharip Drone","Combat Drone","Silah taşıyan ve ateş edebilen insansız hava aracı.","teknoloji"],
+["Münhasır Ekonomik Bölge","Exclusive Economic Zone (EEZ)","Kıyı devletinin 200 deniz miline kadar ekonomik hakları.","deniz"],
+["Neokolonyalizm","Neocolonialism","Eski sömürge güçlerinin ekonomik/siyasi kontrolü sürdürmesi.","jeopolitik"],
+["Nükleer Kış","Nuclear Winter","Nükleer savaş sonrası atmosferin karanlığa gömülmesi senaryosu.","strateji"],
+["Nükleer şemsiye","Nuclear Umbrella","Nükleer gücün müttefiklerine sağladığı caydırıcılık garantisi.","strateji"],
+["OODA Döngüsü","OODA Loop","Gözle-Yönlendir-Karar Ver-Harekete Geç karar döngüsü (Boyd).","strateji"],
+["Özel Kuvvetler","Special Forces","Konvansiyonel olmayan görevler için eğitilmiş elit birlikler.","askeri"],
+["Pandemi","Pandemic","Küresel ölçekte yayılan salgın hastalık.","jeopolitik"],
+["Paydaş Analizi","Stakeholder Analysis","Çatışmadaki tüm tarafların çıkarlarının haritalanması.","strateji"],
+["Platin","Platinum","Katalizör ve elektronik için kritik değerli metal.","jeopolitik"],
+["Provokasyon","Provocation","Düşmanı tepki vermeye kışkırtmak için yapılan eylem.","strateji"],
+["Radikalleşme","Radicalization","Bireylerin aşırı ideolojilere yönelmesi süreci.","jeopolitik"],
+["Rezilians","Resilience","Bir sistemin şoklara dayanıklılığı ve toparlanma kapasitesi.","strateji"],
+["Sahil Güvenlik","Coast Guard","Kıyı güvenliği ve deniz polisliği yapan kuvvet.","deniz"],
+["Savaş Ekonomisi","War Economy","Savaş döneminde ekonominin askeri üretime yönlendirilmesi.","strateji"],
+["Savaş Sucu","War Crime","Savaş hukukunun ihlali (sivil katliam, işkence vb.).","jeopolitik"],
+["Savaş Yorgunluğu","War Fatigue","Uzun süren savaşın toplumda yarattığı bıkkınlık.","strateji"],
+["Silah Yarışı","Arms Race","Devletlerin birbirini geçmek için silahlanma yarışına girmesi.","jeopolitik"],
+["Silahsızlanma","Disarmament","Silahların azaltılması veya ortadan kaldırılması.","jeopolitik"],
+["Sismik Bomba","Bunker Buster","Yer altı hedeflerini imha eden derin delici bomba.","teknoloji"],
+["Soft Power","Soft Power","Kültür, değerler ve diplomasi yoluyla etki kurma.","jeopolitik"],
+["Stratejik İletişim","Strategic Communication","Devletin mesajlarını hedef kitlelere etkili ulaştırması.","siber"],
+["Stratejik Sabır","Strategic Patience","Uzun vadeli hedefler için kısa vadeli provokasyonlara tepki vermeme.","strateji"],
+["Su Savaşları","Water Wars","Su kaynakları üzerine çıkan çatışmalar.","jeopolitik"],
+["Şangay İşbirliği Örgütü","Shanghai Cooperation Organisation","Çin-Rusya liderliğindeki güvenlik ve ekonomi örgütü.","jeopolitik"],
+["Tahkim","Fortification","Savunma amaçlı yapılan istihkam çalışması.","askeri"],
+["Tampon Bölge","Buffer Zone","İki düşman arasında çatışmayı önlemek için oluşturulan alan.","strateji"],
+["Tedarik Güvenliği","Supply Security","Kritik malzemelere kesintisiz erişimin sağlanması.","jeopolitik"],
+["Terörizm","Terrorism","Siyasi amaçlı şiddet eylemleri.","jeopolitik"],
+["Titan","Titanium","Hafif ve dayanıklı metal. Havacılık ve savunmada kritik.","teknoloji"],
+["Topyekun Savaş","Total War","Tüm ulusal kaynakların savaşa seferber edilmesi.","strateji"],
+["Tungsten","Tungsten","En yüksek erime noktasına sahip metal. Zırh delici mühimmatta kullanılır.","teknoloji"],
+["Türkiye Yüzyılı","Turkey's Century","Türkiye'nin 2023 sonrası stratejik vizyonu.","jeopolitik"],
+["Uluslararası Yaptırım","International Sanctions","BM veya büyük güçlerin bir devlete uyguladığı cezai önlemler.","jeopolitik"],
+["Uranyum","Uranium","Nükleer enerji ve silah üretiminde kullanılan radyoaktif element.","teknoloji"],
+["Uzay Madenciliği","Space Mining","Asteroid ve gezegenlerdeki kaynakların çıkarılması.","teknoloji"],
+["Uzay Savaşı","Space Warfare","Uzay ortamında yürütülen askeri operasyonlar.","teknoloji"],
+["Veto Hakkı","Veto Power","BM Güvenlik Konseyi daimi üyelerinin karar engelleme yetkisi.","jeopolitik"],
+["Yapay Zeka Savaşı","AI Warfare","Yapay zekanın askeri karar alma ve silah sistemlerinde kullanımı.","teknoloji"],
+["Yeni Soğuk Savaş","New Cold War","ABD-Çin arasındaki artan stratejik rekabet.","jeopolitik"],
+["Yıkıcı Teknoloji","Disruptive Technology","Mevcut düzeni kökten değiştiren yeni teknoloji.","teknoloji"],
+["Yumusıak Karın","Soft Underbelly","Bir savunma sisteminin en zayıf noktası.","strateji"],
+["Zafer Hastalığı","Victory Disease","Başarının aşırı özgüvene ve hatalara yol açması.","strateji"],
+["Zero-Sum Oyun","Zero-Sum Game","Bir tarafın kazancının diğerinin kaybı olduğu durum.","strateji"]
+];
+
+// Sözlüğü render et
+let currentCat='all';
+let searchTerm='';
+
+function renderDict(){
+  const filtered=TERMS.filter(t=>{
+    const catMatch=currentCat==='all'||t[3]===currentCat;
+    const searchMatch=!searchTerm||t[0].toLowerCase().includes(searchTerm)||t[1].toLowerCase().includes(searchTerm)||t[2].toLowerCase().includes(searchTerm);
+    return catMatch&&searchMatch;
+  });
+  
+  document.getElementById('termCount').textContent=filtered.length+' terim gösteriliyor';
+  
+  // Harfe göre grupla
+  const groups={};
+  filtered.forEach(t=>{
+    const letter=t[0].charAt(0).toUpperCase();
+    if(!groups[letter])groups[letter]=[];
+    groups[letter].push(t);
+  });
+  
+  const letters=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'tr'));
+  let html='';
+  letters.forEach(letter=>{
+    html+=`<div class="letter-section"><div class="letter-header">${letter} <span class="count">${groups[letter].length} terim</span></div>`;
+    groups[letter].sort((a,b)=>a[0].localeCompare(b[0],'tr')).forEach(t=>{
+      html+=`<div class="term-item"><div><div class="term-name">${t[0]}</div><div class="term-eng">${t[1]}</div><div class="term-def">${t[2]}</div></div><div class="term-cat">${t[3]}</div></div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('dictContent').innerHTML=html||'<p style="padding:40px;text-align:center;color:var(--muted)">Sonuç bulunamadı.</p>';
+}
+
+// Arama
+document.getElementById('searchInput').addEventListener('input',e=>{
+  searchTerm=e.target.value.toLowerCase();
+  renderDict();
+});
+
+// Kategori filtreleme
+document.querySelectorAll('.cat-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    currentCat=btn.dataset.cat;
+    renderDict();
+  });
+});
+
+renderDict();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim 11: Kuantum-Lazer-Siber Savaş Komuta Merkezi | Harb-i Strateji</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a1a; color: #e0e0e0; min-height: 100vh; }
+        .header { background: linear-gradient(135deg, #1a0033 0%, #0d1b2a 100%); padding: 20px; text-align: center; border-bottom: 2px solid #7b2ff7; }
+        .header h1 { font-size: 1.6em; color: #b388ff; }
+        .header p { color: #aaa; margin-top: 5px; font-size: 0.9em; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .scenario-box { background: linear-gradient(135deg, #1a1a3e 0%, #0d1b2a 100%); border: 1px solid #7b2ff7; border-radius: 12px; padding: 20px; margin: 15px 0; }
+        .scenario-box h2 { color: #b388ff; margin-bottom: 10px; font-size: 1.2em; }
+        .scenario-box p { line-height: 1.7; color: #ccc; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+        .stat-box { background: rgba(123,47,247,0.1); border: 1px solid #7b2ff7; border-radius: 8px; padding: 12px; text-align: center; }
+        .stat-box .value { font-size: 1.4em; font-weight: bold; color: #b388ff; }
+        .stat-box .label { font-size: 0.75em; color: #999; margin-top: 4px; }
+        .decision-card { background: #111; border: 1px solid #333; border-radius: 10px; padding: 15px; margin: 10px 0; cursor: pointer; transition: all 0.3s; }
+        .decision-card:hover { border-color: #7b2ff7; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(123,47,247,0.3); }
+        .decision-card h3 { color: #e0e0e0; margin-bottom: 8px; font-size: 1em; }
+        .decision-card p { color: #999; font-size: 0.85em; line-height: 1.5; }
+        .result-box { background: linear-gradient(135deg, #0d2818 0%, #0a1628 100%); border: 1px solid #00c853; border-radius: 12px; padding: 20px; margin: 15px 0; display: none; }
+        .result-box.negative { border-color: #ff1744; background: linear-gradient(135deg, #2a0d0d 0%, #1a0a28 100%); }
+        .result-box h3 { color: #69f0ae; margin-bottom: 10px; }
+        .result-box.negative h3 { color: #ff5252; }
+        .result-box p { line-height: 1.7; color: #ccc; }
+        .phase-indicator { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
+        .phase-dot { width: 12px; height: 12px; border-radius: 50%; background: #333; border: 2px solid #555; }
+        .phase-dot.active { background: #7b2ff7; border-color: #b388ff; }
+        .phase-dot.completed { background: #00c853; border-color: #69f0ae; }
+        .final-score { background: linear-gradient(135deg, #1a0033 0%, #0d1b2a 100%); border: 2px solid #b388ff; border-radius: 12px; padding: 25px; text-align: center; margin: 20px 0; display: none; }
+        .final-score h2 { color: #b388ff; margin-bottom: 15px; }
+        .score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
+        .score-item { background: rgba(123,47,247,0.1); border-radius: 8px; padding: 10px; }
+        .score-item .s-label { font-size: 0.8em; color: #999; }
+        .score-item .s-value { font-size: 1.3em; font-weight: bold; color: #b388ff; }
+        .btn-yeniden başlat { background: #7b2ff7; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1em; margin-top: 15px; }
+        .btn-yeniden başlat:hover { background: #9c4dff; }
+        .tag { display: inline-block; background: rgba(123,47,247,0.2); color: #b388ff; padding: 3px 8px; border-radius: 4px; font-size: 0.75em; margin: 2px; }
+        .hidden { display: none; }
+    
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+    <div class="header">
+        <h1>Simülasyon 11: KUANTUM-LAZER-SİBER SAVAŞ KOMUTA MERKEZİ</h1>
+        <p>Rol: Türk Savunma Sanayii Başkanlığı Teknoloji Direktörü | 3 Kritik Karar</p>
+    </div>
+    <div class="container">
+        <div class="phase-indicator" id="phaseIndicator">
+            <div class="phase-dot active" id="dot1"></div>
+            <div class="phase-dot" id="dot2"></div>
+            <div class="phase-dot" id="dot3"></div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box"><div class="value" id="budgetVal">100</div><div class="label">BÜTÇE (Milyar ₺)</div></div>
+            <div class="stat-box"><div class="value" id="techVal">65</div><div class="label">TEKNOLOJİ SEVİYESİ</div></div>
+            <div class="stat-box"><div class="value" id="deterVal">50</div><div class="label">CAYDIRICILIK</div></div>
+        </div>
+
+        <!-- PHASE 1: Lazer Silah Yatırımı -->
+        <div id="phase1">
+            <div class="scenario-box">
+                <h2>SENARYO 1: Lazer Silah Sistemi Yatırımı</h2>
+                <p>Türkiye, lazer silah sistemlerinde dünyada ilk 7 ülke arasında. TÜBİTAK ARMOL ve ROKETSAN ALKA projeleri başarılı. Ancak yeni nesil yüksek enerjili lazer (100 kW+) için büyük bir yatırım kararı gerekiyor. Mevcut bütçeyle ne yapacaksınız?</p>
+                <p style="margin-top:10px;"><span class="tag">Maliyet Asimetrisi</span> <span class="tag">Savunma Sanayii</span></p>
+            </div>
+            <div class="decision-card" onclick="decide(1,'A')">
+                <h3>A) Tam Ölçekli Yatırım (30 Milyar ₺)</h3>
+                <p>100 kW+ lazer sistemini 3 yılda geliştir. Kendi jeneratör ve soğutma teknolojimizi üret. Dron sürülerine karşı tam koruma sağla. Riskli ama devrimci.</p>
+            </div>
+            <div class="decision-card" onclick="decide(1,'B')">
+                <h3>B) Kademeli Geliştirme (15 Milyar ₺)</h3>
+                <p>Mevcut ARMOL/ALKA'yı güçlendir (50 kW). Paralelde 100 kW AR-GE'yi yavaş ilerlet. Daha az riskli ama rakipler öne geçebilir.</p>
+            </div>
+            <div class="decision-card" onclick="decide(1,'C')">
+                <h3>C) Uluslararası Ortaklık (10 Milyar ₺)</h3>
+                <p>İsrail veya Güney Kore ile ortak geliştirme anlaşması yap. Hızlı teknoloji transferi ama bağımlılık riski ve IP paylaşımı sorunu.</p>
+            </div>
+        </div>
+
+        <!-- PHASE 2: Kuantum Güvenlik -->
+        <div id="phase2" class="hidden">
+            <div class="scenario-box">
+                <h2>SENARYO 2: Kuantum Tehdidi ve Şifreleme Krizi</h2>
+                <p>İstihbarat raporları, rakip bir devletin 2028'e kadar kuantum bilgisayarla mevcut RSA şifrelerimizi kırabileceğini gösteriyor. TSK'nın tüm güvenli iletişim altyapısı tehlikede. Kuantum radarı (K-RAD) ise F-35 gibi stealth uçakları tespit edebilir. Önceliğiniz ne?</p>
+                <p style="margin-top:10px;"><span class="tag">Kuantum Devrimi</span> <span class="tag">İstihbarat</span></p>
+            </div>
+            <div class="decision-card" onclick="decide(2,'A')">
+                <h3>A) Kuantum Şifreleme Öncelikli</h3>
+                <p>Tüm bütçeyi Kuantum Anahtar Dağıtımı (KAD) altyapısına yatır. TSK iletişimini hacklenemez hale getir. Ancak K-RAD gecikmeli kalır.</p>
+            </div>
+            <div class="decision-card" onclick="decide(2,'B')">
+                <h3>B) Kuantum Radarı (K-RAD) Öncelikli</h3>
+                <p>Stealth uçakları tespit edebilen K-RAD'ı geliştir. Hava savunmasında devrimci avantaj sağla. Ancak şifreleme açığı devam eder.</p>
+            </div>
+            <div class="decision-card" onclick="decide(2,'C')">
+                <h3>C) Dengeli Yaklaşım + Post-Kuantum Kriptografi</h3>
+                <p>Mevcut şifreleri post-kuantum algoritmalarla güncelle (geçici çözüm). Paralelde hem KAD hem K-RAD'ı düşük hızda geliştir.</p>
+            </div>
+        </div>
+
+        <!-- PHASE 3: Siber Savaş Hukuku -->
+        <div id="phase3" class="hidden">
+            <div class="scenario-box">
+                <h2>SENARYO 3: Siber Saldırı ve Karşılık Verme Hakkı</h2>
+                <p>Kritik enerji altyapınıza (BOTAŞ boru hatları + EÜAŞ santralleri) büyük çaplı bir siber saldırı yapıldı. 3 şehirde elektrik kesildi, 2 hastanede jeneratörler çöktü. İstihbarat, saldırının bir devlet aktöründen geldiğini %70 güvenle tespit etti ama kesin kanıt yok (Atfetme Problemi). Ne yaparsınız?</p>
+                <p style="margin-top:10px;"><span class="tag">Tallinn Kriteri</span> <span class="tag">BM Madde 51</span></p>
+            </div>
+            <div class="decision-card" onclick="decide(3,'A')">
+                <h3>A) Karşı Siber Saldırı (Aktif Savunma)</h3>
+                <p>Tespit edilen kaynağa karşı siber operasyon başlat. Onların enerji altyapısını hedef al. Hızlı ve caydırıcı ama hukuki meşruiyet tartışmalı.</p>
+            </div>
+            <div class="decision-card" onclick="decide(3,'B')">
+                <h3>B) Diplomatik Yol + BM Başvurusu</h3>
+                <p>Kanıtları uluslararası kamuoyuyla paylaş, BM'ye başvur, müttefiklerden destek iste. Hukuki olarak güçlü ama yavaş ve caydırıcılığı düşük.</p>
+            </div>
+            <div class="decision-card" onclick="decide(3,'C')">
+                <h3>C) Tallinn Kriteri: Etki Odaklı Karşılık</h3>
+                <p>Saldırının fiziksel etkisini (hastane çöküşü, can kaybı riski) belgeleyerek BM Madde 51 kapsamında meşru müdafaa ilan et. Hem siber hem kinetik seçenekleri masada tut.</p>
+            </div>
+        </div>
+
+        <!-- Sonuç Kutuları -->
+        <div id="result1" class="result-box"></div>
+        <div id="result2" class="result-box"></div>
+        <div id="result3" class="result-box"></div>
+
+        <!-- Final Skor -->
+        <div id="finalScore" class="final-score">
+            <h2>SİMÜLASYON SONUCU</h2>
+            <div class="score-grid">
+                <div class="score-item"><div class="s-label">Kalan Bütçe</div><div class="s-value" id="fBudget">-</div></div>
+                <div class="score-item"><div class="s-label">Teknoloji Seviyesi</div><div class="s-value" id="fTech">-</div></div>
+                <div class="score-item"><div class="s-label">Caydırıcılık</div><div class="s-value" id="fDeter">-</div></div>
+                <div class="score-item"><div class="s-label">Genel Değerlendirme</div><div class="s-value" id="fGrade">-</div></div>
+            </div>
+            <div id="finalAnalysis" style="text-align:left; margin-top:15px; padding:15px; background:rgba(0,0,0,0.3); border-radius:8px;"></div>
+            <button class="btn-yeniden başlat" onclick="location.reload()">Yeniden Başla</button>
+        </div>
+    </div>
+
+    <script>
+        let budget = 100, tech = 65, deter = 50;
+        let phase = 1;
+        let choices = [];
+
+        function updateStats() {
+            document.getElementById('budgetVal').textContent = budget;
+            document.getElementById('techVal').textContent = tech;
+            document.getElementById('deterVal').textContent = deter;
+        }
+
+        function decide(p, choice) {
+            if (p !== phase) return;
+            choices.push(choice);
+            let resultEl = document.getElementById('result' + p);
+            let html = '';
+            let isNeg = false;
+
+            if (p === 1) {
+                if (choice === 'A') {
+                    budget -= 30; tech += 25; deter += 20;
+                    html = '<h3>Tam Ölçekli Yatırım Sonucu</h3><p>3 yıl içinde 100 kW+ lazer sistemi geliştirildi. Dron sürülerine karşı tam koruma sağlandı. Maliyet asimetrisi tersine döndü: Artık 2 milyon dolarlık füze yerine birkaç dolarlık lazer atışıyla savunma yapıyorsunuz. Ancak bütçe ciddi daraldı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Tarihsel Analoji:</strong> İsrail Iron Beam projesi gibi cesur bir hamle.</p>';
+                } else if (choice === 'B') {
+                    budget -= 15; tech += 12; deter += 8;
+                    html = '<h3>Kademeli Geliştirme Sonucu</h3><p>ARMOL/ALKA 50 kW\'a yükseltildi. Kısa menzilli dronlara karşı etkili ama büyük füzelere yetersiz. AR-GE devam ediyor ancak rakipler (İsrail, ABD) 100 kW eşiğini geçti.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Risk:</strong> Teknolojik açık büyüyebilir.</p>';
+                } else {
+                    budget -= 10; tech += 15; deter += 5;
+                    html = '<h3>Uluslararası Ortaklık Sonucu</h3><p>Hızlı teknoloji transferi sağlandı. Ancak kritik IP (fikri mülkiyet) paylaşıldı. Ortak ülke, kriz anında teknoloji erişimini kısıtlayabilir. Bağımlılık riski oluştu.</p><p style="margin-top:10px;color:#ff8a65;"><strong>Uyarı:</strong> FCAS projesindeki IP kavgalarını hatırlayın.</p>';
+                    isNeg = true;
+                }
+            } else if (p === 2) {
+                if (choice === 'A') {
+                    budget -= 20; tech += 15; deter += 10;
+                    html = '<h3>Kuantum Şifreleme Öncelikli Sonuç</h3><p>TSK iletişimi kuantum kanallarına taşındı. Hacklenemez bir komuta-kontrol ağı kuruldu. Ancak K-RAD gecikmesi nedeniyle stealth tehditlerine karşı savunmasız kaldınız.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Avantaj:</strong> İstihbarat güvenliği %100.</p>';
+                } else if (choice === 'B') {
+                    budget -= 20; tech += 18; deter += 15;
+                    html = '<h3>Kuantum Radarı (K-RAD) Öncelikli Sonuç</h3><p>K-RAD sistemi devreye girdi. Komşu ülkelerin stealth uçakları artık radarınızda görünüyor. Hava savunmasında devrimci avantaj. Ancak mevcut şifreleriniz hâlâ kırılabilir durumda.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Risk:</strong> İstihbarat sızıntısı devam ediyor.</p>';
+                } else {
+                    budget -= 15; tech += 10; deter += 8;
+                    html = '<h3>Dengeli Yaklaşım Sonucu</h3><p>Post-kuantum algoritmalar geçici güvenlik sağladı. Hem KAD hem K-RAD düşük hızda ilerliyor. Hiçbir alanda lider değilsiniz ama kritik bir açık da yok.</p><p style="margin-top:10px;color:#90caf9;"><strong>Değerlendirme:</strong> Güvenli ama sıradışı değil.</p>';
+                }
+            } else if (p === 3) {
+                if (choice === 'A') {
+                    budget -= 5; tech += 5; deter += 20;
+                    html = '<h3>Karşı Siber Saldırı Sonucu</h3><p>Rakibin enerji altyapısına karşı operasyon başarılı oldu. Caydırıcılık mesajı net verildi. Ancak uluslararası kamuoyunda "orantısız güç" eleştirisi aldınız. Hukuki meşruiyet tartışmalı.</p><p style="margin-top:10px;color:#ff8a65;"><strong>Tallinn Perspektifi:</strong> Kanıt %70 ise karşılık hukuki olarak tartışmalıdır.</p>';
+                    isNeg = true;
+                } else if (choice === 'B') {
+                    budget -= 2; tech += 0; deter -= 10;
+                    html = '<h3>Diplomatik Yol Sonucu</h3><p>BM\'ye başvuruldu ama veto nedeniyle karar çıkmadı. Müttefikler "derin endişe" açıklaması yaptı. Saldırgan cezasız kaldı. Caydırıcılığınız ciddi düştü; bir sonraki saldırı cesaretlendirildi.</p><p style="margin-top:10px;color:#ff5252;"><strong>Tarihsel Analoji:</strong> 2007 Estonya saldırısı sonrası BM\'nin etkisizliği.</p>';
+                    isNeg = true;
+                } else {
+                    budget -= 8; tech += 5; deter += 15;
+                    html = '<h3>Tallinn Kriteri Uygulaması Sonucu</h3><p>Saldırının fiziksel etkileri (hastane çöküşü, can kaybı riski) belgelendi. BM Madde 51 kapsamında meşru müdafaa ilan edildi. Hem siber hem kinetik seçenekler masada tutularak caydırıcılık sağlandı. Uluslararası destek alındı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Optimal:</strong> Hukuki meşruiyet + caydırıcılık dengesi.</p>';
+                }
+            }
+
+            resultEl.innerHTML = html;
+            resultEl.className = isNeg ? 'result-box negative' : 'result-box';
+            resultEl.style.display = 'block';
+
+            updateStats();
+
+            // Phase transition
+            document.getElementById('dot' + p).classList.remove('active');
+            document.getElementById('dot' + p).classList.add('completed');
+            document.getElementById('phase' + p).style.opacity = '0.4';
+            document.getElementById('phase' + p).style.pointerEvents = 'none';
+
+            if (p < 3) {
+                phase = p + 1;
+                document.getElementById('dot' + phase).classList.add('active');
+                document.getElementById('phase' + phase).classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('phase' + phase).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            } else {
+                showFinal();
+            }
+        }
+
+        function showFinal() {
+            let finalEl = document.getElementById('finalScore');
+            finalEl.style.display = 'block';
+            document.getElementById('fBudget').textContent = budget + ' Milyar ₺';
+            document.getElementById('fTech').textContent = tech + '/100';
+            document.getElementById('fDeter').textContent = deter + '/100';
+
+            let total = (tech + deter) / 2;
+            let grade = total >= 85 ? 'A+ (Stratejik Üstünlük)' : total >= 70 ? 'A (Güçlü Konum)' : total >= 55 ? 'B (Yeterli)' : 'C (Kırılgan)';
+            document.getElementById('fGrade').textContent = grade;
+
+            let analysis = '<p style="color:#b388ff;font-weight:bold;">Koyuncu Kanunları Perspektifi:</p>';
+            analysis += '<p style="margin-top:8px;color:#ccc;">• <strong>Maliyet Asimetrisi:</strong> Lazer yatırımınız savunma maliyetini düşürdü mü?</p>';
+            analysis += '<p style="color:#ccc;">• <strong>5 Katmanlı Egemenlik:</strong> Kuantum kararınız Veri ve Algoritma katmanlarını güçlendirdi mi?</p>';
+            analysis += '<p style="color:#ccc;">• <strong>Bilişsel Çöküş:</strong> Siber karşılığınız caydırıcılık mesajını net verdi mi?</p>';
+            analysis += '<p style="margin-top:12px;color:#999;font-style:italic;">"Savaş artık cephede değil; fiber optik kablolarda, kuantum laboratuvarlarında ve lazer jeneratörlerinde kazanılmaktadır."</p>';
+            document.getElementById('finalAnalysis').innerHTML = analysis;
+
+            setTimeout(() => finalEl.scrollIntoView({ behavior: 'smooth' }), 300);
+        }
+    </script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

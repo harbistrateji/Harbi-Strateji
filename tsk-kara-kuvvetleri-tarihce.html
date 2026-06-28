@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TSK Kara Kuvvetleri Tarihçesi — MÖ 209'dan Günümüze</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0f17;color:#e8e8e8;overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#0a0f17 0%,#1a1f2e 50%,#0a0f17 100%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;pointer-events:none;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%,rgba(76,175,80,0.08) 0%,transparent 60%)}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#4CAF50;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;text-shadow:0 0 30px rgba(76,175,80,0.3)}
+.hero .subtitle{font-size:1.1rem;color:#aaa;max-width:600px;line-height:1.6}
+.hero .year-badge{display:inline-block;margin-top:20px;padding:8px 24px;border:2px solid #4CAF50;border-radius:30px;font-size:1.4rem;font-weight:700;color:#4CAF50}
+.start-btn{margin-top:30px;padding:14px 40px;background:linear-gradient(135deg,#4CAF50,#2E7D32);border:none;border-radius:8px;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase;letter-spacing:1px}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(76,175,80,0.4)}
+.timeline{display:none;max-width:900px;margin:0 auto;padding:40px 20px;position:relative}
+.timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#4CAF50,#1B5E20);transform:translateX(-50%)}
+.era{margin-bottom:60px;position:relative;opacity:0;transform:translateY(40px);transition:all .8s ease}
+.era.visible{opacity:1;transform:translateY(0)}
+.era-header{text-align:center;margin-bottom:30px}
+.era-header h2{font-size:1.8rem;color:#4CAF50;margin-bottom:5px}
+.era-header .era-period{color:#888;font-size:0.95rem}
+.event{display:flex;align-items:flex-start;margin-bottom:25px;position:relative}
+.event:nth-child(odd){flex-direction:row-reverse}
+.event-dot{position:absolute;left:50%;top:15px;width:16px;height:16px;background:#4CAF50;border-radius:50%;transform:translateX(-50%);z-index:2;box-shadow:0 0 10px rgba(76,175,80,0.5)}
+.event-content{width:44%;padding:20px;background:rgba(76,175,80,0.05);border:1px solid rgba(76,175,80,0.2);border-radius:12px;transition:all .3s}
+.event-content:hover{background:rgba(76,175,80,0.1);border-color:#4CAF50;transform:scale(1.02)}
+.event-content h3{color:#81C784;font-size:1.1rem;margin-bottom:8px}
+.event-content .year{color:#4CAF50;font-weight:700;font-size:0.9rem;margin-bottom:5px}
+.event-content p{color:#bbb;font-size:0.9rem;line-height:1.5}
+.event:nth-child(odd) .event-content{margin-right:auto;margin-left:6%}
+.event:nth-child(even) .event-content{margin-left:auto;margin-right:6%}
+.stats-bar{display:flex;justify-content:center;gap:30px;flex-wrap:wrap;margin:40px 0;padding:20px;background:rgba(76,175,80,0.05);border-radius:12px;border:1px solid rgba(76,175,80,0.15)}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:900;color:#4CAF50}
+.stat-label{font-size:0.8rem;color:#888;margin-top:4px}
+.music-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:rgba(76,175,80,0.2);border:2px solid #4CAF50;color:#4CAF50;font-size:1.5rem;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.music-btn:hover{background:rgba(76,175,80,0.4)}
+.nav-dots{position:fixed;right:15px;top:50%;transform:translateY(-50%);z-index:99;display:none}
+.nav-dots .dot{width:10px;height:10px;border-radius:50%;background:rgba(76,175,80,0.3);margin:8px 0;cursor:pointer;transition:all .3s}
+.nav-dots .dot.active{background:#4CAF50;transform:scale(1.3)}
+@media(max-width:768px){
+.timeline::before{left:20px}
+.event{flex-direction:column!important}
+.event-dot{left:20px}
+.event-content{width:calc(100% - 50px);margin-left:50px!important;margin-right:0!important}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div class="hero" id="hero">
+<h1>🪖 Kara Kuvvetleri Tarihçesi</h1>
+<p class="subtitle">Dünyanın en eski ve kesintisiz ordularından biri. Mete Han'ın onlu sisteminden NATO'nun en güçlü kara ordusuna — 2.233 yıllık bir yolculuk.</p>
+<div class="year-badge">MÖ 209 — 2026</div>
+<button class="start-btn" onclick="startTimeline()">Yolculuğa Başla</button>
+</div>
+
+<div class="timeline" id="timeline">
+<div class="stats-bar">
+<div class="stat"><div class="stat-num">2233</div><div class="stat-label">Yıllık Tarih</div></div>
+<div class="stat"><div class="stat-num">16</div><div class="stat-label">İmparatorluk</div></div>
+<div class="stat"><div class="stat-num">400K+</div><div class="stat-label">Aktif Personel</div></div>
+<div class="stat"><div class="stat-num">NATO #2</div><div class="stat-label">Kara Gücü</div></div>
+</div>
+
+<div class="era" data-era="1">
+<div class="era-header"><h2>İlk Türk Devletleri</h2><div class="era-period">MÖ 209 — MS 1071</div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">MÖ 209</div><h3>Mete Han — Onlu Sistem</h3><p>Büyük Hun İmparatoru Mete Han, 10.000 atlıdan oluşan tümen sistemiyle dünyanın ilk düzenli ordusunu kurdu. Tümenbaşı, binbaşı, yüzbaşı, onbaşı hiyerarşisi bugün hâlâ kullanılmaktadır.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">552-745</div><h3>Göktürk Ordusu</h3><p>Göktürk Kağanlığı, Orta Asya'dan Hazar'a uzanan coğrafyada atlı okçu birliklerini mükemmelleştirdi. "Turan taktiği" dünya askeri tarihine girdi.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1040</div><h3>Dandanakan Meydan Muharebesi</h3><p>Büyük Selçuklular, Gaznelileri yenerek bağımsızlığını kazandı. Kara Kuvvetlerinin teşkilat ve eğitimi sağlam esaslara bağlandı.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">26 Ağustos 1071</div><h3>Malazgirt Meydan Muharebesi</h3><p>Sultan Alparslan, Bizans İmparatoru Romanos Diogenes'i yenerek Anadolu'yu Türk yurdu yaptı. Hilal taktiği askeri deha örneği olarak tarihe geçti.</p></div></div>
+</div>
+
+<div class="era" data-era="2">
+<div class="era-header"><h2>Osmanlı İmparatorluğu</h2><div class="era-period">1299 — 1922</div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1363</div><h3>Sırpsındığı — Avrupa'ya Geçiş</h3><p>Osmanlı orduları Anadolu dışına çıktı. Kosova, Niğbolu, Varna zaferleri peş peşe geldi.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">I. Murat Dönemi</div><h3>Yeniçeri Ocağı Kuruluşu</h3><p>Tarihte ilk süvarili ordu niteliğini taşıyan Osmanlı ordusu, Yeniçeri Ocağı ile sürekli bir yapıya dönüştürüldü. İmparatorluğun yükselişinde kilit rol oynadı.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">29 Mayıs 1453</div><h3>İstanbul'un Fethi</h3><p>Fatih Sultan Mehmet, şahi toplarıyla desteklenen 80.000 kişilik orduyla Konstantinopolis'i fethetti. Çağ kapandı, çağ açıldı.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1526</div><h3>Mohaç Meydan Muharebesi</h3><p>Kanuni Sultan Süleyman, Macar ordusunu 2 saatte imha etti. Osmanlı kara gücünün doruk noktası.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">15 Haziran 1826</div><h3>Yeniçeri Ocağı Kaldırılışı</h3><p>Asakir-i Mansure-i Muhammediye adıyla modern ordu kuruldu. 1834'te Kara Harp Okulu açıldı.</p></div></div>
+</div>
+
+<div class="era" data-era="3">
+<div class="era-header"><h2>Kurtuluş Savaşı</h2><div class="era-period">1919 — 1922</div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1920</div><h3>Düzenli Ordunun Kuruluşu</h3><p>Mustafa Kemal Paşa önderliğinde Batı Cephesi Komutanlığı teşkil edildi. Dağınık milis grupları disiplinli bir orduya dönüştürüldü.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1921</div><h3>İnönü Zaferleri & Sakarya</h3><p>"Hattı müdafaa yoktur, sathı müdafaa vardır. O satıh bütün vatandır." Sakarya Meydan Muharebesi 22 gün 22 gece sürdü.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">26 Ağustos 1922</div><h3>Büyük Taarruz</h3><p>Başkomutan Mustafa Kemal'in bizzat yönettiği taarruz zaferle sonuçlandı. "Ordular! İlk hedefiniz Akdeniz'dir. İleri!" emri verildi. 9 Eylül'de düşman denize döküldü.</p></div></div>
+</div>
+
+<div class="era" data-era="4">
+<div class="era-header"><h2>Cumhuriyet Dönemi</h2><div class="era-period">1923 — Günümüz</div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1934</div><h3>İlk Tank Birliği</h3><p>Lüleburgaz'da Türkiye'nin ilk tank birliği kuruldu. Mekanize dönüşümün başlangıcı.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1949</div><h3>Kara Kuvvetleri Komutanlığı</h3><p>Bağımsız bir komutanlık olarak teşkil edildi. Tüm sınıf okulları ve eğitim merkezleri bünyesine alındı.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1950</div><h3>Kore Savaşı</h3><p>BM ordusuna katılan Türk Tugayı, Kunuri'de efsaneleşti. "Türkler olmasaydı hepimiz esir düşerdik" — ABD Generali.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1952</div><h3>NATO Üyeliği</h3><p>Kara Kuvvetleri NATO standartlarına göre modern silah ve teçhizatla donatıldı. Nike füzeleri tedarik edildi.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">1974</div><h3>Kıbrıs Barış Harekâtı</h3><p>Amfibi çıkarma harekâtıyla Kıbrıs'ta Türk Barış Kuvvetleri Komutanlığı kuruldu.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">2007+</div><h3>İHA/SİHA Devrimi</h3><p>Taktik ve Mini İnsansız Hava Aracı Sistemleri ordu kuruluşuna dahil edildi. Bayraktar TB2 ile asimetrik üstünlük sağlandı.</p></div></div>
+<div class="event"><div class="event-dot"></div><div class="event-content"><div class="year">2020+</div><h3>ALTAY & Yerli Sistemler</h3><p>ALTAY tankı, KAPLAN zırhlısı, ASELSAN AKKOR aktif koruma sistemi. Türk savunma sanayii kara sistemlerinde %70+ yerlilik oranına ulaştı.</p></div></div>
+</div>
+</div>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">♪</button>
+
+<div class="nav-dots" id="navDots">
+<div class="dot active" onclick="scrollToEra(1)"></div>
+<div class="dot" onclick="scrollToEra(2)"></div>
+<div class="dot" onclick="scrollToEra(3)"></div>
+<div class="dot" onclick="scrollToEra(4)"></div>
+</div>
+
+<script>
+let audioCtx, musicPlaying=false, musicInterval;
+
+function startTimeline(){
+document.getElementById('hero').style.display='none';
+document.getElementById('timeline').style.display='block';
+document.getElementById('navDots').style.display='block';
+setTimeout(()=>{
+document.querySelectorAll('.era').forEach((el,i)=>{
+setTimeout(()=>el.classList.add('visible'),i*400);
+});
+},200);
+}
+
+function toggleMusic(){
+if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+if(musicPlaying){
+clearInterval(musicInterval);
+musicPlaying=false;
+document.getElementById('musicBtn').style.opacity='0.5';
+}else{
+playMarchMusic();
+musicPlaying=true;
+document.getElementById('musicBtn').style.opacity='1';
+}
+}
+
+function playMarchMusic(){
+const notes=[196,220,247,262,294,330,349,392];
+let step=0;
+function playNote(){
+if(!musicPlaying)return;
+const osc=audioCtx.createOscillator();
+const gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+osc.type='triangle';
+osc.frequency.value=notes[step%notes.length];
+gain.gain.setValueAtTime(0.08,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.4);
+osc.start();osc.stop(audioCtx.currentTime+0.4);
+step++;
+}
+musicInterval=setInterval(playNote,500);
+playNote();
+}
+
+function scrollToEra(n){
+const era=document.querySelector(`[data-era="${n}"]`);
+if(era)era.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// Intersection Observer for scroll animations
+const observer=new IntersectionObserver((entries)=>{
+entries.forEach(e=>{
+if(e.isIntersecting){
+e.target.classList.add('visible');
+const eraNum=e.target.dataset.era;
+document.querySelectorAll('.nav-dots .dot').forEach((d,i)=>{
+d.classList.toggle('active',i+1==eraNum);
+});
+}
+});
+},{threshold:0.2});
+
+document.querySelectorAll('.era').forEach(el=>observer.observe(el));
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

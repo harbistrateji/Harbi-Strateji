@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Geleceğin <em>Askeri</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+
+/* === GAME AREA STYLING === */
+.sim-content h1{
+  font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--bone);text-transform:uppercase;letter-spacing:0.05em;
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.score-board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;margin-bottom:28px;
+}
+.score-card{background:var(--deep);padding:16px 14px;text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.4rem;display:block;margin-bottom:4px;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+  transition:opacity 0.3s,transform 0.3s;
+}
+.panel.hidden{display:none;}
+.panel h2,.panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:14px;}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.option-btn{
+  font-family:var(--font-mono);font-size:0.8rem;
+  padding:12px 20px;border:1px solid var(--line);
+  border-radius:6px;background:var(--deep);
+  color:var(--bone);cursor:pointer;transition:all 0.25s;
+  text-align:left;flex:1;min-width:200px;
+}
+.option-btn:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.decision-panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.decision-panel .header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.decision-panel h2,.decision-panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:10px;}
+.decision-panel p{color:var(--bone-dim);line-height:1.7;margin-bottom:16px;}
+
+/* decision sim specific */
+.scenario-box{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.scenario-box.hidden{display:none;}
+.scenario-box .header{font-family:var(--font-mono);font-size:0.7rem;color:var(--signal);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.final-report{
+  background:var(--panel);border:2px solid var(--gold);
+  border-radius:8px;padding:32px;margin-top:24px;
+}
+.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:20px 0;}
+.report-item{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.report-item .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;display:block;margin-bottom:6px;}
+.report-item .value{font-family:var(--font-display);font-size:1.3rem;color:var(--signal);}
+.country-tag{font-family:var(--font-mono);font-size:0.7rem;padding:4px 10px;border-radius:12px;display:inline-block;margin:4px;}
+.country-tag.tag-turkey{background:rgba(224,56,56,0.15);color:#e03838;border:1px solid #e03838;}
+.country-tag.tag-usa{background:rgba(74,158,255,0.15);color:#4a9eff;border:1px solid #4a9eff;}
+.country-tag.tag-russia{background:rgba(255,165,0,0.15);color:#ffa500;border:1px solid #ffa500;}
+.score-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:14px;text-align:center;
+}
+.score-card .value{font-family:var(--font-display);font-size:1.3rem;color:var(--signal);display:block;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;}
+.btn-next{
+  font-family:var(--font-mono);font-size:0.82rem;
+  padding:14px 28px;border:1px solid var(--signal);
+  border-radius:4px;background:var(--signal);
+  color:var(--void);cursor:pointer;font-weight:600;
+  transition:all 0.25s;display:block;margin:20px auto;
+}
+.btn-next:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+
+/* sim13 loadout specific */
+.loadout-display{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+  gap:12px;margin:20px 0;
+}
+.loadout-item{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:14px;text-align:center;
+}
+.loadout-item .icon{font-size:1.5rem;margin-bottom:6px;}
+.loadout-item .name{font-family:var(--font-mono);font-size:0.7rem;color:var(--bone-dim);}
+
+
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Geleceğin <em>Askeri</em></h1>
+  <p class="lead">2040 muharip profili simülasyonu — Biyonik, YZ entegre, otonom sistemlerle çalışan gelecek askeri.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">2040</span><span class="lbl">Hedef</span></div><div class="hero-stat"><span class="num">AI+</span><span class="lbl">Entegre</span></div><div class="hero-stat"><span class="num">6</span><span class="lbl">Sistem</span></div><div class="hero-stat"><span class="num">3</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+
+    <div class="header">
+        
+        <p>İnsan-Makine Organizması Tasarım Simülasyonu | SASAD 2024 Raporu</p>
+    </div>
+    
+        <div class="phase-bar" id="phaseBar">
+            <div class="phase-seg active"></div>
+            <div class="phase-seg"></div>
+            <div class="phase-seg"></div>
+            <div class="phase-seg"></div>
+            <div class="phase-seg"></div>
+        </div>
+
+        <div class="soldier-stats">
+            <div class="stat-card"><div class="label">Hayatta Kalma</div><div class="value mid" id="scoreSurvival">60</div></div>
+            <div class="stat-card"><div class="label">Bilişsel Yük</div><div class="value mid" id="scoreCognitive">50</div></div>
+            <div class="stat-card"><div class="label">Ateş Gücü</div><div class="value mid" id="scoreFirepower">55</div></div>
+            <div class="stat-card"><div class="label">Enerji Özerkliği</div><div class="value low" id="scoreEnergy">40</div></div>
+            <div class="stat-card"><div class="label">Ağ Entegrasyonu</div><div class="value mid" id="scoreNetwork">50</div></div>
+        </div>
+
+        <!-- PHASE 0: Briefing -->
+        <div class="scenario-box" id="phase0">
+            <h2>BRİFİNG: Tek-Er Donatım Merkezi</h2>
+            <p>Siz, Türk Silahlı Kuvvetleri'nin "Geleceğin Askerî" programının baş mühendisisiniz. Göreviniz, 2030 yılı için bir Tek-Er (bireysel savaşçı) sistemi tasarlamak. 5 kritik alanda karar vermeniz gerekiyor.</p>
+            <p>Her karar, askerin hayatta kalma, bilişsel yük yönetimi, ateş gücü, enerji özerkliği ve ağ entegrasyonu skorlarını etkileyecek.</p>
+            <div class="loadout-display">
+                <div class="loadout-item"><div class="icon">🪖</div><div class="name">Akıllı Kask</div></div>
+                <div class="loadout-item"><div class="icon">🦾</div><div class="name">Dış İskelet</div></div>
+                <div class="loadout-item"><div class="icon">📡</div><div class="name">Taktik Ağ</div></div>
+                <div class="loadout-item"><div class="icon">🤖</div><div class="name">Otonom Yardımcı</div></div>
+                <div class="loadout-item"><div class="icon">🔋</div><div class="name">Enerji Sistemi</div></div>
+                <div class="loadout-item"><div class="icon">🧠</div><div class="name">YZ Asistanı</div></div>
+            </div>
+            <button class="btn-next" onclick="startSim()">Tasarıma Başla</button>
+        </div>
+
+        <!-- PHASE 1: Helmet/Visor -->
+        <div class="scenario-box hidden" id="phase1">
+            <h2>KARAR 1: Akıllı Kask ve Vizör Sistemi</h2>
+            <p>Askerîn "gözü" olan kask vizörü, savaş alanındaki tüm bilgiyi (düşman konumu, dost birlikler, dron görüntüleri) gösterecek. Ancak çok fazla bilgi askerin beynini felç edebilir (bilişsel aşırı yük).</p>
+            <span class="tech-badge">AR Vizör</span> <span class="tech-badge">HUD</span> <span class="tech-badge">Termal</span> <span class="tech-badge">360° Farkındalık</span>
+            <div class="decision-panel">
+                <h3>Hangi vizör konseptini seçersiniz?</h3>
+                <button class="option-btn" onclick="selectOption(1, 'full_ar')">
+                    <strong>A) Tam AR Vizör:</strong> Tüm bilgiyi (harita, düşman, dron görüntüsü, biyometrik) aynı anda göster. Asker her şeyi görür ama bilişsel yük çok yüksek.
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'ai_filter')">
+                    <strong>B) YZ Filtreli Vizör:</strong> Yapay zekâ, sadece o an kritik olan bilgiyi göstersin. Geri kalanı gizlesin. Asker "ihtiyacı olanı, ihtiyacı olduğu an" görsün.
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'minimal')">
+                    <strong>C) Minimal HUD:</strong> Sadece pusula, mühimmat sayısı ve acil uyarılar gösterilsin. Detaylı bilgi için sesli komutla sorulsun. Bilişsel yük minimumda.
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'modular')">
+                    <strong>D) Modüler Profiller:</strong> Görev tipine göre değişen profiller (keşif profili, taarruz profili, savunma profili). Her profil farklı bilgi katmanları gösterir.
+                </button>
+            </div>
+            <div class="result-box" id="result1"></div>
+        </div>
+
+        <!-- PHASE 2: Exoskeleton -->
+        <div class="scenario-box hidden" id="phase2">
+            <h2>KARAR 2: Dış İskelet (Exoskeleton) Sistemi</h2>
+            <p>Asker, savaş alanında ortalama 45 kg yük taşıyor (silah, mühimmat, batarya, su, zırh). Bu ağırlık fiziksel performansı ve dayanıklılığı ciddi şekilde düşürüyor. Dış iskelet bu yükü hafifletebilir.</p>
+            <span class="tech-badge">Pasif İskelet</span> <span class="tech-badge">Aktif İskelet</span> <span class="tech-badge">Hibrit</span>
+            <div class="decision-panel">
+                <h3>Hangi dış iskelet konseptini seçersiniz?</h3>
+                <button class="option-btn" onclick="selectOption(2, 'full_powered')">
+                    <strong>A) Tam Motorlu İskelet:</strong> Elektrik motorlarıyla tüm vücudu destekler. 100 kg'a kadar yük taşıyabilir. Ancak batarya ömrü kısa (4-6 saat) ve arızalanırsa asker hareket edemez.
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'passive')">
+                    <strong>B) Pasif İskelet:</strong> Motor yok, yay ve karbon fiber mekanizmalarla yükü kemiklere dağıtır. Batarya gerektirmez, hafif ve güvenilir. Ama güç artışı sınırlı (%30-40 yük azaltma).
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'lower_body')">
+                    <strong>C) Alt Vücut Odaklı:</strong> Sadece bacaklara motorlu destek. Yürüme ve koşma hızını artırır, diz/ayak bileği yaralanmalarını önler. Üst vücut serbest kalır. Batarya ömrü uzun (12+ saat).
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'no_exo')">
+                    <strong>D) İskelet Yok, Yük Azaltma:</strong> Dış iskelet yerine askerin taşıdığı yükü azalt. Daha hafif silahlar, daha küçük bataryalar, dron desteğiyle mühimmat taşıma. Basit ve güvenilir.
+                </button>
+            </div>
+            <div class="result-box" id="result2"></div>
+        </div>
+
+        <!-- PHASE 3: Autonomous Companion -->
+        <div class="scenario-box hidden" id="phase3">
+            <h2>KARAR 3: Otonom Yardımcı Sistem</h2>
+            <p>Geleceğin askeri yalnız savaşmayacak. Yanında otonom sistemler (robot köpek, mini dron, paletli araç) olacak. Bu sistemler keşif, yük taşıma veya ateş desteği sağlayabilir.</p>
+            <span class="tech-badge">Robot Köpek</span> <span class="tech-badge">Dron Sürüsü</span> <span class="tech-badge">UGV</span> <span class="tech-badge">Sürü Zekâsı</span>
+            <div class="decision-panel">
+                <h3>Askere hangi otonom yardımcıyı verirsiniz?</h3>
+                <button class="option-btn" onclick="selectOption(3, 'robot_dog')">
+                    <strong>A) Robot Köpek (Quadruped):</strong> Her arazide hareket edebilir, bina içine girebilir, sensör taşır. Keşif ve erken uyarı görevi. Sessiz ve çevik. Ama ateş gücü yok.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'drone_swarm')">
+                    <strong>B) Mini Dron Sürüsü (5 adet):</strong> Havadan 360° gözetleme, hedef işaretleme, hatta kamikaze saldırı yapabilir. Ama rüzgâra duyarlı, batarya ömrü kısa (20-30 dk) ve EW'ye açık.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'ugv')">
+                    <strong>C) Paletli Mini UGV:</strong> Ağır yük taşır (mühimmat, yaralı), uzaktan kumandalı silah istasyonu monte edilebilir. Ama yavaş, gürültülü ve şehir içinde manevra kabiliyeti düşük.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'hybrid_team')">
+                    <strong>D) Hibrit Takım (1 Dron + 1 Robot Köpek):</strong> Dron havadan bakar, robot köpek yerde keşif yapar. İkisi birbirine veri aktarır (sürü zekâsı). Daha pahalı ve karmaşık ama çok yönlü.
+                </button>
+            </div>
+            <div class="result-box" id="result3"></div>
+        </div>
+
+        <!-- PHASE 4: Energy -->
+        <div class="scenario-box hidden" id="phase4">
+            <h2>KARAR 4: Enerji ve Güç Sistemi</h2>
+            <p>Modern askerin en büyük sorunu: Şarj! Tüm bu teknolojiler (vizör, telsiz, dron, iskelet) elektrik istiyor. Sahadaki asker prize takamaz. Enerji özerkliği kritik.</p>
+            <span class="tech-badge">Lityum Batarya</span> <span class="tech-badge">Enerji Hasadı</span> <span class="tech-badge">Yakıt Hücresi</span> <span class="tech-badge">Güneş Paneli</span>
+            <div class="decision-panel">
+                <h3>Hangi enerji stratejisini seçersiniz?</h3>
+                <button class="option-btn" onclick="selectOption(4, 'big_battery')">
+                    <strong>A) Büyük Lityum Batarya:</strong> Tek bir büyük batarya paketi (72 saat). Güvenilir ve basit. Ama ağır (3-4 kg) ve vurulursa yangın riski var.
+                </button>
+                <button class="option-btn" onclick="selectOption(4, 'harvest')">
+                    <strong>B) Enerji Hasadı Tekstili:</strong> Üniformaya entegre güneş panelleri + hareket enerjisi dönüştürücüler. Süresiz enerji ama üretim miktarı düşük ve hava koşullarına bağımlı.
+                </button>
+                <button class="option-btn" onclick="selectOption(4, 'fuel_cell')">
+                    <strong>C) Hidrojen Yakıt Hücresi:</strong> Çok yüksek enerji yoğunluğu, sessiz çalışır. 5 günlük otonom operasyon. Ama hidrojen kartuşu lojistiği zor ve pahalı.
+                </button>
+                <button class="option-btn" onclick="selectOption(4, 'distributed')">
+                    <strong>D) Dağıtık Mikro Bataryalar:</strong> Her cihazın kendi küçük bataryası + merkezi yedek. Bir batarya bozulsa diğerleri çalışmaya devam eder. Toplam ağırlık fazla ama dayanıklılık yüksek.
+                </button>
+            </div>
+            <div class="result-box" id="result4"></div>
+        </div>
+
+        <!-- PHASE 5: AI Assistant -->
+        <div class="scenario-box hidden" id="phase5">
+            <h2>KARAR 5: Yapay Zekâ Asistanı Yetki Seviyesi</h2>
+            <p>Askerîn yanındaki YZ asistanı, veri analizi yapıp önerilerde bulunacak. Kritik soru: YZ'ye ne kadar yetki verirsiniz? Çok yetki = hız ama kontrol kaybı riski. Az yetki = güvenlik ama yavaşlık.</p>
+            <span class="tech-badge">Danışman YZ</span> <span class="tech-badge">Yarı-Otonom</span> <span class="tech-badge">Tam Otonom</span>
+            <div class="decision-panel">
+                <h3>YZ asistanına hangi yetki seviyesini verirsiniz?</h3>
+                <button class="option-btn" onclick="selectOption(5, 'advisor')">
+                    <strong>A) Sadece Danışman:</strong> YZ analiz yapar ve öneri sunar ama hiçbir şeyi kendi başına yapamaz. Her eylem için insan onayı gerekir. Güvenli ama yavaş.
+                </button>
+                <button class="option-btn" onclick="selectOption(5, 'semi_auto')">
+                    <strong>B) Yarı-Otonom:</strong> Düşük riskli eylemleri (keşif dronu yönlendirme, sensör ayarı) kendi yapar. Yüksek riskli eylemlerde (ateş açma, geri çekilme) insan onayı ister.
+                </button>
+                <button class="option-btn" onclick="selectOption(5, 'full_auto')">
+                    <strong>C) Tam Otonom (Acil Durumda):</strong> Normal koşullarda insan onayı ister ama iletişim kesilirse veya asker yaralanırsa kendi başına karar verir (savunma ateşi, tıbbi tahliye çağrısı).
+                </button>
+                <button class="option-btn" onclick="selectOption(5, 'tiered')">
+                    <strong>D) Katmanlı Yetki:</strong> Görev tipine göre yetki seviyesi değişir. Keşifte tam otonom, taarruzda yarı-otonom, sivil bölgede sadece danışman. Komutan uzaktan yetki seviyesini değiştirebilir.
+                </button>
+            </div>
+            <div class="result-box" id="result5"></div>
+        </div>
+
+        <!-- FINAL REPORT -->
+        <div class="final-report" id="finalReport">
+            <h2>TEK-ER TASARIM RAPORU</h2>
+            <div class="soldier-stats" style="margin-bottom:20px;">
+                <div class="stat-card"><div class="label">Hayatta Kalma</div><div class="value" id="fSurvival">-</div></div>
+                <div class="stat-card"><div class="label">Bilişsel Yük</div><div class="value" id="fCognitive">-</div></div>
+                <div class="stat-card"><div class="label">Ateş Gücü</div><div class="value" id="fFirepower">-</div></div>
+                <div class="stat-card"><div class="label">Enerji Özerkliği</div><div class="value" id="fEnergy">-</div></div>
+                <div class="stat-card"><div class="label">Ağ Entegrasyonu</div><div class="value" id="fNetwork">-</div></div>
+            </div>
+            <div class="report-grid" id="reportGrid"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        let scores = { survival: 60, cognitive: 50, firepower: 55, energy: 40, network: 50 };
+        let currentPhase = 0;
+        let choices = {};
+
+        const outcomes = {
+            1: {
+                full_ar: { survival: 5, cognitive: -15, firepower: 10, energy: -10, network: 15, title: "Tam AR Vizör", text: "Maksimum durum farkındalığı sağlıyor ama bilişsel aşırı yük riski çok yüksek. ABD'nin IVAS programında askerler baş dönmesi ve bulantı şikayetleri bildirdi. Eğitim süresi çok uzun." },
+                ai_filter: { survival: 15, cognitive: 20, firepower: 10, energy: -5, network: 10, title: "YZ Filtreli Vizör", text: "En dengeli çözüm! YZ, askerin o anki görevine ve tehdit seviyesine göre bilgiyi filtreliyor. 'İhtiyacın olanı, ihtiyacın olduğu an' prensibi. SASAD raporunun önerdiği yaklaşım bu." },
+                minimal: { survival: 10, cognitive: 25, firepower: 0, energy: 5, network: -5, title: "Minimal HUD", text: "Bilişsel yük minimumda ama durum farkındalığı düşük. Asker tehlikeyi geç fark edebilir. Deneyimli birlikler için iyi ama yeni askerler için yetersiz." },
+                modular: { survival: 10, cognitive: 10, firepower: 5, energy: -5, network: 10, title: "Modüler Profiller", text: "Esnek ve uyarlanabilir. Ancak profil değişimi sırasında kısa bir 'kör nokta' oluşuyor. Ayrıca asker yanlış profili seçerse kritik bilgiyi kaçırabilir." }
+            },
+            2: {
+                full_powered: { survival: 10, cognitive: 0, firepower: 15, energy: -20, network: 0, title: "Tam Motorlu İskelet", text: "Devasa güç artışı ama enerji tüketimi çok yüksek. Batarya bittiğinde asker 'zırhlı bir heykel' gibi kalır. Lojistik bağımlılık yaratır. Özel kuvvetler için uygun, genel kuvvetler için riskli." },
+                passive: { survival: 15, cognitive: 5, firepower: 5, energy: 10, network: 0, title: "Pasif İskelet", text: "Güvenilir, hafif ve batarya gerektirmez. %30-40 yük azaltma sağlar. Arızalanma riski minimal. Türkiye'nin mevcut teknoloji seviyesiyle üretilebilir. SASAD raporunun kısa vadeli önerisi." },
+                lower_body: { survival: 15, cognitive: 5, firepower: 5, energy: -5, network: 0, title: "Alt Vücut Odaklı", text: "Pratik ve etkili. Yürüme hızını %25 artırır, diz yaralanmalarını %60 azaltır. Üst vücut serbest kaldığı için silah kullanımını engellemez. Batarya ömrü uzun (12+ saat)." },
+                no_exo: { survival: 5, cognitive: 10, firepower: 0, energy: 15, network: 5, title: "Yük Azaltma Stratejisi", text: "Pragmatik yaklaşım. Daha hafif silahlar (polimer gövde), daha küçük bataryalar, dron ile mühimmat taşıma. Basit, ucuz ve güvenilir. Ancak fiziksel avantaj sağlamaz." }
+            },
+            3: {
+                robot_dog: { survival: 15, cognitive: 5, firepower: 0, energy: -5, network: 10, title: "Robot Köpek (Quadruped)", text: "Her arazide çalışır, bina içine girebilir, sessiz keşif yapar. Boston Dynamics Spot benzeri. Ancak ateş gücü yok ve düşman tarafından ele geçirilme riski var. EW'ye karşı kablolu kontrol seçeneği olmalı." },
+                drone_swarm: { survival: 10, cognitive: -5, firepower: 20, energy: -10, network: 15, title: "Mini Dron Sürüsü", text: "Havadan 360° gözetleme ve kamikaze saldırı kapasitesi. Çok güçlü ama batarya ömrü kısa (20-30 dk), rüzgâra duyarlı ve elektronik harbe açık. Asker aynı anda 5 dronu yönetmek zorunda (bilişsel yük)." },
+                ugv: { survival: 10, cognitive: 5, firepower: 15, energy: -5, network: 5, title: "Paletli Mini UGV", text: "Ağır yük taşır, uzaktan kumandalı silah istasyonu monte edilebilir. Yaralı tahliyesi yapabilir. Ama yavaş, gürültülü ve şehir içinde manevra kabiliyeti düşük. Açık arazide etkili." },
+                hybrid_team: { survival: 20, cognitive: -10, firepower: 10, energy: -15, network: 20, title: "Hibrit Takım", text: "En çok yönlü seçenek! Dron havadan, robot köpek yerden keşif yapar. Sürü zekâsı ile birbirlerine veri aktarır. Ama en pahalı, en karmaşık ve en çok enerji tüketen seçenek. Eğitim süresi uzun." }
+            },
+            4: {
+                big_battery: { survival: 5, cognitive: 0, firepower: 0, energy: 20, network: 0, title: "Büyük Lityum Batarya", text: "Basit ve güvenilir. 72 saat otonom operasyon. Ama 3-4 kg ağırlık ekler ve vurulursa termal kaçak (yangın) riski var. Soğuk havada kapasite %30 düşer." },
+                harvest: { survival: 5, cognitive: 0, firepower: 0, energy: 15, network: 0, title: "Enerji Hasadı Tekstili", text: "Teorik olarak süresiz enerji ama üretim miktarı düşük (günde 5-10 Wh). Gece, kapalı hava veya bina içinde işe yaramaz. Yedek batarya ile birlikte kullanılmalı. 2030+ teknolojisi." },
+                fuel_cell: { survival: 5, cognitive: 0, firepower: 0, energy: 30, network: 0, title: "Hidrojen Yakıt Hücresi", text: "En yüksek enerji yoğunluğu! 5 günlük otonom operasyon, sessiz çalışır. Ama hidrojen kartuşu lojistiği zor, pahalı ve kartuş hasarlanırsa patlama riski var. Özel kuvvetler için ideal." },
+                distributed: { survival: 15, cognitive: 0, firepower: 0, energy: 15, network: 5, title: "Dağıtık Mikro Bataryalar", text: "Dayanıklılık odaklı. Bir batarya bozulsa diğerleri çalışmaya devam eder. Tek arıza noktası yok. Toplam ağırlık biraz fazla ama operasyonel güvenilirlik çok yüksek. Askerî standartlara en uygun." }
+            },
+            5: {
+                advisor: { survival: 5, cognitive: 15, firepower: 0, energy: 5, network: 5, title: "Sadece Danışman YZ", text: "En güvenli seçenek. İnsan her zaman kontrolde. Savaş hukuku açısından sorunsuz. Ama karar hızı düşük. Düşman YZ kullanıyorsa hız dezavantajı oluşur. 'İnsan-döngüde' (human-in-the-loop) modeli." },
+                semi_auto: { survival: 15, cognitive: 10, firepower: 10, energy: 0, network: 10, title: "Yarı-Otonom YZ", text: "Dengeli ve pragmatik. Düşük riskli görevlerde hız kazandırır, yüksek riskli kararlarda insan denetimi korunur. NATO'nun önerdiği standart yaklaşım. Türkiye için en uygun başlangıç noktası." },
+                full_auto: { survival: 20, cognitive: 5, firepower: 15, energy: -5, network: 15, title: "Tam Otonom (Acil Durum)", text: "İletişim kesildiğinde veya asker yaralandığında hayat kurtarıcı. Ama 'otonom öldürme' kararı savaş hukuku açısından çok tartışmalı. Atfetme (accountability) problemi yaratır." },
+                tiered: { survival: 15, cognitive: 15, firepower: 10, energy: -5, network: 15, title: "Katmanlı Yetki Sistemi", text: "En sofistike yaklaşım! Görev ve ortama göre yetki seviyesi değişir. Komutan uzaktan kontrol edebilir. Ama yazılım karmaşıklığı çok yüksek ve yetki geçişlerinde 'gri alanlar' oluşabilir." }
+            }
+        };
+
+        function startSim() {
+            document.getElementById('phase0').classList.add('hidden');
+            document.getElementById('phase1').classList.remove('hidden');
+            updatePhaseBar(1);
+        }
+
+        function selectOption(phase, choice) {
+            choices[phase] = choice;
+            const outcome = outcomes[phase][choice];
+            
+            scores.survival = Math.min(100, Math.max(0, scores.survival + outcome.survival));
+            scores.cognitive = Math.min(100, Math.max(0, scores.cognitive + outcome.cognitive));
+            scores.firepower = Math.min(100, Math.max(0, scores.firepower + outcome.firepower));
+            scores.energy = Math.min(100, Math.max(0, scores.energy + outcome.energy));
+            scores.network = Math.min(100, Math.max(0, scores.network + outcome.network));
+            updateScoreDisplay();
+
+            const resultBox = document.getElementById('result' + phase);
+            const nextLabel = phase < 5 ? 'Sonraki Karar →' : 'Raporu Göster';
+            resultBox.innerHTML = `<h4>${outcome.title}</h4><p>${outcome.text}</p><button class="btn-next" onclick="nextPhase(${phase})">${nextLabel}</button>`;
+            resultBox.classList.add('show');
+
+            const buttons = document.querySelectorAll(`#phase${phase} .option-btn`);
+            buttons.forEach(b => { b.classList.remove('selected'); b.style.pointerEvents = 'none'; });
+            event.target.closest('.option-btn').classList.add('selected');
+        }
+
+        function nextPhase(currentP) {
+            if (currentP < 5) {
+                document.getElementById('phase' + currentP).classList.add('hidden');
+                document.getElementById('phase' + (currentP + 1)).classList.remove('hidden');
+                updatePhaseBar(currentP + 1);
+            } else {
+                document.getElementById('phase5').classList.add('hidden');
+                showFinalReport();
+            }
+        }
+
+        function updatePhaseBar(phase) {
+            const segs = document.querySelectorAll('.phase-seg');
+            segs.forEach((seg, i) => {
+                seg.classList.remove('active', 'done');
+                if (i < phase) seg.classList.add('done');
+                else if (i === phase) seg.classList.add('active');
+            });
+        }
+
+        function updateScoreDisplay() {
+            updateScore('scoreSurvival', scores.survival);
+            updateScore('scoreCognitive', scores.cognitive);
+            updateScore('scoreFirepower', scores.firepower);
+            updateScore('scoreEnergy', scores.energy);
+            updateScore('scoreNetwork', scores.network);
+        }
+
+        function updateScore(id, value) {
+            const el = document.getElementById(id);
+            el.textContent = value;
+            el.className = 'value ' + (value >= 70 ? 'high' : value >= 40 ? 'mid' : 'low');
+        }
+
+        function showFinalReport() {
+            const report = document.getElementById('finalReport');
+            report.classList.add('show');
+            
+            const ids = ['fSurvival', 'fCognitive', 'fFirepower', 'fEnergy', 'fNetwork'];
+            const vals = [scores.survival, scores.cognitive, scores.firepower, scores.energy, scores.network];
+            ids.forEach((id, i) => {
+                const el = document.getElementById(id);
+                el.textContent = vals[i];
+                el.className = 'value ' + (vals[i] >= 70 ? 'high' : vals[i] >= 40 ? 'mid' : 'low');
+            });
+
+            const total = vals.reduce((a, b) => a + b, 0);
+            let grade = '';
+            if (total >= 400) grade = 'S - Mükemmel Tasarım';
+            else if (total >= 340) grade = 'A - İleri Seviye';
+            else if (total >= 280) grade = 'B - Yetkin Tasarım';
+            else if (total >= 220) grade = 'C - Temel Seviye';
+            else grade = 'D - Yeniden Tasarla';
+
+            const grid = document.getElementById('reportGrid');
+            grid.innerHTML = `
+                <div class="report-item"><h4>Genel Değerlendirme</h4><p>Toplam: ${total}/500<br>Derece: <strong>${grade}</strong></p></div>
+                <div class="report-item"><h4>Kask/Vizör</h4><p>${outcomes[1][choices[1]].title}</p></div>
+                <div class="report-item"><h4>Dış İskelet</h4><p>${outcomes[2][choices[2]].title}</p></div>
+                <div class="report-item"><h4>Otonom Yardımcı</h4><p>${outcomes[3][choices[3]].title}</p></div>
+                <div class="report-item"><h4>Enerji Sistemi</h4><p>${outcomes[4][choices[4]].title}</p></div>
+                <div class="report-item"><h4>YZ Asistanı</h4><p>${outcomes[5][choices[5]].title}</p></div>
+                <div class="report-item"><h4>SASAD Karşılaştırma</h4><p>SASAD 2024 raporunun önerisi: YZ filtreli vizör + Pasif iskelet + Hibrit takım + Dağıtık batarya + Yarı-otonom YZ. Sizin tasarımınız bu referansla karşılaştırılabilir.</p></div>
+                <div class="report-item"><h4>Türkiye Notu</h4><p>Türkiye'nin mevcut savunma sanayii (ASELSAN, HAVELSAN, STM) bu sistemlerin çoğunu yerli olarak üretme kapasitesine sahiptir. Kritik eksik: Milli YZ dili ve veri ekosistemi.</p></div>
+            `;
+            updatePhaseBar(5);
+        }
+    
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

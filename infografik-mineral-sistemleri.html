@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tedarik Zinciri Röntgeni — Hangi Sistemde Hangi Mineral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+.mono{font-family:var(--font-mono);}
+
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 32px 100px;}
+@media (max-width:720px){.wrap{padding:0 18px 80px;}}
+
+/* ===== header ===== */
+header{padding:56px 0 36px;}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--signal);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+header h1{font-size:clamp(2rem,5.5vw,3.4rem);color:var(--bone);max-width:760px;margin-bottom:18px;}
+header h1 em{font-style:normal;color:var(--signal);}
+header p.lead{font-size:1.05rem;max-width:640px;}
+
+/* ===== legend / filter bar ===== */
+.filter-bar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:32px 0 8px;
+  padding:18px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+.filter-label{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--bone-dim);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  display:flex;
+  align-items:center;
+  margin-right:6px;
+}
+.filter-chip{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  padding:7px 14px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  color:var(--bone-dim);
+  background:var(--deep);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{
+  background:var(--signal);
+  border-color:var(--signal);
+  color:var(--void);
+  font-weight:600;
+}
+.search-box{
+  margin-top:14px;
+  width:100%;
+}
+.search-box input{
+  width:100%;
+  background:var(--deep);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:12px 16px;
+  color:var(--bone);
+  font-family:var(--font-mono);
+  font-size:0.85rem;
+}
+.search-box input:focus{outline:none;border-color:var(--signal);}
+.search-box input::placeholder{color:var(--bone-dim);}
+
+/* ===== system strips ===== */
+.systems{margin-top:36px;display:flex;flex-direction:column;gap:14px;}
+.sys-strip{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+  transition:border-color 0.2s;
+}
+.sys-strip.expanded{border-color:var(--signal);}
+.sys-head{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:20px 24px;
+  cursor:pointer;
+  user-select:none;
+}
+.sys-icon{
+  font-size:1.6rem;
+  width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--deep);
+  border:1px solid var(--line);
+  border-radius:8px;
+  flex-shrink:0;
+}
+.sys-info{flex:1;min-width:0;}
+.sys-cat{
+  font-family:var(--font-mono);
+  font-size:0.66rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:var(--steel);
+  display:block;
+  margin-bottom:3px;
+}
+.sys-name{font-family:var(--font-body);font-weight:700;font-size:1.15rem;color:var(--bone);}
+.sys-mineral-tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.tag-pill{
+  font-family:var(--font-mono);
+  font-size:0.64rem;
+  padding:3px 9px;
+  border-radius:12px;
+  background:var(--deep);
+  border:1px solid var(--line);
+  color:var(--bone-dim);
+}
+.tag-pill.risk-high{border-color:rgba(255,77,46,0.5);color:var(--threat);}
+.tag-pill.risk-mid{border-color:rgba(216,182,92,0.5);color:var(--gold);}
+.sys-chevron{
+  font-family:var(--font-mono);
+  color:var(--bone-dim);
+  font-size:1.1rem;
+  transition:transform 0.25s;
+  flex-shrink:0;
+}
+.sys-strip.expanded .sys-chevron{transform:rotate(90deg);color:var(--signal);}
+
+.sys-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.35s ease;
+}
+.sys-strip.expanded .sys-body{max-height:900px;}
+.sys-body-inner{
+  padding:0 24px 28px;
+  border-top:1px solid var(--line);
+}
+.sys-desc{
+  padding-top:18px;
+  font-size:0.93rem;
+  margin-bottom:20px;
+}
+.mineral-table{width:100%;border-collapse:collapse;}
+.mineral-table th{
+  text-align:left;
+  font-family:var(--font-mono);
+  font-size:0.66rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--bone-dim);
+  padding:8px 12px;
+  border-bottom:1px solid var(--line);
+}
+.mineral-table td{
+  padding:12px 12px;
+  border-bottom:1px solid var(--line);
+  font-size:0.88rem;
+  vertical-align:top;
+}
+.mineral-table tr:last-child td{border-bottom:none;}
+.mt-sym{
+  font-family:var(--font-display);
+  color:var(--signal);
+  font-size:0.95rem;
+  white-space:nowrap;
+}
+.mt-risk-dot{
+  display:inline-block;
+  width:7px;height:7px;
+  border-radius:50%;
+  margin-right:7px;
+}
+.dot-high{background:var(--threat);box-shadow:0 0 6px var(--threat);}
+.dot-mid{background:var(--gold);}
+.dot-low{background:var(--signal-dim);}
+.mt-role{color:var(--bone-dim);}
+
+.no-results{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--bone-dim);
+  font-family:var(--font-mono);
+  font-size:0.85rem;
+  display:none;
+}
+
+/* ===== summary footer note ===== */
+.source-note{
+  margin-top:48px;
+  padding:20px 24px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-left:3px solid var(--steel);
+  border-radius:6px;
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  color:var(--bone-dim);
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Bağımsız Modül · Tedarik Zinciri Analizi</div>
+    <h1>Hangi Sistemde <em>Hangi Mineral?</em></h1>
+    <p class="lead">
+      Bir savaş uçağından bir kuantum şifreleme uydusuna, bir radardan siber savunma altyapısına —
+      her askeri ve teknolojik sistem, görünmez bir mineral omurgaya yaslanır. Aşağıdaki sistemleri
+      açarak hangi kritik mineralin hangi işlevi gördüğünü ve tedarik riskini görün.
+    </p>
+  </header>
+
+  <div class="filter-bar">
+    <span class="filter-label">Kategoriye göre filtrele:</span>
+    <button class="filter-chip active" data-cat="all">Tümü</button>
+    <button class="filter-chip" data-cat="hava">✈ Hava Platformları</button>
+    <button class="filter-chip" data-cat="deniz">⚓ Deniz Sistemleri</button>
+    <button class="filter-chip" data-cat="kara">🛡 Kara Sistemleri</button>
+    <button class="filter-chip" data-cat="muhimmat">🎯 Güdüm & Mühimmat</button>
+    <button class="filter-chip" data-cat="elektronik">📡 Elektronik Harp & Radar</button>
+    <button class="filter-chip" data-cat="uzay">🛰 Uzay & Uydu</button>
+    <button class="filter-chip" data-cat="siber">🔐 Siber & Veri Altyapısı</button>
+    <div class="search-box">
+      <input type="text" id="mineral-search" placeholder="Bir mineral ara (örn. Neodimyum, Galyum, Tantal)...">
+    </div>
+  </div>
+
+  <div class="systems" id="systems-list"></div>
+  <div class="no-results" id="no-results">Eşleşen sistem veya mineral bulunamadı. Filtreyi temizleyin ya da farklı bir terim deneyin.</div>
+
+  <div class="source-note">
+    KAYNAK: Bu modüldeki sistem-mineral eşlemeleri, Selahaddin Koyuncu'nun "Yeni Teknolojiler ve Silahlı
+    Çatışmaların Dönüşümü" (İstanbul Topkapı Üniversitesi, 2025) tezindeki Tablo 8.4.1, 8.4.2 ve ilgili
+    şekillerden (Mishra 2022; Girardi vd. 2023; Pitron 2023; GAO 2024; Roy vd. 2025) derlenmiştir.
+    Risk göstergeleri tedarikteki coğrafi yoğunlaşmayı temsil eder, kesin yüzdeler kaynak belgelere göre değişir.
+  </div>
+</div>
+
+<script>
+const SYSTEMS = [
+  {
+    cat:'hava', icon:'✈', catLabel:'Hava Platformu',
+    name:'Savaş Uçağı (F-35 sınıfı)',
+    desc:'Bir F-35 uçağı yaklaşık 400 kilogramdan fazla nadir toprak elementine ihtiyaç duyar. Aviyonik, motor mıknatısları ve sensör sistemleri bu minerallere doğrudan bağımlıdır.',
+    minerals:[
+      {sym:'Sm-Co', name:'Samaryum-Kobalt', risk:'high', role:'Motor ve aktüatör mıknatıslarında; yüksek sıcaklıkta manyetik gücünü koruyan savunma sınıfı alaşım.'},
+      {sym:'Nd-Fe-B', name:'Neodimyum-Demir-Bor', risk:'high', role:'Kompakt, güçlü kalıcı mıknatıslar; kılavuzluk ve kontrol elektrik motorlarında kullanılır.'},
+      {sym:'Y/Eu/Tb', name:'İtriyum, Europiyum, Terbiyum', risk:'high', role:'Lazer hedefleme ve aviyonik görüntüleme sistemlerinde enerji/çözünürlük amplifikasyonu.'},
+      {sym:'Ti', name:'Titanyum', risk:'mid', role:'Gövde ve motor yapısında hafif-yüksek mukavemet malzemesi.'},
+      {sym:'Ga', name:'Galyum (GaN)', risk:'high', role:'Radar ve elektronik harp sistemlerinde yüksek frekanslı, yüksek güçlü yarı iletkenler.'}
+    ]
+  },
+  {
+    cat:'deniz', icon:'⚓', catLabel:'Deniz Sistemi',
+    name:'Nükleer Denizaltı (Virginia sınıfı)',
+    desc:'Bir Virginia sınıfı denizaltı projesi yaklaşık dört ton nadir toprak elementine ihtiyaç duyar — sonar, tahrik ve elektronik sistemlerin tamamı bu tedarik zincirine bağımlıdır.',
+    minerals:[
+      {sym:'Nd/Sm', name:'Neodimyum, Samaryum', risk:'high', role:'Sonar dönüştürücülerde ve elektrikli tahrik motorlarında kalıcı mıknatıs.'},
+      {sym:'Gd', name:'Gadolinyum', risk:'high', role:'Gözetleme ve navigasyon yardımcılarında (radar/sonar) sinyal işleme.'},
+      {sym:'Co', name:'Kobalt', risk:'high', role:'Süper alaşımlarda ve enerji depolama sistemlerinde.'},
+      {sym:'Be', name:'Berilyum', risk:'low', role:'Nükleer reaktör bileşenlerinde yapısal malzeme.'}
+    ]
+  },
+  {
+    cat:'deniz', icon:'⚓', catLabel:'Deniz Sistemi',
+    name:'Destroyer (Arleigh Burke sınıfı)',
+    desc:'İki tondan fazla nadir toprak elementi içeren bu sınıf, entegre radar, silah sistemleri ve elektrikli tahrik için yoğun mineral tedarikine dayanır.',
+    minerals:[
+      {sym:'Nd/Pr', name:'Neodimyum, Praseodimyum', risk:'high', role:'Elektrikli tahrik motorları ve marş jeneratörlerinde kalıcı mıknatıs.'},
+      {sym:'Y/La/Lu', name:'İtriyum, Lantan, Lutesyum', risk:'high', role:'Radar sinyal amplifikasyonu ve kimyasal madde alarm sistemlerinde.'},
+      {sym:'W', name:'Tungsten', risk:'mid', role:'Yüksek ısı direnci gereken bağlantı ve gövde bileşenlerinde.'}
+    ]
+  },
+  {
+    cat:'kara', icon:'🛡', catLabel:'Kara Sistemi',
+    name:'İnsansız Kara Aracı (İKA)',
+    desc:'Tanklardan türetilen modern İKA\'lar, otonom navigasyon, sensör füzyonu ve elektrikli tahrik için yoğun kritik mineral kullanır.',
+    minerals:[
+      {sym:'Nd/Dy/Tb', name:'Neodimyum, Disprozyum, Terbiyum', risk:'high', role:'Elektrikli tahrik motorları ve göbeğe monteli çekiş sistemlerinde kalıcı mıknatıs.'},
+      {sym:'Ga', name:'Galyum', risk:'high', role:'Sensör füzyonu ve iletişim çiplerinde yarı iletken.'},
+      {sym:'Li', name:'Lityum', risk:'mid', role:'Batarya ve enerji depolama sisteminde.'},
+      {sym:'Co', name:'Kobalt', risk:'high', role:'Lityum-iyon pillerde katot malzemesi.'}
+    ]
+  },
+  {
+    cat:'kara', icon:'🛡', catLabel:'Kara Sistemi',
+    name:'Sürü Robotları (KBRN Dekontaminasyon)',
+    desc:'Kirlenmiş sahalarda otonom hareket eden sürü robotları, sensör ve iletişim ağı için yoğun mineral kullanımı gerektirir.',
+    minerals:[
+      {sym:'Nd', name:'Neodimyum', risk:'high', role:'Çoklu robot eklemlerinde kompakt mıknatıs motorları.'},
+      {sym:'Si', name:'Silisyum Metal', risk:'mid', role:'Sensör çiplerinin ve işlemcilerin temel alt tabanı.'},
+      {sym:'Pt', name:'Platin Grubu', risk:'low', role:'Kimyasal/biyolojik algılama sensörlerinde katalizör.'}
+    ]
+  },
+  {
+    cat:'muhimmat', icon:'🎯', catLabel:'Güdüm & Mühimmat',
+    name:'Hassas Güdümlü Mühimmat (Tomahawk sınıfı)',
+    desc:'Seyir füzeleri, gemi karşıtı ve karadan havaya füzeler; hedefleme doğruluğu doğrudan nadir toprak mıknatıslarının kalitesine bağlıdır.',
+    minerals:[
+      {sym:'Nd/Pr/Sm', name:'Neodimyum, Praseodimyum, Samaryum', risk:'high', role:'Kılavuzluk ve kontrol elektrik motorları, fin aktüatörleri.'},
+      {sym:'Dy/Tb', name:'Disprozyum, Terbiyum', risk:'high', role:'Güdüm sistemi — füzenin hedeflenmesini kontrol eden bileşenler.'}
+    ]
+  },
+  {
+    cat:'muhimmat', icon:'🎯', catLabel:'Güdüm & Mühimmat',
+    name:'Yönlendirilmiş Enerji Silahları (DEW)',
+    desc:'Elektromanyetik raylı silahlar, yüksek güçlü mikrodalga sistemleri ve lazer silahları, devasa enerji depolama/amplifikasyon kapasitesi gerektirir.',
+    minerals:[
+      {sym:'çeşitli', name:'Yoğunluk amplifikasyon malzemeleri', risk:'high', role:'Ni metal hidrit bataryalar, alan reddi sistemleri, sıkışma cihazları.'},
+      {sym:'Y/Eu/Tb', name:'İtriyum, Europiyum, Terbiyum', risk:'high', role:'Lazer avenger, fotonik bozucu ve hava tabanlı lazer hedefleme sistemlerinde.'}
+    ]
+  },
+  {
+    cat:'elektronik', icon:'📡', catLabel:'Elektronik Harp & Radar',
+    name:'Radar ve Sonar Sistemleri',
+    desc:'Gözetleme, navigasyon ve tehdit tespiti, sinyal amplifikasyonu ve çözünürlük artışı için spesifik nadir toprak elementlerine bağımlıdır.',
+    minerals:[
+      {sym:'Gd/Sm/Y', name:'Gadolinyum, Samaryum, İtriyum', risk:'high', role:'Radar ve sonar sinyal amplifikasyonunda temel bileşen.'},
+      {sym:'Ga', name:'Galyum (GaN)', risk:'high', role:'5G altyapısı ve güç elektroniğinde yüksek frekanslı performans.'},
+      {sym:'Eu', name:'Europiyum', risk:'high', role:'Galyum nitrür ve indiyum fosfit doplamada; optoelektronik performans.'}
+    ]
+  },
+  {
+    cat:'elektronik', icon:'📡', catLabel:'Elektronik Harp & Radar',
+    name:'Kuantum Radar & Sensörler',
+    desc:'Stealth tespiti ve düşman faaliyetlerinin hassas tespiti için kuantum sensör teknolojileri, ultra-saf yarı iletken malzemeye dayanır.',
+    minerals:[
+      {sym:'Si', name:'Ultra Saf Silisyum', risk:'mid', role:'Kuantum bilgisayar ve sensör çiplerinin alt tabanı.'},
+      {sym:'In-P', name:'İndiyum Fosfür', risk:'mid', role:'Yüksek frekanslı kuantum iletişim cihazlarında.'},
+      {sym:'Y', name:'İtriyum', risk:'high', role:'Fotonik ve yüksek hızlı bilgi işlem uygulamalarını destekler.'}
+    ]
+  },
+  {
+    cat:'uzay', icon:'🛰', catLabel:'Uzay & Uydu',
+    name:'İletişim & İstihbarat Uyduları',
+    desc:'Uydu fırlatma araçları (SLV) ve uydu gövdeleri, ağırlık-mukavemet dengesi ile aşırı sıcaklık koşullarına dayanıklı özel malzemeler gerektirir.',
+    minerals:[
+      {sym:'Al/Ti', name:'Alüminyum, Titanyum', risk:'mid', role:'Hafif fakat yüksek mukavemetli uzay aracı gövde yapısı.'},
+      {sym:'Nb/Ta', name:'Niyobyum, Tantal', risk:'mid', role:'Yüksek ısı direnci gereken motor ve yapısal bileşenler.'},
+      {sym:'Li/Co', name:'Lityum, Kobalt', risk:'high', role:'Uzay aracı enerji, tahrik ve güç sistemlerinde vazgeçilmez.'}
+    ]
+  },
+  {
+    cat:'uzay', icon:'🛰', catLabel:'Uzay & Uydu',
+    name:'Uydu Karşıtı Silahlar (ASAT)',
+    desc:'Anti-uydu silahları ve müfettiş uydular, hassas hedefleme ve kinetik etki için yoğun nadir toprak ve güç sistemleri kullanır.',
+    minerals:[
+      {sym:'Nd/Dy', name:'Neodimyum, Disprozyum', risk:'high', role:'Hassas güdüm ve hedefleme motorlarında kalıcı mıknatıs.'},
+      {sym:'W', name:'Tungsten', risk:'mid', role:'Kinetik darbe bileşenlerinde yüksek yoğunluklu malzeme.'}
+    ]
+  },
+  {
+    cat:'siber', icon:'🔐', catLabel:'Siber & Veri Altyapısı',
+    name:'Veri Merkezi & Bellek Sistemleri',
+    desc:'SSD\'ler, HDD\'ler ve bellek yongaları; askeri C2 ve istihbarat verisinin depolandığı altyapı, çok katmanlı mineral tedarikine dayanır.',
+    minerals:[
+      {sym:'Si', name:'Silisyum', risk:'mid', role:'NAND flaş bellek ve transistörlerin kalbi; tüm mikroçiplerin temel alt tabanı.'},
+      {sym:'Nd/Pr', name:'Neodimyum, Praseodimyum', risk:'high', role:'HDD mil motorlarında kalıcı mıknatıs; hassas, yüksek hızlı disk dönüşü.'},
+      {sym:'Sm-Co', name:'Samaryum-Kobalt', risk:'high', role:'Savunma sınıfı depolama sistemlerinde termal kararlılık gerektiren mıknatıslar.'},
+      {sym:'Li', name:'Lityum', risk:'mid', role:'Veri merkezi yedek güç pillerinde enerji yoğunluğu.'},
+      {sym:'Au', name:'Altın', risk:'low', role:'Bellek çiplerinde kablo ve elektrik konnektör bağlantıları.'}
+    ]
+  },
+  {
+    cat:'siber', icon:'🔐', catLabel:'Siber & Veri Altyapısı',
+    name:'Kuantum Şifreleme Altyapısı (QKD)',
+    desc:'Kuantum Anahtar Dağıtımı ile kırılamaz iletişim sağlayan altyapı, foton tabanlı kübitler ve hassas optik bileşenler gerektirir.',
+    minerals:[
+      {sym:'In-P', name:'İndiyum Fosfür', risk:'mid', role:'Foton kaynağı ve dedektör çiplerinde temel yarı iletken malzeme.'},
+      {sym:'Ga-As', name:'Galyum Arsenit', risk:'high', role:'Yüksek frekanslı optoelektronik bileşenlerde, mobil ve uydu sistemlerinde.'},
+      {sym:'Si', name:'Silisyum', risk:'mid', role:'Kuantum işlemci alt tabanı ve klasik-kuantum arayüz devrelerinde.'}
+    ]
+  },
+  {
+    cat:'elektronik', icon:'📡', catLabel:'Elektronik Harp & Radar',
+    name:'Elektronik Harp Karşı-Önlem Sistemleri',
+    desc:'Radar ikaz alıcıları, IR arama-takip sistemleri (IRST) ve elektro-optik dağıtık açıklık sistemleri (EODAS), hassas sensör malzemelerine dayanır.',
+    minerals:[
+      {sym:'Ge', name:'Germanyum', risk:'high', role:'Kızılötesi optik sistemlerde ve IR güdümlü tehdit tespitinde.'},
+      {sym:'Ga', name:'Galyum', risk:'high', role:'Yüksek frekanslı karıştırma ve aldatma sistemlerinde yarı iletken.'},
+      {sym:'Y/Eu', name:'İtriyum, Europiyum', risk:'high', role:'Sinyal işleme ve elektronik koruma bileşenlerinde.'}
+    ]
+  }
+];
+
+const RISK_LABEL = {high:'Yüksek Risk (Çin tekeli / %70+)', mid:'Orta Risk', low:'Düşük Risk'};
+
+function renderSystems(filterCat, searchTerm){
+  const list = document.getElementById('systems-list');
+  const term = (searchTerm||'').trim().toLowerCase();
+
+  const filtered = SYSTEMS.filter(sys=>{
+    const catOk = filterCat==='all' || sys.cat===filterCat;
+    if(!catOk) return false;
+    if(!term) return true;
+    const inName = sys.name.toLowerCase().includes(term);
+    const inMinerals = sys.minerals.some(m=> m.sym.toLowerCase().includes(term) || m.name.toLowerCase().includes(term));
+    return inName || inMinerals;
+  });
+
+  document.getElementById('no-results').style.display = filtered.length===0 ? 'block':'none';
+
+  list.innerHTML = filtered.map((sys,i)=>{
+    const tags = sys.minerals.slice(0,4).map(m=>`<span class="tag-pill risk-${m.risk}">${m.sym}</span>`).join('');
+    const rows = sys.minerals.map(m=>`
+      <tr>
+        <td class="mt-sym">${m.sym}<br><span style="font-family:var(--font-mono);font-size:0.66rem;color:var(--bone-dim);">${m.name}</span></td>
+        <td><span class="mt-risk-dot dot-${m.risk}"></span><span class="mono" style="font-size:0.72rem;color:var(--bone-dim)">${RISK_LABEL[m.risk]}</span></td>
+        <td class="mt-role">${m.role}</td>
+      </tr>
+    `).join('');
+    return `
+      <div class="sys-strip" data-idx="${i}">
+        <div class="sys-head">
+          <div class="sys-icon">${sys.icon}</div>
+          <div class="sys-info">
+            <span class="sys-cat">${sys.catLabel}</span>
+            <span class="sys-name">${sys.name}</span>
+            <div class="sys-mineral-tags">${tags}${sys.minerals.length>4?`<span class="tag-pill">+${sys.minerals.length-4}</span>`:''}</div>
+          </div>
+          <div class="sys-chevron">›</div>
+        </div>
+        <div class="sys-body">
+          <div class="sys-body-inner">
+            <p class="sys-desc">${sys.desc}</p>
+            <table class="mineral-table">
+              <thead><tr><th>Mineral</th><th>Tedarik Riski</th><th>Sistemdeki Rolü</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  list.querySelectorAll('.sys-strip').forEach(strip=>{
+    strip.querySelector('.sys-head').addEventListener('click',()=>{
+      const wasExpanded = strip.classList.contains('expanded');
+      list.querySelectorAll('.sys-strip').forEach(s=>s.classList.remove('expanded'));
+      if(!wasExpanded) strip.classList.add('expanded');
+    });
+  });
+}
+
+let activeCat = 'all';
+document.querySelectorAll('.filter-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCat = chip.dataset.cat;
+    renderSystems(activeCat, document.getElementById('mineral-search').value);
+  });
+});
+document.getElementById('mineral-search').addEventListener('input',(e)=>{
+  renderSystems(activeCat, e.target.value);
+});
+
+renderSystems('all','');
+</script>
+
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>DOKTRİN DASH — OZA Arcade</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c14;--panel:#0f1722;--accent:#ff6b35;--text:#eaf0f7;--dim:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace}
+.game-wrap{display:grid;grid-template-columns:1fr 380px;height:100vh;gap:0}
+@media(max-width:900px){.game-wrap{grid-template-columns:1fr;grid-template-rows:60vh 40vh}}
+.canvas-panel{position:relative;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)}
+.game-hud{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.06)}
+.hud-item{text-align:center}
+.hud-label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.hud-val{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;color:var(--accent)}
+canvas{flex:1;display:block;width:100%;background:#0a0e18}
+.info-panel{background:var(--panel);padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.info-title{font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.info-subtitle{font-size:11px;color:var(--dim);margin-top:4px}
+.info-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px}
+.info-section h3{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.info-section p,.info-section li{font-size:12px;line-height:1.7;color:var(--dim)}
+.info-section ul{list-style:none;padding:0}
+.info-section li::before{content:'▸ ';color:var(--accent)}
+.back-btn{position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-size:12px;border:1px solid rgba(0,224,255,.2)}
+.start-overlay{position:absolute;inset:0;background:rgba(8,12,20,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;transition:opacity .3s}
+.start-overlay.hidden{opacity:0;pointer-events:none}
+.start-btn{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:16px 48px;border-radius:12px;cursor:pointer;margin-top:20px;transition:.2s}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(255,107,53,.4)}
+.start-title{font-family:'Chakra Petch',sans-serif;font-size:28px;font-weight:800;color:var(--accent)}
+.start-desc{font-size:12px;color:var(--dim);margin-top:8px;text-align:center;max-width:300px}
+.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" class="back-btn">← OZA Hub</a>
+<div class="game-wrap">
+  <div class="canvas-panel">
+    <div class="game-hud">
+      <div class="hud-item"><div class="hud-label">ETAP</div><div class="hud-val" id="stage">1</div></div>
+      <div class="hud-item"><div class="hud-label">MESAFE</div><div class="hud-val" id="distance">0m</div></div>
+      <div class="hud-item"><div class="hud-label">SKOR</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">CAN</div><div class="hud-val" id="lives">3</div></div>
+    </div>
+    <canvas id="gc"></canvas>
+    <div class="start-overlay" id="overlay">
+      <div class="start-title">📜 DOKTRİN DASH</div>
+      <div class="start-desc">Clausewitz'den Sun Tzu'ya, doktrin engelleri arasında koş. Doğru doktrin kartını topla, yanlıştan kaç!</div>
+      <button class="start-btn" onclick="startGame()">BAŞLAT</button>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+  <div class="info-panel">
+    <div>
+      <div class="info-title">📜 DOKTRİN DASH</div>
+      <div class="info-subtitle">7 Askeri Doktrin, Sonsuz Koşu</div>
+    </div>
+    <div class="info-section">
+      <h3>Nasıl Oynanır</h3>
+      <ul>
+        <li>← → veya A/D ile şerit değiştir</li>
+        <li>SPACE ile zıpla</li>
+        <li>Doğru doktrin kartlarını topla (+puan)</li>
+        <li>Yanlış engellerden kaç (-can)</li>
+        <li>Her 500m'de yeni etap, hız artar</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Doktrin Kartları</h3>
+      <ul>
+        <li><strong>Clausewitz:</strong> "Savaş, politikanın başka araçlarla devamıdır"</li>
+        <li><strong>Sun Tzu:</strong> "Savaşmadan kazanmak en üstün sanattır"</li>
+        <li><strong>Jomini:</strong> "İç hatlar prensibi — kuvvet yoğunlaştırma"</li>
+        <li><strong>Mahan:</strong> "Deniz hakimiyeti dünya hakimiyetidir"</li>
+        <li><strong>Douhet:</strong> "Hava gücü savaşı tek başına kazanabilir"</li>
+        <li><strong>Liddell Hart:</strong> "Dolaylı yaklaşım stratejisi"</li>
+        <li><strong>Boyd:</strong> "OODA döngüsü — hız üstünlüğü"</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Etap Sistemi</h3>
+      <p>Her 500m mesafede yeni etap açılır. Hız %20 artar, yeni engel tipleri eklenir. Etap 5+'te doktrin soruları gelir — doğru cevap bonus puan!</p>
+    </div>
+  </div>
+</div>
+<script>
+const canvas=document.getElementById('gc');const ctx=canvas.getContext('2d');
+let W,H,running=false,animId;
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+
+function resize(){W=canvas.width=canvas.clientWidth;H=canvas.height=canvas.clientHeight}
+window.addEventListener('resize',resize);resize();
+
+// Sound synthesis
+function playTone(freq,dur,type='square',vol=.15){
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.value=vol;
+  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
+  o.connect(g);g.connect(audioCtx.destination);
+  o.start();o.stop(audioCtx.currentTime+dur);
+}
+function sfxCollect(){playTone(880,.1,'sine',.2);setTimeout(()=>playTone(1100,.1,'sine',.15),50)}
+function sfxHit(){playTone(150,.2,'sawtooth',.3);playTone(80,.3,'square',.2)}
+function sfxStage(){[440,550,660,880].forEach((f,i)=>setTimeout(()=>playTone(f,.15,'sine',.2),i*80))}
+
+// Particles
+const parts=[];
+function spawnParticles(x,y,color,count=12){
+  for(let i=0;i<count;i++)parts.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,life:30,color,size:Math.random()*4+2});
+}
+function updateParticles(){
+  for(let i=parts.length-1;i>=0;i--){
+    const p=parts[i];p.x+=p.vx;p.y+=p.vy;p.life--;p.vy+=.3;
+    if(p.life<=0)parts.splice(i,1);
+    else{ctx.globalAlpha=p.life/30;ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,p.size,p.size);ctx.globalAlpha=1;}
+  }
+}
+
+// Game state
+let player={lane:1,y:0,vy:0,jumping:false};
+let obstacles=[];let collectibles=[];let dist=0;let score=0;let lives=3;let stage=1;let speed=5;
+const LANES=[.2,.5,.8];
+const DOCTRINES=['Clausewitz','Sun Tzu','Jomini','Mahan','Douhet','Liddell Hart','Boyd'];
+const COLORS=['#ff6b35','#00ff88','#00e0ff','#c9a84c','#a855f7','#ec4899','#ef4444'];
+
+function spawnObstacle(){
+  const lane=Math.floor(Math.random()*3);
+  obstacles.push({lane,y:-60,w:50,h:50,type:'block'});
+}
+function spawnCollectible(){
+  const lane=Math.floor(Math.random()*3);
+  const idx=Math.floor(Math.random()*DOCTRINES.length);
+  collectibles.push({lane,y:-40,idx,size:30});
+}
+
+let spawnTimer=0;
+function update(){
+  dist+=speed/10;speed=5+stage*1.2;
+  spawnTimer++;
+  if(spawnTimer%30===0)spawnObstacle();
+  if(spawnTimer%50===0)spawnCollectible();
+  if(dist>stage*500){stage++;sfxStage();document.getElementById('stage').textContent=stage;}
+  
+  // Move obstacles
+  for(let i=obstacles.length-1;i>=0;i--){
+    obstacles[i].y+=speed;
+    if(obstacles[i].y>H+60)obstacles.splice(i,1);
+  }
+  // Move collectibles
+  for(let i=collectibles.length-1;i>=0;i--){
+    collectibles[i].y+=speed;
+    if(collectibles[i].y>H+40)collectibles.splice(i,1);
+  }
+  
+  // Player jump
+  if(player.jumping){player.vy+=1.2;player.y+=player.vy;if(player.y>=0){player.y=0;player.jumping=false;player.vy=0;}}
+  
+  // Collision detection
+  const px=LANES[player.lane]*W;const py=H-80+player.y;
+  for(let i=obstacles.length-1;i>=0;i--){
+    const o=obstacles[i];const ox=LANES[o.lane]*W;
+    if(Math.abs(ox-px)<35&&Math.abs(o.y-py)<40&&!player.jumping){
+      obstacles.splice(i,1);lives--;sfxHit();
+      spawnParticles(px,py,'#ff3333');
+      document.getElementById('lives').textContent=lives;
+      if(lives<=0)gameOver();
+    }
+  }
+  for(let i=collectibles.length-1;i>=0;i--){
+    const c=collectibles[i];const cx=LANES[c.lane]*W;
+    if(Math.abs(cx-px)<30&&Math.abs(c.y-py)<35){
+      collectibles.splice(i,1);score+=100*stage;sfxCollect();
+      spawnParticles(cx,c.y,COLORS[c.idx]);
+      document.getElementById('score').textContent=score;
+    }
+  }
+  
+  document.getElementById('distance').textContent=Math.floor(dist)+'m';
+}
+
+function draw(){
+  ctx.fillStyle='#0a0e18';ctx.fillRect(0,0,W,H);
+  // Lane lines
+  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;
+  for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(W*(i/3.5+.07),0);ctx.lineTo(W*(i/3.5+.07),H);ctx.stroke();}
+  // Speed lines
+  ctx.strokeStyle='rgba(255,255,255,.03)';
+  for(let i=0;i<10;i++){const y=(Date.now()/10+i*80)%H;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  
+  // Obstacles
+  obstacles.forEach(o=>{
+    const x=LANES[o.lane]*W;
+    ctx.fillStyle='rgba(224,21,21,.8)';
+    ctx.fillRect(x-25,o.y-25,50,50);
+    ctx.strokeStyle='#ff4444';ctx.lineWidth=2;ctx.strokeRect(x-25,o.y-25,50,50);
+    ctx.fillStyle='#fff';ctx.font='20px serif';ctx.textAlign='center';ctx.fillText('⚠️',x,o.y+7);
+  });
+  
+  // Collectibles
+  collectibles.forEach(c=>{
+    const x=LANES[c.lane]*W;
+    ctx.fillStyle=COLORS[c.idx]+'33';
+    ctx.beginPath();ctx.arc(x,c.y,18,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=COLORS[c.idx];ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 9px Chakra Petch';ctx.textAlign='center';
+    ctx.fillText(DOCTRINES[c.idx].substring(0,4),x,c.y+4);
+  });
+  
+  // Player
+  const px=LANES[player.lane]*W;const py=H-80+player.y;
+  ctx.fillStyle='#ff6b35';
+  ctx.beginPath();ctx.moveTo(px,py-20);ctx.lineTo(px-15,py+15);ctx.lineTo(px+15,py+15);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+  // Glow
+  ctx.shadowColor='#ff6b35';ctx.shadowBlur=20;
+  ctx.fillStyle='#ff6b3544';ctx.beginPath();ctx.arc(px,py,25,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;
+  
+  updateParticles();
+}
+
+function gameLoop(){
+  if(!running)return;
+  update();draw();
+  animId=requestAnimationFrame(gameLoop);
+}
+
+function startGame(){
+  audioCtx.resume();
+  document.getElementById('overlay').classList.add('hidden');
+  running=true;player={lane:1,y:0,vy:0,jumping:false};
+  obstacles=[];collectibles=[];dist=0;score=0;lives=3;stage=1;speed=5;spawnTimer=0;
+  document.getElementById('score').textContent='0';
+  document.getElementById('lives').textContent='3';
+  document.getElementById('stage').textContent='1';
+  document.getElementById('distance').textContent='0m';
+  gameLoop();
+}
+
+function gameOver(){
+  running=false;cancelAnimationFrame(animId);
+  playTone(200,.5,'sawtooth',.3);
+  document.getElementById('overlay').classList.remove('hidden');
+  document.querySelector('.start-title').textContent='OYUN BİTTİ';
+  document.querySelector('.start-desc').textContent=`Skor: ${score} | Mesafe: ${Math.floor(dist)}m | Etap: ${stage}`;
+  document.querySelector('.start-btn').textContent='YENİDEN BAŞLAT';
+}
+
+document.addEventListener('keydown',e=>{
+  if(!running)return;
+  if((e.key==='ArrowLeft'||e.key==='a')&&player.lane>0){player.lane--;sfxCollect();}
+  if((e.key==='ArrowRight'||e.key==='d')&&player.lane<2){player.lane++;sfxCollect();}
+  if(e.key===' '&&!player.jumping){player.jumping=true;player.vy=-18;playTone(440,.1,'sine',.1);}
+});
+// Touch controls
+let touchX=0;
+canvas.addEventListener('touchstart',e=>{touchX=e.touches[0].clientX});
+canvas.addEventListener('touchend',e=>{
+  if(!running)return;
+  const dx=e.changedTouches[0].clientX-touchX;
+  if(Math.abs(dx)<30){if(!player.jumping){player.jumping=true;player.vy=-18;}}
+  else if(dx<0&&player.lane>0)player.lane--;
+  else if(dx>0&&player.lane<2)player.lane++;
+});
+</script>
+</body>
+</html>

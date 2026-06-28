@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Askerî Hafıza — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:20px 16px 80px}
+.stats{display:flex;gap:10px;margin-bottom:16px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;flex:1}
+.sval{font-size:20px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.grid{display:grid;gap:8px;margin-bottom:16px}
+.card-cell{aspect-ratio:1;background:var(--panel);border:2px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;transition:all .2s;user-select:none}
+.card-cell.flipped{background:rgba(0,224,255,.1);border-color:var(--cyan)}
+.card-cell.matched{background:rgba(0,255,136,.1);border-color:var(--green);cursor:default}
+.card-cell.wrong{background:rgba(224,21,21,.1);border-color:var(--red);animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.card-cell.hidden{font-size:0}
+.msg{text-align:center;font-size:14px;color:var(--dim);margin-bottom:12px;min-height:20px}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:var(--cyan);color:#000}
+.overlay{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+.big{font-size:48px;font-weight:700;color:var(--cyan)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🧠 ASKERİ HAFIZA</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="stats">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--cyan)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-moves" style="color:var(--gold)">0</div><div class="slbl">HAMLELEr</div></div>
+  <div class="sbox"><div class="sval" id="s-pairs" style="color:var(--green)">0/8</div><div class="slbl">EŞLEŞTİ</div></div>
+  <div class="sbox"><div class="sval" id="s-best" style="color:var(--dim)">—</div><div class="slbl">EN İYİ</div></div>
+</div>
+<div class="msg" id="msg">Kartları eşleştir!</div>
+<div class="grid" id="grid" style="grid-template-columns:repeat(4,1fr)"></div>
+<div id="end-area"></div>
+<button class="btn" id="start-btn" onclick="startGame()">▶ YENİ OYUN</button>
+</div>
+<script>
+var SYMBOLS=['🚁','🛸','⚔️','🛡️','💣','🔭','🎯','📡'];
+var cards=[],flipped=[],matched=0,moves=0,pts=0,locked=false;
+var best=Infinity;
+try{best=parseInt(localStorage.getItem('mini_hafiza_best')||'9999');}catch(e){}
+if(best<9999)document.getElementById('s-best').textContent=best;
+
+function startGame(){
+  document.getElementById('start-btn').style.display='none';
+  document.getElementById('end-area').innerHTML='';
+  var pairs=SYMBOLS.concat(SYMBOLS).sort(function(){return Math.random()-.5;});
+  cards=pairs.map(function(s,i){return {id:i,symbol:s,flipped:false,matched:false};});
+  flipped=[];matched=0;moves=0;pts=0;locked=false;
+  renderGrid();
+  // Preview: show all cards for 2 seconds
+  locked=true;
+  cards.forEach(function(c){c.flipped=true;});
+  renderGrid();
+  setTimeout(function(){
+    cards.forEach(function(c){c.flipped=false;});
+    renderGrid();
+    locked=false;
+  },2000);
+  updateStats();
+}
+
+function renderGrid(){
+  document.getElementById('grid').innerHTML=cards.map(function(c,i){
+    var cls='card-cell'+(c.matched?' matched':c.flipped?' flipped':' hidden');
+    return '<div class="'+cls+'" id="c'+i+'" onclick="flipCard('+i+')">'+(c.flipped||c.matched?c.symbol:'🔒')+'</div>';
+  }).join('');
+}
+
+function flipCard(i){
+  if(locked)return;
+  var c=cards[i];
+  if(c.matched||c.flipped)return;
+  if(flipped.length>=2)return;
+  c.flipped=true;
+  flipped.push(i);
+  var el=document.getElementById('c'+i);
+  el.textContent=c.symbol;
+  el.className='card-cell flipped';
+  if(flipped.length===2){
+    moves++;
+    updateStats();
+    locked=true;
+    setTimeout(checkMatch,700);
+  }
+}
+
+function checkMatch(){
+  var a=cards[flipped[0]],b=cards[flipped[1]];
+  if(a.symbol===b.symbol){
+    a.matched=b.matched=true;
+    matched++;
+    pts+=100;
+    document.getElementById('c'+flipped[0]).className='card-cell matched';
+    document.getElementById('c'+flipped[1]).className='card-cell matched';
+    document.getElementById('msg').textContent='✅ Eşleşti! +100 puan';
+    if(matched===8){endGame();}
+  } else {
+    a.flipped=b.flipped=false;
+    document.getElementById('c'+flipped[0]).className='card-cell wrong';
+    document.getElementById('c'+flipped[1]).className='card-cell wrong';
+    setTimeout(function(){
+      document.getElementById('c'+flipped[0]).className='card-cell hidden';
+      document.getElementById('c'+flipped[0]).textContent='🔒';
+      document.getElementById('c'+flipped[1]).className='card-cell hidden';
+      document.getElementById('c'+flipped[1]).textContent='🔒';
+    },300);
+    document.getElementById('msg').textContent='❌ Eşleşmedi';
+  }
+  flipped=[];
+  locked=false;
+  updateStats();
+}
+
+function endGame(){
+  if(moves<best){best=moves;try{localStorage.setItem('mini_hafiza_best',best);}catch(e){}}
+  var bonus=Math.max(0,500-(moves-8)*20);
+  pts+=bonus;
+  try{
+    var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    sc['mobil-hafiza']=Math.max(sc['mobil-hafiza']||0,pts);
+    localStorage.setItem('hs_scores',JSON.stringify(sc));
+  }catch(e){}
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+  document.getElementById('s-best').textContent=best+' hamle';
+  document.getElementById('end-area').innerHTML='<div class="overlay"><div style="font-size:40px">🏆</div><div class="big">'+pts+'</div><div style="font-size:13px;color:var(--dim)">'+moves+' hamlede tamamlandı!</div></div>';
+  document.getElementById('start-btn').style.display='';
+}
+
+function updateStats(){
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('s-moves').textContent=moves;
+  document.getElementById('s-pairs').textContent=matched+'/8';
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+}
+
+startGame();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="tr" data-hs-skip>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>İHA FABRİKA: ÜRETİM HATTI — OZA Arcade</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080c14;color:#e8eaf0;font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+a{color:#00e0ff;text-decoration:none}
+.back{position:fixed;top:12px;left:12px;font-size:13px;padding:6px 14px;border:1px solid rgba(0,224,255,.3);border-radius:6px;z-index:100;background:rgba(8,12,20,.8)}
+.back:hover{background:rgba(0,224,255,.1)}
+h1{font-family:'Courier New',monospace;font-size:clamp(18px,4vw,28px);text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:2px}
+h1 .icon{font-size:1.2em}
+.sub{color:#9ca3af;font-size:clamp(11px,2vw,14px);text-align:center;margin-bottom:16px;font-family:'Courier New',monospace}
+.game-wrap{display:flex;gap:20px;align-items:flex-start;justify-content:center;width:95%;max-width:1100px;flex-wrap:wrap}
+.game-area{flex:1;min-width:300px;max-width:550px}
+.info-panel{width:320px;max-height:80vh;overflow-y:auto;background:rgba(15,21,32,.9);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;font-size:13px;line-height:1.7}
+.info-panel h2{color:#f59e0b;font-family:'Courier New',monospace;font-size:15px;margin-bottom:10px;text-transform:uppercase}
+.info-panel h3{color:#f59e0b;font-size:13px;margin:14px 0 6px}
+.info-panel ul{list-style:none;padding:0}
+.info-panel li::before{content:"▸ ";color:#f59e0b}
+.info-panel li{margin:4px 0}
+canvas{display:block;border-radius:10px;border:2px solid #f59e0b;box-shadow:0 0 30px #f59e0b33;max-width:100%}
+.hud{display:flex;gap:16px;justify-content:center;padding:10px;font-family:'Courier New',monospace;font-size:clamp(11px,2vw,14px);background:rgba(15,21,32,.9);border-radius:8px;border:1px solid rgba(255,255,255,.08);margin-bottom:10px}
+.hud span{color:#9ca3af}
+.hud b{color:#f59e0b}
+.btn{display:block;margin:16px auto;padding:14px 40px;font-size:16px;font-weight:700;border:none;border-radius:8px;cursor:pointer;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:1px;transition:.2s}
+.mobile-controls{display:none;gap:10px;justify-content:center;margin-top:10px}
+.mobile-controls button{width:60px;height:60px;border-radius:50%;border:2px solid #f59e0b;background:rgba(0,224,255,.1);color:#fff;font-size:20px;cursor:pointer}
+@media(max-width:768px){
+  .game-wrap{flex-direction:column;align-items:center}
+  .info-panel{width:95%;max-height:200px}
+  .mobile-controls{display:flex}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" class="back">← OZA Hub</a>
+
+<h1><span class="icon">🏭</span> İHA FABRİKA <span class="icon">🏭</span></h1>
+<p class="sub">İHA üretim hattını yönet. Siparişleri zamanında teslim et!</p>
+<div class="game-wrap">
+<div class="game-area">
+  <div class="hud">
+    <span>SEVİYE: <b id="hLvl">1</b></span>
+    <span>BÜTÇE: <b id="hBudget">500</b>M$</span>
+    <span>ÜRETİM: <b id="hProd">0</b></span>
+    <span>SİPARİŞ: <b id="hOrder">0/3</b></span>
+  </div>
+  <canvas id="gc" width="520" height="480"></canvas>
+  <div class="mobile-controls">
+    <button id="mbBuild">🏗️ İnşa</button>
+    <button id="mbUpgrade">⬆️ Yükselt</button>
+    <button id="mbShip">📦 Teslim</button>
+  </div>
+</div>
+<div class="info-panel">
+  <h2>🏭 İHA FABRİKA</h2>
+  <p>Türk İHA üretim hattını yönet!</p>
+  <h3>NASIL OYNANIR</h3>
+  <ul>
+    <li>Üretim istasyonlarına tıklayarak İHA üret</li>
+    <li>Hammadde topla → Montaj yap → Test et → Teslim et</li>
+    <li>Siparişleri zamanında tamamla</li>
+    <li>Kazancınla fabrikayı büyüt</li>
+  </ul>
+  <h3>İHA TİPLERİ</h3>
+  <ul>
+    <li><b>TB2 (Temel):</b> 50M$ | 3 parça | 10sn</li>
+    <li><b>Akıncı (Gelişmiş):</b> 150M$ | 5 parça | 20sn</li>
+    <li><b>Kızılelma (İleri):</b> 300M$ | 8 parça | 35sn</li>
+    <li><b>ANKA-3 (Stealth):</b> 500M$ | 10 parça | 50sn</li>
+  </ul>
+  <h3>FABRİKA MODÜLLER</h3>
+  <ul>
+    <li><b>Hammadde Deposu:</b> Kapasiteyi artırır</li>
+    <li><b>Montaj Hattı:</b> Üretim hızını artırır</li>
+    <li><b>Test Pisti:</b> Kaliteyi artırır</li>
+    <li><b>AR-GE Merkezi:</b> Yeni İHA tiplerini açar</li>
+  </ul>
+</div>
+</div>
+<script>
+(function(){
+const canvas=document.getElementById('gc'),ctx=canvas.getContext('2d');
+const W=520,H=480;
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+function playSound(freq,dur,type='square'){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(.12,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);
+}
+
+const IHAS=[
+  {name:'TB2',cost:50,parts:3,time:600,reward:80,emoji:'🛩️'},
+  {name:'Akıncı',cost:150,parts:5,time:1200,reward:250,emoji:'✈️'},
+  {name:'Kızılelma',cost:300,parts:8,time:2100,reward:500,emoji:'🦅'},
+  {name:'ANKA-3',cost:500,parts:10,time:3000,reward:800,emoji:'🚀'}
+];
+
+let level=1,budget=500,totalProduced=0,
+    orders=[],productionSlots=[],
+    unlockedIHA=1,factoryLevel=1,
+    frame=0,gameActive=true;
+
+function generateOrder(){
+  let type=Math.min(Math.floor(Math.random()*unlockedIHA),IHAS.length-1);
+  let qty=Math.floor(Math.random()*3)+1;
+  let deadline=IHAS[type].time*qty*1.5;
+  return{type,qty,produced:0,deadline,timer:deadline};
+}
+
+function initLevel(){
+  orders=[];productionSlots=[];
+  for(let i=0;i<Math.min(2+Math.floor(level/3),5);i++){
+    orders.push(generateOrder());
+  }
+  productionSlots=[];
+  for(let i=0;i<Math.min(2+Math.floor(level/2),4);i++){
+    productionSlots.push({active:false,type:0,progress:0,total:0});
+  }
+}
+
+function startProduction(slotIdx,ihaType){
+  if(budget<IHAS[ihaType].cost)return;
+  if(productionSlots[slotIdx].active)return;
+  budget-=IHAS[ihaType].cost;
+  productionSlots[slotIdx]={active:true,type:ihaType,progress:0,total:IHAS[ihaType].time};
+  playSound(440,.1,'triangle');
+  updateHUD();
+}
+
+function deliverToOrder(ihaType){
+  let order=orders.find(o=>o.type===ihaType&&o.produced<o.qty);
+  if(order){
+    order.produced++;totalProduced++;
+    budget+=IHAS[ihaType].reward;
+    playSound(880,.2,'sine');
+    if(order.produced>=order.qty){
+      let bonus=Math.floor(order.timer/10);
+      budget+=bonus;
+      playSound(1046,.3,'sine');
+    }
+    updateHUD();
+  }
+}
+
+canvas.addEventListener('click',e=>{
+  if(!gameActive)return;
+  let rect=canvas.getBoundingClientRect();
+  let mx=(e.clientX-rect.left)*(W/rect.width);
+  let my=(e.clientY-rect.top)*(H/rect.height);
+  
+  // Click on production slots (bottom area)
+  let slotY=340;
+  productionSlots.forEach((slot,i)=>{
+    let sx=20+i*130,sy=slotY;
+    if(mx>sx&&mx<sx+120&&my>sy&&my<sy+100){
+      if(!slot.active){
+        // Show IHA selection (cycle through types)
+        let type=i%unlockedIHA;
+        startProduction(i,type);
+      }
+    }
+  });
+  
+  // Click on IHA type buttons (top)
+  IHAS.forEach((iha,i)=>{
+    if(i>=unlockedIHA)return;
+    let bx=20+i*130,by=20;
+    if(mx>bx&&mx<bx+120&&my>by&&my<by+60){
+      // Find empty slot
+      let emptySlot=productionSlots.findIndex(s=>!s.active);
+      if(emptySlot>=0)startProduction(emptySlot,i);
+    }
+  });
+});
+
+function updateHUD(){
+  document.getElementById('hLvl').textContent=level;
+  document.getElementById('hBudget').textContent=budget;
+  document.getElementById('hProd').textContent=totalProduced;
+  let completed=orders.filter(o=>o.produced>=o.qty).length;
+  document.getElementById('hOrder').textContent=completed+'/'+orders.length;
+}
+
+function checkLevelComplete(){
+  if(orders.every(o=>o.produced>=o.qty)){
+    level++;
+    if(level%3===0&&unlockedIHA<IHAS.length)unlockedIHA++;
+    budget+=100*level;
+    playSound(523,.2,'sine');playSound(659,.2,'sine');playSound(784,.3,'sine');
+    setTimeout(()=>{initLevel();updateHUD();},1000);
+  }
+  // Check if any order timed out
+  if(orders.some(o=>o.timer<=0&&o.produced<o.qty)){
+    gameActive=false;
+  }
+}
+
+function draw(){
+  frame++;
+  ctx.fillStyle='#080c14';ctx.fillRect(0,0,W,H);
+  
+  // IHA type buttons (top)
+  IHAS.forEach((iha,i)=>{
+    let bx=20+i*130,by=20;
+    ctx.fillStyle=i<unlockedIHA?'rgba(245,158,11,.1)':'rgba(50,50,50,.3)';
+    ctx.strokeStyle=i<unlockedIHA?'#f59e0b':'#333';
+    ctx.lineWidth=1;ctx.strokeRect(bx,by,120,55);ctx.fillRect(bx,by,120,55);
+    ctx.fillStyle=i<unlockedIHA?'#fff':'#555';ctx.font='bold 13px Courier New';ctx.textAlign='center';
+    ctx.fillText(iha.emoji+' '+iha.name,bx+60,by+22);
+    ctx.fillStyle=i<unlockedIHA?'#f59e0b':'#555';ctx.font='11px Courier New';
+    ctx.fillText(iha.cost+'M$',bx+60,by+42);
+  });
+  
+  // Orders (middle)
+  ctx.fillStyle='#9ca3af';ctx.font='bold 12px Courier New';ctx.textAlign='left';
+  ctx.fillText('SİPARİŞLER:',20,110);
+  orders.forEach((order,i)=>{
+    let ox=20,oy=125+i*50;
+    let iha=IHAS[order.type];
+    ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(ox,oy,W-40,42);
+    ctx.strokeStyle=order.produced>=order.qty?'#10b981':order.timer<300?'#ef4444':'rgba(255,255,255,.1)';
+    ctx.strokeRect(ox,oy,W-40,42);
+    ctx.fillStyle='#fff';ctx.font='13px Courier New';ctx.textAlign='left';
+    ctx.fillText(iha.emoji+' '+iha.name+' x'+order.qty,ox+10,oy+18);
+    ctx.fillStyle=order.produced>=order.qty?'#10b981':'#f59e0b';
+    ctx.fillText(order.produced+'/'+order.qty+' teslim',ox+10,oy+35);
+    // Timer bar
+    let barW=150,barX=W-190;
+    ctx.fillStyle='rgba(255,255,255,.1)';ctx.fillRect(barX,oy+15,barW,8);
+    ctx.fillStyle=order.timer<300?'#ef4444':'#10b981';
+    ctx.fillRect(barX,oy+15,barW*(order.timer/order.deadline),8);
+    ctx.fillStyle='#6b7280';ctx.font='10px Courier New';
+    ctx.fillText(Math.ceil(order.timer/60)+'s',barX+barW+5,oy+23);
+  });
+  
+  // Production slots (bottom)
+  ctx.fillStyle='#9ca3af';ctx.font='bold 12px Courier New';ctx.textAlign='left';
+  ctx.fillText('ÜRETİM HATLARI:',20,330);
+  productionSlots.forEach((slot,i)=>{
+    let sx=20+i*130,sy=345;
+    ctx.fillStyle=slot.active?'rgba(245,158,11,.08)':'rgba(255,255,255,.03)';
+    ctx.strokeStyle=slot.active?'#f59e0b':'rgba(255,255,255,.1)';
+    ctx.lineWidth=1;ctx.strokeRect(sx,sy,120,100);ctx.fillRect(sx,sy,120,100);
+    if(slot.active){
+      let iha=IHAS[slot.type];
+      ctx.fillStyle='#fff';ctx.font='bold 12px Courier New';ctx.textAlign='center';
+      ctx.fillText(iha.emoji+' '+iha.name,sx+60,sy+25);
+      // Progress bar
+      let prog=slot.progress/slot.total;
+      ctx.fillStyle='rgba(255,255,255,.1)';ctx.fillRect(sx+10,sy+40,100,12);
+      ctx.fillStyle='#f59e0b';ctx.fillRect(sx+10,sy+40,100*prog,12);
+      ctx.fillStyle='#fff';ctx.font='10px Courier New';
+      ctx.fillText(Math.floor(prog*100)+'%',sx+60,sy+70);
+      // Animated dots
+      let dots='.'.repeat(Math.floor(frame/20)%4);
+      ctx.fillText('Üretiliyor'+dots,sx+60,sy+88);
+    }else{
+      ctx.fillStyle='#6b7280';ctx.font='12px Courier New';ctx.textAlign='center';
+      ctx.fillText('BOŞ',sx+60,sy+45);
+      ctx.fillText('Tıkla →',sx+60,sy+65);
+      ctx.fillText('Üret',sx+60,sy+80);
+    }
+  });
+  
+  ctx.textAlign='left';
+  
+  // Update production
+  if(gameActive&&frame%1===0){
+    productionSlots.forEach(slot=>{
+      if(slot.active){
+        slot.progress+=factoryLevel;
+        if(slot.progress>=slot.total){
+          slot.active=false;
+          deliverToOrder(slot.type);
+          playSound(660,.15);
+        }
+      }
+    });
+    // Update order timers
+    orders.forEach(o=>{if(o.produced<o.qty)o.timer--;});
+    checkLevelComplete();
+  }
+  
+  if(!gameActive){
+    ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#ef4444';ctx.font='bold 24px Courier New';ctx.textAlign='center';
+    ctx.fillText('SİPARİŞ SÜRESİ DOLDU!',W/2,H/2-20);
+    ctx.fillStyle='#fff';ctx.font='16px Courier New';
+    ctx.fillText('Toplam Üretim: '+totalProduced+' İHA',W/2,H/2+20);
+    ctx.fillText('Seviye: '+level,W/2,H/2+50);
+    ctx.fillText('Tıkla → Yeniden',W/2,H/2+80);
+    canvas.onclick=()=>location.reload();
+    ctx.textAlign='left';
+  }
+  
+  requestAnimationFrame(draw);
+}
+
+initLevel();updateHUD();draw();
+
+// Mobile buttons
+document.getElementById('mbBuild').onclick=()=>{
+  let emptySlot=productionSlots.findIndex(s=>!s.active);
+  if(emptySlot>=0)startProduction(emptySlot,0);
+};
+document.getElementById('mbUpgrade').onclick=()=>{
+  if(budget>=200){budget-=200;factoryLevel++;playSound(880,.2,'triangle');updateHUD();}
+};
+document.getElementById('mbShip').onclick=()=>{};
+})();
+</script>
+</body></html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Tarihte İlkler — Swipe Challenge | OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0f17;--card:#141c2b;--border:rgba(0,224,255,.15);--cyan:#00E0FF;--gold:#C9A24B;--red:#E01515;--green:#10b981;--purple:#a78bfa;--text:#EAF0F7;--dim:#6b7b8f}
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap');
+html,body{height:100%;overflow:hidden;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text)}
+.app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative}
+/* Header */
+.hdr{padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);z-index:100}
+.hdr-back{color:var(--dim);text-decoration:none;font-size:20px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:var(--cyan)}
+.hdr-score{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold)}
+.hdr-streak{font-size:11px;color:var(--red);margin-left:8px}
+/* Progress */
+.progress{height:3px;background:rgba(255,255,255,.05)}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));transition:width .3s}
+/* Card Stack */
+.stack{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:16px}
+.card{position:absolute;width:calc(100% - 32px);max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 24px;touch-action:none;cursor:grab;transition:transform .1s,opacity .2s;will-change:transform}
+.card.exit-left{transform:translateX(-120%) rotate(-15deg)!important;opacity:0;transition:.4s cubic-bezier(.19,1,.22,1)}
+.card.exit-right{transform:translateX(120%) rotate(15deg)!important;opacity:0;transition:.4s cubic-bezier(.19,1,.22,1)}
+.card-era{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.card-cat{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;background:rgba(167,139,250,.15);color:var(--purple);margin-bottom:14px}
+.card-question{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700;line-height:1.3;margin-bottom:20px}
+.card-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.option{padding:14px 12px;border:1px solid var(--border);border-radius:12px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent}
+.option:hover{border-color:var(--cyan);background:rgba(0,224,255,.05)}
+.option.correct{border-color:var(--green);background:rgba(16,185,129,.15);color:var(--green);animation:pulse .3s}
+.option.wrong{border-color:var(--red);background:rgba(224,21,21,.1);color:var(--red);animation:shake .3s}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+/* Reveal */
+.card-reveal{display:none;margin-top:16px;padding:14px;background:rgba(0,224,255,.04);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;font-size:12px;line-height:1.6;color:var(--dim)}
+.card-reveal.show{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* Swipe Indicators */
+.swipe-hint{position:absolute;top:50%;transform:translateY(-50%);font-size:24px;opacity:0;transition:.2s;pointer-events:none}
+.swipe-hint.left{left:20px;color:var(--red)}
+.swipe-hint.right{right:20px;color:var(--green)}
+/* Bottom */
+.bottom{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.btn-skip{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:none;color:var(--dim);font-size:12px;cursor:pointer}
+.btn-next{padding:8px 20px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;font-size:12px;font-weight:600;cursor:pointer;opacity:0;transition:.3s}
+.btn-next.show{opacity:1}
+.combo{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold)}
+/* Intro */
+.intro{position:fixed;inset:0;z-index:1000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px}
+.intro h1{font-family:'Chakra Petch',sans-serif;font-size:28px;color:var(--cyan);margin-bottom:12px}
+.intro p{color:var(--dim);font-size:14px;max-width:300px;line-height:1.6;margin-bottom:24px}
+.intro .start-btn{padding:14px 40px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;font-size:15px;font-weight:700;cursor:pointer;font-family:'Chakra Petch',sans-serif}
+.intro .cat-select{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
+.intro .cat-btn{padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:none;color:var(--dim);font-size:11px;cursor:pointer;transition:.2s}
+.intro .cat-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,224,255,.1)}
+/* Result */
+.result{display:none;position:fixed;inset:0;z-index:1000;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px}
+.result.show{display:flex}
+.result h2{font-family:'Chakra Petch',sans-serif;font-size:24px;color:var(--gold);margin-bottom:8px}
+.result .score-big{font-size:48px;font-weight:700;color:var(--cyan);font-family:'Chakra Petch',sans-serif}
+.result .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0}
+.result .stat{padding:12px;border:1px solid var(--border);border-radius:10px}
+.result .stat-val{font-size:18px;font-weight:700;color:var(--text)}
+.result .stat-lbl{font-size:10px;color:var(--dim)}
+.result .retry-btn{padding:12px 32px;border:none;border-radius:10px;background:var(--cyan);color:#000;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px}
+.hidden{display:none!important}
+/* Sound toggle */
+.sound-btn{position:fixed;bottom:70px;right:16px;z-index:200;width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--dim);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <h1>⚔️ TARİHTE İLKLER</h1>
+  <p>Türk tarihinin ilklerini test et! Doğru cevapla puan kazan, seri yap, rekor kır.</p>
+  <div class="cat-select" id="catSelect"></div>
+  <button class="start-btn" onclick="startGame()">BAŞLA →</button>
+</div>
+
+<!-- RESULT -->
+<div class="result" id="result">
+  <h2>🏆 SONUÇ</h2>
+  <div class="score-big" id="finalScore">0</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="statCorrect">0</div><div class="stat-lbl">DOĞRU</div></div>
+    <div class="stat"><div class="stat-val" id="statWrong">0</div><div class="stat-lbl">YANLIŞ</div></div>
+    <div class="stat"><div class="stat-val" id="statStreak">0</div><div class="stat-lbl">EN İYİ SERİ</div></div>
+  </div>
+  <button class="retry-btn" onclick="location.reload()">TEKRAR OYNA</button>
+</div>
+
+<!-- GAME -->
+<div class="app" id="gameApp">
+  <div class="hdr">
+    <a href="oza-hub.html" class="hdr-back">←</a>
+    <span class="hdr-title">TARİHTE İLKLER</span>
+    <span class="hdr-score" id="score">0 XP</span>
+    <span class="hdr-streak" id="streak"></span>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="stack" id="stack"></div>
+  <div class="bottom">
+    <button class="btn-skip" onclick="skipCard()">ATLA →</button>
+    <span class="combo" id="combo"></span>
+    <button class="btn-next" id="btnNext" onclick="nextCard()">SONRAKİ →</button>
+  </div>
+</div>
+
+<div class="sound-btn" id="soundBtn" onclick="toggleSound()">🔊</div>
+
+<script>
+// DATA - Türk Tarihi İlkleri (Z/Alfa kuşağı quiz formatı)
+const ALL_DATA = {
+turk: [
+{q:"Tarihte kurulan ilk Türk devleti hangisidir?",a:"Asya Hun Devleti",opts:["Asya Hun Devleti","Göktürk","Uygur","Avar"],cat:"Devlet",era:"MÖ 220",desc:"Teoman tarafından kurulan Asya Hun Devleti, Orta Asyada Türklerin bilinen ilk siyasi teşkilatlanmasıdır."},
+{q:"'Türk' adını resmi olarak kullanan ilk devlet?",a:"I. Göktürk Devleti",opts:["I. Göktürk Devleti","Uygurlar","Hunlar","Karluklar"],cat:"Devlet",era:"552",desc:"Bumin Kağan liderliğinde 552de kurulan I. Göktürk Devleti, 'Türk' adını resmi olarak kullanan ilk devlettir."},
+{q:"Yerleşik yaşama geçen ilk Türk devleti?",a:"Uygurlar",opts:["Uygurlar","Karahanlılar","Selçuklular","Göktürkler"],cat:"Kültür",era:"744",desc:"Uygurlar göçebe yaşamı terk ederek şehirler kurmuş, tarım ve ticaretle geçimlerini sağlamışlardır."},
+{q:"İlk Türk alfabesini bulan devlet?",a:"Göktürkler",opts:["Göktürkler","Uygurlar","Hunlar","Kırgızlar"],cat:"Kültür",era:"6. yy",desc:"Göktürkler kendi adlarıyla anılan ilk Türk alfabesini geliştirmiş, Orhun Yazıtları bu alfabeyle yazılmıştır."},
+{q:"Avrupada kurulan ilk Türk devleti?",a:"Avrupa Hun Devleti",opts:["Avrupa Hun Devleti","Avar","Bulgar","Peçenek"],cat:"Devlet",era:"375",desc:"Balamir komutasında batıya göç eden Hunlar, Kavimler Göçünü başlatarak Romanın yıkılışını hızlandırmışlardır."},
+{q:"İstanbulu ilk kuşatan Türkler?",a:"Avarlar",opts:["Avarlar","Hunlar","Göktürkler","Peçenekler"],cat:"Askerî",era:"619",desc:"Avarlar, Sasanilerle ittifak kurarak Konstantinopolisi kuşatmışlardır."},
+{q:"İslamiyeti kabul eden ilk Türk topluluğu?",a:"Karluklar",opts:["Karluklar","Oğuzlar","Karahanlılar","Kıpçaklar"],cat:"Din",era:"751",desc:"Talas Savaşında Abbasilerin yanında yer alan Karluklar, İslamiyeti kabul eden ilk Türk topluluğudur."},
+{q:"İlk düzenli Türk ordusunu kuran hükümdar?",a:"Mete Han",opts:["Mete Han","Teoman","Attila","Bumin Kağan"],cat:"Askerî",era:"MÖ 209",desc:"Mete Han, orduyu onluk sisteme göre düzenlemiş ve bu sistem yüzyıllarca kullanılmıştır."},
+{q:"Bilinen ilk Türk hükümdarı?",a:"Tomris Hatun",opts:["Tomris Hatun","Teoman","Mete Han","Balamir"],cat:"Devlet",era:"MÖ 530",desc:"İskit kraliçesi Tomris, Pers İmparatoru Büyük Kirosu mağlup ederek öldürmüştür."},
+{q:"En uzun Türk destanı hangisidir?",a:"Manas Destanı",opts:["Manas Destanı","Oğuz Kağan","Ergenekon","Alp Er Tunga"],cat:"Kültür",era:"9. yy",desc:"500.000 mısradan oluşan Manas Destanı, dünyanın en uzun destanıdır."},
+],
+osmanli: [
+{q:"İlk Osmanlı parası kimin döneminde basıldı?",a:"Osman Bey",opts:["Osman Bey","Orhan Bey","I. Murat","Fatih"],cat:"Ekonomi",era:"1299",desc:"İlk Osmanlı akçesi Osman Bey döneminde basılmıştır."},
+{q:"Osmanlının aldığı ilk beylik?",a:"Karesi Beyliği",opts:["Karesi Beyliği","Saruhan","Aydınoğlu","Germiyanoğlu"],cat:"Devlet",era:"1345",desc:"Karesi Beyliğinin alınması Osmanlıya denizcilik gücü kazandırmıştır."},
+{q:"İlk Osmanlı donanması kimin döneminde kuruldu?",a:"Orhan Bey",opts:["Orhan Bey","I. Murat","Yıldırım","Fatih"],cat:"Askerî",era:"1327",desc:"Orhan Bey döneminde ilk donanma oluşturulmuş ve Rumeliye geçiş sağlanmıştır."},
+{q:"İlk kez top kullanan Osmanlı padişahı?",a:"I. Murat",opts:["I. Murat","Fatih","Yıldırım","II. Mehmet"],cat:"Askerî",era:"1389",desc:"I. Murat döneminde ilk defa top kullanılmıştır."},
+{q:"İlk Osmanlı tersanesi nerede kuruldu?",a:"Gelibolu",opts:["Gelibolu","İstanbul","İzmir","Sinop"],cat:"Askerî",era:"1390",desc:"Yıldırım Bayezid tarafından Geliboluda kurulan tersane, Osmanlı deniz gücünün temelini oluşturmuştur."},
+{q:"Osmanlının ilk anayasası?",a:"Kanun-i Esasi (1876)",opts:["Kanun-i Esasi (1876)","Tanzimat Fermanı","Islahat Fermanı","Sened-i İttifak"],cat:"Hukuk",era:"1876",desc:"Mithat Paşa öncülüğünde ilan edilen Kanun-i Esasi, Osmanlının ilk anayasasıdır."},
+{q:"Osmanlının kazandığı son meydan muharebesi?",a:"Dömeke (1897)",opts:["Dömeke (1897)","Sakarya","Preveze","Mohaç"],cat:"Askerî",era:"1897",desc:"Osmanlı-Yunan Savaşındaki bu zafer, ordunun kazandığı son büyük meydan muharebesidir."},
+{q:"İlk kağıt para hangi padişah döneminde basıldı?",a:"Abdülmecit",opts:["Abdülmecit","II. Mahmut","Abdülhamit","V. Mehmet"],cat:"Ekonomi",era:"1840",desc:"Kaime adıyla ilk kağıt para Abdülmecit döneminde basılmıştır."},
+{q:"Osmanlıdan ayrılan ilk Balkan devleti?",a:"Yunanistan",opts:["Yunanistan","Sırbistan","Bulgaristan","Romanya"],cat:"Diplomasi",era:"1829",desc:"Yunanistan, 1829da bağımsızlığını kazanarak Osmanlıdan ayrılan ilk Balkan devletidir."},
+{q:"Osmanlının Batıdan aldığı ilk teknik araç?",a:"Matbaa",opts:["Matbaa","Telgraf","Tren","Top"],cat:"Teknoloji",era:"1727",desc:"İbrahim Müteferrikanın kurduğu matbaa, Osmanlının Batıdan aldığı ilk teknik araçtır."},
+],
+inkilap: [
+{q:"Kurtuluş Savaşının ilk siyasi belgesi?",a:"Amasya Genelgesi",opts:["Amasya Genelgesi","Erzurum Kongresi","Sivas Kongresi","Misak-ı Milli"],cat:"Milli Mücadele",era:"1919",desc:"22 Haziran 1919da yayımlanan Amasya Genelgesi, Kurtuluş Savaşının ilk siyasi belgesidir."},
+{q:"TBMMyi tanıyan ilk Müslüman devlet?",a:"Afganistan",opts:["Afganistan","İran","Azerbaycan","Mısır"],cat:"Diplomasi",era:"1921",desc:"Afganistan, TBMM hükümetini tanıyan ilk Müslüman devlettir."},
+{q:"TBMMyi tanıyan ilk İtilaf devleti?",a:"Fransa",opts:["Fransa","İngiltere","İtalya","ABD"],cat:"Diplomasi",era:"1921",desc:"Ankara Antlaşması ile Fransa, TBMMyi tanıyan ilk İtilaf devleti olmuştur."},
+{q:"Türkiyenin ilk siyasi partisi?",a:"Cumhuriyet Halk Fırkası",opts:["Cumhuriyet Halk Fırkası","Terakkiperver CF","Serbest CF","Demokrat Parti"],cat:"Siyasi",era:"1923",desc:"9 Eylül 1923te kurulan CHF, Türkiye Cumhuriyetinin ilk siyasi partisidir."},
+{q:"İlk çok partili seçim ne zaman yapıldı?",a:"1946",opts:["1946","1950","1924","1930"],cat:"Siyasi",era:"1946",desc:"Türkiyede ilk çok partili seçim 1946da yapılmıştır."},
+{q:"Atatürkün Başkomutan olarak katıldığı ilk savaş?",a:"Sakarya Meydan Muharebesi",opts:["Sakarya Meydan Muharebesi","Büyük Taarruz","I. İnönü","Dumlupınar"],cat:"Milli Mücadele",era:"1921",desc:"Mustafa Kemalin Başkomutan olarak katıldığı ilk savaş Sakarya Meydan Muharebesidir."},
+{q:"Laikliğin ilk aşaması hangisidir?",a:"Saltanatın Kaldırılması",opts:["Saltanatın Kaldırılması","Halifeliğin Kaldırılması","Tevhid-i Tedrisat","Medeni Kanun"],cat:"Atatürk",era:"1922",desc:"Saltanatın kaldırılması, din ve devlet işlerinin ayrılması sürecinin ilk adımıdır."},
+{q:"İlk güçler ayrılığı hangi anayasadadır?",a:"1961 Anayasası",opts:["1961 Anayasası","1924 Anayasası","1982 Anayasası","1921 Anayasası"],cat:"Hukuk",era:"1961",desc:"1961 Anayasası, Türkiyede ilk kez güçler ayrılığı ilkesini tam anlamıyla benimsemiştir."},
+{q:"'Kahraman' unvanı verilen ilk şehir?",a:"Maraş",opts:["Maraş","Antep","Urfa","Hatay"],cat:"Milli Mücadele",era:"1920",desc:"12 Şubat 1920de Fransız işgaline karşı direnen Maraşa 'Kahraman' unvanı verilmiştir."},
+{q:"Düzenli ordunun aldığı ilk ve tek yenilgi?",a:"Eskişehir-Kütahya",opts:["Eskişehir-Kütahya","I. İnönü","II. İnönü","Sakarya"],cat:"Milli Mücadele",era:"1921",desc:"Kurtuluş Savaşında düzenli ordunun aldığı ilk ve tek yenilgi Eskişehir-Kütahya Savaşlarıdır."},
+]
+};
+
+// Game State
+let currentCategory = 'all';
+let questions = [];
+let currentIdx = 0;
+let score = 0;
+let streak = 0;
+let maxStreak = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+let audioCtx = null;
+let soundEnabled = true;
+
+// Init categories
+const cats = ['all','turk','osmanli','inkilap'];
+const catLabels = {all:'TÜMÜ',turk:'TÜRK TARİHİ',osmanli:'OSMANLI',inkilap:'İNKILAP'};
+document.getElementById('catSelect').innerHTML = cats.map(c=>
+  `<button class="cat-btn${c==='all'?' active':''}" data-cat="${c}" onclick="selectCat('${c}')">${catLabels[c]}</button>`
+).join('');
+
+function selectCat(c){
+  currentCategory = c;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.toggle('active',b.dataset.cat===c));
+}
+
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+function startGame(){
+  document.getElementById('intro').classList.add('hidden');
+  if(currentCategory==='all'){
+    questions=[...ALL_DATA.turk,...ALL_DATA.osmanli,...ALL_DATA.inkilap];
+  } else {
+    questions=[...ALL_DATA[currentCategory]];
+  }
+  questions = shuffleArray(questions).slice(0,20);
+  renderCard();
+}
+
+function renderCard(){
+  if(currentIdx >= questions.length){endGame();return;}
+  const q = questions[currentIdx];
+  const opts = shuffleArray([...q.opts]);
+  const stack = document.getElementById('stack');
+  stack.innerHTML = `
+    <div class="card" id="currentCard">
+      <div class="card-era">${q.era}</div>
+      <div class="card-cat">${q.cat}</div>
+      <div class="card-question">${q.q}</div>
+      <div class="card-options">
+        ${opts.map(o=>`<div class="option" onclick="answer(this,'${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}')">${o}</div>`).join('')}
+      </div>
+      <div class="card-reveal" id="reveal">${q.desc||''}</div>
+    </div>
+  `;
+  answered = false;
+  document.getElementById('btnNext').classList.remove('show');
+  document.getElementById('progressFill').style.width = ((currentIdx/questions.length)*100)+'%';
+}
+
+function answer(el, selected, correctAns){
+  if(answered) return;
+  answered = true;
+  const options = document.querySelectorAll('.option');
+  if(selected === correctAns){
+    el.classList.add('correct');
+    score += 10 + streak*2;
+    streak++;
+    correct++;
+    if(streak > maxStreak) maxStreak = streak;
+    playSound('correct');
+  } else {
+    el.classList.add('wrong');
+    options.forEach(o=>{if(o.textContent===correctAns)o.classList.add('correct');});
+    streak = 0;
+    wrong++;
+    playSound('wrong');
+  }
+  document.getElementById('score').textContent = score + ' XP';
+  document.getElementById('streak').textContent = streak > 1 ? '🔥'+streak : '';
+  document.getElementById('combo').textContent = streak >= 3 ? 'COMBO x'+streak+'!' : '';
+  document.getElementById('reveal').classList.add('show');
+  document.getElementById('btnNext').classList.add('show');
+}
+
+function nextCard(){
+  currentIdx++;
+  renderCard();
+}
+
+function skipCard(){
+  if(!answered){wrong++;streak=0;}
+  currentIdx++;
+  renderCard();
+}
+
+function endGame(){
+  document.getElementById('gameApp').classList.add('hidden');
+  const r = document.getElementById('result');
+  r.classList.add('show');
+  document.getElementById('finalScore').textContent = score + ' XP';
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statStreak').textContent = maxStreak;
+  // Save to localStorage
+  const prev = parseInt(localStorage.getItem('hs_ilkler_best')||'0');
+  if(score > prev) localStorage.setItem('hs_ilkler_best', score);
+}
+
+// Sound
+function initAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+}
+function playSound(type){
+  if(!soundEnabled) return;
+  initAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  if(type==='correct'){osc.frequency.value=880;gain.gain.value=0.15;osc.type='sine';}
+  else{osc.frequency.value=220;gain.gain.value=0.1;osc.type='sawtooth';}
+  osc.start();gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.2);
+  osc.stop(audioCtx.currentTime+0.2);
+}
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  document.getElementById('soundBtn').textContent=soundEnabled?'🔊':'🔇';
+}
+
+// Touch swipe support
+let touchStartX = 0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if(Math.abs(diff)>80 && answered){
+    const card = document.getElementById('currentCard');
+    if(card){card.classList.add(diff>0?'exit-right':'exit-left');setTimeout(nextCard,300);}
+  }
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

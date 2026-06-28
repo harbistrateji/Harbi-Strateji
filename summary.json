@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-06-22T01:32:09.972988",
+  "status": "COMPLETE",
+  "tasks": {
+    "hibrit_mizanpaj": "✅ Tamamlandı",
+    "oza_menu": "✅ 26 oyun/simülasyon",
+    "kulliyat_menu": "✅ 148 içerik",
+    "hs_tv": "✅ 4 kanal",
+    "example_html": "✅ 4 dosya uyarlandı",
+    "yeni_simulasyonlar": "✅ 12 simülasyon",
+    "interaktif_infografik": "✅ 41 infografik",
+    "semantic_menu": "✅ 6 kategori",
+    "live_preview": "✅ Ana sayfa hazır"
+  },
+  "server_url": "http://localhost:8000/harbi-strateji-live",
+  "live_directory": "/home/ubuntu/harbi-strateji-live"
+}

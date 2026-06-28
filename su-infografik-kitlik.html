@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Küresel Su Kıtlığı & Teknolojileri — Harb-i Strateji</title>
+<style>
+:root{--bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#3498db;--txt:#e8eaf0;--dim:#6b7280;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;}
+.hero{background:linear-gradient(135deg,#050d18,#0a0a1a,#050d18);padding:50px 20px;text-align:center;border-bottom:2px solid var(--blue);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;pointer-events:none;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(52,152,219,.06),transparent 70%);}
+.hero-title{font-size:clamp(1.6rem,4vw,3rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;line-height:1.1;}
+.t1{color:var(--blue);}
+.t2{color:var(--cyan);}
+.hero-sub{font-size:.9rem;color:var(--gold);letter-spacing:2px;margin-top:8px;margin-bottom:28px;}
+.hero-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.nav-btn{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--dim);font-size:.78rem;cursor:pointer;transition:all .2s;text-decoration:none;}
+.nav-btn:hover{border-color:var(--blue);color:var(--blue);}
+.section{max-width:1400px;margin:0 auto;padding:50px 24px;}
+.sec-title{font-size:clamp(1.1rem,2.5vw,1.7rem);font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.sec-title span{color:var(--blue);}
+.sec-sub{font-size:.83rem;color:var(--dim);margin-bottom:28px;max-width:800px;line-height:1.6;}
+hr.sep{border:none;border-top:1px solid var(--border);margin:0;}
+/* CRISIS CARDS */
+.crisis-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.crisis-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;transition:all .2s;}
+.crisis-card:hover{transform:translateY(-3px);border-color:var(--blue);}
+.cc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.cc-icon{font-size:2rem;}
+.cc-title{font-size:.95rem;font-weight:700;}
+.cc-sub{font-size:.7rem;color:var(--dim);margin-top:2px;}
+.cc-stat{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.72rem;}
+.cc-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;margin:3px 0;overflow:hidden;}
+.cc-fill{height:100%;border-radius:3px;transition:width 1.5s ease;}
+/* TECH CARDS */
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+.tech-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s;}
+.tech-card:hover{transform:translateY(-3px);border-color:var(--cyan);}
+.tc-head{padding:14px;border-bottom:1px solid var(--border);}
+.tc-icon{font-size:2rem;margin-bottom:4px;}
+.tc-name{font-size:.95rem;font-weight:700;}
+.tc-body{padding:14px;}
+.tc-metric{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.72rem;}
+.tc-metals{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.tc-metal{padding:2px 7px;border-radius:4px;font-size:.62rem;font-weight:700;border:1px solid;}
+/* WATER WARS */
+.wars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.war-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;transition:all .2s;}
+.war-card:hover{border-color:var(--red);}
+.wc-title{font-size:.88rem;font-weight:700;color:var(--red);margin-bottom:6px;}
+.wc-parties{font-size:.72rem;color:var(--gold);margin-bottom:4px;}
+.wc-desc{font-size:.72rem;color:var(--dim);line-height:1.5;}
+.wc-risk{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.62rem;font-weight:700;margin-top:6px;}
+/* COUNTRY WATER */
+.cw-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.cw-flag{font-size:1.2rem;width:28px;}
+.cw-name{width:100px;font-size:.72rem;}
+.cw-bar-bg{flex:1;height:26px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;}
+.cw-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 8px;font-size:.7rem;font-weight:700;transition:width 1.5s ease;}
+.cw-val{width:60px;font-size:.75rem;font-weight:700;text-align:right;}
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.stat-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+.stat-val{font-size:2rem;font-weight:900;}
+.stat-lbl{font-size:.68rem;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+/* TABS */
+.tab-bar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.tab{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.78rem;color:var(--dim);transition:all .2s;}
+.tab.active{border-color:var(--blue);color:var(--blue);background:rgba(52,152,219,.08);}
+/* ALERT BANNER */
+.alert-banner{background:rgba(224,21,21,.08);border:1px solid var(--red);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:.82rem;display:flex;align-items:center;gap:10px;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">
+    <div class="t1">KÜRESEL SU KITLIĞI</div>
+    <div class="t2">& GELECEĞİN SU TEKNOLOJİLERİ</div>
+  </div>
+  <div class="hero-sub">💧 2050 Krizi | 🌍 Su Savaşları | 🔬 Nadir Metal Arıtma | ⚔️ Jeopolitik Gerilimler</div>
+  <div class="hero-nav">
+    <a href="#stats" class="nav-btn">📊 İstatistikler</a>
+    <a href="#crisis" class="nav-btn">🚨 Kriz Bölgeleri</a>
+    <a href="#wars" class="nav-btn">⚔️ Su Savaşları</a>
+    <a href="#tech" class="nav-btn">🔬 Teknolojiler</a>
+    <a href="#country" class="nav-btn">🌍 Ülke Analizi</a>
+    <a href="#turkey" class="nav-btn">🇹🇷 Türkiye</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="section" id="stats">
+  <div class="sec-title">📊 Küresel Su <span>Gerçekleri</span></div>
+  <div class="alert-banner">
+    🚨 <strong>2050 Uyarısı:</strong> Mevcut tüketim hızıyla 2050'de 4 milyar insan ciddi su sıkıntısıyla karşılaşacak. Küresel su talebi %55 artacak.
+  </div>
+  <div class="stat-grid" id="statGrid"></div>
+</div>
+
+<hr class="sep">
+
+<!-- CRISIS REGIONS -->
+<div class="section" id="crisis">
+  <div class="sec-title">🚨 Küresel Su <span>Kriz Bölgeleri</span></div>
+  <div class="sec-sub">Dünya genelinde su kıtlığı yaşayan kritik bölgeler, nedenleri ve nadir metal bağlantılı çözüm teknolojileri.</div>
+  <div class="crisis-grid" id="crisisGrid"></div>
+</div>
+
+<hr class="sep">
+
+<!-- WATER WARS -->
+<div class="section" id="wars">
+  <div class="sec-title">⚔️ Su <span>Savaşları & Anlaşmazlıkları</span></div>
+  <div class="sec-sub">Tarihsel ve güncel su çatışmaları, nehir hakimiyeti mücadeleleri ve jeopolitik gerilimler.</div>
+  <div class="wars-grid" id="warsGrid"></div>
+</div>
+
+<hr class="sep">
+
+<!-- TECH -->
+<div class="section" id="tech">
+  <div class="sec-title">🔬 Su Teknolojileri & <span>Nadir Metal Bağlantısı</span></div>
+  <div class="sec-sub">Gelecek nesil su arıtma, desalinasyon ve geri dönüşüm teknolojilerinde kritik mineraller.</div>
+  <div class="tech-grid" id="techGrid"></div>
+</div>
+
+<hr class="sep">
+
+<!-- COUNTRY ANALYSIS -->
+<div class="section" id="country">
+  <div class="sec-title">🌍 Ülke <span>Su Güvenliği Analizi</span></div>
+  <div class="sec-sub">Ülkelerin su stresi, yenilenebilir su kaynakları ve su teknolojisi yatırımları karşılaştırması.</div>
+  <div class="tab-bar" id="countryTabs"></div>
+  <div id="countryContent"></div>
+</div>
+
+<hr class="sep">
+
+<!-- TURKEY -->
+<div class="section" id="turkey">
+  <div class="sec-title">🇹🇷 Türkiye'nin <span>Su Güvenliği</span></div>
+  <div class="sec-sub">Türkiye'nin su kaynakları, komşu ülkelerle anlaşmazlıklar ve stratejik konumu.</div>
+  <div id="turkeyContent"></div>
+</div>
+
+<script>
+const STATS_DATA = [
+  {val:'97.5%',lbl:'Tuzlu Su (Okyanus)',color:'var(--blue)'},
+  {val:'2.5%',lbl:'Tatlı Su (Toplam)',color:'var(--cyan)'},
+  {val:'0.3%',lbl:'Erişilebilir Tatlı Su',color:'var(--green)'},
+  {val:'4B',lbl:'2050 Su Sıkıntısı (kişi)',color:'var(--red)'},
+  {val:'70%',lbl:'Tarım Su Tüketimi',color:'var(--gold)'},
+  {val:'$1T+',lbl:'Yıllık Su Altyapı Yatırımı',color:'var(--cyan)'},
+  {val:'785M',lbl:'Temiz Suya Erişimi Yok',color:'var(--red)'},
+  {val:'2050',lbl:'Küresel Kriz Yılı',color:'var(--gold)'},
+];
+
+const CRISIS_DATA = [
+  {
+    icon:'🏜️',title:'Orta Doğu & Kuzey Afrika',sub:'Dünya\'nın en su stresli bölgesi',
+    color:'#e74c3c',
+    stats:{'Su Stresi':'Aşırı Yüksek','Yıllık Yağış':'<100 mm','Nüfus':'500M+','Bağımlılık':'Desalinasyon'},
+    barVal:95,barColor:'#e74c3c',
+    desc:'Suudi Arabistan, BAE, Kuveyt tatlı su kaynağı yok. Tamamen desalinasyona bağımlı. Nadir metal membranlar kritik.',
+  },
+  {
+    icon:'🌊',title:'Güney Asya (Hindistan/Pakistan)',sub:'Himalaya buzulları eriyor',
+    color:'#e67e22',
+    stats:{'Su Stresi':'Yüksek','Buzul Kaybı':'%40 (2100 hedefi)','Nüfus':'1.8 milyar','Risk':'Taşkın+Kuraklık'},
+    barVal:78,barColor:'#e67e22',
+    desc:'Ganj, İndus ve Brahmaputra nehirleri buzul erimesiyle tehdit altında. Hindistan-Pakistan su anlaşmazlığı tırmanıyor.',
+  },
+  {
+    icon:'🌍',title:'Sahra Altı Afrika',sub:'Altyapı yetersizliği + iklim değişikliği',
+    color:'#f39c12',
+    stats:{'Erişim Yok':'600M kişi','Hastalık':'Su kaynaklı %80','Yatırım Açığı':'$114B/yıl','Çözüm':'Nano filtre'},
+    barVal:70,barColor:'#f39c12',
+    desc:'Kongo Nehri\'nin %30\'u kullanılıyor. Nano membran filtreler ve güneş enerjili pompalar çözüm yolu.',
+  },
+  {
+    icon:'🏔️',title:'Orta Asya (Aral Gölü)',sub:'Tarihin en büyük ekolojik felaketi',
+    color:'#9b59b6',
+    stats:{'Göl Kaybı':'%90','Tuzluluk':'%10 artış','Etkilenen':'60M kişi','Durum':'Geri dönüşü yok'},
+    barVal:90,barColor:'#9b59b6',
+    desc:'Sovyet döneminde pamuk tarlaları için kurutulan Aral Gölü artık çöl. Su yönetimi felaketi örneği.',
+  },
+  {
+    icon:'🌵',title:'ABD Batı Yakası',sub:'Megakuraklık — Colorado Nehri krizi',
+    color:'#e74c3c',
+    stats:{'Rezervuar':'%30 doluluk','Colorado Nehri':'Anlaşmazlık','Kuraklık':'22 yıl süren','Çözüm':'Desalinasyon'},
+    barVal:65,barColor:'#e74c3c',
+    desc:'Lake Mead ve Lake Powell tarihi düşük seviyelerde. 7 eyalet Colorado Nehri paylaşımında anlaşmazlık.',
+  },
+  {
+    icon:'🌱',title:'Çin Kuzey Ovaları',sub:'Yeraltı suyu tükeniyor',
+    color:'#27ae60',
+    stats:{'Yeraltı Suyu':'%30 azaldı','Tarım':'%70 bağımlı','Nüfus':'400M','Yatırım':'$100B+ su transfer'},
+    barVal:60,barColor:'#27ae60',
+    desc:'Çin\'in Güney-Kuzey Su Transfer Projesi: 1,400 km kanal. Dünyanın en büyük su mühendisliği projesi.',
+  },
+];
+
+const WARS_DATA = [
+  {title:'Nil Nehri Anlaşmazlığı',parties:'Etiyopya vs Mısır vs Sudan',risk:'Çok Yüksek',riskColor:'#e74c3c',
+   desc:'GERD Barajı (Büyük Etiyopya Rönesans Barajı) Mısır\'ın Nil suyunu %25 azaltabilir. Askerî tehditler gündemde.'},
+  {title:'Fırat-Dicle Havzası',parties:'Türkiye vs Irak vs Suriye',risk:'Yüksek',riskColor:'#e67e22',
+   desc:'Türkiye\'nin GAP projesindeki 22 baraj Irak ve Suriye\'nin su payını dramatik biçimde düşürdü.'},
+  {title:'İndus Suları Anlaşmazlığı',parties:'Hindistan vs Pakistan',risk:'Çok Yüksek',riskColor:'#e74c3c',
+   desc:'1960 İndus Suları Antlaşması bozulma tehlikesinde. Nükleer iki ülke arasında su gerilimi tırmanıyor.'},
+  {title:'Mekong Nehri Krizi',parties:'Çin vs 5 Alt Ülke',risk:'Yüksek',riskColor:'#e67e22',
+   desc:'Çin\'in 11 barajı Kamboçya, Vietnam, Tayland, Laos, Myanmar\'ın su akışını kontrol altına aldı.'},
+  {title:'Colorado Nehri Krizi',parties:'ABD 7 Eyaleti',risk:'Orta',riskColor:'#f39c12',
+   desc:'Arizona, Nevada, Kaliforniya, Utah, Colorado, Wyoming, New Mexico arasında su paylaşım savaşı.'},
+  {title:'Aral Gölü Mirası',parties:'Kazakistan vs Özbekistan',risk:'Orta',riskColor:'#f39c12',
+   desc:'Kuruyan Aral Gölü\'nün kalan sularını paylaşma mücadelesi. Tuz fırtınaları bölgeyi etkiliyor.'},
+  {title:'Ürdün Nehri Anlaşmazlığı',parties:'İsrail vs Ürdün vs Filistin',risk:'Yüksek',riskColor:'#e67e22',
+   desc:'Ürdün Nehri debisi %90 azaldı. Su hakları Orta Doğu barış sürecinin merkezinde.'},
+  {title:'Güney Asya Buzul Krizi',parties:'Hindistan vs Çin vs Pakistan',risk:'Çok Yüksek',riskColor:'#e74c3c',
+   desc:'Himalaya buzulları 2100\'e kadar %40 eriyecek. 3 nükleer güç aynı su kaynağına bağımlı.'},
+];
+
+const TECH_DATA = [
+  {
+    icon:'🔬',name:'Ters Osmoz (RO) Membranlar',color:'#c41e3a',
+    metals:['Ti','Nd','Ag'],metalColors:['#1abc9c','#e74c3c','#C9A24B'],
+    metrics:{'Tuz Giderme':'%99.7','Enerji':'3-4 kWh/m³','Maliyet':'$0.5-1/m³','Lider':'Suudi Arabistan/İsrail'},
+    desc:'Titanyum nano membranlar ve gümüş antibakteriyel kaplama. Neodimyum mıknatıslı pompalar.',
+    mineralPuan:70,costPuan:65,effPuan:95,scalePuan:90,
+  },
+  {
+    icon:'⚡',name:'Elektrodiyaliz (ED)',color:'#f39c12',
+    metals:['Pt','Ir','Ti','Nd'],metalColors:['#C9A24B','#7f8c8d','#1abc9c','#e74c3c'],
+    metrics:{'Tuz Giderme':'%95','Enerji':'1-2 kWh/m³','Uygulama':'Acı su','Lider':'ABD/Japonya'},
+    desc:'Platin elektrotlar, iridyum kaplama. Düşük tuzluluklu sular için enerji verimli çözüm.',
+    mineralPuan:60,costPuan:75,effPuan:85,scalePuan:70,
+  },
+  {
+    icon:'☀️',name:'Güneş Destekli Desalinasyon',color:'#f39c12',
+    metals:['Ga','In','Se','Ti'],metalColors:['#f39c12','#e91e63','#27ae60','#1abc9c'],
+    metrics:{'Enerji':'Güneş (sıfır maliyet)','Kapasite':'100-10,000 m³/gün','Maliyet':'$0.3-0.8/m³','Lider':'BAE/Avustralya'},
+    desc:'Galyum arsenid güneş panelleri + titanyum membran kombinasyonu. Uzak bölgeler için ideal.',
+    mineralPuan:75,costPuan:85,effPuan:80,scalePuan:75,
+  },
+  {
+    icon:'🧬',name:'Biyomimetik Membranlar',color:'#9b59b6',
+    metals:['Ag','Cu','Nd','Zn'],metalColors:['#C9A24B','#e67e22','#e74c3c','#3498db'],
+    metrics:{'Verimlilik':'10x RO\'dan hızlı','Enerji':'%80 daha az','Durum':'Araştırma aşaması','Lider':'ABD/Almanya'},
+    desc:'Aquaporin proteinleri taklit eden nano yapılar. Gümüş ve bakır antibakteriyel katmanlar.',
+    mineralPuan:80,costPuan:50,effPuan:98,scalePuan:40,
+  },
+  {
+    icon:'🌊',name:'Atmosferik Su Üretimi (AWG)',color:'#3498db',
+    metals:['Li','Nd','Ti','Co'],metalColors:['#27ae60','#e74c3c','#1abc9c','#2980b9'],
+    metrics:{'Kapasite':'2-5 L/kWh','Nem':'>30% gerekli','Maliyet':'$0.10-0.30/L','Lider':'İsrail/ABD'},
+    desc:'Havadan su çekme. Lityum klorür adsorbent, neodimyum mıknatıslı kompresörler.',
+    mineralPuan:65,costPuan:60,effPuan:70,scalePuan:60,
+  },
+  {
+    icon:'🔋',name:'Kapasitif Deiyonizasyon (CDI)',color:'#27ae60',
+    metals:['Nd','Co','Ti','Ag'],metalColors:['#e74c3c','#2980b9','#1abc9c','#C9A24B'],
+    metrics:{'Enerji':'0.1-0.5 kWh/m³','Geri Kazanım':'%90','Uygulama':'Düşük tuzluluk','Lider':'Çin/Hollanda'},
+    desc:'Elektrokimyasal tuz giderme. Neodimyum ve kobalt içeren süperkapasitör elektrotlar.',
+    mineralPuan:70,costPuan:80,effPuan:80,scalePuan:65,
+  },
+];
+
+const COUNTRY_WATER = [
+  {flag:'🇮🇸',name:'İzlanda',stress:0,renew:170000,invest:95,color:'#27ae60'},
+  {flag:'🇳🇴',name:'Norveç',stress:2,renew:80000,invest:90,color:'#27ae60'},
+  {flag:'🇧🇷',name:'Brezilya',stress:5,renew:28000,invest:75,color:'#27ae60'},
+  {flag:'🇨🇦',name:'Kanada',stress:3,renew:85000,invest:85,color:'#27ae60'},
+  {flag:'🇷🇺',name:'Rusya',stress:4,renew:30000,invest:65,color:'#27ae60'},
+  {flag:'🇨🇳',name:'Çin',stress:40,renew:2000,invest:80,color:'#e67e22'},
+  {flag:'🇮🇳',name:'Hindistan',stress:55,renew:1100,invest:60,color:'#e74c3c'},
+  {flag:'🇹🇷',name:'Türkiye',stress:35,renew:2900,invest:55,color:'#e67e22'},
+  {flag:'🇩🇪',name:'Almanya',stress:18,renew:1300,invest:88,color:'#f39c12'},
+  {flag:'🇺🇸',name:'ABD',stress:25,renew:9000,invest:82,color:'#f39c12'},
+  {flag:'🇯🇵',name:'Japonya',stress:20,renew:3300,invest:90,color:'#f39c12'},
+  {flag:'🇸🇦',name:'S.Arabistan',stress:100,renew:2,invest:70,color:'#e74c3c'},
+  {flag:'🇮🇱',name:'İsrail',stress:90,renew:100,invest:95,color:'#e74c3c'},
+  {flag:'🇦🇺',name:'Avustralya',stress:30,renew:22000,invest:78,color:'#e67e22'},
+  {flag:'🇪🇬',name:'Mısır',stress:95,renew:60,invest:50,color:'#e74c3c'},
+];
+
+// ===== RENDER =====
+function renderStats(){
+  document.getElementById('statGrid').innerHTML = STATS_DATA.map(s=>`
+    <div class="stat-card">
+      <div class="stat-val" style="color:${s.color}">${s.val}</div>
+      <div class="stat-lbl">${s.lbl}</div>
+    </div>
+  `).join('');
+}
+
+function renderCrisis(){
+  document.getElementById('crisisGrid').innerHTML = CRISIS_DATA.map(c=>`
+    <div class="crisis-card">
+      <div class="cc-header">
+        <div class="cc-icon">${c.icon}</div>
+        <div><div class="cc-title">${c.title}</div><div class="cc-sub">${c.sub}</div></div>
+      </div>
+      ${Object.entries(c.stats).map(([k,v])=>`
+        <div class="cc-stat"><span style="color:var(--dim)">${k}</span><span style="color:${c.color};font-weight:700">${v}</span></div>
+      `).join('')}
+      <div class="cc-bar"><div class="cc-fill" style="width:${c.barVal}%;background:${c.barColor}"></div></div>
+      <div style="font-size:.7rem;color:var(--dim);margin-top:8px;line-height:1.5">${c.desc}</div>
+    </div>
+  `).join('');
+}
+
+function renderWars(){
+  document.getElementById('warsGrid').innerHTML = WARS_DATA.map(w=>`
+    <div class="war-card">
+      <div class="wc-title">⚔️ ${w.title}</div>
+      <div class="wc-parties">🌍 ${w.parties}</div>
+      <div class="wc-desc">${w.desc}</div>
+      <span class="wc-risk" style="background:${w.riskColor}22;color:${w.riskColor};border:1px solid ${w.riskColor}44">Risk: ${w.risk}</span>
+    </div>
+  `).join('');
+}
+
+function renderTech(){
+  document.getElementById('techGrid').innerHTML = TECH_DATA.map(t=>`
+    <div class="tech-card">
+      <div class="tc-head" style="border-left:3px solid ${t.color}">
+        <div class="tc-icon">${t.icon}</div>
+        <div class="tc-name">${t.name}</div>
+      </div>
+      <div class="tc-body">
+        ${Object.entries(t.metrics).map(([k,v])=>`
+          <div class="tc-metric"><span style="color:var(--dim)">${k}</span><span style="color:${t.color};font-weight:700">${v}</span></div>
+        `).join('')}
+        <div style="margin-top:8px;font-size:.62rem;color:var(--dim)">⚗️ Kritik Mineraller:</div>
+        <div class="tc-metals">${t.metals.map((m,i)=>`<span class="tc-metal" style="color:${t.metalColors[i]};border-color:${t.metalColors[i]}44">${m}</span>`).join('')}</div>
+        <div style="margin-top:8px;font-size:.7rem;color:var(--dim);line-height:1.5">${t.desc}</div>
+        <div style="margin-top:8px">
+          ${[['mineralScore','Mineral Bağımsızlığı','var(--red)'],['costScore','Maliyet','var(--gold)'],['effScore','Verimlilik','var(--green)'],['scaleScore','Ölçeklenebilirlik','var(--cyan)']].map(([k,l,c])=>`
+            <div style="font-size:.6rem;color:var(--dim);margin-top:3px">${l}</div>
+            <div class="cc-bar"><div class="cc-fill" style="width:${t[k]}%;background:${c}"></div></div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCountry(){
+  const tabs = document.getElementById('countryTabs');
+  const content = document.getElementById('countryContent');
+  const metrics = [
+    {key:'stress',label:'Su Stresi (%)',max:100,higher:'bad'},
+    {key:'renew',label:'Yenilenebilir Su (m³/kişi)',max:170000,higher:'good'},
+    {key:'invest',label:'Su Teknoloji Skoru',max:100,higher:'good'},
+  ];
+  metrics.forEach((m,i)=>{
+    const tab = document.createElement('div');
+    tab.className = `tab ${i===0?'active':''}`;
+    tab.textContent = m.label;
+    tab.onclick = ()=>{
+      document.querySelectorAll('#countryTabs .tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      renderCountryBars(m,content);
+    };
+    tabs.appendChild(tab);
+  });
+  renderCountryBars(metrics[0],content);
+}
+
+function renderCountryBars(metric,container){
+  const sorted = [...COUNTRY_WATER].sort((a,b)=>metric.higher==='bad'?b[metric.key]-a[metric.key]:b[metric.key]-a[metric.key]);
+  container.innerHTML = sorted.map(c=>`
+    <div class="cw-row">
+      <div class="cw-flag">${c.flag}</div>
+      <div class="cw-name">${c.name}</div>
+      <div class="cw-bar-bg">
+        <div class="cw-fill" style="width:0%;background:${c.color}" data-w="${c[metric.key]/metric.max*100}">
+          ${c[metric.key]}${metric.key==='invest'?'':''}
+        </div>
+      </div>
+      <div class="cw-val" style="color:${c.color}">${c[metric.key].toLocaleString()}</div>
+    </div>
+  `).join('');
+  setTimeout(()=>{container.querySelectorAll('.cw-fill').forEach(f=>f.style.width=f.dataset.w+'%');},100);
+}
+
+function renderTurkey(){
+  document.getElementById('turkeyContent').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;">
+      <div class="crisis-card" style="border-color:var(--blue)">
+        <div class="cc-header"><div class="cc-icon">🏔️</div><div><div class="cc-title">Su Kaynakları</div></div></div>
+        <div class="cc-stat"><span>Yıllık Yüzey Suyu</span><span style="color:var(--cyan);font-weight:700">186 milyar m³</span></div>
+        <div class="cc-stat"><span>Kullanılabilir</span><span style="color:var(--cyan);font-weight:700">112 milyar m³</span></div>
+        <div class="cc-stat"><span>Yeraltı Suyu</span><span style="color:var(--cyan);font-weight:700">14 milyar m³</span></div>
+        <div class="cc-stat"><span>Kişi Başı</span><span style="color:var(--gold);font-weight:700">2,900 m³/yıl</span></div>
+        <div class="cc-stat"><span>Durum</span><span style="color:var(--gold);font-weight:700">Su Sıkıntısı Eşiği</span></div>
+        <div style="font-size:.7rem;color:var(--dim);margin-top:8px;line-height:1.5">Türkiye 1,700 m³/kişi eşiğinin üzerinde ama iklim değişikliğiyle 2040'a kadar bu sınırın altına düşebilir.</div>
+      </div>
+      <div class="crisis-card" style="border-color:var(--red)">
+        <div class="cc-header"><div class="cc-icon">⚔️</div><div><div class="cc-title">Fırat-Dicle Sorunu</div></div></div>
+        <div class="cc-stat"><span>GAP Barajları</span><span style="color:var(--red);font-weight:700">22 baraj</span></div>
+        <div class="cc-stat"><span>Irak Etki</span><span style="color:var(--red);font-weight:700">%60 azalma</span></div>
+        <div class="cc-stat"><span>Suriye Etki</span><span style="color:var(--red);font-weight:700">%40 azalma</span></div>
+        <div class="cc-stat"><span>Antlaşma</span><span style="color:var(--gold);font-weight:700">Yok (müzakere sürüyor)</span></div>
+        <div style="font-size:.7rem;color:var(--dim);margin-top:8px;line-height:1.5">Türkiye su kaynaklarını kalkınma aracı olarak kullanıyor. Irak ve Suriye ile gerginlik süregelmekte.</div>
+      </div>
+      <div class="crisis-card" style="border-color:var(--green)">
+        <div class="cc-header"><div class="cc-icon">🔬</div><div><div class="cc-title">Su Teknolojisi Yatırımları</div></div></div>
+        <div class="cc-stat"><span>Desalinasyon</span><span style="color:var(--green);font-weight:700">İzmir, Antalya</span></div>
+        <div class="cc-stat"><span>Arıtma Kapasitesi</span><span style="color:var(--green);font-weight:700">%85 kentsel</span></div>
+        <div class="cc-stat"><span>Su Kaybı</span><span style="color:var(--red);font-weight:700">%40 (şebeke)</span></div>
+        <div class="cc-stat"><span>Tarım Verimliliği</span><span style="color:var(--gold);font-weight:700">%45 (düşük)</span></div>
+        <div style="font-size:.7rem;color:var(--dim);margin-top:8px;line-height:1.5">Türkiye'nin su altyapısı modernizasyona ihtiyaç duyuyor. Damla sulama ve akıllı şebeke yatırımları artıyor.</div>
+      </div>
+      <div class="crisis-card" style="border-color:var(--gold)">
+        <div class="cc-header"><div class="cc-icon">⚗️</div><div><div class="cc-title">Nadir Metal & Su Bağlantısı</div></div></div>
+        <div class="cc-stat"><span>Titanyum Rezervi</span><span style="color:var(--gold);font-weight:700">Kayseri/Eskişehir</span></div>
+        <div class="cc-stat"><span>Bor (Boron)</span><span style="color:var(--gold);font-weight:700">Dünya 1. (73%)</span></div>
+        <div class="cc-stat"><span>Membran Üretimi</span><span style="color:var(--cyan);font-weight:700">Gelişmekte</span></div>
+        <div class="cc-stat"><span>Potansiyel</span><span style="color:var(--green);font-weight:700">Su teknolojisi ihracatı</span></div>
+        <div style="font-size:.7rem;color:var(--dim);margin-top:8px;line-height:1.5">Türkiye'nin bor rezervleri su arıtma membranlarında kritik. Yerli teknoloji geliştirme fırsatı büyük.</div>
+      </div>
+    </div>
+  `;
+}
+
+window.addEventListener('load',()=>{
+  renderStats();renderCrisis();renderWars();renderTech();renderCountry();renderTurkey();
+  // Animate bars
+  setTimeout(()=>{document.querySelectorAll('.cc-fill').forEach(f=>{const w=f.style.width;f.style.width='0';setTimeout(()=>f.style.width=w,100);});},200);
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

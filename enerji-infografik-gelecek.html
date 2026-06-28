@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geleceğin Enerji Teknolojileri — Harb-i Strateji</title>
+<style>
+:root{--bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#e67e22;--purple:#9b59b6;--txt:#e8eaf0;--dim:#6b7280;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;}
+.hero{background:linear-gradient(135deg,#050d18,#0a1a0a,#050d18);padding:50px 20px;text-align:center;border-bottom:2px solid var(--green);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;pointer-events:none;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,255,136,.05),transparent 70%);}
+.hero-title{font-size:clamp(1.6rem,4vw,3rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;line-height:1.1;}
+.t1{color:var(--green);}
+.t2{color:var(--cyan);}
+.hero-sub{font-size:.9rem;color:var(--gold);letter-spacing:2px;margin-top:8px;margin-bottom:28px;}
+.hero-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.nav-btn{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--dim);font-size:.78rem;cursor:pointer;transition:all .2s;text-decoration:none;}
+.nav-btn:hover{border-color:var(--green);color:var(--green);}
+.section{max-width:1400px;margin:0 auto;padding:50px 24px;}
+.sec-title{font-size:clamp(1.1rem,2.5vw,1.7rem);font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.sec-title span{color:var(--green);}
+.sec-sub{font-size:.83rem;color:var(--dim);margin-bottom:28px;max-width:800px;line-height:1.6;}
+hr.sep{border:none;border-top:1px solid var(--border);margin:0;}
+/* TECH CARDS */
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.tech-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s;cursor:pointer;}
+.tech-card:hover{transform:translateY(-4px);border-color:var(--green);}
+.tc-header{padding:16px;display:flex;align-items:center;gap:12px;}
+.tc-icon{font-size:2.5rem;}
+.tc-info h3{font-size:1rem;font-weight:700;}
+.tc-info p{font-size:.72rem;color:var(--dim);margin-top:2px;}
+.tc-body{padding:0 16px 16px;}
+.tc-metric{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.72rem;}
+.tc-metric .mk{color:var(--dim);}
+.tc-metric .mv{font-weight:700;}
+.tc-metals{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.tc-metal{padding:2px 7px;border-radius:4px;font-size:.62rem;font-weight:700;border:1px solid;}
+.tc-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;margin-top:4px;overflow:hidden;}
+.tc-bar-fill{height:100%;border-radius:3px;transition:width 1.5s ease;}
+.readiness-badge{padding:3px 10px;border-radius:4px;font-size:.65rem;font-weight:700;}
+/* TIMELINE */
+.timeline-wrap{position:relative;padding:20px 0;}
+.tl-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--green),var(--cyan),var(--gold));transform:translateX(-50%);}
+.tl-item{display:flex;margin-bottom:32px;position:relative;}
+.tl-item:nth-child(odd){flex-direction:row-reverse;}
+.tl-content{width:45%;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;margin:0 4%;}
+.tl-dot{position:absolute;left:50%;top:16px;width:16px;height:16px;border-radius:50%;transform:translateX(-50%);border:2px solid var(--bg);}
+.tl-year{font-size:.7rem;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.tl-title{font-size:.85rem;font-weight:700;margin-bottom:4px;}
+.tl-desc{font-size:.72rem;color:var(--dim);line-height:1.5;}
+/* COMPARISON BARS */
+.comp-bars{display:flex;flex-direction:column;gap:10px;}
+.cb-row{display:flex;align-items:center;gap:10px;}
+.cb-label{width:160px;font-size:.75rem;text-align:right;color:var(--txt);}
+.cb-bar{flex:1;height:28px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;position:relative;}
+.cb-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:.72rem;font-weight:700;color:#000;transition:width 1.5s ease;}
+.cb-val{width:70px;font-size:.78rem;font-weight:700;text-align:right;}
+/* MINERAL MAP */
+.mineral-map{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+.mm-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;transition:all .2s;}
+.mm-card:hover{border-color:var(--gold);transform:scale(1.03);}
+.mm-sym{font-size:1.6rem;font-weight:900;margin-bottom:4px;}
+.mm-name{font-size:.68rem;color:var(--dim);}
+.mm-use{font-size:.62rem;color:var(--cyan);margin-top:3px;}
+.mm-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:5px;overflow:hidden;}
+.mm-fill{height:100%;border-radius:2px;}
+/* COUNTRY RACE */
+.race-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.race-flag{font-size:1.2rem;width:28px;}
+.race-country{width:90px;font-size:.72rem;}
+.race-bar-bg{flex:1;height:28px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;}
+.race-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 8px;font-size:.7rem;font-weight:700;color:#000;transition:width 1.5s ease;}
+.race-pct{width:50px;font-size:.75rem;font-weight:700;text-align:right;}
+/* ANIMATED COUNTER */
+.counter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.counter-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+.counter-val{font-size:2rem;font-weight:900;color:var(--cyan);}
+.counter-lbl{font-size:.68rem;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+/* TABS */
+.tab-bar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.tab{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.78rem;color:var(--dim);transition:all .2s;}
+.tab.active{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.08);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">
+    <div class="t1">GELECEĞİN ENERJİ</div>
+    <div class="t2">TEKNOLOJİLERİ</div>
+  </div>
+  <div class="hero-sub">⚛️ ITER Füzyon | ☀️ Perovskite | 💧 Yeşil Hidrojen | 🔬 SMR | 🔋 Katı-Hal Batarya</div>
+  <div class="hero-nav">
+    <a href="#tech-cards" class="nav-btn">🔬 Teknolojiler</a>
+    <a href="#timeline" class="nav-btn">📅 Yol Haritası</a>
+    <a href="#minerals" class="nav-btn">⚗️ Kritik Mineraller</a>
+    <a href="#country-race" class="nav-btn">🏁 Ülke Yarışı</a>
+    <a href="#comparison" class="nav-btn">📊 Karşılaştırma</a>
+    <a href="#stats" class="nav-btn">📈 İstatistikler</a>
+  </div>
+</div>
+
+<!-- STATS COUNTERS -->
+<div class="section" id="stats">
+  <div class="sec-title">📈 Küresel Enerji <span>İstatistikleri</span></div>
+  <div class="counter-grid" id="counterGrid"></div>
+</div>
+
+<hr class="sep">
+
+<!-- TECH CARDS -->
+<div class="section" id="tech-cards">
+  <div class="sec-title">🔬 Gelecek <span>Enerji Teknolojileri</span></div>
+  <div class="sec-sub">2025-2050 yılları arasında enerji dönüşümünü şekillendirecek 10 kritik teknoloji ve nadir metal bağımlılıkları.</div>
+  <div class="tab-bar" id="techTabs"></div>
+  <div id="techTabContent"></div>
+  <div class="tech-grid" id="techGrid"></div>
+</div>
+
+<hr class="sep">
+
+<!-- TIMELINE -->
+<div class="section" id="timeline" style="background:linear-gradient(135deg,rgba(0,255,136,.02),transparent);">
+  <div class="sec-title">📅 Enerji Dönüşümü <span>Yol Haritası</span></div>
+  <div class="sec-sub">2025-2050 arası kritik kilometre taşları ve teknoloji olgunluk seviyeleri.</div>
+  <div class="timeline-wrap" id="timelineWrap">
+    <div class="tl-line"></div>
+  </div>
+</div>
+
+<hr class="sep">
+
+<!-- MINERALS -->
+<div class="section" id="minerals">
+  <div class="sec-title">⚗️ Kritik Mineraller & <span>Enerji Bağlantısı</span></div>
+  <div class="sec-sub">Her enerji teknolojisinin kritik mineral bağımlılığı ve Çin hakimiyeti riski.</div>
+  <div class="mineral-map" id="mineralMap"></div>
+</div>
+
+<hr class="sep">
+
+<!-- COUNTRY RACE -->
+<div class="section" id="country-race">
+  <div class="sec-title">🏁 Temiz Enerji <span>Ülke Yarışı</span></div>
+  <div class="sec-sub">Ülkelerin yenilenebilir enerji kapasitesi ve enerji dönüşümü hızı karşılaştırması.</div>
+  <div id="countryRace"></div>
+</div>
+
+<hr class="sep">
+
+<!-- COMPARISON -->
+<div class="section" id="comparison">
+  <div class="sec-title">📊 Teknoloji <span>Karşılaştırması</span></div>
+  <div class="sec-sub">Enerji yoğunluğu, maliyet, mineral bağımlılığı ve 2050 potansiyeli.</div>
+  <div class="tab-bar" id="compTabs"></div>
+  <div id="compContent"></div>
+</div>
+
+<script>
+// ===== DATA =====
+const TECH_DATA = [
+  {
+    id:'iter',name:'ITER Füzyon Reaktörü',icon:'🌟',color:'#c41e3a',category:'Nükleer',
+    readiness:'TRL 6-7',readinessColor:'#f39c12',
+    commercialYear:2035,costPer:'~$0.05/kWh (hedef)',
+    capacity:'500 MW (demo)',country:'🌍 Uluslararası (35 ülke)',
+    metals:['Li','Be','Nd','Dy','W','Nb'],
+    metalColors:['#27ae60','#c41e3a','#e74c3c','#c0392b','#7f8c8d','#2980b9'],
+    metrics:{
+      'Yakıt':'Trityum + Döteryum',
+      'Plazma Sıcaklığı':'150 milyon °C',
+      'Enerji Kazanımı':'Q=10 (hedef)',
+      'İnşaat Maliyeti':'$22 milyar',
+      'İlk Plazma':'2025',
+      'Ticari Operasyon':'2035-2040',
+    },
+    desc:'Dünyanın en büyük füzyon deneyi. Fransa\'da inşaat devam ediyor. Başarılı olursa sonsuz temiz enerji.',
+    mineralPuan:75,costPuan:90,safetyPuan:95,scalabilityPuan:85,
+  },
+  {
+    id:'perovskite',name:'Perovskite Güneş Paneli',icon:'☀️',color:'#f39c12',category:'Güneş',
+    readiness:'TRL 7-8',readinessColor:'#27ae60',
+    commercialYear:2027,costPer:'<$0.01/kWh (hedef)',
+    capacity:'Sınırsız',country:'🇨🇳🇩🇪🇯🇵 Çin/Almanya/Japonya',
+    metals:['Pb','In','Ga','Se'],
+    metalColors:['#7f8c8d','#e91e63','#f39c12','#27ae60'],
+    metrics:{
+      'Verimlilik':'%33+ (çift katmanlı)',
+      'Mevcut Si Verimliliği':'%22-24',
+      'Üretim Maliyeti':'%60 daha ucuz',
+      'Ömür':'15+ yıl (hedef)',
+      'Ticari Ürün':'2027',
+      'Kurşun Sorunu':'Kurşunsuz versiyonlar geliştiriliyor',
+    },
+    desc:'Silisyumu geçecek yeni nesil güneş teknolojisi. Çin bu alanda dünya lideri.',
+    mineralPuan:60,costPuan:95,safetyPuan:70,scalabilityPuan:98,
+  },
+  {
+    id:'green_h2',name:'Yeşil Hidrojen',icon:'💧',color:'#3498db',category:'Hidrojen',
+    readiness:'TRL 7-9',readinessColor:'#27ae60',
+    commercialYear:2026,costPer:'$2-4/kg (hedef <$1)',
+    capacity:'Sınırsız',country:'🇩🇪🇦🇺🇸🇦 Almanya/Avustralya/S.Arabistan',
+    metals:['Pt','Ir','Ti','Ni'],
+    metalColors:['#C9A24B','#7f8c8d','#1abc9c','#2980b9'],
+    metrics:{
+      'Elektroliz Tipi':'PEM + Alkalin',
+      'Platin Gereksinimi':'0.3 mg/cm² (azalıyor)',
+      'İridyum Gereksinimi':'Kritik kıtlık riski',
+      'Maliyet Hedefi':'<$1/kg (2030)',
+      'Almanya Yatırımı':'€9 milyar',
+      'Avustralya Potansiyeli':'Dünya ihracatçısı',
+    },
+    desc:'Yenilenebilir elektrikle üretilen sıfır karbonlu yakıt. Depolama ve taşımacılık devrimci.',
+    mineralPuan:80,costPuan:60,safetyPuan:85,scalabilityPuan:90,
+  },
+  {
+    id:'smr',name:'Küçük Modüler Reaktör (SMR)',icon:'🔬',color:'#9b59b6',category:'Nükleer',
+    readiness:'TRL 6-8',readinessColor:'#f39c12',
+    commercialYear:2030,costPer:'$0.06-0.10/kWh',
+    capacity:'10-300 MW',country:'🇺🇸🇬🇧🇨🇦 ABD/İngiltere/Kanada',
+    metals:['Zr','Hf','Y','Co'],
+    metalColors:['#1abc9c','#16a085','#C9A24B','#2980b9'],
+    metrics:{
+      'NuScale Kapasitesi':'77 MW/modül',
+      'Zirkonyum Kullanımı':'Yakıt kılıfı',
+      'Hafniyum':'Kontrol çubuğu',
+      'İnşaat Süresi':'3-4 yıl (büyük reaktör 10+ yıl)',
+      'Atık':'%90 daha az',
+      'Ülke Sayısı':'17 ülke aktif proje',
+    },
+    desc:'Fabrikada üretilen, modüler nükleer reaktörler. Uzak bölgeler ve endüstriyel kullanım için ideal.',
+    mineralPuan:65,costPuan:70,safetyPuan:90,scalabilityPuan:80,
+  },
+  {
+    id:'solid_battery',name:'Katı-Hal Batarya',icon:'🔋',color:'#27ae60',category:'Depolama',
+    readiness:'TRL 5-7',readinessColor:'#e67e22',
+    commercialYear:2028,costPer:'$50/kWh (hedef)',
+    capacity:'EV + Şebeke',country:'🇯🇵🇰🇷🇺🇸 Toyota/Samsung/QuantumScape',
+    metals:['Li','Co','Nd','Ga','In'],
+    metalColors:['#27ae60','#2980b9','#e74c3c','#f39c12','#e91e63'],
+    metrics:{
+      'Enerji Yoğunluğu':'500+ Wh/kg (2x Li-ion)',
+      'Şarj Süresi':'10 dakika (%80)',
+      'Ömür':'2000+ döngü',
+      'Toyota Hedefi':'2027-2028 araç',
+      'Lityum Gereksinimi':'%30 daha az',
+      'Güvenlik':'Yanmaz, sızdırmaz',
+    },
+    desc:'Sıvı elektroliti katı ile değiştiren devrimci batarya. EV menzilini 2 katına çıkaracak.',
+    mineralPuan:70,costPuan:80,safetyPuan:98,scalabilityPuan:85,
+  },
+  {
+    id:'offshore_wind',name:'Açık Deniz Rüzgar',icon:'🌬️',color:'#1abc9c',category:'Rüzgar',
+    readiness:'TRL 9',readinessColor:'#27ae60',
+    commercialYear:2024,costPer:'$0.04-0.08/kWh',
+    capacity:'15-20 MW/türbin',country:'🇬🇧🇩🇰🇨🇳 İngiltere/Danimarka/Çin',
+    metals:['Nd','Dy','Co','Fe'],
+    metalColors:['#e74c3c','#c0392b','#2980b9','#7f8c8d'],
+    metrics:{
+      'Siemens Gamesa SG 14-222':'14 MW, 222m çap',
+      'Neodimyum/Türbin':'~600 kg',
+      'Disprozyum/Türbin':'~100 kg',
+      'İngiltere Kapasitesi':'45 GW (2030 hedefi)',
+      'Çin Hakimiyeti':'NTE %70',
+      'Maliyet Düşüşü':'%70 (2010-2024)',
+    },
+    desc:'Dünyanın en hızlı büyüyen enerji sektörü. Neodimyum mıknatıslar kritik bileşen.',
+    mineralPuan:85,costPuan:85,safetyPuan:95,scalabilityPuan:95,
+  },
+  {
+    id:'geothermal',name:'Gelişmiş Jeotermal',icon:'🌋',color:'#e67e22',category:'Jeotermal',
+    readiness:'TRL 5-7',readinessColor:'#e67e22',
+    commercialYear:2030,costPer:'$0.03-0.06/kWh',
+    capacity:'Sınırsız',country:'🇺🇸🇮🇸🇰🇪 ABD/İzlanda/Kenya',
+    metals:['Ti','Ni','Co','Cr'],
+    metalColors:['#1abc9c','#2980b9','#2980b9','#7f8c8d'],
+    metrics:{
+      'EGS Teknolojisi':'Kaya kırma ile ısı çıkarma',
+      'Quaise Energy':'Milimetre dalga sondaj',
+      'Derinlik':'10-20 km',
+      'Süreklilik':'7/24 baseload',
+      'Emisyon':'Neredeyse sıfır',
+      'ABD Potansiyeli':'100x mevcut elektrik',
+    },
+    desc:'Yerin derinliklerinden ısı çıkarma. Yeni sondaj teknolojileriyle her yerde kullanılabilir.',
+    mineralPuan:50,costPuan:75,safetyPuan:90,scalabilityPuan:80,
+  },
+  {
+    id:'wave_tidal',name:'Dalga & Gelgit Enerjisi',icon:'🌊',color:'#3498db',category:'Deniz',
+    readiness:'TRL 5-6',readinessColor:'#e67e22',
+    commercialYear:2032,costPer:'$0.10-0.20/kWh',
+    capacity:'Sınırlı',country:'🇬🇧🇫🇷🇦🇺 İngiltere/Fransa/Avustralya',
+    metals:['Nd','Co','Ti','Cu'],
+    metalColors:['#e74c3c','#2980b9','#1abc9c','#e67e22'],
+    metrics:{
+      'Atlantis Resources':'MeyGen 6 MW',
+      'Orbital Marine':'O2 2 MW',
+      'Öngörülebilirlik':'%99.9 (gelgit)',
+      'Küresel Potansiyel':'1 TW',
+      'Zorluk':'Korozyon, bakım',
+      'Türkiye':'Boğaz akıntısı potansiyeli',
+    },
+    desc:'Okyanus dalgaları ve gelgit akıntılarından enerji. Öngörülebilir ve sürekli kaynak.',
+    mineralPuan:60,costPuan:40,safetyPuan:85,scalabilityPuan:50,
+  },
+];
+
+const MINERALS_ENERGY = [
+  {sym:'Li',name:'Lityum',color:'#27ae60',use:'Batarya, füzyon',china:30,puan:85},
+  {sym:'Nd',name:'Neodimyum',color:'#e74c3c',use:'Rüzgar türbini, EV motoru',china:85,puan:95},
+  {sym:'Dy',name:'Disprozyum',color:'#c0392b',use:'Yüksek sıcaklık mıknatıs',china:99,puan:90},
+  {sym:'Co',name:'Kobalt',color:'#2980b9',use:'Batarya katodu',china:20,puan:80},
+  {sym:'Ga',name:'Galyum',color:'#f39c12',use:'Güneş paneli, LED',china:98,puan:85},
+  {sym:'In',name:'İndiyum',color:'#e91e63',use:'İnce film güneş',china:55,puan:70},
+  {sym:'Pt',name:'Platin',color:'#C9A24B',use:'Hidrojen elektroliz',china:5,puan:75},
+  {sym:'Ir',name:'İridyum',color:'#7f8c8d',use:'PEM elektrolizör',china:5,puan:95},
+  {sym:'Te',name:'Tellür',color:'#9b59b6',use:'CdTe güneş paneli',china:60,puan:70},
+  {sym:'Se',name:'Selenyum',color:'#27ae60',use:'CIGS güneş paneli',china:40,puan:65},
+  {sym:'Be',name:'Berilyum',color:'#c41e3a',use:'Füzyon reaktör duvarı',china:5,puan:90},
+  {sym:'Nb',name:'Niyobyum',color:'#2980b9',use:'Süperiletken mıknatıs',china:5,puan:80},
+  {sym:'Zr',name:'Zirkonyum',color:'#1abc9c',use:'Nükleer yakıt kılıfı',china:35,puan:85},
+  {sym:'Hf',name:'Hafniyum',color:'#16a085',use:'Nükleer kontrol çubuğu',china:40,puan:80},
+  {sym:'W',name:'Tungsten',color:'#7f8c8d',use:'Füzyon plazma duvarı',china:85,puan:75},
+  {sym:'Ti',name:'Titanyum',color:'#1abc9c',use:'Elektrolizör, yapı',china:35,puan:70},
+];
+
+const COUNTRY_ENERGY = [
+  {flag:'🇨🇳',name:'Çin',re:50,ev:35,h2:20,invest:758,color:'#e74c3c'},
+  {flag:'🇺🇸',name:'ABD',re:22,ev:8,h2:15,invest:369,color:'#3498db'},
+  {flag:'🇩🇪',name:'Almanya',re:59,ev:18,h2:30,invest:86,color:'#f1c40f'},
+  {flag:'🇬🇧',name:'İngiltere',re:42,ev:16,h2:25,invest:64,color:'#2980b9'},
+  {flag:'🇯🇵',name:'Japonya',re:22,ev:3,h2:35,invest:52,color:'#e74c3c'},
+  {flag:'🇫🇷',name:'Fransa',re:27,ev:14,h2:20,invest:45,color:'#3498db'},
+  {flag:'🇮🇳',name:'Hindistan',re:43,ev:2,h2:10,invest:90,color:'#f39c12'},
+  {flag:'🇦🇺',name:'Avustralya',re:35,ev:8,h2:40,invest:38,color:'#f39c12'},
+  {flag:'🇰🇷',name:'G.Kore',re:9,ev:9,h2:30,invest:43,color:'#1abc9c'},
+  {flag:'🇹🇷',name:'Türkiye',re:54,ev:2,h2:8,invest:12,color:'#C9A24B'},
+];
+
+const TIMELINE_DATA = [
+  {year:2025,title:'ITER İlk Plazma',desc:'Fransa\'daki ITER reaktörü ilk plazma üretiyor. Füzyon çağının başlangıcı.',color:'#c41e3a',icon:'🌟'},
+  {year:2026,title:'Perovskite Ticari Satış',desc:'İlk ticari perovskite güneş panelleri pazara giriyor. %30+ verimlilik.',color:'#f39c12',icon:'☀️'},
+  {year:2027,title:'Yeşil H₂ <$2/kg',desc:'Elektroliz maliyeti düşüyor. Almanya ve Avustralya ihracata başlıyor.',color:'#3498db',icon:'💧'},
+  {year:2028,title:'Toyota Katı-Hal EV',desc:'Toyota ilk katı-hal bataryalı EV\'yi seri üretiyor. 1200 km menzil.',color:'#27ae60',icon:'🔋'},
+  {year:2030,title:'İlk Ticari SMR',desc:'NuScale ve Rolls-Royce ilk SMR\'ları devreye alıyor. 77 MW/modül.',color:'#9b59b6',icon:'🔬'},
+  {year:2032,title:'Offshore Rüzgar 2 TW',desc:'Küresel açık deniz rüzgâr kapasitesi 2 TW\'a ulaşıyor.',color:'#1abc9c',icon:'🌬️'},
+  {year:2035,title:'DEMO Füzyon Reaktörü',desc:'ITER\'den sonra DEMO reaktörü inşaatı başlıyor. Net enerji üretimi.',color:'#c41e3a',icon:'⚛️'},
+  {year:2040,title:'Yeşil H₂ <$1/kg',desc:'Hidrojen fosil yakıtlarla rekabet edebilir hale geliyor.',color:'#3498db',icon:'🌍'},
+  {year:2050,title:'Net Sıfır Hedefi',desc:'IEA senaryosu: %90 yenilenebilir, füzyon ticari, H₂ ekonomisi.',color:'#27ae60',icon:'🌱'},
+];
+
+const STATS = [
+  {val:'$1.8T',lbl:'2024 Temiz Enerji Yatırımı',color:'var(--green)'},
+  {val:'3,870 GW',lbl:'Küresel Güneş Kapasitesi (2024)',color:'var(--gold)'},
+  {val:'%35',lbl:'Çin Küresel RE Payı',color:'var(--red)'},
+  {val:'$22B',lbl:'ITER Toplam Maliyet',color:'var(--cyan)'},
+  {val:'140M ton',lbl:'Lityum Rezervi (küresel)',color:'var(--green)'},
+  {val:'%98',lbl:'Galyum Çin Hakimiyeti',color:'var(--red)'},
+  {val:'2050',lbl:'Net Sıfır Hedef Yılı',color:'var(--gold)'},
+  {val:'500 MW',lbl:'ITER Hedef Güç Çıkışı',color:'var(--cyan)'},
+];
+
+// ===== RENDER FUNCTIONS =====
+function renderStats(){
+  document.getElementById('counterGrid').innerHTML = STATS.map(s=>`
+    <div class="counter-card">
+      <div class="counter-val" style="color:${s.color}">${s.val}</div>
+      <div class="counter-lbl">${s.lbl}</div>
+    </div>
+  `).join('');
+}
+
+function renderTechCards(){
+  const grid = document.getElementById('techGrid');
+  grid.innerHTML = TECH_DATA.map(t=>`
+    <div class="tech-card">
+      <div class="tc-header" style="border-bottom:2px solid ${t.color}22;">
+        <div class="tc-icon">${t.icon}</div>
+        <div class="tc-info">
+          <h3>${t.name}</h3>
+          <p>${t.country}</p>
+        </div>
+        <span class="readiness-badge" style="background:${t.readinessColor}22;color:${t.readinessColor};border:1px solid ${t.readinessColor}44;">${t.readiness}</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-metric"><span class="mk">Ticari Hedef</span><span class="mv" style="color:${t.color}">${t.commercialYear}</span></div>
+        <div class="tc-metric"><span class="mk">Maliyet</span><span class="mv" style="color:var(--gold)">${t.costPer}</span></div>
+        <div class="tc-metric"><span class="mk">Kapasite</span><span class="mv" style="color:var(--cyan)">${t.capacity}</span></div>
+        <div style="margin-top:6px;font-size:.62rem;color:var(--dim);">⚗️ Kritik Mineraller:</div>
+        <div class="tc-metals">${t.metals.map((m,i)=>`<span class="tc-metal" style="color:${t.metalColors[i]};border-color:${t.metalColors[i]}44;">${m}</span>`).join('')}</div>
+        <div style="margin-top:8px;font-size:.7rem;color:var(--dim);line-height:1.5;">${t.desc}</div>
+        <div style="margin-top:8px;">
+          ${['mineralScore','costScore','safetyScore','scalabilityScore'].map((k,i)=>{
+            const labels=['Mineral Bağımsızlığı','Maliyet Rekabeti','Güvenlik','Ölçeklenebilirlik'];
+            const colors=['var(--red)','var(--gold)','var(--green)','var(--cyan)'];
+            return `<div style="font-size:.6rem;color:var(--dim);margin-top:3px;">${labels[i]}</div>
+            <div class="tc-bar"><div class="tc-bar-fill" style="width:${t[k]}%;background:${colors[i]}"></div></div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTimeline(){
+  const wrap = document.getElementById('timelineWrap');
+  const line = wrap.querySelector('.tl-line');
+  TIMELINE_DATA.forEach((item,i)=>{
+    const el = document.createElement('div');
+    el.className = 'tl-item';
+    el.innerHTML = `
+      <div class="tl-content">
+        <div class="tl-year">${item.year}</div>
+        <div class="tl-title">${item.icon} ${item.title}</div>
+        <div class="tl-desc">${item.desc}</div>
+      </div>
+      <div class="tl-dot" style="background:${item.color}"></div>
+    `;
+    wrap.appendChild(el);
+  });
+}
+
+function renderMinerals(){
+  document.getElementById('mineralMap').innerHTML = MINERALS_ENERGY.map(m=>`
+    <div class="mm-card">
+      <div class="mm-sym" style="color:${m.color}">${m.sym}</div>
+      <div class="mm-name">${m.name}</div>
+      <div class="mm-use">${m.use}</div>
+      <div style="font-size:.6rem;color:${m.china>=70?'var(--red)':m.china>=40?'var(--orange)':'var(--green)'};margin-top:4px;">Çin: %${m.china}</div>
+      <div class="mm-bar"><div class="mm-fill" style="width:${m.china}%;background:${m.china>=70?'var(--red)':m.china>=40?'var(--orange)':'var(--green)'}"></div></div>
+    </div>
+  `).join('');
+}
+
+function renderCountryRace(){
+  const container = document.getElementById('countryRace');
+  const metrics = [
+    {key:'re',label:'Yenilenebilir Enerji Payı (%)',max:100},
+    {key:'ev',label:'EV Satış Payı (%)',max:50},
+    {key:'h2',label:'Yeşil H₂ Hazırlık Skoru',max:50},
+    {key:'invest',label:'Temiz Enerji Yatırımı ($B)',max:800},
+  ];
+  
+  const tabs = document.createElement('div');
+  tabs.className = 'tab-bar';
+  tabs.id = 'raceTabs';
+  
+  const content = document.createElement('div');
+  content.id = 'raceContent';
+  
+  metrics.forEach((metric,mi)=>{
+    const tab = document.createElement('div');
+    tab.className = `tab ${mi===0?'active':''}`;
+    tab.textContent = metric.label;
+    tab.onclick = ()=>{
+      document.querySelectorAll('#raceTabs .tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      renderRaceMetric(metric,content);
+    };
+    tabs.appendChild(tab);
+  });
+  
+  container.appendChild(tabs);
+  container.appendChild(content);
+  renderRaceMetric(metrics[0],content);
+}
+
+function renderRaceMetric(metric,container){
+  const sorted = [...COUNTRY_ENERGY].sort((a,b)=>b[metric.key]-a[metric.key]);
+  container.innerHTML = sorted.map(c=>`
+    <div class="race-row">
+      <div class="race-flag">${c.flag}</div>
+      <div class="race-country">${c.name}</div>
+      <div class="race-bar-bg">
+        <div class="race-fill" style="width:0%;background:${c.color}" data-w="${c[metric.key]/metric.max*100}">
+          ${c[metric.key]}${metric.key==='invest'?'B':'%'}
+        </div>
+      </div>
+      <div class="race-pct" style="color:${c.color}">${c[metric.key]}${metric.key==='invest'?'B':'%'}</div>
+    </div>
+  `).join('');
+  setTimeout(()=>{
+    container.querySelectorAll('.race-fill').forEach(f=>f.style.width=f.dataset.w+'%');
+  },100);
+}
+
+function renderComparison(){
+  const tabs = document.getElementById('compTabs');
+  const content = document.getElementById('compContent');
+  const metrics = [
+    {key:'mineralScore',label:'Mineral Bağımsızlığı',color:'var(--red)'},
+    {key:'costScore',label:'Maliyet Rekabeti',color:'var(--gold)'},
+    {key:'safetyScore',label:'Güvenlik',color:'var(--green)'},
+    {key:'scalabilityScore',label:'Ölçeklenebilirlik',color:'var(--cyan)'},
+  ];
+  
+  metrics.forEach((m,i)=>{
+    const tab = document.createElement('div');
+    tab.className = `tab ${i===0?'active':''}`;
+    tab.textContent = m.label;
+    tab.onclick = ()=>{
+      document.querySelectorAll('#compTabs .tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      renderCompBars(m,content);
+    };
+    tabs.appendChild(tab);
+  });
+  renderCompBars(metrics[0],content);
+}
+
+function renderCompBars(metric,container){
+  const sorted = [...TECH_DATA].sort((a,b)=>b[metric.key]-a[metric.key]);
+  container.innerHTML = `<div class="comp-bars">${sorted.map(t=>`
+    <div class="cb-row">
+      <div class="cb-label">${t.icon} ${t.name.substring(0,20)}</div>
+      <div class="cb-bar">
+        <div class="cb-fill" style="width:0%;background:${t.color}" data-w="${t[metric.key]}">
+          ${t[metric.key]}%
+        </div>
+      </div>
+      <div class="cb-val" style="color:${t.color}">${t[metric.key]}%</div>
+    </div>
+  `).join('')}</div>`;
+  setTimeout(()=>{
+    container.querySelectorAll('.cb-fill').forEach(f=>f.style.width=f.dataset.w+'%');
+  },100);
+}
+
+// ===== INIT =====
+window.addEventListener('load',()=>{
+  renderStats();
+  renderTechCards();
+  renderTimeline();
+  renderMinerals();
+  renderCountryRace();
+  renderComparison();
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

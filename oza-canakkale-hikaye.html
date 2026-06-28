@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Çanakkale 1915 — Boğaz'ın Hikâyesi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9a24b;--red:#c41e3a;--navy:#0a1628;--text:#eaf0f7;--dim:#7a8a9e}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--navy);color:var(--text);font-family:'IBM Plex Sans',sans-serif;touch-action:none}
+#app{width:100%;height:100%;position:relative}
+
+/* Particle canvas */
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+/* Story slides */
+.slide{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 20px 20px;opacity:0;transform:translateX(100%);transition:all 0.6s cubic-bezier(0.19,1,0.22,1);pointer-events:none}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:auto}
+.slide.exit{opacity:0;transform:translateX(-100%)}
+
+/* Slide content */
+.slide-emoji{font-size:4rem;margin-bottom:12px;animation:float 3s ease-in-out infinite}
+.slide-counter{font-size:0.7rem;color:var(--dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.slide-title{font-family:'Cinzel',serif;font-size:clamp(1.4rem,4vw,2.2rem);color:var(--gold);text-align:center;margin-bottom:16px;text-shadow:0 0 20px rgba(201,162,75,0.3)}
+.slide-text{font-size:clamp(0.85rem,2.5vw,1rem);line-height:1.7;text-align:center;max-width:600px;color:var(--text);opacity:0;animation:fadeUp 0.8s ease 0.3s forwards}
+.slide-fact{margin-top:20px;padding:12px 20px;border:1px solid rgba(201,162,75,0.3);border-radius:12px;background:rgba(201,162,75,0.05);font-size:0.8rem;color:var(--gold);text-align:center;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards}
+.slide-fact strong{display:block;font-size:1.8rem;margin-bottom:4px}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px;width:100%;max-width:400px}
+.stat-card{background:rgba(255,255,255,0.03);border:1px solid rgba(201,162,75,0.2);border-radius:10px;padding:12px;text-align:center;opacity:0;animation:popIn 0.5s ease forwards}
+.stat-card:nth-child(1){animation-delay:0.3s}
+.stat-card:nth-child(2){animation-delay:0.5s}
+.stat-card:nth-child(3){animation-delay:0.7s}
+.stat-card:nth-child(4){animation-delay:0.9s}
+.stat-val{font-size:1.5rem;font-weight:700;color:var(--gold)}
+.stat-lbl{font-size:0.65rem;color:var(--dim);margin-top:4px}
+
+/* Navigation */
+.nav-hint{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:50;font-size:0.7rem;color:var(--dim);letter-spacing:2px;animation:pulse 2s ease infinite}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold));z-index:100;transition:width 0.4s ease}
+
+/* Music toggle */
+.music-btn{position:fixed;top:15px;right:15px;z-index:100;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.5);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem;transition:0.3s}
+.music-btn:hover{background:rgba(201,162,75,0.2);transform:scale(1.1)}
+.music-btn.muted{opacity:0.4}
+
+/* Back button */
+.back-btn{position:fixed;top:15px;left:15px;z-index:100;padding:6px 12px;border-radius:8px;background:rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.15);color:var(--dim);font-size:0.7rem;text-decoration:none;transition:0.3s;backdrop-filter:blur(4px)}
+.back-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Impact effect */
+.impact-flash{position:fixed;inset:0;z-index:200;background:rgba(196,30,58,0.3);opacity:0;pointer-events:none;transition:opacity 0.1s}
+.impact-flash.active{opacity:1}
+
+/* Timeline dots */
+.timeline-dots{position:fixed;right:15px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:8px}
+.t-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--gold);cursor:pointer;transition:0.3s}
+.t-dot.active{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+
+/* Animations */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<div id="app">
+<canvas id="particles"></canvas>
+<div class="progress-bar" id="progress"></div>
+<a href="oza-turk-savas-tarihi-hub.html" class="back-btn">← Savaş Tarihi</a>
+<div class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</div>
+<div class="impact-flash" id="flash"></div>
+<div class="timeline-dots" id="dots"></div>
+<div class="nav-hint">← KAYDIR VEYA TIKLA →</div>
+
+<!-- SLIDES -->
+<div class="slide active" id="s0">
+<div class="slide-emoji">⚔️</div>
+<div class="slide-counter">BÖLÜM 1 / 10</div>
+<div class="slide-title">Çanakkale 1915<br>Boğaz'ın Hikâyesi</div>
+<div class="slide-text">18. yüzyılda Fransız İhtilali ile düşünce alanında, Sanayi Devrimi ile ekonomik alanda gerçekleşen yenilikçi hareketler Avrupa haritasını değiştirdi. Milliyetçilik kavramı geliştikçe çok uluslu imparatorlukların sonu gelmeye başladı.</div>
+<div class="slide-fact"><strong>1914</strong>Birinci Dünya Savaşı'nın başlangıcı</div>
+</div>
+
+<div class="slide" id="s1">
+<div class="slide-emoji">🌊</div>
+<div class="slide-counter">BÖLÜM 2 / 10</div>
+<div class="slide-title">Boğazların Stratejik Önemi</div>
+<div class="slide-text">Boğazların sömürgecilik yarışı ve sömürge yolları açısından önemi büyüktü. Boğazlara kimin egemen olacağı çözülmesi gereken büyük bir sorundu. Güçlü bir devletin hakimiyeti altına girmesi, diğer devletlerin emellerine uymuyordu.</div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val">28 Haz</div><div class="stat-lbl">Suikast Tarihi 1914</div></div>
+<div class="stat-card"><div class="stat-val">2</div><div class="stat-lbl">Karşı Blok</div></div>
+<div class="stat-card"><div class="stat-val">4 Ağu</div><div class="stat-lbl">Boğaz Savunma Planı</div></div>
+<div class="stat-card"><div class="stat-val">27 Eyl</div><div class="stat-lbl">Boğaz Kapatıldı</div></div>
+</div>
+</div>
+
+<div class="slide" id="s2">
+<div class="slide-emoji">💥</div>
+<div class="slide-counter">BÖLÜM 3 / 10</div>
+<div class="slide-title">İlk Bombardıman — 3 Kasım 1914</div>
+<div class="slide-text">Fransız ve İngiliz savaş gemileri boğaz girişindeki tabyalara bir taarruz gerçekleştirdi. Seddülbahir Kalesinin cephaneliğinin isabet alıp havaya uçmasıyla Çanakkale'nin İlk Şehitleri verilmiş oldu.</div>
+<div class="slide-fact"><strong>Churchill</strong>İngiliz Deniz Bakanı'nın ısrarıyla Çanakkale Harekâtı kabul edildi</div>
+</div>
+
+<div class="slide" id="s3">
+<div class="slide-emoji">🚢</div>
+<div class="slide-counter">BÖLÜM 4 / 10</div>
+<div class="slide-title">Nusret Mayın Gemisi</div>
+<div class="slide-text">7/8 Mart gecesi Nusret mayın gemisi gizlice Erenköy Koyunda kıyıya paralel konumda, 26 mayından oluşan 11. Mayın hattını oluşturdu. Bu mayın hattı 18 Mart'ta kader değiştirici bir rol oynayacaktı.</div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val">26</div><div class="stat-lbl">Mayın Sayısı</div></div>
+<div class="stat-card"><div class="stat-val">11.</div><div class="stat-lbl">Mayın Hattı</div></div>
+<div class="stat-card"><div class="stat-val">7/8 Mart</div><div class="stat-lbl">Gece Operasyonu</div></div>
+<div class="stat-card"><div class="stat-val">Gizli</div><div class="stat-lbl">Kıyıya Paralel</div></div>
+</div>
+</div>
+
+<div class="slide" id="s4">
+<div class="slide-emoji">⚓</div>
+<div class="slide-counter">BÖLÜM 5 / 10</div>
+<div class="slide-title">18 Mart 1915 — Büyük Taarruz</div>
+<div class="slide-text">Birleşik Filo'nun planı: İlk gün boğaz kıyısındaki tabyaların susturulması ve mayın hatlarının açılması suretiyle Marmara'ya geçmek. Harekat sabah 08.15'te Queen Elizabeth'in direğinde görülen ileriye hareket işareti ile başladı.</div>
+<div class="slide-fact"><strong>3 Hat</strong>Filo üç hat şeklinde düzen almıştı</div>
+</div>
+
+<div class="slide" id="s5">
+<div class="slide-emoji">🎯</div>
+<div class="slide-counter">BÖLÜM 6 / 10</div>
+<div class="slide-title">Türk Topçusu Ateş Açıyor!</div>
+<div class="slide-text">Üçüncü hattaki daha eski savaş gemileri de ilerleyip Türk topçusunun menziline girdiğinde durum değişmeye başladı. Türk topçusu tarafından ateş altında kalan gemiler geri çekilmeye başladılar.</div>
+<div class="slide-fact"><strong>Seyit Onbaşı</strong>275 kg'lık mermiyi tek başına taşıyan kahraman</div>
+</div>
+
+<div class="slide" id="s6">
+<div class="slide-emoji">💣</div>
+<div class="slide-counter">BÖLÜM 7 / 10</div>
+<div class="slide-title">Mayın Tarlası — Felaket!</div>
+<div class="slide-text">Dönüş manevrası yapılan alandaki mayın faktörü filonun çekilişini büyük oranda etkiledi. Amiral de Robeck bir mayın tarlası içinde olduklarını anladı.</div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val">3</div><div class="stat-lbl">Batan Gemi</div></div>
+<div class="stat-card"><div class="stat-val">4</div><div class="stat-lbl">Ağır Hasarlı</div></div>
+<div class="stat-card"><div class="stat-val">17:00</div><div class="stat-lbl">Geri Çekilme</div></div>
+<div class="stat-card"><div class="stat-val">Bouvet</div><div class="stat-lbl">İlk Batan Gemi</div></div>
+</div>
+</div>
+
+<div class="slide" id="s7">
+<div class="slide-emoji">🏆</div>
+<div class="slide-counter">BÖLÜM 8 / 10</div>
+<div class="slide-title">Zafer! — Geçilmez!</div>
+<div class="slide-text">Büyük boğaz harekâtında zafer, tabyalarımızdaki Türk topçuları ve boğazın kalbine ustaca döşenen mayın hatları sayesinde Türklerin oldu. Çelik zırhlara bürünmüş, her yönüyle teknik üstünlüğe sahip armadaya karşı can siperane mücadele!</div>
+<div class="slide-fact"><strong>Çanakkale Geçilmez!</strong>Deniz zaferinin ardından kara muharebeleri başlayacaktı</div>
+</div>
+
+<div class="slide" id="s8">
+<div class="slide-emoji">🗺️</div>
+<div class="slide-counter">BÖLÜM 9 / 10</div>
+<div class="slide-title">Batan Gemiler</div>
+<div class="slide-text">Bouvet, Irresistible ve Ocean battı. Inflexible, Gaulois, Suffren ve Agamemnon ağır hasar aldı. İtilaf Devletleri'nin en güçlü donanması Türk azmi karşısında geri çekilmek zorunda kaldı.</div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-val">Bouvet</div><div class="stat-lbl">Fransız Zırhlısı</div></div>
+<div class="stat-card"><div class="stat-val">Ocean</div><div class="stat-lbl">İngiliz Zırhlısı</div></div>
+<div class="stat-card"><div class="stat-val">Irresistible</div><div class="stat-lbl">İngiliz Zırhlısı</div></div>
+<div class="stat-card"><div class="stat-val">Suffren</div><div class="stat-lbl">Fransız (Hasarlı)</div></div>
+</div>
+</div>
+
+<div class="slide" id="s9">
+<div class="slide-emoji">🇹🇷</div>
+<div class="slide-counter">BÖLÜM 10 / 10</div>
+<div class="slide-title">Sonuç ve Miras</div>
+<div class="slide-text">Çanakkale Zaferi, Türk milletinin varoluş mücadelesinin sembolüdür. Teknolojik üstünlüğe karşı inanç, strateji ve cesaretin galip geldiği bu destan, Kurtuluş Savaşı'nın da ilham kaynağı olmuştur.</div>
+<div class="slide-fact" style="font-style:italic;line-height:1.8;font-size:0.9rem;max-width:400px;margin:0 auto;text-align:center">
+<strong style="font-size:1.1rem;display:block;margin-bottom:10px">BİR YOLCUYA</strong>
+Dur yolcu! Bilmeden gelip bastığın<br>
+Bu toprak, bir devrin battığı yerdir.<br>
+Eğil de kulak ver, bu sessiz yığın<br>
+Bir vatan kalbinin attığı yerdir.<br><br>
+Bu ıssız, gölgesiz yolun sonunda<br>
+Gördüğün bu tümsek, Anadolu'nda<br>
+İstiklal uğrunda, namus yolunda<br>
+Can veren Mehmed'in yattığı yerdir.<br><br>
+Bu tümsek, koparken büyük zelzele,<br>
+Son vatan parçası geçerken ele,<br>
+Mehmed'in düşmanı boğduğu sele<br>
+Mübarek kanının aktığı yerdir.<br><br>
+<em style="color:#f4a261">— Necmettin Halil Onan</em>
+</div>
+</div>
+
+</div>
+
+<script>
+// Particle system
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize(); window.addEventListener('resize',resize);
+
+const particles = [];
+for(let i=0;i<60;i++){
+    particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,r:Math.random()*2,a:Math.random()*0.5});
+}
+function drawParticles(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+        if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(201,162,75,${p.a})`;ctx.fill();
+    });
+    requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// Slide system
+let current = 0;
+const total = 10;
+const slides = document.querySelectorAll('.slide');
+const progress = document.getElementById('progress');
+const flash = document.getElementById('flash');
+const dotsContainer = document.getElementById('dots');
+
+// Create timeline dots
+for(let i=0;i<total;i++){
+    const d = document.createElement('div');
+    d.className = 't-dot' + (i===0?' active':'');
+    d.onclick = ()=>goTo(i);
+    dotsContainer.appendChild(d);
+}
+
+function updateDots(){
+    document.querySelectorAll('.t-dot').forEach((d,i)=>{
+        d.classList.toggle('active',i===current);
+    });
+}
+
+function goTo(idx){
+    if(idx===current||idx<0||idx>=total)return;
+    const dir = idx > current ? 1 : -1;
+    slides[current].classList.remove('active');
+    slides[current].classList.add(dir>0?'exit':'');
+    setTimeout(()=>slides[current-dir]&&slides[current-dir].classList.remove('exit'),600);
+    current = idx;
+    slides[current].classList.add('active');
+    progress.style.width = ((current+1)/total*100)+'%';
+    updateDots();
+    
+    // Impact effect on battle slides
+    if([2,5,6].includes(current)){
+        flash.classList.add('active');
+        setTimeout(()=>flash.classList.remove('active'),150);
+        document.body.style.animation = 'shake 0.3s ease';
+        setTimeout(()=>document.body.style.animation='',300);
+        playImpact();
+    }
+    playTransition();
+}
+
+function next(){goTo(current+1)}
+function prev(){goTo(current-1)}
+
+// Touch/swipe
+let startX=0,startY=0;
+document.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;startY=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchend',e=>{
+    const dx=startX-e.changedTouches[0].clientX;
+    const dy=Math.abs(startY-e.changedTouches[0].clientY);
+    if(Math.abs(dx)>50&&dy<100){dx>0?next():prev()}
+},{passive:true});
+
+// Click navigation
+document.addEventListener('click',e=>{
+    if(e.target.closest('.music-btn,.back-btn,.t-dot,.stat-card'))return;
+    const x=e.clientX;
+    if(x>window.innerWidth*0.6)next();
+    else if(x<window.innerWidth*0.4)prev();
+});
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' ')next();
+    if(e.key==='ArrowLeft')prev();
+});
+
+// Audio system
+let audioCtx, isPlaying=false;
+function initAudio(){
+    if(audioCtx)return;
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+}
+
+function playNote(freq,dur,type='sine',vol=0.1){
+    if(!audioCtx)return;
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+    osc.type=type;osc.frequency.value=freq;
+    gain.gain.setValueAtTime(vol,audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.start();osc.stop(audioCtx.currentTime+dur);
+}
+
+function playTransition(){
+    if(!audioCtx||!isPlaying)return;
+    playNote(440,0.15,'sine',0.05);
+    setTimeout(()=>playNote(554,0.15,'sine',0.04),80);
+}
+
+function playImpact(){
+    if(!audioCtx||!isPlaying)return;
+    playNote(80,0.4,'sawtooth',0.15);
+    playNote(60,0.3,'square',0.1);
+}
+
+let bgInterval;
+function startBGM(){
+    if(!audioCtx)return;
+    const melody=[220,262,294,330,262,220,196,220];
+    let i=0;
+    bgInterval=setInterval(()=>{
+        if(!isPlaying)return;
+        playNote(melody[i%melody.length],1.5,'sine',0.03);
+        playNote(melody[i%melody.length]/2,2,'triangle',0.02);
+        i++;
+    },2000);
+}
+
+function toggleMusic(){
+    initAudio();
+    isPlaying=!isPlaying;
+    document.getElementById('musicBtn').classList.toggle('muted',!isPlaying);
+    if(isPlaying){startBGM()}else{clearInterval(bgInterval)}
+}
+
+// Auto-start music on first interaction
+document.addEventListener('click',function once(){
+    initAudio();isPlaying=true;startBGM();
+    document.getElementById('musicBtn').classList.remove('muted');
+    document.removeEventListener('click',once);
+},{once:true});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

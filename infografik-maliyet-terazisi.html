@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İnsansız Cehennem — Maliyet Terazisi İnfografik</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:5px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;color:var(--red)}
+.hero{text-align:center;padding:36px 20px 20px;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-block;padding:4px 14px;border:1px solid var(--red);border-radius:20px;font-size:13px;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(20px,4.5vw,34px);font-weight:700;line-height:1.2;margin-bottom:10px}
+.hero h1 span{color:var(--red)}
+.hero p{font-size:13px;color:var(--dim);line-height:1.8;max-width:620px;margin:0 auto}
+/* Budget slider */
+.slider-section{max-width:700px;margin:24px auto;padding:0 16px}
+.slider-label{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);text-align:center;margin-bottom:10px}
+.budget-display{font-family:'Chakra Petch',sans-serif;font-size:36px;font-weight:700;color:var(--cyan);text-align:center;margin-bottom:10px}
+.budget-sub{font-size:13px;color:var(--dim);text-align:center;margin-bottom:14px}
+input[type=range]{width:100%;-webkit-appearance:none;height:8px;border-radius:4px;background:linear-gradient(to right,var(--cyan) 0%,var(--cyan) 50%,rgba(255,255,255,.1) 50%);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--cyan);border:3px solid var(--bg);cursor:pointer;box-shadow:0 0 10px rgba(0,224,255,.5)}
+/* Scale */
+.scale-marks{display:flex;justify-content:space-between;font-size:13px;color:var(--dim);margin-top:6px;padding:0 2px}
+/* Terazi */
+.terazi-section{max-width:900px;margin:24px auto;padding:0 16px}
+.terazi-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;position:relative}
+.terazi-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);text-align:center;margin-bottom:16px}
+.terazi-arms{display:flex;align-items:flex-start;gap:0;position:relative;min-height:200px}
+.terazi-pole{position:absolute;left:50%;top:0;transform:translateX(-50%);width:4px;height:60px;background:linear-gradient(to bottom,var(--gold),rgba(201,162,75,.3));border-radius:2px}
+.terazi-beam{position:absolute;top:55px;left:10%;right:10%;height:4px;background:var(--gold);border-radius:2px;transform-origin:center;transition:transform .8s ease}
+.terazi-left{position:absolute;left:5%;top:60px;width:35%;text-align:center;transition:transform .8s ease;transform-origin:top center}
+.terazi-right{position:absolute;right:5%;top:60px;width:35%;text-align:center;transition:transform .8s ease;transform-origin:top center}
+.terazi-kefe{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:14px;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.terazi-icon{font-size:clamp(28px,6vw,48px);margin-bottom:6px}
+.terazi-name{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.terazi-count{font-family:'Chakra Petch',sans-serif;font-size:clamp(18px,4vw,28px);font-weight:700;color:var(--red)}
+.terazi-price{font-size:13px;color:var(--dim)}
+.drone-swarm{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;margin-top:6px;max-height:80px;overflow:hidden}
+.drone-icon{font-size:12px;animation:floatDrone .5s infinite alternate}
+@keyframes floatDrone{0%{transform:translateY(0)}100%{transform:translateY(-2px)}}
+/* Canvas simulation */
+.sim-section{max-width:900px;margin:24px auto;padding:0 16px}
+.sim-title{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--gold);text-align:center;margin-bottom:12px}
+.sim-wrap{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+canvas#sim{display:block;width:100%;background:#060d14}
+.sim-controls{display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.sim-btn{padding:10px 20px;border:2px solid;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:var(--panel);transition:.2s}
+.sim-btn:hover{transform:scale(1.03)}
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;max-width:900px;margin:24px auto;padding:0 16px 40px}
+.stat-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.stat-num{font-family:'Chakra Petch',sans-serif;font-size:24px;font-weight:700}
+.stat-label{font-size:13px;color:var(--dim);margin-top:4px;text-transform:uppercase}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">⚖️ İNSANSIZ CEHENNEM — MALİYET TERAZİSİ</div>
+  <div style="font-size:13px;color:var(--dim);margin-left:auto">Asimetrik Savaş Ekonomisi</div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">İnteraktif İnfografik</div>
+  <h1>Aynı Bütçeyle <span>15.000 Drone</span><br>veya 1 Uçak Gemisi?</h1>
+  <p>Modern savaşın en çarpıcı gerçeği: Maliyet asimetrisi savunmacının aleyhine çalışıyor. Bütçe kaydıracını hareket ettir, teraziyi izle ve sürü simülasyonunu başlat.</p>
+</div>
+
+<div class="slider-section">
+  <div class="slider-label">💰 SAVUNMA BÜTÇESİ</div>
+  <div class="budget-display" id="budget-display">$1,5 Milyar</div>
+  <div class="budget-sub" id="budget-sub">1 Uçak Gemisi = $1,5 Milyar · 1 FPV Drone = $500</div>
+  <input type="range" id="budget-slider" min="1" max="100" value="50" oninput="updateBudget(this.value)">
+  <div class="scale-marks">
+    <span>$30M</span><span>$500M</span><span>$1,5Mrd</span><span>$5Mrd</span><span>$10Mrd</span>
+  </div>
+</div>
+
+<div class="terazi-section">
+  <div class="terazi-wrap">
+    <div class="terazi-title">⚖️ MALİYET TERAZİSİ</div>
+    <div class="terazi-arms" style="height:220px">
+      <div class="terazi-pole"></div>
+      <div class="terazi-beam" id="terazi-beam"></div>
+      <div class="terazi-left" id="terazi-left">
+        <div class="terazi-kefe">
+          <div class="terazi-icon">⛵</div>
+          <div class="terazi-name">UÇAK GEMİSİ</div>
+          <div class="terazi-count" id="ship-count">1</div>
+          <div class="terazi-price">$1,5 Milyar/adet</div>
+        </div>
+      </div>
+      <div class="terazi-right" id="terazi-right">
+        <div class="terazi-kefe">
+          <div class="terazi-icon">🚁</div>
+          <div class="terazi-name">FPV DRONE</div>
+          <div class="terazi-count" id="drone-count" style="color:var(--cyan)">3.000.000</div>
+          <div class="terazi-price">$500/adet</div>
+          <div class="drone-swarm" id="drone-swarm"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sim-section">
+  <div class="sim-title">🎮 SÜRÜ SİMÜLASYONU — Drone Sürüsü vs Uçak Gemisi</div>
+  <div class="sim-wrap"><canvas id="sim" height="280"></canvas></div>
+  <div class="sim-controls">
+    <button class="sim-btn" onclick="startSim()" style="border-color:var(--red);color:var(--red)">⚡ SİMÜLE ET</button>
+    <button class="sim-btn" onclick="resetSim()" style="border-color:var(--dim);color:var(--dim)">🔄 SIFIRLA</button>
+    <button class="sim-btn" onclick="addEH()" style="border-color:var(--cyan);color:var(--cyan)">📡 EH SİSTEMİ EKLE</button>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-num" style="color:var(--red)">200:1</div><div class="stat-label">Shahed / Patriot Maliyet</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--cyan)">4,5M</div><div class="stat-label">Ukrayna 2025 Drone Üretimi</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--gold)">183</div><div class="stat-label">Ukrayna Drone Üreticisi</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--green)">%80</div><div class="stat-label">Drone Elektroniği Çin'de</div></div>
+</div>
+
+<script>
+// Budget slider
+var budgetLevels = [
+  {val:1,display:'$30 Milyon',ships:0,drones:60000},
+  {val:10,display:'$150 Milyon',ships:0,drones:300000},
+  {val:20,display:'$300 Milyon',ships:0,drones:600000},
+  {val:30,display:'$500 Milyon',ships:0,drones:1000000},
+  {val:50,display:'$1,5 Milyar',ships:1,drones:3000000},
+  {val:60,display:'$2 Milyar',ships:1,drones:4000000},
+  {val:75,display:'$4 Milyar',ships:2,drones:8000000},
+  {val:90,display:'$7 Milyar',ships:4,drones:14000000},
+  {val:100,display:'$10 Milyar',ships:6,drones:20000000}
+];
+
+function updateBudget(val) {
+  val = parseInt(val);
+  // Update gradient
+  var slider = document.getElementById('budget-slider');
+  slider.style.background = 'linear-gradient(to right, var(--cyan) 0%, var(--cyan) '+val+'%, rgba(255,255,255,.1) '+val+'%)';
+  // Find level
+  var level = budgetLevels[0];
+  for (var i = 0; i < budgetLevels.length; i++) {
+    if (val >= budgetLevels[i].val) level = budgetLevels[i];
+  }
+  document.getElementById('budget-display').textContent = level.display;
+  document.getElementById('ship-count').textContent = level.ships;
+  document.getElementById('drone-count').textContent = level.drones.toLocaleString('tr-TR');
+  // Terazi tilt
+  var tilt = Math.min(20, level.drones / 1000000 * 3);
+  document.getElementById('terazi-beam').style.transform = 'rotate(' + tilt + 'deg)';
+  document.getElementById('terazi-left').style.transform = 'translateY(' + (-tilt * 3) + 'px)';
+  document.getElementById('terazi-right').style.transform = 'translateY(' + (tilt * 3) + 'px)';
+  // Drone swarm icons
+  var swarm = document.getElementById('drone-swarm');
+  var count = Math.min(50, Math.floor(level.drones / 100000));
+  swarm.innerHTML = '🚁'.repeat(count);
+}
+
+// Canvas simulation
+var simCanvas = document.getElementById('sim');
+var sCtx = simCanvas.getContext('2d');
+var sW, sH;
+function resizeSim() { sW = simCanvas.offsetWidth; sH = 280; simCanvas.width = sW; simCanvas.height = sH; }
+resizeSim(); window.addEventListener('resize', resizeSim);
+
+var ship = { x: 0.5, y: 0.5, hp: 100, maxHp: 100, alive: true };
+var drones = [];
+var missiles = [];
+var ehActive = false;
+var simRunning = false;
+var sFrame = 0;
+
+function createDrone() {
+  var side = Math.random() < 0.5 ? 0 : 1;
+  return {
+    x: side === 0 ? 0.05 : 0.95,
+    y: Math.random(),
+    vx: side === 0 ? 0.003 : -0.003,
+    vy: (Math.random() - 0.5) * 0.003,
+    alive: true, jammed: false
+  };
+}
+
+function startSim() {
+  simRunning = true; ship.hp = 100; ship.alive = true;
+  drones = []; missiles = [];
+  for (var i = 0; i < 40; i++) drones.push(createDrone());
+  drawSim();
+}
+
+function resetSim() {
+  simRunning = false; ship.hp = 100; ship.alive = true;
+  drones = []; missiles = []; ehActive = false;
+  sCtx.clearRect(0, 0, sW, sH);
+  sCtx.fillStyle = '#060d14'; sCtx.fillRect(0, 0, sW, sH);
+  sCtx.fillStyle = 'rgba(0,224,255,0.3)'; sCtx.font = '14px Chakra Petch';
+  sCtx.textAlign = 'center'; sCtx.fillText('⚡ "SİMÜLE ET" butonuna bas', sW/2, sH/2);
+}
+
+function addEH() { ehActive = !ehActive; }
+
+var simAnimId;
+function drawSim() {
+  if (!simRunning) return;
+  cancelAnimationFrame(simAnimId);
+  sCtx.clearRect(0, 0, sW, sH);
+  sCtx.fillStyle = '#060d14'; sCtx.fillRect(0, 0, sW, sH);
+  // Grid
+  sCtx.strokeStyle = 'rgba(0,224,255,0.03)'; sCtx.lineWidth = 1;
+  for (var x = 0; x < sW; x += 30) { sCtx.beginPath(); sCtx.moveTo(x,0); sCtx.lineTo(x,sH); sCtx.stroke(); }
+  for (var y = 0; y < sH; y += 30) { sCtx.beginPath(); sCtx.moveTo(0,y); sCtx.lineTo(sW,y); sCtx.stroke(); }
+
+  // EH radius
+  if (ehActive) {
+    sCtx.beginPath(); sCtx.arc(ship.x*sW, ship.y*sH, 80, 0, Math.PI*2);
+    sCtx.strokeStyle = 'rgba(0,224,255,0.2)'; sCtx.lineWidth = 2;
+    sCtx.setLineDash([5,5]); sCtx.stroke(); sCtx.setLineDash([]);
+    sCtx.fillStyle = 'rgba(0,224,255,0.04)'; sCtx.fill();
+    sCtx.fillStyle = 'rgba(0,224,255,0.5)'; sCtx.font = '10px IBM Plex Mono'; sCtx.textAlign = 'center';
+    sCtx.fillText('EH KORUMA ALANI', ship.x*sW, ship.y*sH - 90);
+  }
+
+  // Ship
+  if (ship.alive) {
+    sCtx.font = '28px serif'; sCtx.textAlign = 'center';
+    sCtx.fillText('⛵', ship.x*sW, ship.y*sH + 10);
+    // HP bar
+    var hpW = 60, hpH = 6;
+    sCtx.fillStyle = 'rgba(255,255,255,.1)'; sCtx.fillRect(ship.x*sW-hpW/2, ship.y*sH-28, hpW, hpH);
+    var hpColor = ship.hp > 50 ? '#00ff88' : ship.hp > 25 ? '#C9A24B' : '#E01515';
+    sCtx.fillStyle = hpColor; sCtx.fillRect(ship.x*sW-hpW/2, ship.y*sH-28, hpW*(ship.hp/100), hpH);
+    sCtx.fillStyle = 'rgba(234,240,247,0.7)'; sCtx.font = '10px IBM Plex Mono';
+    sCtx.fillText('HP: '+Math.floor(ship.hp)+'%', ship.x*sW, ship.y*sH-32);
+  }
+
+  // Drones
+  drones.forEach(function(d) {
+    if (!d.alive) return;
+    // EH jamming
+    if (ehActive) {
+      var dx = d.x*sW - ship.x*sW, dy = d.y*sH - ship.y*sH;
+      if (Math.sqrt(dx*dx+dy*dy) < 80) { d.jammed = true; }
+    } else { d.jammed = false; }
+    if (!d.jammed) {
+      d.x += d.vx; d.y += d.vy;
+      // Steer toward ship
+      var dx2 = ship.x - d.x, dy2 = ship.y - d.y;
+      var dist = Math.sqrt(dx2*dx2+dy2*dy2);
+      d.vx += dx2/dist * 0.0003; d.vy += dy2/dist * 0.0003;
+      // Speed cap
+      var spd = Math.sqrt(d.vx*d.vx+d.vy*d.vy);
+      if (spd > 0.005) { d.vx = d.vx/spd*0.005; d.vy = d.vy/spd*0.005; }
+      // Hit ship
+      if (dist < 0.04 && ship.alive) {
+        d.alive = false; ship.hp -= 3;
+        if (ship.hp <= 0) { ship.alive = false; }
+      }
+    }
+    sCtx.font = d.jammed ? '10px serif' : '12px serif';
+    sCtx.globalAlpha = d.jammed ? 0.3 : 1;
+    sCtx.textAlign = 'center';
+    sCtx.fillText('🚁', d.x*sW, d.y*sH);
+    sCtx.globalAlpha = 1;
+    if (d.jammed) {
+      sCtx.fillStyle = 'rgba(0,224,255,0.5)'; sCtx.font = '8px IBM Plex Mono';
+      sCtx.fillText('JAM', d.x*sW, d.y*sH-10);
+    }
+  });
+
+  // Respawn drones
+  if (sFrame % 30 === 0 && ship.alive) {
+    var alive = drones.filter(function(d) { return d.alive; }).length;
+    if (alive < 30) drones.push(createDrone());
+  }
+
+  // Ship destroyed
+  if (!ship.alive) {
+    sCtx.fillStyle = 'rgba(224,21,21,0.8)'; sCtx.font = 'bold 18px Chakra Petch'; sCtx.textAlign = 'center';
+    sCtx.fillText('⛵ GEMİ BATIRILD!', sW/2, sH/2 - 10);
+    sCtx.fillStyle = 'rgba(201,162,75,0.8)'; sCtx.font = '12px IBM Plex Mono';
+    sCtx.fillText('Drone sürüsü EH sistemlerini aşırı yükledi', sW/2, sH/2 + 15);
+    simRunning = false; return;
+  }
+
+  // HUD
+  sCtx.fillStyle = 'rgba(224,21,21,0.6)'; sCtx.font = '10px IBM Plex Mono'; sCtx.textAlign = 'left';
+  sCtx.fillText('AKTİF DRONE: '+drones.filter(function(d){return d.alive;}).length, 10, 16);
+  sCtx.fillStyle = 'rgba(0,224,255,0.6)'; sCtx.textAlign = 'right';
+  sCtx.fillText(ehActive ? '📡 EH AKTİF' : '⚠️ EH PASİF', sW-10, 16);
+
+  sFrame++;
+  simAnimId = requestAnimationFrame(drawSim);
+}
+
+// Init
+resetSim();
+updateBudget(50);
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

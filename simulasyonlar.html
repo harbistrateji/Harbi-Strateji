@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Simülasyonlar — Stratejik Simülasyon Merkezi | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:hidden;}
+
+/* === HERO === */
+.sim-hero{position:relative;text-align:center;padding:5rem 2rem 3rem;overflow:hidden;}
+.sim-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,224,255,.08) 0%,transparent 60%);pointer-events:none;}
+.sim-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,224,255,.3),transparent);}
+.sim-hero h1{font-family:'Oswald',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;background:linear-gradient(135deg,#00E0FF 0%,#00FF88 50%,#00E0FF 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradientShift 4s ease infinite;margin-bottom:.8rem;}
+@keyframes gradientShift{0%,100%{background-position:0% center;}50%{background-position:100% center;}}
+.sim-hero p{color:rgba(255,255,255,.6);font-size:1rem;max-width:750px;margin:0 auto;line-height:1.7;}
+.sim-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:2rem;flex-wrap:wrap;}
+.sim-stat{text-align:center;position:relative;padding:1rem 1.5rem;border-radius:12px;background:rgba(0,224,255,.03);border:1px solid rgba(0,224,255,.08);transition:all .3s;}
+.sim-stat:hover{border-color:rgba(0,224,255,.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,224,255,.1);}
+.sim-stat-num{font-family:'Oswald',sans-serif;font-size:2.2rem;font-weight:700;color:#00E0FF;display:block;}
+.sim-stat-lbl{font-size:.95rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem;font-weight:500;}
+
+/* === FILTER BAR === */
+.sim-filter-bar{display:flex;justify-content:center;gap:.6rem;padding:1.5rem 2rem;flex-wrap:wrap;position:sticky;top:0;z-index:100;background:rgba(6,10,16,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.04);}
+.sim-filter-btn{font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;padding:.5rem 1.2rem;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .25s;white-space:nowrap;}
+.sim-filter-btn:hover{border-color:rgba(0,224,255,.4);color:#00E0FF;background:rgba(0,224,255,.05);}
+.sim-filter-btn.active{background:linear-gradient(135deg,rgba(0,224,255,.15),rgba(0,255,136,.1));border-color:#00E0FF;color:#00E0FF;box-shadow:0 0 12px rgba(0,224,255,.2);}
+
+/* === CONTENT === */
+.sim-content{max-width:1300px;margin:0 auto;padding:2rem 2rem 4rem;}
+.sim-section{margin-bottom:3rem;animation:fadeInUp .6s ease both;}
+.sim-section:nth-child(2){animation-delay:.1s;}
+.sim-section:nth-child(3){animation-delay:.2s;}
+.sim-section:nth-child(4){animation-delay:.3s;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+.sim-section-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid rgba(255,255,255,.06);position:relative;}
+.sim-section-head::after{content:'';position:absolute;bottom:-1px;left:0;width:60px;height:2px;background:linear-gradient(90deg,#00E0FF,transparent);}
+.sim-section-icon{font-size:1.5rem;filter:drop-shadow(0 0 6px rgba(0,224,255,.3));}
+.sim-section-title{font-family:'Oswald',sans-serif;font-size:1.2rem;font-weight:600;color:#E8EDF5;letter-spacing:.02em;}
+.sim-section-count{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:rgba(0,224,255,.6);margin-left:auto;padding:.3rem .8rem;border-radius:12px;background:rgba(0,224,255,.06);border:1px solid rgba(0,224,255,.1);}
+
+/* === CARD GRID === */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;}
+
+/* === INTERACTIVE CARD === */
+.sim-card{position:relative;background:rgba(10,20,40,.85);border:1px solid rgba(0,224,255,.2);border-radius:14px;padding:1.5rem;cursor:pointer;transition:all .35s cubic-bezier(.19,1,.22,1);text-decoration:none;display:flex;flex-direction:column;overflow:hidden;}
+.sim-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00E0FF,#00FF88);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.19,1,.22,1);}
+.sim-card::after{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,224,255,.06) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.sim-card:hover{border-color:rgba(0,224,255,.3);transform:translateY(-4px) scale(1.01);box-shadow:0 12px 40px rgba(0,224,255,.1),0 4px 16px rgba(0,0,0,.3);}
+.sim-card:hover::before{transform:scaleX(1);}
+.sim-card:hover::after{opacity:1;}
+.sim-card:active{transform:translateY(-2px) scale(.99);}
+
+.sim-card-header{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;}
+.sim-card-icon{font-size:2rem;filter:drop-shadow(0 2px 8px rgba(0,224,255,.2));transition:transform .3s;}
+.sim-card:hover .sim-card-icon{transform:scale(1.15) rotate(-5deg);}
+.sim-card-title{font-family:'Oswald',sans-serif;font-size:1rem;font-weight:600;color:#E8EDF5;transition:color .3s;}
+.sim-card:hover .sim-card-title{color:#00E0FF;}
+.sim-card-desc{font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:.8rem;flex:1;}
+.sim-card-meta{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+.sim-card-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.2rem .6rem;border-radius:4px;background:rgba(0,224,255,.06);color:rgba(0,224,255,.8);border:1px solid rgba(0,224,255,.12);transition:all .3s;}
+.sim-card:hover .sim-card-tag{background:rgba(0,224,255,.1);border-color:rgba(0,224,255,.25);}
+.sim-card-tag.new{background:rgba(0,255,136,.06);color:#00FF88;border-color:rgba(0,255,136,.12);}
+.sim-card-tag.hot{background:rgba(255,100,50,.06);color:#FF6432;border-color:rgba(255,100,50,.12);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+
+/* Play indicator */
+.sim-card-play{position:absolute;top:1rem;right:1rem;width:28px;height:28px;border-radius:50%;background:rgba(0,224,255,.1);border:1px solid rgba(0,224,255,.2);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.8);transition:all .3s;}
+.sim-card:hover .sim-card-play{opacity:1;transform:scale(1);}
+.sim-card-play::after{content:'';width:0;height:0;border-left:8px solid #00E0FF;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px;}
+
+/* Difficulty indicator */
+.sim-card-difficulty{display:flex;gap:2px;margin-left:auto;}
+.sim-card-difficulty span{width:4px;height:12px;border-radius:2px;background:rgba(255,255,255,.15);transition:background .3s;}
+.sim-card-difficulty span.filled{background:#00E0FF;}
+.sim-card-difficulty span.filled.med{background:#FFD700;}
+.sim-card-difficulty span.filled.hard{background:#FF6432;}
+
+/* === AMBIENT PARTICLES === */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:#00E0FF;border-radius:50%;opacity:.3;animation:float-particle linear infinite;}
+@keyframes float-particle{0%{transform:translateY(100vh) translateX(0);opacity:0;}10%{opacity:.3;}90%{opacity:.3;}100%{transform:translateY(-100px) translateX(50px);opacity:0;}}
+
+/* === RESPONSIVE === */
+@media(max-width:768px){
+  .sim-hero{padding:3rem 1.5rem 2rem;}
+  .sim-hero h1{font-size:1.8rem;}
+  .sim-grid{grid-template-columns:1fr;}
+  .sim-stats{gap:1rem;}
+  .sim-stat{padding:.7rem 1rem;}
+  .sim-filter-bar{gap:.4rem;padding:1rem;}
+  .sim-filter-btn{font-size:.9rem;padding:.4rem .8rem;}
+}
+
+/* === SOUND INDICATOR === */
+.sound-toggle{position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;border-radius:50%;background:rgba(0,224,255,.1);border:1px solid rgba(0,224,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;transition:all .3s;font-size:1.2rem;}
+.sound-toggle:hover{background:rgba(0,224,255,.2);transform:scale(1.1);}
+.sound-toggle.muted{opacity:.4;}
+
+.sim-card-hidden{opacity:0;transform:translateY(20px);transition:opacity .5s, transform .5s;animation:cardAppear .6s ease forwards;}
+.sim-card-visible{opacity:1!important;transform:translateY(0)!important;transition:opacity .5s, transform .5s;}@keyframes cardAppear{to{opacity:1;transform:translateY(0);}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<!-- Ambient Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Hero -->
+<div class="sim-hero">
+  <h1>Stratejik Simülasyon Merkezi</h1>
+  <p>Algoritmik harp senaryolarından kuantum kriptografiye, sürü İHA tasarımından spektrum savaşlarına — gerçek dünya stratejik problemlerini interaktif simülasyonlarla keşfedin.</p>
+  <div class="sim-stats">
+    <div class="sim-stat"><span class="sim-stat-num" data-target="20">0</span><div class="sim-stat-lbl">Simülasyon</div></div>
+    <div class="sim-stat"><span class="sim-stat-num" data-target="4">0</span><div class="sim-stat-lbl">Kategori</div></div>
+    <div class="sim-stat"><span class="sim-stat-num" data-target="60">0</span><div class="sim-stat-lbl">Senaryo</div></div>
+    <div class="sim-stat"><span class="sim-stat-num" data-target="100">0</span><div class="sim-stat-lbl">Karar Noktası</div></div>
+  </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="sim-filter-bar">
+  <button class="sim-filter-btn active" data-filter="all">Tümü</button>
+  <button class="sim-filter-btn" data-filter="yeni">🆕 Yeni Eklenenler</button>
+  <button class="sim-filter-btn" data-filter="algoritmik">⚔️ Algoritmik Harp</button>
+  <button class="sim-filter-btn" data-filter="jeopolitik">🌍 Jeopolitik</button>
+  <button class="sim-filter-btn" data-filter="siber">💻 Siber & Teknoloji</button>
+</div>
+
+<!-- Content -->
+<div class="sim-content">
+
+<!-- YENİ EKLENENLER -->
+<section class="sim-section" data-category="yeni">
+  <div class="sim-section-head">
+    <span class="sim-section-icon">🆕</span>
+    <span class="sim-section-title">Yeni Eklenen Simülasyonlar</span>
+    <span class="sim-section-count">6 simülasyon</span>
+  </div>
+  <div class="sim-grid">
+    <a href="sim01-algoritmik-harp.html" class="sim-card" data-cat="yeni algoritmik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🧮</div>
+        <div class="sim-card-title">Algoritmik Harp Simülasyonu</div>
+      </div>
+      <div class="sim-card-desc">Yapay zekâ destekli karar döngüleri, OODA loop optimizasyonu ve algoritmik savaş senaryoları.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag new">YENİ</span><span class="sim-card-tag">Algoritmik</span><span class="sim-card-tag">YZ</span>
+        <div class="sim-card-difficulty"><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span><span></span></div>
+      </div>
+    </a>
+    <a href="siber-eh-simulatoru.html" class="sim-card" data-cat="yeni siber">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">📡</div>
+        <div class="sim-card-title">Siber / EH Operasyon Simülatörü</div>
+      </div>
+      <div class="sim-card-desc">Konvansiyonel bomba, siber solucan veya EH frekansıyla hedef devre dışı bırakma. 12 farklı senaryo.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag new">YENİ</span><span class="sim-card-tag">Siber Harp</span><span class="sim-card-tag">EH</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span></span></div>
+      </div>
+    </a>
+    <a href="suru-iha-tasarim-simulatoru.html" class="sim-card" data-cat="yeni algoritmik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🤖</div>
+        <div class="sim-card-title">Sürü İHA Tasarım Simülatörü</div>
+      </div>
+      <div class="sim-card-desc">Bütçe, işlemci, batarya ve haberleşme seçerek drone tasarlayın. Tedarik zinciri jeopolitiğini keşfedin.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag new">YENİ</span><span class="sim-card-tag">Drone</span><span class="sim-card-tag">Tedarik</span>
+        <div class="sim-card-difficulty"><span class="filled"></span><span class="filled"></span><span></span><span></span></div>
+      </div>
+    </a>
+    <a href="stratejik-mineraller-periyodik-tablo.html" class="sim-card" data-cat="yeni jeopolitik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">💎</div>
+        <div class="sim-card-title">Stratejik Mineraller — Periyodik Tablo</div>
+      </div>
+      <div class="sim-card-desc">Savunma sanayinde kritik rol oynayan stratejik mineraller. Tıklanabilir periyodik tablo ile keşfet.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag new">YENİ</span><span class="sim-card-tag">Veri Tabanı</span><span class="sim-card-tag">İnteraktif</span>
+        <div class="sim-card-difficulty"><span class="filled"></span><span></span><span></span><span></span></div>
+      </div>
+    </a>
+    <a href="kuantum-kriptografi-qkd-simulatoru.html" class="sim-card" data-cat="yeni siber">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🔐</div>
+        <div class="sim-card-title">Kuantum Kriptografi (QKD) Simülatörü</div>
+      </div>
+      <div class="sim-card-desc">Alice ve Bob arasında güvenli anahtar dağıtımı. Eve dinleyicisinin tespitini interaktif olarak izle.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag new">YENİ</span><span class="sim-card-tag">Kriptografi</span><span class="sim-card-tag">Kuantum</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span></span><span></span></div>
+      </div>
+    </a>
+    <a href="nato-ankara-zirvesi-2026.html" class="sim-card" data-cat="yeni jeopolitik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🏛️</div>
+        <div class="sim-card-title">NATO Ankara Zirvesi 2026</div>
+      </div>
+      <div class="sim-card-desc">NATO'nun Ankara'daki kritik zirvesi. Stratejik kararlar, ittifak dinamikleri ve Türkiye'nin rolü.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag new">YENİ</span><span class="sim-card-tag">NATO</span><span class="sim-card-tag">Diplomasi</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ALGORİTMİK HARP -->
+<section class="sim-section" data-category="algoritmik">
+  <div class="sim-section-head">
+    <span class="sim-section-icon">⚔️</span>
+    <span class="sim-section-title">Algoritmik Harp Simülasyonları</span>
+    <span class="sim-section-count">5 simülasyon</span>
+  </div>
+  <div class="sim-grid">
+    <a href="sim1-demir-kubbe.html" class="sim-card" data-cat="algoritmik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🛡️</div>
+        <div class="sim-card-title">Demir Kubbe — Füze Savunma</div>
+      </div>
+      <div class="sim-card-desc">Çok katmanlı hava savunma sistemi simülasyonu. Balistik ve cruise füze tehditlerine karşı müdahale.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Hava Savunma</span><span class="sim-card-tag">Algoritmik</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim2-plazma-korlugu.html" class="sim-card" data-cat="algoritmik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">⚡</div>
+        <div class="sim-card-title">Plazma Körlüğü</div>
+      </div>
+      <div class="sim-card-desc">Hipersonik araçların plazma kılıfı iletişim problemi simülasyonu.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Hipersonik</span><span class="sim-card-tag">Fizik</span>
+        <div class="sim-card-difficulty"><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span></div>
+      </div>
+    </a>
+    <a href="sim3-bilissel-kalkan.html" class="sim-card" data-cat="algoritmik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🧠</div>
+        <div class="sim-card-title">Bilişsel Kalkan</div>
+      </div>
+      <div class="sim-card-desc">Dezenformasyon ve bilişsel savaş senaryolarına karşı savunma simülasyonu.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Bilişsel Harp</span><span class="sim-card-tag">Dezenformasyon</span>
+        <div class="sim-card-difficulty"><span class="filled"></span><span class="filled"></span><span></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim4-maliyet-terazisi.html" class="sim-card" data-cat="algoritmik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">⚖️</div>
+        <div class="sim-card-title">Maliyet Terazisi</div>
+      </div>
+      <div class="sim-card-desc">Asimetrik savaşta maliyet-etkinlik analizi. Saldırı vs savunma ekonomisi.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Ekonomi</span><span class="sim-card-tag">Asimetri</span>
+        <div class="sim-card-difficulty"><span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim5-fcas-cokus.html" class="sim-card" data-cat="algoritmik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">✈️</div>
+        <div class="sim-card-title">FCAS Çöküş Senaryosu</div>
+      </div>
+      <div class="sim-card-desc">Gelecek nesil savaş uçağı programının çöküş senaryoları ve alternatifleri.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Havacılık</span><span class="sim-card-tag">FCAS</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- JEOPOLİTİK & STRATEJİK -->
+<section class="sim-section" data-category="jeopolitik">
+  <div class="sim-section-head">
+    <span class="sim-section-icon">🌍</span>
+    <span class="sim-section-title">Jeopolitik & Stratejik Simülasyonlar</span>
+    <span class="sim-section-count">5 simülasyon</span>
+  </div>
+  <div class="sim-grid">
+    <a href="sim6-pentagon-cin.html" class="sim-card" data-cat="jeopolitik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🇺🇸</div>
+        <div class="sim-card-title">Pentagon vs Çin</div>
+      </div>
+      <div class="sim-card-desc">ABD-Çin stratejik rekabet simülasyonu. Pasifik'te güç dengesi senaryoları.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">ABD-Çin</span><span class="sim-card-tag">Pasifik</span>
+        <div class="sim-card-difficulty"><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim7-darbe30-tuccar-devlet.html" class="sim-card" data-cat="jeopolitik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">💰</div>
+        <div class="sim-card-title">Darbe 30 — Tüccar Devlet</div>
+      </div>
+      <div class="sim-card-desc">Ekonomik bağımlılık ve ticaret savaşları simülasyonu.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Ekonomi</span><span class="sim-card-tag">Ticaret</span>
+        <div class="sim-card-difficulty"><span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim9-imparatorluk-stres-testi.html" class="sim-card" data-cat="jeopolitik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🏛️</div>
+        <div class="sim-card-title">İmparatorluk Stres Testi</div>
+      </div>
+      <div class="sim-card-desc">Büyük güçlerin çöküş dinamikleri. Tarihsel kalıplar ve modern paraleller.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Tarih</span><span class="sim-card-tag">Çöküş</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim14-hurmuz-petrodolar.html" class="sim-card" data-cat="jeopolitik">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🛢️</div>
+        <div class="sim-card-title">Hürmüz — Petrodolar</div>
+      </div>
+      <div class="sim-card-desc">Hürmüz Boğazı krizi ve petrodolar sistemi üzerindeki etkileri.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Enerji</span><span class="sim-card-tag">Hürmüz</span>
+        <div class="sim-card-difficulty"><span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span></div>
+      </div>
+    </a>
+    <a href="sim10-ai-polis-zihin-okuma.html" class="sim-card" data-cat="jeopolitik siber">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🤖</div>
+        <div class="sim-card-title">YZ Polis — Zihin Okuma</div>
+      </div>
+      <div class="sim-card-desc">Yapay zekâ destekli gözetim ve tahminsel polislik etik simülasyonu.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">YZ</span><span class="sim-card-tag">Etik</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span></span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- TEKNOLOJİ & SİBER -->
+<section class="sim-section" data-category="siber">
+  <div class="sim-section-head">
+    <span class="sim-section-icon">💻</span>
+    <span class="sim-section-title">Teknoloji & Siber Simülasyonlar</span>
+    <span class="sim-section-count">4 simülasyon</span>
+  </div>
+  <div class="sim-grid">
+    <a href="sim8-siber-casusluk-ai.html" class="sim-card" data-cat="siber">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🕵️</div>
+        <div class="sim-card-title">Siber Casusluk — YZ</div>
+      </div>
+      <div class="sim-card-desc">Yapay zekâ destekli siber casusluk operasyonları simülasyonu.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Siber</span><span class="sim-card-tag">YZ</span>
+        <div class="sim-card-difficulty"><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim11-kuantum-lazer-siber.html" class="sim-card" data-cat="siber">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🔬</div>
+        <div class="sim-card-title">Kuantum Lazer Siber</div>
+      </div>
+      <div class="sim-card-desc">Kuantum bilgisayarların kriptografi üzerindeki etkisi ve lazer iletişim.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Kuantum</span><span class="sim-card-tag">Lazer</span>
+        <div class="sim-card-difficulty"><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span></div>
+      </div>
+    </a>
+    <a href="sim12-spektrum-savasi.html" class="sim-card" data-cat="siber">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">📻</div>
+        <div class="sim-card-title">Spektrum Savaşı</div>
+      </div>
+      <div class="sim-card-desc">Elektromanyetik spektrum üzerinde hâkimiyet mücadelesi simülasyonu.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag hot">POPÜLER</span><span class="sim-card-tag">EMS</span><span class="sim-card-tag">EW</span>
+        <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span></span></div>
+      </div>
+    </a>
+    <a href="sim13-gelecegin-askeri.html" class="sim-card" data-cat="siber">
+      <div class="sim-card-play"></div>
+      <div class="sim-card-header">
+        <div class="sim-card-icon">🦾</div>
+        <div class="sim-card-title">Geleceğin Askeri</div>
+      </div>
+      <div class="sim-card-desc">2040 muharebe ortamı: otonom sistemler, artırılmış gerçeklik, biyonik asker.</div>
+      <div class="sim-card-meta">
+        <span class="sim-card-tag">Gelecek</span><span class="sim-card-tag">Otonom</span>
+        <div class="sim-card-difficulty"><span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span></div>
+      </div>
+    </a>
+  </div>
+
+    <!-- X/Y Kuşağı Analiz Sayfaları -->
+    <div class="sim-card" data-cat="siber algoritmik" onclick="location.href='siber-operasyon-odasi.html'">
+      <div class="card-top-line" style="background:linear-gradient(90deg,#ef4444,#f59e0b)"></div>
+      <div class="card-icon">🖥️</div>
+      <h3 class="card-title">Siber Operasyon Odası</h3>
+      <p class="card-desc">Bütüncül stratejik matris — konvansiyonel vs algoritmik savaş karşılaştırması, OODA-X analizi, canlı osiloskop.</p>
+      <div class="card-tags"><span class="tag">Siber</span><span class="tag">Algoritmik</span><span class="tag">X/Y Kuşağı</span></div>
+      <div class="difficulty-bar" style="--diff-color:#ef4444;--diff-width:90%"></div>
+    </div>
+    <div class="sim-card" data-cat="jeopolitik askeri" onclick="location.href='kuresel-askeri-sistemler.html'">
+      <div class="card-top-line" style="background:linear-gradient(90deg,#10b981,#3b82f6)"></div>
+      <div class="card-icon">🌐</div>
+      <h3 class="card-title">Küresel Askeri Sistemler Analizi</h3>
+      <p class="card-desc">Konvansiyonel vs algoritmik savaş odası — İran operasyonu söylem analizi, Mind×Mine sentezi, maliyet asimetrisi.</p>
+      <div class="card-tags"><span class="tag">Jeopolitik</span><span class="tag">Askeri</span><span class="tag">X/Y Kuşağı</span></div>
+      <div class="difficulty-bar" style="--diff-color:#10b981;--diff-width:85%"></div>
+    </div>
+</section>
+
+</div>
+
+<!-- Sound Toggle -->
+<div class="sound-toggle" id="soundToggle" title="Ses Efektleri">🔊</div>
+
+<script>
+// === AMBIENT PARTICLES ===
+(function(){
+  const container = document.getElementById('particles');
+  for(let i=0;i<30;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDuration = (8+Math.random()*12)+'s';
+    p.style.animationDelay = Math.random()*8+'s';
+    p.style.width = p.style.height = (1+Math.random()*2)+'px';
+    container.appendChild(p);
+  }
+})();
+
+// === COUNTER ANIMATION ===
+function animateCounters(){
+  document.querySelectorAll('.sim-stat-num[data-target]').forEach(el=>{
+    const target = +el.dataset.target;
+    const duration = 1500;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now-start)/duration,1);
+      const eased = 1-Math.pow(1-progress,3);
+      el.textContent = Math.round(target*eased)+(target>=100?'+':'');
+      if(progress<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// Intersection Observer for counters
+const heroObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){animateCounters();heroObs.disconnect();}});
+},{threshold:0.3});
+heroObs.observe(document.querySelector('.sim-hero'));
+
+// === CARD MOUSE TRACKING ===
+document.querySelectorAll('.sim-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX-rect.left)/rect.width*100).toFixed(1);
+    const y = ((e.clientY-rect.top)/rect.height*100).toFixed(1);
+    card.style.setProperty('--mx',x+'%');
+    card.style.setProperty('--my',y+'%');
+  });
+});
+
+// === SOUND EFFECTS (Web Audio API) ===
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+}
+
+function playHoverSound(){
+  if(!soundEnabled) return;
+  initAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(800,audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(1200,audioCtx.currentTime+0.08);
+  gain.gain.setValueAtTime(0.03,audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.15);
+  osc.start();
+  osc.stop(audioCtx.currentTime+0.15);
+}
+
+function playClickSound(){
+  if(!soundEnabled) return;
+  initAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(400,audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(800,audioCtx.currentTime+0.1);
+  gain.gain.setValueAtTime(0.05,audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.2);
+  osc.start();
+  osc.stop(audioCtx.currentTime+0.2);
+}
+
+document.querySelectorAll('.sim-card').forEach(card=>{
+  card.addEventListener('mouseenter',playHoverSound);
+  card.addEventListener('click',playClickSound);
+});
+
+// Sound toggle
+const soundToggle = document.getElementById('soundToggle');
+soundToggle.addEventListener('click',()=>{
+  soundEnabled = !soundEnabled;
+  soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+  soundToggle.classList.toggle('muted',!soundEnabled);
+});
+
+// === FILTER SYSTEM ===
+const filterBtns = document.querySelectorAll('.sim-filter-btn');
+const sections = document.querySelectorAll('.sim-section');
+
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    filterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    
+    sections.forEach(section=>{
+      if(filter==='all'){
+        section.style.display='';
+        section.style.animation='fadeInUp .4s ease both';
+        section.querySelectorAll('.sim-card').forEach(card=>{
+          card.style.display='';
+          card.classList.remove('sim-card-hidden');
+          card.classList.add('sim-card-visible');
+        });
+      } else {
+        const cat = section.dataset.category;
+        if(cat===filter){
+          section.style.display='';
+          section.style.animation='fadeInUp .4s ease both';
+          section.querySelectorAll('.sim-card').forEach(card=>{
+            card.style.display='';
+            card.style.opacity='1';
+            card.style.transform='translateY(0)';
+          });
+        } else {
+          section.style.display='none';
+        }
+      }
+    });
+  });
+});
+
+// === SCROLL REVEAL ===
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.remove('sim-card-hidden');
+      e.target.classList.add('sim-card-visible');
+    }
+  });
+},{threshold:0.1});
+
+document.querySelectorAll('.sim-card').forEach((card,i)=>{
+  card.classList.add('sim-card-hidden');
+  card.style.transitionDelay = (i*0.05)+'s';
+  revealObs.observe(card);
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Haberler — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--ed-red:#c41e3a;--ed-black:#0a0f17;--ed-white:#0d1420;--ed-gray:#141c2b;--ed-border:rgba(255,255,255,.08);--ed-muted:rgba(255,255,255,.45);--ed-text:#e0e4ea;--font-serif:'Playfair Display',serif;--font-sans:'IBM Plex Sans',sans-serif;--font-mono:'IBM Plex Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-sans);background:#0a0f17;color:#e0e4ea}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+.nav{background:rgba(10,15,23,.95);border-bottom:1px solid rgba(255,255,255,.06);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.nav-brand{font-family:var(--font-serif);font-size:20px;font-weight:900;color:#e8eaed}
+.nav-links{display:flex;gap:20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.nav-links a{color:var(--ed-muted);transition:color .2s}
+.nav-links a:hover,.nav-links a.on{color:var(--ed-red)}
+.back-btn{font-family:var(--font-mono);font-size:11px;color:var(--ed-muted);display:flex;align-items:center;gap:6px}
+.back-btn:hover{color:var(--ed-red)}
+
+/* HEADER */
+.page-header{padding:40px 24px 24px;border-bottom:1px solid rgba(255,255,255,.06)}
+.page-header h1{font-family:var(--font-serif);font-size:42px;font-weight:900;color:#c9a84c;margin-bottom:8px}
+.page-header p{font-size:14px;color:var(--ed-muted);max-width:600px;line-height:1.6}
+
+/* TICKER */
+.ticker-bar{background:var(--ed-red);padding:10px 24px;overflow:hidden;position:relative}
+.ticker-bar .ticker{display:inline-block;white-space:nowrap;animation:tickerScroll 40s linear infinite;font-size:12px;color:#fff;font-weight:500;padding-left:100%}
+.ticker-bar .ticker b{color:#ffd700}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+
+/* FILTER */
+.filter-bar{padding:16px 24px;border-bottom:1px solid var(--ed-border);display:flex;gap:10px;flex-wrap:wrap}
+.filter-btn{font-family:var(--font-mono);font-size:11px;padding:6px 14px;border:1px solid rgba(255,255,255,.15);border-radius:20px;cursor:pointer;transition:all .2s;background:transparent;color:rgba(255,255,255,.6)}
+.filter-btn:hover,.filter-btn.active{background:var(--ed-red);color:#fff;border-color:var(--ed-red)}
+
+/* CONTENT */
+.content{max-width:1200px;margin:0 auto;padding:32px 24px}
+
+/* FEATURED */
+.featured{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--ed-border)}
+.featured-main{position:relative}
+.featured-main .img-placeholder{background:linear-gradient(135deg,#1a1a1a,#333);aspect-ratio:16/9;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:16px}
+.featured-main .kicker{font-family:var(--font-mono);font-size:10px;color:var(--ed-red);text-transform:uppercase;letter-spacing:.15em;margin-bottom:8px;font-weight:700}
+.featured-main h2{font-family:var(--font-serif);font-size:28px;font-weight:700;line-height:1.2;margin-bottom:10px;color:#e8eaed}
+.featured-main p{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7}
+.featured-main .meta{font-family:var(--font-mono);font-size:10px;color:var(--ed-muted);margin-top:12px}
+.featured-side{display:flex;flex-direction:column;gap:16px}
+.featured-side-item{padding:16px;border:1px solid rgba(255,255,255,.08);border-radius:8px;transition:all .2s;background:rgba(255,255,255,.02)}
+.featured-side-item:hover{border-color:var(--ed-red);box-shadow:0 4px 12px rgba(196,30,58,.08)}
+.featured-side-item .kicker{font-family:var(--font-mono);font-size:9px;color:var(--ed-red);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;font-weight:700}
+.featured-side-item h3{font-family:var(--font-serif);font-size:15px;font-weight:700;line-height:1.3;margin-bottom:4px;color:#e8eaed}
+.featured-side-item .meta{font-family:var(--font-mono);font-size:9px;color:var(--ed-muted)}
+
+/* SECTION HEADERS */
+.section-head{display:flex;align-items:center;gap:16px;margin-bottom:24px;margin-top:40px}
+.section-head h2{font-family:var(--font-serif);font-size:22px;font-weight:700;white-space:nowrap;color:#e8eaed}
+.section-head .line{flex:1;height:1px;background:rgba(255,255,255,.08)}
+.section-head .count{font-family:var(--font-mono);font-size:10px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:12px}
+
+/* NEWS GRID */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
+.news-card{border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:20px;transition:all .2s;background:rgba(255,255,255,.02)}
+.news-card:hover{border-color:var(--ed-red);transform:translateY(-2px);box-shadow:0 6px 20px rgba(196,30,58,.08)}
+.news-card .kicker{font-family:var(--font-mono);font-size:9px;color:var(--ed-red);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;font-weight:700}
+.news-card h3{font-family:var(--font-serif);font-size:15px;font-weight:700;line-height:1.3;margin-bottom:8px;color:#e8eaed}
+.news-card p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:10px}
+.news-card .meta{font-family:var(--font-mono);font-size:9px;color:var(--ed-muted);display:flex;justify-content:space-between}
+.news-card .tag{font-size:9px;padding:2px 8px;background:rgba(255,255,255,.06);border-radius:10px;color:rgba(255,255,255,.5)}
+
+/* ANALYSIS SECTION */
+.analysis-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:40px}
+.analysis-card{display:flex;gap:16px;padding:20px;border:1px solid rgba(255,255,255,.08);border-radius:8px;transition:all .2s;background:rgba(255,255,255,.02)}
+.analysis-card:hover{border-color:var(--ed-red)}
+.analysis-card .num{font-family:var(--font-serif);font-size:32px;color:var(--ed-red);font-weight:700;min-width:50px}
+.analysis-card h3{font-family:var(--font-serif);font-size:14px;font-weight:700;margin-bottom:4px;color:#e8eaed}
+.analysis-card p{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+
+/* FOOTER */
+.footer{background:var(--ed-black);color:#ccc;padding:20px 24px;font-size:11px;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);margin-top:60px}
+.footer a{color:var(--ed-red)}
+
+@media(max-width:900px){
+  .featured{grid-template-columns:1fr}
+  .news-grid{grid-template-columns:1fr}
+  .analysis-grid{grid-template-columns:1fr}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="back-btn">← harbistrateji.com</a>
+  <span class="nav-brand">HABERLER</span>
+  <div class="nav-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a class="on" href="haberler.html">Haberler</a>
+    <a href="medeniyet-dinamikleri.html">Medeniyet Dinamikleri</a>
+    <a href="oza-hub.html">OZA</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <span class="ticker">SON DAKİKA: TSK Irak harekâtı devam ediyor · <b>NATO Hipersonik Silah Raporu</b> yayımlandı · Küresel savunma harcamaları 2.4 Trilyon USD · İran ateşkes görüşmeleri · <b>KAAN ilk uçuş</b> başarılı · Türkiye-Azerbaycan ortak tatbikatı · ABD-Çin teknoloji savaşı kızışıyor · Kuantum şifreleme ilk test · Siber güvenlik zirvesi Ankara'da · Otonom İHA filosu genişliyor</span>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>Haberler & Analiz</h1>
+  <p>Strateji, savunma, jeopolitik ve teknoloji alanlarında güncel haberler, derinlemesine analizler ve uzman yorumları.</p>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterNews('all')">Tümü</button>
+  <button class="filter-btn" onclick="filterNews('savunma')">Savunma</button>
+  <button class="filter-btn" onclick="filterNews('jeopolitik')">Jeopolitik</button>
+  <button class="filter-btn" onclick="filterNews('teknoloji')">Teknoloji</button>
+  <button class="filter-btn" onclick="filterNews('enerji')">Enerji</button>
+  <button class="filter-btn" onclick="filterNews('siber')">Siber</button>
+  <button class="filter-btn" onclick="filterNews('odka')">ODKA</button>
+  <button class="filter-btn" onclick="filterNews('turkistan')">Türkistan</button>
+  <button class="filter-btn" onclick="filterNews('balkanlar')">Balkanlar</button>
+  <button class="filter-btn" onclick="filterNews('uzay')">Uydu & Uzay</button>
+  <button class="filter-btn" onclick="filterNews('hava')">Hava</button>
+  <button class="filter-btn" onclick="filterNews('kara')">Kara</button>
+  <button class="filter-btn" onclick="filterNews('deniz')">Deniz</button>
+  <button class="filter-btn" onclick="filterNews('ekonomi')">Ekonomi</button>
+</div>
+
+<div class="content">
+
+<!-- FEATURED -->
+<div class="featured">
+  <div class="featured-main">
+    <div class="img-placeholder">🌍</div>
+    <div class="kicker">Manşet · Savunma</div>
+    <h2>ABD, KAAN Savaş Uçağı İçin GE F110 Motor Satışını Onayladı</h2>
+    <p>Trump yönetimi, Türkiye'nin 5. nesil millî muharip uçağı KAAN programında kullanılacak General Electric F110 motorlarının satış sürecini Kongre'ye bildirdi. Mayıs 2026'da SSB ile TUSAŞ arasında imzalanan tedarik sözleşmesinin ardından gelen bu adım, KAAN'ın seri üretim takvimine hız kazandıracak. 9 ülkeden 350'den fazla sipariş/niyet mektubu gündemde.</p>
+    <div class="meta">Bayram Kılınçer · 26 Haziran 2026 · 8 dk okuma</div>
+  </div>
+  <div class="featured-side">
+    <a href="#" class="featured-side-item">
+      <div class="kicker">Jeopolitik</div>
+      <h3>ABD-Çin Teknoloji Savaşında Yeni Cephe: Kuantum Bilişim</h3>
+      <div class="meta">24 Haziran 2026</div>
+    </a>
+    <a href="#" class="featured-side-item">
+      <div class="kicker">Savunma</div>
+      <h3>NATO Hipersonik Silah Savunma Raporu Yayımlandı</h3>
+      <div class="meta">23 Haziran 2026</div>
+    </a>
+    <a href="#" class="featured-side-item">
+      <div class="kicker">Enerji</div>
+      <h3>Hürmüz Boğazı'nda Gerilim: Enerji Piyasaları Tedirgin</h3>
+      <div class="meta">22 Haziran 2026</div>
+    </a>
+    <a href="#" class="featured-side-item">
+      <div class="kicker">Siber</div>
+      <h3>Siber Güvenlik Kurulu Cumhurbaşkanı Başkanlığında Toplandı</h3>
+      <div class="meta">5 Mayıs 2026</div>
+    </a>
+  </div>
+</div>
+
+<!-- SAVUNMA & STRATEJİ -->
+<div class="section-head">
+  <h2>Savunma & Strateji</h2>
+  <div class="line"></div>
+  <span class="count">Güncel</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="savunma">
+    <div class="kicker">Savunma Sanayii</div>
+    <h3>Bayraktar TB3, TCG Anadolu'dan Elektronik Taarruz Görevi Gerçekleştirdi</h3>
+    <p>DENİZKURDU Tatbikatı kapsamında TCG Anadolu'dan havalanan TB3, ilk kez sinyal istihbaratı ve elektronik harp görevi icra etti. Kamikaze İİA'yı etkisiz hale getirme testi de başarıyla tamamlandı.</p>
+    <div class="meta"><span>22 Haz 2026</span><span class="tag">İHA</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="savunma">
+    <div class="kicker">NATO</div>
+    <h3>NATO 2026 Savunma Harcamaları: Türkiye %2.4 ile Hedefin Üzerinde</h3>
+    <p>NATO müttefikleri arasında savunma harcamalarını en çok artıran ülkeler listesinde Türkiye ilk 5'te.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">NATO</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="savunma">
+    <div class="kicker">Kara Kuvvetleri</div>
+    <h3>ALTAY Tankı Seri Üretimde: 2026 Hedefi 11 Araç, Yerli Motor Geçişi Yıl Sonunda</h3>
+    <p>BMC tesislerinde aylık 8, yıllık 96 adet kapasiteyle üretim devam ediyor. 2025'te 3, 2026'da 11, 2027'de 41 adet teslim planlanıyor. 2026 sonundan itibaren BMC Power yerli güç grubuna geçilecek.</p>
+    <div class="meta"><span>Haziran 2026</span><span class="tag">Tank</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="savunma">
+    <div class="kicker">Füze Teknolojisi</div>
+    <h3>Tayfun Balistik Füzesi 2. Test Atışını Başarıyla Gerçekleştirdi</h3>
+    <p>1000+ km menzilli Tayfun füzesi, hedefi santimetre hassasiyetinde vurdu.</p>
+    <div class="meta"><span>21 Haz 2026</span><span class="tag">Füze</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="savunma">
+    <div class="kicker">Deniz Kuvvetleri</div>
+    <h3>TCG İstanbul Fırkateyni Denizin Caydırıcı Gücü Oldu</h3>
+    <p>Ocak 2024'te teslim edilen TCG İstanbul (F-515), Doğu Akdeniz'de caydırıcı görev icra ediyor. İstif sınıfının 2. ve 3. gemileri İzmir (F-516) ve İçel (F-518) 2026-2027'de teslim edilecek.</p>
+    <div class="meta"><span>Haziran 2026</span><span class="tag">Deniz</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="savunma">
+    <div class="kicker">Uzay</div>
+    <h3>Türkiye Uzay Ajansı: İlk Gözlem Uydusu 2027'de Fırlatılacak</h3>
+    <p>TUA, millî gözlem uydusu programının takvimini açıkladı.</p>
+    <div class="meta"><span>19 Haz 2026</span><span class="tag">Uzay</span></div>
+  </a>
+</div>
+
+<!-- JEOPOLİTİK -->
+<div class="section-head">
+  <h2>Jeopolitik & Uluslararası İlişkiler</h2>
+  <div class="line"></div>
+  <span class="count">Analiz</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="jeopolitik">
+    <div class="kicker">Orta Doğu</div>
+    <h3>İran-İsrail Gerilimi: Bölgesel Denge Yeniden Şekilleniyor</h3>
+    <p>İran'ın nükleer programındaki gelişmeler ve İsrail'in askeri hazırlıkları bölgesel dengeleri sarsıyor.</p>
+    <div class="meta"><span>24 Haz 2026</span><span class="tag">Orta Doğu</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="jeopolitik">
+    <div class="kicker">Avrasya</div>
+    <h3>Türk Devletleri Teşkilatı: Ortak Savunma Mekanizması Gündemde</h3>
+    <p>TDT zirvesinde ortak savunma ve güvenlik mekanizması kurulması tartışıldı.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">TDT</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="jeopolitik">
+    <div class="kicker">Küresel</div>
+    <h3>BRICS Genişlemesi: Yeni Dünya Düzeninin Sinyalleri</h3>
+    <p>BRICS'e katılan yeni üyelerle birlikte küresel ekonomik denge kayıyor.</p>
+    <div class="meta"><span>22 Haz 2026</span><span class="tag">BRICS</span></div>
+  </a>
+</div>
+
+<!-- TEKNOLOJİ & SİBER -->
+<div class="section-head">
+  <h2>Teknoloji & Siber Güvenlik</h2>
+  <div class="line"></div>
+  <span class="count">Teknoloji</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="teknoloji">
+    <div class="kicker">Yapay Zekâ</div>
+    <h3>Pentagon'un YZ Stratejisi: Otonom Karar Alma Sistemleri</h3>
+    <p>ABD Savunma Bakanlığı, yapay zekâ destekli otonom karar alma sistemlerini 2027'ye kadar aktif hale getirecek.</p>
+    <div class="meta"><span>24 Haz 2026</span><span class="tag">YZ</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="siber">
+    <div class="kicker">Siber Savaş</div>
+    <h3>Küresel Siber Saldırı Dalgası: 47 Ülke Etkilendi</h3>
+    <p>Devlet destekli siber aktörlerin koordineli saldırısı kritik altyapıları hedef aldı.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">Siber</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="teknoloji">
+    <div class="kicker">Kuantum</div>
+    <h3>Çin'in Kuantum Bilgisayarı 10 Milyon Qubit Eşiğini Aştı</h3>
+    <p>Kuantum üstünlüğü yarışında Çin, ABD'nin önüne geçmeye hazırlanıyor.</p>
+    <div class="meta"><span>22 Haz 2026</span><span class="tag">Kuantum</span></div>
+  </a>
+</div>
+
+<!-- ENERJİ -->
+<div class="section-head">
+  <h2>Enerji & Kaynak</h2>
+  <div class="line"></div>
+  <span class="count">Enerji</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="enerji">
+    <div class="kicker">Nükleer Enerji</div>
+    <h3>Akkuyu NGS 1. Ünite Şebekeye Bağlandı</h3>
+    <p>Türkiye'nin ilk nükleer santralinde 1. ünite ticari üretime başladı.</p>
+    <div class="meta"><span>25 Haz 2026</span><span class="tag">Nükleer</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="enerji">
+    <div class="kicker">Petrol</div>
+    <h3>Hürmüz Boğazı'nda Gerilim: Enerji Piyasaları Tedirgin</h3>
+    <p>İran-ABD gerginliği petrol fiyatlarını %12 artırdı, Türkiye alternatif güzergâh arayışında.</p>
+    <div class="meta"><span>22 Haz 2026</span><span class="tag">Petrol</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="enerji">
+    <div class="kicker">Doğalgaz</div>
+    <h3>Karadeniz Gazı: Sakarya Sahası Tam Kapasiteye Ulaştı</h3>
+    <p>Günlük 40 milyon metreküp üretimle Türkiye'nin doğalgaz ithalatı %25 azaldı.</p>
+    <div class="meta"><span>20 Haz 2026</span><span class="tag">Doğalgaz</span></div>
+  </a>
+</div>
+
+<!-- ODKA -->
+<div class="section-head">
+  <h2>ODKA (Orta Doğu & Kuzey Afrika)</h2>
+  <div class="line"></div>
+  <span class="count">Bölgesel</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="odka">
+    <div class="kicker">Irak</div>
+    <h3>TSK Pençe Operasyonları: PKK'ya Karşı Yeni Faz</h3>
+    <p>Kuzey Irak'ta Pençe-Kilit operasyonu genişletilerek yeni bölgeler kontrol altına alındı.</p>
+    <div class="meta"><span>25 Haz 2026</span><span class="tag">Irak</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="odka">
+    <div class="kicker">Suriye</div>
+    <h3>Suriye'de Yeni Dönem: Türkiye'nin Güvenli Bölge Planı</h3>
+    <p>Kuzey Suriye'de oluşturulacak güvenli bölge için uluslararası müzakereler hızlandı.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">Suriye</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="odka">
+    <div class="kicker">Libya</div>
+    <h3>Libya'da Türk Askeri Varlığı: Yeni Anlaşma İmzalandı</h3>
+    <p>Türkiye-Libya savunma iş birliği anlaşması 5 yıl daha uzatıldı.</p>
+    <div class="meta"><span>21 Haz 2026</span><span class="tag">Libya</span></div>
+  </a>
+</div>
+
+<!-- TÜRKİSTAN -->
+<div class="section-head">
+  <h2>Türkistan & Avrasya</h2>
+  <div class="line"></div>
+  <span class="count">Avrasya</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="turkistan">
+    <div class="kicker">Azerbaycan</div>
+    <h3>Türkiye-Azerbaycan Ortak Tatbikatı: Kardeş Yumruk-2026</h3>
+    <p>İki ülke silahlı kuvvetleri Nahçıvan'da büyük çaplı tatbikat gerçekleştirdi.</p>
+    <div class="meta"><span>24 Haz 2026</span><span class="tag">Azerbaycan</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="turkistan">
+    <div class="kicker">Kazakistan</div>
+    <h3>TDT Savunma Mekanizması: Ortak Siber Güvenlik Merkezi</h3>
+    <p>Türk Devletleri Teşkilatı üyeleri ortak siber güvenlik merkezi kuruyor.</p>
+    <div class="meta"><span>22 Haz 2026</span><span class="tag">TDT</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="turkistan">
+    <div class="kicker">Özbekistan</div>
+    <h3>Orta Koridor: Türkiye-Türkistan Ticaret Hacmi Rekor Kırdı</h3>
+    <p>Trans-Hazar güzergâhı üzerinden ticaret hacmi 2025'e göre %40 arttı.</p>
+    <div class="meta"><span>20 Haz 2026</span><span class="tag">Ticaret</span></div>
+  </a>
+</div>
+
+<!-- BALKANLAR -->
+<div class="section-head">
+  <h2>Balkanlar</h2>
+  <div class="line"></div>
+  <span class="count">Bölgesel</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="balkanlar">
+    <div class="kicker">Kosova</div>
+    <h3>Kosova-Sırbistan Gerilimi: NATO KFOR Takviye Ediyor</h3>
+    <p>Kuzey Kosova'daki gerginlik NATO'nun ek birlik konuşlandırmasına yol açtı.</p>
+    <div class="meta"><span>24 Haz 2026</span><span class="tag">Kosova</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="balkanlar">
+    <div class="kicker">Bosna-Hersek</div>
+    <h3>Türkiye'nin Balkan Savunma Diplomasisi Güçleniyor</h3>
+    <p>Bosna-Hersek ile savunma sanayii iş birliği anlaşması genişletildi.</p>
+    <div class="meta"><span>22 Haz 2026</span><span class="tag">Bosna</span></div>
+  </a>
+</div>
+
+<!-- UZAY -->
+<div class="section-head">
+  <h2>Uydu & Uzay</h2>
+  <div class="line"></div>
+  <span class="count">Uzay</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="uzay">
+    <div class="kicker">TUA</div>
+    <h3>İMECE-2 Gözlem Uydusu Fırlatma Tarihi Açıklandı</h3>
+    <p>Türkiye Uzay Ajansı, yeni nesil gözlem uydusunu 2027 Q1'de fırlatacak.</p>
+    <div class="meta"><span>25 Haz 2026</span><span class="tag">TUA</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="uzay">
+    <div class="kicker">Uydu Haberleşme</div>
+    <h3>Türksat 6A Yörünge Testlerini Başarıyla Tamamladı</h3>
+    <p>Yerli ve millî haberleşme uydusu Türksat 6A, tüm frekans bantlarında aktif.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">Türksat</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="uzay">
+    <div class="kicker">Uzay Savunma</div>
+    <h3>NATO Uzay Komutanlığı: Türkiye Aktif Katılım Sağlayacak</h3>
+    <p>Türkiye, NATO'nun uzay operasyonları merkezine personel ve teknoloji katkısı yapacak.</p>
+    <div class="meta"><span>21 Haz 2026</span><span class="tag">NATO</span></div>
+  </a>
+</div>
+
+<!-- HAVA -->
+<div class="section-head">
+  <h2>Hava Kuvvetleri</h2>
+  <div class="line"></div>
+  <span class="count">Hava</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="hava">
+    <div class="kicker">KAAN</div>
+    <h3>KAAN 5. Nesil Savaş Uçağı 2. Prototip Uçuşu Başarılı</h3>
+    <p>İkinci prototip uçağın test uçuşu Akıncı Üssü'nden gerçekleştirildi.</p>
+    <div class="meta"><span>25 Haz 2026</span><span class="tag">KAAN</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="hava">
+    <div class="kicker">İHA</div>
+    <h3>Kızılelma İHA İlk Otonom Uçuş Testini Tamamladı</h3>
+    <p>Baykar'ın insansız savaş uçağı Kızılelma, tam otonom uçuş kapasitesini gösterdi.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">İHA</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="hava">
+    <div class="kicker">Hava Savunma</div>
+    <h3>HİSAR-O+ Sistemi NATO Entegrasyonunu Tamamladı</h3>
+    <p>Yerli hava savunma sistemi HİSAR-O+, NATO Link-16 ağına başarıyla entegre edildi.</p>
+    <div class="meta"><span>21 Haz 2026</span><span class="tag">HİSAR</span></div>
+  </a>
+</div>
+
+<!-- KARA -->
+<div class="section-head">
+  <h2>Kara Kuvvetleri</h2>
+  <div class="line"></div>
+  <span class="count">Kara</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="kara">
+    <div class="kicker">Zırhlı Araçlar</div>
+    <h3>ALTAY Tankı Seri Üretim: 2. Parti 60 Araç Siparişi</h3>
+    <p>Kara Kuvvetleri'nin ALTAY tankı envanteri 2027 sonuna kadar 100 adede ulaşacak.</p>
+    <div class="meta"><span>25 Haz 2026</span><span class="tag">ALTAY</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="kara">
+    <div class="kicker">Otonom Sistemler</div>
+    <h3>HAVELSAN BARKAN İnsansız Kara Aracı Sahaya İndi</h3>
+    <p>Otonom kara aracı BARKAN, sınır güvenliği görevlerinde kullanılmaya başlandı.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">İKA</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="kara">
+    <div class="kicker">Topçu</div>
+    <h3>FIRTINA-2 Obüsü İlk Teslimatlar Başladı</h3>
+    <p>Yeni nesil kendiyürür obüs FIRTINA-2, geliştirilmiş menzil ve ateş hızıyla envantere girdi.</p>
+    <div class="meta"><span>21 Haz 2026</span><span class="tag">Topçu</span></div>
+  </a>
+</div>
+
+<!-- DENİZ -->
+<div class="section-head">
+  <h2>Deniz Kuvvetleri</h2>
+  <div class="line"></div>
+  <span class="count">Deniz</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="deniz">
+    <div class="kicker">Denizaltı</div>
+    <h3>Reis Sınıfı Denizaltı: TCG Pîrî Reis Filosuna Katıldı</h3>
+    <p>AIP motorlu Reis sınıfı denizaltının ikinci gemisi hizmete girdi.</p>
+    <div class="meta"><span>25 Haz 2026</span><span class="tag">Denizaltı</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="deniz">
+    <div class="kicker">Amfibi</div>
+    <h3>TCG Anadolu: F-35B Alternatifi Olarak Kızılelma Entegrasyonu</h3>
+    <p>Hafif uçak gemisi TCG Anadolu, Kızılelma İHA ile tam entegrasyon testlerini tamamladı.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">Amfibi</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="deniz">
+    <div class="kicker">Korvet</div>
+    <h3>MİLGEM Ada Sınıfı: 5. Gemi TCG Kınalıada Modernize Edildi</h3>
+    <p>GENESIS savaş yönetim sistemi güncellemesiyle TCG Kınalıada yenilendi.</p>
+    <div class="meta"><span>21 Haz 2026</span><span class="tag">MİLGEM</span></div>
+  </a>
+</div>
+
+<!-- EKONOMİ -->
+<div class="section-head">
+  <h2>Savunma Ekonomisi</h2>
+  <div class="line"></div>
+  <span class="count">Ekonomi</span>
+</div>
+<div class="news-grid">
+  <a href="#" class="news-card" data-cat="ekonomi">
+    <div class="kicker">İhracat</div>
+    <h3>Savunma İhracatı 2026'da $8.5 Milyar Rekor</h3>
+    <p>Türk savunma sanayii ihracatı yılın ilk yarısında $4.2 milyara ulaştı.</p>
+    <div class="meta"><span>25 Haz 2026</span><span class="tag">İhracat</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="ekonomi">
+    <div class="kicker">Yatırım</div>
+    <h3>ASELSAN Piyasa Değeri $20 Milyarı Aştı</h3>
+    <p>Türkiye'nin en büyük savunma şirketi ASELSAN, Borsa İstanbul'da rekor kırdı.</p>
+    <div class="meta"><span>23 Haz 2026</span><span class="tag">Borsa</span></div>
+  </a>
+  <a href="#" class="news-card" data-cat="ekonomi">
+    <div class="kicker">Bütçe</div>
+    <h3>2027 Savunma Bütçesi: %18 Artış Öngörülüyor</h3>
+    <p>Millî Savunma Bakanlığı bütçesi 2027'de 800 milyar TL'ye çıkacak.</p>
+    <div class="meta"><span>21 Haz 2026</span><span class="tag">Bütçe</span></div>
+  </a>
+</div>
+
+<!-- DERİN ANALİZ -->
+<div class="section-head">
+  <h2>Derin Analiz</h2>
+  <div class="line"></div>
+  <span class="count">Uzman Görüşü</span>
+</div>
+<div class="analysis-grid">
+  <a href="#" class="analysis-card">
+    <span class="num">01</span>
+    <div>
+      <h3>Çok Kutuplu Dünyada Türkiye'nin Stratejik Konumu</h3>
+      <p>Değişen küresel denge içinde Türkiye'nin jeopolitik avantajları ve riskleri</p>
+    </div>
+  </a>
+  <a href="#" class="analysis-card">
+    <span class="num">02</span>
+    <div>
+      <h3>Yapay Zekâ ve Savaşın Geleceği: Otonom Silah Etiği</h3>
+      <p>İnsan-makine etkileşimi ve otonom silah sistemlerinin hukuki çerçevesi</p>
+    </div>
+  </a>
+  <a href="#" class="analysis-card">
+    <span class="num">03</span>
+    <div>
+      <h3>Enerji Geçişi ve Jeopolitik: Nadir Metaller Savaşı</h3>
+      <p>Yeşil enerji dönüşümünün yarattığı yeni kaynak rekabeti</p>
+    </div>
+  </a>
+  <a href="#" class="analysis-card">
+    <span class="num">04</span>
+    <div>
+      <h3>Hibrit Savaşın Evrimi: Bilişsel Boyut</h3>
+      <p>Dezenformasyon, algı yönetimi ve toplumsal dayanıklılık</p>
+    </div>
+  </a>
+</div>
+
+</div>
+
+<!-- İLGİLİ İÇERİKLER (Otomatik Eşleştirme) -->
+<div class="section-head" style="margin-top:3rem;">
+  <h2>İlgili Simülasyonlar & İnfografikler</h2>
+  <div class="line"></div>
+  <span class="count">Otomatik Eşleşme</span>
+</div>
+<div class="related-grid" id="relatedContent" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-bottom:2rem;">
+</div>
+<script>
+// Auto-match related content based on news keywords
+const relatedDB = [
+  {title:'Demir Kubbe Simülasyonu',href:'sim1-demir-kubbe.html',tags:['savunma','füze','hava'],type:'SİM',icon:'🛡️'},
+  {title:'Hipersonik Yarış',href:'oza-hipersonik-yaris.html',tags:['savunma','füze','hipersonik','nato'],type:'OZA',icon:'🚀'},
+  {title:'Kill-Chain Yarışı',href:'oza-kill-chain.html',tags:['savunma','teknoloji','nato'],type:'OZA',icon:'⚡'},
+  {title:'Siber/EH Operasyon Simülatörü',href:'siber-eh-simulatoru.html',tags:['siber','teknoloji'],type:'SİM',icon:'💻'},
+  {title:'Kuantum Kriptografi QKD',href:'kuantum-kriptografi-qkd-simulatoru.html',tags:['siber','kuantum','teknoloji'],type:'SİM',icon:'🔐'},
+  {title:'Sürü İHA Tasarım',href:'suru-iha-tasarim-simulatoru.html',tags:['savunma','teknoloji','iha','hava'],type:'SİM',icon:'🤖'},
+  {title:'Uzay Hakimiyeti',href:'oza-uzay-hakimiyeti.html',tags:['uzay','savunma','nato'],type:'OZA',icon:'🛰️'},
+  {title:'NATO Uzay Savunma',href:'oza-nato-uzay-2025.html',tags:['uzay','nato','savunma'],type:'OZA',icon:'🌌'},
+  {title:'Stratejik Mineraller',href:'stratejik-mineraller-periyodik-tablo.html',tags:['ekonomi','enerji','teknoloji'],type:'SİM',icon:'💎'},
+  {title:'Hürmüz Petrodolar',href:'sim14-hurmuz-petrodolar.html',tags:['enerji','ekonomi','jeopolitik'],type:'SİM',icon:'🛢️'},
+  {title:'Emtia İmparatorluğu',href:'oza-emtia-imparatorlugu.html',tags:['ekonomi','enerji'],type:'OZA',icon:'💰'},
+  {title:'Bilişsel Kalkan',href:'oza-bilissel-kalkan.html',tags:['siber','bilişsel','hibrit'],type:'OZA',icon:'🧠'},
+  {title:'Slopaganda Dedektör',href:'oza-slopaganda-dedektor.html',tags:['siber','bilişsel','medya'],type:'OZA',icon:'🔍'},
+  {title:'Kriz Odası',href:'oza-kriz-odasi.html',tags:['jeopolitik','savunma','kriz'],type:'OZA',icon:'🚨'},
+  {title:'Gelecek Savaş Alanları',href:'infografik-gelecek-savas-alanlari.html',tags:['savunma','teknoloji','nato'],type:'İNFO',icon:'⚔️'},
+  {title:'Hibrit Savaş Katmanlı Model',href:'pro-infografik-10-interaktif.html',tags:['siber','hibrit','jeopolitik'],type:'İNFO',icon:'🌐'},
+  {title:'NATO Bilim-Teknoloji',href:'pro-infografik-07-interaktif.html',tags:['nato','teknoloji','savunma'],type:'İNFO',icon:'🔬'},
+  {title:'Kritik Mineraller',href:'pro-infografik-08-interaktif.html',tags:['ekonomi','enerji','savunma'],type:'İNFO',icon:'⛏️'},
+  {title:'Yapay Zeka Askeri Görevler',href:'pro-infografik-11-interaktif.html',tags:['teknoloji','savunma','yapay zeka'],type:'İNFO',icon:'🤖'},
+  {title:'Otonom Savaş',href:'oza-otonom-savas.html',tags:['teknoloji','savunma','yapay zeka'],type:'OZA',icon:'🎮'},
+  {title:'Çanakkale 1915',href:'oza-canakkale-br.html',tags:['tarih','savunma','deniz'],type:'OZA',icon:'⚓'},
+  {title:'Malazgirt 1071',href:'oza-malazgirt-1071.html',tags:['tarih','kara'],type:'OZA',icon:'🏹'},
+  {title:'Spektrum Savaşı',href:'sim12-spektrum-savasi.html',tags:['siber','teknoloji','elektronik'],type:'SİM',icon:'📡'},
+  {title:'Pentagon-Çin',href:'sim6-pentagon-cin.html',tags:['jeopolitik','savunma'],type:'SİM',icon:'🇺🇸'},
+  {title:'Maliyet Terazisi',href:'sim4-maliyet-terazisi.html',tags:['ekonomi','savunma'],type:'SİM',icon:'⚖️'},
+  {title:'Kuantum Teknolojileri',href:'pro-infografik-12-interaktif.html',tags:['kuantum','teknoloji','siber'],type:'İNFO',icon:'🔬'},
+];
+
+function getActiveFilter(){
+  const active=document.querySelector('.filter-btn.active');
+  return active?active.textContent.toLowerCase().replace('tümü','all'):'all';
+}
+
+function showRelated(){
+  const filter=getActiveFilter();
+  const container=document.getElementById('relatedContent');
+  if(!container)return;
+  let matches=relatedDB;
+  if(filter!=='all'){
+    matches=relatedDB.filter(r=>r.tags.some(t=>t.includes(filter)||filter.includes(t)));
+  }
+  matches=matches.slice(0,6);
+  container.innerHTML=matches.map(r=>`
+    <a href="${r.href}" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1rem;text-decoration:none;color:#e0e0e0;transition:all .3s;display:block;">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+        <span style="font-size:1.5rem;">${r.icon}</span>
+        <span style="font-size:.6rem;background:${r.type==='SİM'?'#10b981':r.type==='OZA'?'#8b5cf6':'#f59e0b'};color:#fff;padding:2px 6px;border-radius:3px;">${r.type}</span>
+      </div>
+      <div style="font-size:.85rem;font-weight:600;">${r.title}</div>
+    </a>
+  `).join('');
+}
+
+// Run on load and on filter change
+document.addEventListener('DOMContentLoaded',showRelated);
+function filterNews(cat){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(event&&event.target)event.target.classList.add('active');
+  else document.querySelector('.filter-btn').classList.add('active');
+  
+  // Filter news cards
+  document.querySelectorAll('.news-card').forEach(card=>{
+    if(cat==='all'||card.dataset.cat===cat){card.style.display='';}else{card.style.display='none';}
+  });
+  
+  // Hide empty sections (section-head + news-grid pairs)
+  document.querySelectorAll('.news-grid').forEach(grid=>{
+    const visibleCards = grid.querySelectorAll('.news-card:not([style*="display: none"])');
+    const sectionHead = grid.previousElementSibling;
+    if(visibleCards.length === 0){
+      grid.style.display='none';
+      if(sectionHead && sectionHead.classList.contains('section-head')) sectionHead.style.display='none';
+    } else {
+      grid.style.display='';
+      if(sectionHead && sectionHead.classList.contains('section-head')) sectionHead.style.display='';
+    }
+  });
+  
+  // Also filter analysis cards and featured items
+  document.querySelectorAll('.analysis-card,.featured-side-item').forEach(el=>{
+    if(cat==='all'){el.style.display='';}else{
+      const text=el.textContent.toLowerCase();
+      el.style.display=text.includes(cat)?'':'none';
+    }
+  });
+  
+  // Show/hide analysis section
+  const analysisGrid = document.querySelector('.analysis-grid');
+  if(analysisGrid){
+    const visibleAnalysis = analysisGrid.querySelectorAll('.analysis-card:not([style*="display: none"])');
+    const analysisSectionHead = analysisGrid.previousElementSibling;
+    if(visibleAnalysis.length === 0){
+      analysisGrid.style.display='none';
+      if(analysisSectionHead && analysisSectionHead.classList.contains('section-head')) analysisSectionHead.style.display='none';
+    } else {
+      analysisGrid.style.display='';
+      if(analysisSectionHead && analysisSectionHead.classList.contains('section-head')) analysisSectionHead.style.display='';
+    }
+  }
+  
+  setTimeout(showRelated,100);
+}
+showRelated();
+</script>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span>© 2026 Harb-i Strateji</span>
+  <span><a href="index.html">Ana Sayfa</a> · <a href="medeniyet-dinamikleri.html">Medeniyet Dinamikleri</a> · <a href="oza-hub.html">OZA</a> · <a href="infografik.html">İnfografik</a> · <a href="kesfet.html">Külliyat</a></span>
+</footer>
+
+
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Su Arıtma Tesisi İnşa — Minecraft Tarzı</title>
+<style>
+:root{--bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#3498db;--txt:#e8eaf0;--dim:#6b7280;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',monospace,sans-serif;overflow:hidden;height:100vh;}
+canvas{display:block;}
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;pointer-events:none;padding:8px 14px;background:linear-gradient(180deg,rgba(0,0,0,.8),transparent);display:flex;justify-content:space-between;align-items:center;}
+.hv{font-weight:900;color:var(--cyan);}
+.hs{font-size:.78rem;display:flex;align-items:center;gap:5px;}
+.water-bar{width:120px;height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;}
+.water-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:5px;transition:width .3s;}
+#hotbar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px;background:rgba(0,0,0,.75);border:1px solid var(--border);border-radius:10px;padding:6px;pointer-events:auto;}
+.hb{width:56px;height:56px;border:2px solid var(--border);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:rgba(0,0,0,.4);position:relative;}
+.hb.active{border-color:var(--blue);}
+.hb-icon{font-size:1.4rem;}
+.hb-name{font-size:.48rem;color:var(--dim);text-align:center;margin-top:1px;}
+.hb-key{position:absolute;top:2px;left:4px;font-size:.5rem;color:var(--dim);}
+#infoPanel{position:fixed;right:10px;top:60px;background:rgba(13,27,42,.95);border:1px solid var(--border);border-radius:10px;padding:12px;width:200px;pointer-events:auto;}
+.ip-title{font-size:.7rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;}
+.ip-metric{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.72rem;}
+.ip-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;margin:3px 0;overflow:hidden;}
+.ip-fill{height:100%;border-radius:3px;transition:width .5s;}
+#craftPanel{position:fixed;left:10px;top:60px;background:rgba(13,27,42,.95);border:1px solid var(--border);border-radius:10px;padding:12px;width:185px;pointer-events:auto;}
+.cp-title{font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;}
+.cp-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:6px;padding:6px;margin-bottom:5px;cursor:pointer;transition:all .15s;font-size:.7rem;}
+.cp-item:hover{border-color:var(--cyan);}
+.cp-item.can{border-color:var(--green);}
+.cp-item.cant{opacity:.4;cursor:not-allowed;}
+#msgs{position:fixed;top:70px;left:50%;transform:translateX(-50%);pointer-events:none;z-index:20;}
+.msg{background:rgba(0,0,0,.85);border:1px solid var(--blue);border-radius:6px;padding:5px 14px;font-size:.76rem;margin-bottom:4px;animation:mIn .3s ease,mOut .3s 2.5s ease forwards;}
+@keyframes mIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes mOut{to{opacity:0;}}
+#intro{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.it{font-size:2.2rem;font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;}
+.it span{color:var(--cyan);}
+.btn-play{background:linear-gradient(135deg,var(--blue),#1a5276);color:#fff;border:none;border-radius:8px;padding:14px 36px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:2px;text-transform:uppercase;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div style="display:flex;gap:14px;align-items:center;">
+    <div class="hs">💧 <div class="water-bar"><div class="water-fill" id="waterFill" style="width:0%"></div></div></div>
+    <div class="hs"><span class="hv" id="lphVal">0</span> L/saat</div>
+  </div>
+  <div style="text-align:center;">
+    <div style="font-size:.85rem;font-weight:900;color:var(--blue);letter-spacing:2px;">💧 SU ARITMA TESİSİ İNŞA</div>
+    <div style="font-size:.65rem;color:var(--dim);">Blok: <span id="selBlockName" style="color:var(--cyan)">Su Pompası</span></div>
+  </div>
+  <div style="display:flex;gap:14px;align-items:center;">
+    <div class="hs">🏆 <span class="hv" id="scoreVal">0</span></div>
+    <div class="hs">☣️ <span class="hv" id="contVal">0%</span></div>
+  </div>
+</div>
+<div id="msgs"></div>
+<div id="hotbar"></div>
+<div id="infoPanel">
+  <div class="ip-title">💧 Tesis Durumu</div>
+  <div class="ip-metric"><span>Su Çıkışı</span><span class="ip-val" id="ip-water" style="color:var(--cyan)">0 L/s</span></div>
+  <div class="ip-bar"><div class="ip-fill" id="ip-water-bar" style="width:0%;background:var(--cyan)"></div></div>
+  <div class="ip-metric"><span>Kirlilik</span><span class="ip-val" id="ip-cont" style="color:var(--green)">0%</span></div>
+  <div class="ip-bar"><div class="ip-fill" id="ip-cont-bar" style="width:0%;background:var(--green)"></div></div>
+  <div class="ip-metric"><span>Arıtma Verimliliği</span><span class="ip-val" id="ip-eff" style="color:var(--gold)">0%</span></div>
+  <div class="ip-bar"><div class="ip-fill" id="ip-eff-bar" style="width:0%;background:var(--gold)"></div></div>
+  <div class="ip-metric"><span>Enerji Tüketimi</span><span class="ip-val" id="ip-energy" style="color:var(--red)">0 kW</span></div>
+  <div style="margin-top:8px;font-size:.65rem;color:var(--dim);">Mineral Kullanımı:</div>
+  <div id="mineralUsage" style="margin-top:4px;font-size:.65rem;"></div>
+</div>
+<div id="craftPanel">
+  <div class="cp-title">🔬 Arıtma Reçeteleri</div>
+  <div id="craftList"></div>
+</div>
+<div id="intro">
+  <div class="it">💧 SU ARITMA <span>TESİSİ</span></div>
+  <div style="font-size:.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:12px;">Minecraft Tarzı Su Güvenliği Simülatörü</div>
+  <div style="font-size:.82rem;color:var(--dim);max-width:500px;line-height:1.7;margin-bottom:24px;">
+    Kirli suyu temizle, şehre temiz su sağla!<br>
+    <strong>Titanyum membranlar, Lityum bataryalar, Nadir metal katalizörler</strong> kullan.<br>
+    Kirlilik artarsa şehir susuz kalır — tesisin verimli çalışmalı!
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin-bottom:20px;">
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:.72rem;"><strong style="color:var(--cyan)">WASD/Ok Tuşları</strong><br>Hareket</div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:.72rem;"><strong style="color:var(--cyan)">Sol Tık</strong><br>Blok yerleştir</div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:.72rem;"><strong style="color:var(--cyan)">Sağ Tık</strong><br>Blok söküldür</div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:.72rem;"><strong style="color:var(--cyan)">1-9</strong><br>Blok seç</div>
+  </div>
+  <button class="btn-play" onclick="startGame()">💧 TESİSİ İNŞA ET</button>
+</div>
+
+<script>
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+const TILE=34;
+
+// ===== BLOCKS =====
+const BLOCKS={
+  0:{name:'Hava',color:'transparent',solid:false},
+  1:{name:'Toprak',color:'#5c4033',solid:true,hardness:1},
+  2:{name:'Beton',color:'#607d8b',solid:true,hardness:2},
+  3:{name:'Su Kanalı',color:'#1a5276',solid:false,water:true,emoji:'🌊'},
+  // Water treatment blocks
+  10:{name:'Su Pompası',icon:'💧',color:'#2980b9',solid:true,waterIn:50,energy:5,metals:{Ti:1},emoji:'💧'},
+  11:{name:'Kaba Filtre',icon:'🪨',color:'#7f8c8d',solid:true,filter:20,energy:2,metals:{},emoji:'🪨'},
+  12:{name:'Ti Membran Filtre',icon:'🔵',color:'#1abc9c',solid:true,filter:60,energy:8,metals:{Ti:2},emoji:'🔵'},
+  13:{name:'Aktif Karbon',icon:'⬛',color:'#2c3e50',solid:true,filter:40,energy:3,metals:{},emoji:'⬛'},
+  14:{name:'UV Sterilizasyon',icon:'💡',color:'#f39c12',solid:true,sterilize:80,energy:10,metals:{Nd:1,Ga:1},emoji:'💡'},
+  15:{name:'Ozon Jeneratörü',icon:'⚡',color:'#9b59b6',solid:true,sterilize:60,energy:15,metals:{Pt:1},emoji:'⚡'},
+  16:{name:'Ters Osmoz',icon:'🔬',color:'#c41e3a',solid:true,filter:90,energy:20,metals:{Ti:3,Nd:1},emoji:'🔬'},
+  17:{name:'Depolama Tankı',icon:'🏗️',color:'#34495e',solid:true,storage:1000,energy:0,metals:{},emoji:'🏗️'},
+  18:{name:'Güneş Paneli',icon:'☀️',color:'#f39c12',solid:true,energyGen:15,metals:{Ga:1,In:1},emoji:'☀️'},
+  19:{name:'Pompa İstasyonu',icon:'⚙️',color:'#e67e22',solid:true,waterOut:100,energy:10,metals:{Co:1},emoji:'⚙️'},
+  20:{name:'Kimyasal Dozaj',icon:'🧪',color:'#e74c3c',solid:true,filter:30,energy:5,metals:{},emoji:'🧪'},
+};
+
+const HOTBAR_ITEMS=[10,11,12,13,14,15,16,17,18,19];
+
+const RECIPES=[
+  {name:'Nano Filtre Modülü',icon:'🔬',result:'nano',req:{Ti:5,Nd:2,Pt:1},points:500,desc:'Ti+Nd nano membran'},
+  {name:'Akıllı Sensör Ağı',icon:'📡',result:'sensor',req:{Ga:3,Ge:2,Nd:2},points:400,desc:'Kirlilik izleme'},
+  {name:'Güneş Destekli Sistem',icon:'☀️',result:'solar_sys',req:{Ga:4,In:3,Li:5},points:600,desc:'Enerji bağımsızlığı'},
+  {name:'Desalinasyon Ünitesi',icon:'🌊',result:'desal',req:{Ti:8,Pt:2,Co:3},points:800,desc:'Deniz suyu arıtma'},
+  {name:'Atık Su Geri Dönüşüm',icon:'♻️',result:'recycle',req:{Ti:4,Nd:2,Co:2},points:700,desc:'%95 geri dönüşüm'},
+];
+
+// ===== WORLD =====
+const COLS=28,ROWS=18;
+let world=[];
+let player={x:4*TILE+17,y:2*TILE+17,vx:0,vy:0};
+let camera={x:0,y:0};
+let selectedBlock=10,selectedSlot=0;
+let score=0;
+let facility={water:0,contamination:30,efficiency:0,energy:0};
+let mineralInv={Ti:10,Nd:8,Ga:5,In:3,Pt:3,Co:8,Li:6,Ge:3};
+let craftedItems={};
+let particles=[];
+let gameRunning=false;
+
+function generateWorld(){
+  world=[];
+  for(let r=0;r<ROWS;r++){
+    world[r]=[];
+    for(let c=0;c<COLS;c++){
+      if(r===0||r===ROWS-1||c===0||c===COLS-1) world[r][c]=2;
+      else if(r===ROWS-2) world[r][c]=1;
+      else world[r][c]=0;
+    }
+  }
+  // Water source (left side)
+  for(let r=3;r<8;r++) world[r][1]=3;
+  // Contamination source (right side)
+  for(let r=10;r<15;r++) world[r][COLS-2]=3;
+}
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  generateWorld();
+  gameRunning=true;
+  buildHotbar();
+  buildCraftList();
+  loop();
+  setInterval(updateFacility,800);
+  // Contamination events
+  setInterval(()=>{
+    if(Math.random()<.3){
+      facility.contamination=Math.min(100,facility.contamination+5);
+      showMsg('☣️ Kirlilik artıyor! Daha fazla filtre ekle!','red');
+    }
+  },8000);
+}
+
+// ===== PHYSICS =====
+const GRAVITY=0.35,JUMP=-8,SPEED=3;
+let keys={};
+document.addEventListener('keydown',e=>{
+  keys[e.key]=true;
+  if(e.key>='1'&&e.key<='9') selectSlot(parseInt(e.key)-1);
+  if(e.key==='0') selectSlot(9);
+  if((e.key===' '||e.key==='ArrowUp'||e.key==='w'||e.key==='W')&&onGround()){e.preventDefault();player.vy=JUMP;}
+});
+document.addEventListener('keyup',e=>keys[e.key]=false);
+
+function onGround(){
+  const col=Math.floor(player.x/TILE),row=Math.floor((player.y+TILE)/TILE);
+  return row<ROWS&&world[row]&&world[row][col]&&BLOCKS[world[row][col]].solid;
+}
+
+function updatePlayer(){
+  if(keys['ArrowLeft']||keys['a']||keys['A']) player.vx=-SPEED;
+  else if(keys['ArrowRight']||keys['d']||keys['D']) player.vx=SPEED;
+  else player.vx*=0.8;
+  player.vy+=GRAVITY;player.vy=Math.min(player.vy,10);
+  player.x+=player.vx;
+  player.x=Math.max(TILE,Math.min(player.x,(COLS-2)*TILE));
+  const col=Math.floor(player.x/TILE);
+  const rT=Math.floor(player.y/TILE),rB=Math.floor((player.y+TILE-2)/TILE);
+  if(world[rT]&&world[rT][col]&&BLOCKS[world[rT][col]].solid) player.x-=player.vx;
+  if(world[rB]&&world[rB][col]&&BLOCKS[world[rB][col]].solid) player.x-=player.vx;
+  player.y+=player.vy;
+  const cL=Math.floor(player.x/TILE),cR=Math.floor((player.x+TILE-2)/TILE);
+  const rBt=Math.floor((player.y+TILE)/TILE),rTp=Math.floor(player.y/TILE);
+  if(player.vy>0){
+    if(rBt<ROWS&&((world[rBt]&&world[rBt][cL]&&BLOCKS[world[rBt][cL]].solid)||(world[rBt]&&world[rBt][cR]&&BLOCKS[world[rBt][cR]].solid))){
+      player.y=rBt*TILE-TILE;player.vy=0;
+    }
+  } else {
+    if(rTp>=0&&((world[rTp]&&world[rTp][cL]&&BLOCKS[world[rTp][cL]].solid)||(world[rTp]&&world[rTp][cR]&&BLOCKS[world[rTp][cR]].solid))){
+      player.y=rTp*TILE+TILE;player.vy=0;
+    }
+  }
+  player.y=Math.max(0,Math.min(player.y,(ROWS-2)*TILE));
+  camera.x+=(player.x-canvas.width/2-camera.x)*0.1;
+  camera.y+=(player.y-canvas.height/2-camera.y)*0.1;
+  camera.x=Math.max(0,Math.min(camera.x,COLS*TILE-canvas.width));
+  camera.y=Math.max(0,Math.min(camera.y,ROWS*TILE-canvas.height));
+}
+
+// ===== PLACE/BREAK =====
+canvas.addEventListener('click',e=>{
+  if(!gameRunning) return;
+  const wx=Math.floor((e.clientX+camera.x)/TILE);
+  const wy=Math.floor((e.clientY+camera.y)/TILE);
+  placeBlock(wx,wy);
+});
+canvas.addEventListener('contextmenu',e=>{
+  e.preventDefault();
+  if(!gameRunning) return;
+  const wx=Math.floor((e.clientX+camera.x)/TILE);
+  const wy=Math.floor((e.clientY+camera.y)/TILE);
+  breakBlock(wx,wy);
+});
+
+function placeBlock(col,row){
+  if(row<0||row>=ROWS||col<0||col>=COLS) return;
+  if(world[row][col]!==0) return;
+  const bid=selectedBlock;
+  const b=BLOCKS[bid];
+  if(!b||!b.solid) return;
+  if(b.metals){
+    const ok=Object.entries(b.metals).every(([m,v])=>(mineralInv[m]||0)>=v);
+    if(!ok){showMsg(`⚠️ Yeterli mineral yok! ${Object.entries(b.metals).map(([m,v])=>`${m}:${v}`).join(', ')}`,'red');return;}
+    Object.entries(b.metals).forEach(([m,v])=>mineralInv[m]-=v);
+  }
+  world[row][col]=bid;
+  score+=10;
+  document.getElementById('scoreVal').textContent=score.toLocaleString();
+  spawnParticles(col*TILE+17,row*TILE+17-camera.y,b.color);
+  showMsg(`✅ ${b.emoji} ${b.name} yerleştirildi`,'green');
+  updateFacility();
+}
+
+function breakBlock(col,row){
+  if(row<0||row>=ROWS||col<0||col>=COLS) return;
+  const bid=world[row][col];
+  if(!bid||bid<=2) return;
+  const b=BLOCKS[bid];
+  world[row][col]=0;
+  if(b.metals) Object.entries(b.metals).forEach(([m,v])=>mineralInv[m]=(mineralInv[m]||0)+Math.floor(v/2));
+  showMsg(`🔨 ${b.name} söküldü`,'cyan');
+  updateFacility();
+}
+
+// ===== FACILITY SIMULATION =====
+function updateFacility(){
+  let totalWater=0,totalFilter=0,totalSterilize=0,totalEnergy=0,totalEnergyGen=0,blockCount=0;
+  const metals={};
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const bid=world[r][c];
+    if(!bid||bid<10) continue;
+    const b=BLOCKS[bid];
+    if(b.waterIn) totalWater+=b.waterIn;
+    if(b.filter) totalFilter+=b.filter;
+    if(b.sterilize) totalSterilize+=b.sterilize;
+    if(b.energy) totalEnergy+=b.energy;
+    if(b.energyGen) totalEnergyGen+=b.energyGen;
+    if(b.metals) Object.entries(b.metals).forEach(([m,v])=>metals[m]=(metals[m]||0)+v);
+    blockCount++;
+  }
+  
+  facility.water=totalWater;
+  const filterEff=Math.min(100,totalFilter);
+  const sterEff=Math.min(100,totalSterilize);
+  facility.efficiency=Math.round((filterEff+sterEff)/2);
+  facility.contamination=Math.max(0,facility.contamination-(filterEff+sterEff)/20);
+  facility.energy=Math.max(0,totalEnergy-totalEnergyGen);
+  
+  const lph=Math.round(totalWater*3600*(facility.efficiency/100));
+  document.getElementById('lphVal').textContent=lph.toLocaleString();
+  document.getElementById('waterFill').style.width=Math.min(100,lph/100000*100)+'%';
+  document.getElementById('contVal').textContent=Math.round(facility.contamination)+'%';
+  
+  document.getElementById('ip-water').textContent=totalWater+' L/s';
+  document.getElementById('ip-water-bar').style.width=Math.min(100,totalWater/200*100)+'%';
+  document.getElementById('ip-cont').textContent=Math.round(facility.contamination)+'%';
+  document.getElementById('ip-cont-bar').style.width=facility.contamination+'%';
+  document.getElementById('ip-cont-bar').style.background=facility.contamination>50?'var(--red)':facility.contamination>25?'var(--gold)':'var(--green)';
+  document.getElementById('ip-cont').style.color=facility.contamination>50?'var(--red)':facility.contamination>25?'var(--gold)':'var(--green)';
+  document.getElementById('ip-eff').textContent=facility.efficiency+'%';
+  document.getElementById('ip-eff-bar').style.width=facility.efficiency+'%';
+  document.getElementById('ip-energy').textContent=facility.energy+' kW';
+  document.getElementById('mineralUsage').innerHTML=Object.entries(metals).map(([m,v])=>`<span style="color:var(--cyan);margin-right:5px;">${m}:${v}</span>`).join('');
+  
+  score+=Math.floor(lph/1000);
+  document.getElementById('scoreVal').textContent=score.toLocaleString();
+  buildCraftList();
+}
+
+// ===== CRAFTING =====
+function buildCraftList(){
+  const list=document.getElementById('craftList');
+  list.innerHTML=RECIPES.map((r,i)=>{
+    const can=Object.entries(r.req).every(([m,v])=>(mineralInv[m]||0)>=v);
+    const reqStr=Object.entries(r.req).map(([m,v])=>`${m}:${mineralInv[m]||0}/${v}`).join(' ');
+    return `<div class="cp-item ${can?'can':'cant'}" onclick="craftItem(${i})">
+      <div style="font-weight:700;color:${can?'var(--green)':'var(--dim)'};">${r.icon} ${r.name}</div>
+      <div style="font-size:.6rem;color:var(--dim);margin-top:2px;">${reqStr}</div>
+      <div style="font-size:.6rem;color:var(--gold);margin-top:1px;">+${r.points} puan</div>
+    </div>`;
+  }).join('');
+}
+
+function craftItem(idx){
+  const r=RECIPES[idx];
+  const can=Object.entries(r.req).every(([m,v])=>(mineralInv[m]||0)>=v);
+  if(!can){showMsg('⚠️ Yeterli mineral yok!','red');return;}
+  Object.entries(r.req).forEach(([m,v])=>mineralInv[m]-=v);
+  craftedItems[r.result]=(craftedItems[r.result]||0)+1;
+  score+=r.points;
+  document.getElementById('scoreVal').textContent=score.toLocaleString();
+  showMsg(`🎉 ${r.name} üretildi! +${r.points} puan`,'green');
+  buildCraftList();
+}
+
+// ===== HOTBAR =====
+function buildHotbar(){
+  const bar=document.getElementById('hotbar');
+  bar.innerHTML=HOTBAR_ITEMS.map((bid,i)=>{
+    const b=BLOCKS[bid];
+    return `<div class="hb ${i===selectedSlot?'active':''}" onclick="selectSlot(${i})">
+      <span class="hb-key">${i<9?i+1:0}</span>
+      <div class="hb-icon">${b.emoji||'🔲'}</div>
+      <div class="hb-name">${b.name.substring(0,9)}</div>
+    </div>`;
+  }).join('');
+}
+function selectSlot(i){
+  selectedSlot=i;selectedBlock=HOTBAR_ITEMS[i];
+  document.getElementById('selBlockName').textContent=BLOCKS[selectedBlock].name;
+  buildHotbar();
+}
+
+// ===== PARTICLES =====
+function spawnParticles(x,y,color){
+  for(let i=0;i<6;i++) particles.push({x,y,vx:(Math.random()-.5)*5,vy:(Math.random()-1)*4,life:25,color});
+}
+function updateParticles(){
+  particles=particles.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.2;p.life--;return p.life>0;});
+}
+
+// ===== RENDER =====
+function render(){
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const sky=ctx.createLinearGradient(0,0,0,canvas.height);
+  sky.addColorStop(0,'#050d18');sky.addColorStop(1,'#0d1b2a');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,canvas.width,canvas.height);
+  
+  const sC=Math.max(0,Math.floor(camera.x/TILE));
+  const eC=Math.min(COLS,sC+Math.ceil(canvas.width/TILE)+2);
+  const sR=Math.max(0,Math.floor(camera.y/TILE));
+  const eR=Math.min(ROWS,sR+Math.ceil(canvas.height/TILE)+2);
+  
+  for(let r=sR;r<eR;r++) for(let c=sC;c<eC;c++){
+    const bid=world[r][c];
+    if(!bid||bid===0) continue;
+    const b=BLOCKS[bid];
+    const sx=c*TILE-camera.x,sy=r*TILE-camera.y;
+    
+    if(bid===3){
+      // Water channel animation
+      const t=Date.now()/500;
+      const grad=ctx.createLinearGradient(sx,sy,sx+TILE,sy+TILE);
+      grad.addColorStop(0,'#1a5276');grad.addColorStop(1,'#2980b9');
+      ctx.fillStyle=grad;ctx.fillRect(sx,sy,TILE,TILE);
+      ctx.fillStyle='rgba(0,224,255,.2)';
+      ctx.fillRect(sx+(Math.sin(t+c)*.5+.5)*TILE*.5,sy,TILE*.3,TILE);
+    } else {
+      ctx.fillStyle=b.color;ctx.fillRect(sx,sy,TILE,TILE);
+      if(bid>=10){
+        ctx.shadowColor=b.color;ctx.shadowBlur=10;
+        ctx.font='16px serif';ctx.textAlign='center';
+        ctx.fillStyle='rgba(255,255,255,.9)';
+        ctx.fillText(b.emoji||'⚡',sx+TILE/2,sy+TILE/2+5);
+        ctx.shadowBlur=0;
+        if(b.filter||b.sterilize){
+          ctx.fillStyle='rgba(0,255,136,.5)';ctx.font='bold 8px monospace';
+          ctx.fillText((b.filter||b.sterilize)+'%',sx+TILE/2,sy+TILE-4);
+        }
+      } else {
+        ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(sx,sy,TILE,2);ctx.fillRect(sx,sy,2,TILE);
+      }
+    }
+  }
+  
+  // Water flow particles (animated)
+  const t=Date.now()/200;
+  for(let r=sR;r<eR;r++) for(let c=sC;c<eC;c++){
+    if(world[r][c]===3){
+      const sx=c*TILE-camera.x,sy=r*TILE-camera.y;
+      ctx.fillStyle='rgba(0,224,255,.4)';
+      ctx.beginPath();ctx.arc(sx+((t*2+c*5)%TILE),sy+TILE/2,2,0,Math.PI*2);ctx.fill();
+    }
+  }
+  
+  // Player
+  const px=player.x-camera.x,py=player.y-camera.y;
+  ctx.fillStyle='#c41e3a';ctx.fillRect(px+4,py,TILE-8,TILE);
+  ctx.fillStyle='#0080aa';ctx.fillRect(px+4,py,TILE-8,10);
+  ctx.fillStyle='#f39c12';ctx.fillRect(px+10,py+3,12,7);
+  ctx.fillStyle='#3498db';ctx.fillRect(px+2,py-4,TILE-4,6);
+  
+  particles.forEach(p=>{
+    ctx.globalAlpha=p.life/25;ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fillStyle=p.color;ctx.fill();ctx.globalAlpha=1;
+  });
+  
+  ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=1;
+  for(let c=sC;c<eC;c++){ctx.beginPath();ctx.moveTo(c*TILE-camera.x,0);ctx.lineTo(c*TILE-camera.x,canvas.height);ctx.stroke();}
+  for(let r=sR;r<eR;r++){ctx.beginPath();ctx.moveTo(0,r*TILE-camera.y);ctx.lineTo(canvas.width,r*TILE-camera.y);ctx.stroke();}
+}
+
+function showMsg(text,type='cyan'){
+  const colors={cyan:'var(--cyan)',green:'var(--green)',red:'var(--red)',gold:'var(--gold)'};
+  const m=document.createElement('div');m.className='msg';m.style.borderColor=colors[type]||colors.cyan;m.textContent=text;
+  document.getElementById('msgs').appendChild(m);setTimeout(()=>m.remove(),2800);
+}
+
+function loop(){
+  if(!gameRunning) return;
+  updatePlayer();updateParticles();render();requestAnimationFrame(loop);
+}
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

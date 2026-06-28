@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blockchain Askerî Lojistik Simülatörü — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root {
+  --font-mono: 'IBM Plex Mono', monospace;
+  --surface-1: #111827;
+  --surface-2: #1f2937;
+  --border: rgba(255,255,255,.08);
+  --border-strong: rgba(255,255,255,.2);
+  --border-accent: #00E0FF;
+  --border-danger: #ef4444;
+  --border-success: #22c55e;
+  --bg-accent: rgba(0,224,255,.08);
+  --bg-danger: rgba(239,68,68,.08);
+  --bg-success: rgba(34,197,94,.08);
+  --text-primary: #e8e6e3;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-accent: #00E0FF;
+  --text-danger: #ef4444;
+  --text-success: #22c55e;
+  --radius: 8px;
+}
+[data-theme="light"] {
+  --surface-1: #f8f9fa;
+  --surface-2: #ffffff;
+  --border: rgba(0,0,0,.08);
+  --border-strong: rgba(0,0,0,.2);
+  --bg-accent: rgba(0,100,200,.06);
+  --bg-danger: rgba(239,68,68,.06);
+  --bg-success: rgba(34,197,94,.06);
+  --text-primary: #1a1a2e;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+}
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+}
+.page-hero {
+  text-align: center;
+  padding: 80px 20px 30px;
+  background: linear-gradient(180deg, rgba(10,15,23,0.9), var(--surface-1)), radial-gradient(ellipse at 50% 0%, rgba(0,224,255,0.1), transparent 70%);
+}
+.page-hero h1 {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  margin: 0 0 12px;
+}
+.page-hero h1 span { color: #00E0FF; }
+.page-hero p {
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.8;
+  line-height: 1.7;
+}
+.content-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<script src="hs-nav.js?v=11"></script>
+<div class="page-hero">
+  <h1>Blockchain <span>Askerî Lojistik</span> Simülatörü</h1>
+  <p>Tedarik zinciri doğrulaması, akıllı sözleşmeler ve sahte parça tespitini interaktif olarak keşfedin. Blok zinciri teknolojisinin askerî lojistikte nasıl devrim yarattığını görün.</p>
+</div>
+<div class="content-wrap">
+
+<h2 class="sr-only">Blockchain tabanlı askeri lojistik simülatörü — tedarik zinciri doğrulaması, akıllı sözleşmeler ve sahte parça tespitini interaktif olarak keşfet.</h2>
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blockAdd{from{opacity:0;transform:scaleX(.7)}to{opacity:1;transform:scaleX(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.blw{padding:.5rem 0 1rem;font-size:14px;}
+.nav2{display:flex;gap:4px;margin-bottom:14px;border-bottom:.5px solid var(--border);}
+.n2tab{padding:7px 14px;font-size:13px;cursor:pointer;color:var(--text-secondary);border-bottom:2px solid transparent;transition:all .15s;}
+.n2tab.on{color:var(--text-accent);border-bottom-color:var(--text-accent);}
+.tc2{display:none;}.tc2.on{display:block;}
+.chain-container{display:flex;align-items:center;gap:0;overflow-x:auto;padding:8px 0;margin:10px 0;}
+.block{min-width:110px;border-radius:8px;border:.5px solid var(--border);background:var(--surface-2);padding:8px 10px;flex-shrink:0;transition:all .3s;cursor:pointer;position:relative;}
+.block:hover{border-color:var(--border-strong);}
+.block.selected{border-color:var(--border-accent);background:var(--bg-accent);}
+.block.tampered{border-color:var(--border-danger);background:var(--bg-danger);animation:pulse 1s infinite;}
+.block.genesis{border-color:var(--border-success);background:var(--bg-success);}
+.block-num{font-size:10px;color:var(--text-muted);margin-bottom:3px;}
+.block-hash{font-size:9px;font-family:var(--font-mono);color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px;}
+.block-data{font-size:11px;font-weight:500;color:var(--text-primary);line-height:1.3;}
+.chain-arrow{font-size:18px;color:var(--text-muted);padding:0 2px;flex-shrink:0;}
+.block-detail{border-radius:10px;border:.5px solid var(--border);background:var(--surface-1);padding:14px;margin:10px 0;animation:fadeUp .3s ease;}
+.detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:.5px solid var(--border);font-size:12px;gap:12px;}
+.detail-row:last-child{border-bottom:none;}
+.dr-label{color:var(--text-muted);flex-shrink:0;width:110px;}
+.dr-val{color:var(--text-primary);font-family:var(--font-mono);font-size:11px;word-break:break-all;text-align:right;}
+.tamper-btn{padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border-danger);background:var(--bg-danger);color:var(--text-danger);cursor:pointer;transition:all .15s;}
+.tamper-btn:hover{background:var(--text-danger);color:var(--surface-2);}
+.restore-btn{padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border-success);background:var(--bg-success);color:var(--text-success);cursor:pointer;}
+.alert-box{border-radius:8px;padding:10px 14px;font-size:12px;margin:8px 0;line-height:1.6;animation:fadeUp .3s ease;}
+.alert-box.danger{background:var(--bg-danger);border:.5px solid var(--border-danger);color:var(--text-danger);}
+.alert-box.success{background:var(--bg-success);border:.5px solid var(--border-success);color:var(--text-success);}
+.alert-box.info{background:var(--bg-accent);border:.5px solid var(--border-accent);color:var(--text-accent);}
+.sc-flow{display:flex;flex-direction:column;gap:8px;margin:10px 0;}
+.sc-step{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:8px;border:.5px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .2s;}
+.sc-step:hover{border-color:var(--border-strong);}
+.sc-step.active-step{border-color:var(--border-accent);background:var(--bg-accent);}
+.sc-step.done-step{border-color:var(--border-success);background:var(--bg-success);}
+.sc-step.fail-step{border-color:var(--border-danger);background:var(--bg-danger);}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:500;}
+.step-title{font-size:13px;font-weight:500;color:var(--text-primary);}
+.step-desc{font-size:12px;color:var(--text-secondary);margin-top:2px;line-height:1.5;}
+.sc-step.active-step .step-title,.sc-step.active-step .step-desc{color:var(--text-accent);}
+.sc-step.done-step .step-title,.sc-step.done-step .step-desc{color:var(--text-success);}
+.sc-step.fail-step .step-title,.sc-step.fail-step .step-desc{color:var(--text-danger);}
+.scenario-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.sscen{border:.5px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;background:var(--surface-2);transition:all .15s;}
+.sscen:hover{border-color:var(--border-strong);}
+.sscen.sel{border-color:var(--border-accent);background:var(--bg-accent);}
+.sscen-title{font-size:12px;font-weight:500;color:var(--text-primary);}
+.sscen-sub{font-size:11px;color:var(--text-secondary);margin-top:3px;}
+.sscen.sel .sscen-title{color:var(--text-accent);}
+</style>
+
+<div class="blw">
+<div style="font-size:16px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Blockchain Askeri Lojistik Simülatörü</div>
+<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Tedarik zinciri manipülasyonunu dene, akıllı sözleşmelerin nasıl çalıştığını keşfet.</div>
+
+<div class="nav2">
+  <div class="n2tab on" onclick="showTab2('chain')">Blok zinciri</div>
+  <div class="n2tab" onclick="showTab2('smart')">Akıllı sözleşme</div>
+  <div class="n2tab" onclick="showTab2('scenarios')">Saldırı senaryoları</div>
+</div>
+
+<div class="tc2 on" id="tab2-chain">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px">Mühimmat tedarik kayıtları — bir bloğa tıkla, ardından tahrifat dene:</div>
+  <div class="chain-container" id="chainView"></div>
+  <div id="blockDetail" style="display:none"></div>
+  <div id="chainAlert"></div>
+  <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+    <button onclick="addBlock()" style="padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border-accent);background:var(--bg-accent);color:var(--text-accent);cursor:pointer">+ Yeni kayıt ekle</button>
+    <button onclick="restoreChain()" style="padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">Zinciri onar</button>
+    <button onclick="sendPrompt('Blockchain teknolojisi askeri tedarik zincirinde nasıl kullanılır?')" style="padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">Detaylı açıklama ↗</button>
+  </div>
+</div>
+
+<div class="tc2" id="tab2-smart">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">IoT sensöründen otomatik sipariş akışını adım adım gör:</div>
+  <div class="scenario-selector">
+    <div class="sscen sel" id="sc_engine" onclick="selectSmartScen('engine',this)">
+      <div class="sscen-title"><i class="ti ti-engine" aria-hidden="true"></i> Jet motoru parçası</div>
+      <div class="sscen-sub">Türbin kanadı aşınma sensörü</div>
+    </div>
+    <div class="sscen" id="sc_ammo" onclick="selectSmartScen('ammo',this)">
+      <div class="sscen-title"><i class="ti ti-package" aria-hidden="true"></i> Mühimmat</div>
+      <div class="sscen-sub">Depo nem ve stok sensörü</div>
+    </div>
+    <div class="sscen" id="sc_drone" onclick="selectSmartScen('drone',this)">
+      <div class="sscen-title"><i class="ti ti-drone" aria-hidden="true"></i> İHA bataryası</div>
+      <div class="sscen-sub">Pil şarj döngüsü sayacı</div>
+    </div>
+    <div class="sscen" id="sc_armor" onclick="selectSmartScen('armor',this)">
+      <div class="sscen-title"><i class="ti ti-shield" aria-hidden="true"></i> Zırh paneli</div>
+      <div class="sscen-sub">Darbe sensörü ve bütünlük ölçer</div>
+    </div>
+  </div>
+  <div class="sc-flow" id="smartFlow"></div>
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button onclick="runSmartContract()" style="padding:7px 16px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border-accent);background:var(--bg-accent);color:var(--text-accent);cursor:pointer">Sözleşmeyi çalıştır</button>
+    <button onclick="resetSmartContract()" style="padding:7px 12px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">Sıfırla</button>
+  </div>
+</div>
+
+<div class="tc2" id="tab2-scenarios">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Gerçek dünya saldırı vektörlerini incele:</div>
+  <div id="attackScens"></div>
+</div>
+</div>
+
+<script>
+const blockData = [
+  {num:0,type:'genesis',label:'Blok #0',data:'Genesis bloğu',hash:'0000a1b2',prev:'0000000',items:'Sistem başlatıldı',supplier:'Sistem',qty:0,date:'2024-01-01'},
+  {num:1,type:'normal',label:'Blok #1',data:'Motor parçası',hash:'1f3c8d4e',prev:'0000a1b2',items:'Türbin kanadı x12',supplier:'Rolls-Royce DE',qty:12,date:'2024-03-15'},
+  {num:2,type:'normal',label:'Blok #2',data:'Mühimmat',hash:'2a7e9f1c',prev:'1f3c8d4e',items:'40mm mermi x5000',supplier:'NATO Depo TR',qty:5000,date:'2024-04-02'},
+  {num:3,type:'normal',label:'Blok #3',data:'İHA bataryası',hash:'3b5d2e8a',prev:'2a7e9f1c',items:'LiFePO4 6S x200',supplier:'ASELSAN',qty:200,date:'2024-04-18'},
+  {num:4,type:'normal',label:'Blok #4',data:'Zırh paneli',hash:'4c1a7f3d',prev:'3b5d2e8a',items:'UHMWPE panel x50',supplier:'Roketsan',qty:50,date:'2024-05-07'},
+];
+
+let chain = JSON.parse(JSON.stringify(blockData));
+let tamperedIdx = null;
+let selectedIdx = null;
+
+function renderChain() {
+  const cv = document.getElementById('chainView');
+  cv.innerHTML = '';
+  chain.forEach((b,i) => {
+    if(i>0){const arr=document.createElement('div');arr.className='chain-arrow';arr.textContent='→';cv.appendChild(arr);}
+    const div = document.createElement('div');
+    div.className = 'block' + (b.type==='genesis'?' genesis':'') + (tamperedIdx!==null&&i>=tamperedIdx?' tampered':'') + (selectedIdx===i?' selected':'');
+    div.innerHTML = `<div class="block-num">${b.label}</div><div class="block-hash">#${tamperedIdx!==null&&i>=tamperedIdx?'????xxxx':b.hash}</div><div class="block-data">${b.data}</div>`;
+    div.onclick = () => selectBlock(i);
+    cv.appendChild(div);
+  });
+}
+
+function selectBlock(i) {
+  selectedIdx = i;
+  renderChain();
+  const b = chain[i];
+  const isTampered = tamperedIdx !== null && i >= tamperedIdx;
+  document.getElementById('blockDetail').style.display = 'block';
+  document.getElementById('blockDetail').innerHTML = `
+    <div class="block-detail">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:500;color:var(--text-primary)">${b.label} — detaylar</div>
+        ${i>0?`<button class="tamper-btn" onclick="tamperBlock(${i})"><i class="ti ti-edit" aria-hidden="true"></i> Kaydı tahrif et</button>`:''}
+      </div>
+      <div class="detail-row"><span class="dr-label">Blok hash</span><span class="dr-val" style="color:${isTampered?'var(--text-danger)':'var(--text-success)'}">0x${isTampered?'????xxxx (GEÇERSİZ)':b.hash}</span></div>
+      <div class="detail-row"><span class="dr-label">Önceki hash</span><span class="dr-val">0x${b.prev}</span></div>
+      <div class="detail-row"><span class="dr-label">Tedarikçi</span><span class="dr-val">${b.supplier}</span></div>
+      <div class="detail-row"><span class="dr-label">İçerik</span><span class="dr-val">${b.items}</span></div>
+      <div class="detail-row"><span class="dr-label">Miktar</span><span class="dr-val">${b.qty>0?b.qty+' adet':'—'}</span></div>
+      <div class="detail-row"><span class="dr-label">Tarih</span><span class="dr-val">${b.date}</span></div>
+      <div class="detail-row"><span class="dr-label">Bütünlük</span><span class="dr-val" style="color:${isTampered?'var(--text-danger)':'var(--text-success)'}">${isTampered?'BOZUK — zincir kırıldı':'Doğrulandı'}</span></div>
+    </div>
+  `;
+  updateAlert();
+}
+
+function tamperBlock(i) {
+  tamperedIdx = i;
+  renderChain();
+  selectBlock(i);
+}
+
+function restoreChain() {
+  tamperedIdx = null;
+  selectedIdx = null;
+  document.getElementById('blockDetail').style.display = 'none';
+  document.getElementById('chainAlert').innerHTML = '<div class="alert-box success"><b>Zincir onarıldı.</b> Tüm hash değerleri yeniden doğrulandı. Konsensüs mekanizması tahrifatı reddetti.</div>';
+  renderChain();
+}
+
+function addBlock() {
+  const items = ['Radar modülü x3','Muhabere telsizi x20','Termal kamera x8','EMP koruması x15'];
+  const suppliers = ['Aselsan','HAVELSAN','Roketsan','STM'];
+  const n = chain.length;
+  chain.push({
+    num:n,type:'normal',label:`Blok #${n}`,
+    data:'Yeni ekipman',
+    hash:(Math.random()*0xFFFFFFFF>>>0).toString(16).padStart(8,'0'),
+    prev:chain[n-1].hash,
+    items:items[n%items.length],
+    supplier:suppliers[n%suppliers.length],
+    qty:Math.round(Math.random()*100+5),
+    date:new Date().toISOString().slice(0,10)
+  });
+  renderChain();
+  document.getElementById('chainAlert').innerHTML = `<div class="alert-box info"><b>Yeni blok eklendi.</b> Blok #${n} zincire eklendi ve önceki bloğun hash değerine kriptografik olarak bağlandı.</div>`;
+}
+
+function updateAlert() {
+  const ca = document.getElementById('chainAlert');
+  if(tamperedIdx !== null) {
+    ca.innerHTML = `<div class="alert-box danger"><b>Tahrifat tespit edildi!</b> Blok #${tamperedIdx} ve sonrası geçersiz. Hash değerleri uyuşmuyor — zincir konsensüsü reddetti. Gerçek bir saldırganın değişikliği ağdaki tüm düğümler tarafından otomatik olarak reddedilir.</div>`;
+  } else {
+    ca.innerHTML = '<div class="alert-box success"><b>Zincir bütünlüğü doğrulandı.</b> Tüm hash değerleri tutarlı.</div>';
+  }
+}
+
+const smartScenarios = {
+  engine:{
+    title:'Jet motoru türbin kanadı',
+    steps:[
+      {icon:'ti-cpu',title:'IoT sensörü ölçüm yaptı',desc:'Türbin kanadı titreşim sensörü: aşınma eşiği %87 — kritik sınır aşıldı (güvenli sınır: %80).',status:'done'},
+      {icon:'ti-code',title:'Akıllı sözleşme tetiklendi',desc:'Sözleşme koşulu: "aşınma > %80 → otomatik sipariş başlat". İnsan onayı gerekmez.',status:'done'},
+      {icon:'ti-certificate',title:'Tedarikçi kimliği doğrulandı',desc:'Rolls-Royce DE → blockchain\'deki sertifika kontrol edildi. Geçerli NATO tedarikçisi.',status:'done'},
+      {icon:'ti-package',title:'Sipariş blockchain\'e yazıldı',desc:'12 adet türbin kanadı siparişi değiştirilemez kayıt olarak zincire eklendi. Hash: 0x4f2a...',status:'active'},
+      {icon:'ti-truck',title:'Otomatik sevkiyat başlatıldı',desc:'Tedarikçi sisteme bildirim aldı. Tahmini teslimat: 72 saat. Tüm süreç denetlenebilir.',status:'pending'},
+    ]
+  },
+  ammo:{
+    steps:[
+      {icon:'ti-thermometer',title:'Nem sensörü alarm verdi',desc:'Depo nem seviyesi %78 — standart üst sınır %65. Mühimmat bozulma riski.',status:'done'},
+      {icon:'ti-code',title:'Akıllı sözleşme: acil kontrol',desc:'Şartname: "nem > %65 → depo logistiği bildirim + stok sayımı".',status:'done'},
+      {icon:'ti-list-check',title:'Stok ve kalite kontrolü',desc:'5.000 adet 40mm mermi kontrol edildi. 300 adette nem hasarı tespit edildi.',status:'done'},
+      {icon:'ti-alert-triangle',title:'Hasar raporu zincire yazıldı',desc:'Hasar kaydı değiştirilemez şekilde eklendi. Tedarik zinciri sorumluluğu net.',status:'active'},
+      {icon:'ti-refresh',title:'Yenileme siparişi başlatıldı',desc:'300 adet hasar gören mühimmat için otomatik yenileme siparişi oluşturuldu.',status:'pending'},
+    ]
+  },
+  drone:{
+    steps:[
+      {icon:'ti-battery-charging',title:'Şarj döngüsü sayacı',desc:'İHA bataryası şarj döngüsü: 487/500 — ömür bitimine 13 döngü kaldı.',status:'done'},
+      {icon:'ti-code',title:'Akıllı sözleşme uyarısı',desc:'Şart: "döngü > 480 → bakım zamanlaması ve önceden sipariş".',status:'done'},
+      {icon:'ti-drone',title:'İHA bakım planlamasına eklendi',desc:'İHA-047 numaralı araç bakım listesine alındı. Görev programı güncellendi.',status:'done'},
+      {icon:'ti-package',title:'Batarya siparişi zincire yazıldı',desc:'ASELSAN\'dan 5 adet yedek LiFePO4 6S paketi siparişi. Teslimatta QR doğrulama zorunlu.',status:'active'},
+      {icon:'ti-check',title:'Operasyonel süreklilik sağlandı',desc:'Batarya değişimi önceden planlandı. Operasyonel kesinti sıfır.',status:'pending'},
+    ]
+  },
+  armor:{
+    steps:[
+      {icon:'ti-alert-triangle',title:'Darbe sensörü alarm verdi',desc:'Zırh paneli #23: 3 adet 7.62mm çarpı hasarı tespit edildi. Bütünlük: kritik.',status:'done'},
+      {icon:'ti-code',title:'Akıllı sözleşme: acil protokol',desc:'Şart: "bütünlük < %60 → anında değiştirme siparişi + operatör bildirimi".',status:'done'},
+      {icon:'ti-map-pin',title:'Araca en yakın depo belirlendi',desc:'GPS koordinatları kullanılarak 24 km mesafedeki NATO deposu belirlendi.',status:'done'},
+      {icon:'ti-truck',title:'Acil sevkiyat zincire yazıldı',desc:'2 adet UHMWPE yedek panel için acil sevkiyat emri. İmzasız, değiştirilemez kayıt.',status:'active'},
+      {icon:'ti-shield-check',title:'Panel değişimi onaylandı',desc:'Saha teknisyeni QR taramasıyla yeni panelin orijinalliğini doğruladı.',status:'pending'},
+    ]
+  }
+};
+
+let currentSmartScen = 'engine';
+let smartRunning = false;
+let smartStep = 0;
+
+function selectSmartScen(id, el) {
+  currentSmartScen = id;
+  document.querySelectorAll('.sscen').forEach(s => s.classList.remove('sel'));
+  el.classList.add('sel');
+  resetSmartContract();
+}
+
+function renderSmartFlow(steps, activeIdx) {
+  const flow = document.getElementById('smartFlow');
+  flow.innerHTML = steps.map((s,i) => {
+    let cls = 'sc-step';
+    let dotBg = 'var(--surface-1)', dotColor = 'var(--text-muted)', dotContent = (i+1).toString();
+    if(i < activeIdx){cls+=' done-step';dotBg='var(--bg-success)';dotColor='var(--text-success)';dotContent='✓';}
+    else if(i === activeIdx){cls+=' active-step';dotBg='var(--bg-accent)';dotColor='var(--text-accent)';}
+    return `<div class="${cls}">
+      <div class="step-dot" style="background:${dotBg};color:${dotColor}">${dotContent}</div>
+      <div>
+        <div class="step-title"><i class="ti ${s.icon}" aria-hidden="true" style="margin-right:6px"></i>${s.title}</div>
+        <div class="step-desc">${i<=activeIdx?s.desc:'&nbsp;'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function runSmartContract() {
+  if(smartRunning) return;
+  smartRunning = true;
+  const scen = smartScenarios[currentSmartScen];
+  const steps = scen.steps;
+  let idx = 0;
+  renderSmartFlow(steps, 0);
+  const interval = setInterval(() => {
+    idx++;
+    if(idx >= steps.length) { clearInterval(interval); smartRunning = false; return; }
+    renderSmartFlow(steps, idx);
+  }, 900);
+}
+
+function resetSmartContract() {
+  smartRunning = false;
+  smartStep = 0;
+  document.getElementById('smartFlow').innerHTML = '';
+}
+
+const attackScenarios = [
+  {
+    title:'Sahte parça enjeksiyonu',icon:'ti-package-off',color:'var(--text-danger)',
+    threat:'Çin kaynaklı sahte elektronik bileşenler NATO tedarik zincirine sızıyor. Sahte parçalar kritik sistemlerde arıza veya kasıtlı hata üretiyor.',
+    withBC:'Blockchain ile: Her parça fabrikadan çıkışta hash\'lendi. Saha teknisyeni QR okuyunca sahte parçanın hash\'i eşleşmiyor — sistem anında alarm veriyor.',
+    withoutBC:'Blockchain olmadan: Sahte parça görsel incelemeyle tespit edilebilir, ancak küçük elektronik bileşenlerde bu neredeyse imkânsız.'
+  },
+  {
+    title:'Tedarik zinciri veri manipülasyonu',icon:'ti-database-off',color:'var(--text-warning)',
+    threat:'Düşman hackerları tedarik veri tabanına sızarak stok miktarlarını değiştiriyor — kıtlık yaratıyor veya aşırı sipariş tetikliyor.',
+    withBC:'Blockchain ile: Merkezi veri tabanı yok. Her kayıt dağıtık ağda binlerce düğümde saklanıyor. Tek düğüme saldırı zinciri bozmaz.',
+    withoutBC:'Blockchain olmadan: Merkezi veri tabanı tek hata noktasıdır. Bir saldırı tüm lojistik operasyonu durdurabilir.'
+  },
+  {
+    title:'Tedarikçi kimlik sahtekârlığı',icon:'ti-user-off',color:'var(--text-danger)',
+    threat:'Saldırgan gerçek tedarikçi gibi davranarak bozuk mühimmat veya gizli izleme cihazı içeren ekipman teslim ediyor.',
+    withBC:'Blockchain ile: Tedarikçi sertifikaları zincirde. Her teslimatta dijital imza doğrulanıyor. Sahte tedarikçi imzayı kopyalayamaz.',
+    withoutBC:'Blockchain olmadan: Tedarikçi doğrulaması belge tabanlı — sahte evrak üreten bir saldırgan sistemi kandırabilir.'
+  },
+  {
+    title:'Akıllı sözleşme manipülasyonu',icon:'ti-code-off',color:'var(--text-accent)',
+    threat:'Saldırgan akıllı sözleşme koduna erişerek otomatik sipariş koşullarını değiştirmeye çalışıyor.',
+    withBC:'Blockchain ile: Sözleşme kodu zincire yazıldı ve değiştirilemez. Güncelleme çoğunluk konsensüsü gerektirir.',
+    withoutBC:'Blockchain olmadan: Merkezi yazılım güncellenebilir — içeriden saldırı veya yetkisiz erişimle manipülasyon mümkün.'
+  }
+];
+
+function showTab2(id) {
+  document.querySelectorAll('.tc2').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.n2tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tab2-'+id).classList.add('on');
+  event.target.classList.add('on');
+  if(id==='scenarios') buildAttackScens();
+}
+
+function buildAttackScens() {
+  const el = document.getElementById('attackScens');
+  if(el.children.length) return;
+  attackScenarios.forEach(sc => {
+    const div = document.createElement('div');
+    div.style.cssText = 'border:.5px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;';
+    div.innerHTML = `
+      <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;background:var(--surface-2)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+        <i class="ti ${sc.icon}" aria-hidden="true" style="color:${sc.color};font-size:16px"></i>
+        <span style="font-size:13px;font-weight:500;color:var(--text-primary)">${sc.title}</span>
+        <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto;font-size:13px;color:var(--text-muted)"></i>
+      </div>
+      <div style="display:none;padding:12px 14px;background:var(--surface-1);animation:fadeUp .2s ease">
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px"><b style="color:var(--text-primary)">Tehdit:</b> ${sc.threat}</div>
+        <div style="font-size:12px;color:var(--text-success);line-height:1.6;margin-bottom:6px"><i class="ti ti-shield-check" aria-hidden="true"></i> <b>Blockchain ile:</b> ${sc.withBC}</div>
+        <div style="font-size:12px;color:var(--text-danger);line-height:1.6"><i class="ti ti-shield-off" aria-hidden="true"></i> <b>Blockchain olmadan:</b> ${sc.withoutBC}</div>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+renderChain();
+updateAlert();
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Teknoloji Ağacı | Harb-i Strateji OZA</title>
+<meta name="hs-skip" content="true">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;900&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0d0d0d;--card:#1a1a1a;--card2:#222;--red:#c41e3a;--red2:#ff2d55;--white:#f0f0f0;--gray:#888;--gray2:#555;--border:rgba(255,255,255,.1);--accent:#c41e3a;}
+html,body{height:100%;overflow:hidden;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--white);}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#111;border-bottom:2px solid var(--red);position:fixed;top:0;left:0;right:0;z-index:100;}
+.tb-back{color:var(--red);text-decoration:none;font-size:.75rem;font-weight:700;font-family:'Chakra Petch',monospace;}
+.tb-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:900;color:var(--white);text-transform:uppercase;letter-spacing:1px;}
+.tb-stats{display:flex;gap:12px;font-size:.7rem;font-family:'IBM Plex Mono',monospace;}
+.tb-stats span{color:var(--gray);}
+.tb-stats b{color:var(--red2);}
+
+.main{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 50px);margin-top:50px;}
+
+/* SOL PANEL - AĞAÇ */
+.left-panel{overflow-y:auto;padding:20px;border-right:1px solid var(--border);}
+.left-panel::-webkit-scrollbar{width:4px;}
+.left-panel::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px;}
+.era-section{margin-bottom:24px;}
+.era-title{font-family:'Chakra Petch',monospace;font-size:.7rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid rgba(196,30,58,.3);}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.tech-node{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .2s;position:relative;}
+.tech-node:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 4px 12px rgba(196,30,58,.2);}
+.tech-node.unlocked{border-color:rgba(255,255,255,.3);background:rgba(196,30,58,.05);}
+.tech-node.unlocked::after{content:'✓';position:absolute;top:8px;right:8px;color:var(--red2);font-weight:700;font-size:.8rem;}
+.tech-node.locked{opacity:.4;cursor:not-allowed;}
+.tech-node.locked:hover{transform:none;border-color:var(--border);}
+.tn-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.tn-icon{font-size:1.3rem;}
+.tn-name{font-family:'Chakra Petch',monospace;font-size:.75rem;font-weight:700;color:var(--white);}
+.tn-era{font-size:.6rem;color:var(--gray);font-family:'IBM Plex Mono',monospace;}
+.tn-desc{font-size:.6rem;color:var(--gray);line-height:1.5;margin-bottom:6px;}
+.tn-cost{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--red2);font-weight:700;}
+
+/* SAĞ PANEL - DETAY */
+.right-panel{overflow-y:auto;padding:20px;background:#111;display:flex;flex-direction:column;gap:16px;}
+.right-panel::-webkit-scrollbar{width:4px;}
+.right-panel::-webkit-scrollbar-thumb{background:var(--gray2);border-radius:2px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.info-card h3{font-family:'Chakra Petch',monospace;font-size:.85rem;font-weight:700;color:var(--red);margin-bottom:8px;text-transform:uppercase;}
+.detail-header{text-align:center;padding:20px 0;border-bottom:1px solid var(--border);}
+.detail-header .icon{font-size:2.5rem;margin-bottom:8px;}
+.detail-header .name{font-family:'Chakra Petch',monospace;font-size:1.2rem;font-weight:900;color:var(--white);}
+.detail-header .era{font-size:.7rem;color:var(--red);font-family:'IBM Plex Mono',monospace;margin-top:4px;}
+.detail-desc{font-size:.75rem;color:var(--gray);line-height:1.8;padding:12px 0;border-bottom:1px solid var(--border);}
+.effects-grid{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0;}
+.effect-tag{font-size:.6rem;padding:4px 10px;border-radius:4px;background:rgba(196,30,58,.15);color:var(--red2);border:1px solid rgba(196,30,58,.3);font-family:'IBM Plex Mono',monospace;}
+.unlock-btn{width:100%;padding:12px;border:none;border-radius:6px;font-family:'Chakra Petch',monospace;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:1px;}
+.unlock-btn.active{background:var(--red);color:var(--white);}
+.unlock-btn.active:hover{background:var(--red2);box-shadow:0 4px 12px rgba(196,30,58,.4);}
+.unlock-btn.disabled{background:var(--card2);color:var(--gray);cursor:not-allowed;}
+.progress-section{margin-top:auto;}
+.progress-bar{height:6px;background:var(--card2);border-radius:3px;overflow:hidden;margin-top:8px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red2));border-radius:3px;transition:width .3s;}
+.stat-row{display:flex;justify-content:space-between;font-size:.65rem;color:var(--gray);margin-top:6px;}
+.stat-row b{color:var(--white);}
+.placeholder-msg{text-align:center;color:var(--gray);font-size:.75rem;padding:40px 0;}
+.placeholder-msg .big{font-size:2rem;margin-bottom:8px;}
+
+/* INTRO */
+.intro-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}
+.intro-overlay.hidden{display:none;}
+.intro-overlay h1{font-family:'Chakra Petch',monospace;font-size:2rem;font-weight:900;color:var(--white);margin-bottom:8px;text-transform:uppercase;}
+.intro-overlay .sub{font-size:.85rem;color:var(--red);font-family:'IBM Plex Mono',monospace;margin-bottom:20px;}
+.intro-overlay p{font-size:.8rem;color:var(--gray);max-width:500px;line-height:1.8;margin-bottom:24px;}
+.intro-overlay button{background:var(--red);color:var(--white);border:none;border-radius:6px;padding:14px 40px;font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all .2s;}
+.intro-overlay button:hover{background:var(--red2);box-shadow:0 4px 20px rgba(196,30,58,.4);}
+
+/* MOBİL */
+@media(max-width:900px){
+.main{grid-template-columns:1fr;height:auto;margin-top:50px;}
+.right-panel{border-top:2px solid var(--red);max-height:50vh;}
+}
+</style><link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+
+<div class="intro-overlay" id="intro">
+<h1>Teknoloji Ağacı</h1>
+<div class="sub">MÖ 3000 — 2100+ | 10 Çağ | 25 Teknoloji</div>
+<p style="max-width:600px;margin-bottom:16px;"><b style="color:var(--red2);">Amaç:</b> Medeniyetlerin teknolojik gelişim yolculuğunu yönet. Bozkır Atlısı'ndan Dyson Küresi'ne, her çağda stratejik teknoloji kararları ver.</p>
+<p style="max-width:600px;margin-bottom:16px;"><b style="color:var(--red2);">Nasıl Oynanır:</b><br>• Her teknoloji <b>Araştırma Puanı (AP)</b> harcar<br>• Teknolojileri sırayla açarak çağları geç<br>• Her açılan teknoloji yeni yetenekler kazandırır<br>• Hedef: Tüm 25 teknolojiyi açarak Tip II Medeniyete ulaş!</p>
+<p style="max-width:600px;"><b style="color:var(--red2);">İpucu:</b> Teknolojilere tıklayarak detaylarını incele. Stratejik sıralama önemli — bazı teknolojiler diğerlerinin önkoşuludur.</p>
+<button onclick="startGame()">Araştırmaya Başla</button>
+</div>
+
+<div class="top-bar" id="topBar" style="display:none;padding-left:150px;">
+<a href="oza-harbi-strateji-evren.html" class="tb-back">← OZA</a>
+<div class="tb-title">Teknoloji Ağacı</div>
+<div class="tb-stats"><span>AP: <b id="apTop">100</b></span><span>Seviye: <b id="lvlTop">1</b></span><span>Açılan: <b id="unlockTop">1</b>/25</span></div>
+</div>
+
+<div class="main" id="mainArea" style="display:none;">
+<!-- SOL: AĞAÇ -->
+<div class="left-panel" id="treePanel"></div>
+<!-- SAĞ: DETAY -->
+<div class="right-panel" id="detailPanel">
+<div class="placeholder-msg"><div class="big">🔬</div>Bir teknoloji seçin<br><small>Detayları burada göreceksiniz</small></div>
+</div>
+</div>
+
+<script>
+const TECHS=[
+{id:0,icon:'🐎',name:'Bozkır Atlısı',era:'MÖ 3000',eraGroup:'Antik Çağ',desc:'At evcilleştirme ve binicilik. Hareket kabiliyeti devrim yarattı. Göçebe medeniyetin temeli. Türk kavimlerinin Orta Asya bozkırlarında at sırtında kurduğu hakimiyet, tarih boyunca sürecek askeri üstünlüğün başlangıcıdır.',effects:['Hız +50%','Menzil +100km','Göç kapasitesi','Süvari üstünlüğü'],cost:0,unlocked:true},
+{id:1,icon:'⚒️',name:'Demir İşleme',era:'MÖ 1200',eraGroup:'Antik Çağ',desc:'Demir madenciliği ve işleme. Bronzdan çok daha sert silahlar ve aletler. Hititlerin demir tekeli, Anadolu\'nun stratejik önemini artırdı.',effects:['Silah gücü +30%','Tarım verimi +20%','Zırh üretimi','Ticaret gücü'],cost:20,unlocked:false},
+{id:2,icon:'🏹',name:'Kompozit Yay',era:'MÖ 800',eraGroup:'Antik Çağ',desc:'Kemik, ahşap ve sinir katmanlı yay. At üstünden 300m menzil. Türk-Moğol ordularının temel silahı.',effects:['Menzil +200%','At üstü savaş','Volley ateşi','Psikolojik etki'],cost:25,unlocked:false},
+{id:3,icon:'💥',name:'Barut',era:'1000',eraGroup:'Orta Çağ',desc:'Çin\'den gelen barut teknolojisi. Savaşın doğasını değiştirdi. Osmanlı\'nın top teknolojisi fetihler çağını başlattı.',effects:['Top üretimi','Tüfek','Kale yıkma','Psikolojik savaş'],cost:35,unlocked:false},
+{id:4,icon:'⚔️',name:'Kuşatma Mühendisliği',era:'1400',eraGroup:'Orta Çağ',desc:'Dev toplar, lağım kazma, kuşatma kuleleri. Kalelerin sonu. Fatih\'in Şahi topları İstanbul surlarını yıktı.',effects:['Kale yıkma +80%','Tünel savaşı','Mancınık','Psikolojik baskı'],cost:30,unlocked:false},
+{id:5,icon:'💣',name:'Matbaa & Propaganda',era:'1450',eraGroup:'Orta Çağ',desc:'Bilgi yayılması hızlandı. Psikolojik savaşın temeli. Osmanlı\'da ilk matbaa 1727.',effects:['Moral savaşı','Eğitim +50%','Propaganda','Kültürel etki'],cost:28,unlocked:false},
+{id:6,icon:'⚓',name:'Okyanus Gemiciliği',era:'1500',eraGroup:'Keşifler Çağı',desc:'Karavela, pusula, harita. Keşifler çağı başladı. Osmanlı Akdeniz hakimiyeti Preveze ile zirveye ulaştı.',effects:['Okyanus geçişi','Ticaret +100%','Deniz hakimiyeti','Sömürge'],cost:35,unlocked:false},
+{id:7,icon:'🏰',name:'Yıldız Tabya',era:'1600',eraGroup:'Keşifler Çağı',desc:'Top ateşine dayanıklı açılı kale tasarımı. Vauban sistemi. Savunma mimarisinde devrim.',effects:['Savunma +60%','Top dayanımı','Hendek sistemi','Uzun kuşatma'],cost:38,unlocked:false},
+{id:8,icon:'🚂',name:'Demiryolu',era:'1830',eraGroup:'Sanayi Çağı',desc:'Askerî lojistik devrim. Büyük orduları hızla taşıma. Berlin-Bağdat hattı jeopolitik dengeleri değiştirdi.',effects:['Lojistik +200%','Seferberlik hızı','Ekonomi','Stratejik derinlik'],cost:42,unlocked:false},
+{id:9,icon:'📞',name:'Telgraf & Telsiz',era:'1840',eraGroup:'Sanayi Çağı',desc:'Anlık iletişim. Komuta kontrol devrim yaratı. Savaş alanı bilgisi gerçek zamanlı.',effects:['Komuta hızı +300%','Koordinasyon','Casus ağı','Erken uyarı'],cost:40,unlocked:false},
+{id:10,icon:'🏭',name:'Sanayi Devrimi',era:'1760',eraGroup:'Sanayi Çağı',desc:'Buhar makinesi, fabrikalar, demiryolu. Üretim kapasitesi patladı. Osmanlı\'nın gerileme döneminin başlangıcı.',effects:['Üretim x10','Demiryolu','Çelik gemi','Kitle ordusu'],cost:45,unlocked:false},
+{id:11,icon:'✈️',name:'Havacılık',era:'1914',eraGroup:'Dünya Savaşları',desc:'Uçak keşif, bombardıman, hava muharebesi. 3. boyut savaşa eklendi. Çanakkale\'de ilk hava keşfi.',effects:['Hava keşfi','Bombardıman','Hava üstünlüğü','Stratejik bombalama'],cost:48,unlocked:false},
+{id:12,icon:'📡',name:'Radar',era:'1935',eraGroup:'Dünya Savaşları',desc:'Radyo dalgalarıyla tespit. Hava savunmasının temeli. İngiltere\'yi kurtaran teknoloji.',effects:['Erken uyarı','Hava savunma','Deniz keşfi','Gece savaşı'],cost:50,unlocked:false},
+{id:13,icon:'☢️',name:'Nükleer Enerji',era:'1945',eraGroup:'Soğuk Savaş',desc:'Atom bombası ve nükleer reaktör. Caydırıcılık çağı. MAD doktrini dünya savaşını önledi.',effects:['Nükleer caydırıcılık','Sınırsız enerji','Denizaltı','Stratejik denge'],cost:55,unlocked:false},
+{id:14,icon:'💻',name:'Bilgisayar',era:'1960',eraGroup:'Soğuk Savaş',desc:'Dijital devrim. Şifreleme, simülasyon, otomasyon. ARPANET\'ten internete.',effects:['Siber savaş','Simülasyon','Şifreleme','Komuta kontrol'],cost:55,unlocked:false},
+{id:15,icon:'🛰️',name:'Uydu Teknolojisi',era:'1957',eraGroup:'Soğuk Savaş',desc:'Uzay yarışı. GPS, iletişim, keşif uyduları. Göktürk ve İMECE Türkiye\'nin uzay varlığı.',effects:['Küresel iletişim','GPS güdüm','İstihbarat','Erken uyarı'],cost:60,unlocked:false},
+{id:16,icon:'🌐',name:'İnternet',era:'1990',eraGroup:'Bilgi Çağı',desc:'Küresel ağ. Bilgi savaşının yeni alanı. Siber operasyonlar 5. boyut.',effects:['Siber operasyon','Sosyal mühendislik','Veri madenciliği','Hibrit savaş'],cost:60,unlocked:false},
+{id:17,icon:'🤖',name:'Yapay Zeka',era:'2020',eraGroup:'Bilgi Çağı',desc:'Makine öğrenmesi, otonom sistemler, karar destek. Savaşın geleceğini şekillendiriyor.',effects:['Otonom drone','Siber savaş','Tahmin analizi','Karar destek'],cost:70,unlocked:false},
+{id:18,icon:'🚀',name:'Hipersonik Silah',era:'2025',eraGroup:'Bilgi Çağı',desc:'Mach 5+ hızda manevra yapabilen füzeler. Mevcut savunma sistemleri yetersiz kalıyor.',effects:['Savunma aşma','Anlık vuruş','Caydırıcılık','Stratejik üstünlük'],cost:75,unlocked:false},
+{id:19,icon:'⚡',name:'Otonom Sistemler',era:'2030+',eraGroup:'Gelecek',desc:'İnsansız savaş sistemleri. Sürü drone, robot piyade. Savaşta insan faktörü azalıyor.',effects:['Sürü zekası','Sıfır kayıp','7/24 operasyon','Maliyet düşüşü'],cost:80,unlocked:false},
+{id:20,icon:'🧠',name:'Nöroteknoloji',era:'2035+',eraGroup:'Gelecek',desc:'Beyin-bilgisayar arayüzü. Asker performans artırma. Düşünce ile kontrol.',effects:['Tepki hızı +500%','Telepatik kontrol','Süper asker','Bilişsel savaş'],cost:85,unlocked:false},
+{id:21,icon:'⚗️',name:'Kuantum Bilgisayar',era:'2035+',eraGroup:'Gelecek',desc:'Klasik bilgisayarların milyonlarca katı hız. Tüm şifreleme sistemleri kırılabilir.',effects:['Şifre kırma','Simülasyon x10⁶','Optimizasyon','Kuantum iletişim'],cost:90,unlocked:false},
+{id:22,icon:'🌌',name:'Uzay Hakimiyeti',era:'2050+',eraGroup:'Gelecek',desc:'Yörünge silahları, Ay üssü, asteroid madenciliği. Uzay yeni savaş alanı.',effects:['Yörünge silahı','Uzay madeni','Koloni','Küresel gözetim'],cost:100,unlocked:false},
+{id:23,icon:'🔮',name:'Antimadde Silahı',era:'2060+',eraGroup:'Gelecek',desc:'Madde-antimadde tepkimesi. Mutlak yıkım gücü. Teorik ama kaçınılmaz.',effects:['Mutlak yıkım','Uzay itici','Enerji kaynağı','Caydırıcılık'],cost:120,unlocked:false},
+{id:24,icon:'🌟',name:'Dyson Küresi',era:'2100+',eraGroup:'Gelecek',desc:'Yıldızın tüm enerjisini toplama. Tip II medeniyet. Kardashev ölçeğinde sıçrama.',effects:['Sınırsız enerji','Yıldızlararası','Tanrısal güç','Medeniyet sıçraması'],cost:200,unlocked:false}
+];
+
+let G={ap:100,level:1,selected:-1};
+
+function startGame(){
+document.getElementById('intro').classList.add('hidden');
+document.getElementById('topBar').style.display='flex';
+document.getElementById('mainArea').style.display='grid';
+renderTree();
+}
+
+function renderTree(){
+const panel=document.getElementById('treePanel');
+const groups={};
+TECHS.forEach((t,i)=>{if(!groups[t.eraGroup])groups[t.eraGroup]=[];groups[t.eraGroup].push({...t,idx:i});});
+let html='';
+for(const[era,techs] of Object.entries(groups)){
+html+=`<div class="era-section"><div class="era-title">${era}</div><div class="tech-grid">`;
+techs.forEach(t=>{
+const canUnlock=t.idx===0||TECHS[t.idx-1].unlocked;
+const cls=t.unlocked?'unlocked':canUnlock?'':'locked';
+html+=`<div class="tech-node ${cls}" onclick="selectTech(${t.idx})">
+<div class="tn-header"><span class="tn-icon">${t.icon}</span><span class="tn-name">${t.name}</span></div>
+<div class="tn-era">${t.era}</div>
+<div class="tn-desc">${t.desc.substring(0,80)}...</div>
+<div class="tn-cost">${t.unlocked?'Araştırıldı ✓':t.cost+' AP'}</div>
+</div>`;
+});
+html+=`</div></div>`;
+}
+panel.innerHTML=html;
+updateStats();
+}
+
+function selectTech(idx){
+G.selected=idx;
+const t=TECHS[idx];
+const canUnlock=idx===0||TECHS[idx-1].unlocked;
+const panel=document.getElementById('detailPanel');
+let btnClass='unlock-btn ';
+let btnText='';
+if(t.unlocked){btnClass+='disabled';btnText='ARAŞTIRILDI ✓';}
+else if(!canUnlock){btnClass+='disabled';btnText='ÖNCEKİ TEKNOLOJİ GEREKLİ';}
+else if(G.ap<t.cost){btnClass+='disabled';btnText='YETERSİZ AP ('+t.cost+' gerekli)';}
+else{btnClass+='active';btnText='ARAŞTIR — '+t.cost+' AP';}
+
+panel.innerHTML=`
+<div class="detail-header"><div class="icon">${t.icon}</div><div class="name">${t.name}</div><div class="era">${t.era} — ${t.eraGroup}</div></div>
+<div class="detail-desc">${t.desc}</div>
+<div class="info-card"><h3>Etkiler</h3><div class="effects-grid">${t.effects.map(e=>`<span class="effect-tag">${e}</span>`).join('')}</div></div>
+<div class="info-card"><h3>Maliyet</h3><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:.75rem;color:var(--gray);">Araştırma Puanı</span><span style="font-family:'IBM Plex Mono',monospace;font-size:1rem;color:var(--red2);font-weight:700;">${t.cost} AP</span></div></div>
+<button class="${btnClass}" onclick="unlockTech()"><span>${btnText}</span></button>
+<div class="progress-section"><div class="info-card"><h3>İlerleme</h3><div class="progress-bar"><div class="progress-fill" style="width:${(TECHS.filter(x=>x.unlocked).length/25*100).toFixed(1)}%"></div></div><div class="stat-row"><span>Açılan: <b>${TECHS.filter(x=>x.unlocked).length}</b>/25</span><span>Kalan AP: <b>${G.ap}</b></span></div></div></div>`;
+}
+
+function unlockTech(){
+if(G.selected<0)return;
+const t=TECHS[G.selected];
+if(t.unlocked||G.ap<t.cost)return;
+const canUnlock=G.selected===0||TECHS[G.selected-1].unlocked;
+if(!canUnlock)return;
+G.ap-=t.cost;t.unlocked=true;G.level++;
+renderTree();selectTech(G.selected);
+}
+
+function updateStats(){
+const unlocked=TECHS.filter(t=>t.unlocked).length;
+document.getElementById('apTop').textContent=G.ap;
+document.getElementById('lvlTop').textContent=G.level;
+document.getElementById('unlockTop').textContent=unlocked;
+}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body></html>

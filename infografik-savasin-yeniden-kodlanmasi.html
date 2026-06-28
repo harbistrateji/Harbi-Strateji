@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Savaşın Yeniden Kodlanması — Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Chakra Petch',system-ui,sans-serif;background:#0a0f17;color:#e8e8e8;overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,#E0151522 0%,transparent 60%);pointer-events:none}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,#E01515,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;animation:fadeUp .8s ease}
+.hero .subtitle{font-size:1.1rem;color:#aaa;max-width:700px;margin-bottom:30px;animation:fadeUp 1s ease}
+.badge{display:inline-block;background:#E0151522;color:#E01515;border:1px solid #E0151544;padding:4px 12px;border-radius:20px;font-size:12px;margin:4px;animation:fadeUp 1.2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.sections{max-width:1200px;margin:0 auto;padding:40px 20px}
+.section{background:#111827;border:1px solid #1f2937;border-radius:16px;padding:32px;margin-bottom:24px;transition:all .3s;position:relative;overflow:hidden}
+.section:hover{border-color:#E0151544;transform:translateY(-2px);box-shadow:0 8px 32px #E0151511}
+.section::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#E01515;border-radius:4px 0 0 4px}
+.section h2{font-size:1.4rem;color:#E01515;margin-bottom:12px;padding-left:16px}
+.section p{color:#ccc;line-height:1.8;padding-left:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:20px;padding-left:16px}
+.card{background:#0a0f17;border:1px solid #1f2937;border-radius:12px;padding:20px;transition:all .3s}
+.card:hover{border-color:#E0151566;background:#111827}
+.card .icon{font-size:2rem;margin-bottom:8px}
+.card h3{color:#fff;font-size:1rem;margin-bottom:8px}
+.card p{color:#999;font-size:.85rem;line-height:1.6}
+.stat-bar{display:flex;align-items:center;gap:8px;margin-top:8px}
+.stat-bar .bar{flex:1;height:6px;background:#1f2937;border-radius:3px;overflow:hidden}
+.stat-bar .fill{height:100%;background:#E01515;border-radius:3px;animation:fillBar 1.5s ease forwards}
+@keyframes fillBar{from{width:0}}
+.stat-bar .val{color:#E01515;font-size:12px;font-weight:700;min-width:40px}
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:#E0151533}
+.timeline-item{position:relative;margin-bottom:24px;padding-left:20px}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:6px;width:12px;height:12px;border-radius:50%;background:#E01515;border:2px solid #0a0f17}
+.timeline-item h4{color:#fff;margin-bottom:4px}
+.timeline-item p{color:#999;font-size:.85rem}
+.audio-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:#E01515;border:none;color:#fff;font-size:20px;cursor:pointer;z-index:9999;box-shadow:0 4px 20px #E0151544;transition:all .3s}
+.audio-btn:hover{transform:scale(1.1)}
+.audio-btn.playing{animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 4px 20px #E0151544}50%{box-shadow:0 4px 40px #E0151588}}
+footer{text-align:center;padding:40px;color:#666;font-size:12px;border-top:1px solid #1f2937}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.hero h1{font-size:1.8rem}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#E01515;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #E0151533;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="hero">
+<h1>Savaşın Yeniden Kodlanması</h1>
+<p class="subtitle">Askerî ve Otonom Yapay Zekâ: Bilimler Arası Etkileşim ile Yeni Nesil Ordunun Anatomisi</p>
+<div><span class="badge">⚔️ OTONOM SAVAŞ</span><span class="badge">🧠 BİLİŞSEL HARP</span><span class="badge">⚛️ KUANTUM</span><span class="badge">🤖 SÜRÜ ZEKÂSI</span></div>
+</div>
+<div class="sections">
+<div class="section"><h2>Temel Bilimler: Zekânın Soyut Kökleri</h2><p>Her otonom sistemin kalbinde temel bilimsel prensipler yatar. Matematik (Bayesçi çıkarım, optimizasyon, oyun teorisi), Fizik (kuantum radar, hipersonik plazma), Kimya (metamalzemeler, katı hal piller), Biyoloji (sürü zekâsı, BCI).</p><div class="grid"><div class="card"><div class="icon">📐</div><h3>Matematik</h3><p>Bayesçi çıkarım, çok amaçlı optimizasyon, oyun teorisi, kaos teorisi. Sentetik zekânın mantıksal çekirdeği.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:95%"></div></div><div class="val">95%</div></div></div><div class="card"><div class="icon">⚛️</div><h3>Kuantum Fiziği</h3><p>Atomik interferometre, kuantum radar, dolaşık fotonlar. Stealth teknolojisinin sonu.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:72%"></div></div><div class="val">72%</div></div></div><div class="card"><div class="icon">🧪</div><h3>Malzeme Bilimi</h3><p>Yüksek entropili alaşımlar, metamalzemeler, grafen piller. Zekânın kabuğu.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:80%"></div></div><div class="val">80%</div></div></div><div class="card"><div class="icon">🧬</div><h3>Nörobilim</h3><p>Nöromorfik çipler, sürü zekâsı, BCI. Yaşamın kodlarından ilham.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:68%"></div></div><div class="val">68%</div></div></div></div></div><div class="section"><h2>Mühendislik: Teorinin Çeliğe Dönüşümü</h2><p>Bilgisayarla görme, üretken YZ (hayalet tümen), NLP (istihbarat analizi), blockchain (angajman kanıt zinciri), edge bilişim (bulut bağımsız otonomi), dijital ikiz.</p><div class="grid"><div class="card"><div class="icon">👁️</div><h3>Bilgisayarla Görme</h3><p>Semantik segmentasyon — her pikselin ne olduğunu anlama. Otonom navigasyon.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:90%"></div></div><div class="val">90%</div></div></div><div class="card"><div class="icon">🎭</div><h3>Üretken YZ</h3><p>Sahte hayalet tümen — telsiz, intikal emri, uydu ısı izi. Aldatmacanın silahı.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:85%"></div></div><div class="val">85%</div></div></div><div class="card"><div class="icon">🔗</div><h3>Blockchain</h3><p>Otonom SİHA angajman zinciri — değiştirilemez kanıt. Savaş hukuku devrimi.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:78%"></div></div><div class="val">78%</div></div></div><div class="card"><div class="icon">📡</div><h3>Edge Bilişim</h3><p>İletişim kesilse bile drone sürüsü mesh ağ kurar. Bulut bağımlılığı = ölümcül zafiyet.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:92%"></div></div><div class="val">92%</div></div></div></div></div><div class="section"><h2>Bilişsel Elektronik Harp</h2><p>YZ, düşmanın tüm elektromanyetik savaş düzenini (EOB) çıkarır. Cerrahi hassasiyette karıştırma — geleneksel jammer gibi bağırmak yerine, neşter gibi çalışır. AESA radarları saniyede binlerce kez huzme yönlendirir.</p><div class="grid"><div class="card"><div class="icon">📻</div><h3>AESA Radar</h3><p>Binlerce T/R modülü — aynı anda hava, kara, deniz takibi. Elektronik huzme yönlendirme.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:88%"></div></div><div class="val">88%</div></div></div><div class="card"><div class="icon">🛡️</div><h3>Post-Kuantum Kriptografi</h3><p>Kafes tabanlı algoritmalar — kuantum bilgisayarlara karşı dijital zırh.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:75%"></div></div><div class="val">75%</div></div></div><div class="card"><div class="icon">🎯</div><h3>SAR Radar</h3><p>10 km sanal anten — kamufle tankın üzerindeki ağ dokusunu bile ayırt eder.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:82%"></div></div><div class="val">82%</div></div></div><div class="card"><div class="icon">🔬</div><h3>CRISPR Biyosensör</h3><p>Genetik materyal hedefleme — biyolojik salgının ilk dakikasında tespit ve haritalandırma.</p><div class="stat-bar"><div class="bar"><div class="fill" style="width:65%"></div></div><div class="val">65%</div></div></div></div></div>
+</div>
+<button class="audio-btn" id="audioBtn" onclick="toggleAudio()">🔊</button>
+<audio id="bgAudio" loop>
+<source src="Zenith_Unbound.mp3" type="audio/mpeg">
+</audio>
+<footer>© 2026 Harb-i Strateji · Selahaddin Koyuncu · Gerçeklerden Geleceğe</footer>
+<script>
+let audioPlaying=false;
+function toggleAudio(){
+  const a=document.getElementById('bgAudio');
+  const b=document.getElementById('audioBtn');
+  if(audioPlaying){a.pause();b.textContent='🔊';b.classList.remove('playing');}
+  else{a.volume=0.3;a.play();b.textContent='🔇';b.classList.add('playing');}
+  audioPlaying=!audioPlaying;
+}
+// Intersection Observer for animations
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}}); 
+},{threshold:0.1});
+document.querySelectorAll('.section').forEach(s=>{s.style.opacity='0';s.style.transform='translateY(30px)';s.style.transition='all 0.6s ease';obs.observe(s);});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

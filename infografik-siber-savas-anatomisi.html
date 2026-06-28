@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Siber Savaş Anatomisi — İnteraktif İnfografik | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Mono',monospace;background:#000;color:#00ff41;overflow-x:hidden;}
+:root{--green:#00ff41;--red:#ff0040;--cyan:#00e0ff;--amber:#ffb000;--bg:#000;--card:rgba(0,20,0,0.8);}
+
+/* MATRIX RAIN */
+.matrix-canvas{position:fixed;inset:0;z-index:0;opacity:0.15;pointer-events:none;}
+
+/* CRT EFFECT */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.1) 0px,transparent 1px,transparent 2px);opacity:0.3;}
+
+.sound-toggle{position:fixed;top:12px;right:12px;z-index:9999;background:rgba(0,10,0,0.95);border:1px solid rgba(0,255,65,0.3);border-radius:4px;padding:6px 14px;color:var(--green);cursor:pointer;font-size:14px;backdrop-filter:blur(8px);border:none;}
+.sound-toggle.active{text-shadow:0 0 10px var(--green);}
+
+/* HERO */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-content{position:relative;z-index:10;text-align:center;}
+.hero-prompt{font-size:0.8rem;color:var(--green);opacity:0;animation:typeIn 2s 0.5s forwards;}
+.hero-title{font-size:clamp(2rem,7vw,4rem);font-weight:700;color:var(--green);text-shadow:0 0 30px rgba(0,255,65,0.5);margin:1rem 0;opacity:0;animation:glitch 0.5s 2s forwards;}
+.hero-cursor{display:inline-block;width:12px;height:1.2em;background:var(--green);animation:blink 1s step-end infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+@keyframes typeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes glitch{0%{opacity:0;transform:skew(-5deg);}20%{opacity:1;transform:skew(2deg);}40%{transform:skew(-1deg);}60%{transform:skew(0.5deg);}100%{opacity:1;transform:skew(0);}}
+
+.terminal-box{background:rgba(0,10,0,0.9);border:1px solid rgba(0,255,65,0.3);border-radius:4px;padding:1.5rem;margin-top:2rem;text-align:left;max-width:600px;margin-left:auto;margin-right:auto;opacity:0;animation:fadeUp 1s 3s forwards;}
+.terminal-line{font-size:0.8rem;color:rgba(0,255,65,0.7);margin-bottom:0.3rem;}
+.terminal-line .cmd{color:var(--green);}
+.terminal-line .warn{color:var(--amber);}
+.terminal-line .err{color:var(--red);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(0,255,65,0.3);font-size:0.75rem;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+/* SECTIONS */
+.section{padding:6rem 1.5rem;max-width:1100px;margin:0 auto;position:relative;z-index:10;}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.3rem,3.5vw,2rem);font-weight:700;color:var(--green);text-shadow:0 0 15px rgba(0,255,65,0.3);margin-bottom:0.5rem;opacity:0;transform:translateY(30px);transition:all 0.8s;}
+.section-title.visible{opacity:1;transform:translateY(0);}
+.section-subtitle{font-size:0.8rem;color:var(--amber);margin-bottom:2rem;opacity:0;transform:translateY(15px);transition:all 0.8s 0.2s;}
+.section-subtitle.visible{opacity:1;transform:translateY(0);}
+
+/* ATTACK TYPES */
+.attack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-top:1.5rem;}
+.attack-card{background:var(--card);border:1px solid rgba(0,255,65,0.1);border-radius:4px;padding:1.2rem;opacity:0;transform:translateY(20px);transition:all 0.6s;cursor:pointer;position:relative;overflow:hidden;}
+.attack-card.visible{opacity:1;transform:translateY(0);}
+.attack-card:hover{border-color:var(--green);box-shadow:0 0 20px rgba(0,255,65,0.1);}
+.attack-card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);animation:scanH 3s linear infinite;}
+@keyframes scanH{0%{left:-100%;}100%{left:100%;}}
+.attack-name{font-family:'Chakra Petch',sans-serif;font-size:1rem;font-weight:600;color:var(--green);margin-bottom:0.5rem;}
+.attack-severity{display:inline-block;padding:2px 8px;border-radius:2px;font-size:0.65rem;text-transform:uppercase;margin-bottom:0.5rem;}
+.attack-severity.critical{background:rgba(255,0,64,0.2);color:var(--red);border:1px solid rgba(255,0,64,0.3);}
+.attack-severity.high{background:rgba(255,176,0,0.2);color:var(--amber);border:1px solid rgba(255,176,0,0.3);}
+.attack-severity.medium{background:rgba(0,224,255,0.2);color:var(--cyan);border:1px solid rgba(0,224,255,0.3);}
+.attack-desc{font-size:0.75rem;color:rgba(0,255,65,0.5);line-height:1.6;}
+.attack-example{font-size:0.7rem;color:var(--amber);margin-top:0.5rem;font-style:italic;}
+
+/* KILL CHAIN */
+.killchain{display:flex;gap:0;margin-top:2rem;overflow-x:auto;padding-bottom:1rem;}
+.kc-step{flex:0 0 160px;background:var(--card);border:1px solid rgba(0,255,65,0.1);padding:1rem;text-align:center;position:relative;opacity:0;transform:scale(0.8);transition:all 0.5s;}
+.kc-step.visible{opacity:1;transform:scale(1);}
+.kc-step::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--green);font-size:1.2rem;z-index:2;}
+.kc-step:last-child::after{display:none;}
+.kc-num{font-size:1.5rem;color:var(--green);font-weight:700;margin-bottom:0.3rem;}
+.kc-title{font-size:0.75rem;color:#fff;font-weight:600;margin-bottom:0.3rem;}
+.kc-desc{font-size:0.65rem;color:rgba(0,255,65,0.4);}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:2rem;}
+.stat-card{background:var(--card);border:1px solid rgba(0,255,65,0.1);border-radius:4px;padding:1.2rem;text-align:center;opacity:0;transform:scale(0.9);transition:all 0.5s;}
+.stat-card.visible{opacity:1;transform:scale(1);}
+.stat-val{font-size:2rem;font-weight:700;color:var(--green);text-shadow:0 0 10px rgba(0,255,65,0.3);}
+.stat-lbl{font-size:0.65rem;color:rgba(0,255,65,0.4);text-transform:uppercase;margin-top:0.3rem;}
+
+/* LOG STREAM */
+.log-stream{background:rgba(0,5,0,0.9);border:1px solid rgba(0,255,65,0.2);border-radius:4px;padding:1rem;margin-top:2rem;max-height:200px;overflow:hidden;font-size:0.7rem;line-height:1.8;}
+.log-line{opacity:0;animation:logAppear 0.3s forwards;}
+@keyframes logAppear{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
+.log-time{color:rgba(0,255,65,0.3);}
+.log-src{color:var(--cyan);}
+.log-action{color:var(--amber);}
+.log-target{color:var(--red);}
+
+/* DIVIDER */
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);margin:0;opacity:0.2;}
+
+@media(max-width:768px){
+  .attack-grid{grid-template-columns:1fr;}
+  .killchain{flex-wrap:nowrap;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<canvas class="matrix-canvas" id="matrix"></canvas>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</button>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-prompt">root@harbistrateji:~# cat /proc/cyber_warfare_analysis</div>
+    <h1 class="hero-title">SİBER SAVAŞ<br>ANATOMİSİ<span class="hero-cursor"></span></h1>
+    <div class="terminal-box">
+      <div class="terminal-line"><span class="cmd">[SYS]</span> Analiz modülü yükleniyor...</div>
+      <div class="terminal-line"><span class="warn">[WARN]</span> 2025'te küresel siber saldırı sayısı: 38.6 milyon/gün</div>
+      <div class="terminal-line"><span class="err">[ALERT]</span> Kritik altyapı hedefli saldırılar %300 arttı</div>
+      <div class="terminal-line"><span class="cmd">[INFO]</span> Devlet destekli APT grupları: 150+ aktif</div>
+      <div class="terminal-line"><span class="cmd">[READY]</span> İnteraktif analiz hazır. Kaydırarak keşfedin.</div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ [ENTER] Devam</div>
+</section>
+
+<!-- SALDIRI TÜRLERİ -->
+<section class="section">
+  <h2 class="section-title" data-anim>// Saldırı Vektörleri</h2>
+  <p class="section-subtitle" data-anim>Siber savaşta kullanılan başlıca saldırı yöntemleri</p>
+  
+  <div class="attack-grid">
+    <div class="attack-card" data-anim>
+      <div class="attack-name">APT (Advanced Persistent Threat)</div>
+      <span class="attack-severity critical">KRİTİK</span>
+      <div class="attack-desc">Devlet destekli, uzun süreli, hedefli sızma operasyonları. Aylarca tespit edilmeden sistemde kalabilir.</div>
+      <div class="attack-example">Örnek: SolarWinds (2020) — 18.000 kurum etkilendi</div>
+    </div>
+    <div class="attack-card" data-anim>
+      <div class="attack-name">Ransomware (Fidye Yazılımı)</div>
+      <span class="attack-severity critical">KRİTİK</span>
+      <div class="attack-desc">Verileri şifreleyerek fidye talep eden saldırılar. Hastaneler, enerji şirketleri, devlet kurumları hedef.</div>
+      <div class="attack-example">Örnek: Colonial Pipeline (2021) — ABD yakıt krizi</div>
+    </div>
+    <div class="attack-card" data-anim>
+      <div class="attack-name">Zero-Day Exploit</div>
+      <span class="attack-severity critical">KRİTİK</span>
+      <div class="attack-desc">Henüz yaması bulunmayan güvenlik açıklarını kullanan saldırılar. Karaborsa fiyatı: $2.5M+</div>
+      <div class="attack-example">Örnek: Stuxnet (2010) — İran nükleer santrifüjleri</div>
+    </div>
+    <div class="attack-card" data-anim>
+      <div class="attack-name">DDoS (Dağıtık Hizmet Engelleme)</div>
+      <span class="attack-severity high">YÜKSEK</span>
+      <div class="attack-desc">Hedef sistemi aşırı trafikle çökertme. Botnet'ler milyonlarca zombi cihaz kullanır.</div>
+      <div class="attack-example">Örnek: Estonya (2007) — Ülke çapında internet çöktü</div>
+    </div>
+    <div class="attack-card" data-anim>
+      <div class="attack-name">Supply Chain Attack</div>
+      <span class="attack-severity high">YÜKSEK</span>
+      <div class="attack-desc">Yazılım tedarik zincirini hedef alarak binlerce kuruma aynı anda sızma.</div>
+      <div class="attack-example">Örnek: NotPetya (2017) — $10 milyar küresel hasar</div>
+    </div>
+    <div class="attack-card" data-anim>
+      <div class="attack-name">SCADA/ICS Saldırıları</div>
+      <span class="attack-severity critical">KRİTİK</span>
+      <div class="attack-desc">Endüstriyel kontrol sistemlerini hedef alan saldırılar. Elektrik, su, nükleer tesisler risk altında.</div>
+      <div class="attack-example">Örnek: Ukrayna Elektrik Şebekesi (2015) — 230.000 kişi karanlıkta</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- KILL CHAIN -->
+<section class="section">
+  <h2 class="section-title" data-anim>// Siber Kill Chain</h2>
+  <p class="section-subtitle" data-anim>Bir siber saldırının 7 aşaması (Lockheed Martin modeli)</p>
+  
+  <div class="killchain">
+    <div class="kc-step" data-anim><div class="kc-num">01</div><div class="kc-title">Keşif</div><div class="kc-desc">Hedef hakkında bilgi toplama</div></div>
+    <div class="kc-step" data-anim><div class="kc-num">02</div><div class="kc-title">Silahlanma</div><div class="kc-desc">Exploit + payload hazırlama</div></div>
+    <div class="kc-step" data-anim><div class="kc-num">03</div><div class="kc-title">Teslimat</div><div class="kc-desc">Phishing, USB, watering hole</div></div>
+    <div class="kc-step" data-anim><div class="kc-num">04</div><div class="kc-title">İstismar</div><div class="kc-desc">Güvenlik açığını tetikleme</div></div>
+    <div class="kc-step" data-anim><div class="kc-num">05</div><div class="kc-title">Kurulum</div><div class="kc-desc">Backdoor/RAT yerleştirme</div></div>
+    <div class="kc-step" data-anim><div class="kc-num">06</div><div class="kc-title">C2</div><div class="kc-desc">Komuta-kontrol kanalı</div></div>
+    <div class="kc-step" data-anim><div class="kc-num">07</div><div class="kc-title">Eylem</div><div class="kc-desc">Veri çalma/yok etme</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- İSTATİSTİKLER -->
+<section class="section">
+  <h2 class="section-title" data-anim>// Küresel İstatistikler</h2>
+  <p class="section-subtitle" data-anim>2025 yılı siber savaş verileri</p>
+  
+  <div class="stat-grid">
+    <div class="stat-card" data-anim><div class="stat-val" data-count="10">0</div><div class="stat-lbl">Trilyon $ Yıllık Hasar</div></div>
+    <div class="stat-card" data-anim><div class="stat-val" data-count="39">0</div><div class="stat-lbl">Milyon Saldırı/Gün</div></div>
+    <div class="stat-card" data-anim><div class="stat-val" data-count="150">0</div><div class="stat-lbl">Aktif APT Grubu</div></div>
+    <div class="stat-card" data-anim><div class="stat-val" data-count="287">0</div><div class="stat-lbl">Gün Ort. Tespit Süresi</div></div>
+    <div class="stat-card" data-anim><div class="stat-val" data-count="3">0</div><div class="stat-lbl">Milyon Açık Pozisyon</div></div>
+    <div class="stat-card" data-anim><div class="stat-val" data-count="75">0</div><div class="stat-lbl">Ülke Siber Ordu</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CANLI LOG -->
+<section class="section">
+  <h2 class="section-title" data-anim>// Canlı Saldırı Akışı (Simülasyon)</h2>
+  <p class="section-subtitle" data-anim>Gerçek zamanlı siber tehdit simülasyonu</p>
+  <div class="log-stream" id="logStream"></div>
+</section>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:4rem 1rem;border-top:1px solid rgba(0,255,65,0.1);position:relative;z-index:10;">
+  <p style="font-size:0.7rem;color:rgba(0,255,65,0.3);">HARB-İ STRATEJİ · SİBER SAVAŞ ANALİZİ · 2026</p>
+</div>
+
+<script>
+// MATRIX RAIN
+(function(){
+  const canvas=document.getElementById('matrix');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const chars='01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+  const fontSize=14;const columns=Math.floor(canvas.width/fontSize);
+  const drops=Array(columns).fill(1);
+  function draw(){
+    ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#00ff41';ctx.font=fontSize+'px monospace';
+    for(let i=0;i<drops.length;i++){
+      const text=chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+      if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)drops[i]=0;
+      drops[i]++;
+    }
+  }
+  setInterval(draw,50);
+  window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+})();
+
+// SCROLL OBSERVER
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.querySelectorAll('[data-count]').forEach(c=>animateCounter(c,parseInt(c.dataset.count)));}});},{threshold:0.15});
+document.querySelectorAll('[data-anim]').forEach(el=>obs.observe(el));
+
+function animateCounter(el,target){
+  if(el.dataset.animated)return;el.dataset.animated='1';
+  let current=0;const step=Math.max(1,target/40);
+  const iv=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(iv);}el.textContent=Math.round(current);},40);
+}
+
+// LIVE LOG SIMULATION
+const logSources=['CN','RU','IR','KP','US','TR','IL','UK'];
+const logActions=['SYN_FLOOD','BRUTE_FORCE','SQL_INJECT','XSS_PROBE','PORT_SCAN','PHISHING','MALWARE','EXFIL'];
+const logTargets=['gov.tr','energy.eu','mil.us','bank.jp','infra.de','telecom.kr','health.uk','defense.fr'];
+const logEl=document.getElementById('logStream');
+function addLog(){
+  const line=document.createElement('div');line.className='log-line';
+  const time=new Date().toISOString().substr(11,8);
+  const src=logSources[Math.floor(Math.random()*logSources.length)];
+  const action=logActions[Math.floor(Math.random()*logActions.length)];
+  const target=logTargets[Math.floor(Math.random()*logTargets.length)];
+  line.innerHTML=`<span class="log-time">[${time}]</span> <span class="log-src">${src}</span> → <span class="log-action">${action}</span> → <span class="log-target">${target}</span>`;
+  line.style.animationDelay='0s';
+  logEl.appendChild(line);
+  if(logEl.children.length>15)logEl.removeChild(logEl.firstChild);
+  logEl.scrollTop=logEl.scrollHeight;
+}
+setInterval(addLog,1500);
+
+// SOUND
+let audioCtx=null,isPlaying=false;
+function toggleSound(){
+  const btn=document.getElementById('soundToggle');
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(!isPlaying){
+    // Digital ambient
+    const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+    const filter=audioCtx.createBiquadFilter();
+    osc.type='square';osc.frequency.value=40;
+    filter.type='lowpass';filter.frequency.value=100;
+    gain.gain.value=0.02;
+    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+    osc.start();
+    // Random beeps
+    window._beepInterval=setInterval(()=>{
+      const beep=audioCtx.createOscillator();const bg=audioCtx.createGain();
+      beep.type='sine';beep.frequency.value=800+Math.random()*2000;
+      bg.gain.value=0.02;bg.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.1);
+      beep.connect(bg);bg.connect(audioCtx.destination);
+      beep.start();beep.stop(audioCtx.currentTime+0.1);
+    },2000+Math.random()*3000);
+    window._nodes={osc};
+    btn.textContent='🔊';btn.classList.add('active');isPlaying=true;
+  }else{
+    window._nodes.osc.stop();clearInterval(window._beepInterval);
+    btn.textContent='🔇';btn.classList.remove('active');isPlaying=false;
+  }
+}
+</script>
+</body>
+</html>

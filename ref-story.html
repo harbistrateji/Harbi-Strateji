@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harb-i Strateji — Story Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   HARB-İ STRATEJİ — HORIZONTAL STORY CANVAS
+   Cinematic · Editorial · Immersive
+═══════════════════════════════════════════════════════ */
+:root {
+  --ink:       #080d14;
+  --navy:      #0c1a2e;
+  --navy-2:    #162540;
+  --navy-3:    #1e3356;
+  --crimson:   #c0192a;
+  --crimson-2: #e0203a;
+  --gold:      #c9a84c;
+  --gold-2:    #f0cc6e;
+  --smoke:     #d8dde6;
+  --mist:      #8a9ab5;
+  --white:     #f4f6fb;
+  --mono:      'JetBrains Mono', monospace;
+  --serif:     'Playfair Display', Georgia, serif;
+  --sans:      'Oswald', sans-serif;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--ink); }
+
+/* ─── CANVAS SHELL ─────────────────────────────────── */
+.canvas {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;  /* JS-driven, no native scroll */
+  position: relative;
+}
+
+.slides-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.85s cubic-bezier(0.77,0,0.175,1);
+  will-change: transform;
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── UI CHROME ────────────────────────────────────── */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(to bottom, rgba(8,13,20,.85) 0%, transparent 100%);
+  pointer-events: none;
+}
+.tb-brand {
+  font-family: var(--sans);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+.tb-sep { color: rgba(255,255,255,.18); }
+.tb-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  color: var(--gold);
+  letter-spacing: .08em;
+}
+.tb-counter {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: .65rem;
+  color: rgba(255,255,255,.35);
+}
+
+/* PROGRESS BAR */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: rgba(255,255,255,.06);
+  z-index: 901;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--crimson), var(--gold));
+  transition: width 0.85s cubic-bezier(0.77,0,0.175,1);
+}
+
+/* NAV ARROWS */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 800;
+  width: 48px; height: 48px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 50%;
+  background: rgba(8,13,20,.65);
+  backdrop-filter: blur(8px);
+  color: rgba(255,255,255,.6);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.nav-arrow:hover {
+  background: var(--crimson);
+  border-color: var(--crimson);
+  color: #fff;
+  transform: translateY(-50%) scale(1.08);
+}
+.nav-arrow.prev { left: 1.25rem; }
+.nav-arrow.next { right: 1.25rem; }
+.nav-arrow:disabled { opacity: .2; pointer-events: none; }
+
+/* DOTS NAV */
+.dots-nav {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 800;
+  display: flex;
+  gap: .6rem;
+  align-items: center;
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  cursor: pointer;
+  transition: all .3s;
+  border: none;
+}
+.dot.active {
+  width: 24px;
+  border-radius: 3px;
+  background: var(--crimson);
+}
+.dot:hover:not(.active) { background: rgba(255,255,255,.5); }
+
+/* SLIDE LABEL */
+.slide-no {
+  position: absolute;
+  bottom: 3.5rem; right: 2rem;
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .1em;
+  color: rgba(255,255,255,.2);
+  z-index: 10;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE 1 — GIRIŞ
+   Fullscreen visual · Massive typography · Impact text
+═══════════════════════════════════════════════════ */
+.s1-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(192,25,42,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 20% 70%, rgba(12,26,46,.95) 0%, transparent 50%),
+    linear-gradient(160deg, #040810 0%, #0c1a2e 45%, #1a0a12 100%);
+}
+
+/* Animated grid */
+.s1-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridDrift 30s linear infinite;
+}
+@keyframes gridDrift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 80px 80px; }
+}
+
+/* Radar SVG */
+.s1-radar {
+  position: absolute;
+  right: 6vw; top: 50%;
+  transform: translateY(-50%);
+  width: min(50vw, 600px);
+  opacity: .07;
+  animation: radarSpin 25s linear infinite;
+}
+@keyframes radarSpin { to { transform: translateY(-50%) rotate(360deg); } }
+
+/* SCAN LINE sweep */
+.s1-scan {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(192,168,76,.015) 48%,
+    rgba(192,168,76,.04) 50%,
+    rgba(192,168,76,.015) 52%,
+    transparent 100%
+  );
+  animation: scanMove 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes scanMove {
+  0%   { background-position-y: -100vh; transform: translateY(-60%); }
+  100% { transform: translateY(60%); }
+}
+
+/* RED STRIPE accent */
+.s1-stripe {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--crimson);
+  animation: stripeGlow 3s ease-in-out infinite alternate;
+}
+@keyframes stripeGlow {
+  from { box-shadow: 0 0 12px rgba(192,25,42,.4); }
+  to   { box-shadow: 0 0 32px rgba(192,25,42,.8); }
+}
+
+.s1-content {
+  position: absolute;
+  left: 8vw; top: 50%;
+  transform: translateY(-50%);
+  max-width: 660px;
+  z-index: 10;
+}
+
+.s1-eyebrow {
+  display: flex; align-items: center; gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+.s1-tag {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  padding: .25rem .75rem;
+  border: 1px solid rgba(201,168,76,.3);
+  border-radius: 2px;
+}
+.s1-date {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  color: rgba(255,255,255,.3);
+}
+
+.s1-title {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  line-height: 1.0;
+  color: var(--white);
+  letter-spacing: -.02em;
+  margin-bottom: 1.25rem;
+  /* Dramatic text shadow */
+  text-shadow: 0 2px 40px rgba(192,25,42,.2), 0 0 80px rgba(0,0,0,.8);
+}
+.s1-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.s1-impact {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  line-height: 1.65;
+  color: rgba(255,255,255,.55);
+  letter-spacing: .02em;
+  max-width: 520px;
+  margin-bottom: 2rem;
+}
+
+.s1-cta {
+  display: flex; align-items: center; gap: 1.5rem;
+}
+.s1-scroll-hint {
+  display: flex; align-items: center; gap: .7rem;
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.3);
+  text-transform: uppercase;
+  animation: hintPulse 2.5s ease-in-out infinite;
+}
+@keyframes hintPulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
+.s1-arrow-anim {
+  display: flex; gap: 2px;
+}
+.s1-arrow-anim span {
+  display: block;
+  width: 6px; height: 6px;
+  border-right: 1.5px solid var(--crimson);
+  border-bottom: 1.5px solid var(--crimson);
+  transform: rotate(-45deg);
+  animation: arrowFade 1.2s ease-in-out infinite;
+}
+.s1-arrow-anim span:nth-child(2) { animation-delay: .15s; }
+.s1-arrow-anim span:nth-child(3) { animation-delay: .3s; }
+@keyframes arrowFade { 0%,100%{opacity:.2} 50%{opacity:1} }
+
+/* Animated entrance */
+.s1-content > * {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: enterUp .9s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+.s1-content > *:nth-child(1) { animation-delay: .1s; }
+.s1-content > *:nth-child(2) { animation-delay: .25s; }
+.s1-content > *:nth-child(3) { animation-delay: .4s; }
+.s1-content > *:nth-child(4) { animation-delay: .55s; }
+@keyframes enterUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* CORNER DATA */
+.s1-data-corner {
+  position: absolute;
+  right: 2.5rem; bottom: 5rem;
+  z-index: 10;
+  display: flex; flex-direction: column; gap: .4rem;
+  text-align: right;
+}
+.s1-stat {
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .08em;
+  color: rgba(201,168,76,.5);
+}
+.s1-stat strong {
+  display: block;
+  font-size: 1.2rem;
+  font-family: var(--sans);
+  font-weight: 700;
+  color: rgba(255,255,255,.65);
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE 2 — ANLATIM + AKORDIYON
+   Split: Text|Accordion  ←→  Visual
+═══════════════════════════════════════════════════ */
+.s2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.s2-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #080d14 0%, #0e1c30 60%, #14091a 100%);
+  transition: filter .5s ease;
+}
+.s2-bg.blurred {
+  filter: blur(6px) brightness(.7);
+}
+
+/* SUBTLE NOISE TEXTURE */
+.s2-noise {
+  position: absolute; inset: 0;
+  opacity: .03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── LEFT PANEL: TEXT + ACCORDION ── */
+.s2-left {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem 4vw 5rem 8vw;
+  border-right: 1px solid rgba(255,255,255,.06);
+}
+
+.s2-chapter {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--crimson);
+  margin-bottom: .75rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.s2-chapter::before {
+  content: '';
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--crimson);
+}
+
+.s2-title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 1rem;
+  letter-spacing: -.01em;
+}
+
+.s2-lead {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: .9rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 2rem;
+}
+
+/* ─── ACCORDION ─────────────────── */
+.acc-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.acc-row {
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  position: relative;
+  /* Focus state - white overlay on others */
+}
+
+/* When one is open, dim the others */
+.acc-wrap.has-open .acc-row:not(.open) {
+  opacity: .35;
+  transition: opacity .4s ease;
+}
+.acc-row { transition: opacity .4s ease; }
+
+.acc-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.acc-num {
+  font-family: var(--mono);
+  font-size: .58rem;
+  color: rgba(255,255,255,.2);
+  width: 20px;
+  flex-shrink: 0;
+  letter-spacing: .05em;
+}
+.acc-row.open .acc-num { color: var(--gold); }
+
+.acc-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem;
+  flex-shrink: 0;
+  transition: all .3s;
+  background: rgba(255,255,255,.03);
+}
+.acc-row.open .acc-icon {
+  background: var(--crimson);
+  border-color: var(--crimson);
+}
+
+.acc-label {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: .88rem;
+  letter-spacing: .04em;
+  color: rgba(255,255,255,.65);
+  flex: 1;
+  transition: color .3s;
+}
+.acc-row.open .acc-label { color: var(--white); }
+
+.acc-chevron {
+  font-size: .7rem;
+  color: rgba(255,255,255,.2);
+  transition: transform .35s cubic-bezier(.25,.46,.45,.94), color .3s;
+  flex-shrink: 0;
+}
+.acc-row.open .acc-chevron {
+  transform: rotate(90deg);
+  color: var(--crimson);
+}
+
+/* ── ACCORDION BODY ─────────────── */
+/* Expands WITHIN the slide, no layout shift */
+.acc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .4s cubic-bezier(.25,.46,.45,.94);
+  overflow: hidden;
+}
+.acc-row.open .acc-body {
+  grid-template-rows: 1fr;
+}
+.acc-body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.acc-content {
+  padding: .75rem 0 1.25rem 3rem;
+}
+.acc-content p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: .82rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,.5);
+  margin-bottom: .75rem;
+}
+.acc-content p:last-child { margin-bottom: 0; }
+.acc-content strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* DATA TAGS inside accordion */
+.acc-tags {
+  display: flex; flex-wrap: wrap; gap: .4rem;
+  margin-top: .75rem;
+}
+.acc-tag {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .08em;
+  color: var(--mist);
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  padding: .2rem .6rem;
+  border-radius: 2px;
+}
+
+/* ── RIGHT PANEL: VISUAL ─────────── */
+.s2-right {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Dark map / graphic placeholder */
+.s2-visual {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #0a1428 0%, #0c0814 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.s2-visual-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* ── MAP NODES ─── */
+.map-container {
+  position: relative;
+  width: 380px; height: 380px;
+}
+.map-node {
+  position: absolute;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: .3rem;
+  cursor: default;
+}
+.map-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--crimson);
+  box-shadow: 0 0 0 0 rgba(192,25,42,.4);
+  animation: nodePulse 2.5s ease-out infinite;
+}
+.map-node:nth-child(2) .map-dot { background: var(--gold); box-shadow: 0 0 0 0 rgba(201,168,76,.4); animation-delay: .5s; }
+.map-node:nth-child(3) .map-dot { background: #4a9eff; box-shadow: 0 0 0 0 rgba(74,158,255,.4); animation-delay: 1s; }
+.map-node:nth-child(4) .map-dot { background: #4aff9e; box-shadow: 0 0 0 0 rgba(74,255,158,.4); animation-delay: 1.5s; }
+.map-node:nth-child(5) .map-dot { animation-delay: .8s; }
+@keyframes nodePulse {
+  0%  { box-shadow: 0 0 0 0 currentColor; }
+  70% { box-shadow: 0 0 0 16px transparent; }
+  100%{ box-shadow: 0 0 0 0 transparent; }
+}
+.map-label {
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.5);
+  white-space: nowrap;
+  background: rgba(8,13,20,.7);
+  padding: .1rem .4rem;
+  border-radius: 2px;
+}
+
+/* SVG lines connecting nodes */
+.map-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+}
+.map-line {
+  stroke: rgba(201,168,76,.12);
+  stroke-width: 1;
+  stroke-dasharray: 4 6;
+  animation: dashMove 8s linear infinite;
+}
+.map-line.active {
+  stroke: rgba(192,25,42,.35);
+  stroke-width: 1.5;
+}
+@keyframes dashMove { to { stroke-dashoffset: -40; } }
+
+/* FOCUS OVERLAY (when accordion open) */
+.s2-focus-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8,13,20,.0);
+  pointer-events: none;
+  transition: background .5s ease;
+  z-index: 5;
+}
+.s2-focus-overlay.active {
+  background: rgba(8,13,20,.5);
+  backdrop-filter: blur(4px);
+}
+
+/* FOCUS CARD — appears over visual when acc is open */
+.s2-focus-card {
+  position: absolute;
+  z-index: 20;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(.92);
+  width: min(360px, 80%);
+  background: rgba(14,24,42,.95);
+  border: 1px solid rgba(255,255,255,.1);
+  border-top: 2px solid var(--crimson);
+  padding: 1.75rem;
+  border-radius: 3px;
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all .45s cubic-bezier(.25,.46,.45,.94);
+}
+.s2-focus-card.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.fc-label {
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--crimson);
+  margin-bottom: .75rem;
+}
+.fc-title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: .75rem;
+}
+.fc-body {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: .78rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,.5);
+}
+.fc-stat-row {
+  display: flex; gap: 1.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.fc-stat .val {
+  font-family: var(--sans);
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--gold); line-height: 1;
+}
+.fc-stat .lbl {
+  font-family: var(--mono);
+  font-size: .55rem; color: var(--mist);
+  letter-spacing: .06em;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE 3 — DATA VİZÜELİZASYON
+═══════════════════════════════════════════════════ */
+.s3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.s3-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(12,26,46,.9) 0%, #040810 100%);
+}
+.s3-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(192,25,42,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192,25,42,.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.s3-content {
+  position: relative; z-index: 10;
+  max-width: 900px; width: 100%;
+  padding: 0 4vw;
+}
+.s3-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.s3-chapter {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+.s3-title {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  color: var(--white);
+  font-weight: 900;
+}
+
+/* BAR CHART */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  height: 220px;
+  padding: 0 .5rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  margin-bottom: 1rem;
+}
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  height: 100%;
+  justify-content: flex-end;
+}
+.bar-fill {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  position: relative;
+  transform-origin: bottom;
+  transform: scaleY(0);
+  animation: barGrow .9s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+@keyframes barGrow { to { transform: scaleY(1); } }
+.bar-col:nth-child(1) .bar-fill { background: linear-gradient(to top, #bb1919, #e8293c); animation-delay: .1s; }
+.bar-col:nth-child(2) .bar-fill { background: linear-gradient(to top, #8a5a00, #c9a84c); animation-delay: .2s; }
+.bar-col:nth-child(3) .bar-fill { background: linear-gradient(to top, #1a4a8a, #4a8aff); animation-delay: .3s; }
+.bar-col:nth-child(4) .bar-fill { background: linear-gradient(to top, #1a6a4a, #4aff9e); animation-delay: .4s; }
+.bar-col:nth-child(5) .bar-fill { background: linear-gradient(to top, #4a1a8a, #9a4aff); animation-delay: .5s; }
+.bar-col:nth-child(6) .bar-fill { background: linear-gradient(to top, #bb1919, #e8293c); animation-delay: .6s; opacity: .7; }
+
+.bar-val {
+  font-family: var(--sans);
+  font-size: .75rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.7);
+  text-align: center;
+}
+.bar-lbl {
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.3);
+  text-align: center;
+}
+
+/* STAT ROW */
+.s3-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.s3-stat {
+  text-align: center;
+  padding: 1.25rem;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 3px;
+  background: rgba(255,255,255,.02);
+}
+.s3-stat .val {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: .35rem;
+}
+.s3-stat .val span { color: var(--crimson); font-size: 1.4rem; }
+.s3-stat .lbl {
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE 4 — SONUÇ
+═══════════════════════════════════════════════════ */
+.s4 {
+  display: flex;
+  align-items: center;
+}
+.s4-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, #040810 0%, #0d1a08 50%, #08040a 100%);
+}
+.s4-accent {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 40%;
+  background: linear-gradient(to left, rgba(201,168,76,.04) 0%, transparent 100%);
+}
+.s4-line-h {
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(201,168,76,.08) 30%, rgba(201,168,76,.15) 60%, transparent 100%);
+}
+.s4-content {
+  position: relative; z-index: 10;
+  padding: 0 8vw 0 10vw;
+  max-width: 700px;
+}
+.s4-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.s4-label::before {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--gold);
+}
+.s4-title {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  line-height: 1.1;
+  color: var(--white);
+  letter-spacing: -.02em;
+  margin-bottom: 1.5rem;
+}
+.s4-title em { color: var(--gold); font-style: normal; }
+.s4-body {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: .9rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 2rem;
+}
+.s4-divider {
+  width: 60px; height: 2px;
+  background: var(--crimson);
+  margin: 1.5rem 0;
+}
+.s4-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: rgba(255,255,255,.3);
+  line-height: 1.6;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--gold);
+}
+.s4-back-btn {
+  margin-top: 2.5rem;
+  display: inline-flex; align-items: center; gap: .6rem;
+  font-family: var(--sans);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  background: none;
+  border: 1px solid rgba(255,255,255,.12);
+  padding: .6rem 1.25rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .2s;
+  text-decoration: none;
+}
+.s4-back-btn:hover {
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  border-color: rgba(255,255,255,.3);
+}
+
+/* right decorative vertical text */
+.s4-vert {
+  position: absolute;
+  right: 3rem; top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.07);
+  white-space: nowrap;
+}
+
+/* ─── RESPONSIVE ────────────────────────────────── */
+@media (max-width: 900px) {
+  .s2 { grid-template-columns: 1fr; }
+  .s2-left { padding: 5rem 2rem 2rem; }
+  .s2-right { display: none; }
+  .s3-stats { grid-template-columns: repeat(2,1fr); }
+  .bar-chart { height: 160px; }
+  .s1-title { font-size: 2.4rem; }
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<!-- PROGRESS -->
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:25%"></div></div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <span class="tb-brand">Harb-i Strateji</span>
+  <span class="tb-sep">—</span>
+  <span class="tb-label">Story Canvas // Özel Harekât Dosyası</span>
+  <span class="tb-counter" id="counter">01 / 04</span>
+</div>
+
+<!-- NAV ARROWS -->
+<button class="nav-arrow prev" id="btn-prev" onclick="navigate(-1)" disabled>‹</button>
+<button class="nav-arrow next" id="btn-next" onclick="navigate(1)">›</button>
+
+<!-- DOTS -->
+<div class="dots-nav" id="dots">
+  <button class="dot active" onclick="goTo(0)" title="Giriş"></button>
+  <button class="dot" onclick="goTo(1)" title="Anlatım"></button>
+  <button class="dot" onclick="goTo(2)" title="Veriler"></button>
+  <button class="dot" onclick="goTo(3)" title="Sonuç"></button>
+</div>
+
+<!-- ════════════════ CANVAS ════════════════ -->
+<div class="canvas">
+  <div class="slides-track" id="track">
+
+    <!-- ══ SLIDE 1: GİRİŞ ══════════════════════════════════ -->
+    <div class="slide s1">
+      <div class="s1-bg"></div>
+      <div class="s1-grid"></div>
+      <!-- RADAR SVG -->
+      <svg class="s1-radar" viewBox="0 0 400 400" fill="none" stroke="currentColor" aria-hidden="true">
+        <circle cx="200" cy="200" r="190" stroke-width="1"/>
+        <circle cx="200" cy="200" r="140" stroke-width=".7"/>
+        <circle cx="200" cy="200" r="90"  stroke-width=".5"/>
+        <circle cx="200" cy="200" r="45"  stroke-width=".4"/>
+        <line x1="10" y1="200" x2="390" y2="200" stroke-width=".5"/>
+        <line x1="200" y1="10" x2="200" y2="390" stroke-width=".5"/>
+        <line x1="55"  y1="55"  x2="345" y2="345" stroke-width=".3" stroke-dasharray="3,6"/>
+        <line x1="345" y1="55"  x2="55"  y2="345" stroke-width=".3" stroke-dasharray="3,6"/>
+        <line x1="200" y1="200" x2="380" y2="50" stroke-width="2" stroke="rgba(192,25,42,.6)"/>
+        <circle cx="380" cy="50" r="6" fill="rgba(192,25,42,.8)"/>
+        <circle cx="280" cy="120" r="4" fill="rgba(201,168,76,.6)"/>
+        <circle cx="150" cy="260" r="3" fill="rgba(74,158,255,.5)"/>
+      </svg>
+      <div class="s1-scan"></div>
+      <div class="s1-stripe"></div>
+
+      <div class="s1-content">
+        <div class="s1-eyebrow">
+          <span class="s1-tag">⬥ Operasyon Analizi</span>
+          <span class="s1-date">14 Eylül 2024 // 03:42 UTC</span>
+        </div>
+        <h1 class="s1-title">Pençe-<em>Kartal</em><br>Operasyonu</h1>
+        <p class="s1-impact">
+          Kuzey Irak'ın dağlık koridorlarında yürütülen bu kapsamlı harekât, 
+          bölgesel güç dengelerini yeniden şekillendiren kritik bir dönüm noktası 
+          olarak tarihe geçti.
+        </p>
+        <div class="s1-cta">
+          <div class="s1-scroll-hint">
+            <div class="s1-arrow-anim">
+              <span></span><span></span><span></span>
+            </div>
+            Kaydır / Ok Tuşu
+          </div>
+        </div>
+      </div>
+
+      <div class="s1-data-corner">
+        <div class="s1-stat"><strong>17</strong>Etkisiz Hedef</div>
+        <div class="s1-stat"><strong>48:22</strong>Operasyon Süresi</div>
+        <div class="s1-stat"><strong>0</strong>Kayıp</div>
+      </div>
+      <div class="slide-no">01 // GİRİŞ</div>
+    </div>
+
+    <!-- ══ SLIDE 2: ANLATIM + AKORDIYON ════════════════════ -->
+    <div class="slide s2" id="slide2">
+      <div class="s2-bg" id="s2-bg"></div>
+      <div class="s2-noise"></div>
+
+      <!-- LEFT: TEXT + ACCORDION -->
+      <div class="s2-left">
+        <div class="s2-chapter">02 // Harekât Arka Planı</div>
+        <h2 class="s2-title">Neden Bu Bölge?<br>Neden Bu An?</h2>
+        <p class="s2-lead">
+          Pençe-Kartal, Irak topraklarındaki uzun süreli terör altyapısını çökertmek 
+          için seçilen hassas bir pencerede icra edildi. Harekâtın üç temel boyutu:
+        </p>
+
+        <div class="acc-wrap" id="acc-wrap">
+
+          <!-- Row 1 -->
+          <div class="acc-row" id="acc-0">
+            <button class="acc-trigger" onclick="toggleS2Acc(0)">
+              <span class="acc-num">01</span>
+              <span class="acc-icon">🗺</span>
+              <span class="acc-label">Arka Plan & Bölgesel Bağlam</span>
+              <span class="acc-chevron">›</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <div class="acc-content">
+                  <p>Kandil dağlarından Mahmur ovasına uzanan <strong>280 km²</strong>'lik operasyon alanı, yıllar içinde derinlemesine tahkimlenmiş yerleşik lojistik ağları barındırıyordu.</p>
+                  <p>2019'dan bu yana sürdürülen Pençe serisi, bu dosyanın önceki bölümlerini oluşturmaktadır. Harekât, istihbarat analizleri ile birleştirilen insansız sistemlerin koordineli kullanımıyla icra edildi.</p>
+                  <div class="acc-tags">
+                    <span class="acc-tag">Kandil</span>
+                    <span class="acc-tag">Sincar</span>
+                    <span class="acc-tag">Mahmur</span>
+                    <span class="acc-tag">Zaho</span>
+                    <span class="acc-tag">280 km²</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="acc-row" id="acc-1">
+            <button class="acc-trigger" onclick="toggleS2Acc(1)">
+              <span class="acc-num">02</span>
+              <span class="acc-icon">📊</span>
+              <span class="acc-label">Detaylı Harekât Verileri</span>
+              <span class="acc-chevron">›</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <div class="acc-content">
+                  <p>Harekâtta <strong>TB2 Bayraktar</strong>, <strong>Akıncı</strong> ve <strong>Kızılelma prototipi</strong> dahil çoklu İHA/SİHA platformları koordineli biçimde kullanıldı. 48 saatlik operasyon penceresi içinde:</p>
+                  <p><strong>17 hedef</strong> imha edildi. <strong>3 ana tünel sistemi</strong> devre dışı bırakıldı. <strong>2 lojistik merkez</strong> bertaraf edildi.</p>
+                  <div class="acc-tags">
+                    <span class="acc-tag">TB2 Bayraktar</span>
+                    <span class="acc-tag">Akıncı</span>
+                    <span class="acc-tag">MAM-L</span>
+                    <span class="acc-tag">CSTAR-250</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="acc-row" id="acc-2">
+            <button class="acc-trigger" onclick="toggleS2Acc(2)">
+              <span class="acc-num">03</span>
+              <span class="acc-icon">🎙</span>
+              <span class="acc-label">Tanık & Uzman Anlatımı</span>
+              <span class="acc-chevron">›</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <div class="acc-content">
+                  <p><em>"Bu harekât, sadece taktik bir müdahale değil — Ankara'nın sınır ötesi güç projeksiyon kapasitesini kalıcı biçimde tesis ettiğinin ilanıydı."</em></p>
+                  <p>— <strong>Dr. Kemal Arslantaş</strong>, Savunma Stratejileri Merkezi, Ankara</p>
+                  <div class="acc-tags">
+                    <span class="acc-tag">Özel Röportaj</span>
+                    <span class="acc-tag">12 Eylül 2024</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /acc-wrap -->
+      </div><!-- /s2-left -->
+
+      <!-- RIGHT: VISUAL -->
+      <div class="s2-right">
+        <!-- Focus overlay -->
+        <div class="s2-focus-overlay" id="s2-focus-overlay"></div>
+
+        <!-- Background visual -->
+        <div class="s2-visual">
+          <div class="s2-visual-grid"></div>
+          <div class="map-container">
+            <svg class="map-svg" viewBox="0 0 380 380" aria-hidden="true">
+              <line class="map-line active" x1="80" y1="80"   x2="200" y2="140" stroke-dashoffset="0"/>
+              <line class="map-line"        x1="200" y1="140" x2="300" y2="100" stroke-dashoffset="10"/>
+              <line class="map-line"        x1="200" y1="140" x2="240" y2="270" stroke-dashoffset="20"/>
+              <line class="map-line active" x1="80" y1="80"   x2="150" y2="230" stroke-dashoffset="5"/>
+              <line class="map-line"        x1="150" y1="230" x2="240" y2="270" stroke-dashoffset="15"/>
+            </svg>
+            <div class="map-node" style="left:65px;top:65px">
+              <div class="map-dot"></div>
+              <div class="map-label">TSK İleri Üs</div>
+            </div>
+            <div class="map-node" style="left:185px;top:125px">
+              <div class="map-dot"></div>
+              <div class="map-label">Kandil Koridoru</div>
+            </div>
+            <div class="map-node" style="left:285px;top:85px">
+              <div class="map-dot"></div>
+              <div class="map-label">Sincar</div>
+            </div>
+            <div class="map-node" style="left:135px;top:215px">
+              <div class="map-dot"></div>
+              <div class="map-label">Mahmur</div>
+            </div>
+            <div class="map-node" style="left:225px;top:255px">
+              <div class="map-dot"></div>
+              <div class="map-label">Zaho</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOCUS CARD (appears on accordion open) -->
+        <div class="s2-focus-card" id="s2-focus-card">
+          <div class="fc-label" id="fc-label">⬥ Arka Plan</div>
+          <div class="fc-title" id="fc-title">Bölgesel Bağlam</div>
+          <div class="fc-body" id="fc-body">Seçili konu hakkında detaylı veriler yükleniyor…</div>
+          <div class="fc-stat-row" id="fc-stats"></div>
+        </div>
+      </div>
+
+      <div class="slide-no">02 // ANLATIM</div>
+    </div><!-- /s2 -->
+
+    <!-- ══ SLIDE 3: VERİLER ════════════════════════════════ -->
+    <div class="slide s3">
+      <div class="s3-bg"></div>
+      <div class="s3-grid-bg"></div>
+      <div class="s3-content">
+        <div class="s3-header">
+          <div class="s3-chapter">03 // Harekât Veritabanı</div>
+          <h2 class="s3-title">Rakamlarla Pençe-Kartal</h2>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-col">
+            <div class="bar-val">17</div>
+            <div class="bar-fill" style="height:90%"></div>
+            <div class="bar-lbl">Hedef</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">48s</div>
+            <div class="bar-fill" style="height:75%"></div>
+            <div class="bar-lbl">Süre</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">7</div>
+            <div class="bar-fill" style="height:45%"></div>
+            <div class="bar-lbl">İHA Tipi</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">3</div>
+            <div class="bar-fill" style="height:30%"></div>
+            <div class="bar-lbl">Tünel</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">280</div>
+            <div class="bar-fill" style="height:100%"></div>
+            <div class="bar-lbl">km²</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">0</div>
+            <div class="bar-fill" style="height:5%"></div>
+            <div class="bar-lbl">Kayıp</div>
+          </div>
+        </div>
+        <div class="s3-stats">
+          <div class="s3-stat">
+            <div class="val">4<span>.</span>2B</div>
+            <div class="lbl">Toplam uçuş saati</div>
+          </div>
+          <div class="s3-stat">
+            <div class="val">99<span>%</span></div>
+            <div class="lbl">Hassasiyet oranı</div>
+          </div>
+          <div class="s3-stat">
+            <div class="val">72<span>s</span></div>
+            <div class="lbl">İstihbarat-vuruş süresi</div>
+          </div>
+          <div class="s3-stat">
+            <div class="val">6<span>+</span></div>
+            <div class="lbl">Platform türü</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-no">03 // VERİLER</div>
+    </div>
+
+    <!-- ══ SLIDE 4: SONUÇ ══════════════════════════════════ -->
+    <div class="slide s4">
+      <div class="s4-bg"></div>
+      <div class="s4-accent"></div>
+      <div class="s4-line-h"></div>
+      <div class="s4-content">
+        <div class="s4-label">04 // Değerlendirme</div>
+        <h2 class="s4-title">Harekât Bir<br><em>Mesaj</em>dır.</h2>
+        <div class="s4-divider"></div>
+        <p class="s4-body">
+          Pençe-Kartal, Türk Silahlı Kuvvetleri'nin modern savaş alanında insan kayıpsız, 
+          hassas ve hızlı müdahale kapasitesini dünyaya bir kez daha kanıtladı. 
+          İnsansız sistemlerin bu harekâttaki rolü, Türkiye'nin savunma doktrinindeki 
+          köklü dönüşümün somut yansımasıdır.
+        </p>
+        <blockquote class="s4-quote">
+          "Pençe serisi artık bir harekât süreci değil, stratejik bir süreklilik politikasıdır."
+        </blockquote>
+        <a href="#" class="s4-back-btn" onclick="goTo(0);return false;">⟵ Başa Dön</a>
+      </div>
+      <div class="s4-vert">HARB-İ STRATEJİ // STORY CANVAS // 2024</div>
+      <div class="slide-no">04 // SONUÇ</div>
+    </div>
+
+  </div><!-- /slides-track -->
+</div><!-- /canvas -->
+
+<script>
+/* ════════════ SLIDE ENGINE ════════════ */
+let current = 0;
+const total  = 4;
+const track  = document.getElementById('track');
+const prev   = document.getElementById('btn-prev');
+const next   = document.getElementById('btn-next');
+const dots   = document.querySelectorAll('.dot');
+const counter= document.getElementById('counter');
+const progress = document.getElementById('progress');
+
+function goTo(n) {
+  n = Math.max(0, Math.min(total - 1, n));
+  current = n;
+  track.style.transform = `translateX(-${n * 100}vw)`;
+  dots.forEach((d,i) => d.classList.toggle('active', i===n));
+  counter.textContent = String(n+1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+  progress.style.width = ((n+1)/total*100) + '%';
+  prev.disabled = (n === 0);
+  next.disabled = (n === total-1);
+}
+function navigate(dir) { goTo(current + dir); }
+
+/* Keyboard */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+});
+
+/* Touch / swipe */
+let touchX = 0;
+document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+}, {passive:true});
+
+/* ════════════ SLIDE 2 ACCORDION ════════════ */
+const FOCUS_DATA = [
+  {
+    label: '⬥ Arka Plan',
+    title: 'Bölgesel Coğrafya',
+    body: 'Operasyon bölgesinin 280 km²\'lik alanı, Kandil\'den Mahmur\'a uzanan stratejik koridoru kapsıyor. 2019\'dan bu yana süren Pençe serisi harekâtlarının doruk noktası.',
+    stats: [
+      {val:'280', lbl:'km²'},
+      {val:'5+', lbl:'Yıllık Süreç'},
+      {val:'14', lbl:'Önceki Op.'}
+    ]
+  },
+  {
+    label: '⬥ Harekât Verisi',
+    title: '17 Hedef — 48 Saat',
+    body: 'TB2, Akıncı ve çoklu platform koordinasyonuyla icra edilen harekâtta 17 kritik hedef imha edildi. 3 ana tünel ağı ve 2 lojistik merkez devre dışı bırakıldı.',
+    stats: [
+      {val:'17', lbl:'Hedef'},
+      {val:'48s', lbl:'Süre'},
+      {val:'%99', lbl:'İsabet'}
+    ]
+  },
+  {
+    label: '⬥ Uzman Görüşü',
+    title: '"Stratejik Süreklilik"',
+    body: 'Savunma analistleri, Pençe-Kartal\'ın bir harekât değil, Türkiye\'nin sınır ötesi güç projeksiyonu doktrininin tescili olduğu görüşünde hemfikir.',
+    stats: [
+      {val:'6+', lbl:'Uzman'},
+      {val:'3', lbl:'Ülke Analizi'},
+      {val:'24s', lbl:'Medya Takibi'}
+    ]
+  }
+];
+
+let openAccIdx = -1;
+
+function toggleS2Acc(idx) {
+  const wrap    = document.getElementById('acc-wrap');
+  const overlay = document.getElementById('s2-focus-overlay');
+  const card    = document.getElementById('s2-focus-card');
+  const rows    = document.querySelectorAll('.acc-row');
+
+  if (openAccIdx === idx) {
+    // CLOSE
+    rows[idx].classList.remove('open');
+    wrap.classList.remove('has-open');
+    overlay.classList.remove('active');
+    card.classList.remove('active');
+    openAccIdx = -1;
+    return;
+  }
+
+  // OPEN new
+  rows.forEach(r => r.classList.remove('open'));
+  rows[idx].classList.add('open');
+  wrap.classList.add('has-open');
+  openAccIdx = idx;
+
+  // Update focus card
+  const d = FOCUS_DATA[idx];
+  document.getElementById('fc-label').textContent = d.label;
+  document.getElementById('fc-title').textContent = d.title;
+  document.getElementById('fc-body').textContent  = d.body;
+  document.getElementById('fc-stats').innerHTML   = d.stats.map(s =>
+    `<div class="fc-stat"><div class="val">${s.val}</div><div class="lbl">${s.lbl}</div></div>`
+  ).join('');
+
+  // Show overlay + card with small delay for smoothness
+  requestAnimationFrame(() => {
+    overlay.classList.add('active');
+    setTimeout(() => card.classList.add('active'), 60);
+  });
+}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

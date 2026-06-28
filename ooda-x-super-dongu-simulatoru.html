@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OODA-X Süper Döngü Simülatörü — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root {
+  --bg: #0a0f17;
+  --surface-2: #111827;
+  --border: #1f2937;
+  --border-strong: #374151;
+  --border-accent: #c41e3a;
+  --bg-accent: rgba(196,30,58,.05);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #c41e3a;
+  --text-danger: #ef4444;
+  --bg-danger: rgba(239,68,68,.1);
+  --border-danger: rgba(239,68,68,.3);
+  --text-success: #10b981;
+  --bg-success: rgba(16,185,129,.1);
+  --border-success: rgba(16,185,129,.3);
+}
+body { background: var(--bg); color: var(--text-primary); font-family: 'IBM Plex Sans', sans-serif; margin: 0; padding: 0; }
+.page-wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+.page-header { text-align: center; padding: 40px 20px 20px; }
+.page-header h1 { font-family: 'Chakra Petch', sans-serif; font-size: 2rem; color: #c41e3a; margin-bottom: 8px; }
+.page-header p { color: var(--text-secondary); font-size: 14px; max-width: 600px; margin: 0 auto; }
+.page-header .badge { display: inline-block; margin-top: 12px; padding: 4px 12px; background: rgba(196,30,58,.15); border: 1px solid rgba(196,30,58,.4); border-radius: 4px; color: #c41e3a; font-size: 11px; font-family: 'IBM Plex Mono', monospace; }
+.back-link { display: inline-block; margin: 16px 0; padding: 8px 16px; background: rgba(196,30,58,.1); border: 1px solid rgba(196,30,58,.3); border-radius: 6px; color: #c41e3a; text-decoration: none; font-size: 13px; }
+.back-link:hover { background: rgba(196,30,58,.2); }
+.source-note { text-align: center; padding: 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 30px; }
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<script src="hs-nav.js?v=11"></script>
+<div class="page-wrap">
+    
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">OODA-X Süper Döngü Simülatörü — klasik OODA ile YZ-Kuantum-Blockchain entegrasyonlu OODA-X karşılaştırması, hipersonik tehdit senaryoları ve matematiksel modeller.</h2>
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes countUp{from{opacity:0}to{opacity:1}}
+.xw{padding:.5rem 0 1rem;font-size:14px;}
+.xnav{display:flex;gap:4px;margin-bottom:14px;border-bottom:.5px solid var(--border);flex-wrap:wrap;}
+.xtab{padding:7px 12px;font-size:12px;cursor:pointer;color:var(--text-secondary);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.xtab.on{color:var(--text-accent);border-bottom-color:var(--text-accent);}
+.xtc{display:none;}.xtc.on{display:block;}
+
+/* Karşılaştırma ringlerı */
+.ring-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0;}
+.ring-box{border:.5px solid var(--border);border-radius:12px;padding:14px;background:var(--surface-2);text-align:center;}
+.ring-title{font-size:13px;font-weight:500;margin-bottom:8px;}
+.ring-time{font-size:28px;font-weight:500;margin:6px 0;}
+.ring-sub{font-size:11px;color:var(--text-muted);}
+.layer-stack{margin:10px 0;}
+.layer{border-radius:8px;padding:9px 12px;margin-bottom:5px;border:.5px solid;transition:all .3s;cursor:pointer;}
+.layer:hover{filter:brightness(1.05);}
+.layer-name{font-size:12px;font-weight:500;}
+.layer-val{font-size:11px;margin-top:2px;opacity:.85;}
+.layer-bar{height:4px;border-radius:2px;margin-top:6px;background:rgba(255,255,255,.2);}
+.layer-fill{height:4px;border-radius:2px;background:rgba(255,255,255,.7);transition:width 1s;}
+
+/* Senaryo */
+.threat-card{border:.5px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--surface-2);margin-bottom:8px;cursor:pointer;transition:all .2s;}
+.threat-card:hover{border-color:var(--border-strong);}
+.threat-card.sel{border-color:var(--border-accent);background:var(--bg-accent);}
+.threat-card.sel .tc-title{color:var(--text-accent);}
+.tc-title{font-size:13px;font-weight:500;color:var(--text-primary);}
+.tc-meta{font-size:11px;color:var(--text-secondary);margin-top:3px;display:flex;gap:12px;flex-wrap:wrap;}
+.tc-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500;}
+
+/* Timeline animasyonu */
+.x-timeline{margin:12px 0;}
+.xt-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;opacity:0;transform:translateX(-6px);transition:opacity .4s,transform .4s;}
+.xt-step.in{opacity:1;transform:translateX(0);}
+.xt-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+.xt-body{flex:1;}
+.xt-title{font-size:13px;font-weight:500;color:var(--text-primary);}
+.xt-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;margin-top:2px;}
+.xt-time{font-size:10px;font-family:var(--font-mono);margin-top:3px;}
+
+/* Matematik paneli */
+.math-card{border:.5px solid var(--border);border-radius:8px;padding:12px 14px;background:var(--surface-1);margin-bottom:8px;}
+.math-title{font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:6px;}
+.math-formula{font-family:var(--font-mono);font-size:12px;color:var(--text-accent);background:var(--surface-0);border-radius:4px;padding:6px 10px;margin:4px 0;line-height:1.7;}
+.math-result{font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.6;}
+
+/* Risk göstergeleri */
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.risk-card{border-radius:8px;padding:10px 12px;border:.5px solid;}
+.risk-num{font-size:22px;font-weight:500;margin:2px 0;}
+.risk-lbl{font-size:11px;opacity:.8;}
+.risk-sub{font-size:10px;margin-top:3px;opacity:.7;}
+
+.info-alert{border-radius:8px;padding:10px 14px;font-size:12px;line-height:1.6;margin:8px 0;animation:fadeUp .3s ease;}
+.info-alert.blue{background:var(--bg-accent);border:.5px solid var(--border-accent);color:var(--text-accent);}
+.info-alert.green{background:var(--bg-success);border:.5px solid var(--border-success);color:var(--text-success);}
+.info-alert.red{background:var(--bg-danger);border:.5px solid var(--border-danger);color:var(--text-danger);}
+.info-alert.warn{background:var(--bg-warning);border:.5px solid var(--border-warning);color:var(--text-warning);}
+</style>
+
+<div class="xw">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+  <div>
+    <div style="font-size:16px;font-weight:500;color:var(--text-primary)">OODA-X — Süper Döngü Simülatörü</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Selahaddin Koyuncu · <span style="font-family:var(--font-mono)">ORCID: 0009-0004-5339-5613</span></div>
+  </div>
+  <div style="font-size:11px;color:var(--text-muted);text-align:right;line-height:1.6">YZ · Kuantum · Blockchain<br>entegrasyonu</div>
+</div>
+
+<div class="xnav">
+  <div class="xtab on" onclick="showXT('compare')">OODA vs OODA-X</div>
+  <div class="xtab" onclick="showXT('layers')">X Katmanları</div>
+  <div class="xtab" onclick="showXT('scenario')">Hipersonik Senaryo</div>
+  <div class="xtab" onclick="showXT('math')">Matematiksel Model</div>
+  <div class="xtab" onclick="showXT('risk')">Risk & Etik</div>
+</div>
+
+<!-- TAB 1: Karşılaştırma -->
+<div class="xtc on" id="xt-compare">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Döngü süresi kaydırıcılarla interaktif karşılaştır — OODA vs OODA-X:</div>
+
+  <div class="ring-compare">
+    <div class="ring-box" style="border-color:var(--border-strong)">
+      <div class="ring-title" style="color:var(--text-secondary)">Klasik OODA<br><span style="font-size:10px;font-weight:400">Boyd, 1976 · İnsan hızı</span></div>
+      <div class="ring-time" id="oodaTotal" style="color:var(--text-primary)">60s</div>
+      <div class="ring-sub">1991 Patriot referansı</div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">t_OODA = t_O + t_Y + t_K + t_E</div>
+        <div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap" id="oodaBreakdown"></div>
+      </div>
+    </div>
+    <div class="ring-box" style="border-color:var(--border-accent);background:var(--bg-accent)">
+      <div class="ring-title" style="color:var(--text-accent)">OODA-X<br><span style="font-size:10px;font-weight:400">YZ · Kuantum · Blockchain</span></div>
+      <div class="ring-time" id="xTotal" style="color:var(--text-accent)">—</div>
+      <div class="ring-sub" style="color:var(--text-accent);opacity:.7">Milisaniye hedefi</div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;color:var(--text-accent);opacity:.7;margin-bottom:4px">t_X = t_OODA × (1 − η_AI)</div>
+        <div style="font-size:11px;color:var(--text-accent);opacity:.7" id="xBreakdown">Ayarları değiştir</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface-1);border:.5px solid var(--border);border-radius:10px;padding:14px;margin:10px 0">
+    <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:10px">OODA parametrelerini ayarla (saniye):</div>
+    <div id="sliders"></div>
+    <div style="margin-top:12px;padding-top:10px;border-top:.5px solid var(--border)">
+      <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:8px">OODA-X YZ hızlandırma katsayısı (η_AI):</div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-secondary)">
+        <span>Düşük YZ</span>
+        <input type="range" min="30" max="98" value="90" id="aiEta" oninput="calcX()" style="flex:1">
+        <span id="etaVal" style="min-width:36px;text-align:right;color:var(--text-accent);font-weight:500">%90</span>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">DARPA Maven referansı: t_observe %70 kısalma · Makale referansı: &lt;100ms hedef</div>
+    </div>
+  </div>
+
+  <div id="compareOutcome"></div>
+  <button onclick="sendPrompt('OODA-X\'te YZ hızlandırma katsayısı nasıl hesaplanır? Matematiksel temeli açıkla.')" style="margin-top:8px;padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">η_AI matematiksel temeli ↗</button>
+</div>
+
+<!-- TAB 2: X Katmanları -->
+<div class="xtc" id="xt-layers">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">OODA-X'in üç entegrasyon katmanı — her katmana tıkla:</div>
+
+  <div style="display:grid;grid-template-columns:1fr;gap:10px" id="layerCards"></div>
+
+  <div id="layerDetail" style="margin-top:10px"></div>
+</div>
+
+<!-- TAB 3: Hipersonik Senaryo -->
+<div class="xtc" id="xt-scenario">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Tehdit seç — klasik OODA ve OODA-X tepkilerini karşılaştır:</div>
+
+  <div id="threatCards"></div>
+  <div class="x-timeline" id="scenTimeline"></div>
+  <div id="scenOutcome"></div>
+</div>
+
+<!-- TAB 4: Matematik -->
+<div class="xtc" id="xt-math">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Makaledeki matematiksel modeller — interaktif hesap:</div>
+  <div id="mathPanels"></div>
+</div>
+
+<!-- TAB 5: Risk & Etik -->
+<div class="xtc" id="xt-risk">
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">OODA-X'in stratejik riskleri ve etik boyutları:</div>
+  <div class="risk-grid" id="riskGrid"></div>
+  <div id="riskDetail"></div>
+  <button onclick="sendPrompt('Otonom silah sistemlerinde etik ve uluslararası insancıl hukuk (IHL) gereklilikleri nelerdir?')" style="margin-top:10px;padding:7px 14px;font-size:12px;border-radius:var(--radius);border:.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">IHL & OODA-X etik çerçevesi ↗</button>
+</div>
+</div>
+
+<script>
+/* ── DATA ── */
+const oodaPhases = [
+  {id:'O', label:'Gözlem (t_O)', default:15, color:'#378ADD', desc:'Sensör-radar veri akışı'},
+  {id:'Y', label:'Yönelim (t_Y)', default:20, color:'#1D9E75', desc:'İstihbarat analizi'},
+  {id:'K', label:'Karar (t_K)',   default:15, color:'#BA7517', desc:'Komuta kararı'},
+  {id:'E', label:'Eylem (t_E)',   default:10, color:'#D85A30', desc:'Atış/manevra emri'},
+];
+
+const xLayers = [
+  {
+    name:'YZ Katmanı', sub:'Gözlem & Yönelim hızlandırma', icon:'ti-cpu',
+    color:'#378ADD', bg:'var(--bg-accent)', bc:'var(--border-accent)', tc:'var(--text-accent)',
+    effect:'t_observe → %70 kısalma (DARPA Maven), t_orient → &lt;1s (karar sıkıştırması)',
+    formula:'t_X_observe = t_O × (1 − 0.70) = 0.30 × t_O',
+    detail:'Kalman filtreleri sinyal-gürültü oranını (SNR) artırarak P_detect = %95+ sağlar. Makine öğrenimi ile "karar sıkıştırması" (decision compression) t_orient\'i 1 saniyenin altına indirir. DARPA Maven projesi gerçek zamanlı drone/uydu görüntü işleme ile bunu kanıtlamıştır. Kuantum Monte Carlo algoritmaları simülasyon doğruluğunu P_accuracy = %99\'a taşır.',
+    refs:['DARPA Maven projesi', 'The Algorithmic Odyssey (2023)', 'Johnson (2022) Defence Studies']
+  },
+  {
+    name:'Kuantum Katmanı', sub:'Karar hızlandırma & kriptografi', icon:'ti-atom',
+    color:'#7F77DD', bg:'var(--bg-pro)', bc:'var(--border-pro)', tc:'var(--text-pro)',
+    effect:'Grover algoritması: arama O(√N) → t_decide &lt;10s, şifre kırma milisaniyeler',
+    formula:'t_quantum_search = O(√N) vs klasik O(N)',
+    detail:'Kuantum bilgisayarlar Grover algoritması ile N seçenek arasındaki arama süresini O(√N)\'e indirerek karar alternatiflerini üstel hızlandırır. QKD (Kuantum Anahtar Dağıtımı) ile P_security = 0.99 sağlanır. Post-quantum blockchain (SHA-256 tabanlı) veri bütünlüğünü güvence altına alır.',
+    refs:['Krelina (2021) Quantum Warfare', 'Grover algoritması', 'QKD BB84 protokolü']
+  },
+  {
+    name:'Blockchain Katmanı', sub:'Veri bütünlüğü & lojistik güvenlik', icon:'ti-link',
+    color:'#1D9E75', bg:'var(--bg-success)', bc:'var(--border-success)', tc:'var(--text-success)',
+    effect:'P_security = 0.99 · Veri manipülasyonu önlenir · %95 veri bütünlüğü (McAbee et al., 2019)',
+    formula:'P_integrity = 1 − (1 − p_node)^N (N düğüm konsensüsü)',
+    detail:'Merkeziyetsiz Dağıtık Defter Teknolojisi (DLT), OODA\'nın veri güvenilirliğini artırır. Tek bir merkezi saldırı noktası ortadan kalkar. Akıllı sözleşmeler lojistik kararları otomatikleştirir — insan gecikmesi sıfırlanır. McAbee et al. (2019) askeri blockchain uygulamalarında %95 veri bütünlüğü kanıtlamıştır.',
+    refs:['McAbee et al. (2019)', 'Kostopoulos (2025) Technologies', 'Dogum (2022) DTIC']
+  },
+];
+
+const threats = [
+  {
+    name:'Fattah-1 Hipersonik Füze (Mach 10)',
+    icon:'ti-rocket', color:'#E24B4A',
+    speed:'Mach 10 (~12.000 km/h)', range:'200 km', reactionTime:'~60s',
+    classicResult:'BAŞARISIZ', xResult:'KISMI BAŞARI',
+    steps_classic:[
+      {dot:'#888780', title:'Radar tespiti (plazma körlüğü)', desc:'Plazma kılıfı (n_e = 10¹²-10¹⁵ m⁻³) radar sinyalini %50-70 zayıflatıyor. P_detect = %30.', time:'t=0s'},
+      {dot:'#888780', title:'Veri analizi — insan yönelimi', desc:'Operatör verileri değerlendiriyor. t_orient = 15-20s. Bu sürede füze 200+ km ilerledi.', time:'t=18s'},
+      {dot:'#E24B4A', title:'Karar gecikmesi', desc:'t_decide = 15s. İnsan karar verme hızı hipersonik tehdidi yakalayamıyor.', time:'t=33s'},
+      {dot:'#E24B4A', title:'Interceptor kalkışı — çok geç', desc:'Patriot/THAAD fırlatıldı. Kapanma süresi yetersiz. P_escape = %70 (Mach 10 manevra kapasitesi).', time:'t=43s'},
+      {dot:'#E24B4A', title:'Sızma (Leakage)', desc:'Füze hedefe ulaştı. Klasik OODA döngüsü hipersonik tehdidi durdurmaya yetmedi.', time:'t=60s'},
+    ],
+    steps_x:[
+      {dot:'#378ADD', title:'YZ sensör füzyonu — Kalman filtresi', desc:'Plazma körlüğüne rağmen çoklu sensör veri füzyonu ile P_detect = %95. t_observe = 4.5s (-%70).', time:'t=4.5s'},
+      {dot:'#7F77DD', title:'Kuantum Monte Carlo simülasyonu', desc:'Füze yörüngesi 10⁶ örnek ile P_accuracy = %99 simüle edildi. t_orient = 0.8s.', time:'t=5.3s'},
+      {dot:'#1D9E75', title:'LAWS (Otonom) karar — blockchain onaylı', desc:'Otonom Ölümcül Silah Sistemi blockchain imzalı karar verdi. t_decide = 0.1s.', time:'t=5.4s'},
+      {dot:'#1D9E75', title:'DEW (Yönlendirilmiş Enerji) atışı', desc:'Lazer silahı (P=100 kW, t_destroy &lt;1s) plazma kılıfını aşarak füzeye ulaştı.', time:'t=6.4s'},
+      {dot:'#1D9E75', title:'Önleme — düşük debris riski', desc:'Kinetik olmayan imha. Enkaz kinetiği minimize edildi. OODA-X döngüsü: 6.4s vs klasik 60s.', time:'t=6.4s'},
+    ]
+  },
+  {
+    name:'Shahed Sürü Saldırısı (×50 drone)',
+    icon:'ti-drone', color:'#BA7517',
+    speed:'300 km/h', range:'2.000 km', reactionTime:'30-300s',
+    classicResult:'STOK TÜKENMESİ', xResult:'SEÇICI ÖNLEME',
+    steps_classic:[
+      {dot:'#888780', title:'50 hedef — radar doygunluğu', desc:'Sistemler aynı anda 50 hedefi takip edemez. Kapasite aşımı (overwhelmed). P_track = %40.', time:'t=0s'},
+      {dot:'#E24B4A', title:'Maliyet asimetrisi tuzağı', desc:'Her Shahed 20-50K$. Her Patriot PAC-3 interceptor: 4M$. Oran: 1:80-200.', time:'t=10s'},
+      {dot:'#E24B4A', title:'Stok tükenmesi', desc:'50 drone için 50-100 interceptor. Tek saldırıda stok %10-20 erir. 7-10 gün dayanıklılık.', time:'t=25s'},
+      {dot:'#E24B4A', title:'Leakage: Poisson dağılımı', desc:'λ = 50 × (1-0.60) = 20. P_leak = e^(-20) ≈ 0. Sayısal üstünlük sistemi çökertiyor.', time:'t=40s'},
+    ],
+    steps_x:[
+      {dot:'#378ADD', title:'YZ sürü önceliklendirme', desc:'50 drone arasında tehdit önceliği milisaniyelerde sıralandı. Kritik 15 hedef belirlendi.', time:'t=0.5s'},
+      {dot:'#7F77DD', title:'Kuantum Grover hedef seçimi', desc:'O(√50) ≈ 7 adımda optimal önleme kombinasyonu hesaplandı.', time:'t=0.9s'},
+      {dot:'#1D9E75', title:'DEW + seçici interceptor kombinasyonu', desc:'Lazer düşük değerli hedefleri $1/atış maliyetiyle imha. Interceptor sadece kritik hedeflere.', time:'t=2.0s'},
+      {dot:'#1D9E75', title:'Maliyet tersine çevrildi', desc:'Ortalama önleme maliyeti: %80 lazer + %20 interceptor. Asimetri kırıldı.', time:'t=30s'},
+    ]
+  },
+  {
+    name:'Balistik Füze Saturation Saldırısı (×150)',
+    icon:'ti-rocket', color:'#D85A30',
+    speed:'Mach 5-8', range:'1.500 km', reactionTime:'20-30s',
+    classicResult:'KATASTROFİK', xResult:'KISMI SAVUNMA',
+    steps_classic:[
+      {dot:'#888780', title:'2026 Al Udeid senaryosu', desc:'150 füze eş zamanlı. AN/TPY-2 radar kapasitesi aşıldı. Radar imha edildi.', time:'t=0s'},
+      {dot:'#E24B4A', title:'THAAD stok tükenmesi', desc:'Tek saldırıda 150 THAAD fırlatıldı = ABD stoklarının %30\'u. Tarihsel veri.', time:'t=15s'},
+      {dot:'#E24B4A', title:'Binomial model çöküşü', desc:'M > N (füze > interceptor). Poisson devreye girer. P_leak = e^{-λ} kritik.', time:'t=20s'},
+      {dot:'#E24B4A', title:'Wilkening modeli: λ hesabı', desc:'λ = 150 × (1-0.85) = 22.5. Sızma: ~22-23 füze hedefi vurdu.', time:'t=25s'},
+    ],
+    steps_x:[
+      {dot:'#378ADD', title:'Orbital AI erken uyarı (Starlink/Starshield)', desc:'7000+ uydu ağı fırlatma 45s önce tespit etti. t_observe = 2s.', time:'t=-45s'},
+      {dot:'#7F77DD', title:'Kuantum simülasyon: tüm yörüngeler', desc:'150 füzenin olası yörüngeleri paralel simüle edildi. Öncelik haritası oluşturuldu.', time:'t=-40s'},
+      {dot:'#1D9E75', title:'Çok katmanlı savunma aktivasyonu', desc:'DEW + THAAD + Lazer koordineli devreye girdi. Her sistem ayrı tehdit katmanını kapattı.', time:'t=-35s'},
+      {dot:'#1D9E75', title:'Sonuç: λ_X hesabı', desc:'P_intercept = %95 → λ_X = 150 × 0.05 = 7.5. Sızma ~7-8 füze. Klasikten %66 iyileşme.', time:'t=0s'},
+    ]
+  },
+];
+
+const mathPanels = [
+  {
+    title:'OODA-X Döngü Denklemi',
+    formula:'t_OODA-X = t_OODA × (1 − η_AI)\nη_AI ∈ [0.70, 0.99] (YZ hızlandırma katsayısı)\nHedef: t_X < 100ms = 0.1s',
+    result:'Klasik OODA (1991 Patriot): t = 60s\nOODA-X (DARPA Maven referansı): t = 6s\nOODA-X (tam otonom hedef): t = 60ms\nHipersonik tehdit penceresi: 20-30s → OODA-X kritik'
+  },
+  {
+    title:'Sızma (Leakage) Olasılığı — Wilkening Modeli',
+    formula:'P_leak = e^{-λ} × (λ^k / k!)\nλ = M × (1 − P_intercept)\nM = tehdit sayısı, N = interceptor sayısı',
+    result:'2026 senaryosu (M=150, P_intercept=0.85):\nλ = 150 × 0.15 = 22.5 → ~22 füze sızar\nOODA-X ile P_intercept=0.95:\nλ_X = 150 × 0.05 = 7.5 → ~7 füze sızar\nİyileşme: %66 daha az sızma'
+  },
+  {
+    title:'Plazma Kılıfı Radar Zayıflaması',
+    formula:'f_p = √(n_e × e² / ε₀ × m_e)\nn_e = 10¹²-10¹⁵ m⁻³ (Mach 10)\nRadar zayıflaması: %50-70',
+    result:'Klasik radar: P_detect(Mach10) = %30\nYZ veri füzyonu ile: P_detect = %95\nQKD destekli veri akışı: P_integrity = 0.99\nNet iyileşme: +%65 tespit olasılığı'
+  },
+  {
+    title:'Kuantum Grover Karar Hızlandırma',
+    formula:'Klasik arama: O(N) → N adım\nGrover: O(√N) → √N adım\nN=150 tehdit: 150 → √150 ≈ 12 adım',
+    result:'150 tehdit için klasik analiz: ~150 adım\nKuantum Grover: ~12 adım\nHızlanma: 12.5×\nPratik: t_decide < 10s (otonom: <0.1s)'
+  },
+  {
+    title:'Maliyet Asimetrisi & Sürdürülebilirlik',
+    formula:'Attrition rate = M / (N × P_intercept)\nMaliyet oranı k = C_interceptor / C_threat\nk(1991) = 8:1 → k(2026) = 200:1',
+    result:'Shahed: 20-50K$ | Patriot PAC-3: 4M$\nOran: 1:80-200 → ekonomik iflas\nDEW (lazer) maliyeti: ~1$/atış\nOODA-X DEW entegrasyonu ile k → 1:1'
+  },
+];
+
+const risks = [
+  {label:'Nükleer tırmanma riski', val:'%40 artış', sub:'RAND (2022): AI +%10-15, tam otonomi +%40', bg:'var(--bg-danger)', bc:'var(--border-danger)', tc:'var(--text-danger)',
+   detail:'Tam otonom OODA-X sistemleri (P_autonomy=0.95) yanlış sınıflandırma durumunda nükleer tırmanmayı tetikleyebilir. İnsan onayı döngüsü dışında kalırsa ikinci vurma (second strike) otomatik başlayabilir.'},
+  {label:'İnsan rolü azalması', val:'%10 insan', sub:'Post-human savaş 2030-2040 hedefi', bg:'var(--bg-warning)', bc:'var(--border-warning)', tc:'var(--text-warning)',
+   detail:'OODA-X\'in tam otonom hale gelmesiyle insan rolü savunmada %10\'a, saldırıda sıfıra yaklaşıyor. Hesap verebilirlik krizi: kim sorumlu?'},
+  {label:'IHL uyumluluk riski', val:'Kritik', sub:'Uluslararası İnsancıl Hukuk gereksinimleri', bg:'var(--bg-accent)', bc:'var(--border-accent)', tc:'var(--text-accent)',
+   detail:'Otonom sistemlerin orantılılık ve ayrım ilkelerine uyması zorunlu. LAWS için anlamlı insan kontrolü (meaningful human control) henüz tanımlanmamış.'},
+  {label:'Orbital hegemonya riski', val:'Tekil bağımlılık', sub:'Musk/Amazon ekosistemi → devlet bağımlılığı', bg:'var(--bg-warning)', bc:'var(--border-warning)', tc:'var(--text-warning)',
+   detail:'Starlink/Starshield, AWS gibi özel şirket altyapısına bağımlılık devletlerin egemenliğini kısıtlıyor. Tek şirketin "whitelist/blacklist" kararları savaş seyrini değiştirebiliyor.'},
+];
+
+/* ── INIT ── */
+let selectedThreat = 0;
+let selectedLayer = null;
+
+function showXT(id) {
+  document.querySelectorAll('.xtc').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.xtab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('xt-'+id).classList.add('on');
+  event.target.classList.add('on');
+}
+
+/* ── TAB 1: Compare ── */
+function buildSliders() {
+  const wrap = document.getElementById('sliders');
+  oodaPhases.forEach(p => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12px;';
+    row.innerHTML = `
+      <span style="width:120px;color:var(--text-secondary);flex-shrink:0">${p.label}</span>
+      <input type="range" min="1" max="60" value="${p.default}" id="sl_${p.id}" oninput="calcX()" style="flex:1">
+      <span style="min-width:32px;text-align:right;font-weight:500;color:${p.color}" id="sv_${p.id}">${p.default}s</span>
+    `;
+    wrap.appendChild(row);
+  });
+}
+
+function calcX() {
+  const vals = oodaPhases.map(p => +document.getElementById('sl_'+p.id).value);
+  oodaPhases.forEach((p,i) => { document.getElementById('sv_'+p.id).textContent = vals[i]+'s'; });
+  const total = vals.reduce((a,b)=>a+b,0);
+  const eta = +document.getElementById('aiEta').value / 100;
+  document.getElementById('etaVal').textContent = '%'+Math.round(eta*100);
+  const xTime = (total * (1-eta));
+  document.getElementById('oodaTotal').textContent = total+'s';
+  document.getElementById('xTotal').textContent = xTime >= 1 ? xTime.toFixed(1)+'s' : (xTime*1000).toFixed(0)+'ms';
+  const bd = oodaPhases.map((p,i)=>`<span style="background:${p.color}22;color:${p.color};border:.5px solid ${p.color}44;border-radius:4px;padding:2px 6px;font-size:10px">${p.id}:${vals[i]}s</span>`).join('');
+  document.getElementById('oodaBreakdown').innerHTML = bd;
+  document.getElementById('xBreakdown').textContent = `η_AI = %${Math.round(eta*100)} → ${xTime >= 1 ? xTime.toFixed(1)+'s' : (xTime*1000).toFixed(0)+'ms'}`;
+
+  const ratio = total / xTime;
+  const co = document.getElementById('compareOutcome');
+  let cls='blue', msg='';
+  if(xTime < 0.5) { cls='green'; msg=`<b>OODA-X tam otonom bölge:</b> ${(xTime*1000).toFixed(0)}ms — İnsan hipersonik tehdide tepki veremez iken sistem çoktan müdahale etti. 2026 senaryosu için kritik.`; }
+  else if(xTime < 5) { cls='green'; msg=`<b>OODA-X etkin:</b> ${xTime.toFixed(1)}s — Klasik OODA\'ya göre ${ratio.toFixed(0)}× hızlı. Hipersonik penceresinin (20-30s) içinde kalıyor.`; }
+  else if(xTime < 20) { cls='blue'; msg=`<b>OODA-X avantajlı:</b> ${xTime.toFixed(1)}s — ${ratio.toFixed(1)}× iyileşme. Hipersonik tehdide yetişiyor ama marj dar.`; }
+  else { cls='warn'; msg=`<b>YZ katsayısı düşük:</b> ${xTime.toFixed(1)}s — η_AI\'yı artır. Mach 10 tehdide tepki penceresi (~20s) dolmak üzere.`; }
+  co.innerHTML = `<div class="info-alert ${cls}">${msg}</div>`;
+}
+
+/* ── TAB 2: Layers ── */
+function buildLayers() {
+  const el = document.getElementById('layerCards');
+  if(el.children.length) return;
+  xLayers.forEach((l,i) => {
+    const div = document.createElement('div');
+    div.className = 'layer';
+    div.style.cssText = `background:${l.bg};border-color:${l.bc};color:${l.tc}`;
+    div.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ti ${l.icon}" aria-hidden="true" style="font-size:18px"></i>
+          <div>
+            <div class="layer-name">${l.name}</div>
+            <div class="layer-val">${l.sub}</div>
+          </div>
+        </div>
+        <i class="ti ti-chevron-down" aria-hidden="true" style="font-size:14px;opacity:.7"></i>
+      </div>
+      <div class="layer-bar"><div class="layer-fill" style="width:${[90,75,85][i]}%"></div></div>
+    `;
+    div.onclick = () => showLayerDetail(i, div);
+    el.appendChild(div);
+  });
+}
+
+function showLayerDetail(i, clickedDiv) {
+  const l = xLayers[i];
+  const det = document.getElementById('layerDetail');
+  if(selectedLayer === i) { selectedLayer = null; det.innerHTML=''; return; }
+  selectedLayer = i;
+  det.innerHTML = `
+    <div class="math-card" style="animation:fadeUp .3s ease">
+      <div class="math-title"><i class="ti ${l.icon}" aria-hidden="true" style="margin-right:6px;color:${l.color}"></i>${l.name} — Detaylar</div>
+      <div class="math-formula">${l.effect}</div>
+      <div class="math-formula">${l.formula}</div>
+      <div class="math-result">${l.detail}</div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        ${l.refs.map(r=>`<span style="background:${l.bg};color:${l.tc};border:.5px solid ${l.bc};border-radius:4px;padding:2px 8px;font-size:10px">${r}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* ── TAB 3: Scenarios ── */
+function buildThreatCards() {
+  const el = document.getElementById('threatCards');
+  if(el.children.length) return;
+  threats.forEach((t,i) => {
+    const div = document.createElement('div');
+    div.className = 'threat-card' + (i===0?' sel':'');
+    div.innerHTML = `
+      <div class="tc-title"><i class="ti ${t.icon}" aria-hidden="true" style="color:${t.color};margin-right:6px"></i>${t.name}</div>
+      <div class="tc-meta">
+        <span><i class="ti ti-gauge" aria-hidden="true"></i> ${t.speed}</span>
+        <span><i class="ti ti-clock" aria-hidden="true"></i> Tepki penceresi: ${t.reactionTime}</span>
+        <span class="tc-badge" style="background:var(--bg-danger);color:var(--text-danger);border:.5px solid var(--border-danger)">Klasik: ${t.classicResult}</span>
+        <span class="tc-badge" style="background:var(--bg-success);color:var(--text-success);border:.5px solid var(--border-success)">OODA-X: ${t.xResult}</span>
+      </div>
+    `;
+    div.onclick = () => selectThreat(i, div);
+    el.appendChild(div);
+  });
+  runTimeline(0);
+}
+
+function selectThreat(i, div) {
+  selectedThreat = i;
+  document.querySelectorAll('.threat-card').forEach(c=>c.classList.remove('sel'));
+  div.classList.add('sel');
+  document.getElementById('scenTimeline').innerHTML='';
+  document.getElementById('scenOutcome').innerHTML='';
+  runTimeline(i);
+}
+
+function runTimeline(idx) {
+  const t = threats[idx];
+  const tl = document.getElementById('scenTimeline');
+  tl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--text-danger);margin-bottom:6px"><i class="ti ti-circle" aria-hidden="true"></i> Klasik OODA</div>
+        <div id="classic_steps"></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--text-accent);margin-bottom:6px"><i class="ti ti-bolt" aria-hidden="true"></i> OODA-X</div>
+        <div id="x_steps"></div>
+      </div>
+    </div>
+  `;
+  t.steps_classic.forEach((s,i) => {
+    const div = document.createElement('div');
+    div.className = 'xt-step';
+    div.innerHTML = `<div class="xt-dot" style="background:${s.dot}22;color:${s.dot};font-size:10px">${i+1}</div>
+      <div class="xt-body"><div class="xt-title" style="font-size:12px">${s.title}</div>
+      <div class="xt-desc" style="font-size:11px">${s.desc}</div>
+      <div class="xt-time" style="color:${s.dot}">${s.time}</div></div>`;
+    document.getElementById('classic_steps').appendChild(div);
+    setTimeout(()=>div.classList.add('in'), i*300+100);
+  });
+  t.steps_x.forEach((s,i) => {
+    const div = document.createElement('div');
+    div.className = 'xt-step';
+    div.innerHTML = `<div class="xt-dot" style="background:${s.dot}22;color:${s.dot};font-size:10px">${i+1}</div>
+      <div class="xt-body"><div class="xt-title" style="font-size:12px">${s.title}</div>
+      <div class="xt-desc" style="font-size:11px">${s.desc}</div>
+      <div class="xt-time" style="color:${s.dot}">${s.time}</div></div>`;
+    document.getElementById('x_steps').appendChild(div);
+    setTimeout(()=>div.classList.add('in'), i*300+100);
+  });
+}
+
+/* ── TAB 4: Math ── */
+function buildMath() {
+  const el = document.getElementById('mathPanels');
+  if(el.children.length) return;
+  mathPanels.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'math-card';
+    div.innerHTML = `
+      <div class="math-title">${m.title}</div>
+      <div class="math-formula" style="white-space:pre-line">${m.formula}</div>
+      <div class="math-result" style="white-space:pre-line">${m.result}</div>
+    `;
+    el.appendChild(div);
+  });
+}
+
+/* ── TAB 5: Risk ── */
+function buildRisk() {
+  const el = document.getElementById('riskGrid');
+  if(el.children.length) return;
+  risks.forEach((r,i) => {
+    const div = document.createElement('div');
+    div.className = 'risk-card';
+    div.style.cssText = `background:${r.bg};border-color:${r.bc};cursor:pointer;transition:all .2s;`;
+    div.innerHTML = `<div class="risk-num" style="color:${r.tc}">${r.val}</div>
+      <div class="risk-lbl" style="color:${r.tc};font-weight:500">${r.label}</div>
+      <div class="risk-sub" style="color:${r.tc}">${r.sub}</div>`;
+    div.onclick = () => {
+      document.getElementById('riskDetail').innerHTML = `<div class="info-alert warn" style="animation:fadeUp .3s ease"><b>${r.label}:</b> ${r.detail}</div>`;
+    };
+    el.appendChild(div);
+  });
+}
+
+/* ── BOOT ── */
+buildSliders();
+calcX();
+
+document.querySelectorAll('.xtab').forEach(tab => {
+  const orig = tab.onclick;
+  tab.addEventListener('click', function() {
+    const id = this.getAttribute('onclick').match(/'(\w+)'/)[1];
+    if(id==='layers') buildLayers();
+    if(id==='scenario') buildThreatCards();
+    if(id==='math') buildMath();
+    if(id==='risk') buildRisk();
+  });
+});
+</script>
+
+  <div class="source-note">
+    Kaynak: Harb-i Strateji Kanunları (Koyuncu &amp; Ünlü) | OODA-X &lt; Rakip OODA = Zafer | 2026
+  </div>
+</div>
+</body>
+</html>

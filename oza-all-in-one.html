@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="hs-skip" content="true">
+<title>OZA — Harb-i Strateji · Tüm Oyunlar</title>
+<style>
+/* ══════════════════════════════════════════════════════════
+   HARB-İ STRATEJİ — OZA ALL-IN-ONE
+   Sıfır harici bağımlılık. Çevrimdışı çalışır.
+   Tüm oyunlar tek dosyada: Kriz Odası · Asimetri Terazisi ·
+   OODA-X · Slopaganda Dedektör · Karanlık Kış ·
+   Emtia İmparatorluğu · Harbi Quiz · Mobil Oyunlar (8 mini)
+══════════════════════════════════════════════════════════ */
+:root{
+  --bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;
+  --red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;
+  --green:#00ff88;--purple:#9400d3;
+  --line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);
+  --tx:#EAF0F7;--dim:#90a1b5;
+  --disp:'Chakra Petch',system-ui,sans-serif;
+  --mono:'Courier New',monospace;
+  --sans:system-ui,-apple-system,sans-serif
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+/* ── Genel bileşenler ── */
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:10px;font-family:var(--disp);font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px;text-align:center}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover,.btn-red:active{background:var(--red2)}
+.btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-gold{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--cyan))}
+.row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:999px;border:1px solid;letter-spacing:.04em;text-transform:uppercase}
+.tag-red{color:var(--red2);border-color:rgba(224,21,21,.4)}
+.tag-cyan{color:var(--cyan);border-color:rgba(0,224,255,.4)}
+.tag-gold{color:var(--gold);border-color:rgba(201,162,75,.4)}
+.big-num{font-family:var(--disp);font-weight:700;font-size:48px;text-align:center;margin:12px 0}
+
+/* ── Navigasyon ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2)}
+.nav-top{display:flex;align-items:center;padding:0 14px;height:48px;gap:10px}
+.nav-brand{font-family:var(--disp);font-weight:700;font-size:16px;color:var(--red2)}
+.nav-brand span{color:var(--gold)}
+.nav-pts{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--gold);white-space:nowrap}
+.nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--line)}
+.nav-tabs::-webkit-scrollbar{display:none}
+.ntab{flex:0 0 auto;padding:9px 14px;font-family:var(--disp);font-size:12px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
+.ntab.on{color:var(--red2);border-bottom-color:var(--red2)}
+
+/* ── Ana içerik ── */
+#main{padding-top:88px}
+.page{display:none;max-width:760px;margin:0 auto;padding:20px 14px 80px}
+.page.on{display:block}
+.page-title{font-family:var(--disp);font-weight:700;font-size:clamp(24px,5vw,40px);margin-bottom:6px;line-height:1}
+.page-sub{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:18px;line-height:1.6}
+
+/* ── Hub ── */
+.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.hub-card{background:var(--panel);border:2px solid var(--line2);border-radius:14px;padding:18px;cursor:pointer;transition:.2s}
+.hub-card:hover,.hub-card:active{border-color:var(--red2);transform:translateY(-2px)}
+.hc-icon{font-size:32px;margin-bottom:10px}
+.hc-name{font-family:var(--disp);font-weight:700;font-size:15px;color:#fff;margin-bottom:6px}
+.hc-desc{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.5}
+.hc-score{font-family:var(--mono);font-size:10px;color:var(--gold);margin-top:8px}
+.stat-band{display:flex;gap:0;border:1px solid var(--line2);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.sb-item{flex:1;padding:14px 8px;text-align:center;border-right:1px solid var(--line2)}
+.sb-item:last-child{border-right:none}
+.sb-val{font-family:var(--disp);font-weight:700;font-size:22px;color:var(--red2)}
+.sb-lbl{font-family:var(--mono);font-size:9px;color:var(--dim);text-transform:uppercase;margin-top:3px}
+
+/* ── Kriz Odası ── */
+.crisis-meter{margin:12px 0}
+.cm-label{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:4px;display:flex;justify-content:space-between}
+.cm-track{height:10px;background:var(--panel2);border-radius:5px;overflow:hidden}
+.cm-fill{height:100%;border-radius:5px;transition:width .3s}
+.slider-wrap{margin:10px 0}
+.slider-label{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:6px;display:flex;justify-content:space-between}
+input[type=range]{width:100%;height:6px;border-radius:3px;background:var(--panel2);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--red2);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--red2);border:none;cursor:pointer}
+.scenario-box{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:14px;margin-bottom:14px}
+.scenario-title{font-family:var(--disp);font-weight:700;font-size:16px;margin-bottom:6px}
+.scenario-desc{font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.6}
+.timer-bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-bottom:14px}
+.timer-fill{height:100%;background:var(--red2);border-radius:4px;transition:width 1s linear}
+.result-box{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:16px;margin-top:12px;display:none}
+
+/* ── Asimetri Terazisi ── */
+.swipe-card{background:var(--panel2);border:2px solid var(--line2);border-radius:16px;padding:22px;text-align:center;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;cursor:grab;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.swipe-card.swipe-left{transform:translateX(-60px) rotate(-8deg);border-color:var(--red2)}
+.swipe-card.swipe-right{transform:translateX(60px) rotate(8deg);border-color:var(--green)}
+.swipe-hint{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px}
+.swipe-hint .left{color:var(--red2)}
+.swipe-hint .right{color:var(--green)}
+.card-cost{font-family:var(--mono);font-size:11px;color:var(--gold);margin-top:8px}
+.card-effect{font-family:var(--mono);font-size:11px;color:var(--cyan);margin-top:4px}
+
+/* ── OODA-X ── */
+.ooda-arena{background:var(--panel2);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px;position:relative}
+.ooda-phase{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.ooda-signal{width:120px;height:120px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:14px;cursor:pointer;border:3px solid var(--line2);transition:all .2s}
+.ooda-signal.wait{background:var(--panel);color:var(--dim)}
+.ooda-signal.ready{background:rgba(0,255,136,.2);border-color:var(--green);color:var(--green);animation:ooda-pulse .5s ease-in-out infinite}
+.ooda-signal.early{background:rgba(224,21,21,.2);border-color:var(--red2);color:var(--red2)}
+@keyframes ooda-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.hp-bar{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.hp-seg{width:28px;height:8px;border-radius:4px;background:var(--red2);transition:.3s}
+.hp-seg.empty{background:var(--panel2)}
+.vs-row{display:flex;gap:12px;align-items:center;justify-content:center;margin-bottom:12px}
+.vs-box{flex:1;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:12px;text-align:center}
+.vs-label{font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:4px}
+.vs-val{font-family:var(--disp);font-weight:700;font-size:20px}
+
+/* ── Slopaganda ── */
+.slop-card{background:var(--panel2);border:2px solid var(--line2);border-radius:14px;padding:20px;margin-bottom:12px;position:relative}
+.slop-source{font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px}
+.slop-headline{font-family:var(--disp);font-weight:700;font-size:17px;color:#fff;margin-bottom:10px;line-height:1.4}
+.slop-body{font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:14px}
+.slop-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.slop-btn{padding:14px;border-radius:10px;border:2px solid;font-family:var(--disp);font-weight:700;font-size:13px;cursor:pointer;text-align:center;background:transparent;transition:.15s}
+.slop-btn.real{color:var(--green);border-color:rgba(0,255,136,.4)}
+.slop-btn.fake{color:var(--red2);border-color:rgba(224,21,21,.4)}
+.slop-btn:active{transform:scale(.97)}
+.slop-verdict{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:14px;margin-top:10px;display:none}
+
+/* ── Karanlık Kış ── */
+.kk-map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.kk-cell{height:56px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:20px;font-family:var(--disp);font-size:11px;font-weight:700;transition:.2s;cursor:pointer;flex-direction:column;gap:2px}
+.kk-cell.base{border-color:var(--cyan);background:rgba(0,224,255,.1)}
+.kk-cell.enemy{border-color:var(--red2);background:rgba(224,21,21,.15);animation:kk-threat .8s ease-in-out infinite}
+.kk-cell.defended{border-color:var(--green);background:rgba(0,255,136,.1)}
+.kk-cell.destroyed{border-color:rgba(150,170,200,.1);background:rgba(0,0,0,.3);opacity:.5}
+@keyframes kk-threat{0%,100%{box-shadow:0 0 0 0 rgba(224,21,21,.4)}50%{box-shadow:0 0 0 6px rgba(224,21,21,0)}}
+.kk-resources{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.kk-res{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:8px 12px;font-family:var(--mono);font-size:11px;flex:1;min-width:80px;text-align:center}
+.kk-res-val{font-family:var(--disp);font-weight:700;font-size:18px;color:var(--cyan)}
+.kk-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.kk-action{padding:10px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);font-family:var(--mono);font-size:11px;cursor:pointer;text-align:center;transition:.15s}
+.kk-action:hover,.kk-action:active{border-color:var(--gold);background:rgba(201,162,75,.08)}
+.kk-log{font-family:var(--mono);font-size:10px;color:var(--dim);background:var(--panel2);border-radius:8px;padding:10px;min-height:60px;max-height:100px;overflow-y:auto;line-height:1.8}
+.perk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:12px}
+.perk-item{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:10px;cursor:pointer;transition:.15s}
+.perk-item.owned{border-color:rgba(0,255,136,.4);background:rgba(0,255,136,.06)}
+.perk-item.locked{opacity:.4;cursor:default}
+.perk-item:hover:not(.locked):not(.owned){border-color:var(--gold)}
+.pi-label{font-family:var(--disp);font-size:12px;font-weight:700;margin-bottom:3px}
+.pi-desc{font-family:var(--mono);font-size:9px;color:var(--dim);margin-bottom:6px}
+.pi-cost{font-family:var(--mono);font-size:10px;color:var(--gold)}
+
+/* ── Emtia İmparatorluğu ── */
+.emtia-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.emtia-card{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:12px;text-align:center;transition:.15s}
+.emtia-card:hover{border-color:var(--gold)}
+.ec-icon{font-size:28px;margin-bottom:6px}
+.ec-name{font-family:var(--disp);font-size:12px;font-weight:700;margin-bottom:4px}
+.ec-stock{font-family:var(--mono);font-size:11px;color:var(--cyan);margin-bottom:6px}
+.ec-rate{font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px}
+.ec-btn{padding:8px;border-radius:6px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-family:var(--disp);font-size:11px;cursor:pointer;width:100%;transition:.15s}
+.ec-btn:active{background:rgba(201,162,75,.15)}
+.market-ticker{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:10px;font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:12px;overflow:hidden;white-space:nowrap}
+
+/* ── Harbi Quiz ── */
+.quiz-cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.quiz-cat{background:var(--panel2);border:2px solid var(--line2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:.15s}
+.quiz-cat.on{border-color:var(--red2);background:rgba(224,21,21,.1)}
+.quiz-cat:hover{border-color:var(--red)}
+.qc-icon{font-size:26px;margin-bottom:6px}
+.qc-name{font-family:var(--disp);font-size:12px;font-weight:700}
+.q-card{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:18px;margin-bottom:12px}
+.q-meta{font-family:var(--mono);font-size:10px;color:var(--red2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.q-text{font-family:var(--disp);font-weight:700;font-size:17px;color:#fff;line-height:1.4;margin-bottom:14px}
+.q-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.q-choice{padding:12px;border-radius:8px;border:2px solid var(--line2);background:var(--panel);font-family:var(--sans);font-size:13px;cursor:pointer;transition:.15s;color:var(--tx)}
+.q-choice:hover:not(.locked){border-color:var(--red)}
+.q-choice.correct{border-color:var(--green);background:rgba(0,255,136,.1)}
+.q-choice.wrong{border-color:var(--red2);background:rgba(224,21,21,.1)}
+.q-choice.locked{cursor:default}
+.q-explain{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:14px;margin-top:10px;display:none}
+.q-timer-bar{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.q-timer-fill{height:100%;background:var(--red2);border-radius:3px;transition:width 1s linear}
+
+/* ── Mobil Oyunlar ── */
+.mini-tabs{display:flex;overflow-x:auto;scrollbar-width:none;gap:6px;padding-bottom:8px;margin-bottom:14px}
+.mini-tabs::-webkit-scrollbar{display:none}
+.mtab{flex:0 0 auto;padding:8px 14px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--dim);transition:.15s;white-space:nowrap}
+.mtab.on{border-color:var(--red2);background:rgba(224,21,21,.1);color:var(--red2)}
+.mini-screen{display:none}
+.mini-screen.on{display:block}
+.rt-circle{width:140px;height:140px;border-radius:50%;margin:16px auto;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:14px;cursor:pointer;border:3px solid var(--line2);transition:all .2s}
+.rt-idle{background:var(--panel2);color:var(--dim)}
+.rt-wait{background:rgba(224,21,21,.15);border-color:var(--red2);color:var(--red2)}
+.rt-go{background:rgba(0,255,136,.2);border-color:var(--green);color:var(--green);animation:rt-pulse .5s ease-in-out infinite}
+@keyframes rt-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.tg-area{position:relative;height:240px;background:var(--panel2);border-radius:10px;overflow:hidden;cursor:crosshair;margin-bottom:10px;border:1px solid var(--line2)}
+.tg-dot{position:absolute;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;animation:tg-pop .15s ease-out;border:2px solid var(--red2)}
+@keyframes tg-pop{from{transform:scale(0)}to{transform:scale(1)}}
+.sort-pool{display:flex;gap:8px;flex-wrap:wrap;min-height:50px;padding:10px;background:var(--panel2);border-radius:8px;border:2px dashed var(--line2);margin-bottom:10px}
+.sort-slots{display:flex;gap:8px;flex-wrap:wrap;min-height:50px;padding:10px;background:rgba(0,224,255,.04);border-radius:8px;border:2px dashed rgba(0,224,255,.3);margin-bottom:10px}
+.sort-chip{padding:7px 12px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;font-family:var(--mono);font-size:11px;cursor:pointer;transition:.15s}
+.sort-chip:active,.sort-chip.placed{border-color:var(--gold);background:rgba(201,162,75,.1)}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.mem-card{height:60px;border-radius:8px;border:2px solid var(--line2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:all .25s}
+.mem-card.face-up{background:var(--panel);border-color:var(--cyan)}
+.mem-card.matched{background:rgba(0,255,136,.1);border-color:var(--green);pointer-events:none}
+.mem-card.wrong-flash{background:rgba(224,21,21,.15);border-color:var(--red2)}
+.code-display{font-family:var(--disp);font-weight:700;font-size:32px;text-align:center;letter-spacing:10px;color:var(--cyan);padding:14px;background:var(--panel2);border-radius:10px;border:1px solid rgba(0,224,255,.3);margin-bottom:10px}
+.code-slots{display:flex;gap:8px;justify-content:center;margin-bottom:10px}
+.code-slot{width:50px;height:58px;border-radius:8px;border:2px solid var(--line2);background:var(--panel2);color:#fff;font-family:var(--disp);font-size:24px;font-weight:700;text-align:center;line-height:58px}
+.code-slot.active{border-color:var(--cyan)}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:220px;margin:0 auto}
+.np{padding:14px 0;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:#fff;font-family:var(--disp);font-size:17px;cursor:pointer;text-align:center;transition:.15s}
+.np:active{background:rgba(0,224,255,.15);border-color:var(--cyan)}
+.pz-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
+.pz-cell{height:50px;border-radius:6px;border:1px solid var(--line2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:.15s}
+.pz-cell.wall{background:rgba(150,170,200,.1);cursor:default}
+.pz-cell.start-cell{border-color:var(--green);background:rgba(0,255,136,.12)}
+.pz-cell.end-cell{border-color:var(--gold);background:rgba(201,162,75,.12)}
+.pz-cell.on-path{border-color:var(--cyan);background:rgba(0,224,255,.12)}
+.math-q{font-family:var(--disp);font-weight:700;font-size:30px;text-align:center;padding:14px;background:var(--panel2);border-radius:10px;margin-bottom:12px}
+.math-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.math-opt{padding:14px;border-radius:10px;border:2px solid var(--line2);background:var(--panel2);font-family:var(--disp);font-size:20px;font-weight:700;cursor:pointer;text-align:center;color:#fff;transition:.15s}
+.math-opt.ok{border-color:var(--green);background:rgba(0,255,136,.12)}
+.math-opt.ng{border-color:var(--red2);background:rgba(224,21,21,.12)}
+#dr-canvas{border-radius:10px;border:1px solid var(--line2);display:block;margin:0 auto;touch-action:none;max-width:100%}
+
+/* ── Hub mini-oyun grid ── */
+.hub-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.hmcard{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:13px;transition:.2s;cursor:pointer}
+.hmcard:hover{border-color:rgba(0,224,255,.4);transform:translateY(-2px)}
+.hmc-icon{font-size:22px;margin-bottom:6px}
+.hmc-name{font-family:var(--disp);font-size:12px;font-weight:700;margin-bottom:4px}
+.hmc-desc{font-family:var(--mono);font-size:9px;color:var(--dim);line-height:1.5;margin-bottom:8px}
+.hmc-footer{display:flex;align-items:center;justify-content:space-between}
+.hmc-score{font-family:var(--mono);font-size:9px;color:var(--gold)}
+.hmc-btns{display:flex;gap:4px}
+.hmc-how{padding:4px 8px;border-radius:6px;background:transparent;color:var(--dim);border:1px solid var(--line2);font-family:var(--disp);font-size:9px;cursor:pointer;transition:.15s}
+.hmc-how:hover{color:var(--cyan);border-color:rgba(0,224,255,.4)}
+.hmc-play{padding:4px 10px;border-radius:6px;background:var(--cyan);color:#000;border:none;font-family:var(--disp);font-size:9px;font-weight:700;cursor:pointer}
+
+/* ── Hub ana oyun kartları ── */
+.hub-card{position:relative}
+.hc-btns{display:flex;gap:6px;margin-top:10px}
+.hc-how{padding:6px 10px;border-radius:7px;background:transparent;color:var(--cyan);border:1px solid rgba(0,224,255,.35);font-family:var(--disp);font-size:10px;font-weight:700;cursor:pointer;transition:.15s}
+.hc-how:hover{background:rgba(0,224,255,.08)}
+.hc-play{flex:1;padding:6px 10px;border-radius:7px;background:var(--red);color:#fff;border:none;font-family:var(--disp);font-size:10px;font-weight:700;cursor:pointer;transition:.15s}
+.hc-play:hover{background:var(--red2)}
+
+/* ── Nasıl Oynanır Modal ── */
+.how-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
+.how-overlay.open{display:flex}
+.how-modal{background:var(--panel);border:2px solid var(--line2);border-radius:20px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto;position:relative;animation:how-pop .22s cubic-bezier(.34,1.56,.64,1)}
+@keyframes how-pop{from{transform:scale(.88) translateY(24px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.how-head{padding:20px 20px 14px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid var(--line)}
+.how-icon{font-size:38px;flex-shrink:0;line-height:1}
+.how-title{font-family:var(--disp);font-weight:700;font-size:20px;color:#fff;margin-bottom:3px}
+.how-sub{font-family:var(--mono);font-size:10px;color:var(--red2);text-transform:uppercase;letter-spacing:.1em}
+.how-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line2);background:var(--panel2);color:var(--dim);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s}
+.how-close:hover{color:#fff;border-color:var(--red2)}
+.how-body{padding:16px 20px 6px}
+.how-sec{margin-bottom:14px}
+.how-lbl{font-family:var(--disp);font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.how-text{font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.75}
+.how-steps{list-style:none;padding:0;counter-reset:step}
+.how-steps li{font-family:var(--mono);font-size:11px;color:var(--tx);line-height:1.7;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid var(--line)}
+.how-steps li:last-child{border-bottom:none}
+.how-steps li::before{content:counter(step);counter-increment:step;position:absolute;left:0;top:6px;width:18px;height:18px;border-radius:50%;background:rgba(224,21,21,.15);border:1px solid rgba(224,21,21,.3);color:var(--red2);font-family:var(--disp);font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center;line-height:1}
+.how-tip{background:rgba(0,224,255,.06);border:1px solid rgba(0,224,255,.2);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--cyan);line-height:1.7;margin-top:10px}
+.how-tip strong{display:block;margin-bottom:3px;font-family:var(--disp);font-size:10px;letter-spacing:.06em}
+.how-footer{padding:12px 20px 18px;display:flex;gap:8px;border-top:1px solid var(--line)}
+.how-play{flex:1;padding:12px;border-radius:10px;background:var(--red);color:#fff;border:none;font-family:var(--disp);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+.how-play:hover{background:var(--red2)}
+.how-dismiss{padding:12px 16px;border-radius:10px;background:transparent;color:var(--dim);border:1px solid var(--line2);font-family:var(--disp);font-size:12px;cursor:pointer;transition:.15s}
+.how-dismiss:hover{color:#fff}
+
+/* ── Paylaşım kartı ── */
+.share-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px;display:none}
+.share-card{background:linear-gradient(135deg,#0f1722,#16202d);border:2px solid var(--gold);border-radius:18px;padding:28px;max-width:360px;width:100%;text-align:center;position:relative}
+.sc-brand{font-family:var(--mono);font-size:9px;color:rgba(201,162,75,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.sc-game{font-family:var(--mono);font-size:11px;color:var(--red2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.sc-score{font-family:var(--disp);font-weight:700;font-size:56px;color:#fff;line-height:1;margin-bottom:6px}
+.sc-sub{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:16px}
+.sc-badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.sc-badge{font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:999px;border:1px solid rgba(201,162,75,.4);color:var(--gold)}
+.sc-btns{display:flex;gap:8px}
+
+/* ── Rozet toast ── */
+#badge-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9998;background:var(--panel);border:2px solid var(--gold);border-radius:10px;padding:10px 20px;font-family:var(--mono);font-size:12px;color:var(--gold);pointer-events:none;opacity:0;transition:opacity .4s;white-space:nowrap}
+
+/* ── Animasyonlu arka plan ── */
+#bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.25}
+#main{position:relative;z-index:1}
+
+@media(max-width:480px){
+  .hub-grid{grid-template-columns:1fr 1fr}
+  .q-choices{grid-template-columns:1fr}
+  .math-opts{grid-template-columns:1fr 1fr}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+
+<!-- Arka plan canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Navigasyon -->
+<div id="nav">
+  <div class="nav-top">
+    <div class="nav-brand">HARB-İ<span>STRATEJİ</span></div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:8px">OZA</div>
+    <div class="nav-pts" id="nav-pts">⭐ 0 puan</div>
+  </div>
+  <div class="nav-tabs" id="nav-tabs">
+    <div class="ntab on" onclick="navGo(0)">🏠 Hub</div>
+    <div class="ntab" onclick="navGo(1)">🎮 Kriz</div>
+    <div class="ntab" onclick="navGo(2)">⚔️ Asimetri</div>
+    <div class="ntab" onclick="navGo(3)">⚡ OODA-X</div>
+    <div class="ntab" onclick="navGo(4)">🕵️ Slopaganda</div>
+    <div class="ntab" onclick="navGo(5)">❄️ Karanlık Kış</div>
+    <div class="ntab" onclick="navGo(6)">🏭 Emtia</div>
+    <div class="ntab" onclick="navGo(7)">🎓 Quiz</div>
+    <div class="ntab" onclick="navGo(8)">📱 Mobil</div>
+  </div>
+</div>
+
+<div id="main">
+
+<!-- ═══════════════════════════════════════════════════════
+     0. HUB
+═══════════════════════════════════════════════════════ -->
+<div class="page on" id="p0">
+  <div class="page-title">OZA OYUN MERKEZİ</div>
+  <div class="page-sub">Z/Alfa kuşağı için stratejik simülasyon oyunları · Adaptif YZ · Rogue-like meta-progress</div>
+
+  <div class="stat-band">
+    <div class="sb-item"><div class="sb-val" id="hub-total">0</div><div class="sb-lbl">Toplam Puan</div></div>
+    <div class="sb-item"><div class="sb-val" id="hub-badges">0</div><div class="sb-lbl">Rozet</div></div>
+    <div class="sb-item"><div class="sb-val" id="hub-perks">0</div><div class="sb-lbl">Perk</div></div>
+    <div class="sb-item"><div class="sb-val" id="hub-ai">1</div><div class="sb-lbl">YZ Seviye</div></div>
+  </div>
+
+  <div class="hub-grid" id="hub-grid"></div>
+
+  <div style="font-family:var(--disp);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 12px;display:flex;align-items:center;gap:8px">
+    &#x1F4F1; Mobil Mini Oyunlar
+    <span style="font-family:var(--mono);font-size:9px;background:var(--cyan);color:#000;padding:2px 8px;border-radius:999px">8 OYUN</span>
+  </div>
+  <div class="hub-mini-grid" id="hub-mini-grid"></div>
+
+  <div class="card">
+    <div style="font-family:var(--disp);font-weight:700;font-size:14px;margin-bottom:12px;color:var(--gold)">🔓 Perk Mağazası — Meta-Progress</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:12px">Harcanabilir puan: <span id="hub-spend" style="color:var(--gold)">0</span></div>
+    <div class="perk-grid" id="hub-perk-grid"></div>
+  </div>
+
+  <div class="card">
+    <div style="font-family:var(--disp);font-weight:700;font-size:14px;margin-bottom:12px">🏅 Rozetler</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="hub-badge-shelf"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     1. KRİZ ODASI
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p1">
+  <div class="page-title">🎮 Kriz Odası</div>
+  <div class="page-sub">10 saniye · G=T×S×E×L formülü · Anlık karar · YZ rakibi</div>
+
+  <div class="card">
+    <div class="row">
+      <span class="tag tag-red" id="kr-wave">SENARYO 1/5</span>
+      <span style="font-family:var(--mono);font-size:12px;color:var(--gold)" id="kr-pts">0 puan</span>
+    </div>
+    <div class="timer-bar"><div class="timer-fill" id="kr-timer-fill" style="width:100%"></div></div>
+    <div class="scenario-box" id="kr-scenario">
+      <div class="scenario-title" id="kr-title">Kriz Odası</div>
+      <div class="scenario-desc" id="kr-desc">Başlamak için aşağıdaki düğmeye bas.</div>
+    </div>
+    <div id="kr-sliders"></div>
+    <div class="row" style="margin-top:12px">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--dim)">G Skoru:</span>
+      <span style="font-family:var(--disp);font-weight:700;font-size:22px;color:var(--red2)" id="kr-g">—</span>
+    </div>
+    <button class="btn btn-red" id="kr-btn" onclick="krAction()">▶ BAŞLAT</button>
+    <div class="result-box" id="kr-result"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     2. ASİMETRİ TERAZİSİ
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p2">
+  <div class="page-title">⚔️ Asimetri Terazisi</div>
+  <div class="page-sub">Swipe ile karar ver · 1:100 maliyet-etki · Adaptif YZ rakibi</div>
+
+  <div class="card">
+    <div class="row">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gold)" id="as-pts">Puan: 0</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--dim)" id="as-round">Tur: 0/10</span>
+    </div>
+    <div class="swipe-hint">
+      <span class="left">← REDDet</span>
+      <span class="right">KABUL ET →</span>
+    </div>
+    <div class="swipe-card" id="as-card">
+      <div style="font-size:36px;margin-bottom:12px" id="as-icon">⚔️</div>
+      <div style="font-family:var(--disp);font-weight:700;font-size:17px;color:#fff;margin-bottom:8px" id="as-title">Başlamak için dokun</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--dim);text-align:center;line-height:1.6" id="as-desc">Swipe veya butonları kullan</div>
+      <div class="card-cost" id="as-cost"></div>
+      <div class="card-effect" id="as-effect"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button class="btn btn-red" style="flex:1" onclick="asSwipe('left')">✕ REDDET</button>
+      <button class="btn btn-outline" style="flex:1" onclick="asSwipe('right')">✓ KABUL</button>
+    </div>
+    <div style="font-family:var(--mono);font-size:11px;text-align:center;margin-top:10px;min-height:20px" id="as-feedback"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     3. OODA-X DÜELLOSU
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p3">
+  <div class="page-title">⚡ OODA-X Düellosu</div>
+  <div class="page-sub">250ms eşiği · Adaptif YZ rakibi · HP sistemi</div>
+
+  <div class="card">
+    <div class="vs-row">
+      <div class="vs-box">
+        <div class="vs-label">SEN</div>
+        <div class="vs-val" id="ox-my-ms" style="color:var(--cyan)">—</div>
+      </div>
+      <div style="font-family:var(--disp);font-weight:700;font-size:20px;color:var(--dim)">VS</div>
+      <div class="vs-box">
+        <div class="vs-label" id="ox-ai-label">YZ (Seviye 1)</div>
+        <div class="vs-val" id="ox-ai-ms" style="color:var(--red2)">—</div>
+      </div>
+    </div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;margin-bottom:8px">OYUNCU HP</div>
+    <div class="hp-bar" id="ox-hp-bar"></div>
+    <div class="ooda-arena">
+      <div class="ooda-phase" id="ox-phase">HAZIR OL</div>
+      <div class="ooda-signal wait" id="ox-signal" onclick="oxTap()">BAŞLAT</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:12px" id="ox-result">—</div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gold)" id="ox-pts">Puan: 0</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--dim)" id="ox-round">Tur 0/10</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     4. SLOPAGANDA DEDEKTÖR
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p4">
+  <div class="page-title">🕵️ Slopaganda Dedektör</div>
+  <div class="page-sub">Dezenformasyonu tespit et · Deepfake analizi · Bilişsel savunma</div>
+
+  <div class="card">
+    <div class="row">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gold)" id="sl-pts">Puan: 0</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--dim)" id="sl-round">Kart: 0/10</span>
+    </div>
+    <div class="slop-card" id="sl-card">
+      <div class="slop-source" id="sl-source">Kaynak: —</div>
+      <div class="slop-headline" id="sl-headline">Başlamak için aşağıdaki butona bas</div>
+      <div class="slop-body" id="sl-body">Slopaganda Dedektör, gerçek ve sahte içerikleri ayırt etme yeteneğini test eder.</div>
+    </div>
+    <div class="slop-btns" id="sl-btns">
+      <button class="slop-btn real" onclick="slVote('real')">✅ GERÇEK</button>
+      <button class="slop-btn fake" onclick="slVote('fake')">❌ SAHTE</button>
+    </div>
+    <div class="slop-verdict" id="sl-verdict"></div>
+    <button class="btn btn-red" id="sl-start" onclick="slStart()" style="margin-top:10px">🕵️ BAŞLAT</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     5. KARANLIK KIŞ
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p5">
+  <div class="page-title">❄️ Karanlık Kış</div>
+  <div class="page-sub">Rogue-like · 10 dalga · Öl → Perk kazan → Geri dön</div>
+
+  <div class="card">
+    <div class="row">
+      <span class="tag tag-cyan" id="kk-wave">DALGA 1/10</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gold)" id="kk-pts">Puan: 0</span>
+    </div>
+    <div class="kk-resources">
+      <div class="kk-res"><div class="kk-res-val" id="kk-energy">100</div><div style="font-family:var(--mono);font-size:9px;color:var(--dim)">ENERJİ</div></div>
+      <div class="kk-res"><div class="kk-res-val" id="kk-ammo">50</div><div style="font-family:var(--mono);font-size:9px;color:var(--dim)">MÜHİMMAT</div></div>
+      <div class="kk-res"><div class="kk-res-val" id="kk-intel">3</div><div style="font-family:var(--mono);font-size:9px;color:var(--dim)">İSTİHBARAT</div></div>
+    </div>
+    <div class="kk-map" id="kk-map"></div>
+    <div class="kk-actions">
+      <div class="kk-action" onclick="kkAction('savun')">🛡️ Savun<br><span style="font-size:9px;color:var(--dim)">-10 enerji</span></div>
+      <div class="kk-action" onclick="kkAction('saldir')">⚔️ Saldır<br><span style="font-size:9px;color:var(--dim)">-5 mühimmat</span></div>
+      <div class="kk-action" onclick="kkAction('istihbarat')">🔍 İstihbarat<br><span style="font-size:9px;color:var(--dim)">-1 istihbarat</span></div>
+      <div class="kk-action" onclick="kkAction('geri-cekil')">🏃 Geri Çekil<br><span style="font-size:9px;color:var(--dim)">+5 enerji</span></div>
+    </div>
+    <div class="kk-log" id="kk-log">Oyun başlamadı...</div>
+    <button class="btn btn-red" id="kk-btn" onclick="kkStart()">❄️ BAŞLAT</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     6. EMTİA İMPARATORLUĞU
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p6">
+  <div class="page-title">🏭 Emtia İmparatorluğu</div>
+  <div class="page-sub">Kritik mineral tedarik zinciri · Idle tycoon · Piyasa rekabeti</div>
+
+  <div class="card">
+    <div class="row">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gold)" id="em-pts">Puan: 0</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--cyan)" id="em-tick">⏱ 0s</span>
+    </div>
+    <div class="market-ticker" id="em-ticker">📈 Piyasa: Lityum ▲ · Kobalt ▼ · Nadir Toprak ▲ · Uranyum — · Titanyum ▲</div>
+    <div class="emtia-grid" id="em-grid"></div>
+    <div style="background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:12px;margin-top:4px">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:6px">KÜRESEL PAZAR DURUMU</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--tx)" id="em-market-status">Piyasa analizi yükleniyor...</div>
+    </div>
+    <button class="btn btn-red" id="em-btn" onclick="emStart()">🏭 BAŞLAT</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     7. HARBİ QUİZ
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p7">
+  <div class="page-title">🎓 Harbi Quiz</div>
+  <div class="page-sub">6 kategori · 15 saniyelik geri sayım · Rozet kazan</div>
+
+  <div id="qz-cat-screen">
+    <div style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:12px;text-align:center">KATEGORİ SEÇ:</div>
+    <div class="quiz-cat-grid" id="qz-cats"></div>
+    <button class="btn btn-red" onclick="qzStart()">🎓 BAŞLAT</button>
+  </div>
+
+  <div id="qz-play-screen" style="display:none">
+    <div class="card" style="margin-bottom:0">
+      <div class="row">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--dim)" id="qz-num">Soru 1/10</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--gold)" id="qz-pts">Puan: 0</span>
+      </div>
+      <div class="q-timer-bar"><div class="q-timer-fill" id="qz-timer-fill" style="width:100%"></div></div>
+      <div class="q-card">
+        <div class="q-meta" id="qz-meta">KATEGORİ</div>
+        <div class="q-text" id="qz-text">Soru yükleniyor...</div>
+        <div class="q-choices" id="qz-choices"></div>
+      </div>
+      <div class="q-explain" id="qz-explain"></div>
+    </div>
+  </div>
+
+  <div id="qz-result-screen" style="display:none;text-align:center;padding:20px">
+    <div style="font-size:56px;margin-bottom:12px" id="qz-res-icon">🎓</div>
+    <div style="font-family:var(--disp);font-weight:700;font-size:28px;margin-bottom:8px" id="qz-res-title">Quiz Bitti</div>
+    <div style="font-family:var(--disp);font-weight:700;font-size:48px;color:var(--red2);margin:10px 0" id="qz-res-score">0</div>
+    <div style="font-family:var(--mono);font-size:12px;color:var(--dim);margin-bottom:16px" id="qz-res-sub"></div>
+    <button class="btn btn-red" onclick="qzReset()">🔄 Tekrar</button>
+    <button class="btn btn-outline" onclick="showShare('Harbi Quiz',qzScore,'var(--red2)')" style="margin-top:8px">📤 Paylaş</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     8. MOBİL OYUNLAR
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="p8">
+  <div class="page-title">📱 Mobil Oyunlar</div>
+  <div class="page-sub">8 hızlı mini oyun · Tek el · Z/Alfa kuşağı</div>
+
+  <div class="mini-tabs">
+    <div class="mtab on" onclick="miniGo(0)">⚡ Tepki</div>
+    <div class="mtab" onclick="miniGo(1)">🎯 Hedef</div>
+    <div class="mtab" onclick="miniGo(2)">📊 Sırala</div>
+    <div class="mtab" onclick="miniGo(3)">🧠 Hafıza</div>
+    <div class="mtab" onclick="miniGo(4)">🔐 Kod Kır</div>
+    <div class="mtab" onclick="miniGo(5)">🗺️ Bulmaca</div>
+    <div class="mtab" onclick="miniGo(6)">🔢 Matematik</div>
+    <div class="mtab" onclick="miniGo(7)">🛸 Drone</div>
+  </div>
+
+  <!-- Tepki Testi -->
+  <div class="mini-screen on card" id="ms0">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">⚡ Tepki Testi</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">Daire yeşile döndüğünde hemen dokun!</div>
+    <div class="big-num" id="rt-ms" style="color:var(--cyan)">—</div>
+    <div class="rt-circle rt-idle" id="rt-circle" onclick="rtTap()">BAŞLAT</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;margin-top:8px;min-height:18px" id="rt-hist"></div>
+  </div>
+
+  <!-- Hedef Vur -->
+  <div class="mini-screen card" id="ms1">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">🎯 Hedef Vur</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">30 saniyede mümkün olduğunca çok hedefi vur!</div>
+    <div class="row">
+      <span style="font-family:var(--mono);font-size:12px;color:var(--gold)" id="tg-pts">Puan: 0</span>
+      <span style="font-family:var(--mono);font-size:12px;color:var(--red2)" id="tg-time">30s</span>
+    </div>
+    <div class="tg-area" id="tg-area"></div>
+    <button class="btn btn-red" id="tg-btn" onclick="tgStart()">🎯 BAŞLAT</button>
+  </div>
+
+  <!-- Sıralama -->
+  <div class="mini-screen card" id="ms2">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">📊 Tehdit Sırala</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">Tehditleri öncelik sırasına göre sırala. Dokunarak seç, hedefe dokun.</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:6px">SIRALAMA ALANI:</div>
+    <div class="sort-slots" id="sort-slots"></div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:6px">TEHDİTLER:</div>
+    <div class="sort-pool" id="sort-pool"></div>
+    <div style="font-family:var(--mono);font-size:12px;text-align:center;min-height:20px;margin-bottom:8px" id="sort-result"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-red" style="flex:1" onclick="sortCheck()">✓ KONTROL</button>
+      <button class="btn btn-outline" style="flex:1" onclick="sortInit()">🔄 YENİ</button>
+    </div>
+  </div>
+
+  <!-- Hafıza -->
+  <div class="mini-screen card" id="ms3">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">🧠 Askerî Hafıza</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">Eşleşen askeri sembol çiftlerini bul!</div>
+    <div class="row">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gold)" id="mem-moves">Hamle: 0</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--cyan)" id="mem-pairs">Çift: 0/8</span>
+    </div>
+    <div class="mem-grid" id="mem-grid"></div>
+    <button class="btn btn-outline" onclick="memInit()">🔄 YENİ OYUN</button>
+  </div>
+
+  <!-- Kod Kır -->
+  <div class="mini-screen card" id="ms4">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">🔐 Şifre Kır</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">Gizli 4 haneli kodu tahmin et! 🟢 = doğru yer · 🟡 = yanlış yer</div>
+    <div class="code-display" id="cd-disp">? ? ? ?</div>
+    <div class="code-slots">
+      <div class="code-slot" id="cs0">_</div><div class="code-slot" id="cs1">_</div>
+      <div class="code-slot" id="cs2">_</div><div class="code-slot" id="cs3">_</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:10px;min-height:50px;margin-bottom:8px;line-height:1.8" id="cd-hist"></div>
+    <div class="numpad">
+      <div class="np" onclick="npTap('1')">1</div><div class="np" onclick="npTap('2')">2</div><div class="np" onclick="npTap('3')">3</div>
+      <div class="np" onclick="npTap('4')">4</div><div class="np" onclick="npTap('5')">5</div><div class="np" onclick="npTap('6')">6</div>
+      <div class="np" onclick="npTap('7')">7</div><div class="np" onclick="npTap('8')">8</div><div class="np" onclick="npTap('9')">9</div>
+      <div class="np" onclick="npTap('del')" style="color:var(--red2)">⌫</div>
+      <div class="np" onclick="npTap('0')">0</div>
+      <div class="np" onclick="npTap('ok')" style="color:var(--green)">✓</div>
+    </div>
+  </div>
+
+  <!-- Bulmaca -->
+  <div class="mini-screen card" id="ms5">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">🗺️ Strateji Bulmaca</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">🟢 başlangıçtan 🏁 hedefe en kısa yolu bul.</div>
+    <div class="pz-grid" id="pz-grid"></div>
+    <div style="font-family:var(--mono);font-size:11px;text-align:center;margin-bottom:10px;min-height:18px" id="pz-status"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-red" style="flex:1" onclick="pzCheck()">✓ KONTROL</button>
+      <button class="btn btn-outline" style="flex:1" onclick="pzInit()">🔄 YENİ</button>
+    </div>
+  </div>
+
+  <!-- Matematik -->
+  <div class="mini-screen card" id="ms6">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">🔢 Hız Matematik</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">Savunma bütçesi hesapla! 60 saniyede kaç doğru?</div>
+    <div class="row">
+      <span style="font-family:var(--mono);font-size:12px;color:var(--gold)" id="mth-pts">Puan: 0</span>
+      <span style="font-family:var(--mono);font-size:12px;color:var(--red2)" id="mth-time">60s</span>
+    </div>
+    <div class="math-q" id="mth-q">—</div>
+    <div class="math-opts" id="mth-opts"></div>
+    <button class="btn btn-red" id="mth-btn" onclick="mthStart()">🔢 BAŞLAT</button>
+  </div>
+
+  <!-- Drone -->
+  <div class="mini-screen card" id="ms7">
+    <div style="font-family:var(--disp);font-weight:700;font-size:18px;margin-bottom:4px">🛸 Drone Kaçış</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px">Drone'u düşman ateşinden kaçır!</div>
+    <div class="row">
+      <span style="font-family:var(--mono);font-size:12px;color:var(--gold)" id="dr-pts">Puan: 0</span>
+      <span style="font-family:var(--mono);font-size:12px;color:var(--red2)" id="dr-hp">❤️❤️❤️</span>
+    </div>
+    <div style="text-align:center"><canvas id="dr-canvas" width="320" height="240"></canvas></div>
+    <button class="btn btn-red" id="dr-btn" onclick="drStart()" style="margin-top:10px">🛸 BAŞLAT</button>
+  </div>
+
+</div><!-- /p8 -->
+
+</div><!-- /main -->
+
+<!-- Nasıl Oynanır Modal -->
+<div class="how-overlay" id="how-overlay" onclick="if(event.target===this)closeHow()">
+  <div class="how-modal">
+    <button class="how-close" onclick="closeHow()">&#x2715;</button>
+    <div class="how-head">
+      <div class="how-icon" id="hw-icon">&#x1F3AE;</div>
+      <div><div class="how-title" id="hw-title">Oyun</div><div class="how-sub" id="hw-sub">NASIL OYNANIR?</div></div>
+    </div>
+    <div class="how-body" id="hw-body"></div>
+    <div class="how-footer">
+      <button class="how-play" id="hw-play-btn">&#x25B6; HEMEN OYNA</button>
+      <button class="how-dismiss" onclick="closeHow()">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<!-- Paylaşım overlay -->
+<div class="share-overlay" id="share-overlay" onclick="if(event.target===this)this.style.display='none'">
+  <div class="share-card">
+    <div class="sc-brand">HARB-İ STRATEJİ · OZA</div>
+    <div class="sc-game" id="sc-game">OYUN</div>
+    <div class="sc-score" id="sc-score">0</div>
+    <div class="sc-sub" id="sc-sub">puan</div>
+    <div class="sc-badges" id="sc-badges-list"></div>
+    <div class="sc-btns">
+      <button class="btn btn-red" style="flex:1;margin-top:0" onclick="copyShare()">📋 Kopyala</button>
+      <button class="btn btn-outline" style="flex:1;margin-top:0" onclick="document.getElementById('share-overlay').style.display='none'">✕ Kapat</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rozet toast -->
+<div id="badge-toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   CORE ENGINE — inline, sıfır bağımlılık
+══════════════════════════════════════════════════════════ */
+var _sc,_bdg,_prk,_ai;
+try{_sc=JSON.parse(localStorage.getItem('hs_scores'))||{};}catch(e){_sc={};}
+try{_bdg=JSON.parse(localStorage.getItem('hs_badges'))||{};}catch(e){_bdg={};}
+try{_prk=JSON.parse(localStorage.getItem('hs_perks'))||{};}catch(e){_prk={};}
+try{_ai=JSON.parse(localStorage.getItem('hs_ai'))||{wins:0,losses:0,level:1};}catch(e){_ai={wins:0,losses:0,level:1};}
+
+function _save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function addScore(g,p){_sc[g]=(_sc[g]||0)+p;_save('hs_scores',_sc);updateHubs();}
+function totalScore(){return Object.values(_sc).reduce(function(a,b){return a+b;},0);}
+function spendScore(){return totalScore()-(_sc.__spent||0);}
+function getScore(g){return _sc[g]||0;}
+
+var BADGE_DEFS={
+  ilk_karar:{label:'🎖 İlk Karar',desc:'İlk oyunu tamamladın'},
+  hizli_top:{label:'⚡ Hızlı Top',desc:'250ms altında tepki'},
+  dedektif:{label:'🕵️ Dedektif',desc:'5 slopaganda tespit'},
+  hayatta:{label:'❄️ Hayatta Kalan',desc:'Karanlık Kış\'tan çıktın'},
+  imparator:{label:'🏭 İmparator',desc:'1000 emtia ürettin'},
+  kriz_ustasi:{label:'🎮 Kriz Ustası',desc:'300+ kriz puanı'},
+  asimetri:{label:'⚔️ Asimetri',desc:'100+ asimetri puanı'},
+  quiz_ace:{label:'🏅 Quiz Ace',desc:'Quiz\'de 10/10 aldın'},
+  sosyal:{label:'📤 Sosyal',desc:'Sonuç paylaştın'},
+  hafiza:{label:'🧠 Hafıza Ustası',desc:'Hafıza oyununu bitirdin'}
+};
+function awardBadge(id){
+  if(_bdg[id]) return;
+  _bdg[id]={ts:Date.now()};_save('hs_badges',_bdg);
+  var b=BADGE_DEFS[id];if(!b)return;
+  var t=document.getElementById('badge-toast');
+  t.textContent='🏅 ROZET: '+b.label;t.style.opacity='1';
+  setTimeout(function(){t.style.opacity='0';},2800);
+  beepWin();updateHubs();
+}
+function hasBadge(id){return !!_bdg[id];}
+
+var PERKS={
+  zirh_1:{label:'🛡️ Zırh I',desc:'+10% hasar direnci',cost:50,game:'*'},
+  hiz_1:{label:'⚡ Hız I',desc:'+50ms karar süresi',cost:75,game:'ooda-x'},
+  istihbarat_1:{label:'🔍 İstihbarat I',desc:'İpucu hakkı +1',cost:60,game:'slopaganda'},
+  lojistik_1:{label:'🚚 Lojistik I',desc:'+20% emtia üretimi',cost:80,game:'emtia'},
+  taktik_1:{label:'🗺️ Taktik I',desc:'Kriz süresi +3sn',cost:70,game:'kriz-odasi'},
+  zirh_2:{label:'🛡️ Zırh II',desc:'+25% hasar direnci',cost:150,game:'*',req:'zirh_1'},
+  drone_1:{label:'🛸 Drone Filosu',desc:'Yeni drone türü',cost:200,game:'karanlik-kis'},
+  doktrin_1:{label:'📜 Yeni Doktrin',desc:'A2/AD stratejisi',cost:250,game:'*'}
+};
+function buyPerk(id){
+  var p=PERKS[id];if(!p||_prk[id])return false;
+  if(p.req&&!_prk[p.req])return false;
+  if(spendScore()<p.cost)return false;
+  _prk[id]=true;_sc.__spent=(_sc.__spent||0)+p.cost;
+  _save('hs_perks',_prk);_save('hs_scores',_sc);
+  beepWin();updateHubs();return true;
+}
+function hasPerk(id){return !!_prk[id];}
+
+function aiWon(){_ai.wins++;if(_ai.level<10&&_ai.wins%3===0)_ai.level++;_save('hs_ai',_ai);}
+function aiLost(){_ai.losses++;if(_ai.level>1&&_ai.losses%5===0)_ai.level--;_save('hs_ai',_ai);}
+function aiLevel(){return _ai.level;}
+function aiMs(){return Math.max(80,350-_ai.level*25+Math.floor(Math.random()*80));}
+
+/* ── Ses ── */
+var _ctx=null;
+function _ac(){if(!_ctx)try{_ctx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}return _ctx;}
+function beep(f,d,v,t){
+  var c=_ac();if(!c)return;
+  try{var o=c.createOscillator(),g=c.createGain();
+  o.type=t||'sine';o.connect(g);g.connect(c.destination);
+  o.frequency.value=f||440;
+  g.gain.setValueAtTime(v||0.12,c.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+(d||0.15));
+  o.start();o.stop(c.currentTime+(d||0.15));}catch(e){}
+}
+function beepOK(){beep(660,0.1,0.12);}
+function beepFail(){beep(200,0.2,0.14,'sawtooth');}
+function beepWin(){beep(880,0.07);setTimeout(function(){beep(1100,0.07);},80);setTimeout(function(){beep(1320,0.15);},160);}
+function beepTick(){beep(1000,0.04,0.07,'square');}
+
+/* ── Görsel efektler ── */
+function flash(color,ms){
+  var d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:9997;pointer-events:none;background:'+(color||'rgba(224,21,21,.3)')+';transition:opacity '+(ms||300)+'ms';
+  document.body.appendChild(d);
+  setTimeout(function(){d.style.opacity='0';setTimeout(function(){d.remove();},(ms||300));},30);
+}
+function burst(el,color){
+  if(!el)return;
+  var r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  for(var i=0;i<10;i++){
+    var p=document.createElement('div');
+    var a=(i/10)*Math.PI*2,dist=40+Math.random()*40;
+    p.style.cssText='position:fixed;z-index:9998;pointer-events:none;width:7px;height:7px;border-radius:50%;background:'+(color||'#E01515')+';left:'+cx+'px;top:'+cy+'px;transition:all .55s ease-out;opacity:1';
+    document.body.appendChild(p);
+    setTimeout(function(pp,a,d){pp.style.transform='translate('+(Math.cos(a)*d)+'px,'+(Math.sin(a)*d)+'px)';pp.style.opacity='0';setTimeout(function(){pp.remove();},600);}.bind(null,p,a,dist),10);
+  }
+}
+
+/* ── Hub güncelle ── */
+function updateHubs(){
+  var t=totalScore(),s=spendScore(),b=Object.keys(_bdg).length,pk=Object.keys(_prk).length;
+  document.getElementById('nav-pts').textContent='⭐ '+t+' puan';
+  var el;
+  if(el=document.getElementById('hub-total'))el.textContent=t;
+  if(el=document.getElementById('hub-badges'))el.textContent=b;
+  if(el=document.getElementById('hub-perks'))el.textContent=pk;
+  if(el=document.getElementById('hub-ai'))el.textContent=aiLevel();
+  if(el=document.getElementById('hub-spend'))el.textContent=s;
+  renderHubGrid();renderMiniGridHub();renderPerkGrid();renderBadgeShelf();
+}
+
+/* ── Paylaşım ── */
+var _shareGame='',_shareScore=0;
+function showShare(game,score,color){
+  _shareGame=game;_shareScore=score;
+  document.getElementById('sc-game').textContent=game.toUpperCase();
+  document.getElementById('sc-game').style.color=color||'var(--red2)';
+  document.getElementById('sc-score').textContent=score;
+  document.getElementById('sc-sub').textContent='puan · OZA Oyun Merkezi';
+  var bl=document.getElementById('sc-badges-list');
+  bl.innerHTML=Object.values(_bdg).slice(0,4).map(function(b){
+    var def=Object.values(BADGE_DEFS).find(function(d){return true;});
+    return '<span class="sc-badge">'+b.label+'</span>';
+  }).join('');
+  // Rozetleri düzgün göster
+  bl.innerHTML=Object.entries(_bdg).slice(0,4).map(function(e){
+    var def=BADGE_DEFS[e[0]];
+    return def?'<span class="sc-badge">'+def.label+'</span>':'';
+  }).join('');
+  document.getElementById('share-overlay').style.display='flex';
+  awardBadge('sosyal');
+}
+function copyShare(){
+  var txt='🎯 '+_shareGame+' · '+_shareScore+' puan\nHarb-i Strateji OZA Oyun Merkezi';
+  if(navigator.clipboard)navigator.clipboard.writeText(txt).then(function(){beepOK();});
+  document.getElementById('share-overlay').style.display='none';
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAVİGASYON
+══════════════════════════════════════════════════════════ */
+function navGo(idx){
+  document.querySelectorAll('.page').forEach(function(p,i){p.classList.toggle('on',i===idx);});
+  document.querySelectorAll('.ntab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
+  var tabs=document.getElementById('nav-tabs');
+  var tab=tabs.children[idx];
+  if(tab)tab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  if(idx!==8&&drRunning)drStop();
+}
+
+/* ══════════════════════════════════════════════════════════
+   HUB
+══════════════════════════════════════════════════════════ */
+var HUB_GAMES=[
+  {icon:'🎮',name:'Kriz Odası',desc:'10sn karar · G formülü · YZ rakibi',idx:1,game:'kriz-odasi'},
+  {icon:'⚔️',name:'Asimetri Terazisi',desc:'Swipe · 1:100 oran · Kart savaşı',idx:2,game:'asimetri'},
+  {icon:'⚡',name:'OODA-X Düellosu',desc:'250ms eşiği · Adaptif YZ',idx:3,game:'ooda-x'},
+  {icon:'🕵️',name:'Slopaganda Dedektör',desc:'Deepfake swipe · Bilişsel savunma',idx:4,game:'slopaganda'},
+  {icon:'❄️',name:'Karanlık Kış',desc:'Rogue-like · Perk sistemi · 10 dalga',idx:5,game:'karanlik-kis'},
+  {icon:'🏭',name:'Emtia İmparatorluğu',desc:'Idle tycoon · Tedarik zinciri',idx:6,game:'emtia'},
+  {icon:'🎓',name:'Harbi Quiz',desc:'6 kategori · Rozet kazan',idx:7,game:'quiz'},
+  {icon:'📱',name:'Mobil Oyunlar',desc:'8 mini oyun · Tek el',idx:8,game:'mobil'}
+];
+var MINI_GAMES_HUB=[
+  {id:'mobil-tepki',icon:'⚡',name:'Tepki Testi',desc:'Yeşil ışıkta dokun, ms ölç',tab:0,
+    how:{sub:'REFLEKS ÖLÇER',amac:'Daire yeşile döndüğünde mümkün olduğunca hızlı dokun.',steps:['Daireye dokun → "Bekle" moduna geçer','Daire yeşile döndüğünde HEMEN dokun!','Tepki süren milisaniye cinsinden gösterilir','250ms altı = Hızlı Top rozeti!'],tip:'Erken dokunursan sıfırlanır. Sabırlı ol!'}},
+  {id:'mobil-hedef',icon:'🎯',name:'Hedef Vur',desc:"30snde maks hedef vur",tab:1,
+    how:{sub:'HEDEF AVCI',amac:'30 saniyede ekranda beliren hedeflere mümkün olduğunca çok dokun.',steps:['BAŞLAT butonuna bas','Ekranda beliren hedeflere hızlıca dokun','Her hedef 10 puan','Hedefler 1.4sn sonra kaybolur'],tip:'Parmağını ekranda tutma — her dokunuş ayrı sayılır.'}},
+  {id:'mobil-siralama',icon:'📊',name:'Tehdit Sırala',desc:'Tehditleri öncelik sırasına diz',tab:2,
+    how:{sub:'STRATEJİK ÖNCELİKLENDİRME',amac:'5 tehdidi en yüksek öncelikten en düşüğe doğru sırala.',steps:['Tehdit kartlarına dokun → seçilir','Sıralama alanına taşı','Tüm tehditleri sıraladıktan sonra KONTROL ET','Doğru sıralama: Nükleer > Siber > Terör > Ambargo > Dezenformasyon'],tip:'Anlık etki (nükleer) > Uzun vadeli etki (dezenformasyon) mantığını kullan.'}},
+  {id:'mobil-hafiza',icon:'🧠',name:'Askerî Hafıza',desc:'Sembol çiftlerini eşleştir',tab:3,
+    how:{sub:'HAFIZA OYUNU',amac:'16 karttan 8 eşleşen çifti bul.',steps:['Bir karta dokun → açılır','İkinci karta dokun → eşleşme kontrol edilir','Eşleşirse kartlar açık kalır','Eşleşmezse 0.7sn sonra kapanır','Tüm 8 çifti bul!'],tip:'Az hamlede bitirirsen daha çok puan kazanırsın.'}},
+  {id:'mobil-kod',icon:'🔐',name:'Şifre Kır',desc:'4 haneli kodu 8 denemede bul',tab:4,
+    how:{sub:'MASTERMIND',amac:'Gizli 4 haneli kodu ipuçlarıyla 8 denemede bul.',steps:['4 haneli tahmin gir → ✓ butonuna bas','🟢 = Doğru rakam, doğru yer','🟡 = Doğru rakam, yanlış yer','⬛ = Bu rakam yok','8 denemede bulamazsan kod açıklanır'],tip:'İlk tahminde 1234 gir — ipuçlarına göre daralt.'}},
+  {id:'mobil-bulmaca',icon:'🗺️',name:'Strateji Bulmaca',desc:'Başlangıçtan hedefe yol bul',tab:5,
+    how:{sub:'YOL BULMA',amac:'Başlangıçtan hedefe kesintisiz bir yol çiz.',steps:['Boş hücrelere dokun → yola ekle','Tekrar dokun → yoldan çıkar','Yol bitişik hücrelerden geçmeli','Duvarlardan geçemezsin','KONTROL ET butonuna bas'],tip:'Önce hedeften geriye doğru düşün.'}},
+  {id:'mobil-matematik',icon:'🔢',name:'Hız Matematik',desc:"60snde savunma bütçesi hesapla",tab:6,
+    how:{sub:'HIZLI HESAP',amac:'60 saniyede mümkün olduğunca çok matematik sorusunu doğru cevapla.',steps:['BAŞLAT butonuna bas','Toplama, çıkarma, çarpma veya bölme sorusu gelir','4 seçenekten doğrusunu seç','Her doğru cevap 10 puan'],tip:'Bölme sorularında sonuçtan geriye çarp — daha hızlı.'}},
+  {id:'mobil-drone',icon:'🛸',name:'Drone Kaçış',desc:'Düşman ateşinden kaç',tab:7,
+    how:{sub:'CANVAS KAÇIŞ',amac:'Drone\u2019unu düşman mermilerinden kaçırarak hayatta kal.',steps:['BAŞLAT butonuna bas','Ekrana dokun → drone o noktaya hareket eder','Kırmızı düşmanlar ateş eder','3 mermi yersen oyun biter'],tip:'Ekranın köşelerine sığın — düşmanlar ortayı hedefler.'}}
+];
+
+var ALL_HOW_DATA={};
+function buildHowData(){
+  var mainData=[
+    {id:'kriz-odasi',icon:'🎮',name:'Kriz Odası',idx:1,how:{sub:'KARAR VERME SİMÜLASYONU',amac:'5 farklı kriz senaryosunda doğru kararlar alarak maksimum G skoru elde et.',steps:['Senaryo ekrana gelir — 10 saniye sayacı başlar','4 kaydıracı (Tehdit, Strateji, Ekonomi, Liderlik) ayarla','G = T × S × E × L formülü otomatik hesaplanır','"Karar Ver" butonuna bas veya süre dolmadan önce tamamla','G skoru ne kadar yüksekse o kadar çok puan kazanırsın'],tip:'Tüm kaydıraçları 10\'a çekmek her zaman doğru değil — senaryoyu oku!'}},
+    {id:'asimetri',icon:'⚔️',name:'Asimetri Terazisi',idx:2,how:{sub:'SWIPE KART SAVAŞI',amac:'10 kart arasında doğru stratejik kararlar vererek asimetrik avantaj sağla.',steps:['Her kart bir askeri strateji gösterir','Sağa kaydır (KABUL ET) → stratejiyi benimse','Sola kaydır (REDDET) → stratejiyi reddet','Her kartın maliyeti ve etkisi farklı — 1:100 oranı ara!','10 tur sonunda toplam puanın hesaplanır'],tip:'Düşük maliyetli, yüksek etkili stratejiler genellikle doğru cevaptır.'}},
+    {id:'ooda-x',icon:'⚡',name:'OODA-X Düellosu',idx:3,how:{sub:'KARAR HIZI DÜELLOSU',amac:'Adaptif YZ rakibini tepki hızında geçerek 10 tur kazanmaya çalış.',steps:['Ekrandaki daireye dokun → "Bekle" moduna geçer','Daire yeşile döndüğünde HEMEN dokun!','Senin tepki süren ile YZ\'nin süresi karşılaştırılır','Daha hızlı olan turu kazanır, yavaş olan HP kaybeder','5 HP biter veya 10 tur tamamlanırsa oyun biter'],tip:'YZ her kayıptan sonra zorlaşır. 250ms altında kalabilirsen rozet kazanırsın!'}},
+    {id:'slopaganda',icon:'🕵️',name:'Slopaganda Dedektör',idx:4,how:{sub:'DEZENFORMASYON AVCI',amac:'10 haber kartından gerçek olanları doğru tespit ederek maksimum puan kazan.',steps:['Ekranda bir haber başlığı, kaynağı ve içeriği görürsün','Kaynağı, dili ve iddia gücünü analiz et','"GERÇEK" veya "SAHTE" butonuna bas','Cevabın ardından açıklama gösterilir','10 kart sonunda toplam puanın hesaplanır'],tip:'Belirsiz kaynak, aşırı dramatik dil ve doğrulanamayan iddialar sahte haberin işaretleridir.'}},
+    {id:'karanlik-kis',icon:'❄️',name:'Karanlık Kış',idx:5,how:{sub:'ROGUE-LIKE DİRENİŞ',amac:'10 dalga boyunca üssünü düşmanlara karşı koruyarak hayatta kal.',steps:['Her dalgada haritada düşmanlar belirir','Savun, Saldır, İstihbarat veya Geri Çekil eylemlerinden birini seç','Enerji ve mühimmat tükenirse oyun biter','Kazandığın puanlarla Perk Mağazası\'ndan kalıcı güçlendirmeler al','Bir sonraki oyunda bu perkler aktif olur'],tip:'İstihbarat eylemini kullan — düşman sayısını öğrenmek stratejini belirler.'}},
+    {id:'emtia',icon:'🏭',name:'Emtia İmparatorluğu',idx:6,how:{sub:'KÜRESEL TEDARİK ZİNCİRİ',amac:'6 kritik mineralin üretimini yöneterek küresel pazar liderliğine ulaş.',steps:['Oyun başladığında mineraller otomatik üretilmeye başlar','Her mineralin "Yükselt" butonuna bas → üretim hızı artar','Piyasa olaylarını takip et — fiyatlar değişiyor!','Yüksek fiyatlı minerallere yatırım yap','1000 ton üretimde İmparator rozeti kazanırsın'],tip:'Nadir Toprak en yüksek fiyatlı mineral — ama üretimi en yavaş.'}},
+    {id:'quiz',icon:'🎓',name:'Harbi Quiz',idx:7,how:{sub:'STRATEJİK BİLGİ YARIŞMASI',amac:'10 soruda mümkün olduğunca çok doğru cevap vererek maksimum puan kazan.',steps:['Kategori seç (veya tümünü karıştır)','Her soru için 15 saniyelik geri sayım başlar','4 seçenekten doğru olanı seç','Cevap sonrası açıklama gösterilir','10/10 doğru yaparsan Quiz Ace rozeti kazanırsın'],tip:'Süre bitmeden cevapla — her saniye değerli. Bilmiyorsan tahmin et!'}}
+  ];
+  mainData.forEach(function(g){ALL_HOW_DATA[g.id]={icon:g.icon,name:g.name,how:g.how,action:function(){navGo(g.idx);}}; });
+  MINI_GAMES_HUB.forEach(function(g){ALL_HOW_DATA[g.id]={icon:g.icon,name:g.name,how:g.how,action:function(){navGo(8);setTimeout(function(){miniGo(g.tab);},100);}}; });
+}
+
+function openHow(gameId,evt){
+  if(evt)evt.stopPropagation();
+  var d=ALL_HOW_DATA[gameId];if(!d)return;
+  document.getElementById('hw-icon').textContent=d.icon;
+  document.getElementById('hw-title').textContent=d.name;
+  document.getElementById('hw-sub').textContent=d.how.sub;
+  var steps=d.how.steps.map(function(s){return '<li>'+s+'</li>';}).join('');
+  document.getElementById('hw-body').innerHTML=
+    '<div class="how-sec"><div class="how-lbl">Amaç</div><div class="how-text">'+d.how.amac+'</div></div>'+
+    '<div class="how-sec"><div class="how-lbl">Adım Adım</div><ol class="how-steps">'+steps+'</ol></div>'+
+    '<div class="how-tip"><strong>&#x1F4A1; İPUÇU</strong>'+d.how.tip+'</div>';
+  document.getElementById('hw-play-btn').onclick=function(){closeHow();d.action();};
+  document.getElementById('how-overlay').classList.add('open');
+  beep(440,0.06,0.06);
+}
+function closeHow(){document.getElementById('how-overlay').classList.remove('open');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeHow();});
+
+function renderHubGrid(){
+  var g=document.getElementById('hub-grid');if(!g)return;
+  g.innerHTML=HUB_GAMES.filter(function(h){return h.idx!==8;}).map(function(h){
+    return '<div class="hub-card">' +
+      '<div class="hc-icon">'+h.icon+'</div>' +
+      '<div class="hc-name">'+h.name+'</div>' +
+      '<div class="hc-desc">'+h.desc+'</div>' +
+      '<div class="hc-score">⭐ '+getScore(h.game)+' puan</div>' +
+      '<div class="hc-btns">' +
+        '<button class="hc-how" onclick="openHow(\''+h.game+'\',event)">? Nasıl</button>' +
+        '<button class="hc-play" onclick="navGo('+h.idx+')">&#x25B6; Oyna</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderMiniGridHub(){
+  var g=document.getElementById('hub-mini-grid');if(!g)return;
+  g.innerHTML=MINI_GAMES_HUB.map(function(h){
+    return '<div class="hmcard">' +
+      '<div class="hmc-icon">'+h.icon+'</div>' +
+      '<div class="hmc-name">'+h.name+'</div>' +
+      '<div class="hmc-desc">'+h.desc+'</div>' +
+      '<div class="hmc-footer">' +
+        '<div class="hmc-score">⭐ '+getScore(h.id)+'</div>' +
+        '<div class="hmc-btns">' +
+          '<button class="hmc-how" onclick="openHow(\''+h.id+'\',event)">?</button>' +
+          '<button class="hmc-play" onclick="navGo(8);setTimeout(function(){miniGo('+h.tab+');},100)">&#x25B6;</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+function renderPerkGrid(){
+  var g=document.getElementById('hub-perk-grid');if(!g)return;
+  var s=spendScore();
+  g.innerHTML=Object.entries(PERKS).map(function(e){
+    var id=e[0],p=e[1];
+    var owned=hasPerk(id),locked=p.req&&!hasPerk(p.req),canBuy=!owned&&!locked&&s>=p.cost;
+    return '<div class="perk-item'+(owned?' owned':'')+(locked?' locked':'')+'" onclick="doBuyPerk(\''+id+'\')">' +
+      '<div class="pi-label">'+(owned?'✓ ':'')+p.label+'</div>' +
+      '<div class="pi-desc">'+p.desc+'</div>' +
+      '<div class="pi-cost">'+(owned?'Açık':(locked?'🔒 Kilitli':'⭐ '+p.cost+' puan'))+'</div>' +
+    '</div>';
+  }).join('');
+}
+function renderBadgeShelf(){
+  var g=document.getElementById('hub-badge-shelf');if(!g)return;
+  g.innerHTML=Object.entries(BADGE_DEFS).map(function(e){
+    var id=e[0],b=e[1];
+    var earned=hasBadge(id);
+    return '<div style="background:var(--panel2);border:1px solid '+(earned?'rgba(201,162,75,.4)':'var(--line2)')+';border-radius:8px;padding:8px 12px;font-family:var(--mono);font-size:10px;color:'+(earned?'var(--gold)':'var(--dim)')+'">'+b.label+'</div>';
+  }).join('');
+}
+function doBuyPerk(id){
+  if(buyPerk(id)){flash('rgba(201,162,75,.15)',300);}
+  else beepFail();
+}
+
+/* ══════════════════════════════════════════════════════════
+   1. KRİZ ODASI
+══════════════════════════════════════════════════════════ */
+var KR_SCENARIOS=[
+  {title:'Siber Saldırı — Kritik Altyapı',desc:'Düşman devlet destekli APT grubu enerji şebekesine saldırıyor. 10 saniyede karar ver!',sliders:['Tehdit Düzeyi','Stratejik Etki','Ekonomik Hasar','Liderlik Kararlılığı']},
+  {title:'Hibrit Savaş — Enformasyon Operasyonu',desc:'Sosyal medya üzerinden koordineli dezenformasyon kampanyası başladı. Toplumsal kutuplaşma artıyor.',sliders:['Tehdit Düzeyi','Stratejik Etki','Ekonomik Hasar','Liderlik Kararlılığı']},
+  {title:'Tedarik Zinciri Krizi — Kritik Mineraller',desc:'Nadir toprak elementi tedarik zinciri kesildi. Savunma sanayii üretimi durma noktasında.',sliders:['Tehdit Düzeyi','Stratejik Etki','Ekonomik Hasar','Liderlik Kararlılığı']},
+  {title:'Deniz Kuvvetleri — Boğaz Krizi',desc:'Stratejik boğazda gerilim tırmandı. Ticaret gemileri tehdit altında.',sliders:['Tehdit Düzeyi','Stratejik Etki','Ekonomik Hasar','Liderlik Kararlılığı']},
+  {title:'Biyolojik Tehdit — KBRN Alarmı',desc:'Sınır bölgesinde kimyasal madde tespiti yapıldı. Kaynak belirsiz.',sliders:['Tehdit Düzeyi','Stratejik Etki','Ekonomik Hasar','Liderlik Kararlılığı']}
+];
+var krWave=0,krScore=0,krRunning=false,krTimer=null,krSecs=10,krValues=[5,5,5,5];
+function krAction(){
+  if(!krRunning){krStart();return;}
+  krSubmit();
+}
+function krStart(){
+  krRunning=true;krWave=0;krScore=0;
+  document.getElementById('kr-pts').textContent='0 puan';
+  document.getElementById('kr-btn').textContent='✓ KARAR VER';
+  document.getElementById('kr-result').style.display='none';
+  krLoadScenario();
+}
+function krLoadScenario(){
+  if(krWave>=KR_SCENARIOS.length){krEnd();return;}
+  var sc=KR_SCENARIOS[krWave];
+  document.getElementById('kr-wave').textContent='SENARYO '+(krWave+1)+'/'+KR_SCENARIOS.length;
+  document.getElementById('kr-title').textContent=sc.title;
+  document.getElementById('kr-desc').textContent=sc.desc;
+  krValues=[5,5,5,5];
+  var sl=document.getElementById('kr-sliders');
+  sl.innerHTML=sc.sliders.map(function(name,i){
+    return '<div class="slider-wrap">' +
+      '<div class="slider-label"><span>'+name+'</span><span id="kr-sv'+i+'">5</span></div>' +
+      '<input type="range" min="1" max="10" value="5" oninput="krSlide('+i+',this.value)">' +
+    '</div>';
+  }).join('');
+  krUpdateG();
+  // Timer
+  krSecs=10+(hasPerk('taktik_1')?3:0);
+  document.getElementById('kr-timer-fill').style.transition='none';
+  document.getElementById('kr-timer-fill').style.width='100%';
+  if(krTimer)clearInterval(krTimer);
+  var total=krSecs;
+  setTimeout(function(){
+    document.getElementById('kr-timer-fill').style.transition='width 1s linear';
+    krTimer=setInterval(function(){
+      krSecs--;
+      document.getElementById('kr-timer-fill').style.width=(krSecs/total*100)+'%';
+      if(krSecs<=3)beepTick();
+      if(krSecs<=0){clearInterval(krTimer);krSubmit();}
+    },1000);
+  },50);
+}
+function krSlide(i,v){
+  krValues[i]=parseInt(v);
+  var el=document.getElementById('kr-sv'+i);
+  if(el)el.textContent=v;
+  krUpdateG();
+}
+function krUpdateG(){
+  var g=krValues.reduce(function(a,b){return a*b;},1);
+  document.getElementById('kr-g').textContent=g;
+}
+function krSubmit(){
+  clearInterval(krTimer);
+  var g=krValues.reduce(function(a,b){return a*b;},1);
+  var maxG=Math.pow(10,4);
+  var pts=Math.round(g/maxG*100)+krSecs*2;
+  krScore+=pts;
+  document.getElementById('kr-pts').textContent=krScore+' puan';
+  var rb=document.getElementById('kr-result');
+  rb.style.display='block';
+  rb.innerHTML='<div style="font-family:var(--disp);font-weight:700;font-size:16px;color:var(--gold);margin-bottom:6px">G = '+g+' · +'+pts+' puan</div>' +
+    '<div style="font-family:var(--mono);font-size:11px;color:var(--dim)">'+
+    (g>5000?'✅ Optimal karar! Tehdit etkisiz hale getirildi.':g>1000?'⚠️ Yeterli karar. İyileştirme gerekiyor.':'❌ Yetersiz karar. Tehdit devam ediyor.')+
+    '</div>';
+  addScore('kriz-odasi',pts);
+  if(g>5000)beepWin(); else beepFail();
+  krWave++;
+  setTimeout(function(){
+    rb.style.display='none';
+    krLoadScenario();
+  },2000);
+}
+function krEnd(){
+  krRunning=false;
+  document.getElementById('kr-btn').textContent='▶ TEKRAR';
+  document.getElementById('kr-result').style.display='block';
+  document.getElementById('kr-result').innerHTML='<div style="font-family:var(--disp);font-weight:700;font-size:20px;color:var(--gold);text-align:center">🏁 '+krScore+' PUAN</div>';
+  if(krScore>=300)awardBadge('kriz_ustasi');
+  awardBadge('ilk_karar');
+  beepWin();flash('rgba(201,162,75,.15)',400);
+}
+
+/* ══════════════════════════════════════════════════════════
+   2. ASİMETRİ TERAZİSİ
+══════════════════════════════════════════════════════════ */
+var AS_CARDS=[
+  {icon:'🛸',title:'Drone Saldırısı',desc:'Düşük maliyetli drone sürüsüyle yüksek değerli hedef.',cost:'$2,000',effect:'+15% etki',correct:'right'},
+  {icon:'🚀',title:'Balistik Füze',desc:'Yüksek maliyetli füze sistemi. Caydırıcılık etkisi yüksek.',cost:'$500,000',effect:'+5% etki',correct:'left'},
+  {icon:'💻',title:'Siber Operasyon',desc:'Kritik altyapıya düşük maliyetli siber saldırı.',cost:'$50,000',effect:'+20% etki',correct:'right'},
+  {icon:'🛡️',title:'Aktif Savunma',desc:'Pahalı füze savunma sistemi. Asimetrik tehdide karşı.',cost:'$1,000,000',effect:'+3% etki',correct:'left'},
+  {icon:'📡',title:'Elektronik Harp',desc:'EW sistemi ile düşman iletişimini engelle.',cost:'$100,000',effect:'+18% etki',correct:'right'},
+  {icon:'🤖',title:'Otonom Sistem',desc:'YZ destekli otonom silah sistemi. Etik tartışmalı.',cost:'$200,000',effect:'+12% etki',correct:'right'},
+  {icon:'🧠',title:'Bilişsel Savaş',desc:'Dezenformasyon kampanyası. Düşük maliyet, yüksek etki.',cost:'$10,000',effect:'+25% etki',correct:'right'},
+  {icon:'⚓',title:'Deniz Ablukası',desc:'Geleneksel deniz gücü projeksiyonu. Yüksek maliyet.',cost:'$800,000',effect:'+8% etki',correct:'left'},
+  {icon:'🔐',title:'Şifreleme Kalkanı',desc:'Kuantum kriptografi ile iletişim güvenliği.',cost:'$150,000',effect:'+22% etki',correct:'right'},
+  {icon:'🌐',title:'İttifak Ağı',desc:'Diplomatik ağ güçlendirme. Uzun vadeli etki.',cost:'$500,000',effect:'+30% etki',correct:'right'}
+];
+var asRound=0,asPts=0,asCards=[],asLock=false,asSX=0;
+function asInit(){
+  asRound=0;asPts=0;asLock=false;
+  asCards=AS_CARDS.slice().sort(function(){return Math.random()-.5;});
+  document.getElementById('as-pts').textContent='Puan: 0';
+  document.getElementById('as-round').textContent='Tur: 0/10';
+  document.getElementById('as-feedback').textContent='';
+  asLoadCard();
+  // Swipe
+  var card=document.getElementById('as-card');
+  card.addEventListener('pointerdown',function(e){asSX=e.clientX;},{ passive:true });
+  card.addEventListener('pointerup',function(e){
+    var dx=e.clientX-asSX;
+    if(Math.abs(dx)>50)asSwipe(dx>0?'right':'left');
+  },{ passive:true });
+}
+function asLoadCard(){
+  if(asRound>=10){asEnd();return;}
+  var c=asCards[asRound];
+  document.getElementById('as-icon').textContent=c.icon;
+  document.getElementById('as-title').textContent=c.title;
+  document.getElementById('as-desc').textContent=c.desc;
+  document.getElementById('as-cost').textContent='Maliyet: '+c.cost;
+  document.getElementById('as-effect').textContent='Etki: '+c.effect;
+  document.getElementById('as-round').textContent='Tur: '+asRound+'/10';
+  document.getElementById('as-feedback').textContent='';
+  document.getElementById('as-card').className='swipe-card';
+  asLock=false;
+}
+function asSwipe(dir){
+  if(asLock||asRound>=10)return;
+  if(asRound===0&&!asCards.length){asInit();return;}
+  asLock=true;
+  var c=asCards[asRound];
+  var card=document.getElementById('as-card');
+  card.classList.add(dir==='left'?'swipe-left':'swipe-right');
+  var correct=(dir===c.correct);
+  var pts=correct?20:0;
+  asPts+=pts;
+  document.getElementById('as-pts').textContent='Puan: '+asPts;
+  var fb=document.getElementById('as-feedback');
+  fb.textContent=correct?'✅ Doğru! +20 puan':'❌ Yanlış strateji';
+  fb.style.color=correct?'var(--green)':'var(--red2)';
+  if(correct){beepWin();burst(card,'var(--green)');aiLost();}
+  else{beepFail();aiWon();}
+  addScore('asimetri',pts);
+  asRound++;
+  setTimeout(asLoadCard,600);
+}
+function asEnd(){
+  document.getElementById('as-card').innerHTML='<div style="font-family:var(--disp);font-weight:700;font-size:28px;color:var(--gold)">🏁 '+asPts+' PUAN</div>';
+  document.getElementById('as-card').className='swipe-card';
+  if(asPts>=100)awardBadge('asimetri');
+  beepWin();flash('rgba(201,162,75,.15)',400);
+}
+asInit();
+
+/* ══════════════════════════════════════════════════════════
+   3. OODA-X
+══════════════════════════════════════════════════════════ */
+var oxState='idle',oxT0=0,oxTO=null,oxHP=5,oxPts=0,oxRound=0,oxLock=false;
+function oxInitHP(){
+  oxHP=5;var bar=document.getElementById('ox-hp-bar');
+  bar.innerHTML='';for(var i=0;i<oxHP;i++){var s=document.createElement('div');s.className='hp-seg';s.id='hp'+i;bar.appendChild(s);}
+}
+function oxTap(){
+  if(oxLock)return;
+  var sig=document.getElementById('ox-signal');
+  if(oxState==='idle'){
+    if(oxRound===0)oxInitHP();
+    oxState='wait';sig.className='ooda-signal wait';sig.textContent='...';
+    document.getElementById('ox-phase').textContent='GÖZLEMLE';
+    oxTO=setTimeout(function(){
+      oxState='go';sig.className='ooda-signal ready';sig.textContent='KARAR!';
+      document.getElementById('ox-phase').textContent='HAREKETE GEÇ!';
+      oxT0=Date.now();beep(880,0.08,0.15);
+      // YZ kararı
+      var ams=aiMs();
+      setTimeout(function(){
+        if(oxState==='go'){
+          // YZ kazandı
+          oxState='idle';oxLock=false;
+          document.getElementById('ox-ai-ms').textContent=ams+'ms';
+          document.getElementById('ox-my-ms').textContent='YAVAŞ';
+          document.getElementById('ox-result').textContent='⚡ YZ kazandı! ('+ams+'ms)';
+          document.getElementById('ox-result').style.color='var(--red2)';
+          sig.className='ooda-signal wait';sig.textContent='TEKRAR';
+          oxHP--;
+          var hpEl=document.getElementById('hp'+(oxHP));
+          if(hpEl)hpEl.classList.add('empty');
+          beepFail();flash('rgba(224,21,21,.25)',250);aiWon();
+          if(oxHP<=0){oxEnd(false);return;}
+          oxRound++;
+          document.getElementById('ox-round').textContent='Tur '+oxRound+'/10';
+        }
+      },ams);
+    },1000+Math.random()*2500);
+  } else if(oxState==='wait'){
+    clearTimeout(oxTO);oxState='idle';oxLock=false;
+    sig.className='ooda-signal early';sig.textContent='ERKEN!';
+    beepFail();flash('rgba(224,21,21,.2)',200);
+    setTimeout(function(){sig.className='ooda-signal wait';sig.textContent='TEKRAR';},1000);
+  } else if(oxState==='go'){
+    clearTimeout(oxTO);
+    var ms=Date.now()-oxT0;oxState='idle';oxLock=false;
+    var ams=aiMs();
+    document.getElementById('ox-my-ms').textContent=ms+'ms';
+    document.getElementById('ox-ai-ms').textContent=ams+'ms';
+    sig.className='ooda-signal wait';sig.textContent='TEKRAR';
+    if(ms<ams){
+      var pts=Math.max(10,Math.round(500/ms*20));
+      oxPts+=pts;addScore('ooda-x',pts);
+      document.getElementById('ox-pts').textContent='Puan: '+oxPts;
+      document.getElementById('ox-result').textContent='✅ Sen kazandın! ('+ms+'ms) +'+pts;
+      document.getElementById('ox-result').style.color='var(--green)';
+      beepWin();burst(sig,'var(--green)');aiLost();
+      if(ms<250)awardBadge('hizli_top');
+    } else {
+      document.getElementById('ox-result').textContent='❌ YZ kazandı! ('+ams+'ms)';
+      document.getElementById('ox-result').style.color='var(--red2)';
+      beepFail();oxHP--;
+      var hpEl2=document.getElementById('hp'+(oxHP));
+      if(hpEl2)hpEl2.classList.add('empty');
+      flash('rgba(224,21,21,.2)',200);aiWon();
+      if(oxHP<=0){oxEnd(false);return;}
+    }
+    oxRound++;
+    document.getElementById('ox-round').textContent='Tur '+oxRound+'/10';
+    document.getElementById('ox-ai-label').textContent='YZ (Seviye '+aiLevel()+')';
+    if(oxRound>=10)oxEnd(true);
+  }
+}
+function oxEnd(won){
+  oxLock=true;
+  var sig=document.getElementById('ox-signal');
+  sig.className='ooda-signal wait';sig.textContent='TEKRAR';
+  document.getElementById('ox-result').textContent=won?'🏆 Tamamlandı! '+oxPts+' puan':'💀 Oyun Bitti! '+oxPts+' puan';
+  document.getElementById('ox-result').style.color=won?'var(--gold)':'var(--red2)';
+  if(won)beepWin(); else beepFail();
+  flash(won?'rgba(201,162,75,.15)':'rgba(224,21,21,.2)',400);
+  oxRound=0;oxPts=0;oxHP=5;oxState='idle';oxLock=false;
+  setTimeout(function(){oxInitHP();document.getElementById('ox-result').textContent='—';},2000);
+}
+oxInitHP();
+
+/* ══════════════════════════════════════════════════════════
+   4. SLOPAGANDA DEDEKTÖR
+══════════════════════════════════════════════════════════ */
+var SL_CARDS=[
+  {src:'@stratejik_analist',headline:'NATO üyesi ülke gizli silah transferi yaptı',body:'Güvenilir kaynaklara göre, bir NATO üyesi ülke çatışma bölgesine gizli silah transferi gerçekleştirdi. Belgeler sızdırıldı.',isReal:false,explain:'Doğrulanmamış kaynak, belirsiz "güvenilir kaynaklar" ifadesi ve sızdırılmış belge iddiası — klasik slopaganda göstergeleri.'},
+  {src:'Reuters',headline:'Küresel savunma harcamaları 2024\'te rekor kırdı',body:'Stockholm Uluslararası Barış Araştırmaları Enstitüsü (SIPRI) verilerine göre küresel savunma harcamaları 2024\'te 2,4 trilyon dolara ulaştı.',isReal:true,explain:'SIPRI güvenilir bir kaynak. Rakamlar doğrulanabilir. Gerçek haber.'},
+  {src:'@gizli_belgeler',headline:'Yapay zeka silahı 1000 kişiyi öldürdü, medya sansürlüyor',body:'Gizli belgeler, bir ülkenin otonom silah sisteminin kontrolden çıktığını ve 1000 sivili öldürdüğünü ortaya koyuyor.',isReal:false,explain:'"Gizli belgeler", "medya sansürü" ve aşırı dramatik iddialar — dezenformasyon kalıpları.'},
+  {src:'BBC News',headline:'Ukrayna-Rusya ateşkesi müzakereleri yeniden başladı',body:'Diplomatik kaynaklar, Ukrayna ve Rusya arasındaki ateşkes müzakerelerinin Türkiye arabuluculuğuyla yeniden başladığını doğruladı.',isReal:true,explain:'BBC güvenilir kaynak. "Diplomatik kaynaklar doğruladı" ifadesi standart gazetecilik pratiği.'},
+  {src:'@ulusal_direnis',headline:'Düşman ülke su kaynaklarımızı zehirledi',body:'Vatansever kaynaklardan gelen bilgilere göre, düşman ülke sınır bölgesindeki su kaynaklarına kimyasal madde karıştırdı.',isReal:false,explain:'"Vatansever kaynaklar" belirsiz. Kimyasal saldırı iddiası doğrulama gerektiriyor. Duygusal dil kullanımı.'},
+  {src:'Financial Times',headline:'Çin nadir toprak ihracatını kısıtladı',body:'Çin Ticaret Bakanlığı, stratejik öneme sahip nadir toprak elementlerinin ihracatına yeni kısıtlamalar getirdi.',isReal:true,explain:'FT güvenilir ekonomi kaynağı. Resmi bakanlık açıklamasına dayalı. Doğrulanabilir.'},
+  {src:'@hakikat_savaşçısı',headline:'Gizli toplantıda dünya liderler yeni savaş planladı',body:'Davos\'ta gizli bir toplantıda dünya liderlerinin yeni bir dünya savaşı planladığı öğrenildi.',isReal:false,explain:'Komplo teorisi yapısı, belirsiz kaynak, aşırı iddia — slopaganda.'},
+  {src:'Al Jazeera',headline:'İnsansız hava araçları savaş taktiklerini değiştirdi',body:'Askerî analistler, son çatışmalarda insansız hava araçlarının geleneksel savaş taktiklerini köklü biçimde değiştirdiğini belirtiyor.',isReal:true,explain:'Al Jazeera güvenilir kaynak. Uzman görüşlerine dayalı analiz. Gerçek haber.'},
+  {src:'@siyasi_gercekler',headline:'Savunma bakanı ülkeyi satıyor, kanıtlar var',body:'Elde ettiğimiz kanıtlar, savunma bakanının yabancı güçlerle işbirliği yaptığını gösteriyor. Halk uyanmalı!',isReal:false,explain:'"Kanıtlar var" ama gösterilmiyor. Duygusal çağrı. Belirsiz kaynak. Dezenformasyon.'},
+  {src:'The Guardian',headline:'İklim değişikliği askeri güvenliği tehdit ediyor',body:'Pentagon raporu, iklim değişikliğinin önümüzdeki 20 yılda küresel güvenlik risklerini önemli ölçüde artıracağını öngörüyor.',isReal:true,explain:'The Guardian güvenilir kaynak. Pentagon resmi raporu. Doğrulanabilir.'}
+];
+var slRound=0,slPts=0,slCards=[],slLock=false,slHints=1+(hasPerk('istihbarat_1')?1:0);
+function slStart(){
+  slRound=0;slPts=0;slLock=false;
+  slCards=SL_CARDS.slice().sort(function(){return Math.random()-.5;});
+  document.getElementById('sl-pts').textContent='Puan: 0';
+  document.getElementById('sl-round').textContent='Kart: 0/10';
+  document.getElementById('sl-start').style.display='none';
+  document.getElementById('sl-verdict').style.display='none';
+  document.getElementById('sl-btns').style.display='grid';
+  slLoadCard();
+}
+function slLoadCard(){
+  if(slRound>=10){slEnd();return;}
+  var c=slCards[slRound];
+  document.getElementById('sl-source').textContent='Kaynak: '+c.src;
+  document.getElementById('sl-headline').textContent=c.headline;
+  document.getElementById('sl-body').textContent=c.body;
+  document.getElementById('sl-round').textContent='Kart: '+slRound+'/10';
+  document.getElementById('sl-verdict').style.display='none';
+  slLock=false;
+}
+function slVote(vote){
+  if(slLock)return;
+  if(slRound===0&&!slCards.length){slStart();return;}
+  slLock=true;
+  var c=slCards[slRound];
+  var correct=(vote==='real')===c.isReal;
+  var pts=correct?20:0;
+  slPts+=pts;addScore('slopaganda',pts);
+  document.getElementById('sl-pts').textContent='Puan: '+slPts;
+  var vd=document.getElementById('sl-verdict');
+  vd.style.display='block';
+  vd.innerHTML='<div style="font-family:var(--disp);font-weight:700;font-size:15px;color:'+(correct?'var(--green)':'var(--red2)')+';margin-bottom:6px">' +
+    (correct?'✅ Doğru! +20 puan':'❌ Yanlış') +
+    '</div><div style="font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.6">' +
+    c.explain + '</div>' +
+    '<button class="btn btn-red" onclick="slNext()" style="margin-top:10px">Sonraki →</button>';
+  if(correct){beepWin();aiLost();}else{beepFail();aiWon();}
+}
+function slNext(){
+  slRound++;slLoadCard();
+}
+function slEnd(){
+  document.getElementById('sl-btns').style.display='none';
+  document.getElementById('sl-verdict').style.display='block';
+  document.getElementById('sl-verdict').innerHTML='<div style="font-family:var(--disp);font-weight:700;font-size:22px;color:var(--gold);text-align:center;margin-bottom:10px">🏁 '+slPts+' PUAN</div>' +
+    '<button class="btn btn-red" onclick="slStart()">🔄 Tekrar</button>' +
+    '<button class="btn btn-outline" onclick="showShare(\'Slopaganda Dedektör\',slPts,\'var(--purple)\')" style="margin-top:8px">📤 Paylaş</button>';
+  if(slPts>=50)awardBadge('dedektif');
+  beepWin();flash('rgba(148,0,211,.15)',400);
+}
+
+/* ══════════════════════════════════════════════════════════
+   5. KARANLIK KIŞ
+══════════════════════════════════════════════════════════ */
+var kkWave=0,kkPts=0,kkEnergy=100,kkAmmo=50,kkIntel=3,kkRunning=false;
+var kkMap=[],kkEnemyPos=[];
+var KK_SIZE=5;
+function kkStart(){
+  kkWave=0;kkPts=0;
+  kkEnergy=100+(hasPerk('zirh_1')?10:0)+(hasPerk('zirh_2')?25:0);
+  kkAmmo=50;kkIntel=3+(hasPerk('istihbarat_1')?1:0);
+  kkRunning=true;
+  document.getElementById('kk-btn').style.display='none';
+  kkNextWave();
+}
+function kkNextWave(){
+  kkWave++;
+  if(kkWave>10){kkEnd(true);return;}
+  document.getElementById('kk-wave').textContent='DALGA '+kkWave+'/10';
+  kkMap=Array(KK_SIZE*KK_SIZE).fill(0);
+  // Üs konumları (köşeler)
+  [0,4,20,24].forEach(function(i){kkMap[i]=2;});
+  // Düşman konumları
+  kkEnemyPos=[];
+  var count=Math.min(kkWave+1,6);
+  while(kkEnemyPos.length<count){
+    var pos=Math.floor(Math.random()*KK_SIZE*KK_SIZE);
+    if(kkMap[pos]===0&&kkEnemyPos.indexOf(pos)<0)kkEnemyPos.push(pos);
+  }
+  kkEnemyPos.forEach(function(p){kkMap[p]=1;});
+  kkRenderMap();
+  kkLog('⚠️ Dalga '+kkWave+': '+count+' düşman tespit edildi!');
+  kkUpdateRes();
+}
+function kkRenderMap(){
+  var g=document.getElementById('kk-map');
+  g.innerHTML=kkMap.map(function(v,i){
+    var cls='kk-cell',icon='',label='';
+    if(v===2){cls+=' base';icon='🏰';label='ÜS';}
+    else if(v===1){cls+=' enemy';icon='⚔️';label='DÜŞMAN';}
+    else if(v===3){cls+=' defended';icon='🛡️';label='SAVUNULDU';}
+    else if(v===4){cls+=' destroyed';icon='💥';label='YIKIK';}
+    return '<div class="'+cls+'">'+icon+'<span style="font-size:8px">'+label+'</span></div>';
+  }).join('');
+}
+function kkAction(act){
+  if(!kkRunning)return;
+  if(act==='savun'){
+    if(kkEnergy<10){kkLog('❌ Yetersiz enerji!');beepFail();return;}
+    kkEnergy-=10;
+    // Bir düşmanı savun
+    if(kkEnemyPos.length>0){
+      var pos=kkEnemyPos.shift();kkMap[pos]=3;
+      kkPts+=20;addScore('karanlik-kis',20);
+      kkLog('🛡️ Düşman savunuldu! +20 puan');
+      beepWin();burst(document.getElementById('kk-map').children[pos],'var(--green)');
+    }
+  } else if(act==='saldir'){
+    if(kkAmmo<5){kkLog('❌ Yetersiz mühimmat!');beepFail();return;}
+    kkAmmo-=5;
+    if(kkEnemyPos.length>0){
+      var pos2=kkEnemyPos.shift();kkMap[pos2]=4;
+      kkPts+=30;addScore('karanlik-kis',30);
+      kkLog('⚔️ Düşman imha edildi! +30 puan');
+      beepWin();
+    }
+  } else if(act==='istihbarat'){
+    if(kkIntel<1){kkLog('❌ İstihbarat tükendi!');beepFail();return;}
+    kkIntel--;
+    kkLog('🔍 İstihbarat: '+kkEnemyPos.length+' düşman kaldı. Sonraki dalga: '+(kkWave<10?'Dalga '+(kkWave+1):'Son dalga')+'.');
+    beepOK();
+  } else if(act==='geri-cekil'){
+    kkEnergy=Math.min(100,kkEnergy+5);
+    kkLog('🏃 Geri çekilindi. +5 enerji kazanıldı.');
+    beepOK();
+  }
+  kkRenderMap();kkUpdateRes();
+  // Dalga bitti mi?
+  if(kkEnemyPos.length===0){
+    kkLog('✅ Dalga '+kkWave+' temizlendi!');
+    setTimeout(kkNextWave,1500);
+  }
+  // Enerji bitti mi?
+  if(kkEnergy<=0){kkEnd(false);}
+}
+function kkUpdateRes(){
+  document.getElementById('kk-energy').textContent=kkEnergy;
+  document.getElementById('kk-ammo').textContent=kkAmmo;
+  document.getElementById('kk-intel').textContent=kkIntel;
+  document.getElementById('kk-pts').textContent='Puan: '+kkPts;
+}
+function kkLog(msg){
+  var log=document.getElementById('kk-log');
+  log.innerHTML='<div>'+msg+'</div>'+log.innerHTML;
+}
+function kkEnd(won){
+  kkRunning=false;
+  kkLog(won?'🏆 TÜM DALGALAR TAMAMLANDI! '+kkPts+' puan':'💀 ÜS DÜŞTÜ! '+kkPts+' puan');
+  document.getElementById('kk-btn').style.display='';
+  document.getElementById('kk-btn').textContent='🔄 TEKRAR';
+  if(won){awardBadge('hayatta');beepWin();flash('rgba(0,255,136,.15)',400);}
+  else{beepFail();flash('rgba(224,21,21,.2)',400);}
+}
+
+/* ══════════════════════════════════════════════════════════
+   6. EMTİA İMPARATORLUĞU
+══════════════════════════════════════════════════════════ */
+var EM_MINERALS=[
+  {id:'li',icon:'🔋',name:'Lityum',stock:0,rate:1,price:100,mult:1},
+  {id:'co',icon:'⚙️',name:'Kobalt',stock:0,rate:0.5,price:200,mult:1},
+  {id:'re',icon:'🌍',name:'Nadir Toprak',stock:0,rate:0.3,price:500,mult:1},
+  {id:'ur',icon:'☢️',name:'Uranyum',stock:0,rate:0.2,price:1000,mult:1},
+  {id:'ti',icon:'✈️',name:'Titanyum',stock:0,rate:0.8,price:150,mult:1},
+  {id:'si',icon:'💎',name:'Silisyum',stock:0,rate:1.5,price:80,mult:1}
+];
+var emRunning=false,emPts=0,emTick=0,emIv=null,emTickerIv=null;
+var MARKET_EVENTS=['Çin ihracat kısıtlaması: Nadir Toprak ▲ %30','ABD-Çin gerilimi: Titanyum ▲ %20','Yeşil enerji talebi: Lityum ▲ %15','Nükleer anlaşma: Uranyum ▼ %10','Teknoloji sektörü: Silisyum ▲ %25','Kobalt madeni krizi: Kobalt ▲ %40'];
+function emStart(){
+  emRunning=true;emPts=0;emTick=0;
+  EM_MINERALS.forEach(function(m){m.stock=0;m.mult=1;});
+  document.getElementById('em-btn').style.display='none';
+  emRender();
+  emIv=setInterval(function(){
+    emTick++;
+    document.getElementById('em-tick').textContent='⏱ '+emTick+'s';
+    // Üretim
+    EM_MINERALS.forEach(function(m){
+      var rate=m.rate*(1+(hasPerk('lojistik_1')?0.2:0))*m.mult;
+      m.stock+=rate;
+      emPts+=Math.floor(m.stock*m.price/1000);
+    });
+    addScore('emtia',1);
+    document.getElementById('em-pts').textContent='Puan: '+emPts;
+    // Piyasa olayı
+    if(emTick%15===0){
+      var ev=MARKET_EVENTS[Math.floor(Math.random()*MARKET_EVENTS.length)];
+      document.getElementById('em-ticker').textContent='📈 '+ev;
+      // Rastgele mineral fiyatı değiştir
+      var m=EM_MINERALS[Math.floor(Math.random()*EM_MINERALS.length)];
+      m.mult=0.8+Math.random()*0.6;
+    }
+    emRender();
+    if(emPts>=1000)awardBadge('imparator');
+    // Piyasa durumu
+    var total=EM_MINERALS.reduce(function(a,m){return a+m.stock;},0);
+    document.getElementById('em-market-status').textContent=
+      total<100?'📉 Tedarik zinciri zayıf. Üretimi artır!':
+      total<500?'📊 Orta düzey üretim. Stratejik rezerv oluşturuluyor.':
+      '📈 Güçlü tedarik zinciri! Küresel pazar lideri konumuna yaklaşılıyor.';
+  },1000);
+}
+function emRender(){
+  var g=document.getElementById('em-grid');if(!g)return;
+  g.innerHTML=EM_MINERALS.map(function(m){
+    return '<div class="emtia-card">' +
+      '<div class="ec-icon">'+m.icon+'</div>' +
+      '<div class="ec-name">'+m.name+'</div>' +
+      '<div class="ec-stock">'+Math.floor(m.stock)+' ton</div>' +
+      '<div class="ec-rate">+'+m.rate.toFixed(1)+'/sn · $'+m.price+'</div>' +
+      '<button class="ec-btn" onclick="emUpgrade(\''+m.id+'\')">⬆ Yükselt</button>' +
+    '</div>';
+  }).join('');
+}
+function emUpgrade(id){
+  var m=EM_MINERALS.find(function(x){return x.id===id;});
+  if(!m)return;
+  var cost=Math.floor(m.rate*100);
+  if(emPts>=cost){emPts-=cost;m.rate*=1.2;beepOK();emRender();}
+  else{beepFail();}
+}
+
+/* ══════════════════════════════════════════════════════════
+   7. HARBİ QUİZ
+══════════════════════════════════════════════════════════ */
+var QZ_CATS=[
+  {id:'strateji',name:'Strateji',icon:'⚔️'},
+  {id:'teknoloji',name:'Teknoloji',icon:'🤖'},
+  {id:'ekonomi',name:'Ekonomi',icon:'💰'},
+  {id:'tarih',name:'Tarih',icon:'📜'},
+  {id:'siber',name:'Siber',icon:'💻'},
+  {id:'jeopolitik',name:'Jeopolitik',icon:'🌍'}
+];
+var QZ_QUESTIONS=[
+  {cat:'strateji',q:'OODA döngüsünü geliştiren teorisyen kimdir?',opts:['John Boyd','Sun Tzu','Clausewitz','Jomini'],ans:0,exp:'John Boyd, F-86 pilotu ve askeri stratejist olarak OODA döngüsünü geliştirdi.'},
+  {cat:'strateji',q:'"Savaş, siyasetin başka araçlarla sürdürülmesidir" sözü kime aittir?',opts:['Sun Tzu','Clausewitz','Machiavelli','Thucydides'],ans:1,exp:'Carl von Clausewitz\'in "Savaş Üzerine" eserinden.'},
+  {cat:'strateji',q:'Hibrit savaşın temel özelliği nedir?',opts:['Sadece konvansiyonel kuvvetler','Düzenli ve düzensiz yöntemlerin kombinasyonu','Yalnızca siber operasyonlar','Nükleer caydırıcılık'],ans:1,exp:'Hibrit savaş; konvansiyonel, düzensiz, siber ve bilgi operasyonlarını eş zamanlı kullanır.'},
+  {cat:'teknoloji',q:'LAWS kısaltması ne anlama gelir?',opts:['Lethal Autonomous Weapons Systems','Large Area Warfare System','Laser Activated War System','Low Altitude Warning System'],ans:0,exp:'LAWS: Ölümcül Otonom Silah Sistemleri.'},
+  {cat:'teknoloji',q:'Kuantum bilgisayarlar askeri alanda öncelikle hangi alanda kullanılacak?',opts:['Kriptografi kırma','Hava savunma','Lojistik','İletişim'],ans:0,exp:'Kuantum bilgisayarlar mevcut şifreleme sistemlerini kırabilir — bu en kritik askeri uygulamadır.'},
+  {cat:'teknoloji',q:'Drone sürüsü (swarm) taktiklerinin temel avantajı nedir?',opts:['Yüksek maliyet','Asimetrik maliyet-etki oranı','Düşük hız','Kolay tespit'],ans:1,exp:'Düşük maliyetli çok sayıda drone, pahalı savunma sistemlerini aşındırır.'},
+  {cat:'ekonomi',q:'SIPRI\'ye göre 2024\'te küresel savunma harcamaları ne kadardır?',opts:['1 trilyon dolar','2,4 trilyon dolar','500 milyar dolar','3 trilyon dolar'],ans:1,exp:'SIPRI 2024 raporu: Küresel savunma harcamaları 2,4 trilyon dolara ulaştı.'},
+  {cat:'ekonomi',q:'Kritik mineraller arasında elektrikli araç bataryaları için en önemli olan hangisidir?',opts:['Demir','Lityum','Bakır','Alüminyum'],ans:1,exp:'Lityum, lityum-iyon bataryaların temel bileşenidir.'},
+  {cat:'ekonomi',q:'Savunma sanayiinde "Ar-Ge yoğunluğu" neyi ifade eder?',opts:['Toplam çalışan sayısı','Ar-Ge harcamasının satışlara oranı','Üretim kapasitesi','İhracat değeri'],ans:1,exp:'Ar-Ge yoğunluğu = Ar-Ge harcaması / Net satışlar. Teknoloji liderliğinin göstergesi.'},
+  {cat:'tarih',q:'İkinci Dünya Savaşı\'nda "Blitzkrieg" stratejisinin özü nedir?',opts:['Uzun kuşatma','Hız ve sürpriz ile derinlemesine saldırı','Savunma hatları','Deniz ablukası'],ans:1,exp:'Blitzkrieg: Zırhlı kuvvetler, hava desteği ve motorize piyadeyle hızlı, derin saldırı.'},
+  {cat:'tarih',q:'Soğuk Savaş\'ta "MAD" doktrini ne anlama gelir?',opts:['Mutual Assured Destruction','Military Advanced Defense','Mass Army Doctrine','Maritime Air Defense'],ans:0,exp:'MAD: Karşılıklı Garantili Yıkım — nükleer caydırıcılığın temel mantığı.'},
+  {cat:'siber',q:'APT kısaltması siber güvenlikte ne anlama gelir?',opts:['Advanced Persistent Threat','Automated Protection Tool','Active Proxy Technology','Adaptive Penetration Test'],ans:0,exp:'APT: Gelişmiş Kalıcı Tehdit — genellikle devlet destekli siber saldırı grupları.'},
+  {cat:'siber',q:'Stuxnet virüsü hangi ülkenin nükleer programını hedef aldı?',opts:['Kuzey Kore','Suriye','İran','Irak'],ans:2,exp:'Stuxnet, İran\'ın Natanz uranyum zenginleştirme tesisini hedef alan ilk silahlı siber silah.'},
+  {cat:'siber',q:'Sıfır-gün (zero-day) açığı nedir?',opts:['Bilinen ve yamalı açık','Henüz keşfedilmemiş veya yamalanmamış açık','Eski sistemlerdeki açık','Donanım hatası'],ans:1,exp:'Zero-day: Üretici henüz farkında olmadığı veya yama yayınlamadığı açık.'},
+  {cat:'jeopolitik',q:'A2/AD stratejisi ne anlama gelir?',opts:['Air-to-Air Defense','Anti-Access/Area Denial','Advanced Attack Doctrine','Asymmetric Aerial Dominance'],ans:1,exp:'A2/AD: Erişim Engelleme/Alan İnkârı — rakibin belirli bir bölgeye girmesini engelleme stratejisi.'},
+  {cat:'jeopolitik',q:'Güç projeksiyonu kavramı neyi ifade eder?',opts:['Enerji üretimi','Askerî gücü uzak bölgelere yansıtma kapasitesi','Ekonomik büyüme','Nüfus artışı'],ans:1,exp:'Güç projeksiyonu: Bir devletin askeri gücünü kendi toprakları dışına yansıtabilme kapasitesi.'},
+  {cat:'jeopolitik',q:'Heartland teorisini geliştiren coğrafyacı kimdir?',opts:['Alfred Mahan','Halford Mackinder','Nicholas Spykman','Zbigniew Brzezinski'],ans:1,exp:'Halford Mackinder\'ın 1904 tarihli "Tarihin Coğrafi Ekseni" makalesinde geliştirdiği teori.'}
+];
+var qzSelectedCats=[],qzQuestions=[],qzCurrent=0,qzScore=0,qzTimer=null,qzLock=false;
+function qzRenderCats(){
+  var g=document.getElementById('qz-cats');if(!g)return;
+  g.innerHTML=QZ_CATS.map(function(c){
+    var on=qzSelectedCats.indexOf(c.id)>=0;
+    return '<div class="quiz-cat'+(on?' on':'')+'" onclick="qzToggleCat(\''+c.id+'\')">' +
+      '<div class="qc-icon">'+c.icon+'</div>' +
+      '<div class="qc-name">'+c.name+'</div>' +
+    '</div>';
+  }).join('');
+}
+function qzToggleCat(id){
+  var idx=qzSelectedCats.indexOf(id);
+  if(idx>=0)qzSelectedCats.splice(idx,1);
+  else qzSelectedCats.push(id);
+  qzRenderCats();beepOK();
+}
+function qzStart(){
+  var pool=qzSelectedCats.length>0?
+    QZ_QUESTIONS.filter(function(q){return qzSelectedCats.indexOf(q.cat)>=0;}):
+    QZ_QUESTIONS.slice();
+  if(pool.length<5){pool=QZ_QUESTIONS.slice();}
+  qzQuestions=pool.sort(function(){return Math.random()-.5;}).slice(0,10);
+  qzCurrent=0;qzScore=0;qzLock=false;
+  document.getElementById('qz-cat-screen').style.display='none';
+  document.getElementById('qz-play-screen').style.display='block';
+  document.getElementById('qz-result-screen').style.display='none';
+  qzLoadQ();
+}
+function qzLoadQ(){
+  if(qzCurrent>=qzQuestions.length){qzEndGame();return;}
+  var q=qzQuestions[qzCurrent];
+  document.getElementById('qz-num').textContent='Soru '+(qzCurrent+1)+'/'+qzQuestions.length;
+  document.getElementById('qz-pts').textContent='Puan: '+qzScore;
+  document.getElementById('qz-meta').textContent=q.cat.toUpperCase();
+  document.getElementById('qz-text').textContent=q.q;
+  document.getElementById('qz-explain').style.display='none';
+  qzLock=false;
+  var ch=document.getElementById('qz-choices');
+  ch.innerHTML=q.opts.map(function(o,i){
+    return '<div class="q-choice" id="qc'+i+'" onclick="qzPick('+i+')" data-idx="'+i+'">'+o+'</div>';
+  }).join('');
+  // Timer
+  var secs=15;
+  document.getElementById('qz-timer-fill').style.transition='none';
+  document.getElementById('qz-timer-fill').style.width='100%';
+  if(qzTimer)clearInterval(qzTimer);
+  setTimeout(function(){
+    document.getElementById('qz-timer-fill').style.transition='width 1s linear';
+    qzTimer=setInterval(function(){
+      secs--;
+      document.getElementById('qz-timer-fill').style.width=(secs/15*100)+'%';
+      if(secs<=3)beepTick();
+      if(secs<=0){clearInterval(qzTimer);if(!qzLock)qzPick(-1);}
+    },1000);
+  },50);
+}
+function qzPick(idx){
+  if(qzLock)return;
+  clearInterval(qzTimer);qzLock=true;
+  var q=qzQuestions[qzCurrent];
+  var correct=(idx===q.ans);
+  var pts=correct?20:0;
+  qzScore+=pts;addScore('quiz',pts);
+  document.getElementById('qz-pts').textContent='Puan: '+qzScore;
+  // Renklendirme
+  for(var i=0;i<q.opts.length;i++){
+    var el=document.getElementById('qc'+i);if(!el)continue;
+    el.classList.add('locked');
+    if(i===q.ans)el.classList.add('correct');
+    else if(i===idx&&!correct)el.classList.add('wrong');
+  }
+  // Açıklama
+  var ex=document.getElementById('qz-explain');
+  ex.style.display='block';
+  ex.innerHTML='<div style="font-family:var(--mono);font-size:11px;color:'+(correct?'var(--green)':'var(--red2)')+';margin-bottom:6px">'+(correct?'✅ Doğru!':'❌ Yanlış')+'</div>' +
+    '<div style="font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.6">'+q.exp+'</div>' +
+    '<button class="btn btn-red" onclick="qzNext()" style="margin-top:10px">Sonraki →</button>';
+  if(correct){beepWin();burst(document.getElementById('qc'+idx),'var(--green)');}
+  else beepFail();
+}
+function qzNext(){qzCurrent++;qzLoadQ();}
+function qzEndGame(){
+  clearInterval(qzTimer);
+  document.getElementById('qz-play-screen').style.display='none';
+  document.getElementById('qz-result-screen').style.display='block';
+  var pct=Math.round(qzScore/200*100);
+  document.getElementById('qz-res-icon').textContent=pct>=80?'🏆':pct>=50?'🎓':'📚';
+  document.getElementById('qz-res-title').textContent=pct>=80?'Mükemmel!':pct>=50?'İyi İş!':'Tekrar Çalış!';
+  document.getElementById('qz-res-score').textContent=qzScore;
+  document.getElementById('qz-res-sub').textContent=pct+'% başarı · '+qzQuestions.length+' soru';
+  if(pct>=100)awardBadge('quiz_ace');
+  beepWin();flash('rgba(201,162,75,.15)',400);
+}
+function qzReset(){
+  document.getElementById('qz-cat-screen').style.display='block';
+  document.getElementById('qz-play-screen').style.display='none';
+  document.getElementById('qz-result-screen').style.display='none';
+}
+qzRenderCats();
+
+/* ══════════════════════════════════════════════════════════
+   8. MOBİL OYUNLAR
+══════════════════════════════════════════════════════════ */
+function miniGo(idx){
+  document.querySelectorAll('.mini-screen').forEach(function(s,i){s.classList.toggle('on',i===idx);});
+  document.querySelectorAll('.mtab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
+  if(idx!==7&&drRunning)drStop();
+}
+
+/* 0. Tepki Testi */
+var rtState='idle',rtT0=0,rtTO=null,rtBest=Infinity,rtHistory=[];
+function rtTap(){
+  var c=document.getElementById('rt-circle');
+  if(rtState==='idle'){
+    rtState='wait';c.className='rt-circle rt-wait';c.textContent='Bekle...';
+    rtTO=setTimeout(function(){
+      rtState='go';c.className='rt-circle rt-go';c.textContent='ŞİMDİ!';
+      rtT0=Date.now();beep(880,0.08,0.15);
+    },1200+Math.random()*2800);
+  } else if(rtState==='wait'){
+    clearTimeout(rtTO);rtState='idle';
+    c.className='rt-circle rt-early';c.textContent='ERKEN!';
+    document.getElementById('rt-ms').textContent='Çok erken!';
+    document.getElementById('rt-ms').style.color='var(--red2)';
+    beepFail();flash('rgba(224,21,21,.25)',250);
+    setTimeout(function(){c.className='rt-circle rt-idle';c.textContent='TEKRAR';},1000);
+  } else if(rtState==='go'){
+    var ms=Date.now()-rtT0;rtState='idle';
+    if(ms<rtBest)rtBest=ms;
+    c.className='rt-circle rt-idle';c.textContent='TEKRAR';
+    document.getElementById('rt-ms').textContent=ms+'ms';
+    var col=ms<250?'var(--cyan)':ms<400?'var(--green)':'var(--gold)';
+    document.getElementById('rt-ms').style.color=col;
+    rtHistory.unshift(ms);if(rtHistory.length>5)rtHistory.pop();
+    document.getElementById('rt-hist').textContent='En iyi: '+rtBest+'ms';
+    var pts=Math.max(5,Math.round(400/ms*20));
+    addScore('mobil-tepki',pts);beepWin();burst(c,ms<250?'var(--cyan)':'var(--green)');
+    if(ms<250)awardBadge('hizli_top');
+  }
+}
+
+/* 1. Hedef Vur */
+var tgRunning=false,tgPts=0,tgSec=30,tgIv=null,tgSpIv=null;
+function tgStart(){
+  tgRunning=true;tgPts=0;tgSec=30;
+  document.getElementById('tg-btn').style.display='none';
+  document.getElementById('tg-area').innerHTML='';
+  document.getElementById('tg-pts').textContent='Puan: 0';
+  tgIv=setInterval(function(){
+    tgSec--;document.getElementById('tg-time').textContent=tgSec+'s';
+    if(tgSec<=3)beepTick();
+    if(tgSec<=0){clearInterval(tgIv);clearInterval(tgSpIv);tgEnd();}
+  },1000);
+  tgSpIv=setInterval(tgSpawn,700);tgSpawn();
+}
+var TG_ICONS=['🎯','💣','🛸','⚔️','🔴'];
+function tgSpawn(){
+  if(!tgRunning)return;
+  var area=document.getElementById('tg-area');
+  var dot=document.createElement('div');
+  dot.className='tg-dot';
+  dot.textContent=TG_ICONS[Math.floor(Math.random()*TG_ICONS.length)];
+  dot.style.left=(5+Math.random()*80)+'%';
+  dot.style.top=(5+Math.random()*75)+'%';
+  dot.style.background='rgba(224,21,21,'+(0.3+Math.random()*0.4)+')';
+  dot.addEventListener('pointerdown',function(e){
+    e.stopPropagation();
+    tgPts+=10;document.getElementById('tg-pts').textContent='Puan: '+tgPts;
+    burst(dot,'var(--red2)');beep(660,0.06,0.08);dot.remove();
+  });
+  area.appendChild(dot);
+  setTimeout(function(){if(dot.parentNode)dot.remove();},1400);
+}
+function tgEnd(){
+  tgRunning=false;
+  var area=document.getElementById('tg-area');
+  area.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:Chakra Petch,sans-serif;font-size:28px;color:var(--gold)">'+tgPts+' PUAN</div>';
+  var btn=document.getElementById('tg-btn');btn.style.display='';btn.textContent='🔄 TEKRAR';
+  addScore('mobil-hedef',tgPts);beepWin();flash('rgba(201,162,75,.15)',400);
+}
+
+/* 2. Sıralama */
+var THREATS=[
+  {t:'☢️ Nükleer Tehdit',p:1},{t:'💻 Siber Saldırı',p:2},
+  {t:'💣 Terör Saldırısı',p:3},{t:'📉 Ekonomik Ambargo',p:4},
+  {t:'📡 Dezenformasyon',p:5}
+];
+function sortInit(){
+  document.getElementById('sort-result').textContent='';
+  var pool=document.getElementById('sort-pool');
+  var slots=document.getElementById('sort-slots');
+  var shuffled=THREATS.slice().sort(function(){return Math.random()-.5;});
+  pool.innerHTML=shuffled.map(function(t){
+    return '<div class="sort-chip" data-p="'+t.p+'" onclick="sortTap(this)">'+t.t+'</div>';
+  }).join('');
+  slots.innerHTML='<div style="font-family:var(--mono);font-size:10px;color:var(--dim);padding:4px">Buraya seç</div>';
+}
+function sortTap(el){
+  var pool=document.getElementById('sort-pool');
+  var slots=document.getElementById('sort-slots');
+  if(el.parentNode===slots){
+    el.classList.remove('placed');pool.appendChild(el);beep(330,0.06,0.08);return;
+  }
+  el.classList.add('placed');
+  var ph=slots.querySelector('div:not(.sort-chip)');if(ph)ph.remove();
+  slots.appendChild(el);beep(660,0.06,0.08);
+}
+function sortCheck(){
+  var chips=Array.from(document.getElementById('sort-slots').querySelectorAll('.sort-chip'));
+  var order=chips.map(function(c){return parseInt(c.dataset.p);});
+  if(order.length<5){document.getElementById('sort-result').textContent='⚠️ Tüm tehditleri sırala!';return;}
+  var wrong=order.filter(function(v,i){return v!==i+1;}).length;
+  var correct=wrong===0;
+  var pts=correct?50:Math.max(0,50-wrong*10);
+  document.getElementById('sort-result').textContent=correct?'✅ Mükemmel! +50 puan':'⚠️ '+wrong+' hata · +'+pts+' puan';
+  document.getElementById('sort-result').style.color=correct?'var(--green)':'var(--gold)';
+  addScore('mobil-siralama',pts);
+  if(correct){beepWin();flash('rgba(0,255,136,.15)',300);}else beepFail();
+}
+sortInit();
+
+/* 3. Hafıza */
+var MEM=['🛸','💣','🛡️','⚔️','🎯','🔐','🌍','🧠'];
+var memCards=[],memFlipped=[],memMoves=0,memMatched=0,memLock=false;
+function memInit(){
+  memMoves=0;memMatched=0;memFlipped=[];memLock=false;
+  var deck=MEM.concat(MEM).sort(function(){return Math.random()-.5;});
+  memCards=deck;
+  var g=document.getElementById('mem-grid');
+  g.innerHTML=deck.map(function(s,i){
+    return '<div class="mem-card" id="mc'+i+'" onclick="memTap('+i+')">🔒</div>';
+  }).join('');
+  document.getElementById('mem-moves').textContent='Hamle: 0';
+  document.getElementById('mem-pairs').textContent='Çift: 0/8';
+}
+function memTap(i){
+  if(memLock)return;
+  var el=document.getElementById('mc'+i);
+  if(!el||el.classList.contains('matched')||el.classList.contains('face-up'))return;
+  el.classList.add('face-up');el.textContent=memCards[i];
+  memFlipped.push(i);beep(440,0.05,0.07);
+  if(memFlipped.length===2){
+    memMoves++;document.getElementById('mem-moves').textContent='Hamle: '+memMoves;
+    memLock=true;
+    var a=memFlipped[0],b=memFlipped[1];
+    if(memCards[a]===memCards[b]){
+      document.getElementById('mc'+a).classList.add('matched');
+      document.getElementById('mc'+b).classList.add('matched');
+      memMatched++;document.getElementById('mem-pairs').textContent='Çift: '+memMatched+'/8';
+      memFlipped=[];memLock=false;beepWin();
+      if(memMatched===8){addScore('mobil-hafiza',Math.max(10,100-memMoves*5));flash('rgba(0,255,136,.2)',400);awardBadge('hafiza');}
+    } else {
+      var ea=document.getElementById('mc'+a),eb=document.getElementById('mc'+b);
+      ea.classList.add('wrong-flash');eb.classList.add('wrong-flash');beepFail();
+      setTimeout(function(){
+        ea.classList.remove('face-up','wrong-flash');ea.textContent='🔒';
+        eb.classList.remove('face-up','wrong-flash');eb.textContent='🔒';
+        memFlipped=[];memLock=false;
+      },700);
+    }
+  }
+}
+memInit();
+
+/* 4. Kod Kır */
+var cdSecret='',cdInput='',cdAttempts=0;
+function cdInit(){
+  cdSecret='';for(var i=0;i<4;i++)cdSecret+=Math.floor(Math.random()*10);
+  cdInput='';cdAttempts=0;
+  document.getElementById('cd-hist').innerHTML='';
+  document.getElementById('cd-disp').textContent='? ? ? ?';
+  document.getElementById('cd-disp').style.color='var(--cyan)';
+  for(var j=0;j<4;j++){var s=document.getElementById('cs'+j);if(s){s.textContent='_';s.classList.remove('active');}}
+}
+function npTap(k){
+  if(k==='del'){cdInput=cdInput.slice(0,-1);}
+  else if(k==='ok'){
+    if(cdInput.length<4)return;
+    cdAttempts++;
+    var res='',green=0;
+    for(var i=0;i<4;i++){
+      if(cdInput[i]===cdSecret[i]){res+='🟢';green++;}
+      else if(cdSecret.indexOf(cdInput[i])>=0){res+='🟡';}
+      else{res+='⬛';}
+    }
+    var h=document.getElementById('cd-hist');
+    h.innerHTML='<div>'+cdInput.split('').join(' ')+' → '+res+'</div>'+h.innerHTML;
+    if(green===4){
+      beepWin();var pts=Math.max(10,100-cdAttempts*10);addScore('mobil-kod',pts);
+      document.getElementById('cd-disp').textContent='✅ KIRILDI!';
+      document.getElementById('cd-disp').style.color='var(--green)';
+      flash('rgba(0,255,136,.2)',400);setTimeout(cdInit,2000);
+    } else if(cdAttempts>=8){
+      beepFail();document.getElementById('cd-disp').textContent=cdSecret.split('').join(' ');
+      document.getElementById('cd-disp').style.color='var(--red2)';
+      setTimeout(cdInit,2000);
+    }
+    cdInput='';
+  } else {
+    if(cdInput.length<4){cdInput+=k;beep(400+parseInt(k)*30,0.04,0.07);}
+  }
+  for(var i=0;i<4;i++){
+    var s=document.getElementById('cs'+i);
+    if(s){s.textContent=cdInput[i]||'_';s.classList.toggle('active',i===cdInput.length);}
+  }
+}
+cdInit();
+
+/* 5. Bulmaca */
+var PZ=5,pzGrid=[],pzPath=[];
+function pzInit(){
+  pzPath=[];pzGrid=Array(PZ*PZ).fill(0);
+  var walls=[2,4,7,9,12,14,17,19,22];
+  walls.sort(function(){return Math.random()-.5;}).slice(0,6).forEach(function(i){if(i!==0&&i!==24)pzGrid[i]=1;});
+  pzRender();
+  document.getElementById('pz-status').textContent='Yeşil noktadan başla, altın hedefe ulaş';
+  document.getElementById('pz-status').style.color='var(--dim)';
+}
+function pzRender(){
+  var g=document.getElementById('pz-grid');
+  g.innerHTML=pzGrid.map(function(v,i){
+    var cls='pz-cell',icon='';
+    if(i===0){cls+=' start-cell';icon='🟢';}
+    else if(i===24){cls+=' end-cell';icon='🏁';}
+    else if(v===1){cls+=' wall';icon='🧱';}
+    else if(pzPath.indexOf(i)>=0){cls+=' on-path';icon='·';}
+    return '<div class="'+cls+'" onclick="pzTap('+i+')">'+icon+'</div>';
+  }).join('');
+}
+function pzTap(i){
+  if(i===0||i===24||pzGrid[i]===1)return;
+  var idx=pzPath.indexOf(i);
+  if(idx>=0)pzPath.splice(idx,1);else pzPath.push(i);
+  pzRender();beep(440,0.03,0.06);
+}
+function pzCheck(){
+  var full=[0].concat(pzPath).concat([24]);
+  var ok=true;
+  for(var i=1;i<full.length;i++){
+    var a=full[i-1],b=full[i];
+    var ar=Math.floor(a/PZ),ac=a%PZ,br=Math.floor(b/PZ),bc=b%PZ;
+    if(Math.abs(ar-br)+Math.abs(ac-bc)!==1){ok=false;break;}
+    if(pzGrid[b]===1&&b!==24){ok=false;break;}
+  }
+  var st=document.getElementById('pz-status');
+  if(ok){st.textContent='✅ Doğru yol! +50 puan';st.style.color='var(--green)';addScore('mobil-bulmaca',50);beepWin();flash('rgba(0,255,136,.15)',300);}
+  else{st.textContent='❌ Yol geçersiz. Tekrar dene!';st.style.color='var(--red2)';beepFail();}
+}
+pzInit();
+
+/* 6. Matematik */
+var mthRunning=false,mthPts=0,mthSec=60,mthIv=null,mthAns=0,mthLock=false;
+function mthStart(){
+  mthRunning=true;mthPts=0;mthSec=60;mthLock=false;
+  document.getElementById('mth-btn').style.display='none';
+  document.getElementById('mth-pts').textContent='Puan: 0';
+  mthIv=setInterval(function(){
+    mthSec--;document.getElementById('mth-time').textContent=mthSec+'s';
+    if(mthSec<=5)beepTick();
+    if(mthSec<=0){clearInterval(mthIv);mthEnd();}
+  },1000);
+  mthNext();
+}
+function mthNext(){
+  if(!mthRunning)return;
+  mthLock=false;
+  var ops=['+','-','×','÷'],op=ops[Math.floor(Math.random()*4)];
+  var a,b;
+  if(op==='+'){a=10+Math.floor(Math.random()*50);b=10+Math.floor(Math.random()*50);mthAns=a+b;}
+  else if(op==='-'){a=30+Math.floor(Math.random()*50);b=5+Math.floor(Math.random()*30);mthAns=a-b;}
+  else if(op==='×'){a=2+Math.floor(Math.random()*12);b=2+Math.floor(Math.random()*12);mthAns=a*b;}
+  else{b=2+Math.floor(Math.random()*9);mthAns=2+Math.floor(Math.random()*10);a=b*mthAns;}
+  document.getElementById('mth-q').textContent=a+' '+op+' '+b+' = ?';
+  var opts=[mthAns];
+  while(opts.length<4){var w=mthAns+Math.floor(Math.random()*20)-10;if(w>0&&opts.indexOf(w)<0)opts.push(w);}
+  opts.sort(function(){return Math.random()-.5;});
+  document.getElementById('mth-opts').innerHTML=opts.map(function(v){
+    return '<div class="math-opt" onclick="mthPick('+v+',this)">'+v+'</div>';
+  }).join('');
+}
+function mthPick(v,el){
+  if(!mthRunning||mthLock)return;
+  mthLock=true;
+  if(v===mthAns){
+    mthPts+=10;el.classList.add('ok');
+    document.getElementById('mth-pts').textContent='Puan: '+mthPts;
+    beepWin();burst(el,'var(--green)');
+  } else {
+    el.classList.add('ng');
+    Array.from(document.getElementById('mth-opts').children).forEach(function(c){if(parseInt(c.textContent)===mthAns)c.classList.add('ok');});
+    beepFail();
+  }
+  setTimeout(mthNext,500);
+}
+function mthEnd(){
+  mthRunning=false;
+  document.getElementById('mth-q').textContent='🏁 '+mthPts+' PUAN';
+  document.getElementById('mth-opts').innerHTML='';
+  var btn=document.getElementById('mth-btn');btn.style.display='';btn.textContent='🔄 TEKRAR';
+  addScore('mobil-matematik',mthPts);beepWin();flash('rgba(201,162,75,.15)',400);
+}
+
+/* 7. Drone Kaçış */
+var drRunning=false,drPts=0,drHP=3,drAF=null;
+var drone={x:160,y:120,vx:0,vy:0,r:13};
+var bullets=[],enemies=[],drSpIv=null;
+function drStart(){
+  drRunning=true;drPts=0;drHP=3;bullets=[];enemies=[];
+  drone.x=160;drone.y=120;drone.vx=0;drone.vy=0;
+  document.getElementById('dr-btn').style.display='none';
+  document.getElementById('dr-pts').textContent='Puan: 0';
+  document.getElementById('dr-hp').textContent='❤️❤️❤️';
+  var canvas=document.getElementById('dr-canvas');
+  canvas.onpointerdown=function(e){
+    e.preventDefault();
+    var r=canvas.getBoundingClientRect();
+    var scaleX=canvas.width/r.width,scaleY=canvas.height/r.height;
+    var cx=(e.clientX-r.left)*scaleX,cy=(e.clientY-r.top)*scaleY;
+    var dx=cx-drone.x,dy=cy-drone.y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d>0){drone.vx=dx/d*5;drone.vy=dy/d*5;}
+  };
+  drSpIv=setInterval(function(){
+    if(!drRunning){clearInterval(drSpIv);return;}
+    if(enemies.length<4){
+      var side=Math.floor(Math.random()*4),ex,ey;
+      if(side===0){ex=Math.random()*320;ey=-15;}
+      else if(side===1){ex=335;ey=Math.random()*240;}
+      else if(side===2){ex=Math.random()*320;ey=255;}
+      else{ex=-15;ey=Math.random()*240;}
+      enemies.push({x:ex,y:ey,vx:(Math.random()-.5)*1.5,vy:(Math.random()-.5)*1.5});
+    }
+    enemies.forEach(function(en){
+      var dx=drone.x-en.x,dy=drone.y-en.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d>0&&d<200)bullets.push({x:en.x,y:en.y,vx:dx/d*3.5,vy:dy/d*3.5});
+    });
+  },1200);
+  drLoop();
+}
+function drStop(){drRunning=false;clearInterval(drSpIv);if(drAF)cancelAnimationFrame(drAF);}
+function drLoop(){
+  if(!drRunning)return;
+  drAF=requestAnimationFrame(drLoop);
+  var canvas=document.getElementById('dr-canvas');
+  var ctx=canvas.getContext('2d');
+  var W=canvas.width,H=canvas.height;
+  ctx.fillStyle='#0d1520';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(0,224,255,.06)';ctx.lineWidth=1;
+  for(var x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(var y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  drone.x+=drone.vx;drone.y+=drone.vy;drone.vx*=0.9;drone.vy*=0.9;
+  drone.x=Math.max(drone.r,Math.min(W-drone.r,drone.x));
+  drone.y=Math.max(drone.r,Math.min(H-drone.r,drone.y));
+  ctx.fillStyle='rgba(0,224,255,.25)';ctx.beginPath();ctx.arc(drone.x,drone.y,drone.r+4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#c41e3a';ctx.beginPath();ctx.arc(drone.x,drone.y,drone.r,0,Math.PI*2);ctx.fill();
+  ctx.font='16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🛸',drone.x,drone.y);
+  enemies.forEach(function(en){
+    en.x+=en.vx;en.y+=en.vy;
+    if(en.x<-20||en.x>W+20||en.y<-20||en.y>H+20){en.x=Math.random()*W;en.y=-15;}
+    ctx.fillStyle='rgba(224,21,21,.3)';ctx.beginPath();ctx.arc(en.x,en.y,12,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#E01515';ctx.beginPath();ctx.arc(en.x,en.y,8,0,Math.PI*2);ctx.fill();
+    ctx.fillText('🎯',en.x,en.y);
+  });
+  bullets=bullets.filter(function(b){
+    b.x+=b.vx;b.y+=b.vy;
+    ctx.fillStyle='#ff3a4a';ctx.beginPath();ctx.arc(b.x,b.y,4,0,Math.PI*2);ctx.fill();
+    var dx=b.x-drone.x,dy=b.y-drone.y;
+    if(Math.sqrt(dx*dx+dy*dy)<drone.r+4){
+      drHP--;
+      document.getElementById('dr-hp').textContent=['','❤️','❤️❤️','❤️❤️❤️'][Math.max(0,drHP)]||'💀';
+      beepFail();if(drHP<=0){drEnd();return false;}return false;
+    }
+    return b.x>-10&&b.x<W+10&&b.y>-10&&b.y<H+10;
+  });
+  drPts++;
+  if(drPts%60===0){addScore('mobil-drone',1);document.getElementById('dr-pts').textContent='Puan: '+Math.floor(drPts/6);}
+}
+function drEnd(){
+  drRunning=false;clearInterval(drSpIv);
+  var canvas=document.getElementById('dr-canvas');
+  var ctx=canvas.getContext('2d');
+  ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#E01515';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('DÜŞÜRÜLDÜ!',canvas.width/2,canvas.height/2-20);
+  ctx.fillStyle='#C9A24B';ctx.font='18px sans-serif';
+  ctx.fillText(Math.floor(drPts/6)+' PUAN',canvas.width/2,canvas.height/2+20);
+  var btn=document.getElementById('dr-btn');btn.style.display='';btn.textContent='🔄 TEKRAR';
+  beepFail();
+}
+
+/* ══════════════════════════════════════════════════════════
+   ANİMASYONLU ARKA PLAN
+══════════════════════════════════════════════════════════ */
+(function(){
+  var canvas=document.getElementById('bg-canvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  for(var i=0;i<60;i++){
+    particles.push({x:Math.random()*2000,y:Math.random()*1200,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5,a:Math.random()});
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,224,255,'+p.a+')';ctx.fill();
+    });
+    // Bağlantı çizgileri
+    for(var i=0;i<particles.length;i++){
+      for(var j=i+1;j<particles.length;j++){
+        var dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<100){
+          ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle='rgba(0,224,255,'+(0.05*(1-d/100))+')';ctx.lineWidth=.5;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ══════════════════════════════════════════════════════════
+   BAŞLATMA
+══════════════════════════════════════════════════════════ */
+buildHowData();
+updateHubs();
+renderHubGrid();
+renderMiniGridHub();
+renderPerkGrid();
+renderBadgeShelf();
+
+/* Klavye kısayolu: Escape modal kapat */
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){closeHow();}
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veri Tabanı — Stratejik Bilgi Merkezi | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+/* === PARTICLES === */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:#00FF88;border-radius:50%;opacity:.3;animation:float-particle linear infinite;}
+@keyframes float-particle{0%{transform:translateY(100vh) translateX(0);opacity:0;}10%{opacity:.3;}90%{opacity:.3;}100%{transform:translateY(-100px) translateX(50px);opacity:0;}}
+
+/* === HERO === */
+.vt-hero{position:relative;text-align:center;padding:5rem 2rem 3rem;overflow:hidden;}
+.vt-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,255,136,.08) 0%,transparent 60%);pointer-events:none;}
+.vt-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,136,.3),transparent);}
+.vt-hero h1{font-family:'Oswald',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;background:linear-gradient(135deg,#00FF88 0%,#00E0FF 50%,#00FF88 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradientShift 4s ease infinite;margin-bottom:.8rem;}
+@keyframes gradientShift{0%,100%{background-position:0% center;}50%{background-position:100% center;}}
+.vt-hero p{color:rgba(255,255,255,.6);font-size:1rem;max-width:750px;margin:0 auto;line-height:1.7;}
+.vt-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:2rem;flex-wrap:wrap;}
+.vt-stat{text-align:center;position:relative;padding:1rem 1.5rem;border-radius:12px;background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.08);transition:all .3s;}
+.vt-stat:hover{border-color:rgba(0,255,136,.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,255,136,.1);}
+.vt-stat-num{font-family:'Oswald',sans-serif;font-size:2.2rem;font-weight:700;color:#00FF88;display:block;}
+.vt-stat-lbl{font-size:.75rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem;font-weight:500;}
+
+/* === FILTER BAR === */
+.vt-filter{display:flex;justify-content:center;gap:.6rem;padding:1.5rem 2rem;flex-wrap:wrap;position:sticky;top:0;z-index:100;background:rgba(6,10,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.04);}
+.vt-filter-btn{font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;padding:.5rem 1.2rem;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .25s;white-space:nowrap;}
+.vt-filter-btn:hover{border-color:rgba(0,255,136,.4);color:#00FF88;background:rgba(0,255,136,.05);}
+.vt-filter-btn.active{background:linear-gradient(135deg,rgba(0,255,136,.15),rgba(0,224,255,.1));border-color:#00FF88;color:#00FF88;box-shadow:0 0 12px rgba(0,255,136,.2);}
+
+/* === CONTENT === */
+.vt-content{max-width:1300px;margin:0 auto;padding:2rem 2rem 4rem;}
+.vt-section{margin-bottom:2.5rem;}
+.vt-section-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.vt-section-icon{font-size:1.3rem;}
+.vt-section-title{font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:600;color:#E8EDF5;}
+.vt-section-count{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.3);margin-left:auto;}
+.vt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;}
+.vt-card{background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.1);border-radius:10px;padding:1.2rem;cursor:pointer;transition:all .3s;text-decoration:none;display:block;position:relative;overflow:hidden;}
+.vt-card:hover{border-color:#00FF88;transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,255,136,.1);}
+.vt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00FF88,transparent);opacity:0;transition:opacity .3s;}
+.vt-card:hover::before{opacity:1;}
+.vt-card::after{content:'';position:absolute;inset:0;border-radius:10px;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,255,136,.06) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.vt-card:hover::after{opacity:1;}
+.vt-card-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.vt-card-title{font-family:'Oswald',sans-serif;font-size:.85rem;font-weight:600;color:#E8EDF5;margin-bottom:.2rem;}
+.vt-card-desc{font-size:.72rem;color:rgba(255,255,255,.45);line-height:1.5;margin-bottom:.4rem;}
+.vt-card-meta{display:flex;gap:.4rem;flex-wrap:wrap;}
+.vt-card-tag{font-family:'JetBrains Mono',monospace;font-size:.55rem;padding:.15rem .4rem;border-radius:3px;background:rgba(0,255,136,.08);color:#00FF88;border:1px solid rgba(0,255,136,.15);}
+
+/* === RESPONSIVE === */
+@media(max-width:768px){
+  .vt-hero{padding:3rem 1.5rem 2rem;}
+  .vt-hero h1{font-size:1.8rem;}
+  .vt-stats{gap:1rem;}
+  .vt-stat{padding:.7rem 1rem;}
+  .vt-grid{grid-template-columns:1fr;}
+  .vt-filter{gap:.4rem;padding:1rem;}
+  .vt-filter-btn{font-size:.7rem;padding:.4rem .8rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<!-- Ambient Particles -->
+<div class="particles" id="particles"></div>
+
+
+<!-- HERO -->
+<section class="vt-hero">
+  <h1>Stratejik Veri Tabanı</h1>
+  <p>Silah sistemleri, stratejik mineraller, askeri doktrinler ve küresel güç endeksleri — yapılandırılmış veri ile stratejik analiz.</p>
+  <div class="vt-stats">
+    <div class="vt-stat"><span class="vt-stat-num" data-target="200">0</span><div class="vt-stat-lbl">Silah Sistemi</div></div>
+    <div class="vt-stat"><span class="vt-stat-num" data-target="3335">0</span><div class="vt-stat-lbl">Sözlük Terimi</div></div>
+    <div class="vt-stat"><span class="vt-stat-num" data-target="118">0</span><div class="vt-stat-lbl">Element</div></div>
+    <div class="vt-stat"><span class="vt-stat-num" data-target="383">0</span><div class="vt-stat-lbl">Makale</div></div>
+  </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="vt-filter">
+  <button class="vt-filter-btn active" data-filter="all">Tümü</button>
+  <button class="vt-filter-btn" data-filter="silah">Silah Sistemleri</button>
+  <button class="vt-filter-btn" data-filter="sozluk">Sözlük</button>
+  <button class="vt-filter-btn" data-filter="kulliyat">Külliyat</button>
+  <button class="vt-filter-btn" data-filter="tsk">TSK</button>
+  <button class="vt-filter-btn" data-filter="infografik">İnfografikler</button>
+</div>
+
+<div class="vt-content">
+
+<!-- SİLAH SİSTEMLERİ -->
+<section class="vt-section" data-cat="silah">
+  <div class="vt-section-head">
+    <span class="vt-section-icon">🎖️</span>
+    <span class="vt-section-title">Silah Sistemleri & Savunma Teknolojileri</span>
+    <span class="vt-section-count">2 içerik</span>
+  </div>
+  <div class="vt-grid">
+    <a href="panel-silah-metal.html" class="vt-card">
+      <div class="vt-card-icon">🔫</div>
+      <div class="vt-card-title">Küresel Silah Paneli</div>
+      <div class="vt-card-desc">200+ küresel silah/proje, ülke filtresi, nadir metal etiketleri, detay modalleri</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">200+ Sistem</span><span class="vt-card-tag">Filtrelenebilir</span></div>
+    </a>
+    <a href="stratejik-mineraller-periyodik-tablo.html" class="vt-card">
+      <div class="vt-card-icon">💎</div>
+      <div class="vt-card-title">Stratejik Mineraller — Periyodik Tablo</div>
+      <div class="vt-card-desc">Savunma sanayinde kritik mineraller, tıklanabilir periyodik tablo, tedarik zinciri riskleri</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">118 Element</span><span class="vt-card-tag">İnteraktif</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- SÖZLÜK & TERMİNOLOJİ -->
+<section class="vt-section" data-cat="sozluk">
+  <div class="vt-section-head">
+    <span class="vt-section-icon">📖</span>
+    <span class="vt-section-title">Sözlük & Terminoloji</span>
+    <span class="vt-section-count">1 içerik</span>
+  </div>
+  <div class="vt-grid">
+    <a href="kulliyat-sozluk.html" class="vt-card">
+      <div class="vt-card-icon">📚</div>
+      <div class="vt-card-title">Harb-i Strateji Sözlüğü</div>
+      <div class="vt-card-desc">3335 askeri, stratejik ve jeopolitik terim. Arama ve filtreleme destekli.</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">3335 Terim</span><span class="vt-card-tag">Aranabilir</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- KÜLLİYAT & MAKALELER -->
+<section class="vt-section" data-cat="kulliyat">
+  <div class="vt-section-head">
+    <span class="vt-section-icon">📝</span>
+    <span class="vt-section-title">Külliyat & Makaleler</span>
+    <span class="vt-section-count">3 içerik</span>
+  </div>
+  <div class="vt-grid">
+    <a href="kulliyat-cilt1.html" class="vt-card">
+      <div class="vt-card-icon">📕</div>
+      <div class="vt-card-title">Külliyat — Cilt 1</div>
+      <div class="vt-card-desc">Stratejik analizler, doktrin incelemeleri ve jeopolitik değerlendirmeler</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">Cilt 1</span><span class="vt-card-tag">Analiz</span></div>
+    </a>
+    <a href="kulliyat-cilt2.html" class="vt-card">
+      <div class="vt-card-icon">📗</div>
+      <div class="vt-card-title">Külliyat — Cilt 2</div>
+      <div class="vt-card-desc">Savunma teknolojileri, siber harp ve gelecek senaryoları</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">Cilt 2</span><span class="vt-card-tag">Teknoloji</span></div>
+    </a>
+    <a href="yazarlar.html" class="vt-card">
+      <div class="vt-card-icon">✍️</div>
+      <div class="vt-card-title">Yazarlar</div>
+      <div class="vt-card-desc">Bayram Kılınçer, Selahaddin Koyuncu — Elektronik Harp, AB-EUISS, Turan Ordusu</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">20+ Makale</span><span class="vt-card-tag">Yazarlar</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- TSK TARİHÇELERİ -->
+<section class="vt-section" data-cat="tsk">
+  <div class="vt-section-head">
+    <span class="vt-section-icon">🇹🇷</span>
+    <span class="vt-section-title">Türk Silahlı Kuvvetleri</span>
+    <span class="vt-section-count">4 içerik</span>
+  </div>
+  <div class="vt-grid">
+    <a href="tsk-kara-kuvvetleri-tarihce.html" class="vt-card">
+      <div class="vt-card-icon">🏔️</div>
+      <div class="vt-card-title">Kara Kuvvetleri Tarihçesi</div>
+      <div class="vt-card-desc">MÖ 209 Mete Han'dan günümüze — dünyanın en eski kara ordusu</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">MÖ 209 →</span><span class="vt-card-tag">Tarihçe</span></div>
+    </a>
+    <a href="tsk-deniz-kuvvetleri-tarihce.html" class="vt-card">
+      <div class="vt-card-icon">⚓</div>
+      <div class="vt-card-title">Deniz Kuvvetleri Tarihçesi</div>
+      <div class="vt-card-desc">1081 Çaka Bey'den Mavi Vatan doktrinine</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">1081 →</span><span class="vt-card-tag">Deniz</span></div>
+    </a>
+    <a href="tsk-hava-kuvvetleri-tarihce.html" class="vt-card">
+      <div class="vt-card-icon">✈️</div>
+      <div class="vt-card-title">Hava Kuvvetleri Tarihçesi</div>
+      <div class="vt-card-desc">1911'den KAAN'a — Türk havacılık tarihi</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">1911 →</span><span class="vt-card-tag">Hava</span></div>
+    </a>
+    <a href="tsk-uzay-komutanligi-tarihce.html" class="vt-card">
+      <div class="vt-card-icon">🛰️</div>
+      <div class="vt-card-title">Uzay Komutanlığı</div>
+      <div class="vt-card-desc">2024'te kurulan Hava Kuvvetleri Uzay Komutanlığı — 9 ana fonksiyon</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">2024 →</span><span class="vt-card-tag">Uzay</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- İNFOGRAFİKLER -->
+<section class="vt-section" data-cat="infografik">
+  <div class="vt-section-head">
+    <span class="vt-section-icon">📊</span>
+    <span class="vt-section-title">İnfografikler & Görsel Analizler</span>
+    <span class="vt-section-count">3 içerik</span>
+  </div>
+  <div class="vt-grid">
+    <a href="infografik.html" class="vt-card">
+      <div class="vt-card-icon">📈</div>
+      <div class="vt-card-title">İnfografik Galerisi</div>
+      <div class="vt-card-desc">18+ interaktif infografik: Şeffaf Savaş, Mineral Ağı, Drone Devrim, BM Reform...</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">18+ İnfografik</span><span class="vt-card-tag">İnteraktif</span></div>
+    </a>
+    <a href="infografik-hibrit-savas-tum-boyutlar.html" class="vt-card">
+      <div class="vt-card-icon">🌐</div>
+      <div class="vt-card-title">Hibrit Savaş — Tüm Boyutlarıyla</div>
+      <div class="vt-card-desc">9 bölüm: Siber, Bilişsel, Ekonomik, Enerji, Uzay, Vekâlet, Türkiye, Gelecek</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">9 Bölüm</span><span class="vt-card-tag">Kapsamlı</span></div>
+    </a>
+    <a href="zeka-savas-soylem.html" class="vt-card">
+      <div class="vt-card-icon">🤖</div>
+      <div class="vt-card-title">Zekâ, Savaş ve Söylem</div>
+      <div class="vt-card-desc">2024-2026 YZ Askeri Dönüşümü — İnteraktif bilgi haritası</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">YZ</span><span class="vt-card-tag">İnteraktif</span></div>
+    </a>
+    <a href="kuresel-ticaret-yollari.html" class="vt-card">
+      <div class="vt-card-icon">🌍</div>
+      <div class="vt-card-title">Küresel Ticaret Yolları</div>
+      <div class="vt-card-desc">Stratejik boğazlar ve ticaret rotaları — interaktif harita</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">Jeopolitik</span><span class="vt-card-tag">Harita</span></div>
+    </a>
+    <a href="ticaret-yollari-guc-tarihi.html" class="vt-card">
+      <div class="vt-card-icon">⚓</div>
+      <div class="vt-card-title">Ticaret Yolları '&' Güç Tarihi</div>
+      <div class="vt-card-desc">Antikçağdan 2026'ya hegemonya döngüsü ve güç analizi</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">Tarih</span><span class="vt-card-tag">İnteraktif</span></div>
+    </a>
+    <a href="turkiye-strateji-explorer.html" class="vt-card">
+      <div class="vt-card-icon">🇹🇷</div>
+      <div class="vt-card-title">Türkiye Strateji Explorer</div>
+      <div class="vt-card-desc">Savunma sanayii, stratejik konum ve bölgesel güç analizi</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">Türkiye</span><span class="vt-card-tag">İnteraktif</span></div>
+    </a>
+    <a href="gorsel-galeri.html" class="vt-card">
+      <div class="vt-card-icon">🖼️</div>
+      <div class="vt-card-title">Görsel Galeri</div>
+      <div class="vt-card-desc">Tüm görsel içerikler: infografikler, haritalar, diyagramlar</div>
+      <div class="vt-card-meta"><span class="vt-card-tag">Galeri</span><span class="vt-card-tag">Görsel</span></div>
+    </a>
+  </div>
+</section>
+
+</div>
+
+<script src="hs-nav.js?v=11"></script>
+<script>
+// === AMBIENT PARTICLES ===
+(function(){
+  const container = document.getElementById('particles');
+  if(!container) return;
+  for(let i=0;i<30;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDuration = (8+Math.random()*12)+'s';
+    p.style.animationDelay = Math.random()*8+'s';
+    p.style.width = p.style.height = (1+Math.random()*2)+'px';
+    container.appendChild(p);
+  }
+})();
+
+// === COUNTER ANIMATION ===
+function animateCounters(){
+  document.querySelectorAll('.vt-stat-num[data-target]').forEach(el=>{
+    const target = +el.dataset.target;
+    const duration = 1500;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now-start)/duration,1);
+      const eased = 1-Math.pow(1-progress,3);
+      el.textContent = Math.round(target*eased)+(target>=100?'+':'');
+      if(progress<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+const heroObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){animateCounters();heroObs.disconnect();}});
+},{threshold:0.3});
+heroObs.observe(document.querySelector('.vt-hero'));
+
+// === CARD MOUSE TRACKING ===
+document.querySelectorAll('.vt-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX-rect.left)/rect.width*100).toFixed(1);
+    const y = ((e.clientY-rect.top)/rect.height*100).toFixed(1);
+    card.style.setProperty('--mx',x+'%');
+    card.style.setProperty('--my',y+'%');
+  });
+});
+
+// === SCROLL REVEAL ===
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.vt-card').forEach((card,i)=>{
+  card.style.opacity='0';
+  card.style.transform='translateY(20px)';
+  card.style.transition='all .4s ease '+(i*0.03)+'s';
+  revealObs.observe(card);
+});
+
+// === FILTER SYSTEM ===
+const filterBtns = document.querySelectorAll('.vt-filter-btn');
+const sections = document.querySelectorAll('.vt-section');
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    filterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    sections.forEach(section=>{
+      if(filter==='all'){
+        section.style.display='';
+        section.style.animation='fadeInUp .4s ease both';
+      } else {
+        section.style.display = section.dataset.cat===filter ? '' : 'none';
+        if(section.dataset.cat===filter) section.style.animation='fadeInUp .4s ease both';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

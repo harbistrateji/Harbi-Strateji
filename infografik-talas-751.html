@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talas 751 — Hareketli İnfografik</title>
+    <style>
+        :root {
+            --bg: #020406;
+            --gold: #c9a24b;
+            --cyan: #00e0ff;
+            --red: #e01515;
+            --text: #eaf0f7;
+            --text-dim: #90a1b5;
+            --panel: rgba(5, 8, 12, 0.9);
+            --border: rgba(201, 162, 75, 0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; overflow: hidden; }
+
+        #canvas-container { position: fixed; inset: 0; z-index: 1; }
+        .hud-overlay { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; }
+
+        .nav-rail {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 80px;
+            background: rgba(0,0,0,0.5);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .nav-dot {
+            width: 10px; height: 10px;
+            border: 1px solid var(--gold);
+            margin: 15px 0;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--gold);
+            box-shadow: 0 0 15px var(--gold);
+            transform: scale(1.3);
+        }
+
+        .main-stage {
+            flex: 1;
+            margin-left: 80px;
+            padding: 40px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .analogy-container {
+            width: 100%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1.2fr;
+            gap: 40px;
+            pointer-events: auto;
+        }
+
+        .info-side { display: flex; flex-direction: column; gap: 20px; }
+        .header-block h2 { font-family: 'Chakra Petch', sans-serif; font-size: 32px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 5px; }
+        .header-block .category { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.3em; }
+
+        .comparison-block { background: var(--panel); border: 1px solid var(--border); padding: 25px; backdrop-filter: blur(10px); }
+        .tech-box { margin-bottom: 20px; }
+        .tech-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--gold); text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .tech-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .tech-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .tech-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+        .visual-side {
+            position: relative;
+            height: 450px;
+            border: 1px solid var(--border);
+            background: rgba(201, 162, 75, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .visualization { width: 80%; height: 80%; z-index: 1; position: relative; }
+
+        .title-overlay {
+            position: absolute;
+            top: 20px; right: 20px;
+            text-align: right;
+            pointer-events: auto;
+        }
+        .title-overlay h3 { font-size: 24px; color: var(--gold); margin-bottom: 5px; }
+        .title-overlay p { font-size: 12px; color: var(--text-dim); }
+
+        @media (max-width: 1200px) {
+            .analogy-container { grid-template-columns: 1fr; }
+            .main-stage { padding: 20px; }
+        }
+    
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+    <canvas id="canvas-container"></canvas>
+    
+    <div class="hud-overlay">
+        <div class="nav-rail">
+            <div class="nav-dot active" onclick="switchScene(0)"></div>
+            <div class="nav-dot" onclick="switchScene(1)"></div>
+            <div class="nav-dot" onclick="switchScene(2)"></div>
+            <div class="nav-dot" onclick="switchScene(3)"></div>
+        </div>
+
+        <div class="main-stage">
+            <div class="analogy-container" id="content">
+                <!-- Scene 1: Taraflar -->
+                <div class="info-side" id="scene0">
+                    <div class="header-block">
+                        <div class="category">⚔️ 751 M.S.</div>
+                        <h2>TALAS SAVAŞI</h2>
+                    </div>
+                    <div class="comparison-block">
+                        <div class="tech-box">
+                            <div class="tech-label">🔵 ABBASI-KARLUK</div>
+                            <div class="tech-name">Ordu Büyüklüğü</div>
+                            <div class="tech-desc">~100,000 asker · Komutan: Ziyad ibn Salih · Taktik: Çevirme</div>
+                        </div>
+                        <div class="tech-box">
+                            <div class="tech-label">🔴 TANG HANEDANI</div>
+                            <div class="tech-name">Ordu Büyüklüğü</div>
+                            <div class="tech-desc">~70,000 asker · Komutan: Gao Xianzhi · Taktik: Frontal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-side">
+                    <canvas id="viz0" class="visualization"></canvas>
+                    <div class="title-overlay">
+                        <h3>TARAFLAR</h3>
+                        <p>Ordu Büyüklüğü Karşılaştırması</p>
+                    </div>
+                </div>
+
+                <div class="info-side">
+                    <div class="header-block">
+                        <div class="category">📊 İSTATİSTİKLER</div>
+                        <h2>SAVAŞ VERİLERİ</h2>
+                    </div>
+                    <div class="comparison-block">
+                        <div class="tech-box">
+                            <div class="tech-label">📅 TARİH</div>
+                            <div class="tech-name">26 Ağustos 751</div>
+                            <div class="tech-desc">Talas Nehri Kıyısı, Orta Asya</div>
+                        </div>
+                        <div class="tech-box">
+                            <div class="tech-label">🏆 SONUÇ</div>
+                            <div class="tech-name">Abbasi-Karluk Zaferi</div>
+                            <div class="tech-desc">Tang Çin'in Orta Asya'dan çekilmesi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas-container');
+        const ctx = canvas.getContext('2d');
+        let currentScene = 0;
+        let animationTime = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function drawBackgroundAnimation() {
+            // Gradient arka plan
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#020406');
+            gradient.addColorStop(1, '#0a0f17');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Animasyonlu noktalar
+            const time = animationTime * 0.001;
+            for (let i = 0; i < 50; i++) {
+                const x = (Math.sin(time + i) * canvas.width * 0.5) + canvas.width * 0.5;
+                const y = (Math.cos(time + i * 0.5) * canvas.height * 0.5) + canvas.height * 0.5;
+                const size = Math.sin(time + i) * 2 + 1;
+                ctx.fillStyle = `rgba(201, 162, 75, ${Math.sin(time + i) * 0.5 + 0.3})`;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawScene0() {
+            // Abbasi tarafı (mavi)
+            const abbasiX = canvas.width * 0.25;
+            const abbasiY = canvas.height * 0.5;
+            ctx.fillStyle = 'rgba(0, 224, 255, 0.2)';
+            ctx.beginPath();
+            ctx.arc(abbasiX, abbasiY, 80, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#00e0ff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Abbasi yazısı
+            ctx.fillStyle = '#00e0ff';
+            ctx.font = 'bold 16px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('ABBASI', abbasiX, abbasiY - 10);
+            ctx.fillText('100K', abbasiX, abbasiY + 15);
+
+            // Tang tarafı (kırmızı)
+            const tangX = canvas.width * 0.75;
+            const tangY = canvas.height * 0.5;
+            ctx.fillStyle = 'rgba(224, 21, 21, 0.2)';
+            ctx.beginPath();
+            ctx.arc(tangX, tangY, 70, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#e01515';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Tang yazısı
+            ctx.fillStyle = '#e01515';
+            ctx.font = 'bold 16px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('TANG', tangX, tangY - 10);
+            ctx.fillText('70K', tangX, tangY + 15);
+
+            // Çizgi
+            ctx.strokeStyle = 'rgba(201, 162, 75, 0.5)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(abbasiX + 80, abbasiY);
+            ctx.lineTo(tangX - 70, tangY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawScene1() {
+            // Kağıt teknolojisi transferi
+            const startX = canvas.width * 0.2;
+            const startY = canvas.height * 0.5;
+            const endX = canvas.width * 0.8;
+            const endY = canvas.height * 0.5;
+
+            // Başlangıç (Çin)
+            ctx.fillStyle = 'rgba(201, 162, 75, 0.3)';
+            ctx.beginPath();
+            ctx.arc(startX, startY, 60, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#c9a24b';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = '#c9a24b';
+            ctx.font = 'bold 14px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('ÇİN', startX, startY - 5);
+            ctx.fillText('📜 KAĞIT', startX, startY + 15);
+
+            // Bitiş (İslam)
+            ctx.fillStyle = 'rgba(0, 224, 255, 0.3)';
+            ctx.beginPath();
+            ctx.arc(endX, endY, 60, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#00e0ff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = '#00e0ff';
+            ctx.font = 'bold 14px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('İSLAM', endX, endY - 5);
+            ctx.fillText('📚 KÜTÜPHANELER', endX, endY + 15);
+
+            // Animasyonlu oklar
+            const progress = (Math.sin(animationTime * 0.005) + 1) / 2;
+            const arrowX = startX + (endX - startX) * progress;
+            ctx.fillStyle = '#e01515';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('→', arrowX, endY - 30);
+        }
+
+        function drawScene2() {
+            // Sonuçlar
+            const resultX = canvas.width * 0.5;
+            const resultY = canvas.height * 0.3;
+
+            ctx.fillStyle = '#c9a24b';
+            ctx.font = 'bold 24px Chakra Petch';
+            ctx.textAlign = 'center';
+            ctx.fillText('SAVAŞIN SONUÇLARI', resultX, resultY);
+
+            // Sonuç 1
+            ctx.fillStyle = 'rgba(0, 224, 255, 0.2)';
+            ctx.fillRect(canvas.width * 0.1, canvas.height * 0.45, canvas.width * 0.35, 80);
+            ctx.strokeStyle = '#00e0ff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(canvas.width * 0.1, canvas.height * 0.45, canvas.width * 0.35, 80);
+            ctx.fillStyle = '#00e0ff';
+            ctx.font = 'bold 14px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('Abbasi Zaferi', canvas.width * 0.275, canvas.height * 0.65);
+            ctx.font = '12px IBM Plex Sans';
+            ctx.fillText('Orta Asya Kontrolü', canvas.width * 0.275, canvas.height * 0.78);
+
+            // Sonuç 2
+            ctx.fillStyle = 'rgba(201, 162, 75, 0.2)';
+            ctx.fillRect(canvas.width * 0.55, canvas.height * 0.45, canvas.width * 0.35, 80);
+            ctx.strokeStyle = '#c9a24b';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(canvas.width * 0.55, canvas.height * 0.45, canvas.width * 0.35, 80);
+            ctx.fillStyle = '#c9a24b';
+            ctx.font = 'bold 14px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('Kağıt Transferi', canvas.width * 0.725, canvas.height * 0.65);
+            ctx.font = '12px IBM Plex Sans';
+            ctx.fillText('Medeniyetler Arası', canvas.width * 0.725, canvas.height * 0.78);
+        }
+
+        function drawScene3() {
+            // Tarihsel etki
+            const centerX = canvas.width * 0.5;
+            const centerY = canvas.height * 0.5;
+
+            // Merkez
+            ctx.fillStyle = 'rgba(201, 162, 75, 0.3)';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 40, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#c9a24b';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = '#c9a24b';
+            ctx.font = 'bold 12px IBM Plex Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('TALAS', centerX, centerY + 5);
+
+            // Etki noktaları
+            const impacts = [
+                { angle: 0, label: 'Türkler\nİslam\'ı Kabul', color: '#00e0ff' },
+                { angle: Math.PI / 2, label: 'Anadolu\nFethi', color: '#c9a24b' },
+                { angle: Math.PI, label: 'Kağıt\nTeknolojisi', color: '#e01515' },
+                { angle: Math.PI * 1.5, label: 'Medeniyetler\nBağlantısı', color: '#00e0ff' }
+            ];
+
+            impacts.forEach(impact => {
+                const x = centerX + Math.cos(impact.angle) * 150;
+                const y = centerY + Math.sin(impact.angle) * 150;
+
+                ctx.strokeStyle = impact.color;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = impact.color;
+                ctx.beginPath();
+                ctx.arc(x, y, 25, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#020406';
+                ctx.font = 'bold 10px IBM Plex Sans';
+                ctx.textAlign = 'center';
+                ctx.fillText(impact.label, x, y);
+            });
+        }
+
+        function animate() {
+            animationTime += 16;
+            drawBackgroundAnimation();
+
+            if (currentScene === 0) drawScene0();
+            else if (currentScene === 1) drawScene1();
+            else if (currentScene === 2) drawScene2();
+            else if (currentScene === 3) drawScene3();
+
+            requestAnimationFrame(animate);
+        }
+
+        function switchScene(index) {
+            currentScene = index;
+            document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animate();
+    </script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

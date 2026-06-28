@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Sürü İHA <em>Tasarım</em> Simülatörü</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+/* === GAME AREA STYLING === */
+.sim-content h1{
+  font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--bone);text-transform:uppercase;letter-spacing:0.05em;
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.score-board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;margin-bottom:28px;
+}
+.score-card{background:var(--deep);padding:16px 14px;text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.4rem;display:block;margin-bottom:4px;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+  transition:opacity 0.3s,transform 0.3s;
+}
+.panel.hidden{display:none;}
+.panel h2,.panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:14px;}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.option-btn{
+  font-family:var(--font-mono);font-size:0.8rem;
+  padding:12px 20px;border:1px solid var(--line);
+  border-radius:6px;background:var(--deep);
+  color:var(--bone);cursor:pointer;transition:all 0.25s;
+  text-align:left;flex:1;min-width:200px;
+}
+.option-btn:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.decision-panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.decision-panel .header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.decision-panel h2,.decision-panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:10px;}
+.decision-panel p{color:var(--bone-dim);line-height:1.7;margin-bottom:16px;}
+
+/* suru-iha specific */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0;}
+.choice-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:8px;padding:18px;text-align:center;
+  cursor:pointer;transition:all 0.25s;
+}
+.choice-card:hover{border-color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.choice-card.selected{border-color:var(--signal);background:rgba(57,255,138,0.08);}
+.cc-icon{font-size:1.8rem;margin-bottom:8px;}
+.cc-name{font-family:var(--font-mono);font-size:0.82rem;color:var(--bone);margin-bottom:4px;}
+.cc-sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);margin-bottom:6px;}
+.cc-price{font-family:var(--font-display);font-size:0.9rem;color:var(--gold);}
+.cc-lock{position:absolute;top:8px;right:8px;font-size:0.7rem;color:var(--threat);}
+.budget-bar{width:100%;height:10px;background:var(--deep);border-radius:5px;overflow:hidden;margin:12px 0;border:1px solid var(--line);}
+.budget-fill{height:100%;border-radius:5px;transition:width 0.4s;background:linear-gradient(90deg,var(--signal),var(--gold));}
+.danger-box{
+  background:rgba(227,10,23,0.1);border:1px solid var(--threat);
+  border-radius:6px;padding:16px;margin:12px 0;
+  font-family:var(--font-mono);font-size:0.8rem;color:var(--threat);
+}
+
+
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Sürü İHA <em>Tasarım</em> Simülatörü</h1>
+  <p class="lead">Otonom sürü İHA formasyonları tasarım ve test simülasyonu — Görev planlama ve koordinasyon.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">100</span><span class="lbl">İHA</span></div><div class="hero-stat"><span class="num">5</span><span class="lbl">Formasyon</span></div><div class="hero-stat"><span class="num">AI</span><span class="lbl">Otonom</span></div><div class="hero-stat"><span class="num">4</span><span class="lbl">Görev</span></div></div>
+</header>
+
+<main class="sim-content">
+<div class="sim-page-wrap">
+  
+<h2 class="sr-only">Sürü İHA Tasarım Simülatörü — bütçe, elektronik ve batarya seçerek drone tasarlayın, tedarik zinciri kısıtlarını öğrenin.</h2>
+<style>
+.sim-wrap { font-size: 14px; padding: 0.5rem 0 1rem; }
+.step-tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; }
+.tab { padding: 6px 16px; border-radius: var(--radius); border: 0.5px solid var(--border); cursor: pointer; font-size: 13px; color: var(--text-secondary); background: var(--surface-1); transition: all .15s; }
+.tab.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+.section { display: none; }
+.section.on { display: block; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1rem; }
+.choice-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; cursor: pointer; transition: all .15s; background: var(--surface-2); }
+.choice-card:hover { border-color: var(--border-strong); }
+.choice-card.sel { border: 1.5px solid var(--border-accent); background: var(--bg-accent); }
+.choice-card.locked { opacity: .45; cursor: not-allowed; }
+.cc-icon { font-size: 22px; margin-bottom: 6px; }
+.cc-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.cc-sub { font-size: 11px; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; }
+.cc-price { font-size: 11px; color: var(--text-accent); margin-top: 5px; font-weight: 500; }
+.cc-lock { font-size: 11px; color: var(--text-danger); margin-top: 4px; }
+.budget-bar { height: 8px; border-radius: 4px; background: var(--border); margin: 6px 0; }
+.budget-fill { height: 8px; border-radius: 4px; transition: width .3s, background .3s; }
+.result-box { border-radius: 10px; border: 0.5px solid var(--border); padding: 1.25rem; background: var(--surface-1); margin-top: 1rem; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: var(--text-secondary); }
+.stat-val { font-weight: 500; color: var(--text-primary); }
+.warning-box { background: var(--bg-warning); border: 0.5px solid var(--border-warning); border-radius: 8px; padding: 10px 14px; margin: 8px 0; font-size: 12px; color: var(--text-warning); line-height: 1.5; }
+.danger-box { background: var(--bg-danger); border: 0.5px solid var(--border-danger); border-radius: 8px; padding: 10px 14px; margin: 8px 0; font-size: 12px; color: var(--text-danger); line-height: 1.5; }
+.success-box { background: var(--bg-success); border: 0.5px solid var(--border-success); border-radius: 8px; padding: 10px 14px; margin: 8px 0; font-size: 12px; color: var(--text-success); line-height: 1.5; }
+.drone-canvas { width: 100%; height: 160px; border-radius: 8px; border: 0.5px solid var(--border); background: var(--surface-0); margin: 12px 0; }
+button.next-btn { margin-top: 10px; padding: 8px 20px; font-size: 13px; border-radius: var(--radius); border: 0.5px solid var(--border-accent); background: var(--bg-accent); color: var(--text-accent); cursor: pointer; transition: all .15s; }
+button.next-btn:hover { background: var(--text-accent); color: var(--surface-2); }
+button.reset-btn { padding: 8px 20px; font-size: 13px; border-radius: var(--radius); border: 0.5px solid var(--border); background: var(--surface-1); color: var(--text-secondary); cursor: pointer; margin-left: 8px; }
+
+/* === GAME AREA STYLING === */
+.sim-content h1{
+  font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--bone);text-transform:uppercase;letter-spacing:0.05em;
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.score-board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;margin-bottom:28px;
+}
+.score-card{background:var(--deep);padding:16px 14px;text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.4rem;display:block;margin-bottom:4px;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+  transition:opacity 0.3s,transform 0.3s;
+}
+.panel.hidden{display:none;}
+.panel h2,.panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:14px;}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.option-btn{
+  font-family:var(--font-mono);font-size:0.8rem;
+  padding:12px 20px;border:1px solid var(--line);
+  border-radius:6px;background:var(--deep);
+  color:var(--bone);cursor:pointer;transition:all 0.25s;
+  text-align:left;flex:1;min-width:200px;
+}
+.option-btn:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.decision-panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.decision-panel .header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.decision-panel h2,.decision-panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:10px;}
+.decision-panel p{color:var(--bone-dim);line-height:1.7;margin-bottom:16px;}
+
+/* suru-iha specific */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0;}
+.choice-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:8px;padding:18px;text-align:center;
+  cursor:pointer;transition:all 0.25s;
+}
+.choice-card:hover{border-color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.choice-card.selected{border-color:var(--signal);background:rgba(57,255,138,0.08);}
+.cc-icon{font-size:1.8rem;margin-bottom:8px;}
+.cc-name{font-family:var(--font-mono);font-size:0.82rem;color:var(--bone);margin-bottom:4px;}
+.cc-sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);margin-bottom:6px;}
+.cc-price{font-family:var(--font-display);font-size:0.9rem;color:var(--gold);}
+.cc-lock{position:absolute;top:8px;right:8px;font-size:0.7rem;color:var(--threat);}
+.budget-bar{width:100%;height:10px;background:var(--deep);border-radius:5px;overflow:hidden;margin:12px 0;border:1px solid var(--line);}
+.budget-fill{height:100%;border-radius:5px;transition:width 0.4s;background:linear-gradient(90deg,var(--signal),var(--gold));}
+.danger-box{
+  background:rgba(227,10,23,0.1);border:1px solid var(--threat);
+  border-radius:6px;padding:16px;margin:12px 0;
+  font-family:var(--font-mono);font-size:0.8rem;color:var(--threat);
+}
+
+</style>
+
+<div class="sim-wrap">
+  <div style="margin-bottom:14px">
+    <div style="font-size:16px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Sürü İHA Tasarım Simülatörü</div>
+    <div style="font-size:13px;color:var(--text-secondary)">Bütçe ve bileşenleri seç — tedarik zinciri jeopolitiğini keşfet.</div>
+  </div>
+
+  <div class="step-tabs">
+    <div class="tab on" id="tab1" onclick="goto(1)">1 — Bütçe</div>
+    <div class="tab" id="tab2" onclick="goto(2)">2 — İşlemci</div>
+    <div class="tab" id="tab3" onclick="goto(3)">3 — Batarya</div>
+    <div class="tab" id="tab4" onclick="goto(4)">4 — Haberleşme</div>
+    <div class="tab" id="tab5" onclick="goto(5)">5 — Sonuç</div>
+  </div>
+
+  <!-- Adım 1: Bütçe -->
+  <div class="section on" id="s1">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Birim başına üretim bütçeni seç (adet başı USD):</div>
+    <div class="card-grid">
+      <div class="choice-card" id="b1" onclick="setBudget(1)">
+        <div class="cc-icon"><i class="ti ti-coin" aria-hidden="true"></i></div>
+        <div class="cc-name">Düşük</div>
+        <div class="cc-sub">Küçük çaplı keşif operasyonu</div>
+        <div class="cc-price">500 USD/adet</div>
+      </div>
+      <div class="choice-card" id="b2" onclick="setBudget(2)">
+        <div class="cc-icon"><i class="ti ti-coins" aria-hidden="true"></i></div>
+        <div class="cc-name">Orta</div>
+        <div class="cc-sub">Taktik sürü saldırısı</div>
+        <div class="cc-price">2.000 USD/adet</div>
+      </div>
+      <div class="choice-card" id="b3" onclick="setBudget(3)">
+        <div class="cc-icon"><i class="ti ti-diamond" aria-hidden="true"></i></div>
+        <div class="cc-name">Yüksek</div>
+        <div class="cc-sub">Gelişmiş otonom platform</div>
+        <div class="cc-price">8.000 USD/adet</div>
+      </div>
+    </div>
+    <button class="next-btn" onclick="goto(2)">Devam →</button>
+  </div>
+
+  <!-- Adım 2: İşlemci -->
+  <div class="section" id="s2">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">YZ işlemcisi seç — Galyum & Germanyum içeriğine dikkat:</div>
+    <div class="card-grid" id="proc-cards"></div>
+    <div id="proc-warn"></div>
+    <button class="next-btn" onclick="goto(3)">Devam →</button>
+  </div>
+
+  <!-- Adım 3: Batarya -->
+  <div class="section" id="s3">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Güç kaynağı seç — Lityum & Kobalt bağımlılığı:</div>
+    <div class="card-grid" id="bat-cards"></div>
+    <div id="bat-warn"></div>
+    <button class="next-btn" onclick="goto(4)">Devam →</button>
+  </div>
+
+  <!-- Adım 4: Haberleşme -->
+  <div class="section" id="s4">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Haberleşme modülü seç — frekans güvenliği & Neodimyum anten:</div>
+    <div class="card-grid" id="com-cards"></div>
+    <div id="com-warn"></div>
+    <button class="next-btn" onclick="goto(5)">Sonuçları Gör →</button>
+  </div>
+
+  <!-- Adım 5: Sonuç -->
+  <div class="section" id="s5">
+    <canvas class="drone-canvas" id="droneCanvas"></canvas>
+    <div id="result-content"></div>
+    <div style="margin-top:12px">
+      <button class="next-btn" onclick="sendPrompt('Bu İHA tasarımının güçlü ve zayıf yönlerini analiz et')">Derin analiz ↗</button>
+      <button class="reset-btn" onclick="resetSim()">Yeniden başla</button>
+    </div>
+  </div>
+</div>
+
+
+</div>
+</main>
+
+<script>
+
+const state = { budget: 2, proc: null, bat: null, com: null };
+
+const procs = [
+  { id:'rpi', name:'ARM Cortex-M', sub:'Basit görev bilgisayarı', price:15, ga:false, ge:false, risk:0, label:'Düşük YZ', color:'#639922' },
+  { id:'nv', name:'NVIDIA Jetson', sub:'GaN bazlı, yüksek YZ gücü', price:180, ga:true, ge:false, risk:2, label:'Yüksek YZ', color:'#3B8BD4' },
+  { id:'hailo', name:'Hailo-8 NPU', sub:'GaAs/InP yarı iletken', price:90, ga:true, ge:true, risk:3, label:'Özel YZ çipi', color:'#D85A30' },
+];
+
+const bats = [
+  { id:'nimh', name:'NiMH Pil', sub:'Kobalt içermez; ağır', price:12, li:false, co:false, risk:0, endurance:18, label:'18 dk', color:'#639922' },
+  { id:'lipo', name:'Li-Po (Kobaltlı)', sub:'Hafif, yüksek yoğunluk', price:38, li:true, co:true, risk:2, endurance:42, label:'42 dk', color:'#EF9F27' },
+  { id:'lfp', name:'LFP (Demir-Fosfat)', sub:'Kobalt yok; ağırca', price:55, li:true, co:false, risk:1, endurance:35, label:'35 dk', color:'#1D9E75' },
+];
+
+const coms = [
+  { id:'lorawan', name:'LoRaWAN', sub:'Uzun menzil, düşük bant genişliği', price:8, nd:false, risk:0, jam:30, label:'Düşük bant', color:'#639922' },
+  { id:'mesh5g', name:'5G Mesh', sub:'GaN anten — Galyum gerekli', price:65, nd:true, risk:3, jam:80, label:'Yüksek bant', color:'#3B8BD4' },
+  { id:'fhss', name:'FHSS Taktik', sub:'Frekans atlama, EH dirençli', price:45, nd:true, risk:2, jam:60, label:'EH dirençli', color:'#D85A30' },
+];
+
+const budgetCosts = [0, 500, 2000, 8000];
+
+function setBudget(n) {
+  state.budget = n;
+  ['b1','b2','b3'].forEach((id,i) => document.getElementById(id).classList.toggle('sel', i+1===n));
+}
+setBudget(2);
+
+function renderCards(containerId, items, stateKey) {
+  const totalBudget = budgetCosts[state.budget];
+  const used = (stateKey === 'proc' ? 0 : (state.proc ? procs.find(p=>p.id===state.proc).price : 0)) +
+               (stateKey === 'bat' ? 0 : (state.bat ? bats.find(b=>b.id===state.bat).price : 0)) +
+               (stateKey === 'com' ? 0 : (state.com ? coms.find(c=>c.id===state.com).price : 0));
+
+  const cont = document.getElementById(containerId);
+  cont.innerHTML = '';
+  items.forEach(item => {
+    const affordable = (used + item.price) <= totalBudget;
+    const sel = state[stateKey] === item.id;
+    const div = document.createElement('div');
+    div.className = 'choice-card' + (sel ? ' sel' : '') + (!affordable ? ' locked' : '');
+    div.innerHTML = `
+      <div class="cc-icon"><i class="ti ti-cpu" aria-hidden="true"></i></div>
+      <div class="cc-name">${item.name}</div>
+      <div class="cc-sub">${item.sub}</div>
+      <div class="cc-price">${item.price} USD</div>
+      ${!affordable ? '<div class="cc-lock">Bütçe yetersiz</div>' : ''}
+      ${item.ga ? '<div class="cc-lock"><i class="ti ti-alert-circle" aria-hidden="true"></i> Galyum gerekli</div>' : ''}
+      ${item.nd ? '<div class="cc-lock"><i class="ti ti-alert-circle" aria-hidden="true"></i> Nd anten gerekli</div>' : ''}
+    `;
+    if(affordable) {
+      div.onclick = () => {
+        state[stateKey] = item.id;
+        renderCards(containerId, items, stateKey);
+        updateWarn(stateKey, item);
+      };
+    }
+    cont.appendChild(div);
+  });
+}
+
+function updateWarn(key, item) {
+  const warnId = { proc:'proc-warn', bat:'bat-warn', com:'com-warn' }[key];
+  const box = document.getElementById(warnId);
+  let html = '';
+  if(key==='proc' && item.ga) html += `<div class="warning-box"><b>Galyum bağımlılığı:</b> Bu çip için Galyum arsenid gerekiyor. Çin'in 2023'te uyguladığı ihracat kısıtlaması NATO tedarik zincirini %60 sekteye uğrattı. Alternatif kaynak: Japonya (sınırlı), Almanya (çok düşük kapasite).</div>`;
+  if(key==='proc' && item.ge) html += `<div class="danger-box"><b>Germanyum kısıtı:</b> InP tabanlı bu çip aynı zamanda Germanyum kullanıyor. Çin dünyanın %60'ını üretiyor. Çift ihracat kısıtlaması projeyi durdurabilir.</div>`;
+  if(key==='bat' && item.co) html += `<div class="warning-box"><b>Kobalt riski:</b> Demokratik Kongo'dan gelen kobalt tedariki siyasi istikrarsızlığa açık. Kongo'nun %70 pazar payı, lojistik aksaklıklarda batarya üretimini doğrudan etkiler.</div>`;
+  if(key==='bat' && item.li && !item.co) html += `<div class="success-box"><b>Akıllı seçim:</b> LFP piller kobalt içermez. Lityum yine de gerekli, ancak Avustralya ve Şili'den çeşitlendirilmiş tedarik mümkün. Bağımlılık nispeten düşük.</div>`;
+  if(key==='com' && item.nd) html += `<div class="warning-box"><b>Neodimyum anten:</b> Bu modülün kompakt antenleri NdFeB mıknatısı kullanıyor. Çin, Nd'nin %85'ini üretiyor. 5G/FHSS modülleri bu kısıtı bypass edemiyor.</div>`;
+  box.innerHTML = html;
+}
+
+function goto(n) {
+  for(let i=1;i<=5;i++) {
+    document.getElementById('s'+i).classList.toggle('on', i===n);
+    document.getElementById('tab'+i).classList.toggle('on', i===n);
+  }
+  if(n===2) renderCards('proc-cards', procs, 'proc');
+  if(n===3) renderCards('bat-cards', bats, 'bat');
+  if(n===4) renderCards('com-cards', coms, 'com');
+  if(n===5) showResult();
+}
+
+function showResult() {
+  const p = state.proc ? procs.find(x=>x.id===state.proc) : null;
+  const b = state.bat ? bats.find(x=>x.id===state.bat) : null;
+  const c = state.com ? coms.find(x=>x.id===state.com) : null;
+
+  drawDrone(p, b, c);
+
+  const totalCost = (p?.price||0) + (b?.price||0) + (c?.price||0);
+  const budget = budgetCosts[state.budget];
+  const leftover = budget - totalCost;
+  const riskScore = (p?.risk||0) + (b?.risk||0) + (c?.risk||0);
+  const endurance = b?.endurance || 0;
+  const jamRes = c?.jam || 0;
+
+  let overallAlert = '';
+  if(riskScore >= 6) overallAlert = `<div class="danger-box"><b>Kritik tedarik riski:</b> Seçtiğin yapılandırma birden fazla kritik minerale bağımlı. Çin kaynaklı ihracat kısıtlamaları projeyi durdurabilir. Tedarik zinciri çeşitlendirmesi şart.</div>`;
+  else if(riskScore >= 3) overallAlert = `<div class="warning-box"><b>Orta tedarik riski:</b> Bazı bileşenler kısıtlı hammadde gerektiriyor. Stok tampon planlaması önerilir.</div>`;
+  else overallAlert = `<div class="success-box"><b>Düşük tedarik riski:</b> Bu yapılandırma önemli bir kritik mineral bağımlılığı içermiyor. Tedarik zinciri nispeten güvenli.</div>`;
+
+  document.getElementById('result-content').innerHTML = `
+    ${overallAlert}
+    <div class="result-box">
+      <div class="stat-row"><span class="stat-label">Birim toplam maliyet</span><span class="stat-val">${totalCost} USD / ${budget} USD bütçe</span></div>
+      <div style="margin: 4px 0 8px"><div class="budget-bar"><div class="budget-fill" style="width:${Math.min(100,Math.round(totalCost/budget*100))}%;background:${totalCost>budget?'#E24B4A':'#1D9E75'}"></div></div></div>
+      <div class="stat-row"><span class="stat-label">YZ işlemcisi</span><span class="stat-val">${p ? p.name : '— seçilmedi'}</span></div>
+      <div class="stat-row"><span class="stat-label">Pil süresi</span><span class="stat-val">${endurance > 0 ? endurance+' dakika' : '—'}</span></div>
+      <div class="stat-row"><span class="stat-label">EH / jammer direnci</span><span class="stat-val">${jamRes}%</span></div>
+      <div class="stat-row"><span class="stat-label">Tedarik zinciri risk puanı</span><span class="stat-val" style="color:${riskScore>=6?'#E24B4A':riskScore>=3?'#EF9F27':'#1D9E75'}">${riskScore}/9</span></div>
+      <div class="stat-row"><span class="stat-label">Kalan bütçe (gövde/diğer)</span><span class="stat-val">${leftover >= 0 ? leftover+' USD' : '<span style="color:#E24B4A">'+leftover+' USD aşım</span>'}</span></div>
+    </div>
+  `;
+}
+
+function drawDrone(p, b, c) {
+  const cvs = document.getElementById('droneCanvas');
+  const ctx = cvs.getContext('2d');
+  cvs.width = cvs.offsetWidth;
+  cvs.height = 160;
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+
+  const cx = cvs.width/2, cy = 80;
+  const armColor = '#888780';
+  const bodyColor = p ? p.color : '#888780';
+  const battColor = b ? b.color : '#888780';
+  const antColor = c ? c.color : '#888780';
+
+  // Kollar
+  [[1,1],[-1,1],[-1,-1],[1,-1]].forEach(([dx,dy]) => {
+    ctx.strokeStyle = armColor+'99';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx+dx*50, cy+dy*50); ctx.stroke();
+    // Motor dairesi
+    ctx.strokeStyle = armColor+'cc';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx+dx*50, cy+dy*50, 14, 0, Math.PI*2); ctx.stroke();
+    // Perde (pervane)
+    ctx.fillStyle = battColor+'88';
+    ctx.beginPath(); ctx.ellipse(cx+dx*50, cy+dy*50, 22, 5, Math.atan2(dy,dx), 0, Math.PI); ctx.fill();
+  });
+
+  // Gövde
+  ctx.fillStyle = bodyColor+'cc';
+  ctx.beginPath(); ctx.roundRect(cx-22, cy-16, 44, 32, 8); ctx.fill();
+  ctx.strokeStyle = bodyColor;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(cx-22, cy-16, 44, 32, 8); ctx.stroke();
+
+  // YZ çipi sembolü
+  ctx.fillStyle = '#fff';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(p ? p.label : '?', cx, cy+4);
+
+  // Anten
+  ctx.strokeStyle = antColor;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx+8, cy-16); ctx.lineTo(cx+8, cy-38); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx+8, cy-38, 4, 0, Math.PI*2); ctx.fillStyle = antColor; ctx.fill();
+
+  // Batarya göstergesi
+  ctx.fillStyle = battColor+'cc';
+  ctx.beginPath(); ctx.roundRect(cx-18, cy+20, 36, 8, 3); ctx.fill();
+  if(b) {
+    ctx.fillStyle = '#fff9';
+    ctx.font = '9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(b.label, cx, cy+27);
+  }
+}
+
+function resetSim() {
+  state.budget=2; state.proc=null; state.bat=null; state.com=null;
+  goto(1); setBudget(2);
+}
+
+</script>
+</body>
+</html>

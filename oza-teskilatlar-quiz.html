@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OZA — Teşkilatlar Quiz</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e1a;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.back-nav{position:fixed;top:12px;left:12px;z-index:999;background:rgba(0,0,0,.7);padding:8px 16px;border-radius:20px;font-size:13px}
+.back-nav a{color:#4fc3f7;text-decoration:none}
+.game-container{max-width:600px;width:90%;padding:30px;text-align:center}
+h1{font-size:1.8em;color:#81c784;margin-bottom:10px}
+.subtitle{color:#90a4ae;margin-bottom:30px}
+.score-bar{display:flex;justify-content:space-between;margin-bottom:20px;padding:10px 20px;background:rgba(0,0,0,.3);border-radius:10px}
+.score-bar span{font-size:.9em;color:#90a4ae}
+.score-bar .val{color:#81c784;font-weight:700}
+.scenario{background:rgba(255,255,255,.05);border-radius:16px;padding:25px;margin-bottom:20px;border:1px solid rgba(129,199,132,.2)}
+.scenario .q-num{font-size:.8em;color:#78909c;margin-bottom:8px}
+.scenario .q-text{font-size:1.1em;color:#fff;line-height:1.5;margin-bottom:15px}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice-btn{padding:15px 20px;background:rgba(129,199,132,.1);border:1px solid rgba(129,199,132,.3);border-radius:12px;color:#e0e0e0;cursor:pointer;text-align:left;font-size:.95em;transition:all .3s}
+.choice-btn:hover{background:rgba(129,199,132,.2);border-color:#81c784;transform:translateX(5px)}
+.choice-btn.correct{background:rgba(129,199,132,.3);border-color:#81c784;color:#81c784}
+.choice-btn.wrong{background:rgba(239,83,80,.2);border-color:#ef5350;color:#ef5350}
+.result{text-align:center;padding:30px}
+.result h2{font-size:1.8em;margin-bottom:15px}
+.result .final-score{font-size:3em;color:#81c784;font-weight:700}
+.restart-btn{margin-top:20px;padding:12px 30px;background:#81c784;color:#0a0e1a;border:none;border-radius:10px;font-size:1em;cursor:pointer;font-weight:600}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="back-nav"><a href="oza-hub.html">← OZA Merkez</a></div>
+<div class="game-container">
+<h1>🌍 Teşkilatlar Quiz</h1>
+<p class="subtitle">Dünya teşkilatlarını ne kadar tanıyorsun?</p>
+<div class="score-bar"><span>Soru: <span class="val" id="qNum">1/12</span></span><span>Puan: <span class="val" id="score">0</span></span></div>
+<div id="gameArea"></div>
+</div>
+<script>
+const questions=[
+{q:"NATO'nun merkezi nerededir?",choices:["Washington","Londra","Brüksel","Paris"],correct:2},
+{q:"Türkiye kaç uluslararası teşkilata üyedir?",choices:["15","22","32","45"],correct:2},
+{q:"Şanghay İşbirliği Örgütü'nün (ŞİÖ) lideri hangi ülkelerdir?",choices:["ABD-AB","Çin-Rusya","Hindistan-Japonya","Türkiye-İran"],correct:1},
+{q:"G-20 ülkeleri dünya GSYH'nın yüzde kaçını temsil eder?",choices:["%60","%72","%85","%95"],correct:2},
+{q:"Türk Konseyi'nin (Türk Devletleri Teşkilatı) merkezi nerededir?",choices:["Ankara","Bakü","İstanbul","Astana"],correct:2},
+{q:"BM Güvenlik Konseyi'nde kaç daimi üye vardır?",choices:["3","5","7","10"],correct:1},
+{q:"OECD'nin merkezi hangi şehirdedir?",choices:["Cenevre","New York","Paris","Viyana"],correct:2},
+{q:"Karadeniz Ekonomik İşbirliği Örgütü (KEİ) kaç üyeye sahiptir?",choices:["8","13","20","27"],correct:1},
+{q:"NATO'nun Madde 5'i ne anlama gelir?",choices:["Ekonomik yaptırım","Kolektif savunma","Silahsızlanma","Barış gücü"],correct:1},
+{q:"D-8 teşkilatının kurucu öncüsü hangi ülkedir?",choices:["Mısır","İran","Türkiye","Malezya"],correct:2},
+{q:"AGİT'in (OSCE) merkezi nerededir?",choices:["Brüksel","Strazburg","Viyana","Helsinki"],correct:2},
+{q:"Avrupa Birliği'ne Türkiye'nin statüsü nedir?",choices:["Tam üye","Gözlemci","Aday ülke","Ortak üye"],correct:2}
+];
+let current=0,score=0;
+function renderQ(){
+if(current>=questions.length){showResult();return}
+const q=questions[current];
+document.getElementById('qNum').textContent=(current+1)+'/'+questions.length;
+document.getElementById('gameArea').innerHTML=`<div class="scenario"><div class="q-num">Soru ${current+1}</div><div class="q-text">${q.q}</div></div><div class="choices">${q.choices.map((c,i)=>`<div class="choice-btn" onclick="answer(${i})">${c}</div>`).join('')}</div>`;
+}
+function answer(idx){const q=questions[current];const btns=document.querySelectorAll('.choice-btn');btns.forEach((b,i)=>{if(i===q.correct)b.classList.add('correct');else if(i===idx)b.classList.add('wrong');b.style.pointerEvents='none'});if(idx===q.correct)score+=10;document.getElementById('score').textContent=score;setTimeout(()=>{current++;renderQ()},1200)}
+function showResult(){document.getElementById('gameArea').innerHTML=`<div class="result"><h2>${score>=80?'Diplomat Seviyesi!':score>=50?'İyi Bilgi!':'Daha Çalış!'}</h2><div class="final-score">${score}/120</div><button class="restart-btn" onclick="restart()">Tekrar Oyna</button></div>`}
+function restart(){current=0;score=0;document.getElementById('score').textContent=0;renderQ()}
+renderQ();
+</script>
+</body>
+</html>

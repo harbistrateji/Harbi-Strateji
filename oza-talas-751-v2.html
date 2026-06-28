@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+    <title>Talas Savaşı 751 — Harb-i Strateji</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1f2e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header {
+            background: rgba(0, 224, 255, 0.1);
+            border: 2px solid #00e0ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 { color: #c9a24b; font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { color: #00e0ff; font-size: 1.1em; margin-bottom: 5px; }
+        .meta { color: #888; font-size: 0.9em; }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(201, 162, 75, 0.2);
+            border: 2px solid #c9a24b;
+            color: #c9a24b;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: #c9a24b;
+            color: #0d0d0d;
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 162, 75, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 224, 255, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .section h2 {
+            color: #00e0ff;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            color: #c9a24b;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .section p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .control-card {
+            background: rgba(0, 224, 255, 0.1);
+            border-left: 4px solid #00e0ff;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .control-card strong {
+            color: #00e0ff;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .control-card code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'IBM Plex Mono', monospace;
+            color: #c9a24b;
+        }
+
+        .tip-box {
+            background: rgba(201, 162, 75, 0.1);
+            border-left: 4px solid #c9a24b;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .tip-box strong {
+            color: #c9a24b;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .strategy-box {
+            background: rgba(224, 21, 21, 0.1);
+            border: 2px solid #e01515;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .strategy-box h4 {
+            color: #e01515;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .strategy-box ul {
+            list-style: none;
+            margin-left: 20px;
+        }
+        .strategy-box li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .strategy-box li:before {
+            content: "⚔️";
+            position: absolute;
+            left: 0;
+        }
+
+        .infographic {
+            background: rgba(0, 224, 255, 0.05);
+            border: 2px solid #00e0ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .infographic svg {
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #c9a24b;
+            color: #0d0d0d;
+        }
+        .btn-primary:hover {
+            background: #e0c76b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 162, 75, 0.4);
+        }
+        .btn-secondary {
+            background: rgba(0, 224, 255, 0.2);
+            color: #00e0ff;
+            border: 2px solid #00e0ff;
+        }
+        .btn-secondary:hover {
+            background: rgba(0, 224, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .video-placeholder {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px dashed #00e0ff;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .video-placeholder p {
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .tabs { flex-direction: column; }
+            .tab-btn { width: 100%; }
+            .control-grid { grid-template-columns: 1fr; }
+            .button-group { flex-direction: column; }
+            .btn { width: 100%; text-align: center; }
+        }
+    </style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+    <div class="container">
+        <header>
+            <h1>⚔️ TALAS SAVAŞI 751</h1>
+            <p class="subtitle">Abbasi-Karluk Türkleri vs. Tang Hanedanı Çin</p>
+            <p class="meta">751 M.S. · Talas Nehri Kıyısı · Orta Asya</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('nasil')">📖 Nasıl Oynanır</button>
+            <button class="tab-btn" onclick="switchTab('kontrol')">🎮 Kontroller</button>
+            <button class="tab-btn" onclick="switchTab('strateji')">🎯 Strateji Rehberi</button>
+            <button class="tab-btn" onclick="switchTab('tarih')">📜 Tarihi Bağlam</button>
+            <button class="tab-btn" onclick="switchTab('infografik')">📊 İnfografik</button>
+        </div>
+
+        <!-- NASIL OYNANIR -->
+        <div id="nasil" class="tab-content active">
+            <div class="section">
+                <h2>🎮 Oyun Akışı</h2>
+                <p>Talas 751 oyununda siz <strong>Abbasi-Karluk ittifakının komutanı</strong> olarak hareket ediyorsunuz. Amacınız: <strong>7 dalgada gelen Tang Çin ordusunu durdurarak kağıt teknolojisini ele geçirmek</strong>.</p>
+                
+                <h3>Temel Mekanikler</h3>
+                <div class="control-grid">
+                    <div class="control-card">
+                        <strong>🏹 Dalga Sistemi</strong>
+                        Oyun 7 dalgaya bölünmüştür. Her dalga başında düşman sayısı artar. Dalgayı tamamlamak = ilerlemek.
+                    </div>
+                    <div class="control-card">
+                        <strong>❤️ Can Sistemi</strong>
+                        100 canla başlıyorsunuz. Düşman saldırısı her 1 can çalar. Can 0'a düşerse oyun biter.
+                    </div>
+                    <div class="control-card">
+                        <strong>🏆 Puan Sistemi</strong>
+                        Her düşmanı öldürdüğünüzde puan kazanırsınız. Puan = Başarı Sırası.
+                    </div>
+                    <div class="control-card">
+                        <strong>📜 Kağıt Teknolojisi</strong>
+                        Belirli düşmanları öldürdüğünüzde kağıt teknolojisini kazanırsınız. 5 kağıt = Oyun Bitti!
+                    </div>
+                </div>
+
+                <h3>Adım Adım Oynanış</h3>
+                <div class="strategy-box">
+                    <h4>1️⃣ Oyuna Başlama</h4>
+                    <ul>
+                        <li><strong>SAVAŞA GİR</strong> butonuna tıklayın</li>
+                        <li>Ekranda 7 Tang askeri görünecek (Dalga 1)</li>
+                        <li>Siz ekranın sol tarafında yeşil karedir</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>2️⃣ Hareket Etme</h4>
+                    <ul>
+                        <li><strong>Bilgisayar:</strong> W/A/S/D veya Ok Tuşları</li>
+                        <li><strong>Mobil:</strong> Sol tarafta görünen joystick'i kullanın</li>
+                        <li>Düşmanlardan kaçın, onları çevrelemek için stratejik hareket yapın</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>3️⃣ Ateş Etme</h4>
+                    <ul>
+                        <li><strong>Bilgisayar:</strong> Fare tıkla veya SPACE tuşu</li>
+                        <li><strong>Mobil:</strong> Sağ tarafta görünen ateş butonuna tıkla</li>
+                        <li>Ok, Kılıç veya Ateş Ok seçebilirsiniz (üst kısımda)</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>4️⃣ Silah Değiştirme</h4>
+                    <ul>
+                        <li>Üst kısımda 3 silah görseli vardır: 🏹 Ok · ⚔️ Kılıç · 🔥 Ateş Ok</li>
+                        <li>Tıklayarak silah değiştirin</li>
+                        <li>Her silahın farklı menzili ve hasarı vardır</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>5️⃣ Dalgaları Tamamlama</h4>
+                    <ul>
+                        <li>Tüm düşmanları öldürün</li>
+                        <li>Dalga tamamlanınca yeni dalga başlar (daha zor)</li>
+                        <li>7 dalgayı tamamlayın = Oyunu Kazanın!</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 İpucu: Oyun Temposu</strong>
+                    Oyun hızlıdır! Düşmanlar her saniye saldırır. Sakin kalın, stratejik hareket yapın. Aceleyle ölüm gelir.
+                </div>
+            </div>
+        </div>
+
+        <!-- KONTROLLER -->
+        <div id="kontrol" class="tab-content">
+            <div class="section">
+                <h2>🎮 Kontrol Şeması</h2>
+
+                <h3>💻 Bilgisayar Kontrolleri</h3>
+                <div class="control-grid">
+                    <div class="control-card">
+                        <strong>W / ⬆️ Ok Tuşu</strong>
+                        Yukarı hareket
+                    </div>
+                    <div class="control-card">
+                        <strong>A / ⬅️ Ok Tuşu</strong>
+                        Sola hareket
+                    </div>
+                    <div class="control-card">
+                        <strong>S / ⬇️ Ok Tuşu</strong>
+                        Aşağı hareket
+                    </div>
+                    <div class="control-card">
+                        <strong>D / ➡️ Ok Tuşu</strong>
+                        Sağa hareket
+                    </div>
+                    <div class="control-card">
+                        <strong>Fare Tıkla / SPACE</strong>
+                        Ateş et
+                    </div>
+                    <div class="control-card">
+                        <strong>R</strong>
+                        Oyunu yenile
+                    </div>
+                    <div class="control-card">
+                        <strong>1 / 2 / 3</strong>
+                        Silah değiştir
+                    </div>
+                    <div class="control-card">
+                        <strong>ESC</strong>
+                        Menüye dön
+                    </div>
+                </div>
+
+                <h3>📱 Mobil Kontrolleri</h3>
+                <div class="control-grid">
+                    <div class="control-card">
+                        <strong>Sol Joystick</strong>
+                        Ekranın sol tarafında görünen joystick'i sürükleyin. Hareket yönü otomatik algılanır.
+                    </div>
+                    <div class="control-card">
+                        <strong>Sağ Ateş Butonu</strong>
+                        Ekranın sağ tarafında görünen ateş butonuna tıklayın. Sürekli basılı tutabilirsiniz.
+                    </div>
+                    <div class="control-card">
+                        <strong>Silah Değiştirme</strong>
+                        Üst kısımda görünen silah ikonlarına tıklayın. Hızlı değişim için 1-2-3 tuşlarını kullanın.
+                    </div>
+                    <div class="control-card">
+                        <strong>Geri Butonu</strong>
+                        Ekranın sol üst köşesinde ← Geri butonu vardır.
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Mobil İpucu</strong>
+                    Joystick'i sürüklerken parmağınızı ekranda tutun. Parmağınızı kaldırırsanız hareket durur. Ateş butonunu sürekli basılı tutabilirsiniz.
+                </div>
+            </div>
+        </div>
+
+        <!-- STRATEJİ REHBERİ -->
+        <div id="strateji" class="tab-content">
+            <div class="section">
+                <h2>🎯 Strateji Rehberi</h2>
+
+                <h3>Silah Seçimi</h3>
+                <div class="strategy-box">
+                    <h4>🏹 Ok (Menzil: Uzak)</h4>
+                    <ul>
+                        <li><strong>Hasar:</strong> Düşük (1 hasar)</li>
+                        <li><strong>Hız:</strong> Orta</li>
+                        <li><strong>Menzil:</strong> Çok Uzak</li>
+                        <li><strong>Kullanım:</strong> Düşmanlar uzakta olduğunda ideal. Grup düşmanları dağıtmak için ok yağmuru yapın.</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>⚔️ Kılıç (Menzil: Yakın)</h4>
+                    <ul>
+                        <li><strong>Hasar:</strong> Yüksek (3 hasar)</li>
+                        <li><strong>Hız:</strong> Yavaş</li>
+                        <li><strong>Menzil:</strong> Çok Yakın</li>
+                        <li><strong>Kullanım:</strong> Düşman yakınsa kılıç kullanın. Tek düşmanı hızlıca bitirmek için ideal.</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>🔥 Ateş Ok (Menzil: Orta)</h4>
+                    <ul>
+                        <li><strong>Hasar:</strong> Orta (2 hasar)</li>
+                        <li><strong>Hız:</strong> Hızlı</li>
+                        <li><strong>Menzil:</strong> Orta</li>
+                        <li><strong>Kullanım:</strong> En dengeli silah. Çoğu durumda ateş ok kullanın.</li>
+                    </ul>
+                </div>
+
+                <h3>Oyun Stratejileri</h3>
+                <div class="strategy-box">
+                    <h4>Dalga 1-2: Öğrenme Aşaması</h4>
+                    <ul>
+                        <li>Kontrolleri öğrenin</li>
+                        <li>Silahları deneyin</li>
+                        <li>Düşman hareket paternini gözlemleyin</li>
+                        <li>Henüz risk almayın — can kaybetmeyin</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>Dalga 3-4: Agresif Oyun</h4>
+                    <ul>
+                        <li>Düşmanları sıkıştırın</li>
+                        <li>Grup halinde gelen düşmanları ok yağmuru ile dağıtın</li>
+                        <li>Kağıt teknolojisi taşıyan düşmanları öncelik verin</li>
+                        <li>Kenarlardan kaçış yolları bırakın</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-box">
+                    <h4>Dalga 5-7: Hayatta Kalma Modu</h4>
+                    <ul>
+                        <li>Düşmanlardan kaçmak kadar önemli = ateş etmek</li>
+                        <li>Merkeze toplanmış düşmanları dağıtın</li>
+                        <li>Canınız 20'nin altına düşerse savunmaya geçin</li>
+                        <li>Kağıt teknolojisi kazanmak için gerekli düşmanları hedefleyin</li>
+                    </ul>
+                </div>
+
+                <h3>Gelişmiş Taktikler</h3>
+                <div class="tip-box">
+                    <strong>🎯 Çevreleme Taktikası</strong>
+                    Düşmanları ekranın köşesine sıkıştırın. Böylece kaçış yolu olmaz ve tüm ateşiniz hedef alır.
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎯 Dalga Ritmi</strong>
+                    Her dalga başında 2-3 saniye bekleyin. Düşmanlar belirli bir düzende gelir. Ritmi öğrenin.
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎯 Kağıt Avcılığı</strong>
+                    Kağıt teknolojisi taşıyan düşmanlar daha parlak renkle gösterilir. Onları hedefleyin.
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎯 Can Yönetimi</strong>
+                    Canınız 50'nin altına düşerse agresif olmayın. Savunmaya geçin ve düşmanları dağıtın.
+                </div>
+            </div>
+        </div>
+
+        <!-- TARİHİ BAĞLAM -->
+        <div id="tarih" class="tab-content">
+            <div class="section">
+                <h2>📜 Talas Savaşı 751 — Tarihi Bağlam</h2>
+
+                <h3>Savaş Öncesi Durum</h3>
+                <p>
+                    8. yüzyılda Orta Asya, iki büyük güç arasında bir çatışma alanıydı: <strong>Abbasi Halifesi</strong> ve <strong>Tang Hanedanı Çin</strong>. 
+                    Abbasi Halifesi, İslam medeniyetini genişletmek istiyordu. Tang Hanedanı ise Orta Asya'nın ipek yollarını kontrol etmek istiyordu.
+                </p>
+
+                <h3>Savaşın Nedenleri</h3>
+                <div class="strategy-box">
+                    <h4>Jeopolitik Rekabet</h4>
+                    <ul>
+                        <li>Tang Hanedanı: Orta Asya'nın ticari yollarını kontrol etmek</li>
+                        <li>Abbasi Halifesi: İslam medeniyetini Doğu'ya yaymak</li>
+                        <li>Karluk Türkleri: Bağımsızlığını korumak ve ittifak kurmak</li>
+                    </ul>
+                </div>
+
+                <h3>Savaşın Gidişatı</h3>
+                <p>
+                    <strong>751 yılında Talas Nehri kıyısında</strong> Abbasi Halifesi'nin ordusu ile Karluk Türkleri, Tang Hanedanı'nın ordusuna karşı savaştı. 
+                    Savaş <strong>Abbasi-Karluk ittifakının zaferiyle</strong> sonuçlandı. Tang ordusu Orta Asya'dan çekilmek zorunda kaldı.
+                </p>
+
+                <h3>Savaşın Sonuçları</h3>
+                <div class="strategy-box">
+                    <h4>🏆 Kazananlar</h4>
+                    <ul>
+                        <li><strong>Abbasi Halifesi:</strong> Orta Asya'nın kontrolünü sağlamlaştırdı</li>
+                        <li><strong>Karluk Türkleri:</strong> Bağımsızlığını korudu ve İslam'ı kabul etti</li>
+                        <li><strong>İslam Medeniyeti:</strong> Doğu'ya yayılmaya başladı</li>
+                    </ul>
+                </div>
+
+                <h3>Kağıt Teknolojisinin Transferi</h3>
+                <p>
+                    <strong>Savaşın en önemli sonucu:</strong> Esir alınan Çinli ustalardan <strong>kağıt yapımı teknolojisi</strong> öğrenildi. 
+                    Bu teknoloji İslam medeniyetine yayıldı ve daha sonra Avrupa'ya ulaştı. 
+                    Kağıt, insanlığın bilgi depolaması ve iletişimini devrim niteliğinde değiştirdi.
+                </p>
+
+                <div class="tip-box">
+                    <strong>📚 Tarihsel Önem</strong>
+                    Talas Savaşı, Orta Asya'nın geleceğini belirledi. Türkler İslam medeniyetinin parçası haline geldi ve bu ittifak 
+                    1000 yıldan fazla sürdü (Osmanlı İmparatorluğu'na kadar).
+                </div>
+            </div>
+        </div>
+
+        <!-- İNFOGRAFİK -->
+        <div id="infografik" class="tab-content">
+            <div class="section">
+                <h2>📊 Talas Savaşı 751 — İnfografik</h2>
+
+                <div class="infographic">
+                    <h3>Savaş İstatistikleri</h3>
+                    <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Başlık -->
+                        <text x="300" y="30" font-size="24" font-weight="bold" fill="#c9a24b" text-anchor="middle">TALAS SAVAŞI 751</text>
+                        
+                        <!-- Abbasi Tarafı -->
+                        <rect x="50" y="80" width="200" height="180" fill="rgba(0,224,255,0.1)" stroke="#00e0ff" stroke-width="2" rx="8"/>
+                        <text x="150" y="110" font-size="18" font-weight="bold" fill="#00e0ff" text-anchor="middle">ABBASI-KARLUK</text>
+                        <text x="150" y="140" font-size="14" fill="#d0d0d0" text-anchor="middle">Ordu Büyüklüğü:</text>
+                        <text x="150" y="160" font-size="16" font-weight="bold" fill="#c9a24b" text-anchor="middle">~100,000</text>
+                        <text x="150" y="190" font-size="14" fill="#d0d0d0" text-anchor="middle">Komutan: Ziyad ibn Salih</text>
+                        <text x="150" y="210" font-size="12" fill="#888" text-anchor="middle">(Abbasi) + Karluk Türkleri</text>
+                        <text x="150" y="235" font-size="14" font-weight="bold" fill="#00e0ff" text-anchor="middle">✓ ZAFERİYET</text>
+                        
+                        <!-- Tang Tarafı -->
+                        <rect x="350" y="80" width="200" height="180" fill="rgba(224,21,21,0.1)" stroke="#e01515" stroke-width="2" rx="8"/>
+                        <text x="450" y="110" font-size="18" font-weight="bold" fill="#e01515" text-anchor="middle">TANG HANEDANI</text>
+                        <text x="450" y="140" font-size="14" fill="#d0d0d0" text-anchor="middle">Ordu Büyüklüğü:</text>
+                        <text x="450" y="160" font-size="16" font-weight="bold" fill="#c9a24b" text-anchor="middle">~70,000</text>
+                        <text x="450" y="190" font-size="14" fill="#d0d0d0" text-anchor="middle">Komutan: Gao Xianzhi</text>
+                        <text x="450" y="210" font-size="12" fill="#888" text-anchor="middle">(Tang Hanedanı Generali)</text>
+                        <text x="450" y="235" font-size="14" font-weight="bold" fill="#e01515" text-anchor="middle">✗ MAĞLUBİYET</text>
+                    </svg>
+                </div>
+
+                <div class="infographic">
+                    <h3>Savaşın Etkileri</h3>
+                    <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Merkez -->
+                        <circle cx="300" cy="200" r="40" fill="#c9a24b" opacity="0.3" stroke="#c9a24b" stroke-width="2"/>
+                        <text x="300" y="210" font-size="12" font-weight="bold" fill="#c9a24b" text-anchor="middle">TALAS</text>
+                        <text x="300" y="225" font-size="12" font-weight="bold" fill="#c9a24b" text-anchor="middle">751</text>
+
+                        <!-- Etki 1: Coğrafi -->
+                        <line x1="300" y1="240" x2="150" y2="320" stroke="#00e0ff" stroke-width="2"/>
+                        <circle cx="150" cy="320" r="30" fill="rgba(0,224,255,0.2)" stroke="#00e0ff" stroke-width="2"/>
+                        <text x="150" y="315" font-size="12" font-weight="bold" fill="#00e0ff" text-anchor="middle">Coğrafi</text>
+                        <text x="150" y="330" font-size="10" fill="#d0d0d0" text-anchor="middle">Tang Çin'in</text>
+                        <text x="150" y="343" font-size="10" fill="#d0d0d0" text-anchor="middle">Orta Asya'dan</text>
+                        <text x="150" y="356" font-size="10" fill="#d0d0d0" text-anchor="middle">çekilmesi</text>
+
+                        <!-- Etki 2: Dini -->
+                        <line x1="300" y1="240" x2="300" y2="340" stroke="#c9a24b" stroke-width="2"/>
+                        <circle cx="300" cy="340" r="30" fill="rgba(201,162,75,0.2)" stroke="#c9a24b" stroke-width="2"/>
+                        <text x="300" y="335" font-size="12" font-weight="bold" fill="#c9a24b" text-anchor="middle">Dini</text>
+                        <text x="300" y="350" font-size="10" fill="#d0d0d0" text-anchor="middle">Türklerin</text>
+                        <text x="300" y="363" font-size="10" fill="#d0d0d0" text-anchor="middle">İslam'ı kabulü</text>
+                        <text x="300" y="376" font-size="10" fill="#d0d0d0" text-anchor="middle">ve yayılması</text>
+
+                        <!-- Etki 3: Teknoloji -->
+                        <line x1="300" y1="240" x2="450" y2="320" stroke="#e01515" stroke-width="2"/>
+                        <circle cx="450" cy="320" r="30" fill="rgba(224,21,21,0.2)" stroke="#e01515" stroke-width="2"/>
+                        <text x="450" y="315" font-size="12" font-weight="bold" fill="#e01515" text-anchor="middle">Teknoloji</text>
+                        <text x="450" y="330" font-size="10" fill="#d0d0d0" text-anchor="middle">Kağıt yapımı</text>
+                        <text x="450" y="343" font-size="10" fill="#d0d0d0" text-anchor="middle">teknolojisinin</text>
+                        <text x="450" y="356" font-size="10" fill="#d0d0d0" text-anchor="middle">transfer edilmesi</text>
+                    </svg>
+                </div>
+
+                <div class="infographic">
+                    <h3>Kağıt Teknolojisinin Yayılışı</h3>
+                    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Zaman çizgisi -->
+                        <line x1="50" y1="100" x2="550" y2="100" stroke="#00e0ff" stroke-width="2"/>
+
+                        <!-- 751 Talas -->
+                        <circle cx="100" cy="100" r="8" fill="#c9a24b"/>
+                        <text x="100" y="130" font-size="12" font-weight="bold" fill="#c9a24b" text-anchor="middle">751</text>
+                        <text x="100" y="145" font-size="10" fill="#d0d0d0" text-anchor="middle">Talas</text>
+                        <text x="100" y="158" font-size="10" fill="#d0d0d0" text-anchor="middle">Kağıt Transferi</text>
+
+                        <!-- 800 İslam -->
+                        <circle cx="220" cy="100" r="8" fill="#00e0ff"/>
+                        <text x="220" y="130" font-size="12" font-weight="bold" fill="#00e0ff" text-anchor="middle">800</text>
+                        <text x="220" y="145" font-size="10" fill="#d0d0d0" text-anchor="middle">İslam</text>
+                        <text x="220" y="158" font-size="10" fill="#d0d0d0" text-anchor="middle">Medeniyeti</text>
+
+                        <!-- 1000 Avrupa -->
+                        <circle cx="400" cy="100" r="8" fill="#e01515"/>
+                        <text x="400" y="130" font-size="12" font-weight="bold" fill="#e01515" text-anchor="middle">1000</text>
+                        <text x="400" y="145" font-size="10" fill="#d0d0d0" text-anchor="middle">Avrupa'ya</text>
+                        <text x="400" y="158" font-size="10" fill="#d0d0d0" text-anchor="middle">Ulaşması</text>
+
+                        <!-- Bugün -->
+                        <circle cx="520" cy="100" r="8" fill="#c9a24b"/>
+                        <text x="520" y="130" font-size="12" font-weight="bold" fill="#c9a24b" text-anchor="middle">Bugün</text>
+                        <text x="520" y="145" font-size="10" fill="#d0d0d0" text-anchor="middle">Dijital</text>
+                        <text x="520" y="158" font-size="10" fill="#d0d0d0" text-anchor="middle">Çağ</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="startGame()">⚔️ SAVAŞA GİR</button>
+            <button class="btn btn-secondary" onclick="goBack()">← GERİ DÖN</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Tüm tab içeriklerini gizle
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Tüm tab butonlarını deaktif et
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Seçilen tabı göster
+            document.getElementById(tabName).classList.add('active');
+
+            // Seçilen butonu aktif et
+            event.target.classList.add('active');
+        }
+
+        function startGame() {
+            window.location.href = 'oza-talas-751.html';
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Sayfa yüklendiğinde ilk tab aktif
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.tab-btn').classList.add('active');
+        });
+    </script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

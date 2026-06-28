@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Büyük Komutanların Sözleri — İnteraktif Koleksiyon</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#080c14;color:#e8ecf0;overflow-x:hidden;min-height:100vh}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 20px;position:relative}
+.hero::before{content:'';position:absolute;pointer-events:none;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(224,21,21,0.06) 0%,transparent 50%)}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#E01515;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.hero .sub{color:#8a9ab0;font-size:0.95rem;max-width:500px;line-height:1.5;margin-bottom:30px}
+.start-btn{padding:14px 40px;background:linear-gradient(135deg,#E01515,#8B0000);border:none;border-radius:8px;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(224,21,21,0.3)}
+.content{display:none;max-width:900px;margin:0 auto;padding:40px 20px}
+.quote-card{background:rgba(224,21,21,0.03);border:1px solid rgba(224,21,21,0.1);border-radius:14px;padding:25px 30px;margin-bottom:20px;cursor:pointer;transition:all .4s;position:relative;overflow:hidden;opacity:0;transform:translateY(20px)}
+.quote-card.visible{opacity:1;transform:translateY(0)}
+.quote-card::before{content:'❝';position:absolute;top:10px;left:15px;font-size:2.5rem;color:rgba(224,21,21,0.1)}
+.quote-card:hover{background:rgba(224,21,21,0.06);border-color:rgba(224,21,21,0.3);transform:translateY(-2px)}
+.quote-card.highlight{border-color:#C9A24B;background:rgba(201,162,75,0.04)}
+.quote-card.highlight::before{color:rgba(201,162,75,0.15)}
+.quote-text{font-size:1.05rem;font-style:italic;color:#d0d8e4;line-height:1.7;margin-bottom:12px;padding-left:20px}
+.quote-author{display:flex;align-items:center;gap:10px;padding-left:20px}
+.author-icon{width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:rgba(224,21,21,0.1);border:1px solid rgba(224,21,21,0.2)}
+.quote-card.highlight .author-icon{background:rgba(201,162,75,0.1);border-color:rgba(201,162,75,0.3)}
+.author-name{font-weight:700;color:#E01515;font-size:0.9rem}
+.quote-card.highlight .author-name{color:#C9A24B}
+.section-title{color:#E01515;font-size:1.3rem;font-weight:700;margin:40px 0 20px;padding-bottom:8px;border-bottom:1px solid rgba(224,21,21,0.15)}
+.music-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:rgba(224,21,21,0.12);border:2px solid #E01515;color:#E01515;font-size:1.5rem;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center}
+.back-btn{position:fixed;top:20px;left:20px;padding:8px 16px;background:rgba(224,21,21,0.1);border:1px solid rgba(224,21,21,0.3);border-radius:6px;color:#E01515;text-decoration:none;font-size:0.85rem;z-index:99}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<a href="oza-turk-savas-tarihi-hub.html" class="back-btn">← Savaş Tarihi</a>
+
+<div class="hero" id="hero">
+<h1>⚔️ Büyük Komutanların Sözleri</h1>
+<p class="sub">Mete Han'dan Atatürk'e — Türk tarihinin büyük komutanlarının strateji, liderlik ve vatan sevgisi üzerine unutulmaz sözleri.</p>
+<button class="start-btn" onclick="startContent()">Sözleri Keşfet</button>
+</div>
+
+<div class="content" id="content">
+<div class="section-title">Mete Han & Hunlar</div>
+<div class="quote-card"><div class="quote-text">"Benden atımı, eğerimi isteyin vereyim. İşimi isteyin vereyim. Çadırımı isteyin vereyim. Ama vatanımdan hiç kimse bir karış toprak istemesin, veremem."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Mete Han</div></div></div>
+
+<div class="section-title">Fatih Sultan Mehmet Han</div>
+<div class="quote-card"><div class="quote-text">"İmkânın sınırını görmek için imkânsızı denemek lazım."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Fatih Sultan Mehmet Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Biz toprakları değil, gönülleri feth etmeye gidiyoruz."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Fatih Sultan Mehmet Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Onlar korkularından denizi zincirleyecek kadar akıllı ise, biz gemileri karadan yürütebilecek kadar deliyiz."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Fatih Sultan Mehmet Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Düşmanı tanımak, tehlikeyi bertaraf etmek demektir."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Fatih Sultan Mehmet Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Yapmak istediğimi sakalımın bir teli bile bilseydi, sakalımın o telini hemen koparır ve yakardım."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Fatih Sultan Mehmet Han</div></div></div>
+
+<div class="section-title">Yavuz Sultan Selim Han</div>
+<div class="quote-card"><div class="quote-text">"Yenileceğinden korkan, daima yenilir."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Yavuz Sultan Selim Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Devletleri yıkan tüm hatanın altında, nice gururun gafleti yatar."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Yavuz Sultan Selim Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Buğday ekmeği yer gibi kılıç sallayan bir orduyu nasıl durdurabilirsiniz?"</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Yavuz Sultan Selim Han</div></div></div>
+
+<div class="section-title">Kanuni Sultan Süleyman Han</div>
+<div class="quote-card"><div class="quote-text">"Halk içinde muteber bir nesne yok devlet gibi, olmaya devlet cihanda bir nefes sıhhat gibi."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Kanuni Sultan Süleyman Han</div></div></div>
+
+<div class="section-title">Diğer Büyük Komutanlar</div>
+<div class="quote-card"><div class="quote-text">"Benim kazanmam önemli değil, diğerlerinin hepsi kaybetmelidir."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Cengiz Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Bir yeri elde tutmak, o yeri fethetmekten daha zordur."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Osman Gazi</div></div></div>
+<div class="quote-card"><div class="quote-text">"Adaletin en kötüsü geç tecelli edenidir. Sonunda hüküm isabetli olsa da, geciken adalet zulümdür."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Orhan Gazi</div></div></div>
+<div class="quote-card"><div class="quote-text">"Zevk, sefa ve rahatı kendimize haram eylemişizdir."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Sultan II. Mustafa</div></div></div>
+<div class="quote-card"><div class="quote-text">"Emir Allah'ındır... Lâkin kulların hiç hatası yok mudur?"</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Sultan II. Süleyman</div></div></div>
+<div class="quote-card"><div class="quote-text">"Kılıç kınından çıkmadıkça it sürüsü dağılmaz."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Sultan II. Mahmud</div></div></div>
+
+<div class="section-title">Sultan Abdülhamid Han</div>
+<div class="quote-card"><div class="quote-text">"Hak arayan varsa, hakkını verin. Baş kaldıran varsa, başını kesin."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Sultan Abdülhamid Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Tarih değil, hatalar tekerrür ediyor!"</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Sultan Abdülhamid Han</div></div></div>
+<div class="quote-card"><div class="quote-text">"Savaş yalnız sınırlarda olmaz. Savaş bir milletin topyekûn ateşe girmesidir. Eğer bu bütünlük sağlanmamışsa zafer tesadüfî, yenilgi kaderdir."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Sultan Abdülhamid Han</div></div></div>
+
+
+<div class="section-title highlight">Gazi Mustafa Kemal Atatürk</div>
+<div class="quote-card highlight"><div class="quote-text">"Yurtta sulh, cihanda sulh."</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Gazi Mustafa Kemal Atatürk</div></div></div>
+<div class="quote-card highlight"><div class="quote-text">"Ordular! İlk hedefiniz Akdeniz'dir. İleri!"</div><div class="quote-author"><div class="author-icon"></div><div class="author-name">Gazi Mustafa Kemal Atatürk</div></div></div>
+</div>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">♪</button>
+
+<script>
+let audioCtx,musicPlaying=false,musicInterval;
+
+function startContent(){
+document.getElementById('hero').style.display='none';
+document.getElementById('content').style.display='block';
+const cards=document.querySelectorAll('.quote-card');
+cards.forEach((c,i)=>{setTimeout(()=>c.classList.add('visible'),i*100);});
+}
+
+function toggleMusic(){
+if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+if(musicPlaying){clearInterval(musicInterval);musicPlaying=false;document.getElementById('musicBtn').style.opacity='0.5';}
+else{playMusic();musicPlaying=true;document.getElementById('musicBtn').style.opacity='1';}
+}
+
+function playMusic(){
+const notes=[196,220,246.94,293.66,329.63,349.23,392,440];
+let step=0;
+function play(){
+if(!musicPlaying)return;
+const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+osc.type='sine';
+osc.frequency.value=notes[step%notes.length];
+gain.gain.setValueAtTime(0.04,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+1.5);
+osc.start();osc.stop(audioCtx.currentTime+1.5);
+step++;
+}
+musicInterval=setInterval(play,800);play();
+}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

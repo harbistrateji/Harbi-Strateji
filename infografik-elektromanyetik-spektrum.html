@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elektromanyetik Spektrum: Görünmez Savaş Alanı — Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050a12;color:#e2e8f0;font-family:'Chakra Petch',sans-serif;overflow-x:hidden}
+.back-nav{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(5,10,18,0.95);border-bottom:1px solid #1e293b;padding:10px 20px;display:flex;align-items:center;gap:12px}
+.back-nav a{color:#00E0FF;text-decoration:none;font-size:14px}
+.hero{margin-top:50px;text-align:center;padding:80px 20px;position:relative;overflow:hidden}
+.wave-bg{position:absolute;top:0;left:0;right:0;bottom:0;opacity:0.15}
+.wave-bg svg{width:100%;height:100%}
+.hero h1{font-size:clamp(26px,5vw,44px);background:linear-gradient(90deg,#00E0FF,#a855f7,#E01515);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;position:relative}
+.hero .subtitle{color:#94a3b8;font-size:16px;max-width:600px;margin:0 auto}
+.badge{display:inline-block;background:rgba(168,85,247,0.15);border:1px solid #a855f7;color:#a855f7;padding:4px 12px;border-radius:20px;font-size:13px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
+.spectrum-bar{height:6px;background:linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#0077ff,#7700ff);border-radius:3px;margin:30px auto;max-width:800px;animation:spectrumPulse 3s ease-in-out infinite}
+@keyframes spectrumPulse{0%,100%{opacity:0.7;transform:scaleX(1)}50%{opacity:1;transform:scaleX(1.02)}}
+.sections{max-width:1100px;margin:0 auto;padding:20px}
+.section{background:#0a1020;border:1px solid #1e293b;border-radius:16px;padding:30px;margin-bottom:24px;position:relative;overflow:hidden;transition:all 0.3s}
+.section:hover{border-color:#a855f7;box-shadow:0 0 20px rgba(168,85,247,0.1)}
+.section h2{color:#a855f7;font-size:22px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.layer-card{background:#050a12;border:1px solid #1e293b;border-radius:12px;padding:20px;transition:all 0.3s;position:relative;overflow:hidden}
+.layer-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00E0FF,#a855f7)}
+.layer-card:hover{border-color:#a855f7;transform:translateY(-3px)}
+.layer-card h3{color:#00E0FF;font-size:16px;margin-bottom:8px}
+.layer-card p{color:#94a3b8;font-size:13px;line-height:1.6}
+.layer-card .freq{color:#a855f7;font-size:13px;font-family:'IBM Plex Mono',monospace;margin-top:8px}
+.pyramid{display:flex;flex-direction:column;align-items:center;gap:4px;margin:20px 0}
+.pyramid-layer{padding:12px;text-align:center;border-radius:8px;color:#fff;font-size:13px;font-weight:bold;transition:all 0.3s;cursor:pointer}
+.pyramid-layer:hover{transform:scale(1.05);box-shadow:0 0 15px currentColor}
+.threat-meter{background:#1e293b;border-radius:8px;height:8px;overflow:hidden;margin-top:8px}
+.threat-fill{height:100%;border-radius:8px;transition:width 1s ease}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}
+.stat{background:#050a12;border:1px solid #1e293b;border-radius:10px;padding:16px;text-align:center}
+.stat .val{font-size:24px;font-weight:bold;color:#00E0FF}
+.stat .lbl{font-size:13px;color:#64748b;margin-top:4px;text-transform:uppercase}
+.xray-btn{display:block;margin:20px auto;background:linear-gradient(135deg,#a855f7,#00E0FF);color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;font-family:'Chakra Petch',sans-serif;text-transform:uppercase;letter-spacing:1px;transition:all 0.3s}
+.xray-btn:hover{transform:scale(1.05);box-shadow:0 0 25px rgba(168,85,247,0.5)}
+.signal-viz{display:flex;align-items:flex-end;gap:3px;height:60px;justify-content:center;margin:20px 0}
+.signal-bar{width:4px;background:#a855f7;border-radius:2px;animation:signalPulse 1.5s ease-in-out infinite}
+@keyframes signalPulse{0%,100%{transform:scaleY(0.3)}50%{transform:scaleY(1)}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="back-nav">
+<a href="infografik.html">← İnfografikler</a>
+<span style="color:#333">|</span>
+<a href="index.html" style="color:#64748b;font-size:12px">Ana Sayfa</a>
+</div>
+
+<div class="hero">
+<div class="badge">6. Boyut · Elektromanyetik Hakimiyet</div>
+<h1>GÖRÜNMEZ SAVAŞ ALANI</h1>
+<p class="subtitle">Elektromanyetik Spektrum — Kara, Deniz, Hava, Uzay ve Siber'i Birbirine Bağlayan Fiziksel Zincir</p>
+<div class="spectrum-bar"></div>
+<div class="signal-viz">
+<div class="signal-bar" style="height:20px;animation-delay:0s"></div>
+<div class="signal-bar" style="height:35px;animation-delay:0.1s"></div>
+<div class="signal-bar" style="height:50px;animation-delay:0.2s"></div>
+<div class="signal-bar" style="height:40px;animation-delay:0.3s"></div>
+<div class="signal-bar" style="height:60px;animation-delay:0.4s"></div>
+<div class="signal-bar" style="height:45px;animation-delay:0.5s"></div>
+<div class="signal-bar" style="height:30px;animation-delay:0.6s"></div>
+<div class="signal-bar" style="height:55px;animation-delay:0.7s"></div>
+<div class="signal-bar" style="height:25px;animation-delay:0.8s"></div>
+<div class="signal-bar" style="height:48px;animation-delay:0.9s"></div>
+</div>
+</div>
+
+<div class="sections">
+
+<div class="section">
+<h2>📡 Spektrum Katmanları — Altıncı Boyut Piramidi</h2>
+<div class="pyramid">
+<div class="pyramid-layer" style="width:60%;background:linear-gradient(90deg,#E01515,#ff4444)">🛰️ UZAY — Uydu İletişim & GPS</div>
+<div class="pyramid-layer" style="width:70%;background:linear-gradient(90deg,#a855f7,#c084fc)">💻 SİBER — Veri Akışı & Şifreleme</div>
+<div class="pyramid-layer" style="width:80%;background:linear-gradient(90deg,#0077ff,#38bdf8)">✈️ HAVA — Radar & Hava Savunma</div>
+<div class="pyramid-layer" style="width:90%;background:linear-gradient(90deg,#00cc88,#34d399)">🚢 DENİZ — Sonar & Denizaltı İletişim</div>
+<div class="pyramid-layer" style="width:100%;background:linear-gradient(90deg,#f4a261,#fbbf24)">🏔️ KARA — Taktik Telsiz & EW</div>
+</div>
+<p style="text-align:center;color:#64748b;font-size:13px;margin-top:12px">⚡ ELEKTROMANYETİK SPEKTRUM — Tüm katmanları birbirine bağlayan tek fiziksel zincir</p>
+</div>
+
+<div class="section">
+<h2>⚡ Kritik Sistemler ve Yetenekler</h2>
+<div class="grid-3">
+<div class="layer-card">
+<h3>🇺🇸 350. Spektrum Savaş Kanadı</h3>
+<p>Eglin Hava Üssü merkezli, 69 ortak ülkenin EMS koordinasyonu. ABD'nin elektromanyetik üstünlük birimi.</p>
+<div class="freq">Frekans: 3 MHz — 300 GHz</div>
+</div>
+<div class="layer-card">
+<h3>🇷🇺 Krasukha-4</h3>
+<p>Rusya'nın mobil elektronik harp sistemi. AWACS ve uydu radarlarını köreltme kapasitesi.</p>
+<div class="freq">Etki Menzili: 300+ km</div>
+</div>
+<div class="layer-card">
+<h3>🇹🇷 KORAL</h3>
+<p>ASELSAN üretimi elektronik harp sistemi. Radar karıştırma ve aldatma. Libya'da savaş kanıtlı.</p>
+<div class="freq">Çoklu Frekans Bandı</div>
+</div>
+<div class="layer-card">
+<h3>Meadowlands Sistemi</h3>
+<p>NATO'nun yeni nesil spektrum yönetim platformu. Gerçek zamanlı frekans tahsisi ve çatışma çözümü.</p>
+<div class="freq">NATO STANAG Uyumlu</div>
+</div>
+<div class="layer-card">
+<h3>Hivemind (Shield AI)</h3>
+<p>YZ tabanlı otonom drone sürü yönetimi. GPS-denied ortamda navigasyon. %40-50 kar marjı.</p>
+<div class="freq">Otonom Karar: <100ms</div>
+</div>
+<div class="layer-card">
+<h3>Kuantum Radar</h3>
+<p>Stealth teknolojisini geçersiz kılacak kuantum dolanıklık tabanlı algılama. Henüz deneysel.</p>
+<div class="freq">Dalga Boyu: Kuantum</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>🎯 Tehdit Seviyesi Analizi</h2>
+<div class="stat-grid">
+<div class="stat"><span class="val">%92</span><span class="lbl">GPS Bağımlılığı</span></div>
+<div class="stat"><span class="val">6</span><span class="lbl">Savaş Boyutu</span></div>
+<div class="stat"><span class="val">350</span><span class="lbl">Kanat Personeli</span></div>
+<div class="stat"><span class="val">69</span><span class="lbl">Ortak Ülke</span></div>
+</div>
+<div style="margin-top:16px">
+<p style="color:#94a3b8;font-size:13px;margin-bottom:8px"><strong style="color:#E01515">Sistem Felci Riski:</strong> Spektrum kontrolü kaybedilirse tüm modern silah sistemleri işlevsiz kalır</p>
+<div class="threat-meter"><div class="threat-fill" style="width:87%;background:linear-gradient(90deg,#f4a261,#E01515)"></div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🔮 OODA-X: Algoritmik Harp Döngüsü</h2>
+<div class="grid-2">
+<div class="layer-card">
+<h3>Klasik OODA (İnsan)</h3>
+<p><strong>Gözle → Yönel → Karar Ver → Harekete Geç</strong><br>Ortalama döngü: 72 saat (stratejik) / 15 dakika (taktik)</p>
+</div>
+<div class="layer-card">
+<h3>OODA-X (YZ Destekli)</h3>
+<p><strong>Algıla → Füzyon → Otonom Karar → Ateşle</strong><br>Ortalama döngü: 250 milisaniye. İnsan onayı opsiyonel.</p>
+</div>
+</div>
+<button class="xray-btn" onclick="toggleXRay()">⚡ X-RAY GÖRÜŞÜ AÇ</button>
+<div id="xray-panel" style="display:none;margin-top:16px;padding:20px;background:#0a0520;border:1px solid #a855f7;border-radius:12px">
+<p style="color:#a855f7;font-size:14px;font-weight:bold;margin-bottom:8px">📡 Spektral Tarama Aktif</p>
+<p style="color:#94a3b8;font-size:13px">Wi-Fi: 2.4/5 GHz · 5G: 3.5/28 GHz · Radar: X-Band 8-12 GHz · GPS: L1 1575.42 MHz · Uydu: Ku-Band 12-18 GHz · Telsiz: VHF 30-300 MHz</p>
+<div class="signal-viz" style="margin-top:12px">
+<div class="signal-bar" style="height:15px;background:#ff0000;animation-delay:0s"></div>
+<div class="signal-bar" style="height:30px;background:#ff7700;animation-delay:0.15s"></div>
+<div class="signal-bar" style="height:45px;background:#ffff00;animation-delay:0.3s"></div>
+<div class="signal-bar" style="height:35px;background:#00ff00;animation-delay:0.45s"></div>
+<div class="signal-bar" style="height:55px;background:#0077ff;animation-delay:0.6s"></div>
+<div class="signal-bar" style="height:40px;background:#7700ff;animation-delay:0.75s"></div>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+function toggleXRay(){
+  const p=document.getElementById('xray-panel');
+  p.style.display=p.style.display==='none'?'block':'none';
+}
+// Animate on scroll
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})
+},{threshold:0.1});
+document.querySelectorAll('.section').forEach(s=>{s.style.opacity='0';s.style.transform='translateY(20px)';s.style.transition='all 0.6s ease';obs.observe(s)});
+// Animate threat meter
+setTimeout(()=>{document.querySelectorAll('.threat-fill').forEach(f=>{f.style.width=f.style.width})},500);
+</script>
+</body>
+</html>

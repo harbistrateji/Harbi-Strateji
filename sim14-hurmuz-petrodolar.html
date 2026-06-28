@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Hürmüz <em>Petrodolar</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;margin-bottom:12px;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+
+/* === GAME AREA STYLING === */
+.sim-content h1{
+  font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--bone);text-transform:uppercase;letter-spacing:0.05em;
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.score-board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;margin-bottom:28px;
+}
+.score-card{background:var(--deep);padding:16px 14px;text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.4rem;display:block;margin-bottom:4px;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+  transition:opacity 0.3s,transform 0.3s;
+}
+.panel.hidden{display:none;}
+.panel h2,.panel h3{font-family:var(--font-display);font-size:1.3rem;color:var(--bone);margin-bottom:14px;}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.option-btn{
+  font-family:var(--font-mono);font-size:0.8rem;
+  padding:12px 20px;border:1px solid var(--line);
+  border-radius:6px;background:var(--deep);
+  color:var(--bone);cursor:pointer;transition:all 0.25s;
+  text-align:left;flex:1;min-width:200px;
+}
+.option-btn:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.decision-panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.decision-panel .header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.decision-panel h2,.decision-panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:10px;}
+.decision-panel p{color:var(--bone-dim);line-height:1.7;margin-bottom:16px;}
+
+/* decision sim specific */
+.scenario-box{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.scenario-box.hidden{display:none;}
+.scenario-box .header{font-family:var(--font-mono);font-size:0.7rem;color:var(--signal);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.final-report{
+  background:var(--panel);border:2px solid var(--gold);
+  border-radius:8px;padding:32px;margin-top:24px;
+}
+.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:20px 0;}
+.report-item{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.report-item .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;display:block;margin-bottom:6px;}
+.report-item .value{font-family:var(--font-display);font-size:1.3rem;color:var(--signal);}
+.country-tag{font-family:var(--font-mono);font-size:0.7rem;padding:4px 10px;border-radius:12px;display:inline-block;margin:4px;}
+.country-tag.tag-turkey{background:rgba(224,56,56,0.15);color:#e03838;border:1px solid #e03838;}
+.country-tag.tag-usa{background:rgba(74,158,255,0.15);color:#4a9eff;border:1px solid #4a9eff;}
+.country-tag.tag-russia{background:rgba(255,165,0,0.15);color:#ffa500;border:1px solid #ffa500;}
+.score-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:14px;text-align:center;
+}
+.score-card .value{font-family:var(--font-display);font-size:1.3rem;color:var(--signal);display:block;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;}
+.btn-next{
+  font-family:var(--font-mono);font-size:0.82rem;
+  padding:14px 28px;border:1px solid var(--signal);
+  border-radius:4px;background:var(--signal);
+  color:var(--void);cursor:pointer;font-weight:600;
+  transition:all 0.25s;display:block;margin:20px auto;
+}
+.btn-next:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+
+
+</style>
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Hürmüz <em>Petrodolar</em></h1>
+  <p class="lead">Hürmüz Boğazı krizi ve petrodolar sistemi çöküş simülasyonu — Enerji güvenliği senaryoları.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">21M</span><span class="lbl">Varil/Gün</span></div><div class="hero-stat"><span class="num">$80</span><span class="lbl">Brent</span></div><div class="hero-stat"><span class="num">6</span><span class="lbl">Aktör</span></div><div class="hero-stat"><span class="num">4</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+
+    <div class="header">
+        
+        <p>3000 Yıllık Döngü ve Yeni Dünya Düzeni Karar Simülasyonu</p>
+    </div>
+    
+        <div class="phase-bar" id="phaseBar">
+            <div class="phase-seg active"></div>
+            <div class="phase-seg"></div>
+            <div class="phase-seg"></div>
+            <div class="phase-seg"></div>
+        </div>
+
+        <div class="score-display">
+            <div class="score-card"><div class="label">Dolar Rezerv Statüsü</div><div class="value mid" id="scoreDollar">60</div></div>
+            <div class="score-card"><div class="label">Ticaret Akışı Güvenliği</div><div class="value mid" id="scoreTrade">60</div></div>
+            <div class="score-card"><div class="label">Jeopolitik İstikrar</div><div class="value mid" id="scoreStability">60</div></div>
+            <div class="score-card"><div class="label">Enerji Fiyatları</div><div class="value mid" id="scoreEnergy">60</div></div>
+        </div>
+
+        <!-- PHASE 0: Briefing -->
+        <div class="scenario-box" id="phase0">
+            <h2>BRİFİNG: 2026 Hürmüz Krizi</h2>
+            <p>Mart 2026. ABD ve İsrail'in İran'a yönelik koordineli hava saldırıları sonrası İran, Hürmüz Boğazı'nı fiilen kapattı. Dünya petrolünün %20'si, doğal gazının %25'i bu boğazdan geçiyor. Petrol fiyatları %40 arttı. İran, Çin tankerlerine özel geçiş izni verirken, diğer tankerlerden petrolü Yuan ile satmalarını şart koştu. Petrodolar sistemi tarihin en büyük sınavıyla karşı karşıya.</p>
+            <p>Siz, küresel bir karar verici olarak bu krizde kritik hamleler yapmalısınız. Her kararınız, doların geleceğini, ticaretin güvenliğini, bölgesel istikrarı ve enerji fiyatlarını etkileyecek.</p>
+            <button class="btn-next" onclick="startSim()">Karar Vermeye Başla</button>
+        </div>
+
+        <!-- PHASE 1: Hürmüz Blockade Reaction -->
+        <div class="scenario-box hidden" id="phase1">
+            <h2>KARAR 1: Hürmüz Boğazı Kapatılmasına Tepki</h2>
+            <p>İran, Hürmüz Boğazı'nı kapatarak küresel enerji arzını tehdit ediyor. Bu duruma nasıl bir tepki vermelisiniz?</p>
+            <div class="decision-panel">
+                <h3>Hangi stratejiyi izlersiniz?</h3>
+                <button class="option-btn" onclick="selectOption(1, 'military_intervention')">
+                    <strong>A) Askerî Müdahale:</strong> Boğazı askeri güçle açmaya çalışın. Hızlı çözüm vaadi var ama bölgesel savaşı tetikleme riski yüksek.
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'diplomatic_pressure')">
+                    <strong>B) Diplomatik Baskı ve Müzakere:</strong> BM ve uluslararası platformlarda İran'a diplomatik baskı uygulayın, müzakere masasına dönmesini sağlayın. Uzun vadeli ama daha az riskli.
+                </button>
+                <button class="option-btn" onclick="selectOption(1, 'alternative_routes')">
+                    <strong>C) Alternatif Güzergahları Hızlandırma:</strong> Körfez ülkelerindeki bypass boru hatlarının kapasitesini artırın ve yeni enerji nakil yolları geliştirin. Orta vadeli çözüm, maliyetli.
+                </button>
+            </div>
+            <div class="result-box" id="result1"></div>
+        </div>
+
+        <!-- PHASE 2: Iran's Yuan Oil Sales -->
+        <div class="scenario-box hidden" id="phase2">
+            <h2>KARAR 2: İran'ın Yuan ile Petrol Satışına Karşı Durum</h2>
+            <p>İran'ın petrolü Yuan ile satma hamlesi, petrodolar sistemine doğrudan bir meydan okumadır. Bu duruma nasıl karşılık verirsiniz?</p>
+            <div class="decision-panel">
+                <h3>Hangi politikayı uygularsınız?</h3>
+                <button class="option-btn" onclick="selectOption(2, 'tighten_sanctions')">
+                    <strong>A) Yaptırımları Sıkılaştırma:</strong> İran'a ve Yuan ile ticaret yapan ülkelere yönelik yaptırımları artırın. Doların gücünü koruma amacı var ama küresel ticareti aksatma riski taşıyor.
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'accept_yuan')">
+                    <strong>B) Yuan'ı Kısmen Kabul Etme:</strong> Belirli ticaret anlaşmalarında Yuan kullanımına esneklik tanıyın. Gerilimi azaltır ama doların rezerv statüsünü zayıflatabilir.
+                </button>
+                <button class="option-btn" onclick="selectOption(2, 'digital_currency')">
+                    <strong>C) Kendi Dijital Para Birimini Geliştirme:</strong> Doların veya diğer majör para birimlerinin dijital versiyonlarını (CBDC) hızla geliştirin. Geleceğin finansal altyapısında liderliği koruma amacı var.
+                </button>
+            </div>
+            <div class="result-box" id="result2"></div>
+        </div>
+
+        <!-- PHASE 3: SWIFT Alternatives -->
+        <div class="scenario-box hidden" id="phase3">
+            <h2>KARAR 3: SWIFT Alternatifleri ve Finansal Altyapı</h2>
+            <p>Çin, Rusya ve diğer ülkeler SWIFT'e alternatif ödeme sistemleri (CIPS gibi) geliştiriyor. Bu durum, Batı'nın finansal kontrolünü tehdit ediyor. Nasıl bir strateji izlersiniz?</p>
+            <div class="decision-panel">
+                <h3>Finansal altyapı için hangi adımı atarsınız?</h3>
+                <button class="option-btn" onclick="selectOption(3, 'support_cips')">
+                    <strong>A) Çin'in CIPS Sistemini Destekleme:</strong> Küresel finansal çeşitliliği artırmak adına CIPS gibi alternatif sistemlere entegrasyonu teşvik edin. Kısa vadede gerilimi azaltır ama uzun vadede Batı'nın finansal gücünü azaltır.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'strengthen_swift')">
+                    <strong>B) SWIFT'i Güçlendirme ve Genişletme:</strong> SWIFT sistemini daha kapsayıcı ve esnek hale getirerek alternatif arayışlarını azaltın. Güvenliği ve şeffaflığı artırın.
+                </button>
+                <button class="option-btn" onclick="selectOption(3, 'new_system')">
+                    <strong>C) Yeni, Çok Kutuplu Finansal Sistem Kurma:</strong> ABD ve müttefiklerinin kontrolünde olmayan, daha adil ve şeffaf yeni bir uluslararası ödeme sistemi kurma girişiminde bulunun. Radikal ama uzun vadeli bir çözüm.
+                </button>
+            </div>
+            <div class="result-box" id="result3"></div>
+        </div>
+
+        <!-- FINAL REPORT -->
+        <div class="final-report" id="finalReport">
+            <h2>HÜRMÜZ KRİZİ RAPORU</h2>
+            <div class="score-display" style="margin-bottom:20px;">
+                <div class="score-card"><div class="label">Dolar Rezerv Statüsü</div><div class="value" id="fDollar">-</div></div>
+                <div class="score-card"><div class="label">Ticaret Akışı Güvenliği</div><div class="value" id="fTrade">-</div></div>
+                <div class="score-card"><div class="label">Jeopolitik İstikrar</div><div class="value" id="fStability">-</div></div>
+                <div class="score-card"><div class="label">Enerji Fiyatları</div><div class="value" id="fEnergy">-</div></div>
+            </div>
+            <div class="report-grid" id="reportGrid"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        let scores = { dollar: 60, trade: 60, stability: 60, energy: 60 };
+        let currentPhase = 0;
+        let choices = {};
+
+        const outcomes = {
+            1: {
+                military_intervention: { dollar: 10, trade: -20, stability: -25, energy: -20, title: "Askerî Müdahale", text: "Boğaz kısa sürede açılabilir ancak bölgesel savaş riski tırmandı. Petrol fiyatları daha da yükseldi, küresel ticaret aksadı. Doların gücü kısa vadede korundu ama uzun vadede maliyeti ağır oldu." },
+                diplomatic_pressure: { dollar: 0, trade: -5, stability: 5, energy: -10, title: "Diplomatik Baskı", text: "Krizin çözümü zaman aldı, bu süreçte petrol fiyatları yüksek kaldı. Ancak bölgesel gerilim azalmaya başladı. Doların statüsü korunurken, diplomatik çözüm arayışları uluslararası işbirliğini güçlendirdi." },
+                alternative_routes: { dollar: -5, trade: 10, stability: 0, energy: -5, title: "Alternatif Güzergahlar", text: "Boğazın kapanmasının etkisi kısmen hafifletildi. Yeni boru hatları ve nakil yolları geliştirme çabaları uzun vadede ticaret akışı güvenliğini artırdı. Ancak bu süreçte doların gücü bir miktar aşındı." }
+            },
+            2: {
+                tighten_sanctions: { dollar: 15, trade: -10, stability: -10, energy: 5, title: "Yaptırımları Sıkılaştırma", text: "Doların rezerv statüsü kısa vadede korundu ancak Yuan ile ticaret yapan ülkelerle gerilim arttı. Küresel ticaret daha da parçalandı. Enerji fiyatları üzerinde baskı devam etti." },
+                accept_yuan: { dollar: -15, trade: 10, stability: 10, energy: -5, title: "Yuan'ı Kısmen Kabul Etme", text: "Doların rezerv statüsü zayıfladı ancak küresel ticaret akışı daha esnek hale geldi. Jeopolitik gerilim azaldı ve enerji fiyatları üzerinde bir miktar rahatlama sağlandı. Çok kutuplu finansal sistemin önü açıldı." },
+                digital_currency: { dollar: 5, trade: 0, stability: 0, energy: 0, title: "Kendi Dijital Para Birimini Geliştirme", text: "Doların gelecekteki gücü için zemin hazırlandı ancak mevcut kriz üzerinde doğrudan bir etkisi olmadı. Uzun vadede finansal egemenliği koruma potansiyeli var." }
+            },
+            3: {
+                support_cips: { dollar: -20, trade: 15, stability: 15, energy: 0, title: "Çin'in CIPS Sistemini Destekleme", text: "Batı'nın finansal hegemonyası ciddi şekilde sarsıldı. Küresel ticaret daha kapsayıcı hale geldi ve jeopolitik istikrar arttı. Ancak doların rezerv statüsü büyük darbe aldı." },
+                strengthen_swift: { dollar: 10, trade: 5, stability: -5, energy: 0, title: "SWIFT'i Güçlendirme", text: "SWIFT'in küresel konumu korundu ancak alternatif arayışları tamamen durdurulamadı. Bazı ülkelerle gerilim devam etti. Doların gücü desteklendi." },
+                new_system: { dollar: -10, trade: 10, stability: 10, energy: 0, title: "Yeni, Çok Kutuplu Finansal Sistem", text: "Uzun vadede daha adil bir küresel finansal sistemin temelleri atıldı. Jeopolitik istikrar arttı ancak doların rezerv statüsü üzerinde baskı oluştu. Geçiş süreci sancılı oldu." }
+            }
+        };
+
+        function startSim() {
+            document.getElementById('phase0').classList.add('hidden');
+            document.getElementById('phase1').classList.remove('hidden');
+            updatePhaseBar(1);
+        }
+
+        function selectOption(phase, choice) {
+            choices[phase] = choice;
+            const outcome = outcomes[phase][choice];
+            
+            scores.dollar = Math.min(100, Math.max(0, scores.dollar + outcome.dollar));
+            scores.trade = Math.min(100, Math.max(0, scores.trade + outcome.trade));
+            scores.stability = Math.min(100, Math.max(0, scores.stability + outcome.stability));
+            scores.energy = Math.min(100, Math.max(0, scores.energy + outcome.energy));
+            updateScoreDisplay();
+
+            const resultBox = document.getElementById('result' + phase);
+            const nextLabel = phase < 3 ? 'Sonraki Karar →' : 'Raporu Göster';
+            resultBox.innerHTML = `<h4>${outcome.title}</h4><p>${outcome.text}</p><button class="btn-next" onclick="nextPhase(${phase})">${nextLabel}</button>`;
+            resultBox.classList.add('show');
+
+            const buttons = document.querySelectorAll(`#phase${phase} .option-btn`);
+            buttons.forEach(b => { b.classList.remove('selected'); b.style.pointerEvents = 'none'; });
+            event.target.closest('.option-btn').classList.add('selected');
+        }
+
+        function nextPhase(currentP) {
+            if (currentP < 3) {
+                document.getElementById('phase' + currentP).classList.add('hidden');
+                document.getElementById('phase' + (currentP + 1)).classList.remove('hidden');
+                updatePhaseBar(currentP + 1);
+            } else {
+                document.getElementById('phase3').classList.add('hidden');
+                showFinalReport();
+            }
+        }
+
+        function updatePhaseBar(phase) {
+            const segs = document.querySelectorAll('.phase-seg');
+            segs.forEach((seg, i) => {
+                seg.classList.remove('active', 'done');
+                if (i < phase) seg.classList.add('done');
+                else if (i === phase) seg.classList.add('active');
+            });
+        }
+
+        function updateScoreDisplay() {
+            updateScore('scoreDollar', scores.dollar);
+            updateScore('scoreTrade', scores.trade);
+            updateScore('scoreStability', scores.stability);
+            updateScore('scoreEnergy', scores.energy);
+        }
+
+        function updateScore(id, value) {
+            const el = document.getElementById(id);
+            el.textContent = value;
+            el.className = 'value ' + (value >= 70 ? 'high' : value >= 40 ? 'mid' : 'low');
+        }
+
+        function showFinalReport() {
+            const report = document.getElementById('finalReport');
+            report.classList.add('show');
+            
+            const ids = ['fDollar', 'fTrade', 'fStability', 'fEnergy'];
+            const vals = [scores.dollar, scores.trade, scores.stability, scores.energy];
+            ids.forEach((id, i) => {
+                const el = document.getElementById(id);
+                el.textContent = vals[i];
+                el.className = 'value ' + (vals[i] >= 70 ? 'high' : vals[i] >= 40 ? 'mid' : 'low');
+            });
+
+            const total = vals.reduce((a, b) => a + b, 0);
+            let grade = '';
+            if (total >= 280) grade = 'A - Küresel Lider';
+            else if (total >= 220) grade = 'B - Dengeli Yönetim';
+            else if (total >= 160) grade = 'C - Zorlu Süreç';
+            else grade = 'D - Kriz Yönetimi Başarısız';
+
+            const grid = document.getElementById('reportGrid');
+            grid.innerHTML = `
+                <div class="report-item"><h4>Genel Değerlendirme</h4><p>Toplam Etki Puanı: ${total}/400<br>Derece: <strong>${grade}</strong></p></div>
+                <div class="report-item"><h4>Hürmüz Tepkisi</h4><p>${outcomes[1][choices[1]].title}</p></div>
+                <div class="report-item"><h4>Yuan Petrol Satışı</h4><p>${outcomes[2][choices[2]].title}</p></div>
+                <div class="report-item"><h4>SWIFT Alternatifleri</h4><p>${outcomes[3][choices[3]].title}</p></div>
+                <div class="report-item"><h4>Tarihsel Not</h4><p>Tarih bize şunu öğretti: Boğazlar değişir, prensip değişmez. Akışı kontrol eden, gücü kontrol eder. Sizin kararlarınız bu kadim döngüyü nasıl etkiledi?</p></div>
+                <div class="report-item"><h4>Harb-i Strateji Analizi</h4><p>2026 İran Savaşı, sadece bir bölgesel çatışma değil, dolar düzenine, finansal boğazlara ve küresel hegemonya mimarisine karşı bir SİSTEM SAVAŞIDIR. Kazanan, sadece bu savaşı değil, yeni dünya düzeninin kurallarını belirleyecektir.</p></div>
+            `;
+            updatePhaseBar(3);
+        }
+    
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

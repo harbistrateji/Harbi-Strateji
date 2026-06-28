@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HARB-İ STRATEJİ // KÜRESEL ASKERİ SİSTEMLER ANALİZİ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030509;
+            color: #94a3b8;
+            overflow: hidden;
+        }
+        .cyber-font { font-family: 'Orbitron', sans-serif; }
+        .mono-font { font-family: 'Share Tech Mono', sans-serif; }
+        
+        /* CRT Ekran Çizgileri ve Parazit Efekti */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.015));
+            z-index: 99999;
+            opacity: 0.4;
+            pointer-events: none;
+            background-size: 100% 4px, 6px 100%;
+        }
+
+        /* Sol-Sağ Panel Özel Arka Plan Akışları */
+        .pane-left {
+            background: linear-gradient(to bottom, rgba(20, 8, 10, 0.3), rgba(30, 5, 5, 0.1));
+        }
+        .pane-right {
+            background: linear-gradient(to bottom, rgba(6, 17, 12, 0.25), rgba(4, 10, 8, 0.05));
+        }
+
+        /* İnteraktif HUD Kart Tasarımları */
+        .hud-card {
+            background: rgba(10, 16, 32, 0.6);
+            backdrop-blur: md;
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .hud-card:hover {
+            background: rgba(15, 23, 42, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -10px rgba(0,0,0,0.7);
+        }
+
+        .border-glow-red { border-left: 3px solid #ef4444; }
+        .border-glow-red:hover { border-color: #f87171; box-shadow: 0 0 15px rgba(239, 68, 68, 0.15); }
+
+        .border-glow-green { border-left: 3px solid #10b981; }
+        .border-glow-green:hover { border-color: #34d399; box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
+
+        /* Nabız ve Radar Animasyonları */
+        @keyframes pulse-radar {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.08); }
+        }
+        .radar-glow { animation: pulse-radar 2.5s infinite; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #03050a; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
+    </style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body class="antialiased h-screen flex flex-col justify-between select-none">
+
+    <audio id="musicTaiwan" loop><source src="taiwan_emp_music.mp3" type="audio/mpeg"></audio>
+    <audio id="musicOrbital" loop><source src="orbital_hegemony_music.mp3" type="audio/mpeg"></audio>
+
+    <header class="w-full bg-slate-950/95 border-b border-slate-900 px-6 py-3 flex flex-wrap justify-between items-center gap-4 text-xs tracking-widest mono-font z-50">
+        <div class="flex items-center gap-3">
+            <div class="relative w-2.5 h-2.5">
+                <span class="absolute inset-0 rounded-full bg-cyan-500 radar-glow"></span>
+                <span class="absolute inset-0 rounded-full bg-cyan-400 scale-75"></span>
+            </div>
+            <span class="text-slate-200 font-bold uppercase">SİSTEMİK STRATEJİ MATRİSİ // DOKTRİNEL SEÇİCİ BÖLME</span>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-slate-900/60 px-4 py-1.5 rounded-lg border border-slate-800">
+            <span class="text-slate-500 text-[11px]"><i class="fas fa-music mr-1.5 text-cyan-400"></i> AUD_STREAM:</span>
+            <button id="btnPlayTaiwan" class="text-slate-400 hover:text-red-400 transition text-[11px] font-semibold flex items-center gap-1">
+                <i class="fas fa-play text-[9px]"></i> TAIWAN_EMP
+            </button>
+            <span class="text-slate-700">|</span>
+            <button id="btnPlayOrbital" class="text-slate-400 hover:text-emerald-400 transition text-[11px] font-semibold flex items-center gap-1">
+                <i class="fas fa-play text-[9px]"></i> ORBITAL_HEGEMONY
+            </button>
+            <span class="text-slate-700">|</span>
+            <button id="btnFreq" class="text-amber-500 hover:brightness-125 transition text-[11px] font-bold flex items-center gap-1">
+                <i class="fas fa-wave-square"></i> FREKANS DEĞİŞTİR
+            </button>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-2 text-[10px] text-slate-500">
+            <span>ANA DENKLEM: G = T × S × E × L</span>
+        </div>
+    </header>
+
+    <main class="w-full flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-800 max-h-[calc(100vh-6.5rem)] overflow-hidden">
+        
+        <section class="pane-left p-6 md:p-10 space-y-6 overflow-y-auto">
+            
+            <div class="bg-red-950/20 border border-red-900/40 p-4 rounded-xl flex items-center justify-between">
+                <div>
+                    <h3 class="cyber-font font-black text-red-500 uppercase text-sm tracking-wide">01 / Konvansiyonel Savaş Alanı</h3>
+                    <p class="text-[10px] text-slate-400 mono-font uppercase">Maddesel Kütle, Beşerî Sınırlar ve Doğrusal Karar Süreçleri</p>
+                </div>
+                <i class="fas fa-shield-alt text-red-500/60 text-lg"></i>
+            </div>
+
+            <div class="bg-slate-950/90 border border-slate-900 rounded-lg p-3 h-14 relative overflow-hidden">
+                <span class="absolute top-1 right-2 text-[9px] text-red-500/50 mono-font tracking-widest">ANALOG_WAVE</span>
+                <canvas id="leftWave" class="w-full h-full opacity-60"></canvas>
+            </div>
+
+            <div class="hud-card border-glow-red p-5 rounded-xl space-y-3">
+                <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase tracking-wider">Maddesel Kütle ve Beşerî Karar Mekanizmaları</h4>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-light">
+                    Geleneksel harp doktrinlerinde güç, fiziksel orduların büyüklüğü, parça mühimmat envanterleri ve coğrafi derinlik üzerinden hesaplanır. Kararlar, John Boyd'un klasik <strong>OODA döngüsüne</strong> (Gözlemle, Yönel, Karar Ver, Uygula) bağlı olarak insan nörolojisinin biyolojik işlem hızında (ortalama 20 ila 60 saniye periyodunda) şekillenir. Savaş alanının sisi, veri eksikliği ve lojistik hatların hantallığı nedeniyle taktiksel kararlar doğrusal bir komuta zincirinde yavaşça akar.
+                </p>
+            </div>
+
+            <div class="hud-card border-glow-red p-5 rounded-xl space-y-4">
+                <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase tracking-wider">İran Operasyonu Söylem Analizi</h4>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Popüler savunma medyasında yer alan abartılı manşetler, yapay zekânın sıfırdan hedef listeleri oluşturarak ilk 4 günde 2.000 hedefi imha ettiğini iddia etmektedir. Klasik lojistik zincirde 6 ay süren bu sürecin tek bir algoritmik hamleyle çözüldüğü algısı, kitle iletişim araçlarınca performatif bir söylem olarak üretilmektedir.
+                </p>
+                <div class="bg-slate-950/50 p-3 rounded-lg border border-slate-900 h-40">
+                    <canvas id="discourseChart"></canvas>
+                </div>
+            </div>
+
+            <div class="hud-card border-glow-red p-5 rounded-xl space-y-3">
+                <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase tracking-wider">Kompleksite Maliyeti Yasası</h4>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Tarih boyunca Roma İmparatorluğu'ndan Sovyetler Birliği'ne kadar büyük güç yapıları incelendiğinde, çöküşün dış akınlardan ziyade kurumsal şişkinlik ve sürdürülemez kompleksite maliyetleri yüzünden gerçekleştiği görülür. Toplam sanayi potansiyeli ve hantal bürokratik katmanlar, azalan getiriler yasasına çarptığı anda, sistem içeriden aşınma fazına girer.
+                </p>
+            </div>
+
+        </section>
+        
+        <section class="pane-right p-6 md:p-10 space-y-6 overflow-y-auto">
+            
+            <div class="bg-emerald-950/20 border border-emerald-900/40 p-4 rounded-xl flex items-center justify-between">
+                <div>
+                    <h3 class="cyber-font font-black text-emerald-500 uppercase text-sm tracking-wide">02 / Algoritmik Sistem Odası</h3>
+                    <p class="text-[10px] text-slate-400 mono-font uppercase">Algoritmik Egemenlik, OODA-X Çağı ve Ağ Merkezli Entegrasyon</p>
+                </div>
+                <i class="fas fa-microchip text-emerald-500/60 text-lg"></i>
+            </div>
+
+            <div class="bg-slate-950/90 border border-slate-900 rounded-lg p-3 h-14 relative overflow-hidden">
+                <span class="absolute top-1 right-2 text-[9px] text-emerald-500/50 mono-font tracking-widest">QUANTUM_SINE</span>
+                <canvas id="rightWave" class="w-full h-full opacity-60"></canvas>
+            </div>
+
+            <div class="hud-card border-glow-green p-5 rounded-xl space-y-3">
+                <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase tracking-wider">OODA-X ve Milisaniyelik Karar Döngüleri</h4>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-light">
+                    Modern askeri gerçeklikte yapay zekâ, tetiği çeken otonom bir irade değil, insan operatörün üzerindeki enformasyon yükünü hafifleten akıllı bir <strong>arayüz, analiz ve öneri katmanıdır</strong>. Hipersonik plazma fiziğinin ve sürü mühimmatlarının baskısı altındaki yeni nesil savaş alanlarında karar döngüsü <strong>OODA-X</strong> seviyesine sıkışarak milisaniyeler (100 ms altı) mertebesine inmektedir. Hedef tespiti bilgisayarlı görü (Computer Vision) ile yürütülürken, büyük dil modelleri (Örn: Claude) dağınık istihbarat yığınları arasından örüntü çıkarmaktadır.
+                </p>
+            </div>
+
+            <div class="hud-card border-glow-green p-5 rounded-xl space-y-4">
+                <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase tracking-wider">Doğrulanmış Hedefleme Akışı ve Asimetri</h4>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    İran operasyonundaki 4 günlük yoğun etki, anlık algoritmik üretimlerin değil; istihbarat birimlerinin aylar öncesinden el ile tek tek doğruladığı statik hedef listelerinin Palantir AIP ve Project Maven gibi platformlarca hızlı bir şekilde mühimmat-silah tahsisine tabi tutulmasının sonucudur. 20.000 dolarlık asimetrik insansız araçların, milyon dolarlık Patriot önleyicilerini yıprattığı bir <strong>Maliyet Asimetrisi Savaşı</strong> yürütülmektedir.
+                </p>
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-900 h-40">
+                    <canvas id="realityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="hud-card border-glow-green p-5 rounded-xl space-y-3">
+                <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase tracking-wider">Mind × Mine: Algoritmik ve Maddesel Sentez</h4>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    21. yüzyılda egemenlik teritoryal sınırlardan bağlantı ağlarına, yarı iletken tedarik zincirlerine ve yörüngesel uydu takımyıldızlarına (Dijital Leviathan) evrilmiştir. Akıl (Mind / Yazılım), toprağın altındaki nadir toprak elementlerine ve işleme kapasitesine (Mine / Maden) moleküler düzeyde göbekten bağlıdır. Türkiye'nin Eskişehir-Beylikova nadir toprak rezervlerini endüstriyel ölçekte çip ve savunma mimarisine entegre etme vizyonu, bu atomik seviyedeki özerklik felsefesine dayanmaktadır.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="w-full bg-slate-950 border-t border-slate-900 p-4 text-center text-[10px] tracking-widest mono-font uppercase text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4 z-50">
+        <span>[ CENTRAL REAL-TIME SIMULATOR // VERİ SETLERİ %100 OYUNLAŞTIRILMIŞ VE ARINDIRILMIŞTIR ]</span>
+        <div class="flex items-center gap-2">
+            <span class="text-slate-400">YAYIN FAALİYETİ PERİYODU: 2024–2026</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. VERİ GRAFİKLERİ MOTORU (CHART.JS) ---
+        const ctxDiscourse = document.getElementById('discourseChart').getContext('2d');
+        const ctxReality = document.getElementById('realityChart').getContext('2d');
+
+        new Chart(ctxDiscourse, {
+            type: 'bar',
+            data: {
+                labels: ['Geleneksel Sefer (6 Ay)', 'Medyatik Söylem (4 Gün)'],
+                datasets: [{
+                    data: [180, 4],
+                    backgroundColor: ['rgba(71, 85, 105, 0.25)', 'rgba(239, 68, 68, 0.6)'],
+                    borderColor: ['rgba(148, 163, 184, 0.4)', '#ef4444'],
+                    borderWidth: 1,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#475569', font: { family: 'Share Tech Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.01)' } },
+                    x: { ticks: { color: '#64748b', font: { family: 'Share Tech Mono', size: 9 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        new Chart(ctxReality, {
+            type: 'bar',
+            data: {
+                labels: ['İstihbarat Hazırlığı (Gün)', 'Algoritmik Eşleşme (Gün)', 'İnsan Karar-Onay (Gün)'],
+                datasets: [{
+                    data: [120, 1, 3],
+                    backgroundColor: ['rgba(245, 158, 11, 0.3)', 'rgba(16, 185, 129, 0.5)', 'rgba(59, 130, 246, 0.3)'],
+                    borderColor: ['#f59e0b', '#10b981', '#3b82f6'],
+                    borderWidth: 1,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#475569', font: { family: 'Share Tech Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.01)' } },
+                    x: { ticks: { color: '#64748b', font: { family: 'Share Tech Mono', size: 9 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        // --- 2. CANLI OSİLOSKOP ANİMASYON MOTORU (HTML5 CANVAS) ---
+        const leftCanvas = document.getElementById('leftWave');
+        const rightCanvas = document.getElementById('rightWave');
+        const lCtx = leftCanvas.getContext('2d');
+        const rCtx = rightCanvas.getContext('2d');
+
+        function resize() {
+            leftCanvas.width = leftCanvas.parentElement.clientWidth;
+            leftCanvas.height = leftCanvas.parentElement.clientHeight;
+            rightCanvas.width = rightCanvas.parentElement.clientWidth;
+            rightCanvas.height = rightCanvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let lTime = 0, rTime = 0, freqMultiplier = 1;
+
+        function animateWaves() {
+            lCtx.clearRect(0, 0, leftCanvas.width, leftCanvas.height);
+            lCtx.beginPath(); lCtx.lineWidth = 1.5; lCtx.strokeStyle = '#ef4444';
+            for (let x = 0; x < leftCanvas.width; x++) {
+                let noise = freqMultiplier > 1 ? Math.sin(x * 0.15 + lTime * 4) * 3 : 0;
+                let y = leftCanvas.height / 2 + Math.sin(x * 0.04 + lTime) * 8 * freqMultiplier + noise;
+                if (x === 0) lCtx.moveTo(x, y); else lCtx.lineTo(x, y);
+            }
+            lCtx.stroke();
+
+            rCtx.clearRect(0, 0, rightCanvas.width, rightCanvas.height);
+            rCtx.beginPath(); rCtx.lineWidth = 1.5; rCtx.strokeStyle = '#10b981';
+            for (let x = 0; x < rightCanvas.width; x++) {
+                let y = rightCanvas.height / 2 + Math.sin(x * 0.02 + rTime) * 10;
+                if (x === 0) rCtx.moveTo(x, y); else rCtx.lineTo(x, y);
+            }
+            rCtx.stroke();
+
+            lTime += 0.04 * freqMultiplier;
+            rTime += 0.03;
+            requestAnimationFrame(animateWaves);
+        }
+        animateWaves();
+
+        // --- 3. KULLANICI MÜZİK VE FREKANS ENTEGRASYON KONTROLÜ ---
+        const taiwanTrack = document.getElementById('musicTaiwan');
+        const orbitalTrack = document.getElementById('musicOriginal'); // fallbacks to orbital
+        const backupOrbital = document.getElementById('musicOrbital');
+        
+        const btnTaiwan = document.getElementById('btnPlayTaiwan');
+        const btnOrbital = document.getElementById('btnPlayOrbital');
+        const freqBtn = document.getElementById('freqBtn');
+
+        let activeTrack = null;
+
+        function playTrack(track, clickedBtn, otherBtn, colorClass) {
+            if (activeTrack === track) {
+                track.pause();
+                activeTrack = null;
+                clickedBtn.innerHTML = `<i class="fas fa-play text-[9px]"></i> ${clickedBtn.id === 'btnPlayTaiwan' ? 'TAIWAN_EMP' : 'ORBITAL_HEG'}`;
+                clickedBtn.className = "text-slate-400 hover:text-white transition text-[11px] font-semibold flex items-center gap-1";
+            } else {
+                if (activeTrack) {
+                    activeTrack.pause();
+                    activeTrack.currentTime = 0;
+                    btnTaiwan.innerHTML = '<i class="fas fa-play text-[9px]"></i> TAIWAN_EMP';
+                    btnTaiwan.className = "text-slate-400 hover:text-white transition text-[11px] font-semibold flex items-center gap-1";
+                    btnPlayOrbital.innerHTML = '<i class="fas fa-play text-[9px]"></i> ORBITAL_HEGEMONY';
+                    btnPlayOrbital.className = "text-slate-400 hover:text-white transition text-[11px] font-semibold flex items-center gap-1";
+                }
+                track.play().then(() => {
+                    activeTrack = track;
+                    clickedBtn.innerHTML = `<i class="fas fa-pause text-[9px]"></i> ${clickedBtn.id === 'btnPlayTaiwan' ? 'TAIWAN_EMP' : 'ORBITAL_HEG'} (AKTİF)`;
+                    clickedBtn.className = `${colorClass} transition text-[11px] font-bold flex items-center gap-1`;
+                }).catch(e => console.log("Ses aktivasyon engeli:", e));
+            }
+        }
+
+        btnTaiwan.addEventListener('click', () => playTrack(taiwanTrack, btnTaiwan, btnPlayOrbital, 'text-red-500'));
+        btnPlayOrbital.addEventListener('click', () => playTrack(backupOrbital, btnPlayOrbital, btnTaiwan, 'text-emerald-500'));
+
+        let isTenseMode = false;
+        freqBtn.addEventListener('click', () => {
+            if (!activeTrack) {
+                playTrack(taiwanTrack, btnTaiwan, btnPlayOrbital, 'text-red-500');
+            }
+            isTenseMode = !isTenseMode;
+            if (isTenseMode) {
+                if (activeTrack) activeTrack.playbackRate = 1.25;
+                freqMultiplier = 2.2;
+                freqBtn.innerHTML = '<i class="fas fa-wave-square text-amber-400"></i> ÇEKİRDEK FREKANS';
+            } else {
+                if (activeTrack) activeTrack.playbackRate = 1.0;
+                freqMultiplier = 1.0;
+                freqBtn.innerHTML = '<i class="fas fa-wave-square"></i> FREKANS DEĞİŞTİR';
+            }
+        });
+    </script>
+</body>
+</html>

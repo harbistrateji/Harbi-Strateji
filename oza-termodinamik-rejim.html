@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="hud">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Termodinamik Rejim — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;user-select:none}
+.top{position:sticky;top:0;z-index:60;background:rgba(10,15,23,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 20px}
+.top .in{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:14px;min-height:52px}
+.back{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);text-decoration:none}.back:hover{color:#fff}
+.title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;flex:1;text-align:center}
+.hdr-score{font-size:12px;color:var(--gold);font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:600px;margin:0 auto;padding:24px 20px 80px}
+.game-header{text-align:center;margin-bottom:20px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(20px,5vw,32px);color:#fff}
+.game-header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:6px}
+.score-band{display:flex;justify-content:center;gap:0;margin-bottom:24px;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.sb-item{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line2)}
+.sb-item:last-child{border-right:none}
+.sb-val{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:var(--red2)}
+.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.card-arena{position:relative;height:440px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.swipe-card{position:absolute;width:100%;max-width:380px;background:var(--panel);border:2px solid var(--line2);border-radius:20px;padding:24px;cursor:grab;touch-action:none;will-change:transform;transition:box-shadow .2s}
+.swipe-card:active{cursor:grabbing}
+.card-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--red2);margin-bottom:8px}
+.card-icon{font-size:36px;margin-bottom:10px}
+.card-name{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:#fff;margin-bottom:8px}
+.card-desc{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:14px}
+.card-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat-box{background:var(--panel2);border-radius:8px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px}
+.stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+.card-verdict{text-align:center;margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);padding:8px;background:rgba(201,162,75,.08);border-radius:8px}
+.swipe-action{position:absolute;top:20px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .15s;pointer-events:none;z-index:10}
+.swipe-action.left{left:20px;color:var(--red2);border:2px solid var(--red2);background:rgba(224,21,21,.15)}
+.swipe-action.right{right:20px;color:var(--green);border:2px solid var(--green);background:rgba(0,255,136,.15)}
+.decision-btns{display:flex;gap:12px;justify-content:center;margin-bottom:16px}
+.dec-btn{flex:1;max-width:160px;padding:14px 10px;border-radius:12px;border:2px solid;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;transition:all .15s;background:transparent}
+.dec-btn.reject{color:var(--red2);border-color:var(--red2)}.dec-btn.reject:hover{background:rgba(224,21,21,.12)}
+.dec-btn.accept{color:var(--green);border-color:var(--green)}.dec-btn.accept:hover{background:rgba(0,255,136,.12)}
+.swipe-hint{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:16px}
+.result-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:20px}
+.result-overlay.show{display:flex}
+.result-box{background:var(--panel);border:2px solid var(--line2);border-radius:20px;padding:32px;max-width:400px;width:100%;text-align:center}
+.res-icon{font-size:48px;margin-bottom:10px}
+.res-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;margin-bottom:6px}
+.res-pts{font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:700;margin:10px 0}
+.res-explain{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;padding:12px 20px;border-radius:9px;border:none;cursor:pointer}
+.btn-red{background:var(--red);color:#fff}
+.btn-outline{background:transparent;color:var(--dim);border:1px solid var(--line2)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="top"><div class="in">
+  <a href="oza-hub.html" class="back">← OZA</a>
+  <span class="title">🔥 Termodinamik Rejim</span>
+  <span class="hdr-score" id="hdr-score">⭐ 0</span>
+</div></header>
+<div class="wrap">
+  <div class="game-header">
+    <h1>TERMODİNAMİK REJİM</h1>
+    <div class="sub">SWIPE SOL: BAŞARISIZ · SWIPE SAĞ: BAŞARILI · ENDÜSTRİYEL SAVAŞ</div>
+  </div>
+  <div class="score-band">
+    <div class="sb-item"><div class="sb-val" id="s-score">0</div><div class="sb-lbl">Puan</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-round">1</div><div class="sb-lbl">Tur</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-streak">0</div><div class="sb-lbl">Seri</div></div>
+  </div>
+  <div class="card-arena" id="card-arena">
+    <div class="swipe-action left" id="sa-left">BAŞARISIZ</div>
+    <div class="swipe-action right" id="sa-right">BAŞARILI</div>
+    <div class="swipe-card" id="swipe-card">
+      <div class="card-tag" id="c-tag"></div>
+      <div class="card-icon" id="c-icon"></div>
+      <div class="card-name" id="c-name"></div>
+      <div class="card-desc" id="c-desc"></div>
+      <div class="card-stats">
+        <div class="stat-box"><div class="stat-val" id="c-prod"></div><div class="stat-lbl">Üretim</div></div>
+        <div class="stat-box"><div class="stat-val" id="c-tech"></div><div class="stat-lbl">Teknoloji</div></div>
+        <div class="stat-box"><div class="stat-val" id="c-moral"></div><div class="stat-lbl">Moral</div></div>
+      </div>
+      <div class="card-verdict" id="c-verdict"></div>
+    </div>
+  </div>
+  <div class="swipe-hint">← Sola kaydır: Başarısız oldu · Sağa kaydır: Başarılı oldu →</div>
+  <div class="decision-btns">
+    <button class="dec-btn reject" onclick="decide(false)">✕ Başarısız</button>
+    <button class="dec-btn accept" onclick="decide(true)">✓ Başarılı</button>
+  </div>
+</div>
+<div class="result-overlay" id="result-overlay">
+  <div class="result-box">
+    <div class="res-icon" id="res-icon">⚔️</div>
+    <div class="res-title" id="res-title"></div>
+    <div class="res-pts" id="res-pts"></div>
+    <div class="res-explain" id="res-explain"></div>
+    <div class="btn-row">
+      <button class="btn btn-red" onclick="nextCard()">Sonraki →</button>
+      <button class="btn btn-outline" onclick="location.href='oza-hub.html'">OZA'ya Dön</button>
+    </div>
+  </div>
+</div>
+<script src="hs-engine.js"></script>
+<script>
+var CARDS=[
+  {tag:'ENDÜSTRİYEL SAVAŞ',icon:'🚂',name:'Demiryolu Mobilizasyonu (1870)',
+   desc:'Prusya, Fransa savaşında demiryolu ağını kullanarak 500.000 askeri 18 günde sınıra taşıdı.',
+   prod:'A+',tech:'Yüksek',moral:'Yüksek',
+   verdict:'Schlieffen Planı\'nın temeli: Demiryolu = Hız',
+   success:true,
+   explain:'Prusya\'nın demiryolu üstünlüğü, Fransa\'yı hazırlıksız yakaladı. Endüstriyel lojistik savaşı kazandı.'},
+  {tag:'TOPLAM SAVAŞ',icon:'🏭',name:'Alman Savaş Ekonomisi (1943)',
+   desc:'Albert Speer yönetiminde Almanya, 1943-44 arası silah üretimini 3 katına çıkardı. Ancak hammadde ve yakıt tükeniyordu.',
+   prod:'A+',tech:'Yüksek',moral:'Düşük',
+   verdict:'Üretim arttı ama kaynak tükendi',
+   success:false,
+   explain:'Speer mucizesi geçiciydi. Stratejik bombalama ve kaynak kıtlığı üretimi çökertti. Termodinamik sınır.'},
+  {tag:'DENİZ GÜCÜ',icon:'⚓',name:'ABD Liberty Gemileri (1941-45)',
+   desc:'ABD, 2.710 Liberty kargo gemisini seri üretimle inşa etti. Bir gemi ortalama 42 günde tamamlanıyordu.',
+   prod:'S',tech:'Orta',moral:'Yüksek',
+   verdict:'Seri üretim = Deniz üstünlüğü',
+   success:true,
+   explain:'Liberty gemileri, U-boat kayıplarını telafi etti. Seri üretim Atlantik Savaşı\'nı kazandırdı.'},
+  {tag:'HAVA GÜCÜ',icon:'✈️',name:'Stratejik Bombalama (1943-45)',
+   desc:'Müttefiklerin Almanya üzerine stratejik bombalama kampanyası: 1.4 milyon ton bomba atıldı.',
+   prod:'S',tech:'Yüksek',moral:'Tartışmalı',
+   verdict:'Üretimi %30 düşürdü ama sivil kayıplar yüksek',
+   success:true,
+   explain:'Stratejik bombalama, Alman üretimini geciktirdi ve yakıt krizini derinleştirdi. Tartışmalı ama etkili.'},
+  {tag:'BAŞARISIZ PLAN',icon:'❄️',name:'Barbarossa Harekâtı (1941)',
+   desc:'3.8 milyon askerle başlayan Barbarossa, lojistik çöküş ve Rus kışı nedeniyle Moskova önlerinde durdu.',
+   prod:'B',tech:'Yüksek',moral:'Düşen',
+   verdict:'Lojistik sınır aşıldı — termodinamik çöküş',
+   success:false,
+   explain:'Hitler, lojistik kapasiteyi aştı. Termodinamik rejimde enerji (yakıt, yiyecek) bitince sistem çöker.'},
+  {tag:'ENDÜSTRİYEL MUCİZE',icon:'🔧',name:'Sovyet Fabrika Tahliyesi (1941)',
+   desc:'SSCB, 1.500+ fabrikayı Ural Dağları\'nın doğusuna taşıdı. 6 ay içinde üretim yeniden başladı.',
+   prod:'A',tech:'Orta',moral:'Yüksek',
+   verdict:'Tarihte en büyük endüstriyel tahliye',
+   success:true,
+   explain:'Stalin\'in fabrika tahliyesi, Sovyet savaş makinesini kurtardı. Termodinamik dayanıklılık örneği.'},
+  {tag:'KAYNAK SAVAŞI',icon:'⛽',name:'Japon Güney Yayılması (1941-42)',
+   desc:'Japonya, petrol ambargosu nedeniyle Güneydoğu Asya\'daki petrol sahalarını ele geçirdi.',
+   prod:'B',tech:'Yüksek',moral:'Yüksek',
+   verdict:'Kaynak ihtiyacı → Savaş genişlemesi',
+   success:false,
+   explain:'Japonya kaynağı aldı ama ABD ile savaşa girdi. Termodinamik denge bozuldu, sistem çöktü.'},
+  {tag:'ATOM ÇAĞI',icon:'☢️',name:'Manhattan Projesi (1942-45)',
+   desc:'130.000 kişi, 2 milyar dolar. Sonuç: İnsanlığın en yıkıcı silahı. Savaşı 6 ay erken bitirdi.',
+   prod:'S',tech:'S',moral:'Tartışmalı',
+   verdict:'Termodinamik rejimin mutlak sınırı',
+   success:true,
+   explain:'Manhattan Projesi, endüstriyel savaşın zirvesi ve sonu. Artık savaş tüm insanlığı yok edebilir.'},
+  {tag:'LOJİSTİK BAŞARI',icon:'🚛',name:'Kızıl Top Ekspresi (Lend-Lease)',
+   desc:'ABD, SSCB\'ye 400.000 kamyon, 13.000 tank, 11.000 uçak gönderdi. Sovyet lojistiğinin %50\'si ABD\'den.',
+   prod:'A+',tech:'Yüksek',moral:'Yüksek',
+   verdict:'Müttefik lojistiği = Zafer',
+   success:true,
+   explain:'Lend-Lease olmadan SSCB savaşı kazanamazdı. Termodinamik rejimde enerji transferi kritiktir.'},
+  {tag:'BAŞARISIZ STRATEJİ',icon:'🎯',name:'V-2 Roket Programı (1944)',
+   desc:'Almanya, 3.000+ V-2 roketi üretti. Maliyet: Bir roket = bir avcı uçağı. Stratejik etki: minimal.',
+   prod:'B',tech:'S',moral:'Düşük',
+   verdict:'Yüksek teknoloji ≠ Stratejik etki',
+   success:false,
+   explain:'V-2 teknolojik başarı ama stratejik başarısızlıktı. Kaynaklar daha etkili silahlardan çalındı.'}
+];
+
+var currentCard=0, totalScore=0, streak=0;
+var isDragging=false, startX=0, currentX=0;
+var card, arena;
+
+function loadCard(){
+  var c=CARDS[currentCard%CARDS.length];
+  document.getElementById('c-tag').textContent=c.tag;
+  document.getElementById('c-icon').textContent=c.icon;
+  document.getElementById('c-name').textContent=c.name;
+  document.getElementById('c-desc').textContent=c.desc;
+  document.getElementById('c-prod').textContent=c.prod;
+  document.getElementById('c-tech').textContent=c.tech;
+  document.getElementById('c-moral').textContent=c.moral;
+  document.getElementById('c-verdict').textContent=c.verdict;
+  document.getElementById('s-round').textContent=(currentCard%CARDS.length)+1;
+  card.style.transition='transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  card.style.transform='translateX(0) rotate(0deg) scale(1)';
+  card.style.opacity='1';
+  setTimeout(function(){card.style.transition='';},400);
+  document.getElementById('result-overlay').classList.remove('show');
+}
+
+function decide(accept){
+  var c=CARDS[currentCard%CARDS.length];
+  var correct=(accept===c.success);
+  var pts=0;
+  if(correct){
+    streak++;pts=10+streak*5;totalScore+=pts;
+    if(typeof HS!=='undefined'){HS.addScore('termodinamik',pts);HS.beepWin();}
+  } else {
+    streak=0;
+    if(typeof HS!=='undefined') HS.beepFail();
+  }
+  card.style.transition='transform 0.5s ease, opacity 0.5s';
+  card.style.transform=accept?'translateX(120%) rotate(15deg)':'translateX(-120%) rotate(-15deg)';
+  card.style.opacity='0';
+  document.getElementById('s-score').textContent=totalScore;
+  document.getElementById('s-streak').textContent=streak;
+  document.getElementById('res-icon').textContent=correct?'✅':'❌';
+  document.getElementById('res-title').textContent=correct?'Doğru! +'+pts:'Yanlış!';
+  document.getElementById('res-pts').textContent=correct?'+'+pts:'0';
+  document.getElementById('res-pts').style.color=correct?'var(--green)':'var(--red2)';
+  document.getElementById('res-explain').textContent=c.explain;
+  setTimeout(function(){document.getElementById('result-overlay').classList.add('show');},500);
+  if(typeof HS!=='undefined'&&totalScore>=100) HS.awardBadge('termodinamik');
+}
+
+function nextCard(){currentCard++;loadCard();}
+
+function initSwipe(){
+  card=document.getElementById('swipe-card');
+  arena=document.getElementById('card-arena');
+  function onStart(x){isDragging=true;startX=x;currentX=0;card.style.transition='none';}
+  function onMove(x){
+    if(!isDragging)return;currentX=x-startX;
+    card.style.transform='translateX('+currentX+'px) rotate('+(currentX*0.08)+'deg)';
+    var saL=document.getElementById('sa-left'),saR=document.getElementById('sa-right');
+    if(currentX<-30){saL.style.opacity=Math.min(1,Math.abs(currentX)/100);saR.style.opacity=0;}
+    else if(currentX>30){saR.style.opacity=Math.min(1,currentX/100);saL.style.opacity=0;}
+    else{saL.style.opacity=0;saR.style.opacity=0;}
+  }
+  function onEnd(){
+    if(!isDragging)return;isDragging=false;
+    document.getElementById('sa-left').style.opacity=0;
+    document.getElementById('sa-right').style.opacity=0;
+    if(currentX<-80) decide(false);
+    else if(currentX>80) decide(true);
+    else{card.style.transition='transform 0.3s';card.style.transform='translateX(0) rotate(0deg)';}
+  }
+  card.addEventListener('mousedown',function(e){onStart(e.clientX);});
+  document.addEventListener('mousemove',function(e){onMove(e.clientX);});
+  document.addEventListener('mouseup',onEnd);
+  card.addEventListener('touchstart',function(e){onStart(e.touches[0].clientX);},{passive:true});
+  document.addEventListener('touchmove',function(e){onMove(e.touches[0].clientX);},{passive:true});
+  document.addEventListener('touchend',onEnd);
+}
+initSwipe();loadCard();
+</script>
+</body>
+</html>

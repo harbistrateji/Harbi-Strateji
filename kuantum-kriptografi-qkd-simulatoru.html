@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Kuantum Kriptografi (QKD) Simülatörü | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+
+:root {
+  --border: #2a3a4a;
+  --border-strong: #3d5060;
+  --border-accent: #00E0FF;
+  --border-success: #00FF88;
+  --border-danger: #E24B4A;
+  --border-warning: #EF9F27;
+  --surface-0: #0a0f17;
+  --surface-1: #0d1b2a;
+  --surface-2: #162540;
+  --bg-accent: rgba(0,224,255,.08);
+  --bg-success: rgba(0,255,136,.08);
+  --bg-danger: rgba(226,75,74,.08);
+  --bg-warning: rgba(239,159,39,.08);
+  --text-primary: #E8EDF5;
+  --text-secondary: #7A8BA0;
+  --text-muted: #3D4F65;
+  --text-accent: #00E0FF;
+  --text-success: #00FF88;
+  --text-danger: #E24B4A;
+  --text-warning: #EF9F27;
+  --radius: 8px;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body { background: var(--surface-0); color: var(--text-primary); font-family: 'Inter', sans-serif; }
+.sim-page-wrap { max-width: 900px; margin: 2rem auto; padding: 0 1.25rem; }
+.sim-page-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.sim-page-header h1 { font-family: 'Oswald', sans-serif; font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: .3rem; }
+.sim-page-header p { font-size: .85rem; color: var(--text-secondary); }
+.sim-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .75rem; color: var(--text-accent); margin-bottom: 1rem; text-decoration: none; }
+.sim-back:hover { text-decoration: underline; }
+.sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="sim-page-wrap">
+  <a href="simulasyonlar.html" class="sim-back">← Simülasyonlara Dön</a>
+  
+<h2 class="sr-only">Kuantum anahtar dağıtımı (QKD) simülatörü — Alice ve Bob arasındaki güvenli iletişimi ve dinleme tespitini interaktif olarak keşfet.</h2>
+<style>
+@keyframes travel { 0%{left:0;opacity:1} 100%{left:calc(100% - 24px);opacity:1} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.qw { padding:.5rem 0 1rem; }
+.channel { position:relative; height:48px; border-radius:8px; border:0.5px solid var(--border); background:var(--surface-1); margin:12px 0; overflow:hidden; display:flex; align-items:center; }
+.channel-label { font-size:11px; color:var(--text-muted); padding:0 10px; white-space:nowrap; z-index:2; }
+.qubit { position:absolute; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; top:50%; transform:translateY(-50%); }
+.qubit.traveling { animation: travel var(--spd,1.2s) ease-in-out forwards; }
+.station { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px; border:0.5px solid var(--border); background:var(--surface-2); margin-bottom:8px; }
+.station-icon { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.station-name { font-size:13px; font-weight:500; color:var(--text-primary); }
+.station-status { font-size:11px; color:var(--text-secondary); margin-top:2px; }
+.bit-row { display:flex; gap:4px; flex-wrap:wrap; margin-top:6px; }
+.bit { width:22px; height:22px; border-radius:4px; border:0.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; transition:all .3s; }
+.bit.match { background:var(--bg-success); border-color:var(--border-success); color:var(--text-success); }
+.bit.mismatch { background:var(--bg-danger); border-color:var(--border-danger); color:var(--text-danger); }
+.bit.pending { background:var(--surface-1); color:var(--text-muted); }
+.log-box { background:var(--surface-1); border:0.5px solid var(--border); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--text-secondary); min-height:60px; line-height:1.7; margin:8px 0; font-family:var(--font-mono); }
+.log-line { animation:fadeIn .3s ease; }
+.toggle-row { display:flex; align-items:center; gap:10px; margin:10px 0; font-size:13px; color:var(--text-secondary); }
+.tgl { position:relative; width:36px; height:20px; border-radius:10px; background:var(--border-strong); cursor:pointer; transition:background .2s; flex-shrink:0; }
+.tgl.on { background:var(--text-danger); }
+.tgl-knob { position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--surface-2); transition:transform .2s; }
+.tgl.on .tgl-knob { transform:translateX(16px); }
+.phase-pills { display:flex; gap:6px; margin:10px 0; }
+.pill { padding:4px 12px; border-radius:20px; font-size:12px; border:0.5px solid var(--border); color:var(--text-muted); background:var(--surface-1); transition:all .3s; }
+.pill.active { background:var(--bg-accent); border-color:var(--border-accent); color:var(--text-accent); font-weight:500; }
+.pill.done { background:var(--bg-success); border-color:var(--border-success); color:var(--text-success); }
+.pill.error { background:var(--bg-danger); border-color:var(--border-danger); color:var(--text-danger); }
+.info-card { border-radius:8px; padding:10px 14px; font-size:12px; line-height:1.6; margin:8px 0; animation:fadeIn .4s ease; }
+.info-card.blue { background:var(--bg-accent); border:0.5px solid var(--border-accent); color:var(--text-accent); }
+.info-card.green { background:var(--bg-success); border:0.5px solid var(--border-success); color:var(--text-success); }
+.info-card.red { background:var(--bg-danger); border:0.5px solid var(--border-danger); color:var(--text-danger); }
+.info-card.warn { background:var(--bg-warning); border:0.5px solid var(--border-warning); color:var(--text-warning); }
+.concept-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
+.concept-card { border:0.5px solid var(--border); border-radius:8px; padding:10px 12px; background:var(--surface-2); cursor:pointer; transition:border-color .2s; }
+.concept-card:hover { border-color:var(--border-strong); }
+.concept-card.sel { border-color:var(--border-accent); background:var(--bg-accent); }
+.concept-title { font-size:12px; font-weight:500; color:var(--text-primary); }
+.concept-body { font-size:11px; color:var(--text-secondary); margin-top:4px; line-height:1.5; display:none; }
+.concept-card.sel .concept-body { display:block; }
+.concept-card.sel .concept-title { color:var(--text-accent); }
+</style>
+
+<div class="qw">
+
+<div style="font-size:16px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Kuantum Anahtar Dağıtımı (QKD) Simülatörü</div>
+<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Alice ve Bob güvenli anahtar kuruyor. Casusun tespitini izle.</div>
+
+<div class="toggle-row">
+  <div class="tgl" id="eveToggle" onclick="toggleEve()"><div class="tgl-knob"></div></div>
+  <span id="eveLbl">Eve (dinleyici) kapalı — güvenli kanal</span>
+</div>
+
+<div class="phase-pills">
+  <div class="pill active" id="ph0">1 Kübit gönder</div>
+  <div class="pill" id="ph1">2 Bazları karşılaştır</div>
+  <div class="pill" id="ph2">3 Anahtar oluştur</div>
+  <div class="pill" id="ph3">4 Hata denetle</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+  <div class="station">
+    <div class="station-icon" style="background:var(--bg-accent)"><i class="ti ti-user-circle" style="color:var(--text-accent);font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="station-name">Alice (Gönderen)</div>
+      <div class="station-status" id="alice-status">Rastgele kübitler hazırlıyor</div>
+      <div class="bit-row" id="alice-bits"></div>
+    </div>
+  </div>
+  <div class="station">
+    <div class="station-icon" style="background:var(--bg-success)"><i class="ti ti-user-circle" style="color:var(--text-success);font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="station-name">Bob (Alan)</div>
+      <div class="station-status" id="bob-status">Ölçüm için hazır</div>
+      <div class="bit-row" id="bob-bits"></div>
+    </div>
+  </div>
+</div>
+
+<div class="channel" id="quantumChannel">
+  <div class="channel-label">Kuantum kanal (foton akışı)</div>
+  <div id="eveStation" style="display:none;position:absolute;right:calc(50% - 30px);top:50%;transform:translateY(-50%);z-index:3">
+    <div style="background:var(--bg-danger);border:1px solid var(--border-danger);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--text-danger);font-weight:500;animation:pulse 1s infinite">Eve</div>
+  </div>
+</div>
+
+<div class="log-box" id="logBox"><span style="color:var(--text-muted)">Simülasyon başlamadı. Başlat tuşuna bas.</span></div>
+
+<div id="infoArea"></div>
+
+<div style="margin-top:10px;display:flex;gap:8px">
+  <button onclick="runSim()" style="padding:8px 18px;font-size:13px;border-radius:var(--radius);border:0.5px solid var(--border-accent);background:var(--bg-accent);color:var(--text-accent);cursor:pointer">Simülasyonu çalıştır</button>
+  <button onclick="resetSim()" style="padding:8px 14px;font-size:13px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">Sıfırla</button>
+</div>
+
+<div style="margin-top:16px;font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px">Temel kavramlar — tıkla ve keşfet</div>
+<div class="concept-grid">
+  <div class="concept-card" onclick="toggleConcept(this)">
+    <div class="concept-title"><i class="ti ti-wave-square" aria-hidden="true"></i> Süperpozisyon</div>
+    <div class="concept-body">Bir kübit ölçülene kadar aynı anda hem 0 hem de 1 durumundadır. Ölçüm anında kesin değer belirlenir — bu yüzden dinleme tespit edilebilir.</div>
+  </div>
+  <div class="concept-card" onclick="toggleConcept(this)">
+    <div class="concept-title"><i class="ti ti-link" aria-hidden="true"></i> Kuantum dolanıklık</div>
+    <div class="concept-body">İki kübit dolanık hale getirildiğinde birinin ölçümü anında diğerini etkiler — mesafeden bağımsız. Einstein buna "hayalet etki" dedi.</div>
+  </div>
+  <div class="concept-card" onclick="toggleConcept(this)">
+    <div class="concept-title"><i class="ti ti-eye-off" aria-hidden="true"></i> Kopya edilemezlik teoremi</div>
+    <div class="concept-body">Bilinmeyen bir kuantum durumu kopyalanamaz. Eve, kübiti kopyalayamadan ölçmek zorunda — bu ölçüm iz bırakır ve tespit edilir.</div>
+  </div>
+  <div class="concept-card" onclick="toggleConcept(this)">
+    <div class="concept-title"><i class="ti ti-shield-check" aria-hidden="true"></i> BB84 protokolü</div>
+    <div class="concept-body">1984'te Bennett ve Brassard tarafından geliştirilen ilk QKD protokolü. Alice rastgele polarizasyon bazları seçer; yanlış baz Eve'in varlığını ortaya çıkarır.</div>
+  </div>
+</div>
+
+<button onclick="sendPrompt('Kuantum kriptografi ile klasik kriptografinin farkları nelerdir? Askeri uygulamaları açıkla.')" style="margin-top:10px;padding:7px 14px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--surface-1);color:var(--text-secondary);cursor:pointer">Askeri uygulama karşılaştırması ↗</button>
+
+</div>
+
+<script>
+let eveActive = false;
+let running = false;
+
+const BITS = 10;
+let aliceBits = [], bobBits = [], aliceBases = [], bobBases = [], sharedKey = [];
+
+function toggleEve() {
+  eveActive = !eveActive;
+  document.getElementById('eveToggle').classList.toggle('on', eveActive);
+  document.getElementById('eveLbl').textContent = eveActive
+    ? 'Eve (dinleyici) aktif — tehlikeli kanal'
+    : 'Eve (dinleyici) kapalı — güvenli kanal';
+  document.getElementById('eveStation').style.display = eveActive ? 'block' : 'none';
+}
+
+function rand() { return Math.round(Math.random()); }
+
+function setBits(id, arr, highlight) {
+  const el = document.getElementById(id);
+  el.innerHTML = arr.map((b,i) => {
+    let cls = 'bit pending';
+    if(highlight && highlight[i] !== undefined) cls = 'bit ' + (highlight[i] ? 'match' : 'mismatch');
+    return `<div class="${cls}">${b}</div>`;
+  }).join('');
+}
+
+function log(msg, delay=0) {
+  return new Promise(r => setTimeout(() => {
+    const box = document.getElementById('logBox');
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.textContent = '› ' + msg;
+    if(box.querySelector('span')) box.innerHTML = '';
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+    r();
+  }, delay));
+}
+
+function setPhase(n) {
+  ['ph0','ph1','ph2','ph3'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = 'pill ' + (i < n ? 'done' : i === n ? 'active' : '');
+  });
+}
+
+function setInfo(html) {
+  document.getElementById('infoArea').innerHTML = html;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function animateQubit(color, label) {
+  const ch = document.getElementById('quantumChannel');
+  const q = document.createElement('div');
+  q.className = 'qubit';
+  q.style.cssText = `background:${color};color:#fff;--spd:.9s;`;
+  q.textContent = label;
+  ch.appendChild(q);
+  await sleep(50);
+  q.classList.add('traveling');
+  await sleep(1000);
+  q.remove();
+}
+
+async function runSim() {
+  if(running) return;
+  running = true;
+  resetDisplay();
+
+  aliceBits = Array.from({length:BITS}, rand);
+  aliceBases = Array.from({length:BITS}, rand);
+  bobBases = Array.from({length:BITS}, rand);
+
+  const eveInterference = eveActive ? Array.from({length:BITS}, rand) : null;
+
+  setBits('alice-bits', aliceBits);
+  setBits('bob-bits', Array(BITS).fill('?'));
+  document.getElementById('alice-status').textContent = 'Kübitler polarize ediliyor';
+  document.getElementById('bob-status').textContent = 'Fotonlar bekleniyor';
+
+  setPhase(0);
+  await log(`Alice ${BITS} adet rastgele kübit üretti`);
+  await sleep(400);
+
+  for(let i=0; i<BITS; i++) {
+    const colors = ['#378ADD','#7F77DD','#1D9E75','#BA7517'];
+    await animateQubit(colors[aliceBases[i]*2 + aliceBits[i]], aliceBits[i].toString());
+    await sleep(100);
+  }
+
+  if(eveActive) {
+    await log('Eve kanalı dinliyor — kübitleri ölçüyor ve yeniden gönderiyor');
+    await sleep(300);
+    setInfo('<div class="info-card warn"><b>Eve müdahalesi:</b> Kuantum kopya edilemezlik teoremi gereği Eve, kübitleri kopyalayamaz. Ölçmek zorunda kalır, bu da kuantum durumlarını bozar ve hata oranını yükseltir.</div>');
+  }
+
+  setPhase(1);
+  await log('Bob kübitleri aldı ve rastgele bazlarla ölçtü');
+  await sleep(400);
+
+  bobBits = aliceBits.map((b, i) => {
+    if(eveActive && eveInterference[i] !== aliceBases[i]) {
+      return rand();
+    }
+    return aliceBases[i] === bobBases[i] ? b : rand();
+  });
+
+  setBits('bob-bits', bobBits);
+  document.getElementById('bob-status').textContent = 'Ölçüm tamamlandı';
+
+  await log('Alice ve Bob bazlarını açık kanalda karşılaştırıyor');
+  await sleep(500);
+
+  setPhase(2);
+  const matchIdx = aliceBases.map((b,i) => b === bobBases[i]);
+  sharedKey = aliceBits.filter((_,i) => matchIdx[i]);
+
+  const aliceHighlight = matchIdx.map(m => m ? 1 : 0);
+  const bobHighlight = matchIdx.map((m,i) => m ? (aliceBits[i]===bobBits[i] ? 1 : 0) : 0);
+
+  setBits('alice-bits', aliceBits, aliceHighlight);
+  setBits('bob-bits', bobBits, bobHighlight.map((v,i) => matchIdx[i] ? v : 0).map((v,i) => matchIdx[i] ? (aliceBits[i]===bobBits[i]?1:0) : 0));
+
+  await log(`Eşleşen baz sayısı: ${matchIdx.filter(Boolean).length} — paylaşılan anahtar: [${sharedKey.join('')}]`);
+  await sleep(500);
+
+  setPhase(3);
+
+  const errorRate = bobBits.filter((b,i) => matchIdx[i] && b !== aliceBits[i]).length / (matchIdx.filter(Boolean).length || 1);
+  const errPct = Math.round(errorRate * 100);
+
+  await log(`Hata oranı analizi: %${errPct}`);
+  await sleep(400);
+
+  document.getElementById('alice-status').textContent = `Anahtar hazır (${sharedKey.length} bit)`;
+  document.getElementById('bob-status').textContent = `Anahtar doğrulandı`;
+
+  if(eveActive && errPct > 20) {
+    setPhase(-1);
+    ['ph0','ph1','ph2','ph3'].forEach(id => document.getElementById(id).className = 'pill error');
+    setInfo(`<div class="info-card red"><b>Dinleyici tespit edildi!</b> Hata oranı %${errPct} — normal eşik %11'in çok üzerinde. Kuantum mekanikleri gereği Eve'in müdahalesi fark edildi. Kanal kapatılıyor, anahtar iptal ediliyor.</div>`);
+    await log(`GÜVENLİK UYARISI: Hata oranı %${errPct} — olası dinleme tespit edildi!`);
+    const icon = document.querySelector('#alice-status');
+    icon.textContent = 'Kanal şüpheli — bağlantı kesildi';
+  } else if(!eveActive) {
+    setPhase(4);
+    ['ph0','ph1','ph2','ph3'].forEach(id => document.getElementById(id).className = 'pill done');
+    setInfo(`<div class="info-card green"><b>Güvenli anahtar kuruldu!</b> Hata oranı %${errPct} — kabul edilebilir sınır içinde. Alice ve Bob artık ${sharedKey.length} bitlik paylaşılan anahtarla şifreli iletişim kurabilir. Eve bu anahtarı kesinlikle bilemez.</div>`);
+    await log(`Başarı: ${sharedKey.length} bitlik güvenli anahtar kuruldu. İletişim şifrelenebilir.`);
+  } else {
+    setInfo(`<div class="info-card warn"><b>Düşük hata — gizli dinleme devam edebilir.</b> %${errPct} hata oranı eşiğe yakın. Eve şanslıydı ve bazlarının bir kısmını doğru tahmin etti. Gerçek sistemlerde daha uzun anahtar uzunlukları istatistiksel tespiti garantiler.</div>`);
+    await log(`Uyarı: Hata oranı %${errPct} — gizli dinleme olasılığı göz ardı edilemez.`);
+  }
+
+  running = false;
+}
+
+function resetDisplay() {
+  document.getElementById('alice-bits').innerHTML = '';
+  document.getElementById('bob-bits').innerHTML = '';
+  document.getElementById('alice-status').textContent = 'Hazırlanıyor';
+  document.getElementById('bob-status').textContent = 'Hazırlanıyor';
+  document.getElementById('infoArea').innerHTML = '';
+  document.getElementById('logBox').innerHTML = '<span style="color:var(--text-muted)">Çalışıyor...</span>';
+  ['ph0','ph1','ph2','ph3'].forEach((id,i) => document.getElementById(id).className = 'pill' + (i===0?' active':''));
+}
+
+function resetSim() {
+  running = false;
+  resetDisplay();
+  document.getElementById('logBox').innerHTML = '<span style="color:var(--text-muted)">Sıfırlandı. Başlat tuşuna bas.</span>';
+}
+
+function toggleConcept(el) {
+  document.querySelectorAll('.concept-card').forEach(c => { if(c!==el) c.classList.remove('sel'); });
+  el.classList.toggle('sel');
+}
+</script>
+
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

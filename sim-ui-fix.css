@@ -1,0 +1,46 @@
+/* Global SIM UI Fix - Better readability and spacing */
+.sim-panel, .panel, .control-panel, .sim-controls {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 12px !important;
+}
+.sim-panel h3, .panel h3, .sim-title {
+  font-size: clamp(14px, 2vw, 18px) !important;
+  margin-bottom: 8px !important;
+}
+.sim-panel p, .panel p, .sim-desc {
+  font-size: clamp(12px, 1.5vw, 14px) !important;
+  line-height: 1.6 !important;
+  margin-bottom: 6px !important;
+}
+/* Better button sizing for mobile */
+.sim-btn, .action-btn, .sim-panel button, .panel button {
+  min-height: 40px !important;
+  padding: 8px 16px !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+}
+/* Fix cramped grids */
+.sim-grid, .stat-grid, .info-grid {
+  gap: 10px !important;
+}
+/* Better stat display */
+.stat-value, .sim-stat-val {
+  font-size: clamp(16px, 2.5vw, 24px) !important;
+}
+.stat-label, .sim-stat-lbl {
+  font-size: 10px !important;
+  letter-spacing: 0.05em !important;
+}
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .sim-panel, .panel, .control-panel {
+    padding: 8px !important;
+  }
+  .sim-grid, .stat-grid {
+    grid-template-columns: 1fr !important;
+  }
+  body {
+    font-size: 14px !important;
+  }
+}

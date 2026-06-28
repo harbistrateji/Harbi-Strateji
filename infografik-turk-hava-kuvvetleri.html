@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Türk Hava Kuvvetleri — İnteraktif İnfografik | Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--sky:#0a1628;--sky2:#0d2040;--gold:#C9A24B;--red:#E01515;--cyan:#00E0FF;--white:#f0f4f8;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--sky);color:var(--white);overflow-x:hidden;}
+a{color:var(--cyan);text-decoration:none;}
+
+/* NAV */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:.8rem 1.5rem;background:rgba(10,22,40,.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,224,255,.1);}
+.top-bar a{font-size:.85rem;font-weight:600;letter-spacing:1px;}
+#soundToggle{background:none;border:1px solid rgba(0,224,255,.3);color:var(--cyan);padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-size:.8rem;}
+
+/* HERO */
+.hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,100,200,.08) 0%,transparent 70%);}
+.hero canvas{position:absolute;inset:0;z-index:0;}
+.hero-content{position:relative;z-index:2;text-align:center;}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:900;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(135deg,var(--cyan),var(--white));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 60px rgba(0,224,255,.3);}
+.hero .sub{font-size:clamp(.9rem,2vw,1.3rem);color:rgba(240,244,248,.6);margin-top:1rem;letter-spacing:2px;}
+.hero .year{font-size:8rem;font-weight:900;opacity:.06;position:absolute;top:20%;left:50%;transform:translateX(-50%);letter-spacing:20px;}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.4);font-size:.8rem;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);}}
+
+/* SECTIONS */
+.section{padding:5rem 2rem;max-width:1200px;margin:0 auto;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.19,1,.22,1);}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-title{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:800;margin-bottom:2rem;position:relative;padding-left:1.5rem;}
+.section-title::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cyan);border-radius:2px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:2rem 0;}
+.stat-card{background:rgba(0,224,255,.03);border:1px solid rgba(0,224,255,.15);border-radius:12px;padding:1.5rem;text-align:center;transition:all .3s;}
+.stat-card:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,224,255,.1);}
+.stat-num{font-size:2.5rem;font-weight:900;color:var(--cyan);font-family:'Courier New',monospace;}
+.stat-label{font-size:.8rem;color:rgba(255,255,255,.6);margin-top:.5rem;text-transform:uppercase;letter-spacing:1px;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:3rem;margin:2rem 0;}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--cyan),var(--gold),var(--red));}
+.tl-item{position:relative;margin-bottom:2.5rem;opacity:0;transform:translateX(-20px);transition:all .6s;}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-item::before{content:'';position:absolute;left:-2.4rem;top:.5rem;width:12px;height:12px;border-radius:50%;background:var(--cyan);border:2px solid var(--sky);box-shadow:0 0 10px var(--cyan);}
+.tl-year{font-size:.95rem;color:var(--gold);font-weight:700;letter-spacing:2px;margin-bottom:.3rem;}
+.tl-title{font-size:1.1rem;font-weight:700;margin-bottom:.3rem;}
+.tl-desc{font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.5;}
+
+/* PLATFORMS */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:2rem 0;}
+.platform-card{background:linear-gradient(135deg,rgba(0,224,255,.03),rgba(0,100,200,.05));border:1px solid rgba(0,224,255,.12);border-radius:12px;padding:1.5rem;transition:all .4s;position:relative;overflow:hidden;}
+.platform-card::after{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(0,224,255,.05) 0%,transparent 70%);transition:all .4s;}
+.platform-card:hover{border-color:var(--cyan);transform:scale(1.02);}
+.platform-card:hover::after{top:-30%;right:-30%;}
+.platform-icon{font-size:2.5rem;margin-bottom:1rem;}
+.platform-name{font-size:1.2rem;font-weight:700;color:var(--cyan);margin-bottom:.5rem;}
+.platform-type{font-size:.9rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:.8rem;}
+.platform-specs{list-style:none;font-size:.8rem;color:rgba(255,255,255,.7);}
+.platform-specs li{padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.platform-specs li span{color:var(--cyan);font-weight:600;}
+
+/* COMPARISON */
+.compare-bar{display:flex;align-items:center;margin:.8rem 0;gap:1rem;}
+.compare-label{width:120px;font-size:.95rem;color:rgba(255,255,255,.7);text-align:right;}
+.compare-track{flex:1;height:20px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;}
+.compare-fill{height:100%;border-radius:10px;transition:width 1.5s cubic-bezier(.19,1,.22,1);width:0;}
+.compare-val{font-size:.9rem;font-weight:700;position:absolute;right:8px;top:50%;transform:translateY(-50%);color:white;text-shadow:0 1px 3px rgba(0,0,0,.5);}
+
+/* FOOTER */
+.footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(0,224,255,.1);font-size:.95rem;color:rgba(255,255,255,.4);}
+
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .platform-grid{grid-template-columns:1fr;}
+  .compare-label{width:80px;font-size:.85rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+
+<div class="top-bar">
+  <a href="index.html">← Harb-i Strateji</a>
+  <button id="soundToggle">🔇</button>
+</div>
+
+<section class="hero">
+  <canvas id="skyCanvas"></canvas>
+  <div class="year">2026</div>
+  <div class="hero-content">
+    <div style="font-size:.8rem;letter-spacing:4px;color:var(--gold);margin-bottom:1rem;">TÜRK SİLAHLI KUVVETLERİ</div>
+    <h1>HAVA KUVVETLERİ</h1>
+    <div class="sub">1911'den KAAN'a — Göklerin Hakimi</div>
+  </div>
+  <div class="scroll-hint">▼ Keşfetmek için kaydırın</div>
+</section>
+
+<div class="section" id="stats">
+  <div class="section-title">Kuvvet Profili</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" data-target="1070">0</div><div class="stat-label">Uçak & Helikopter</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="350">0</div><div class="stat-label">Savaş Uçağı</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="180">0</div><div class="stat-label">İHA/SİHA</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="60000">0</div><div class="stat-label">Personel</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="24">0</div><div class="stat-label">Ana Üs</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="113">0</div><div class="stat-label">Yıllık Gelenek</div></div>
+  </div>
+</div>
+
+<div class="section" id="timeline">
+  <div class="section-title">Tarihsel Gelişim</div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-year">1911</div><div class="tl-title">Osmanlı Havacılık Komisyonu</div><div class="tl-desc">İlk askeri havacılık teşkilatı kuruldu. Fransa'ya pilot eğitimine öğrenci gönderildi.</div></div>
+    <div class="tl-item"><div class="tl-year">1912</div><div class="tl-title">İlk Hava Şehidi: Fethi Bey</div><div class="tl-desc">Osmanlı'nın ilk pilotlarından Fethi Bey, Libya'da şehit düştü.</div></div>
+    <div class="tl-item"><div class="tl-year">1915</div><div class="tl-title">Çanakkale Hava Muharebesi</div><div class="tl-desc">Osmanlı pilotları Çanakkale'de İtilaf keşif uçaklarına karşı savaştı.</div></div>
+    <div class="tl-item"><div class="tl-year">1920</div><div class="tl-title">Millî Mücadele Havacılığı</div><div class="tl-desc">Kurtuluş Savaşı'nda sınırlı hava gücüyle keşif ve bombardıman görevleri.</div></div>
+    <div class="tl-item"><div class="tl-year">1944</div><div class="tl-title">Türk Hava Kuvvetleri Kuruluşu</div><div class="tl-desc">Bağımsız bir kuvvet olarak resmen kuruldu.</div></div>
+    <div class="tl-item"><div class="tl-year">1952</div><div class="tl-title">NATO Üyeliği & Jet Çağı</div><div class="tl-desc">F-84 Thunderjet ile jet çağına geçiş. Kore Savaşı'nda 4. Tugay.</div></div>
+    <div class="tl-item"><div class="tl-year">1974</div><div class="tl-title">Kıbrıs Barış Harekâtı</div><div class="tl-desc">Hava indirme ve hava üstünlüğü operasyonları başarıyla icra edildi.</div></div>
+    <div class="tl-item"><div class="tl-year">1984</div><div class="tl-title">F-16 Programı Başlangıcı</div><div class="tl-desc">TAI'de F-16 üretimi başladı. 270+ uçak üretildi.</div></div>
+    <div class="tl-item"><div class="tl-year">2016</div><div class="tl-title">Fırat Kalkanı Hava Desteği</div><div class="tl-desc">Suriye'de kapsamlı hava harekâtı. Hassas mühimmat kullanımı.</div></div>
+    <div class="tl-item"><div class="tl-year">2024</div><div class="tl-title">KAAN İlk Uçuş</div><div class="tl-desc">5. nesil yerli savaş uçağı KAAN gökyüzüyle buluştu. Türkiye tarihî bir eşiği aştı.</div></div>
+    <div class="tl-item"><div class="tl-year">2028+</div><div class="tl-title">KAAN Seri Üretim & ANKA-3</div><div class="tl-desc">Stealth İHA ANKA-3 ve KAAN ile geleceğin hava gücü şekilleniyor.</div></div>
+  </div>
+</div>
+
+<div class="section" id="platforms">
+  <div class="section-title">Aktif Platformlar</div>
+  <div class="platform-grid">
+    <div class="platform-card">
+      <div class="platform-icon">✈️</div>
+      <div class="platform-name">KAAN (TF-X)</div>
+      <div class="platform-type">5. Nesil Savaş Uçağı</div>
+      <ul class="platform-specs">
+        <li><span>Hız:</span> Mach 2.0+</li>
+        <li><span>Menzil:</span> 1.100+ km</li>
+        <li><span>Tavan:</span> 55.000 ft</li>
+        <li><span>Stealth:</span> Düşük RCS</li>
+        <li><span>Silah:</span> İç silah yuvaları</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🦅</div>
+      <div class="platform-name">F-16C/D Block 50+</div>
+      <div class="platform-type">4. Nesil Çok Rollü</div>
+      <ul class="platform-specs">
+        <li><span>Adet:</span> 245 aktif</li>
+        <li><span>Modernizasyon:</span> ÖZGÜR projesi</li>
+        <li><span>Radar:</span> AESA (yerli)</li>
+        <li><span>Silah:</span> SOM, HGK, KGK</li>
+        <li><span>Görev:</span> Hava-hava & hava-yer</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🚀</div>
+      <div class="platform-name">BAYRAKTAR KIZILELMA</div>
+      <div class="platform-type">İnsansız Muharip Uçak</div>
+      <ul class="platform-specs">
+        <li><span>Hız:</span> Mach 0.9</li>
+        <li><span>Tavan:</span> 35.000 ft</li>
+        <li><span>Silah:</span> 1.500 kg</li>
+        <li><span>YZ:</span> Sürü zekâsı</li>
+        <li><span>Otonom:</span> Tam otonom muharebe</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🛩️</div>
+      <div class="platform-name">HÜRJET</div>
+      <div class="platform-type">Jet Eğitim / Hafif Taarruz</div>
+      <ul class="platform-specs">
+        <li><span>Hız:</span> Mach 1.4</li>
+        <li><span>Tavan:</span> 45.000 ft</li>
+        <li><span>Silah:</span> 3.000 kg</li>
+        <li><span>Görev:</span> Eğitim + CAS</li>
+        <li><span>Motor:</span> TEI-TF6000 (yerli)</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🎯</div>
+      <div class="platform-name">ANKA-3 (MUHAREBE)</div>
+      <div class="platform-type">Stealth İHA</div>
+      <ul class="platform-specs">
+        <li><span>Tip:</span> Flying Wing (stealth)</li>
+        <li><span>Menzil:</span> 3.000+ km</li>
+        <li><span>Silah:</span> İç yuva</li>
+        <li><span>Radar:</span> AESA (minyatür)</li>
+        <li><span>Görev:</span> SEAD/DEAD</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🛡️</div>
+      <div class="platform-name">HİSAR O+ / SİPER</div>
+      <div class="platform-type">Hava Savunma Sistemi</div>
+      <ul class="platform-specs">
+        <li><span>Menzil:</span> 100+ km (SİPER)</li>
+        <li><span>İrtifa:</span> 25 km</li>
+        <li><span>Hedef:</span> Balistik füze</li>
+        <li><span>Radar:</span> Çok fonksiyonlu AESA</li>
+        <li><span>Durum:</span> Aktif görevde</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="compare">
+  <div class="section-title">Bölgesel Hava Gücü Karşılaştırması</div>
+  <div style="margin:2rem 0;">
+    <div class="compare-bar"><div class="compare-label">Türkiye</div><div class="compare-track"><div class="compare-fill" data-width="85" style="background:linear-gradient(90deg,var(--cyan),#0066cc);"><span class="compare-val">1.070</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">Yunanistan</div><div class="compare-track"><div class="compare-fill" data-width="42" style="background:linear-gradient(90deg,#4488cc,#2244aa);"><span class="compare-val">450</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">Mısır</div><div class="compare-track"><div class="compare-fill" data-width="88" style="background:linear-gradient(90deg,#44aa44,#228822);"><span class="compare-val">1.100</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">İsrail</div><div class="compare-track"><div class="compare-fill" data-width="55" style="background:linear-gradient(90deg,#aa8844,#886622);"><span class="compare-val">600</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">İran</div><div class="compare-track"><div class="compare-fill" data-width="30" style="background:linear-gradient(90deg,#aa4444,#882222);"><span class="compare-val">340</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">S. Arabistan</div><div class="compare-track"><div class="compare-fill" data-width="72" style="background:linear-gradient(90deg,#aa44aa,#882288);"><span class="compare-val">800</span></div></div></div>
+  </div>
+  <p style="font-size:.95rem;color:rgba(255,255,255,.4);margin-top:1rem;">* Toplam uçak + helikopter sayıları (2026 tahmini)</p>
+</div>
+
+<div class="footer">HARB-İ STRATEJİ · TÜRK HAVA KUVVETLERİ ANALİZİ · 2026</div>
+
+<script>
+// Sound system
+let audioCtx, soundEnabled = false;
+document.getElementById('soundToggle').addEventListener('click', function(){
+  soundEnabled = !soundEnabled;
+  this.textContent = soundEnabled ? '🔊' : '🔇';
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+});
+function playTone(freq, dur, type='sine'){
+  if(!soundEnabled || !audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.05, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+
+// Sky canvas - jet trails
+const canvas = document.getElementById('skyCanvas');
+const ctx = canvas.getContext('2d');
+let jets = [];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+class Jet{
+  constructor(){this.reset();}
+  reset(){
+    this.x = -50;
+    this.y = Math.random() * canvas.height * 0.6 + canvas.height * 0.1;
+    this.speed = 2 + Math.random() * 3;
+    this.trail = [];
+    this.size = 3 + Math.random() * 2;
+  }
+  update(){
+    this.x += this.speed;
+    this.trail.push({x:this.x, y:this.y, alpha:1});
+    if(this.trail.length > 80) this.trail.shift();
+    this.trail.forEach(t => t.alpha *= 0.97);
+    if(this.x > canvas.width + 100) this.reset();
+  }
+  draw(){
+    // Trail
+    this.trail.forEach(t => {
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, 1, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(200,220,255,${t.alpha * 0.3})`;
+      ctx.fill();
+    });
+    // Jet dot
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,224,255,0.8)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size + 3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,224,255,0.2)';
+    ctx.fill();
+  }
+}
+for(let i=0;i<5;i++){const j=new Jet();j.x=Math.random()*canvas.width;jets.push(j);}
+
+// Stars
+let stars = [];
+for(let i=0;i<100;i++) stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5,a:Math.random()});
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Stars
+  stars.forEach(s => {
+    s.a += 0.01;
+    const alpha = 0.3 + Math.sin(s.a) * 0.2;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(200,220,255,${alpha})`;ctx.fill();
+  });
+  jets.forEach(j => {j.update();j.draw();});
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      playTone(600 + Math.random()*400, 0.3);
+      // Counter animation
+      e.target.querySelectorAll('.stat-num[data-target]').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let current = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+          current += step;
+          if(current >= target){current = target; clearInterval(timer);}
+          el.textContent = Math.floor(current).toLocaleString('tr-TR');
+        }, 25);
+      });
+      // Compare bars
+      e.target.querySelectorAll('.compare-fill').forEach(el => {
+        setTimeout(() => {el.style.width = el.dataset.width + '%';}, 300);
+      });
+    }
+  });
+}, {threshold: 0.2});
+
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// Timeline items
+const tlObserver = new IntersectionObserver((entries) => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){
+      setTimeout(() => {e.target.classList.add('visible'); playTone(800,0.15);}, i * 100);
+    }
+  });
+}, {threshold: 0.3});
+document.querySelectorAll('.tl-item').forEach(t => tlObserver.observe(t));
+</script>
+</body>
+</html>

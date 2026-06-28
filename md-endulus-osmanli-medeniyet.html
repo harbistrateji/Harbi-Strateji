@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Endülüs'ten Osmanlı'ya: Medeniyet Bağı | Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0d12;--panel:#111720;--line:rgba(45,212,191,.15);--teal:#2dd4bf;--teal-dim:rgba(45,212,191,.6);--gold:#C9A24B;--rose:#f43f5e;--purple:#a78bfa;--sky:#38bdf8;--amber:#f59e0b;--text:#EAF0F7;--dim:#8b9cb5;--serif:'Playfair Display',serif;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;--head:'Chakra Petch',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+::selection{background:var(--teal);color:#000}
+
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:1000;background:rgba(255,255,255,.03)}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .15s}
+
+.hdr{position:fixed;top:3px;left:0;right:0;z-index:999;padding:10px 24px;display:flex;align-items:center;gap:14px;background:rgba(10,13,18,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hdr-back{font-size:11px;color:var(--dim);text-decoration:none;padding:4px 12px;border:1px solid var(--line);border-radius:5px;transition:.2s}
+.hdr-back:hover{color:var(--teal);border-color:var(--teal)}
+.hdr-title{font-family:var(--head);font-size:13px;font-weight:700;color:var(--teal)}
+.hdr-sub{font-size:13px;color:var(--dim);margin-left:auto;font-family:var(--mono)}
+.sound-btn{background:none;border:1px solid var(--line);color:var(--dim);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;transition:.2s}
+.sound-btn:hover{color:var(--teal);border-color:var(--teal)}
+
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 70%,rgba(45,212,191,.06) 0%,transparent 60%)}
+.hero-era{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero h1{font-family:var(--serif);font-size:clamp(26px,5.5vw,52px);font-weight:900;line-height:1.15;margin-bottom:20px;opacity:0;animation:fadeUp .8s .5s forwards}
+.hero h1 span{color:var(--teal)}
+.hero-desc{font-size:14px;color:var(--dim);max-width:620px;line-height:1.9;opacity:0;animation:fadeUp .8s .7s forwards}
+.hero-scroll{position:absolute;bottom:40px;font-size:11px;color:var(--dim);animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.timeline-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+.tn-item{width:12px;height:12px;border-radius:50%;border:2px solid var(--dim);cursor:pointer;transition:.3s;position:relative}
+.tn-item.active{background:var(--teal);border-color:var(--teal);transform:scale(1.3)}
+.tn-item:hover{border-color:var(--teal)}
+.tn-item::after{content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--dim);white-space:nowrap;opacity:0;transition:.2s;pointer-events:none}
+.tn-item:hover::after{opacity:1}
+@media(max-width:768px){.timeline-nav{display:none}}
+
+.era{min-height:100vh;padding:100px 24px;position:relative;display:flex;align-items:center;justify-content:center}
+.era-inner{max-width:1000px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media(max-width:768px){.era-inner{grid-template-columns:1fr;gap:24px}}
+.era-content{opacity:0;transform:translateX(-30px);transition:all .8s cubic-bezier(.19,1,.22,1)}
+.era-content.visible{opacity:1;transform:translateX(0)}
+.era-visual{opacity:0;transform:translateX(30px);transition:all .8s cubic-bezier(.19,1,.22,1) .2s}
+.era-visual.visible{opacity:1;transform:translateX(0)}
+
+.era-tag{display:inline-block;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;font-family:var(--mono)}
+.era-period{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:8px}
+.era-title{font-family:var(--serif);font-size:clamp(20px,3.5vw,30px);font-weight:900;line-height:1.25;margin-bottom:14px}
+.era-desc{font-size:13px;color:var(--dim);line-height:1.9;margin-bottom:16px}
+.era-quote{border-left:3px solid var(--teal);padding:12px 16px;background:rgba(45,212,191,.04);border-radius:0 8px 8px 0;font-size:12px;color:var(--text);line-height:1.8;margin-bottom:16px;font-style:italic}
+.era-facts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.era-fact{padding:6px 12px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);font-family:var(--mono);transition:.2s;cursor:default}
+.era-fact:hover{border-color:var(--teal);color:var(--teal);background:rgba(45,212,191,.05)}
+
+.v-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px;position:relative;overflow:hidden}
+.v-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--gold))}
+.v-card-icon{font-size:42px;margin-bottom:12px;display:block}
+.v-card-title{font-family:var(--head);font-size:14px;font-weight:700;margin-bottom:8px;color:var(--teal)}
+.v-card-list{list-style:none;font-size:12px;color:var(--dim);line-height:2}
+.v-card-list li::before{content:'▸ ';color:var(--teal)}
+
+.connector{text-align:center;padding:40px 24px;position:relative}
+.connector::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--line),transparent);transform:translateX(-50%)}
+.connector-dot{width:14px;height:14px;border-radius:50%;background:var(--teal);margin:0 auto;position:relative;z-index:1;animation:pdot 2s infinite}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(45,212,191,.4)}50%{box-shadow:0 0 0 12px rgba(45,212,191,0)}}
+
+/* Flow diagram */
+.flow-section{padding:60px 24px;max-width:800px;margin:0 auto}
+.flow-title{font-family:var(--serif);font-size:clamp(20px,3.5vw,28px);font-weight:900;text-align:center;margin-bottom:30px}
+.flow-title span{color:var(--teal)}
+.flow-diagram{display:flex;flex-direction:column;align-items:center;gap:0}
+.flow-node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 24px;text-align:center;width:280px;transition:.3s}
+.flow-node:hover{border-color:var(--teal);transform:scale(1.03)}
+.flow-node-title{font-family:var(--head);font-size:13px;font-weight:700;color:var(--teal)}
+.flow-node-sub{font-size:11px;color:var(--dim);margin-top:4px}
+.flow-arrow{color:var(--teal);font-size:20px;padding:8px 0;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* 5 Pillar */
+.pillar-section{padding:60px 24px;max-width:900px;margin:0 auto}
+.pillar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:768px){.pillar-grid{grid-template-columns:repeat(2,1fr)}}
+.pillar{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 12px;text-align:center;transition:.3s;cursor:default}
+.pillar:hover{border-color:var(--teal);transform:translateY(-4px);box-shadow:0 8px 24px rgba(45,212,191,.1)}
+.pillar-icon{font-size:28px;margin-bottom:8px}
+.pillar-title{font-size:12px;font-weight:700;color:var(--teal);margin-bottom:4px}
+.pillar-desc{font-size:13px;color:var(--dim);line-height:1.5}
+
+.analysis{padding:60px 24px;max-width:700px;margin:0 auto;text-align:center}
+.analysis-quote{font-family:var(--serif);font-size:clamp(16px,3vw,22px);font-weight:700;line-height:1.6;margin-bottom:20px}
+.analysis-quote span{color:var(--teal)}
+
+.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--line);font-size:11px;color:var(--dim)}
+.footer a{color:var(--teal);text-decoration:none}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="progress"><div class="progress-fill" id="pf"></div></div>
+<canvas id="particles"></canvas>
+
+<header class="hdr">
+  <a href="medeniyet-dinamikleri.html" class="hdr-back">← Medeniyet Dinamikleri</a>
+  <div class="hdr-title">ENDÜLÜS'TEN OSMANLI'YA</div>
+  <div class="hdr-sub">Bilgi, Kurum ve Medeniyet Bağı</div>
+  <button class="sound-btn" id="soundBtn" onclick="toggleSound()">Ses: Kapalı</button>
+</header>
+
+<nav class="timeline-nav" id="tnav"></nav>
+
+<section class="hero">
+  <div class="hero-era">Medeniyet Dinamikleri · Tarih Serisi</div>
+  <h1>Endülüs'ten Osmanlı'ya:<br><span>Medeniyetin Bilgi Akışı</span></h1>
+  <p class="hero-desc">Kurtuba'nın kütüphanelerinden Osmanlı vakıflarına — bilgi üretimi, kurumsal taşıma ve şehir ağlarıyla yaşayan medeniyet döngüsü. İslam medeniyeti yalnızca üretici değil, aynı zamanda taşıyıcı ve kurucu bir sistem olarak çalışmıştır.</p>
+  <div class="hero-scroll">↓ Keşfetmek için kaydır</div>
+</section>
+
+<!-- ERA 1: ENDÜLÜS -->
+<section class="era" data-era="endulus" data-label="Endülüs 756-1492">
+<div class="era-inner">
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.3)">I. Endülüs</div>
+    <div class="era-period">756–1492 · Batı'nın Bilgi Merkezi</div>
+    <div class="era-title">Endülüs: Medeniyetin<br>Batı Ucundaki Bilgi Merkezi</div>
+    <div class="era-desc">Endülüs, İslam medeniyetinin Avrupa'daki en yoğun bilgi ve şehirleşme alanlarından biri olarak ortaya çıkmıştır. Şehir planlaması, tıp ve astronomi, felsefe ve çeviri hareketleri, tarım teknikleri açısından Avrupa tarihine doğrudan etki eden bir merkezdir. Özellikle Kurtuba (Córdoba), kütüphaneler, üniversite benzeri yapılar ve bilimsel üretim ile dönemin en gelişmiş şehirlerinden biri haline gelmiştir.</div>
+    <div class="era-quote">Kurtuba Kütüphanesi: 400.000+ cilt eser. Aynı dönemde Avrupa'nın en büyük kütüphanesi 400 cilt.</div>
+    <div class="era-facts">
+      <span class="era-fact">Kurtuba</span>
+      <span class="era-fact">400.000 Cilt</span>
+      <span class="era-fact">Tıp</span>
+      <span class="era-fact">Astronomi</span>
+      <span class="era-fact">Felsefe</span>
+      <span class="era-fact">Tarım</span>
+    </div>
+  </div>
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">📚</span>
+      <div class="v-card-title">Endülüs Bilgi Üretimi</div>
+      <ul class="v-card-list">
+        <li>Kurtuba: 400.000+ cilt kütüphane</li>
+        <li>İbn Rüşd: Felsefe ve mantık</li>
+        <li>İbnü'l-Heysem: Optik bilimi</li>
+        <li>Zehrâvî: Cerrahi tıp</li>
+        <li>İbn Firnas: Uçuş deneyleri</li>
+        <li>Sulama ve tarım teknikleri</li>
+        <li>Şehir planlaması modeli</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="connector"><div class="connector-dot"></div></div>
+
+<!-- ERA 2: BİLGİ TRANSFERİ -->
+<section class="era" data-era="transfer" data-label="Bilgi Transferi">
+<div class="era-inner">
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">🔄</span>
+      <div class="v-card-title">Çeviri Hareketi</div>
+      <ul class="v-card-list">
+        <li>Arapça → Latince çeviri merkezi</li>
+        <li>Toledo Çeviri Okulu</li>
+        <li>Aristoteles yeniden keşfedildi</li>
+        <li>Cebir (Al-Khwarizmi) aktarıldı</li>
+        <li>Tıbbi eserler (İbn Sina) çevrildi</li>
+        <li>Astronomi bilgisi Avrupa'ya taşındı</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(56,189,248,.12);color:var(--sky);border:1px solid rgba(56,189,248,.3)">II. Bilgi Transferi</div>
+    <div class="era-period">XII–XIII. Yüzyıl · Çeviri Hareketi</div>
+    <div class="era-title">Bilginin Avrupa'ya<br>Transfer Hattı</div>
+    <div class="era-desc">Endülüs üzerinden gerçekleşen en kritik süreçlerden biri: bilginin Arapça'dan Latince'ye çevrilmesi. Felsefi metinler, tıbbi eserler, matematik çalışmaları ve astronomi bilgisi Avrupa'ya taşınmıştır. Bu durum Rönesans öncesi entelektüel zemin ve Avrupa bilim tarihinin erken katalizörü olarak değerlendirilir.</div>
+    <div class="era-quote">Medeniyetler sadece fetihle değil, bilgi transferiyle de dönüşür. Endülüs = Rönesans'ın katalizörü.</div>
+    <div class="era-facts">
+      <span class="era-fact">Toledo Okulu</span>
+      <span class="era-fact">Aristoteles</span>
+      <span class="era-fact">Cebir</span>
+      <span class="era-fact">Tıp</span>
+      <span class="era-fact">Rönesans Zemini</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="connector"><div class="connector-dot"></div></div>
+
+<!-- ERA 3: OSMANLI KURUMSAL -->
+<section class="era" data-era="osmanli-kurum" data-label="Osmanlı Vakıf">
+<div class="era-inner">
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(45,212,191,.12);color:var(--teal);border:1px solid rgba(45,212,191,.3)">III. Osmanlı Kurumsal Model</div>
+    <div class="era-period">XIV–XIX. Yüzyıl · Vakıf Sistemi</div>
+    <div class="era-title">Osmanlı: Kurumsal<br>Medeniyet Modeli</div>
+    <div class="era-desc">Osmanlı medeniyet sistemi yalnızca fetih değil; kurumsal sosyal devlet mimarisi üretmiştir. Vakıf sistemi Osmanlı'da eğitim, sağlık, şehir altyapısı ve sosyal yardım alanlarını finanse eden ana mekanizmadır. Vakıf mantığı: Devletin görünmeyen sosyal omurgası.</div>
+    <div class="era-quote">Vakıf mantığı: Devletin görünmeyen sosyal omurgası. Modern sosyal devletin erken prototipi.</div>
+    <div class="era-facts">
+      <span class="era-fact">26.000+ Vakıf</span>
+      <span class="era-fact">Eğitim</span>
+      <span class="era-fact">Sağlık</span>
+      <span class="era-fact">Altyapı</span>
+      <span class="era-fact">Sosyal Yardım</span>
+    </div>
+  </div>
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">🕌</span>
+      <div class="v-card-title">Vakıf = Erken Sosyal Devlet</div>
+      <ul class="v-card-list">
+        <li>Yoksul bakımı</li>
+        <li>Öğrenci desteği (burs)</li>
+        <li>Yol güvenliği</li>
+        <li>Sağlık hizmeti (darüşşifa)</li>
+        <li>Gıda dağıtımı (imaret)</li>
+        <li>Su yolları ve çeşmeler</li>
+        <li>Sürdürülebilir gelir modeli</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="connector"><div class="connector-dot"></div></div>
+
+<!-- ERA 4: KÜRESEL UZANTI -->
+<section class="era" data-era="kuresel" data-label="Küresel Vakıf">
+<div class="era-inner">
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">🌍</span>
+      <div class="v-card-title">Küresel Vakıf Ağı</div>
+      <ul class="v-card-list">
+        <li>Balkanlar: Medrese ve köprüler</li>
+        <li>Orta Doğu: İmaretler ve hastaneler</li>
+        <li>Kuzey Afrika: Su yolları</li>
+        <li>Hicaz: Hacı altyapısı</li>
+        <li>Kudüs: Çok dinli vakıflar</li>
+        <li>3 kıtada kurumsal iz</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.3)">IV. Küresel Uzantı</div>
+    <div class="era-period">3 Kıta · Kurumsal Yayılma</div>
+    <div class="era-title">Osmanlı Vakıflarının<br>Küresel Coğrafyası</div>
+    <div class="era-desc">Osmanlı vakıf sistemi yalnızca Anadolu ile sınırlı değildir. Balkanlar, Orta Doğu, Kuzey Afrika ve Hicaz bölgesinde medrese, imaret, hastane, su yolları ve kervansaraylar inşa edilmiştir. Bu, kurumsal bir medeniyet taşıma modelidir.</div>
+    <div class="era-quote">Endülüs: Bilgi üretim merkezi. Osmanlı: Kurumsal dağıtım ve süreklilik merkezi. Birlikte: Bilgi → Kurum → Toplum → Şehir → Medeniyet döngüsü.</div>
+    <div class="era-facts">
+      <span class="era-fact">Balkanlar</span>
+      <span class="era-fact">Orta Doğu</span>
+      <span class="era-fact">Kuzey Afrika</span>
+      <span class="era-fact">Hicaz</span>
+      <span class="era-fact">3 Kıta</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 5 PILLAR SYSTEM -->
+<section class="pillar-section">
+  <h2 class="flow-title">Medeniyetin <span>5 Ana Taşıyıcı Sistemi</span></h2>
+  <div class="pillar-grid">
+    <div class="pillar"><div class="pillar-icon">📖</div><div class="pillar-title">Bilgi</div><div class="pillar-desc">Endülüs: Üretim ve çeviri</div></div>
+    <div class="pillar"><div class="pillar-icon">🏛️</div><div class="pillar-title">Kurum</div><div class="pillar-desc">Osmanlı: Vakıf ve devlet yapısı</div></div>
+    <div class="pillar"><div class="pillar-icon">🏙️</div><div class="pillar-title">Şehir</div><div class="pillar-desc">Kültürel yoğunluk alanı</div></div>
+    <div class="pillar"><div class="pillar-icon">⚓</div><div class="pillar-title">Ticaret</div><div class="pillar-desc">Ekonomik dolaşım</div></div>
+    <div class="pillar"><div class="pillar-icon">☪️</div><div class="pillar-title">Din</div><div class="pillar-desc">Etik ve sosyal düzen</div></div>
+  </div>
+</section>
+
+<!-- FLOW DIAGRAM -->
+<section class="flow-section">
+  <h2 class="flow-title">Küresel Medeniyet <span>Akış Modeli</span></h2>
+  <div class="flow-diagram">
+    <div class="flow-node"><div class="flow-node-title">Endülüs</div><div class="flow-node-sub">Bilgi üretimi</div></div>
+    <div class="flow-arrow">⬇</div>
+    <div class="flow-node"><div class="flow-node-title">Avrupa</div><div class="flow-node-sub">Çeviri ve dönüşüm</div></div>
+    <div class="flow-arrow">⬇</div>
+    <div class="flow-node"><div class="flow-node-title">Rönesans</div><div class="flow-node-sub">Bilimsel devrim</div></div>
+    <div class="flow-arrow">⬇</div>
+    <div class="flow-node"><div class="flow-node-title">Modern Bilim</div><div class="flow-node-sub">Endüstri ve teknoloji</div></div>
+  </div>
+  <div style="height:40px"></div>
+  <div class="flow-diagram">
+    <div class="flow-node"><div class="flow-node-title">Osmanlı</div><div class="flow-node-sub">Kurumsal taşıma</div></div>
+    <div class="flow-arrow">⬇</div>
+    <div class="flow-node"><div class="flow-node-title">Balkanlar / Orta Doğu</div><div class="flow-node-sub">Coğrafi yayılma</div></div>
+    <div class="flow-arrow">⬇</div>
+    <div class="flow-node"><div class="flow-node-title">Şehirleşmiş Vakıf Sistemi</div><div class="flow-node-sub">Sosyal devlet modeli</div></div>
+  </div>
+</section>
+
+<!-- FINAL ANALYSIS -->
+<section class="analysis">
+  <div class="analysis-quote">"Medeniyetler, sadece sınırlarla değil; <span>bilgi akışları, kurumlar ve şehir ağlarıyla</span> yaşar ve yayılır."</div>
+  <p style="font-size:12px;color:var(--dim);line-height:1.8">İslam medeniyeti yalnızca üretici değil, aynı zamanda taşıyıcı ve kurucu bir sistem olarak çalışmıştır. Endülüs bilgiyi üretti, Osmanlı onu kurumsal yapıya dönüştürdü ve 3 kıtaya taşıdı.</p>
+</section>
+
+<footer class="footer">
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a> · Harb-i Strateji · Selahaddin Koyuncu Arşivi
+</footer>
+
+<script>
+// Particles
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let W,H,parts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+class P{constructor(){this.reset()}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.2;this.vy=-.1-Math.random()*.2;this.r=Math.random()*1.5+.5;this.a=Math.random()*.2+.05;this.life=Math.random()*300+100}update(){this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.y<0)this.reset()}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(45,212,191,${this.a})`;ctx.fill()}}
+for(let i=0;i<50;i++)parts.push(new P());
+function anim(){ctx.clearRect(0,0,W,H);parts.forEach(p=>{p.update();p.draw()});requestAnimationFrame(anim)}
+anim();
+
+// Progress
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('pf').style.width=(window.scrollY/h*100)+'%';
+});
+
+// Intersection Observer
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.era-content,.era-visual').forEach(el=>el.classList.add('visible'));
+      if(soundEnabled)playReveal();
+    }
+  });
+},{threshold:.2});
+document.querySelectorAll('.era').forEach(s=>obs.observe(s));
+
+// Timeline nav
+const eras=document.querySelectorAll('.era');
+const tnav=document.getElementById('tnav');
+eras.forEach((era,i)=>{
+  const dot=document.createElement('div');
+  dot.className='tn-item';
+  dot.dataset.label=era.dataset.label||'';
+  dot.onclick=()=>era.scrollIntoView({behavior:'smooth'});
+  tnav.appendChild(dot);
+});
+const dots=tnav.querySelectorAll('.tn-item');
+const navObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx=[...eras].indexOf(e.target);
+      dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+    }
+  });
+},{threshold:.4});
+eras.forEach(s=>navObs.observe(s));
+
+// Sound
+let soundEnabled=false,audioCtx=null;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function toggleSound(){soundEnabled=!soundEnabled;document.getElementById('soundBtn').textContent='Ses: '+(soundEnabled?'Açık':'Kapalı');if(soundEnabled)initAudio()}
+function playReveal(){
+  if(!audioCtx)return;
+  const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.type='triangle';osc.frequency.setValueAtTime(500,audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(250,audioCtx.currentTime+.3);
+  gain.gain.setValueAtTime(.06,audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.35);
+  osc.start();osc.stop(audioCtx.currentTime+.35);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'){e.preventDefault();window.scrollBy({top:window.innerHeight*.8,behavior:'smooth'})}
+  if(e.key==='ArrowUp'){e.preventDefault();window.scrollBy({top:-window.innerHeight*.8,behavior:'smooth'})}
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

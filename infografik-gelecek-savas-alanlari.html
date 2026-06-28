@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gelecek Savaş Alanları — İnteraktif İnfografik | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+body{background:#0a0f17;margin:0;font-family:'Segoe UI',sans-serif;color:#e0e0e0;}
+.info-container{max-width:1400px;margin:0 auto;padding:2rem 1rem;}
+.info-title{text-align:center;margin-bottom:2rem;}
+.info-title h1{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:800;background:linear-gradient(135deg,#00e0ff,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem;}
+.info-title p{color:rgba(255,255,255,.5);font-size:.9rem;}
+
+/* Main Grid - 3x3 for domains */
+.domain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+@media(max-width:900px){.domain-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.domain-grid{grid-template-columns:1fr;}}
+
+.domain-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2rem;position:relative;overflow:hidden;transition:all .3s;cursor:pointer;}
+.domain-card:hover{border-color:var(--cyan,#00e0ff);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,224,255,.1);}
+.domain-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,#00e0ff);opacity:0;transition:opacity .3s;}
+.domain-card:hover::before{opacity:1;}
+
+.domain-icon{font-size:2rem;margin-bottom:.8rem;}
+.domain-name{font-size:1rem;font-weight:700;color:#fff;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em;}
+.domain-sub{font-size:.9rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem;}
+.domain-items{list-style:none;padding:0;margin:0;}
+.domain-items li{font-size:.95rem;color:rgba(255,255,255,.6);padding:.25rem 0;padding-left:1.2rem;position:relative;}
+.domain-items li::before{content:'▸';position:absolute;left:0;color:var(--card-accent,#00e0ff);}
+
+.platform-box{margin-top:.8rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:.6rem;}
+.platform-box h5{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--card-accent,#00e0ff);margin:0 0 .4rem;}
+.platform-box ul{list-style:none;padding:0;margin:0;}
+.platform-box ul li{font-size:.9rem;color:rgba(255,255,255,.5);padding:.15rem 0;padding-left:.8rem;position:relative;}
+.platform-box ul li::before{content:'•';position:absolute;left:0;color:var(--card-accent,#00e0ff);}
+
+/* Center Nexus */
+.nexus-card{grid-column:2;grid-row:2;background:radial-gradient(circle,rgba(0,224,255,.08),transparent);border:2px solid rgba(0,224,255,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.nexus-card .domain-name{font-size:1.3rem;color:#00e0ff;}
+.nexus-card .domain-sub{color:rgba(0,224,255,.6);}
+@media(max-width:900px){.nexus-card{grid-column:auto;grid-row:auto;}}
+
+/* Bottom Sections */
+.bottom-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;}
+@media(max-width:768px){.bottom-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.bottom-grid{grid-template-columns:1fr;}}
+
+.bottom-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:1rem;text-align:center;}
+.bottom-card h4{font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fff;margin-bottom:.6rem;}
+.bottom-items{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;}
+.bottom-items span{font-size:.85rem;padding:.2rem .5rem;border-radius:4px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.08);}
+
+/* Risk Seviye */
+.risk-bar{display:flex;align-items:center;gap:.5rem;justify-content:center;margin-top:2rem;padding:1rem;background:rgba(255,255,255,.02);border-radius:8px;}
+.risk-level{display:flex;align-items:center;gap:.3rem;font-size:.9rem;}
+.risk-dot{width:12px;height:12px;border-radius:50%;}
+.risk-low{background:#22c55e;}
+.risk-med{background:#eab308;}
+.risk-high{background:#f97316;}
+.risk-crit{background:#ef4444;}
+
+/* Flags */
+.flags{display:flex;gap:1rem;align-items:center;margin-top:1rem;justify-content:center;}
+.flag-item{display:flex;align-items:center;gap:.3rem;font-size:.95rem;color:rgba(255,255,255,.6);}
+
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="info-container">
+
+<div class="info-title">
+<h1>GELECEK SAVAŞ ALANLARI</h1>
+<p>Entegre Çok Alanlı Muharebe — Hava · Kara · Deniz · Uzay · Siber</p>
+</div>
+
+<div class="domain-grid">
+<!-- HAVA -->
+<div class="domain-card" style="--card-accent:#38bdf8;">
+<div class="domain-icon">✈️</div>
+<div class="domain-name">Hava</div>
+<div class="domain-sub">Hava Üstünlüğü</div>
+<ul class="domain-items">
+<li>Savaş Uçakları — 5. Nesil</li>
+<li>İHA / SİHA — Otonom Sürü</li>
+<li>Havadan Erken İhbar & Kontrol</li>
+<li>Hava Savunma Sistemleri</li>
+<li>Hava-Hava Füzeleri</li>
+<li>Akıllı Mühimmat</li>
+</ul>
+<div class="platform-box">
+<h5>Öne Çıkan Platformlar</h5>
+<ul>
+<li>F-35 Lightning II</li>
+<li>F-22 Raptor</li>
+<li>Bayraktar KIZILELMA</li>
+<li>MQ-9 Reaper</li>
+<li>AWACS</li>
+</ul>
+</div>
+</div>
+
+<!-- KARA -->
+<div class="domain-card" style="--card-accent:#4ade80;">
+<div class="domain-icon">🪖</div>
+<div class="domain-name">Kara</div>
+<div class="domain-sub">Mobilite & Ateş Gücü</div>
+<ul class="domain-items">
+<li>Ana Muharebe Tankları</li>
+<li>Zırhlı Araçlar</li>
+<li>Topçu Sistemleri</li>
+<li>Füzeler</li>
+<li>İnsansız Kara Araçları</li>
+<li>Lojistik Destek</li>
+</ul>
+<div class="platform-box">
+<h5>Öne Çıkan Platformlar</h5>
+<ul>
+<li>ALTAY Tankı</li>
+<li>Leopard 2A7</li>
+<li>K9 Thunder</li>
+<li>HIMARS</li>
+<li>Milrem Type-X</li>
+</ul>
+</div>
+</div>
+
+<!-- DENİZ -->
+<div class="domain-card" style="--card-accent:#818cf8;">
+<div class="domain-icon">🚢</div>
+<div class="domain-name">Deniz</div>
+<div class="domain-sub">Deniz Hakimiyeti</div>
+<ul class="domain-items">
+<li>Uçak Gemileri</li>
+<li>Fırkateyn / Destroyer</li>
+<li>Denizaltılar</li>
+<li>İnsansız Deniz Araçları</li>
+<li>Gemi Savunma Sistemleri</li>
+<li>Anti-Gemi Füzeleri</li>
+</ul>
+<div class="platform-box">
+<h5>Öne Çıkan Platformlar</h5>
+<ul>
+<li>TCG ANADOLU</li>
+<li>Arleigh Burke DDG</li>
+<li>Virginia Sınıfı SSN</li>
+<li>Bayraktar TB3</li>
+<li>Harpoon / Atmaca</li>
+</ul>
+</div>
+</div>
+
+<!-- UZAY -->
+<div class="domain-card" style="--card-accent:#a78bfa;">
+<div class="domain-icon">🛰️</div>
+<div class="domain-name">Uzay</div>
+<div class="domain-sub">Uzayda Farkındalık & Üstünlük</div>
+<ul class="domain-items">
+<li>İstihbarat Uyduları</li>
+<li>Haberleşme Uyduları</li>
+<li>Navigasyon Sistemleri</li>
+<li>Uydu Savunma (ASAT)</li>
+<li>Uzay Durumsal Farkındalık (SSA)</li>
+<li>Uzay Üsleri</li>
+</ul>
+<div class="platform-box">
+<h5>Öne Çıkan Platformlar</h5>
+<ul>
+<li>Starlink</li>
+<li>Türksat 6A</li>
+<li>GPS / Galileo</li>
+<li>SpaceX Starship</li>
+<li>Lazer İletişim</li>
+</ul>
+</div>
+</div>
+
+<!-- NEXUS (Center) -->
+<div class="domain-card nexus-card">
+<div class="domain-icon" style="font-size:3rem;">🎯</div>
+<div class="domain-name">GELECEK<br>SAVAŞ<br>ALANLARI</div>
+<div class="domain-sub">Entegre Çok Alanlı Muharebe</div>
+<div style="display:flex;gap:.8rem;margin-top:.5rem;flex-wrap:wrap;justify-content:center;">
+<span style="font-size:.85rem;padding:.2rem .5rem;border:1px solid rgba(0,224,255,.3);border-radius:4px;color:#00e0ff;">UZAY</span>
+<span style="font-size:.85rem;padding:.2rem .5rem;border:1px solid rgba(74,222,128,.3);border-radius:4px;color:#4ade80;">KARA</span>
+<span style="font-size:.85rem;padding:.2rem .5rem;border:1px solid rgba(56,189,248,.3);border-radius:4px;color:#38bdf8;">HAVA</span>
+<span style="font-size:.85rem;padding:.2rem .5rem;border:1px solid rgba(239,68,68,.3);border-radius:4px;color:#ef4444;">SİBER</span>
+<span style="font-size:.85rem;padding:.2rem .5rem;border:1px solid rgba(129,140,248,.3);border-radius:4px;color:#818cf8;">DENİZ</span>
+</div>
+</div>
+
+<!-- SİBER -->
+<div class="domain-card" style="--card-accent:#ef4444;">
+<div class="domain-icon">💻</div>
+<div class="domain-name">Siber</div>
+<div class="domain-sub">Siber Güvenlik & Siber Saldırı</div>
+<ul class="domain-items">
+<li>Ağ Saldırıları</li>
+<li>Veri Hırsızlığı</li>
+<li>Kritik Altyapı Saldırıları</li>
+<li>Siber İstihbarat</li>
+<li>Siber Savunma</li>
+<li>Siber Tatbikat</li>
+</ul>
+<div class="platform-box">
+<h5>Öne Çıkan Tehditler</h5>
+<ul>
+<li>APT Grupları</li>
+<li>Ransomware</li>
+<li>Zero-Day</li>
+<li>Sosyal Mühendislik</li>
+<li>DDoS Saldırıları</li>
+</ul>
+</div>
+</div>
+
+<!-- TEDARİK ZİNCİRİ -->
+<div class="domain-card" style="--card-accent:#f59e0b;">
+<div class="domain-icon">🔗</div>
+<div class="domain-name">Tedarik Zinciri</div>
+<div class="domain-sub">Maden → Rafineri → İşleme → Bileşen → Sistem → Platform</div>
+<ul class="domain-items">
+<li>Madencilik Bölgeleri</li>
+<li>Rafineri Tesisleri</li>
+<li>Limanlar</li>
+<li>Riskli Rotalar</li>
+</ul>
+</div>
+
+<!-- KRİTİK MİNERALLER -->
+<div class="domain-card" style="--card-accent:#10b981;">
+<div class="domain-icon">⛏️</div>
+<div class="domain-name">Kritik Mineraller</div>
+<div class="domain-sub">Savunma Sanayii Hammaddeleri</div>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.3rem;margin-top:.5rem;">
+<div style="text-align:center;padding:.3rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:4px;"><div style="font-size:.9rem;font-weight:700;color:#10b981;">Nd</div><div style="font-size:.5rem;color:rgba(255,255,255,.4);">Neodimyum</div></div>
+<div style="text-align:center;padding:.3rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:4px;"><div style="font-size:.9rem;font-weight:700;color:#10b981;">Ga</div><div style="font-size:.5rem;color:rgba(255,255,255,.4);">Galyum</div></div>
+<div style="text-align:center;padding:.3rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:4px;"><div style="font-size:.9rem;font-weight:700;color:#10b981;">Ge</div><div style="font-size:.5rem;color:rgba(255,255,255,.4);">Germanyum</div></div>
+<div style="text-align:center;padding:.3rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:4px;"><div style="font-size:.9rem;font-weight:700;color:#10b981;">Li</div><div style="font-size:.5rem;color:rgba(255,255,255,.4);">Lityum</div></div>
+<div style="text-align:center;padding:.3rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:4px;"><div style="font-size:.9rem;font-weight:700;color:#10b981;">Co</div><div style="font-size:.5rem;color:rgba(255,255,255,.4);">Kobalt</div></div>
+</div>
+</div>
+
+<!-- YAPAY ZEKA -->
+<div class="domain-card" style="--card-accent:#06b6d4;">
+<div class="domain-icon">🤖</div>
+<div class="domain-name">Yapay Zeka Teknolojileri</div>
+<div class="domain-sub">Otonom Karar Destek</div>
+<ul class="domain-items">
+<li>Makine Öğrenmesi</li>
+<li>Derin Öğrenme</li>
+<li>Bilgisayarlı Görü</li>
+<li>Doğal Dil İşleme</li>
+<li>Otonom Sistemler</li>
+<li>Karar Destek Sistemleri</li>
+</ul>
+<div style="margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.3rem;">
+<span style="font-size:.55rem;padding:.15rem .4rem;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:3px;color:#06b6d4;">1. ALGILA</span>
+<span style="font-size:.55rem;padding:.15rem .4rem;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:3px;color:#06b6d4;">2. ANALİZ ET</span>
+<span style="font-size:.55rem;padding:.15rem .4rem;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:3px;color:#06b6d4;">3. KARAR VER</span>
+<span style="font-size:.55rem;padding:.15rem .4rem;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:3px;color:#06b6d4;">4. HAREKETE GEÇ</span>
+<span style="font-size:.55rem;padding:.15rem .4rem;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:3px;color:#06b6d4;">5. DEĞERLENDİR</span>
+</div>
+</div>
+</div>
+
+<!-- Bottom Bar -->
+<div class="bottom-grid">
+<div class="bottom-card">
+<h4>Teknoloji Trendleri</h4>
+<div class="bottom-items">
+<span>Kuantum</span>
+<span>5G / 6G</span>
+<span>Robotik & Otonom</span>
+<span>Hipersonik</span>
+<span>Enerji Teknolojileri</span>
+</div>
+</div>
+<div class="bottom-card">
+<h4>Risk Seviyesi</h4>
+<div class="risk-bar" style="flex-direction:column;gap:.3rem;margin:0;padding:0;background:none;">
+<div class="risk-level"><span class="risk-dot risk-low"></span> Düşük</div>
+<div class="risk-level"><span class="risk-dot risk-med"></span> Orta</div>
+<div class="risk-level"><span class="risk-dot risk-high"></span> Yüksek</div>
+<div class="risk-level"><span class="risk-dot risk-crit"></span> Kritik</div>
+</div>
+</div>
+<div class="bottom-card">
+<h4>Küresel Rekabet</h4>
+<div class="flags">
+<span class="flag-item">🇺🇸 ABD</span>
+<span class="flag-item">🇨🇳 Çin</span>
+<span class="flag-item">🇷🇺 Rusya</span>
+<span class="flag-item">🇪🇺 AB</span>
+<span class="flag-item">🇹🇷 Türkiye</span>
+</div>
+</div>
+<div class="bottom-card">
+<h4>Hedef</h4>
+<p style="font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.5;">Entegre, Ağ Merkezli, Otonom ve Yapay Zeka Destekli Çok Alanlı Muharebe Üstünlüğü</p>
+</div>
+</div>
+
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

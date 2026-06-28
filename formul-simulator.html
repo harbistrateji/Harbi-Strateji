@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Formül Simülatörü — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+.fs-wrap{max-width:960px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.fs-hero{text-align:center;margin-bottom:2.5rem;padding:2rem 0;}
+.fs-hero h1{font-family:'Chakra Petch',sans-serif;font-size:2rem;font-weight:800;color:#fff;margin-bottom:.5rem;}
+.fs-hero p{font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;color:rgba(255,255,255,.5);max-width:600px;margin:0 auto;}
+.fs-tabs{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2rem;}
+.fs-tab{font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:600;padding:.5rem 1rem;border:1px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .2s;letter-spacing:.05em;}
+.fs-tab:hover{border-color:rgba(196,30,58,.5);color:#fff;}
+.fs-tab.active{background:rgba(196,30,58,.15);border-color:#c41e3a;color:#fff;}
+.fs-formula-display{text-align:center;margin-bottom:2rem;padding:1.5rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;}
+.fs-formula-eq{font-family:'Chakra Petch',sans-serif;font-size:1.8rem;font-weight:700;color:#00E0FF;margin-bottom:.3rem;}
+.fs-formula-name{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;}
+.fs-sliders{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:2rem;}
+.fs-slider-row{display:grid;grid-template-columns:1fr 60px;gap:1rem;align-items:center;padding:1rem 1.2rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:8px;transition:border-color .2s;}
+.fs-slider-row:hover{border-color:rgba(196,30,58,.3);}
+.fs-slider-label{font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;color:#fff;margin-bottom:.2rem;}
+.fs-slider-desc{font-family:'IBM Plex Sans',sans-serif;font-size:.65rem;color:rgba(255,255,255,.4);}
+.fs-slider-input{width:100%;margin-top:.5rem;accent-color:#c41e3a;cursor:pointer;}
+.fs-slider-val{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:700;color:#C9A24B;text-align:center;}
+.fs-result{text-align:center;padding:2rem;background:linear-gradient(135deg,rgba(196,30,58,.08),rgba(0,224,255,.05));border:2px solid rgba(196,30,58,.3);border-radius:16px;}
+.fs-result-value{font-family:'Chakra Petch',sans-serif;font-size:3rem;font-weight:800;color:#fff;margin-bottom:.3rem;}
+.fs-result-label{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+.fs-result-bar{width:100%;max-width:400px;height:8px;background:rgba(255,255,255,.08);border-radius:4px;margin:1rem auto .5rem;overflow:hidden;}
+.fs-result-fill{height:100%;background:linear-gradient(90deg,#c41e3a,#C9A24B);border-radius:4px;transition:width .3s ease;}
+.fs-result-pct{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.4);}
+.fs-result-desc{font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;color:rgba(255,255,255,.4);margin-top:.8rem;font-style:italic;}
+.fs-warning{display:none;text-align:center;padding:.8rem;background:rgba(196,30,58,.1);border:1px solid rgba(196,30,58,.3);border-radius:8px;margin-top:1rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#c41e3a;}
+.fs-warning.show{display:block;}
+.fs-presets{display:flex;gap:.5rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;}
+.fs-preset{font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.4rem .8rem;border:1px solid rgba(255,255,255,.1);border-radius:4px;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
+.fs-preset:hover{border-color:#C9A24B;color:#C9A24B;}
+[data-theme="light"] .fs-hero h1{color:#0d1b2a;}
+[data-theme="light"] .fs-hero p{color:#475569;}
+[data-theme="light"] .fs-tab{border-color:#dee2e6;color:#475569;}
+[data-theme="light"] .fs-tab.active{background:rgba(196,30,58,.08);color:#0d1b2a;}
+[data-theme="light"] .fs-formula-display{background:rgba(0,0,0,.02);border-color:#dee2e6;}
+[data-theme="light"] .fs-formula-eq{color:#0d4f8a;}
+[data-theme="light"] .fs-formula-name{color:#64748b;}
+[data-theme="light"] .fs-slider-row{background:rgba(0,0,0,.02);border-color:#dee2e6;}
+[data-theme="light"] .fs-slider-label{color:#0d1b2a;}
+[data-theme="light"] .fs-slider-desc{color:#64748b;}
+[data-theme="light"] .fs-slider-val{color:#c41e3a;}
+[data-theme="light"] .fs-result{background:linear-gradient(135deg,rgba(196,30,58,.04),rgba(13,79,138,.04));border-color:#dee2e6;}
+[data-theme="light"] .fs-result-value{color:#0d1b2a;}
+[data-theme="light"] .fs-result-label{color:#64748b;}
+[data-theme="light"] .fs-result-desc{color:#475569;}
+[data-theme="light"] .fs-preset{border-color:#dee2e6;color:#475569;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="fs-wrap">
+  <div class="fs-hero">
+    <h1>Formül Simülatörü</h1>
+    <p>Harb-i Strateji Külliyatı'nın 5 temel formülünü interaktif slider'larla keşfet. Parametreleri değiştir, sonuçları anlık gör.</p>
+  </div>
+
+  <div class="fs-tabs">
+    <button class="fs-tab active" data-formula="G">G = T x S x E x L</button>
+    <button class="fs-tab" data-formula="SW">SW = (Sk x Sh x Sd) - (Sf+Se)</button>
+    <button class="fs-tab" data-formula="SOI">SOI = Ortalama 5 Alan</button>
+    <button class="fs-tab" data-formula="TG">TG = (CxOxBxSxD) / K</button>
+    <button class="fs-tab" data-formula="FIN">E -> I -> T -> M -> F</button>
+  </div>
+
+  <div class="fs-formula-display">
+    <div class="fs-formula-eq" id="formula-eq">G = T x S x E x L</div>
+    <div class="fs-formula-name" id="formula-name">Gucun Algoritmasi</div>
+  </div>
+
+  <div class="fs-sliders" id="sliders-container"></div>
+
+  <div class="fs-result">
+    <div class="fs-result-label" id="result-label">Guc Degeri (G)</div>
+    <div class="fs-result-value" id="result-value">0</div>
+    <div class="fs-result-bar"><div class="fs-result-fill" id="result-fill" style="width:0%"></div></div>
+    <div class="fs-result-pct" id="result-pct">Maksimumun %0'i</div>
+    <div class="fs-result-desc" id="result-desc">Carpimsal model: Biri sifira giderse hepsi sifir olur</div>
+    <div class="fs-warning" id="zero-warning">Bir parametre sifir — tum sistem cokuyor!</div>
+  </div>
+
+  <div class="fs-presets" id="presets-container"></div>
+</div>
+
+<script>
+const formulas = {
+  G: {
+    eq: 'G = T \u00d7 S \u00d7 E \u00d7 L',
+    name: 'G\u00fcc\u00fcn Algoritmas\u0131',
+    resultLabel: 'G\u00fc\u00e7 De\u011feri (G)',
+    resultDesc: '\u00c7arp\u0131msal model: Biri s\u0131f\u0131ra giderse hepsi s\u0131f\u0131r olur',
+    sliders: [
+      {id:'T',label:'T \u2014 Teknoloji',desc:'\u00dcretme + uyarlama + \u00f6l\u00e7eklendirme kapasitesi',min:0,max:10,step:0.1,def:7},
+      {id:'S',label:'S \u2014 Sistem Entegrasyonu',desc:'Organizasyon + karar ak\u0131\u015f\u0131 + kurumsal haf\u0131za',min:0,max:10,step:0.1,def:6},
+      {id:'E',label:'E \u2014 Enerji ve Kritik Kaynak',desc:'Mineral zinciri + enerji egemenli\u011fi',min:0,max:10,step:0.1,def:5},
+      {id:'L',label:'L \u2014 Liderlik ve Doktrin',desc:'Stratejik netlik + kurumsal haf\u0131za',min:0,max:10,step:0.1,def:8}
+    ],
+    calc: v => v.T * v.S * v.E * v.L,
+    maxCalc: v => 10*10*10*10,
+    presets: [
+      {name:'T\u00fcrkiye 2026',vals:{T:7,S:5.5,E:4,L:7}},
+      {name:'ABD',vals:{T:9.5,S:8,E:7,L:7.5}},
+      {name:'\u00c7in',vals:{T:8.5,S:9,E:6,L:8.5}},
+      {name:'Rusya',vals:{T:6,S:5,E:8,L:6}},
+      {name:'\u0130srail',vals:{T:9,S:8.5,E:3,L:9}}
+    ]
+  },
+  SW: {
+    eq: 'SW = (Sk \u00d7 Sh \u00d7 Sd) \u2212 (Sf + Se)',
+    name: 'Sistemler Sava\u015f\u0131',
+    resultLabel: 'Sistemler Sava\u015f\u0131 De\u011feri (SW)',
+    resultDesc: 'Kapasite \u00e7arp\u0131m\u0131 eksi s\u00fcrt\u00fcnme toplam\u0131',
+    sliders: [
+      {id:'Sk',label:'Sk \u2014 Sistem Kapasitesi',desc:'Toplam sistem g\u00fcc\u00fc ve entegrasyon derinli\u011fi',min:0,max:10,step:0.1,def:7},
+      {id:'Sh',label:'Sh \u2014 H\u0131z \u00dcst\u00fcnl\u00fc\u011f\u00fc',desc:'OODA d\u00f6ng\u00fcs\u00fc h\u0131z\u0131 ve karar s\u00fcrati',min:0,max:10,step:0.1,def:6},
+      {id:'Sd',label:'Sd \u2014 Sistem Dayan\u0131kl\u0131l\u0131\u011f\u0131',desc:'Yedeklilik, esneklik ve toparlanma kapasitesi',min:0,max:10,step:0.1,def:5},
+      {id:'Sf',label:'Sf \u2014 S\u00fcrt\u00fcnme',desc:'B\u00fcrokratik engeller, ileti\u015fim kopukluklar\u0131',min:0,max:10,step:0.1,def:3},
+      {id:'Se',label:'Se \u2014 Sistemik Entropi',desc:'D\u00fczensizlik, bilgi kayb\u0131, koordinasyon bozulmas\u0131',min:0,max:10,step:0.1,def:2}
+    ],
+    calc: v => (v.Sk * v.Sh * v.Sd) - (v.Sf + v.Se),
+    maxCalc: v => 10*10*10,
+    presets: [
+      {name:'Y\u00fcksek Entegrasyon',vals:{Sk:9,Sh:8,Sd:7,Sf:2,Se:1}},
+      {name:'B\u00fcrokratik Ordu',vals:{Sk:7,Sh:4,Sd:6,Sf:8,Se:5}},
+      {name:'Asimetrik Kuvvet',vals:{Sk:5,Sh:9,Sd:4,Sf:1,Se:2}}
+    ]
+  },
+  SOI: {
+    eq: 'S\u00d6\u0130 = (DEE+FEE+EES+TEK+KUR) / 5',
+    name: 'Stratejik \u00d6zerklik \u0130ndeksi',
+    resultLabel: 'Stratejik \u00d6zerklik \u0130ndeksi (S\u00d6\u0130)',
+    resultDesc: 'Be\u015f egemenlik alan\u0131n\u0131n ortalamas\u0131 (0-100)',
+    sliders: [
+      {id:'DEE',label:'DEE \u2014 Dijital Egemenlik',desc:'Veri altyap\u0131s\u0131, siber g\u00fcvenlik, dijital ba\u011f\u0131ms\u0131zl\u0131k',min:0,max:100,step:1,def:55},
+      {id:'FEE',label:'FEE \u2014 Finansal Egemenlik',desc:'Para politikas\u0131 ba\u011f\u0131ms\u0131zl\u0131\u011f\u0131, d\u0131\u015f bor\u00e7 oran\u0131',min:0,max:100,step:1,def:45},
+      {id:'EES',label:'EES \u2014 Enerji Egemenli\u011fi',desc:'Enerji kaynaklar\u0131, d\u0131\u015fa ba\u011f\u0131ml\u0131l\u0131k oran\u0131',min:0,max:100,step:1,def:40},
+      {id:'TEK',label:'TEK \u2014 Teknoloji \u00dcretim Kapasitesi',desc:'Ar-Ge yo\u011funlu\u011fu, patent, yerli \u00fcretim',min:0,max:100,step:1,def:60},
+      {id:'KUR',label:'KUR \u2014 Kurumsal \u00d6zerklik',desc:'Yarg\u0131 ba\u011f\u0131ms\u0131zl\u0131\u011f\u0131, kurumsal kapasite',min:0,max:100,step:1,def:50}
+    ],
+    calc: v => (v.DEE + v.FEE + v.EES + v.TEK + v.KUR) / 5,
+    maxCalc: v => 100,
+    presets: [
+      {name:'T\u00fcrkiye 2026',vals:{DEE:55,FEE:45,EES:40,TEK:60,KUR:50}},
+      {name:'ABD',vals:{DEE:92,FEE:88,EES:75,TEK:95,KUR:85}},
+      {name:'G\u00fcney Kore',vals:{DEE:80,FEE:70,EES:25,TEK:88,KUR:72}}
+    ]
+  },
+  TG: {
+    eq: 'TG = (C \u00d7 O \u00d7 B \u00d7 S \u00d7 D) \u00f7 K',
+    name: 'T\u00fcrkiye Grand Strateji 2040',
+    resultLabel: 'T\u00fcrkiye Grand Strateji (TG\u2082\u2080\u2084\u2080)',
+    resultDesc: 'Be\u015f g\u00fc\u00e7 \u00e7arpan\u0131 b\u00f6l\u00fc k\u0131r\u0131lganl\u0131k',
+    sliders: [
+      {id:'C',label:'C \u2014 Co\u011frafi \u00c7arpan',desc:'7 havza \u00d7 3 deniz kontrol kapasitesi',min:0,max:10,step:0.1,def:8},
+      {id:'O',label:'O \u2014 Osmanl\u0131/Medeniyet Birikimi',desc:'Tarihsel derinlik, k\u00fclt\u00fcrel sermaye',min:0,max:10,step:0.1,def:7},
+      {id:'B',label:'B \u2014 Ba\u011flant\u0131sall\u0131k',desc:'Orta Koridor + dijital altyap\u0131 + lojistik',min:0,max:10,step:0.1,def:6},
+      {id:'S',label:'S \u2014 Savunma \u00d6zerkli\u011fi',desc:'TB2\u2192KAAN, yerli savunma sanayii kapasitesi',min:0,max:10,step:0.1,def:7},
+      {id:'D',label:'D \u2014 Dijital Egemenlik',desc:'Mill\u00ee Dijital Omurga, veri merkezi kapasitesi',min:0,max:10,step:0.1,def:5},
+      {id:'K',label:'K \u2014 K\u0131r\u0131lganl\u0131k Endeksi',desc:'\u0130\u00e7 \u00e7eli\u015fkiler, kutupla\u015fma, ekonomik k\u0131r\u0131lganl\u0131k',min:0.1,max:10,step:0.1,def:4}
+    ],
+    calc: v => (v.C * v.O * v.B * v.S * v.D) / v.K,
+    maxCalc: v => (10*10*10*10*10) / 0.1,
+    presets: [
+      {name:'Mevcut Durum',vals:{C:8,O:7,B:6,S:7,D:5,K:4}},
+      {name:'2040 Hedef',vals:{C:9,O:8,B:8.5,S:9,D:8,K:2}},
+      {name:'Kriz Senaryosu',vals:{C:8,O:7,B:4,S:6,D:3,K:8}}
+    ]
+  },
+  FIN: {
+    eq: 'E \u2192 I \u2192 T \u2192 M \u2192 F',
+    name: 'Savunma Finansman Zinciri',
+    resultLabel: 'Zincir G\u00fcc\u00fc',
+    resultDesc: 'A\u011f\u0131rl\u0131kl\u0131 ortalama \u00d7 en zay\u0131f halka etkisi',
+    sliders: [
+      {id:'E',label:'E \u2014 Enerji Kapasitesi',desc:'Enerji \u00fcretimi, ithalat ba\u011f\u0131ml\u0131l\u0131\u011f\u0131, stok',min:0,max:100,step:1,def:60},
+      {id:'I',label:'I \u2014 End\u00fcstriyel Kapasite',desc:'Sanayi \u00fcretimi, tedarik zinciri derinli\u011fi',min:0,max:100,step:1,def:55},
+      {id:'T',label:'T \u2014 Teknoloji Yat\u0131r\u0131m\u0131',desc:'Ar-Ge harcamas\u0131, patent portf\u00f6y\u00fc',min:0,max:100,step:1,def:50},
+      {id:'M',label:'M \u2014 Asker\u00ee Harcama',desc:'Savunma b\u00fct\u00e7esi / GDP oran\u0131',min:0,max:100,step:1,def:45},
+      {id:'F',label:'F \u2014 Finansal S\u00fcreklilik',desc:'Bor\u00e7/GDP, d\u00f6viz rezervi, kredi notu',min:0,max:100,step:1,def:40}
+    ],
+    calc: v => {
+      const chain = (v.E*0.3 + v.I*0.25 + v.T*0.2 + v.M*0.15 + v.F*0.1);
+      const min = Math.min(v.E, v.I, v.T, v.M, v.F);
+      return chain * (min / 100);
+    },
+    maxCalc: v => 100,
+    presets: [
+      {name:'Dengeli',vals:{E:70,I:70,T:70,M:70,F:70}},
+      {name:'Enerji Zay\u0131f',vals:{E:20,I:70,T:75,M:60,F:65}},
+      {name:'T\u00fcrkiye',vals:{E:45,I:60,T:55,M:50,F:35}}
+    ]
+  }
+};
+
+let currentFormula = 'G';
+let values = {};
+
+function renderFormula(key) {
+  currentFormula = key;
+  const f = formulas[key];
+  document.getElementById('formula-eq').textContent = f.eq;
+  document.getElementById('formula-name').textContent = f.name;
+  document.getElementById('result-label').textContent = f.resultLabel;
+  document.getElementById('result-desc').textContent = f.resultDesc;
+  
+  // Update tabs
+  document.querySelectorAll('.fs-tab').forEach(t => t.classList.toggle('active', t.dataset.formula === key));
+  
+  // Build sliders
+  values = {};
+  const container = document.getElementById('sliders-container');
+  container.innerHTML = '';
+  f.sliders.forEach(s => {
+    values[s.id] = s.def;
+    container.innerHTML += `
+      <div class="fs-slider-row">
+        <div>
+          <div class="fs-slider-label">${s.label}</div>
+          <div class="fs-slider-desc">${s.desc}</div>
+          <input type="range" class="fs-slider-input" id="slider-${s.id}" min="${s.min}" max="${s.max}" step="${s.step}" value="${s.def}" oninput="updateValue('${s.id}', this.value)">
+        </div>
+        <div class="fs-slider-val" id="val-${s.id}">${s.def}</div>
+      </div>`;
+  });
+  
+  // Build presets
+  const presetsContainer = document.getElementById('presets-container');
+  presetsContainer.innerHTML = f.presets.map(p => 
+    `<button class="fs-preset" onclick="applyPreset('${key}','${p.name}')">${p.name}</button>`
+  ).join('');
+  
+  calculate();
+}
+
+function updateValue(id, val) {
+  values[id] = parseFloat(val);
+  document.getElementById('val-' + id).textContent = parseFloat(val).toFixed(val % 1 === 0 ? 0 : 1);
+  calculate();
+}
+
+function calculate() {
+  const f = formulas[currentFormula];
+  const result = f.calc(values);
+  const max = f.maxCalc(values);
+  const pct = Math.min(100, Math.max(0, (result / max) * 100));
+  
+  document.getElementById('result-value').textContent = result.toFixed(result > 100 ? 0 : 2);
+  document.getElementById('result-fill').style.width = pct + '%';
+  document.getElementById('result-pct').textContent = 'Maksimumun %' + pct.toFixed(1) + "'i";
+  
+  // Zero warning for G formula
+  const warning = document.getElementById('zero-warning');
+  if (currentFormula === 'G' && Object.values(values).some(v => v === 0)) {
+    warning.classList.add('show');
+  } else {
+    warning.classList.remove('show');
+  }
+}
+
+function applyPreset(formulaKey, presetName) {
+  const f = formulas[formulaKey];
+  const preset = f.presets.find(p => p.name === presetName);
+  if (!preset) return;
+  Object.entries(preset.vals).forEach(([id, val]) => {
+    values[id] = val;
+    const slider = document.getElementById('slider-' + id);
+    if (slider) slider.value = val;
+    const valEl = document.getElementById('val-' + id);
+    if (valEl) valEl.textContent = val % 1 === 0 ? val : val.toFixed(1);
+  });
+  calculate();
+}
+
+// Tab clicks
+document.querySelectorAll('.fs-tab').forEach(tab => {
+  tab.onclick = () => renderFormula(tab.dataset.formula);
+});
+
+// Init
+renderFormula('G');
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

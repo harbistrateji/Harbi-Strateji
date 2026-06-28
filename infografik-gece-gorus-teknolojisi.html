@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gece Görüş ve Termal Görüntüleme Teknolojisi | Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050810;color:#e8e8e8;font-family:'IBM Plex Sans',sans-serif;overflow-x:hidden}
+.back-btn{position:fixed;top:20px;left:20px;z-index:100;color:#00ff88;text-decoration:none;font-size:14px;opacity:.8}
+.back-btn:hover{opacity:1}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 20px;background:radial-gradient(ellipse at 50% 30%,#0a1a0a 0%,#050810 60%)}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(26px,4.5vw,48px);color:#fff;margin-bottom:16px}
+.hero h1 span{color:#00ff88}
+.hero p{font-size:16px;color:#a0a8b4;max-width:650px;line-height:1.7}
+.nv-icon{font-size:80px;margin-bottom:20px;filter:drop-shadow(0 0 20px rgba(0,255,136,.3))}
+
+.section{padding:80px 20px;max-width:1100px;margin:0 auto}
+.section h2{font-family:'Chakra Petch',sans-serif;font-size:28px;color:#fff;text-align:center;margin-bottom:40px}
+.section h2 span{color:#00ff88}
+
+/* Nesil Karşılaştırma */
+.gen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.gen-card{background:linear-gradient(180deg,#0a1a0a,#111827);border:1px solid #1e3a1e;border-radius:16px;padding:24px;text-align:center;transition:all .3s}
+.gen-card:hover{border-color:#00ff88;transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,255,136,.1)}
+.gen-num{font-family:'Chakra Petch',sans-serif;font-size:36px;color:#00ff88;margin-bottom:8px}
+.gen-name{font-size:16px;color:#fff;margin-bottom:8px}
+.gen-tech{font-size:12px;color:#7a8290;margin-bottom:12px}
+.gen-minerals{font-size:13px;color:#a0a8b4;line-height:1.5}
+.gen-minerals strong{color:#00ff88}
+
+/* Mineral Detay */
+.mineral-detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:40px}
+.md-card{background:#0a1a0a;border:1px solid #1e3a1e;border-radius:16px;padding:28px;position:relative;overflow:hidden}
+.md-card::after{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(0,255,136,.03) 0%,transparent 70%)}
+.md-symbol{font-family:'IBM Plex Mono',monospace;font-size:48px;color:#00ff88;font-weight:700;margin-bottom:8px}
+.md-name{font-family:'Chakra Petch',sans-serif;font-size:20px;color:#fff;margin-bottom:12px}
+.md-role{font-size:14px;color:#a0a8b4;line-height:1.6;margin-bottom:16px}
+.md-apps{display:flex;flex-wrap:wrap;gap:6px}
+.md-app{background:rgba(0,255,136,.1);color:#00ff88;padding:4px 10px;border-radius:20px;font-size:13px}
+
+/* Termal Spektrum */
+.spectrum{max-width:800px;margin:60px auto;padding:30px;background:#111827;border-radius:16px;border:1px solid #1e293b}
+.spectrum-title{font-family:'Chakra Petch',sans-serif;font-size:18px;color:#fff;text-align:center;margin-bottom:20px}
+.spectrum-bar{height:40px;border-radius:8px;background:linear-gradient(90deg,#1a0033,#4400aa,#0044ff,#00ff88,#ffff00,#ff8800,#ff0000);margin-bottom:12px;position:relative}
+.spectrum-labels{display:flex;justify-content:space-between;font-size:13px;color:#7a8290}
+.spectrum-note{text-align:center;margin-top:16px;font-size:13px;color:#a0a8b4}
+.spectrum-note strong{color:#00ff88}
+
+@media(max-width:768px){
+  .gen-grid{grid-template-columns:1fr 1fr}
+  .mineral-detail{grid-template-columns:1fr}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<a href="infografik.html" class="back-btn">← İnfografiklere Dön</a>
+
+<section class="hero">
+  <div class="nv-icon">🔭</div>
+  <h1>Gece Görüş & Termal Görüntüleme<br><span>Teknolojisinde Mineraller</span></h1>
+  <p>Karanlıkta görme yeteneği veren teknolojilerin arkasındaki kritik mineraller. Germanyum, itriyum ve lantan olmadan modern gece operasyonları imkansız.</p>
+</section>
+
+<section class="section">
+  <h2>Gece Görüş <span>Nesilleri</span></h2>
+  <div class="gen-grid">
+    <div class="gen-card">
+      <div class="gen-num">I</div>
+      <div class="gen-name">Nesil 0-I</div>
+      <div class="gen-tech">Aktif Kızılötesi (1940-60)</div>
+      <div class="gen-minerals">Kızılötesi projektör + fotokadot tüp. <strong>Germanyum</strong> filtreleri.</div>
+    </div>
+    <div class="gen-card">
+      <div class="gen-num">II</div>
+      <div class="gen-name">Nesil II</div>
+      <div class="gen-tech">Mikro Kanal Plaka (1970-80)</div>
+      <div class="gen-minerals"><strong>İtriyum</strong> fosforları, <strong>Europiyum</strong> katkılı ekranlar.</div>
+    </div>
+    <div class="gen-card">
+      <div class="gen-num">III</div>
+      <div class="gen-name">Nesil III</div>
+      <div class="gen-tech">GaAs Fotokatot (1990-2010)</div>
+      <div class="gen-minerals"><strong>Galyum</strong> arsenid, <strong>Lantan</strong> optik cam, <strong>İtriyum</strong> fosfor.</div>
+    </div>
+    <div class="gen-card">
+      <div class="gen-num">IV</div>
+      <div class="gen-name">Nesil IV+</div>
+      <div class="gen-tech">Dijital Füzyon (2020+)</div>
+      <div class="gen-minerals"><strong>Germanyum</strong> termal + <strong>Galyum</strong> I² füzyonu. Yapay zeka destekli.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Kritik <span>Mineraller</span></h2>
+  <div class="mineral-detail">
+    <div class="md-card">
+      <div class="md-symbol">Ge</div>
+      <div class="md-name">Germanyum (Z=32)</div>
+      <div class="md-role">Kızılötesi optiklerin temel malzemesi. 2-14 μm dalga boyunda %99+ geçirgenlik sağlar. Termal kameralarda, FLIR sistemlerinde ve füze arayıcı başlıklarında lens olarak kullanılır. Geri dönüştürülemez — tek kullanımlık.</div>
+      <div class="md-apps">
+        <span class="md-app">FLIR Sistemi</span>
+        <span class="md-app">Javelin Arayıcı</span>
+        <span class="md-app">Termal Kamera</span>
+        <span class="md-app">Gece Görüş Lensi</span>
+      </div>
+    </div>
+    <div class="md-card">
+      <div class="md-symbol">Y</div>
+      <div class="md-name">İtriyum (Z=39)</div>
+      <div class="md-role">Görüntü yoğunlaştırıcı tüplerdeki fosfor ekranların temel bileşeni. Düşük ışıkta görüntüyü binlerce kat güçlendirir. Ayrıca itriyum stabilize seramikler hafif, darbeye dayanıklı lens gövdeleri sağlar.</div>
+      <div class="md-apps">
+        <span class="md-app">Fosfor Ekran</span>
+        <span class="md-app">Görüntü Tüpü</span>
+        <span class="md-app">Seramik Lens</span>
+        <span class="md-app">AN/PVS-14</span>
+      </div>
+    </div>
+    <div class="md-card">
+      <div class="md-symbol">La</div>
+      <div class="md-name">Lantan (Z=57)</div>
+      <div class="md-role">Yüksek kırılma indeksli optik camın temel bileşeni. Lens kalitesini ve netliğini artırır. Düşük ışık ortamlarında üstün çözünürlük ve derinlik algısı sağlar. Kızılötesi hedefleme optiklerinde de kullanılır.</div>
+      <div class="md-apps">
+        <span class="md-app">Optik Cam</span>
+        <span class="md-app">Kızılötesi Lens</span>
+        <span class="md-app">Teleskop</span>
+        <span class="md-app">Dürbün</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="spectrum">
+    <div class="spectrum-title">Elektromanyetik Spektrum — Gece Görüş Çalışma Aralığı</div>
+    <div class="spectrum-bar"></div>
+    <div class="spectrum-labels">
+      <span>UV (0.1μm)</span>
+      <span>Görünür (0.4-0.7μm)</span>
+      <span>Yakın IR (0.7-1.4μm)</span>
+      <span>Orta IR (3-5μm)</span>
+      <span>Uzak IR (8-14μm)</span>
+    </div>
+    <div class="spectrum-note"><strong>Germanyum</strong> 2-14μm aralığında çalışır · <strong>Galyum Arsenid</strong> 0.7-0.9μm · <strong>İtriyum fosfor</strong> görünür yeşil (0.55μm) yayar</div>
+  </div>
+</section>
+
+<section class="section" style="text-align:center;padding-bottom:120px">
+  <p style="color:#7a8290;font-size:13px">Kaynak: SFA-Oxford · Critical Minerals in Defence and National Security<br>Harb-i Strateji Külliyatı · Optik & Lazer Teknolojileri Araştırma Grubu</p>
+</section>
+
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="hs-skip" content="true">
+    <title>İslam ve Türk Bilginlerinin Karargahı</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Playfair+Display:wght@700;900&subset=latin-ext&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-red: #d32f2f;
+            --color-dark-red: #b71c1c;
+            --color-black: #0d1117;
+            --color-white: #0d1117;
+            --color-light-gray: #161b22;
+            --color-medium-gray: #21262d;
+            --color-dark-gray: #8b949e;
+            --color-text: #c9d1d9;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #0a0f17;
+            color: var(--color-text);
+            line-height: 1.8;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #bilim-arena-root {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a0f17 0%, #0d1117 100%);
+        }
+
+        .ba-phone-wrapper {
+            width: 100%;
+            max-width: 480px;
+            height: 100%;
+            max-height: 900px;
+            background: #0d1117;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1c2128;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 520px) {
+            .ba-phone-wrapper {
+                border: none;
+                border-radius: 0;
+                max-height: 100%;
+            }
+        }
+
+        .ba-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .ba-screen.ba-active {
+            display: flex;
+        }
+
+        /* ===== MENU SCREEN ===== */
+        .ba-menu-top {
+            padding: 32px 28px 24px;
+            text-align: center;
+            background: linear-gradient(to bottom, #161b22, transparent);
+            border-bottom: 3px solid var(--color-red);
+        }
+
+        .ba-menu-icon {
+            font-size: 3.2rem;
+            display: block;
+            margin-bottom: 12px;
+            animation: ba-float 3s ease-in-out infinite;
+        }
+
+        @keyframes ba-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .ba-menu-top h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #f0f6fc;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .ba-menu-top p {
+            font-size: 0.95rem;
+            color: var(--color-dark-gray);
+            margin-bottom: 16px;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+
+        .ba-global-stats {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-red);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 10px;
+            background: rgba(211, 47, 47, 0.08);
+            border-left: 4px solid var(--color-red);
+        }
+
+        .ba-scholar-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ba-scholar-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ba-scholar-grid::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        .ba-scholar-grid::-webkit-scrollbar-thumb {
+            background: var(--color-red);
+            border-radius: 3px;
+        }
+
+        .ba-scholar-card {
+            background: #161b22;
+            border: 2px solid #21262d;
+            border-left: 5px solid var(--color-red);
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ba-scholar-card:hover {
+            background: #1c2128;
+            border-left-color: var(--color-dark-red);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
+        }
+
+        .ba-scholar-card:active {
+            transform: scale(0.98);
+        }
+
+        .ba-scholar-emoji {
+            font-size: 2.2rem;
+            flex-shrink: 0;
+        }
+
+        .ba-scholar-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ba-scholar-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #f0f6fc;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .ba-scholar-info p {
+            font-size: 0.8rem;
+            color: var(--color-dark-gray);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* ===== ARENA SCREEN ===== */
+        .ba-hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 24px;
+            z-index: 40;
+            background: linear-gradient(to bottom, #0d1117 70%, transparent);
+            border-bottom: 2px solid #21262d;
+        }
+
+        .ba-hud-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #f0f6fc;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .ba-progress-track {
+            width: 100%;
+            height: 6px;
+            background: var(--color-medium-gray);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .ba-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-red), var(--color-dark-red));
+            transition: width 0.4s ease;
+        }
+
+        .ba-hud-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* ===== FAIL OVERLAY ===== */
+        .ba-overlay-fail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 23, 0.98);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 28px;
+            text-align: center;
+        }
+
+        .ba-overlay-fail h2 {
+            color: var(--color-red);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin: 16px 0;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .ba-overlay-fail p {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            line-height: 1.6;
+            margin-bottom: 28px;
+            max-width: 300px;
+        }
+
+        /* ===== CARD STAGE ===== */
+        .ba-card-stage {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ba-interactive-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 80px 28px 48px;
+            text-align: center;
+            background: #0d1117;
+            overflow-y: auto;
+        }
+
+        .ba-interactive-card::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .ba-interactive-card::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        .ba-interactive-card::-webkit-scrollbar-thumb {
+            background: var(--color-red);
+        }
+
+        .ba-big-emoji {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .ba-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #f0f6fc;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            line-height: 1.3;
+        }
+
+        .ba-card-desc {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            line-height: 1.8;
+            max-width: 360px;
+            margin-bottom: 28px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== METRIC BOX ===== */
+        .ba-metric-box {
+            width: 100%;
+            max-width: 320px;
+            background: rgba(211, 47, 47, 0.06);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-red);
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .ba-metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .ba-metric-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .ba-m-bar {
+            width: 120px;
+            height: 8px;
+            background: var(--color-medium-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .ba-m-fill {
+            height: 100%;
+            transition: width 0.4s ease;
+            background: linear-gradient(90deg, var(--color-red), var(--color-dark-red));
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .ba-action-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .ba-btn {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid var(--color-black);
+            border-radius: 6px;
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: var(--color-white);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .ba-btn-blue {
+            background: var(--color-red);
+            border-color: var(--color-red);
+        }
+
+        .ba-btn-blue:hover {
+            background: var(--color-dark-red);
+            border-color: var(--color-dark-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(211, 47, 47, 0.25);
+        }
+
+        .ba-btn-blue:active {
+            transform: scale(0.98);
+        }
+
+        .ba-btn-purple {
+            background: var(--color-black);
+            border-color: var(--color-black);
+        }
+
+        .ba-btn-purple:hover {
+            background: var(--color-dark-gray);
+            border-color: var(--color-dark-gray);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .ba-btn-purple:active {
+            transform: scale(0.98);
+        }
+
+        .ba-btn-pink {
+            background: var(--color-red);
+            border-color: var(--color-red);
+        }
+
+        .ba-btn-pink:hover {
+            background: var(--color-dark-red);
+            border-color: var(--color-dark-red);
+        }
+
+        /* ===== 3D VIEWPORT ===== */
+        .ba-viewport3d {
+            width: 100%;
+            max-width: 360px;
+            height: 240px;
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            border-radius: 12px;
+            border: 3px solid var(--color-red);
+            position: relative;
+            overflow: hidden;
+            perspective: 1000px;
+            margin-bottom: 24px;
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.3), 0 8px 20px rgba(211,47,47,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg.ba-simulation {
+            width: 100%;
+            height: 100%;
+            max-width: 360px;
+            max-height: 240px;
+        }
+
+        /* ===== MATRIX GRID ===== */
+        .ba-matrix-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 24px;
+        }
+
+        .ba-matrix-cell {
+            background: #161b22;
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid #21262d;
+            text-align: center;
+        }
+
+        .ba-matrix-cell[style*="border-color: var(--ba-gold)"] {
+            border-color: var(--color-red);
+            background: rgba(211, 47, 47, 0.05);
+        }
+
+        .ba-cell-lbl {
+            font-size: 0.75rem;
+            color: var(--color-dark-gray);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .ba-cell-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--color-red);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* ===== SWIPE HINT ===== */
+        .ba-swipe-hint {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-red);
+            letter-spacing: 1px;
+            margin-top: 20px;
+            animation: ba-bounce 1.5s infinite;
+        }
+
+        @keyframes ba-bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+    
+        /* Bilim Arenası Simülasyon Efektleri */
+        @keyframes ba-pulse-glow { 0%,100%{filter:drop-shadow(0 0 3px #d32f2f)} 50%{filter:drop-shadow(0 0 12px #ff6b6b)} }
+        @keyframes ba-orbit { from{transform:rotate(0deg) translateX(40px) rotate(0deg)} to{transform:rotate(360deg) translateX(40px) rotate(-360deg)} }
+        @keyframes ba-draw { from{stroke-dashoffset:300} to{stroke-dashoffset:0} }
+        @keyframes ba-wave { 0%{transform:translateY(0)} 25%{transform:translateY(-8px)} 50%{transform:translateY(0)} 75%{transform:translateY(8px)} 100%{transform:translateY(0)} }
+        @keyframes ba-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes ba-scale-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+        @keyframes ba-flicker { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        @keyframes ba-slide-in { from{transform:translateX(-50px);opacity:0} to{transform:translateX(0);opacity:1} }
+        @keyframes ba-bounce-y { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes ba-fade-cascade { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .ba-viewport3d svg { overflow: visible !important; }
+        .ba-viewport3d svg * { transform-origin: center center; }
+        .ba-sim-animated { animation-fill-mode: both; }
+
+        </style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+
+<div id="bilim-arena-root">
+    <div class="ba-phone-wrapper">
+        <div id="ha-main-menu" class="ba-screen ba-active">
+            <div class="ba-menu-top">
+                <span class="ba-menu-icon">🧠</span>
+                <h1>İSLAM VE TÜRK BİLGİNLERİNİN KARARGAHI</h1>
+                <p>Bilim Tarihinin Altın Çağı</p>
+                <div class="ba-global-stats" id="ba-menu-global-xp">📊 Akademik Enerji: 0 Bilim XP</div>
+            </div>
+            <div class="ba-scholar-grid" id="ba-scholar-selector-grid"></div>
+        </div>
+
+        <div id="ha-arena-room" class="ba-screen">
+            <div class="ba-hud">
+                <div class="ba-hud-meta">
+                    <span id="ha-hud-title">BİLGİN ADI</span>
+                    <span id="ha-hud-step">DENEY: 1/3</span>
+                </div>
+                <div class="ba-progress-track"><div class="ba-progress-fill" id="ha-hud-bar"></div></div>
+                <div class="ba-hud-stats">
+                    <span id="ha-hud-xp">⚡ 0 XP</span>
+                    <span id="ha-hud-rank">🏆 STAJYER DANIŞMAN</span>
+                </div>
+            </div>
+
+            <div class="ba-overlay-fail" id="ha-fail-overlay">
+                <span class="ba-big-emoji">⚠️</span>
+                <h2>TEORİK HATA</h2>
+                <p id="ha-fail-reason">Bilimsel hata deneyi kilitledi.</p>
+                <button class="ba-btn ba-btn-pink" onclick="ScoringSystem.retry()">TEORİYİ DÜZENLE</button>
+            </div>
+            <div class="ba-card-stage" id="ha-card-stage"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SoundFX = {
+        ctx: null,
+        play(type) {
+            try {
+                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                if (type === "success") {
+                    osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+                    osc.frequency.setValueAtTime(783.99, this.ctx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.35);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.35);
+                } else if (type === "fail") {
+                    osc.type = "sawtooth"; osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(70, this.ctx.currentTime + 0.4);
+                    gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.42);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.42);
+                } else if (type === "click") {
+                    osc.type = "triangle"; osc.frequency.setValueAtTime(450, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.06);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.06);
+                }
+            } catch (e) {}
+        }
+    };
+
+    const ScoringSystem = {
+        totalXP: 0,
+        initGame() { this.totalXP = Number(localStorage.getItem("scholarsXP")) || 0; this.updateHUD(); },
+        addXP(val) { this.totalXP += val; localStorage.setItem("scholarsXP", this.totalXP); this.updateHUD(); },
+        updateHUD() {
+            document.getElementById("ha-hud-xp").innerText = `⚡ ${this.totalXP} XP`;
+            let r = "Stajyer Danışman"; if(this.totalXP>600) r="Akademik Danışman"; if(this.totalXP>1200) r="Kıdemli Mucit"; if(this.totalXP>1800) r="Bilim Ordinaryüsü";
+            document.getElementById("ha-hud-rank").innerText = `🏆 ${r}`;
+            if(document.getElementById("ba-menu-global-xp")) document.getElementById("ba-menu-global-xp").innerText = `📊 Akademik Enerji: ${this.totalXP} Bilim XP`;
+        },
+        triggerFail(reason) { document.getElementById("ha-fail-reason").innerText = reason; document.getElementById("ha-fail-overlay").style.display = "flex"; SoundFX.play("fail"); },
+        retry() { document.getElementById("ha-fail-overlay").style.display = "none"; BattleLauncher.renderStage(); }
+    };
+
+    const SimulationFactory = {
+        createSVG(scholarKey) {
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", "0 0 360 240");
+            svg.setAttribute("class", "ba-simulation");
+            
+            const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            bg.setAttribute("width", "360");
+            bg.setAttribute("height", "240");
+            bg.setAttribute("fill", "#f5f5f5");
+            svg.appendChild(bg);
+
+            // Grid
+            for (let i = 0; i < 360; i += 30) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", i);
+                line.setAttribute("y1", "0");
+                line.setAttribute("x2", i);
+                line.setAttribute("y2", "240");
+                line.setAttribute("stroke", "#e0e0e0");
+                line.setAttribute("stroke-width", "0.5");
+                svg.appendChild(line);
+            }
+            for (let i = 0; i < 240; i += 30) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", "0");
+                line.setAttribute("y1", i);
+                line.setAttribute("x2", "360");
+                line.setAttribute("y2", i);
+                line.setAttribute("stroke", "#e0e0e0");
+                line.setAttribute("stroke-width", "0.5");
+                svg.appendChild(line);
+            }
+
+            // Alan-spesifik simülasyonlar
+            const simulations = {
+                "evliya": () => {
+                    // Seyahat haritası - yol çizimi animasyonu (5s)
+                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    path.setAttribute("d", "M 60 180 Q 100 80 180 120 T 300 80");
+                    path.setAttribute("fill", "none");
+                    path.setAttribute("stroke", "#ff6b6b");
+                    path.setAttribute("stroke-width", "3");
+                    path.setAttribute("stroke-dasharray", "300");
+                    path.setAttribute("stroke-dashoffset", "300");
+                    path.style.animation = "ba-draw 5s ease forwards";
+                    svg.appendChild(path);
+                    const cities = [{x:60,y:180,n:"İstanbul"},{x:140,y:100,n:"Bağdat"},{x:220,y:130,n:"Kahire"},{x:300,y:80,n:"Viyana"}];
+                    cities.forEach((c, i) => {
+                        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        dot.setAttribute("cx", c.x); dot.setAttribute("cy", c.y); dot.setAttribute("r", "5");
+                        dot.setAttribute("fill", "#ff6b6b"); dot.style.opacity = "0";
+                        dot.style.animation = `ba-fade-cascade 0.5s ease ${i*1.2}s forwards`;
+                        svg.appendChild(dot);
+                        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        label.setAttribute("x", c.x); label.setAttribute("y", c.y - 12);
+                        label.setAttribute("text-anchor", "middle"); label.setAttribute("font-size", "10");
+                        label.setAttribute("fill", "#ffcdd2"); label.textContent = c.n;
+                        label.style.opacity = "0"; label.style.animation = `ba-fade-cascade 0.5s ease ${i*1.2+0.3}s forwards`;
+                        svg.appendChild(label);
+                    });
+                },
+                "katip": () => {
+                    // Kitap rafı dolma animasyonu (6s)
+                    const colors = ["#e57373","#f06292","#ba68c8","#7986cb","#4fc3f7","#4db6ac","#aed581"];
+                    for (let i = 0; i < 7; i++) {
+                        const book = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                        book.setAttribute("x", 80 + i * 35); book.setAttribute("y", 200);
+                        book.setAttribute("width", "28"); book.setAttribute("height", "0");
+                        book.setAttribute("fill", colors[i]); book.setAttribute("rx", "2");
+                        book.style.transition = `height 0.8s ease ${i*0.7}s, y 0.8s ease ${i*0.7}s`;
+                        svg.appendChild(book);
+                        setTimeout(() => { book.setAttribute("height", "80"); book.setAttribute("y", "120"); }, 100);
+                    }
+                    const counter = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    counter.setAttribute("x", "180"); counter.setAttribute("y", "60");
+                    counter.setAttribute("text-anchor", "middle"); counter.setAttribute("font-size", "16");
+                    counter.setAttribute("fill", "#ffcdd2"); counter.textContent = "15.000 Eser";
+                    counter.style.animation = "ba-scale-pulse 2s ease infinite";
+                    svg.appendChild(counter);
+                },
+                "kindi": () => {
+                    // Kriptoloji - şifre çözme animasyonu (5s)
+                    const letters = "ΑΒΓΔΕΖΗΘ".split("");
+                    const decoded = "ABCDEFGİ".split("");
+                    letters.forEach((l, i) => {
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        t.setAttribute("x", 80 + i * 30); t.setAttribute("y", "100");
+                        t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", "18");
+                        t.setAttribute("fill", "#ff6b6b"); t.textContent = l;
+                        t.style.animation = `ba-flicker 1s ease ${i*0.5}s infinite`;
+                        svg.appendChild(t);
+                        const d = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        d.setAttribute("x", 80 + i * 30); d.setAttribute("y", "160");
+                        d.setAttribute("text-anchor", "middle"); d.setAttribute("font-size", "18");
+                        d.setAttribute("fill", "#4fc3f7"); d.textContent = decoded[i];
+                        d.style.opacity = "0"; d.style.animation = `ba-fade-cascade 0.6s ease ${i*0.6+1}s forwards`;
+                        svg.appendChild(d);
+                    });
+                    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    arrow.setAttribute("x", "180"); arrow.setAttribute("y", "135");
+                    arrow.setAttribute("text-anchor", "middle"); arrow.setAttribute("font-size", "20");
+                    arrow.setAttribute("fill", "#aaa"); arrow.textContent = "↓ ŞİFRE ÇÖZÜMÜ ↓";
+                    arrow.style.animation = "ba-pulse-glow 2s infinite";
+                    svg.appendChild(arrow);
+                },
+                "harezmi": () => {
+                    // Cebir denklemi çözüm animasyonu (6s)
+                    const steps = ["x² + 10x = 39", "x² + 10x + 25 = 64", "(x+5)² = 64", "x + 5 = 8", "x = 3"];
+                    steps.forEach((eq, i) => {
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        t.setAttribute("x", "180"); t.setAttribute("y", 50 + i * 40);
+                        t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", "16");
+                        t.setAttribute("fill", i === steps.length-1 ? "#4caf50" : "#ff6b6b");
+                        t.textContent = eq; t.style.opacity = "0";
+                        t.style.animation = `ba-slide-in 0.8s ease ${i*1.1}s forwards`;
+                        svg.appendChild(t);
+                    });
+                },
+                "firnas": () => {
+                    // Uçuş simülasyonu - kanat çırpma (7s)
+                    const wing1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    wing1.setAttribute("d", "M 180 120 L 120 100 L 100 110 L 130 115 Z");
+                    wing1.setAttribute("fill", "#ff6b6b"); wing1.setAttribute("opacity", "0.8");
+                    wing1.style.transformOrigin = "180px 120px";
+                    wing1.style.animation = "ba-wave 1.5s ease infinite";
+                    svg.appendChild(wing1);
+                    const wing2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    wing2.setAttribute("d", "M 180 120 L 240 100 L 260 110 L 230 115 Z");
+                    wing2.setAttribute("fill", "#ff6b6b"); wing2.setAttribute("opacity", "0.8");
+                    wing2.style.transformOrigin = "180px 120px";
+                    wing2.style.animation = "ba-wave 1.5s ease 0.2s infinite";
+                    svg.appendChild(wing2);
+                    const body = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+                    body.setAttribute("cx", "180"); body.setAttribute("cy", "120");
+                    body.setAttribute("rx", "12"); body.setAttribute("ry", "8");
+                    body.setAttribute("fill", "#d32f2f");
+                    body.style.animation = "ba-bounce-y 3s ease infinite";
+                    svg.appendChild(body);
+                    // Rüzgar çizgileri
+                    for(let i=0;i<5;i++){
+                        const wind = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        wind.setAttribute("x1", 50+i*60); wind.setAttribute("y1", 160+i*10);
+                        wind.setAttribute("x2", 80+i*60); wind.setAttribute("y2", 160+i*10);
+                        wind.setAttribute("stroke", "#666"); wind.setAttribute("stroke-width", "1");
+                        wind.style.animation = `ba-flicker 2s ease ${i*0.4}s infinite`;
+                        svg.appendChild(wind);
+                    }
+                },
+                "cezeri": () => {
+                    // Mekanik otomat - dişli dönüşü (5s)
+                    const gear1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    gear1.setAttribute("cx", "140"); gear1.setAttribute("cy", "120");
+                    gear1.setAttribute("r", "30"); gear1.setAttribute("fill", "none");
+                    gear1.setAttribute("stroke", "#ff6b6b"); gear1.setAttribute("stroke-width", "3");
+                    gear1.setAttribute("stroke-dasharray", "10 5");
+                    gear1.style.transformOrigin = "140px 120px";
+                    gear1.style.animation = "ba-spin 4s linear infinite";
+                    svg.appendChild(gear1);
+                    const gear2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    gear2.setAttribute("cx", "220"); gear2.setAttribute("cy", "120");
+                    gear2.setAttribute("r", "22"); gear2.setAttribute("fill", "none");
+                    gear2.setAttribute("stroke", "#4fc3f7"); gear2.setAttribute("stroke-width", "3");
+                    gear2.setAttribute("stroke-dasharray", "8 4");
+                    gear2.style.transformOrigin = "220px 120px";
+                    gear2.style.animation = "ba-spin 3s linear infinite reverse";
+                    svg.appendChild(gear2);
+                    const water = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    water.setAttribute("d", "M 100 180 Q 140 170 180 180 T 260 180");
+                    water.setAttribute("fill", "none"); water.setAttribute("stroke", "#4fc3f7");
+                    water.setAttribute("stroke-width", "2");
+                    water.style.animation = "ba-wave 3s ease infinite";
+                    svg.appendChild(water);
+                },
+                "gazzali": () => {
+                    // İnanç-Akıl dengesi - terazi animasyonu (5s)
+                    const beam = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    beam.setAttribute("x1", "100"); beam.setAttribute("y1", "100");
+                    beam.setAttribute("x2", "260"); beam.setAttribute("y2", "100");
+                    beam.setAttribute("stroke", "#ff6b6b"); beam.setAttribute("stroke-width", "3");
+                    beam.style.transformOrigin = "180px 100px";
+                    beam.style.animation = "ba-wave 4s ease infinite";
+                    svg.appendChild(beam);
+                    const pivot = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                    pivot.setAttribute("points", "170,100 190,100 180,130");
+                    pivot.setAttribute("fill", "#d32f2f");
+                    svg.appendChild(pivot);
+                    const t1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    t1.setAttribute("x", "100"); t1.setAttribute("y", "85");
+                    t1.setAttribute("text-anchor", "middle"); t1.setAttribute("font-size", "14");
+                    t1.setAttribute("fill", "#4fc3f7"); t1.textContent = "AKIL";
+                    t1.style.animation = "ba-pulse-glow 3s ease infinite";
+                    svg.appendChild(t1);
+                    const t2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    t2.setAttribute("x", "260"); t2.setAttribute("y", "85");
+                    t2.setAttribute("text-anchor", "middle"); t2.setAttribute("font-size", "14");
+                    t2.setAttribute("fill", "#ff6b6b"); t2.textContent = "İNANÇ";
+                    t2.style.animation = "ba-pulse-glow 3s ease 1.5s infinite";
+                    svg.appendChild(t2);
+                },
+                "farabi": () => {
+                    // Müzik notaları yükselen animasyon (6s)
+                    const notes = ["♩","♪","♫","♬","♩","♪","♫"];
+                    notes.forEach((n, i) => {
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        t.setAttribute("x", 80 + i * 35); t.setAttribute("y", "180");
+                        t.setAttribute("text-anchor", "middle"); t.setAttribute("font-size", "22");
+                        t.setAttribute("fill", `hsl(${i*40}, 70%, 60%)`);
+                        t.style.animation = `ba-bounce-y 2s ease ${i*0.4}s infinite`;
+                        svg.appendChild(t);
+                    });
+                    const staff = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                    for(let i=0;i<5;i++){
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("x1","60"); line.setAttribute("x2","300");
+                        line.setAttribute("y1", 60+i*15); line.setAttribute("y2", 60+i*15);
+                        line.setAttribute("stroke","#444"); line.setAttribute("stroke-width","1");
+                        staff.appendChild(line);
+                    }
+                    svg.appendChild(staff);
+                },
+                "hayyam": () => {
+                    // Takvim/yıldız haritası dönen animasyon (7s)
+                    const outerCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    outerCircle.setAttribute("cx","180"); outerCircle.setAttribute("cy","120");
+                    outerCircle.setAttribute("r","70"); outerCircle.setAttribute("fill","none");
+                    outerCircle.setAttribute("stroke","#ff6b6b"); outerCircle.setAttribute("stroke-width","2");
+                    outerCircle.setAttribute("stroke-dasharray","5 3");
+                    outerCircle.style.transformOrigin = "180px 120px";
+                    outerCircle.style.animation = "ba-spin 7s linear infinite";
+                    svg.appendChild(outerCircle);
+                    for(let i=0;i<12;i++){
+                        const angle = (i*30)*Math.PI/180;
+                        const star = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        star.setAttribute("x", 180+55*Math.cos(angle));
+                        star.setAttribute("y", 120+55*Math.sin(angle));
+                        star.setAttribute("text-anchor","middle"); star.setAttribute("font-size","10");
+                        star.setAttribute("fill","#ffcdd2"); star.textContent = "✦";
+                        star.style.animation = `ba-flicker 3s ease ${i*0.3}s infinite`;
+                        svg.appendChild(star);
+                    }
+                    const center = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    center.setAttribute("x","180"); center.setAttribute("y","125");
+                    center.setAttribute("text-anchor","middle"); center.setAttribute("font-size","14");
+                    center.setAttribute("fill","#4fc3f7"); center.textContent = "365.2422";
+                    center.style.animation = "ba-scale-pulse 3s ease infinite";
+                    svg.appendChild(center);
+                },
+                "heysem": () => {
+                    // Optik - ışık kırılma animasyonu (5s)
+                    const eye = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+                    eye.setAttribute("cx","260"); eye.setAttribute("cy","120");
+                    eye.setAttribute("rx","20"); eye.setAttribute("ry","12");
+                    eye.setAttribute("fill","none"); eye.setAttribute("stroke","#ff6b6b");
+                    eye.setAttribute("stroke-width","2");
+                    svg.appendChild(eye);
+                    const pupil = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    pupil.setAttribute("cx","260"); pupil.setAttribute("cy","120");
+                    pupil.setAttribute("r","5"); pupil.setAttribute("fill","#ff6b6b");
+                    pupil.style.animation = "ba-scale-pulse 2s ease infinite";
+                    svg.appendChild(pupil);
+                    for(let i=0;i<5;i++){
+                        const ray = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        ray.setAttribute("x1","60"); ray.setAttribute("y1", 100+i*10);
+                        ray.setAttribute("x2","240"); ray.setAttribute("y2","120");
+                        ray.setAttribute("stroke",`hsl(${40+i*10},80%,60%)`);
+                        ray.setAttribute("stroke-width","1.5");
+                        ray.setAttribute("stroke-dasharray","200");
+                        ray.setAttribute("stroke-dashoffset","200");
+                        ray.style.animation = `ba-draw 2s ease ${i*0.5}s forwards`;
+                        svg.appendChild(ray);
+                    }
+                },
+                "biruni": () => {
+                    // Dünya yarıçapı hesaplama - trigonometri (6s)
+                    const earth = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    earth.setAttribute("cx","180"); earth.setAttribute("cy","200");
+                    earth.setAttribute("r","80"); earth.setAttribute("fill","none");
+                    earth.setAttribute("stroke","#4fc3f7"); earth.setAttribute("stroke-width","2");
+                    earth.setAttribute("stroke-dasharray","250"); earth.setAttribute("stroke-dashoffset","250");
+                    earth.style.animation = "ba-draw 3s ease forwards";
+                    svg.appendChild(earth);
+                    const mountain = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                    mountain.setAttribute("points","160,120 180,80 200,120");
+                    mountain.setAttribute("fill","#795548"); mountain.style.opacity="0";
+                    mountain.style.animation = "ba-fade-cascade 1s ease 1s forwards";
+                    svg.appendChild(mountain);
+                    const angle = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    angle.setAttribute("d","M 180 80 L 180 200 L 250 150");
+                    angle.setAttribute("fill","none"); angle.setAttribute("stroke","#ff6b6b");
+                    angle.setAttribute("stroke-width","1.5"); angle.setAttribute("stroke-dasharray","3 3");
+                    angle.style.opacity="0"; angle.style.animation = "ba-fade-cascade 1s ease 2s forwards";
+                    svg.appendChild(angle);
+                    const result = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    result.setAttribute("x","180"); result.setAttribute("y","50");
+                    result.setAttribute("text-anchor","middle"); result.setAttribute("font-size","12");
+                    result.setAttribute("fill","#4caf50"); result.textContent = "R = 6.339,6 km";
+                    result.style.opacity="0"; result.style.animation = "ba-fade-cascade 1s ease 4s forwards";
+                    svg.appendChild(result);
+                },
+                "ibnnefis": () => {
+                    // Kan dolaşımı animasyonu (5s)
+                    const heart = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    heart.setAttribute("x","180"); heart.setAttribute("y","130");
+                    heart.setAttribute("text-anchor","middle"); heart.setAttribute("font-size","30");
+                    heart.setAttribute("fill","#d32f2f"); heart.textContent = "❤";
+                    heart.style.animation = "ba-scale-pulse 1s ease infinite";
+                    svg.appendChild(heart);
+                    const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    path1.setAttribute("d","M 180 100 C 120 60 80 100 80 140 C 80 180 120 200 180 160");
+                    path1.setAttribute("fill","none"); path1.setAttribute("stroke","#e57373");
+                    path1.setAttribute("stroke-width","2"); path1.setAttribute("stroke-dasharray","150");
+                    path1.setAttribute("stroke-dashoffset","150");
+                    path1.style.animation = "ba-draw 3s ease infinite";
+                    svg.appendChild(path1);
+                    const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    path2.setAttribute("d","M 180 100 C 240 60 280 100 280 140 C 280 180 240 200 180 160");
+                    path2.setAttribute("fill","none"); path2.setAttribute("stroke","#42a5f5");
+                    path2.setAttribute("stroke-width","2"); path2.setAttribute("stroke-dasharray","150");
+                    path2.setAttribute("stroke-dashoffset","150");
+                    path2.style.animation = "ba-draw 3s ease 0.5s infinite";
+                    svg.appendChild(path2);
+                },
+                "sina": () => {
+                    // Tıp kanunu - ilaç formülü (5s)
+                    const flask = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    flask.setAttribute("d","M 165 60 L 165 100 L 140 160 L 140 180 L 220 180 L 220 160 L 195 100 L 195 60 Z");
+                    flask.setAttribute("fill","none"); flask.setAttribute("stroke","#ff6b6b");
+                    flask.setAttribute("stroke-width","2");
+                    svg.appendChild(flask);
+                    const liquid = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    liquid.setAttribute("x","141"); liquid.setAttribute("y","180");
+                    liquid.setAttribute("width","78"); liquid.setAttribute("height","0");
+                    liquid.setAttribute("fill","rgba(76,175,80,0.5)"); liquid.setAttribute("rx","2");
+                    liquid.style.transition = "height 4s ease, y 4s ease";
+                    svg.appendChild(liquid);
+                    setTimeout(()=>{liquid.setAttribute("height","60"); liquid.setAttribute("y","120");},200);
+                    const bubbles = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                    for(let i=0;i<4;i++){
+                        const b = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        b.setAttribute("cx", 160+i*15); b.setAttribute("cy","160");
+                        b.setAttribute("r","3"); b.setAttribute("fill","rgba(255,255,255,0.5)");
+                        b.style.animation = `ba-bounce-y 2s ease ${i*0.5}s infinite`;
+                        bubbles.appendChild(b);
+                    }
+                    svg.appendChild(bubbles);
+                },
+                "sinan": () => {
+                    // Kubbe mühendisliği - yapı yükselme (6s)
+                    const dome = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    dome.setAttribute("d","M 120 180 Q 120 80 180 60 Q 240 80 240 180");
+                    dome.setAttribute("fill","none"); dome.setAttribute("stroke","#ff6b6b");
+                    dome.setAttribute("stroke-width","3"); dome.setAttribute("stroke-dasharray","200");
+                    dome.setAttribute("stroke-dashoffset","200");
+                    dome.style.animation = "ba-draw 4s ease forwards";
+                    svg.appendChild(dome);
+                    const columns = [{x:120},{x:150},{x:210},{x:240}];
+                    columns.forEach((c,i)=>{
+                        const col = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                        col.setAttribute("x",c.x-3); col.setAttribute("y","180");
+                        col.setAttribute("width","6"); col.setAttribute("height","0");
+                        col.setAttribute("fill","#795548");
+                        col.style.transition = `height 1s ease ${i*0.3}s, y 1s ease ${i*0.3}s`;
+                        svg.appendChild(col);
+                        setTimeout(()=>{col.setAttribute("height","40"); col.setAttribute("y","140");},100);
+                    });
+                    const crescent = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    crescent.setAttribute("x","180"); crescent.setAttribute("y","55");
+                    crescent.setAttribute("text-anchor","middle"); crescent.setAttribute("font-size","16");
+                    crescent.setAttribute("fill","#ffd700"); crescent.textContent = "☪";
+                    crescent.style.opacity="0"; crescent.style.animation = "ba-fade-cascade 1s ease 3.5s forwards";
+                    svg.appendChild(crescent);
+                },
+                "hezarfen": () => {
+                    // Galata Kulesi'nden uçuş (7s)
+                    const tower = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    tower.setAttribute("x","70"); tower.setAttribute("y","80");
+                    tower.setAttribute("width","20"); tower.setAttribute("height","120");
+                    tower.setAttribute("fill","#795548");
+                    svg.appendChild(tower);
+                    const top = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                    top.setAttribute("points","65,80 95,80 80,50");
+                    top.setAttribute("fill","#5d4037");
+                    svg.appendChild(top);
+                    const flyer = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    flyer.setAttribute("x","90"); flyer.setAttribute("y","85");
+                    flyer.setAttribute("font-size","20"); flyer.textContent = "🪁";
+                    flyer.style.transition = "all 5s cubic-bezier(0.25,0.1,0.25,1)";
+                    svg.appendChild(flyer);
+                    setTimeout(()=>{flyer.setAttribute("x","280"); flyer.setAttribute("y","150");},500);
+                },
+                "haldun": () => {
+                    // Toplumsal döngü - yükseliş/çöküş grafiği (6s)
+                    const curve = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    curve.setAttribute("d","M 60 180 Q 100 180 120 100 Q 140 40 180 120 Q 220 180 240 100 Q 260 40 300 120");
+                    curve.setAttribute("fill","none"); curve.setAttribute("stroke","#ff6b6b");
+                    curve.setAttribute("stroke-width","2.5"); curve.setAttribute("stroke-dasharray","400");
+                    curve.setAttribute("stroke-dashoffset","400");
+                    curve.style.animation = "ba-draw 6s ease forwards";
+                    svg.appendChild(curve);
+                    const labels = [{x:120,y:85,t:"Kuruluş"},{x:180,y:135,t:"Duraklama"},{x:240,y:85,t:"Yeniden Doğuş"}];
+                    labels.forEach((l,i)=>{
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        t.setAttribute("x",l.x); t.setAttribute("y",l.y);
+                        t.setAttribute("text-anchor","middle"); t.setAttribute("font-size","10");
+                        t.setAttribute("fill","#ffcdd2"); t.textContent = l.t;
+                        t.style.opacity="0"; t.style.animation = `ba-fade-cascade 0.8s ease ${2+i*1.5}s forwards`;
+                        svg.appendChild(t);
+                    });
+                },
+                "rushd": () => {
+                    // Felsefe köprüsü - Doğu-Batı bağlantısı (5s)
+                    const bridge = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    bridge.setAttribute("d","M 60 140 Q 180 60 300 140");
+                    bridge.setAttribute("fill","none"); bridge.setAttribute("stroke","#ff6b6b");
+                    bridge.setAttribute("stroke-width","3"); bridge.setAttribute("stroke-dasharray","250");
+                    bridge.setAttribute("stroke-dashoffset","250");
+                    bridge.style.animation = "ba-draw 4s ease forwards";
+                    svg.appendChild(bridge);
+                    const east = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    east.setAttribute("x","60"); east.setAttribute("y","165");
+                    east.setAttribute("text-anchor","middle"); east.setAttribute("font-size","12");
+                    east.setAttribute("fill","#4fc3f7"); east.textContent = "DOĞU";
+                    svg.appendChild(east);
+                    const west = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    west.setAttribute("x","300"); west.setAttribute("y","165");
+                    west.setAttribute("text-anchor","middle"); west.setAttribute("font-size","12");
+                    west.setAttribute("fill","#ff6b6b"); west.textContent = "BATI";
+                    svg.appendChild(west);
+                    const book = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    book.setAttribute("x","180"); book.setAttribute("y","85");
+                    book.setAttribute("text-anchor","middle"); book.setAttribute("font-size","20");
+                    book.setAttribute("fill","#ffd700"); book.textContent = "📖";
+                    book.style.animation = "ba-bounce-y 2s ease infinite";
+                    svg.appendChild(book);
+                },
+                "jabir": () => {
+                    // Kimya deneyi - damıtma (5s)
+                    const flask = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    flask.setAttribute("cx","120"); flask.setAttribute("cy","150");
+                    flask.setAttribute("r","30"); flask.setAttribute("fill","none");
+                    flask.setAttribute("stroke","#ff6b6b"); flask.setAttribute("stroke-width","2");
+                    svg.appendChild(flask);
+                    const tube = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    tube.setAttribute("d","M 150 140 Q 200 100 250 130");
+                    tube.setAttribute("fill","none"); tube.setAttribute("stroke","#4fc3f7");
+                    tube.setAttribute("stroke-width","2");
+                    svg.appendChild(tube);
+                    const collector = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    collector.setAttribute("x","240"); collector.setAttribute("y","130");
+                    collector.setAttribute("width","30"); collector.setAttribute("height","40");
+                    collector.setAttribute("fill","none"); collector.setAttribute("stroke","#4fc3f7");
+                    collector.setAttribute("stroke-width","2");
+                    svg.appendChild(collector);
+                    for(let i=0;i<6;i++){
+                        const bubble = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        bubble.setAttribute("cx", 110+Math.random()*20);
+                        bubble.setAttribute("cy", 140+Math.random()*20);
+                        bubble.setAttribute("r","2"); bubble.setAttribute("fill","#4fc3f7");
+                        bubble.style.animation = `ba-bounce-y ${1+Math.random()}s ease ${i*0.3}s infinite`;
+                        svg.appendChild(bubble);
+                    }
+                },
+                "hazini": () => {
+                    // Terazi ve ölçüm (4s)
+                    const beam = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    beam.setAttribute("x1","100"); beam.setAttribute("y1","100");
+                    beam.setAttribute("x2","260"); beam.setAttribute("y2","100");
+                    beam.setAttribute("stroke","#ff6b6b"); beam.setAttribute("stroke-width","3");
+                    beam.style.transformOrigin = "180px 100px";
+                    beam.style.animation = "ba-wave 4s ease infinite";
+                    svg.appendChild(beam);
+                    const pivot = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                    pivot.setAttribute("points","170,100 190,100 180,140");
+                    pivot.setAttribute("fill","#795548");
+                    svg.appendChild(pivot);
+                    const w1 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    w1.setAttribute("x","90"); w1.setAttribute("y","105");
+                    w1.setAttribute("width","20"); w1.setAttribute("height","20");
+                    w1.setAttribute("fill","#ffd700"); w1.style.animation = "ba-scale-pulse 2s ease infinite";
+                    svg.appendChild(w1);
+                    const w2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    w2.setAttribute("cx","250"); w2.setAttribute("cy","115");
+                    w2.setAttribute("r","10"); w2.setAttribute("fill","#4fc3f7");
+                    w2.style.animation = "ba-scale-pulse 2s ease 1s infinite";
+                    svg.appendChild(w2);
+                },
+                "kuscu": () => {
+                    // Astronomi - yıldız haritası (6s)
+                    for(let i=0;i<20;i++){
+                        const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        star.setAttribute("cx", 60+Math.random()*240);
+                        star.setAttribute("cy", 40+Math.random()*160);
+                        star.setAttribute("r", 1+Math.random()*2);
+                        star.setAttribute("fill","#fff");
+                        star.style.animation = `ba-flicker ${2+Math.random()*3}s ease ${Math.random()*2}s infinite`;
+                        svg.appendChild(star);
+                    }
+                    const telescope = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    telescope.setAttribute("d","M 160 200 L 200 120 L 210 125 L 170 205 Z");
+                    telescope.setAttribute("fill","#795548");
+                    telescope.style.opacity="0"; telescope.style.animation = "ba-fade-cascade 1s ease 1s forwards";
+                    svg.appendChild(telescope);
+                    const crosshair = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    crosshair.setAttribute("cx","210"); crosshair.setAttribute("cy","80");
+                    crosshair.setAttribute("r","15"); crosshair.setAttribute("fill","none");
+                    crosshair.setAttribute("stroke","#ff6b6b"); crosshair.setAttribute("stroke-width","1");
+                    crosshair.style.animation = "ba-pulse-glow 2s ease infinite";
+                    svg.appendChild(crosshair);
+                },
+                "takiyuddin": () => {
+                    // Mekanik saat - saniye ibresi (5s)
+                    const face = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    face.setAttribute("cx","180"); face.setAttribute("cy","120");
+                    face.setAttribute("r","60"); face.setAttribute("fill","none");
+                    face.setAttribute("stroke","#ff6b6b"); face.setAttribute("stroke-width","2");
+                    svg.appendChild(face);
+                    for(let i=0;i<12;i++){
+                        const angle = (i*30)*Math.PI/180;
+                        const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        tick.setAttribute("x1", 180+50*Math.cos(angle));
+                        tick.setAttribute("y1", 120+50*Math.sin(angle));
+                        tick.setAttribute("x2", 180+58*Math.cos(angle));
+                        tick.setAttribute("y2", 120+58*Math.sin(angle));
+                        tick.setAttribute("stroke","#ffcdd2"); tick.setAttribute("stroke-width","2");
+                        svg.appendChild(tick);
+                    }
+                    const hand = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    hand.setAttribute("x1","180"); hand.setAttribute("y1","120");
+                    hand.setAttribute("x2","180"); hand.setAttribute("y2","70");
+                    hand.setAttribute("stroke","#d32f2f"); hand.setAttribute("stroke-width","2");
+                    hand.style.transformOrigin = "180px 120px";
+                    hand.style.animation = "ba-spin 5s linear infinite";
+                    svg.appendChild(hand);
+                }
+            };
+
+            if (simulations[scholarKey]) {
+                simulations[scholarKey]();
+            }
+
+            return svg;
+        }
+    };
+
+    const Map3DSystem = {
+        engage(scholarKey) {
+            SoundFX.play("success");
+            ScoringSystem.addXP(100);
+            setTimeout(() => BattleLauncher.next(), 600);
+        }
+    };
+
+    const SwipeEngine = {
+        startX: 0,
+        init() {
+            const stage = document.getElementById("ha-card-stage"); if (!stage) return;
+            stage.addEventListener("touchstart", e => { this.startX = e.touches[0].clientX; }, { passive: true });
+            stage.addEventListener("touchend", e => {
+                let diff = this.startX - e.changedTouches[0].clientX;
+                if (diff > 60) {
+                    let ch = BattleLauncher.currentBattleData.chapters[BattleLauncher.currentChapterIdx];
+                    if (ch && ["story", "context", "3d_hint"].includes(ch.type)) BattleLauncher.next();
+                }
+            }, { passive: true });
+        }
+    };
+
+    const RAW_SCHOLARS = [
+        { key: "evliya", title: "Evliya Çelebi", icon: "🗺️", field: "Seyahatnâme Coğrafyası", metric: "Keşif", val: 95, q: "Seyahatnâme'de halkın kültürünü kaydetmek için hangisini tercih edersiniz?", a1: "Yalnızca Saray Protokolü Tut", a2: "Halkın Dil, Giyim ve Folklorunu Derle", ok: 2, f: "Sıradan halkın dil yapılarını ve folklorik zenginliklerini ıskaladınız." },
+        { key: "katip", title: "Kâtip Çelebi", icon: "📚", field: "Cihannüma Ansiklopedisi", metric: "Katalog", val: 98, q: "15.000 eseri alfabetik düzene koyan Keşf ez-Zunûn için tercih?", a1: "Matbaada Kitlesel Baskı Yap", a2: "El Yazması Olarak Sakla", ok: 1, f: "Eser kütüphanede kilitli kaldı, coğrafi keşiflerin gerisinde kalındı." },
+        { key: "kindi", title: "El-Kindî", icon: "🔮", field: "Kriptoloji & İslam Dini", metric: "Sentez", val: 94, q: "Platon ve Aristo'yu İslam dini felsefesinde nasıl sentezlersiniz?", a1: "Yabancı Akımları Reddet", a2: "Görüşleri Akli Mantıkla Sentezle", ok: 2, f: "Sentez tıkandı, Arapça evrensel bir felsefe dili haline gelemedi." },
+        { key: "harezmi", title: "Harezmi", icon: "🔢", field: "Cebir & Algoritma", metric: "Algoritma", val: 100, q: "Doğu-Batı'nın ilk cebir kitabında hangi rakamı kullanırsınız?", a1: "Roma Rakam Sistemini Koru", a2: "Avrupa'nın Bilmediği 'Sıfır'ı Entegre Et", ok: 2, f: "Basamak aritmetiği kilitlendi, birinci derece denklemler çözülemedi." },
+        { key: "firnas", title: "İbn-i Firnas", icon: "🦅", field: "Havacılık & Aerodinamik", metric: "Uçuş", val: 96, q: "Endülüs sırtlarında yapay kanatlarla havalanmak için ne yapmalısınız?", a1: "Rüzgarsız Ovada Koş", a2: "Lodos Hava Akımını Cepheden Karşıla", ok: 2, f: "Aerodinamik hava kaldırma koridoru oluşmadı." },
+        { key: "cezeri", title: "El-Cezeri", icon: "⚙️", field: "Mekanik Otomatlar", metric: "Mühendislik", val: 97, q: "Sarayın başmühendisi olarak ilk otomatı nasıl tasarlarsınız?", a1: "Su Gücüyle Çalışan Otomat", a2: "Tamamen Manuel Sistem", ok: 1, f: "Otomat hiç çalışmadı, mekanik sistem başarısız oldu." },
+        { key: "gazzali", title: "İmam-ı Gazzâlî", icon: "📖", field: "İslam Dini & Felsefe", metric: "Teoloji", val: 92, q: "İnanç ile aklı nasıl uzlaştıracaksınız?", a1: "Aklı Tamamen Reddet", a2: "İnanç ve Akılı Uyumlu Kıl", ok: 2, f: "Teolojik sentez başarısız oldu, çatışma devam etti." },
+        { key: "farabi", title: "Farâbî", icon: "🎼", field: "Felsefe & Müzik", metric: "Sentez", val: 93, q: "Aristoteles'i Arapçaya nasıl çevirirsiniz?", a1: "Kelime Kelime Tercüme Et", a2: "Anlaşılır Şerhler Yaz", ok: 2, f: "Tercüme anlaşılmadı, felsefe karmaşık kaldı." },
+        { key: "biruni", title: "Biruni", icon: "🌍", field: "Coğrafya & Matematik", metric: "Hesaplama", val: 99, q: "Dünyanın yarıçapını dağdan inmeyerek nasıl hesaplarsınız?", a1: "Trigonometri Kullan", a2: "Deneysel Ölçüm Yap", ok: 1, f: "Hesaplama yöntemi başarısız oldu." },
+        { key: "ibnnefis", title: "İbn Nefis", icon: "❤️", field: "Tıp & Anatomi", metric: "Keşif", val: 95, q: "Galen'in doktrinindeki hatayı nasıl düzeltirsiniz?", a1: "Galen'i Takip Et", a2: "Kan Dolaşımını Yeniden Tanı", ok: 2, f: "Galen'in hatalı teorisi devam etti." },
+        { key: "hayyam", title: "Ömer Hayyam", icon: "📐", field: "Matematik & Astronomi", metric: "Takvim", val: 96, q: "Kusursuz bir takvim tasarlamak için ne yapmalısınız?", a1: "Geleneksel Takvimi Koru", a2: "Matematiksel Takvim Yap", ok: 2, f: "Takvim hatalı kaldı, gün sayımı yanlış oldu." },
+        { key: "heysem", title: "İbn-i Heysem", icon: "👁️", field: "Optik & Fizik", metric: "Görme", val: 97, q: "Antik Yunan ışın teorisindeki hatayı nasıl düzeltirsiniz?", a1: "Antik Teoriyi Takip Et", a2: "Gözün İçine Işın Girdiğini Kanıtla", ok: 2, f: "Işın teorisi hatalı kaldı, görme mekanizması anlaşılmadı." },
+        { key: "sina", title: "İbn-i Sina", icon: "💊", field: "Tıp & Felsefe", metric: "Tıp", val: 98, q: "Hastalıkların kökenine dair rasyonel kanun nasıl yazarsınız?", a1: "Hurafe Tedavilerini Kullan", a2: "Sistematik Tıp Yazı", ok: 2, f: "Tıp sistematik olmadı, hastalıklar çözülemedi." },
+        { key: "sinan", title: "Mimar Sinan", icon: "🏛️", field: "Mimarlık & Mühendislik", metric: "Kubbe", val: 99, q: "Süleymaniye'nin dev kubbesini depreme dayanıklı kılmak için?", a1: "Basit Taş Yapı Yap", a2: "Matematiksel Kubbe Tasarla", ok: 2, f: "Kubbe depremde yıkıldı, mühendislik başarısız oldu." },
+        { key: "hezarfen", title: "Hezarfen Ahmet Çelebi", icon: "🪁", field: "Havacılık & Mekanik", metric: "Uçuş", val: 94, q: "Galata Kulesinden uçmak için yapay kanatları nasıl tasarlarsınız?", a1: "Ağır Malzeme Kullan", a2: "Hafif Esnek Kanat Yap", ok: 2, f: "Kanatlar çalışmadı, uçuş başarısız oldu." },
+        { key: "haldun", title: "İbn-i Haldun", icon: "📜", field: "Tarih & Sosyoloji", metric: "Sosyoloji", val: 93, q: "Tarih yazımında sosyal yasaları nasıl eklersiniz?", a1: "Sadece Hükümdar Listesi Yaz", a2: "Sosyal Yapıyı Analiz Et", ok: 2, f: "Sosyal analiz yapılmadı, tarih eksik kaldı." },
+        { key: "rushd", title: "İbn-i Rüşd", icon: "⚖️", field: "Felsefe & Hukuk", metric: "Rasyonalizm", val: 95, q: "Aristoteles mantığını Batı'ya nasıl tanıtırsınız?", a1: "Mantığı Gizli Tut", a2: "Açık Şerhler Yaz", ok: 2, f: "Mantık yayılmadı, Batı karanlıkta kaldı." },
+        { key: "jabir", title: "İbn-i Hayyan", icon: "🧪", field: "Kimya & Simya", metric: "Kimya", val: 96, q: "Kimyayı simya olmaktan çıkarıp fen bilimi yapmak için?", a1: "Mistik Simya Yap", a2: "Deney Tabanlı Kimya Yap", ok: 2, f: "Kimya mistik kaldı, bilim gelişmedi." },
+        { key: "hazini", title: "Hâzinî", icon: "⚖️", field: "Mekanik & Ölçüm", metric: "Ağırlık", val: 94, q: "Katı ve sıvı cisimlerin özgül ağırlığını nasıl hesaplarsınız?", a1: "Basit Tartı Kullan", a2: "Matematiksel Oran Hesapla", ok: 2, f: "Ağırlık ölçümü hatalı oldu, hesaplama başarısız." },
+        { key: "kuscu", title: "Ali Kuşçu", icon: "🌟", field: "Astronomi & Coğrafya", metric: "Astronomi", val: 97, q: "İstanbul'un enlem/boylam matrisini nasıl düzeltirsiniz?", a1: "Geleneksel Harita Kullan", a2: "Yeni Matematiksel Harita Yap", ok: 2, f: "Harita hatalı kaldı, konumlandırma yanlış oldu." },
+        { key: "takiyuddin", title: "Takiyüddin", icon: "⏱️", field: "Astronomi & Mekanik", metric: "Kronometri", val: 96, q: "Gök cisimlerini saniyeler hassasiyetinde ölçmek için?", a1: "Su Saati Kullan", a2: "Mekanik Gözlem Saati Yap", ok: 2, f: "Ölçüm hassasiyeti sağlanamadı, astronomi hatalı oldu." }
+    ];
+
+    const BattleLauncher = {
+        currentBattleData: null,
+        currentChapterIdx: 0,
+        currentScholarKey: null,
+        init() { ScoringSystem.initGame(); this.renderMenu(); },
+        renderMenu() {
+            const grid = document.getElementById("ba-scholar-selector-grid"); grid.innerHTML = "";
+            RAW_SCHOLARS.forEach(s => {
+                grid.innerHTML += `
+                    <div class="ba-scholar-card" onclick="BattleLauncher.start('${s.key}')">
+                        <span class="ba-scholar-emoji">${s.icon}</span>
+                        <div class="ba-scholar-info">
+                            <h3>${s.title}</h3>
+                            <p>${s.field}</p>
+                        </div>
+                    </div>`;
+            });
+        },
+        start(key) {
+            SoundFX.play("click");
+            let s = RAW_SCHOLARS.find(x => x.key === key); if (!s) return;
+            this.currentScholarKey = key;
+            this.currentBattleData = {
+                title: s.title,
+                special: {},
+                chapters: [
+                    { type: "story", emoji: s.icon, title: `${s.title} Karargahı`, text: `<strong>${s.title}</strong> olarak tarihe geçecek büyük bilimsel çalışmaların merkezindesiniz.<br><br>${s.field} alanında yeni bir çağ başlatmak üzere teorinizi hazırlayın.` },
+                    { type: "choice", emoji: "🔬", title: "Stratejik Karar Anı", text: s.q, choices: [ { text: s.a1, xp: s.ok === 1 ? 150 : -30, failText: s.f }, { text: s.a2, xp: s.ok === 2 ? 150 : -30, failText: s.f } ] },
+                    { type: "map", emoji: "📐", title: "Alan-Spesifik Laboratuvar Projeksiyonu", text: `${s.field} alanında geliştirdiğiniz teorik modülünü görselleştirin.` }
+                ]
+            };
+            this.currentBattleData.special[s.metric] = s.val;
+            this.currentChapterIdx = 0;
+            document.getElementById("ha-main-menu").classList.remove("ba-active");
+            document.getElementById("ha-arena-room").classList.add("ba-active");
+            document.getElementById("ha-hud-title").innerText = this.currentBattleData.title;
+            this.renderStage();
+            setTimeout(() => SwipeEngine.init(), 300);
+        },
+        renderStage() {
+            const stage = document.getElementById("ha-card-stage"); stage.innerHTML = "";
+            const chs = this.currentBattleData.chapters;
+            if (this.currentChapterIdx >= chs.length) { this.showFinalReport(); return; }
+            document.getElementById("ha-hud-step").innerText = `DENEY: ${this.currentChapterIdx + 1}/${chs.length}`;
+            document.getElementById("ha-hud-bar").style.width = `${((this.currentChapterIdx + 1) / chs.length) * 100}%`;
+            const data = chs[this.currentChapterIdx];
+            const card = document.createElement("div"); card.className = "ba-interactive-card";
+            let layout = `<span class="ba-big-emoji">${data.emoji}</span><h2 class="ba-card-title">${data.title}</h2>`;
+            
+            if (data.type === "story") {
+                layout += `<p class="ba-card-desc">${data.text}</p>`;
+                if (this.currentBattleData.special) {
+                    layout += `<div class="ba-metric-box">`;
+                    for (let [k, v] of Object.entries(this.currentBattleData.special)) {
+                        layout += `<div class="ba-metric-row"><span>${k}:</span><div class="ba-m-bar"><div class="ba-m-fill" style="width:${v}%"></div></div></div>`;
+                    }
+                    layout += `</div>`;
+                }
+                layout += `<div class="ba-swipe-hint">➡️ İLERLEMEK İÇİN SOLA KAYDIRIN VEYA TIKLAYIN</div>`;
+                card.onclick = () => { BattleLauncher.next(); };
+            } else if (data.type === "choice") {
+                layout += `<p class="ba-card-desc">${data.text}</p><div class="ba-action-stack">`;
+                data.choices.forEach((c, idx) => { layout += `<button class="ba-btn ba-btn-purple" onclick="event.stopPropagation(); BattleLauncher.handleChoice(${idx})">${c.text}</button>`; });
+                layout += `</div>`;
+            } else if (data.type === "map") {
+                layout += `<p class="ba-card-desc">${data.text}</p>
+                    <div class="ba-viewport3d" id="simulation-container"></div>
+                    <button class="ba-btn ba-btn-blue" onclick="event.stopPropagation(); Map3DSystem.engage('${this.currentScholarKey}')">DENEYİ BAŞLAT</button>`;
+            }
+            card.innerHTML = layout; stage.appendChild(card);
+            
+            if (data.type === "map") {
+                const container = document.getElementById("simulation-container");
+                if (container) {
+                    const svg = SimulationFactory.createSVG(this.currentScholarKey);
+                    container.appendChild(svg);
+                }
+            }
+        },
+        handleChoice(idx) {
+            SoundFX.play("click");
+            const choice = this.currentBattleData.chapters[this.currentChapterIdx].choices[idx];
+            if (choice.xp > 0) { ScoringSystem.addXP(choice.xp); this.next(); } else { ScoringSystem.triggerFail(choice.failText); }
+        },
+        next() { SoundFX.play("click"); this.currentChapterIdx++; this.renderStage(); },
+        showFinalReport() {
+            document.getElementById("ha-card-stage").innerHTML = `
+                <div class="ba-interactive-card">
+                    <span class="ba-big-emoji">🎓</span><h2 class="ba-card-title">LABORATUVAR RAPORU</h2><p class="ba-card-desc">Bilimsel kararlarınız akademide kabul gördü ve tescillendi.</p>
+                    <div class="ba-matrix-grid">
+                        <div class="ba-matrix-cell"><div class="ba-cell-lbl">Teori</div><div class="ba-cell-val">%98</div></div>
+                        <div class="ba-matrix-cell"><div class="ba-cell-lbl">Analiz</div><div class="ba-cell-val">%95</div></div>
+                        <div class="ba-matrix-cell"><div class="ba-cell-lbl">Mantık</div><div class="ba-cell-val">%93</div></div>
+                        <div class="ba-matrix-cell" style="border-color: var(--color-red); background: rgba(211, 47, 47, 0.05);"><div class="ba-cell-lbl" style="color:var(--color-red);">Unvan</div><div class="ba-cell-val" style="font-size:1rem; line-height:1.4;">KIDEMLİ MUCİT</div></div>
+                    </div>
+                    <button class="ba-btn ba-btn-blue" onclick="window.location.reload()">ANA MENÜ</button>
+                </div>`;
+        }
+    };
+
+    window.addEventListener("DOMContentLoaded", () => BattleLauncher.init());
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

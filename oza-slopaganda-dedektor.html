@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="hud">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Slopaganda Dedektör — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;user-select:none}
+.top{position:sticky;top:0;z-index:60;background:rgba(10,15,23,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 20px}
+.top .in{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:14px;min-height:52px}
+.back{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);text-decoration:none}.back:hover{color:#fff}
+.title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px}
+.hdr-score{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold)}
+.wrap{max-width:600px;margin:0 auto;padding:24px 20px 80px}
+
+/* ── Başlık ── */
+.game-header{text-align:center;margin-bottom:20px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(22px,5vw,40px);color:#fff}
+.game-header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:6px}
+
+/* ── Skor bandı ── */
+.score-band{display:flex;justify-content:center;gap:0;margin-bottom:20px;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.sb-item{flex:1;padding:10px 6px;text-align:center;border-right:1px solid var(--line2)}
+.sb-item:last-child{border-right:none}
+.sb-val{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:var(--red2)}
+.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+
+/* ── YZ üretim göstergesi ── */
+.ai-gen-bar{background:var(--panel2);border:1px solid rgba(0,224,255,.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.ai-gen-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:blink .8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ai-gen-text{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan)}
+
+/* ── İçerik kartı ── */
+.content-card{position:relative;background:var(--panel);border:2px solid var(--line2);border-radius:18px;padding:0;overflow:hidden;margin-bottom:16px;cursor:grab;touch-action:none;will-change:transform;min-height:320px}
+.content-card:active{cursor:grabbing}
+
+/* Sahte/gerçek overlay */
+.verdict-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:32px;border-radius:18px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.verdict-overlay.fake{background:rgba(224,21,21,.7);color:#fff}
+.verdict-overlay.real{background:rgba(0,255,136,.6);color:#000}
+
+/* Kart içeriği */
+.card-platform{display:flex;align-items:center;gap:10px;padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+.platform-icon{font-size:20px}
+.platform-name{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)}
+.platform-time{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)}
+.ai-badge{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 7px;border-radius:999px;border:1px solid rgba(0,224,255,.4);color:var(--cyan);margin-left:8px}
+
+.card-visual{height:160px;display:flex;align-items:center;justify-content:center;font-size:72px;background:linear-gradient(135deg,var(--panel2),var(--panel));position:relative;overflow:hidden}
+.deepfake-glitch{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(224,21,21,.05) 2px,rgba(224,21,21,.05) 4px);pointer-events:none}
+.deepfake-scan{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--red2),transparent);animation:scan 2s linear infinite;pointer-events:none}
+@keyframes scan{0%{top:0}100%{top:100%}}
+
+.card-content{padding:16px 18px}
+.card-headline{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;color:#fff;margin-bottom:10px;line-height:1.3}
+.card-body{font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:12px}
+.card-clues{display:flex;gap:6px;flex-wrap:wrap}
+.clue{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 8px;border-radius:999px;border:1px solid}
+
+/* Swipe göstergeleri */
+.swipe-hint-left,.swipe-hint-right{position:absolute;top:50%;transform:translateY(-50%);font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .15s;pointer-events:none;z-index:20}
+.swipe-hint-left{left:10px;color:var(--red2);border:2px solid var(--red2);background:rgba(224,21,21,.15)}
+.swipe-hint-right{right:10px;color:#00ff88;border:2px solid #00ff88;background:rgba(0,255,136,.15)}
+
+/* ── Karar butonları ── */
+.decision-row{display:flex;gap:12px;margin-bottom:20px}
+.dec-btn{flex:1;padding:14px;border-radius:12px;border:2px solid;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;transition:.15s;background:transparent}
+.dec-btn.fake-btn{color:var(--red2);border-color:var(--red2)}.dec-btn.fake-btn:hover{background:rgba(224,21,21,.12)}
+.dec-btn.real-btn{color:#00ff88;border-color:#00ff88}.dec-btn.real-btn:hover{background:rgba(0,255,136,.12)}
+
+/* ── Açıklama ── */
+.explain-box{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:16px;margin-bottom:20px;display:none}
+.explain-box.show{display:block}
+.ex-verdict{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px}
+.ex-pts{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700;margin-bottom:10px}
+.ex-text{font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:14px}
+.ex-signals{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:14px}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;padding:12px 18px;border-radius:9px;border:none;cursor:pointer}
+.btn-red{background:var(--red);color:#fff}
+.btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+
+/* ── İpucu ── */
+.hint-btn{width:100%;padding:10px;background:transparent;border:1px solid rgba(201,162,75,.3);border-radius:8px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;margin-bottom:14px;transition:.15s}
+.hint-btn:hover{border-color:var(--gold);background:rgba(201,162,75,.08)}
+.hint-box{background:rgba(201,162,75,.08);border:1px solid rgba(201,162,75,.3);border-radius:8px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:14px;display:none}
+.hint-box.show{display:block}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="top"><div class="in">
+  <a href="oza-hub.html" class="back">← OZA</a>
+  <span class="title">🕵️ Slopaganda Dedektör</span>
+  <span class="hdr-score" id="hdr-score">⭐ 0</span>
+</div></header>
+
+<div class="wrap">
+  <div class="game-header">
+    <h1>SLOPAGANDA DEDEKTÖR</h1>
+    <div class="sub">GERÇEK Mİ SAHTE Mİ? · YZ ÜRETİMİ · SWIPE KARAR VER</div>
+  </div>
+
+  <div class="score-band">
+    <div class="sb-item"><div class="sb-val" id="s-score">0</div><div class="sb-lbl">Puan</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-correct">0</div><div class="sb-lbl">Doğru</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-streak">0</div><div class="sb-lbl">Seri</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-round">1</div><div class="sb-lbl">Tur</div></div>
+  </div>
+
+  <!-- YZ üretim göstergesi -->
+  <div class="ai-gen-bar">
+    <div class="ai-gen-dot"></div>
+    <div class="ai-gen-text" id="ai-gen-text">YZ içerik analiz motoru aktif — Dinamik dezenformasyon üretiliyor…</div>
+  </div>
+
+  <!-- İçerik kartı -->
+  <div class="content-card" id="content-card">
+    <div class="verdict-overlay fake" id="vo-fake">✕ SAHTE</div>
+    <div class="verdict-overlay real" id="vo-real">✓ GERÇEK</div>
+    <div class="swipe-hint-left" id="sh-left">✕ SAHTE</div>
+    <div class="swipe-hint-right" id="sh-right">✓ GERÇEK</div>
+
+    <div class="card-platform">
+      <span class="platform-icon" id="c-platform-icon">📱</span>
+      <span class="platform-name" id="c-platform">Platform</span>
+      <span class="ai-badge" id="c-ai-badge" style="display:none">YZ ÜRETİMİ</span>
+      <span class="platform-time" id="c-time">2 saat önce</span>
+    </div>
+
+    <div class="card-visual" id="c-visual">
+      <span id="c-emoji">🌍</span>
+      <div class="deepfake-glitch" id="c-glitch" style="display:none"></div>
+      <div class="deepfake-scan" id="c-scan" style="display:none"></div>
+    </div>
+
+    <div class="card-content">
+      <div class="card-headline" id="c-headline">Yükleniyor…</div>
+      <div class="card-body" id="c-body"></div>
+      <div class="card-clues" id="c-clues"></div>
+    </div>
+  </div>
+
+  <!-- İpucu -->
+  <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 İpucu Göster (−5 puan)</button>
+  <div class="hint-box" id="hint-box"></div>
+
+  <!-- Karar butonları -->
+  <div class="decision-row">
+    <button class="dec-btn fake-btn" onclick="decide(false)">✕ SAHTE</button>
+    <button class="dec-btn real-btn" onclick="decide(true)">✓ GERÇEK</button>
+  </div>
+
+  <!-- Açıklama -->
+  <div class="explain-box" id="explain-box">
+    <div class="ex-verdict" id="ex-verdict">—</div>
+    <div class="ex-pts" id="ex-pts">+0</div>
+    <div class="ex-text" id="ex-text"></div>
+    <div class="ex-signals" id="ex-signals"></div>
+    <div class="btn-row">
+      <button class="btn btn-red" onclick="nextCard()">Sonraki →</button>
+      <button class="btn btn-outline" onclick="HS.showShareCard({title:'Slopaganda Dedektör',puan:totalScore,game:'slopaganda',color:'#E01515'})">📤 Paylaş</button>
+    </div>
+  </div>
+</div>
+
+<script src="hs-engine.js"></script>
+<script>
+// YZ tarafından "üretilmiş" gibi gösterilen dinamik içerik havuzu
+var CONTENT = [
+  {
+    platform:'📱 Twitter/X', time:'3 dakika önce', emoji:'🚀', isReal:false,
+    aiGenerated:true, hasGlitch:true,
+    headline:'Türkiye yeni hipersonik füze sistemini test etti: Menzil 3000 km',
+    body:'Savunma Bakanlığı kaynakları, yerli geliştirilen HIZIR-X hipersonik füzenin başarılı test atışını doğruladı. Sistem NATO standartlarını aşıyor.',
+    clues:[{text:'Kaynak yok',color:'var(--red2)',border:'rgba(224,21,21,.4)'},{text:'Resmi açıklama yok',color:'var(--red2)',border:'rgba(224,21,21,.4)'},{text:'Aşırı spesifik',color:'var(--gold)',border:'rgba(201,162,75,.4)'}],
+    hint:'Resmi savunma bakanlığı açıklaması olmayan spesifik teknik iddialar genellikle dezenformasyondur.',
+    explain:'Bu içerik YZ tarafından üretilmiş bir dezenformasyon örneğidir. Gerçek savunma haberleri resmi kanallardan doğrulanır.',
+    signals:'🔴 Kaynak yok · 🔴 Resmi teyit yok · 🟡 Aşırı spesifik rakamlar · 🟡 Aciliyet hissi'
+  },
+  {
+    platform:'📺 Haber Sitesi', time:'1 saat önce', emoji:'🌍', isReal:true,
+    aiGenerated:false, hasGlitch:false,
+    headline:'NATO Genel Sekreteri: Savunma harcamaları 2024\'te rekor kırdı',
+    body:'NATO Genel Sekreteri Rutte, üye ülkelerin savunma harcamalarının 2024\'te toplam 1.3 trilyon dolara ulaştığını açıkladı. 23 üye ülke GDP\'nin %2 hedefini karşıladı.',
+    clues:[{text:'Resmi kaynak',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'Doğrulanabilir',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'Spesifik veri',color:'var(--cyan)',border:'rgba(0,224,255,.4)'}],
+    hint:'Resmi kaynaktan gelen, doğrulanabilir veriler içeren haberler genellikle güvenilirdir.',
+    explain:'Bu gerçek bir haberdir. NATO\'nun resmi açıklamalarına dayanan, doğrulanabilir veriler içermektedir.',
+    signals:'🟢 Resmi kaynak · 🟢 Doğrulanabilir veri · 🟢 Çoklu kaynak teyidi · 🟡 Kontrol et'
+  },
+  {
+    platform:'📱 Instagram', time:'30 dakika önce', emoji:'🎭', isReal:false,
+    aiGenerated:true, hasGlitch:true,
+    headline:'DEEPFAKE: General X, ülkesini terk ettiğini açıkladı',
+    body:'Viral olan videoda üst düzey bir general, görevini bıraktığını ve ülkesini terk ettiğini söylüyor. Video milyonlarca kez izlendi.',
+    clues:[{text:'Deepfake şüphesi',color:'var(--red2)',border:'rgba(224,21,21,.4)'},{text:'Viral içerik',color:'var(--gold)',border:'rgba(201,162,75,.4)'},{text:'Resmi teyit yok',color:'var(--red2)',border:'rgba(224,21,21,.4)'}],
+    hint:'Viral video içeriklerinde yüz ve ses uyumsuzluğu, doğal olmayan göz hareketi deepfake belirtisidir.',
+    explain:'Bu YZ tarafından üretilmiş bir deepfake içeriktir. Yüz manipülasyonu ve ses sentezi kullanılmıştır.',
+    signals:'🔴 Deepfake belirtisi · 🔴 Resmi teyit yok · 🔴 Viral yayılım · 🟡 Duygusal içerik'
+  },
+  {
+    platform:'🌐 Haber Ajansı', time:'2 saat önce', emoji:'⚔️', isReal:true,
+    aiGenerated:false, hasGlitch:false,
+    headline:'BM: Ukrayna\'da sivil kayıplar 2024\'te 12.000\'i aştı',
+    body:'BM İnsan Hakları Ofisi, 2024 yılında Ukrayna\'da 12.000\'den fazla sivil kayıp belgelendiğini açıkladı. Rapor bağımsız gözlemciler tarafından hazırlandı.',
+    clues:[{text:'BM Raporu',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'Bağımsız doğrulama',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'Belgelenmiş',color:'var(--cyan)',border:'rgba(0,224,255,.4)'}],
+    hint:'Uluslararası kuruluşların raporları, bağımsız doğrulama mekanizmaları içerir.',
+    explain:'BM İnsan Hakları Ofisi\'nin resmi raporu gerçektir. Bağımsız gözlemciler tarafından doğrulanmıştır.',
+    signals:'🟢 BM resmi raporu · 🟢 Bağımsız doğrulama · 🟢 Belgelenmiş veri · 🟢 Çoklu kaynak'
+  },
+  {
+    platform:'📱 TikTok', time:'15 dakika önce', emoji:'💣', isReal:false,
+    aiGenerated:true, hasGlitch:true,
+    headline:'GİZLİ BELGE: NATO ülkesi gizlice Rusya\'ya silah satıyor',
+    body:'Sızdırılan gizli belgeler, bir NATO üyesinin Rusya\'ya yasadışı silah transferi yaptığını ortaya koyuyor. Belgelerin özgünlüğü iddia ediliyor.',
+    clues:[{text:'"Gizli belge" iddiası',color:'var(--red2)',border:'rgba(224,21,21,.4)'},{text:'İsim yok',color:'var(--red2)',border:'rgba(224,21,21,.4)'},{text:'Doğrulanamaz',color:'var(--gold)',border:'rgba(201,162,75,.4)'}],
+    hint:'"Gizli belge" ve "sızdırıldı" ifadeleri dezenformasyonun klasik araçlarıdır. Kaynak ve belge özgünlüğü sorgulanmalıdır.',
+    explain:'Bu klasik bir dezenformasyon tekniğidir: belirsiz "gizli belge" iddiası, isim vermeden suçlama, doğrulanamaz kaynak.',
+    signals:'🔴 "Gizli belge" klişesi · 🔴 İsim/kaynak yok · 🔴 Doğrulanamaz · 🔴 Komplo çerçevesi'
+  },
+  {
+    platform:'📰 Gazetesi', time:'4 saat önce', emoji:'🛡️', isReal:true,
+    aiGenerated:false, hasGlitch:false,
+    headline:'Savunma Sanayii Başkanlığı: İnsansız hava araçları ihracatı 2024\'te 1 milyar doları aştı',
+    body:'SSB Başkanı Haluk Görgün, Türkiye\'nin İHA ihracatının 2024 yılında 1 milyar doları aştığını açıkladı. Bayraktar TB2 en çok ihraç edilen sistem olmaya devam ediyor.',
+    clues:[{text:'Resmi açıklama',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'İsimli kaynak',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'Doğrulanabilir',color:'#00ff88',border:'rgba(0,255,136,.4)'}],
+    hint:'İsimli resmi kaynak, doğrulanabilir veri ve kurumsal açıklama güvenilirlik göstergesidir.',
+    explain:'SSB Başkanı\'nın resmi açıklamasına dayanan bu haber gerçektir. Doğrulanabilir veriler içermektedir.',
+    signals:'🟢 İsimli resmi kaynak · 🟢 Kurumsal açıklama · 🟢 Doğrulanabilir · 🟢 Tutarlı veri'
+  },
+  {
+    platform:'📱 WhatsApp', time:'Bilinmiyor', emoji:'☢️', isReal:false,
+    aiGenerated:false, hasGlitch:false,
+    headline:'ACİL: Nükleer tesis sızıntısı! Bölgeyi terk edin!',
+    body:'Güvenilir kaynaklardan alınan bilgiye göre yakın bölgedeki nükleer tesiste ciddi sızıntı yaşandı. Yetkililerin haberi gizlediği iddia ediliyor.',
+    clues:[{text:'WhatsApp zinciri',color:'var(--red2)',border:'rgba(224,21,21,.4)'},{text:'Aciliyet manipülasyonu',color:'var(--red2)',border:'rgba(224,21,21,.4)'},{text:'Belirsiz kaynak',color:'var(--gold)',border:'rgba(201,162,75,.4)'}],
+    hint:'WhatsApp zincirleri, "güvenilir kaynak" ifadesi ve panik yaratma amacı dezenformasyonun temel araçlarıdır.',
+    explain:'Bu klasik bir panik dezenformasyonudur. "Güvenilir kaynak" belirsizliği, aciliyet hissi ve WhatsApp yayılımı tipik belirtilerdir.',
+    signals:'🔴 WhatsApp zinciri · 🔴 Belirsiz kaynak · 🔴 Panik yaratma · 🔴 "Gizleniyor" çerçevesi'
+  },
+  {
+    platform:'🌐 Reuters', time:'1 saat önce', emoji:'🌏', isReal:true,
+    aiGenerated:false, hasGlitch:false,
+    headline:'Çin savunma bütçesi 2024\'te %7.2 artışla 225 milyar dolara ulaştı',
+    body:'Çin Ulusal Halk Kongresi\'nde açıklanan bütçeye göre savunma harcamaları geçen yıla göre %7.2 artarak 225 milyar dolara ulaştı.',
+    clues:[{text:'Reuters haberi',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'Resmi bütçe verisi',color:'#00ff88',border:'rgba(0,255,136,.4)'},{text:'Doğrulanabilir',color:'#00ff88',border:'rgba(0,255,136,.4)'}],
+    hint:'Uluslararası haber ajanslarının resmi bütçe verilerine dayanan haberleri güvenilirdir.',
+    explain:'Reuters\'ın Çin Ulusal Halk Kongresi resmi bütçe açıklamasına dayanan bu haber gerçektir.',
+    signals:'🟢 Reuters ajansı · 🟢 Resmi bütçe · 🟢 Doğrulanabilir · 🟢 Çoklu kaynak teyidi'
+  }
+];
+
+var currentIdx = 0, totalScore = 0, correct = 0, streak = 0;
+var hintUsed = false, answered = false;
+var isDragging = false, startX = 0, currentX = 0;
+var card;
+
+function loadCard(){
+  answered = false; hintUsed = false;
+  var c = CONTENT[currentIdx % CONTENT.length];
+
+  document.getElementById('c-platform-icon').textContent = c.platform.split(' ')[0];
+  document.getElementById('c-platform').textContent = c.platform.substring(2);
+  document.getElementById('c-time').textContent = c.time;
+  document.getElementById('c-emoji').textContent = c.emoji;
+  document.getElementById('c-headline').textContent = c.headline;
+  document.getElementById('c-body').textContent = c.body;
+  document.getElementById('s-round').textContent = (currentIdx % CONTENT.length) + 1;
+
+  var aiBadge = document.getElementById('c-ai-badge');
+  aiBadge.style.display = c.aiGenerated ? 'inline' : 'none';
+
+  var glitch = document.getElementById('c-glitch');
+  var scan = document.getElementById('c-scan');
+  glitch.style.display = c.hasGlitch ? 'block' : 'none';
+  scan.style.display = c.hasGlitch ? 'block' : 'none';
+
+  var cluesEl = document.getElementById('c-clues');
+  cluesEl.innerHTML = c.clues.map(function(cl){
+    return '<span class="clue" style="color:'+cl.color+';border-color:'+cl.border+'">'+cl.text+'</span>';
+  }).join('');
+
+  document.getElementById('hint-box').classList.remove('show');
+  document.getElementById('hint-btn').style.display = '';
+  document.getElementById('explain-box').classList.remove('show');
+  document.getElementById('vo-fake').style.opacity = '0';
+  document.getElementById('vo-real').style.opacity = '0';
+
+  // Kart animasyonu
+  card.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  card.style.transform = 'translateX(0) rotate(0deg) scale(1)';
+  card.style.opacity = '1';
+  setTimeout(function(){ card.style.transition = ''; }, 400);
+
+  // YZ mesajı
+  var msgs = [
+    'YZ içerik analiz motoru aktif — Dinamik dezenformasyon üretiliyor…',
+    'Derin öğrenme modeli çalışıyor — Sahte içerik kalıpları analiz ediliyor…',
+    'GPT-tabanlı metin üretimi tespit edildi — Doğrulama gerekiyor…',
+    'Görüntü manipülasyonu taranıyor — Piksel analizi devam ediyor…'
+  ];
+  document.getElementById('ai-gen-text').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+function showHint(){
+  if(hintUsed) return;
+  hintUsed = true;
+  var c = CONTENT[currentIdx % CONTENT.length];
+  var hb = document.getElementById('hint-box');
+  hb.textContent = '💡 ' + c.hint;
+  hb.classList.add('show');
+  document.getElementById('hint-btn').style.display = 'none';
+  HS.beep(440, 0.1, 0.1);
+}
+
+function decide(isReal){
+  if(answered) return;
+  answered = true;
+
+  var c = CONTENT[currentIdx % CONTENT.length];
+  var correct_ans = (isReal === c.isReal);
+  var pts = 0;
+
+  if(correct_ans){
+    streak++;
+    pts = 10 + streak * 3;
+    if(hintUsed) pts = Math.floor(pts * 0.7);
+    if(HS.hasPerk('istihbarat_1')) pts += 5;
+    totalScore += pts;
+    correct++;
+    HS.addScore('slopaganda', pts);
+    HS.beepWin();
+    HS.burst(card, isReal ? '#00ff88' : 'var(--red2)');
+    HS.flashScreen(isReal ? 'rgba(0,255,136,0.15)' : 'rgba(224,21,21,0.15)', 300);
+    HS.aiLost();
+
+    document.getElementById('vo-'+(isReal?'real':'fake')).style.opacity = '1';
+  } else {
+    streak = 0;
+    HS.beepFail();
+    HS.flashScreen('rgba(224,21,21,0.3)', 400);
+    HS.aiWon();
+    document.getElementById('vo-'+(isReal?'real':'fake')).style.opacity = '1';
+  }
+
+  // Kart animasyonu
+  card.style.transition = 'transform 0.5s ease, opacity 0.5s';
+  card.style.transform = (isReal ? 'translateX(80%)' : 'translateX(-80%)') + ' rotate('+(isReal?'8':'-8')+'deg)';
+  card.style.opacity = '0.5';
+
+  document.getElementById('s-score').textContent = totalScore;
+  document.getElementById('s-correct').textContent = correct;
+  document.getElementById('s-streak').textContent = streak;
+  document.getElementById('hdr-score').textContent = '⭐ ' + HS.getTotalScore();
+
+  // Açıklama
+  var eb = document.getElementById('explain-box');
+  document.getElementById('ex-verdict').textContent = correct_ans ? (isReal ? '✅ Doğru: GERÇEK' : '✅ Doğru: SAHTE') : (isReal ? '❌ Yanlış: ASLINDA SAHTE' : '❌ Yanlış: ASLINDA GERÇEK');
+  document.getElementById('ex-verdict').style.color = correct_ans ? '#00ff88' : 'var(--red2)';
+  document.getElementById('ex-pts').textContent = correct_ans ? '+' + pts + ' puan' : '0 puan';
+  document.getElementById('ex-pts').style.color = correct_ans ? '#00ff88' : 'var(--red2)';
+  document.getElementById('ex-text').textContent = c.explain;
+  document.getElementById('ex-signals').textContent = c.signals;
+
+  setTimeout(function(){ eb.classList.add('show'); }, 500);
+
+  if(correct >= 5) HS.awardBadge('dedektif');
+}
+
+function nextCard(){
+  currentIdx++;
+  loadCard();
+}
+
+// Swipe
+function initSwipe(){
+  card = document.getElementById('content-card');
+  function onStart(x){ isDragging=true; startX=x; currentX=0; card.style.transition='none'; }
+  function onMove(x){
+    if(!isDragging) return;
+    currentX = x - startX;
+    var rot = currentX * 0.06;
+    card.style.transform = 'translateX('+currentX+'px) rotate('+rot+'deg)';
+    var shl = document.getElementById('sh-left'), shr = document.getElementById('sh-right');
+    if(currentX < -30){ shl.style.opacity = Math.min(1,Math.abs(currentX)/80); shr.style.opacity=0; }
+    else if(currentX > 30){ shr.style.opacity = Math.min(1,currentX/80); shl.style.opacity=0; }
+    else { shl.style.opacity=0; shr.style.opacity=0; }
+  }
+  function onEnd(){
+    if(!isDragging) return; isDragging=false;
+    document.getElementById('sh-left').style.opacity=0;
+    document.getElementById('sh-right').style.opacity=0;
+    if(currentX < -70){ HS.beepSwipe('left'); decide(false); }
+    else if(currentX > 70){ HS.beepSwipe('right'); decide(true); }
+    else { card.style.transition='transform .3s'; card.style.transform='translateX(0) rotate(0deg)'; }
+  }
+  card.addEventListener('mousedown',function(e){onStart(e.clientX);});
+  document.addEventListener('mousemove',function(e){onMove(e.clientX);});
+  document.addEventListener('mouseup',onEnd);
+  card.addEventListener('touchstart',function(e){onStart(e.touches[0].clientX);},{passive:true});
+  document.addEventListener('touchmove',function(e){onMove(e.touches[0].clientX);},{passive:true});
+  document.addEventListener('touchend',onEnd);
+}
+
+initSwipe();
+loadCard();
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

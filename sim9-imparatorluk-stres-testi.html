@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | İmparatorluk <em>Stres Testi</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+.hidden{display:none !important;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px;margin:20px 0;}
+.empire-select{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px;}
+.empire-card{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.3s;}
+.empire-card:hover{border-color:var(--signal);transform:translateY(-3px);}
+.empire-card.selected{border-color:var(--signal);box-shadow:0 0 20px rgba(57,255,138,0.2);}
+.empire-card .flag{font-size:2.5rem;margin-bottom:8px;}
+.empire-card .name{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:4px;}
+.empire-card .risk{font-size:0.75rem;color:var(--bone-dim);}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.score-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:20px 0;padding:16px;background:var(--panel);border-radius:10px;border:1px solid var(--line);}
+.score-card{text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.8rem;}
+.score-card .label{font-size:0.7rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.result-box{background:var(--panel-2);border-radius:10px;padding:20px;margin-top:16px;}
+.meter{width:100%;height:24px;background:var(--deep);border-radius:12px;overflow:hidden;margin-top:12px;}
+.meter-fill{height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:bold;color:var(--void);transition:width 1s ease;}
+</style>
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>İmparatorluk <em>Stres Testi</em></h1>
+  <p class="lead">Büyük güçlerin çöküş dinamikleri simülasyonu — Tarihsel kalıplarla günümüz süper güçlerini test edin.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">6</span><span class="lbl">İmparatorluk</span></div><div class="hero-stat"><span class="num">500yr</span><span class="lbl">Veri</span></div><div class="hero-stat"><span class="num">12</span><span class="lbl">Faktör</span></div><div class="hero-stat"><span class="num">3</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+
+<h1>İMPARATORLUK STRES TESTİ: TARİH TEKERRÜR MÜ?</h1>
+
+
+<div class="panel" id="step0">
+<h2>Süper Gücünüzü Seçin</h2>
+<p style="color:#aaa;margin-bottom:10px">Hangi küresel gücün liderliğini üstlenmek istiyorsunuz?</p>
+<div class="empire-select">
+<div class="empire-card" onclick="selectEmpire('abd')"><div class="flag">🇺🇸</div><div class="name">ABD</div><div class="risk">Risk: Askerî Aşırı Yayılma</div></div>
+<div class="empire-card" onclick="selectEmpire('cin')"><div class="flag">🇨🇳</div><div class="name">Çin</div><div class="risk">Risk: Ekolojik İflas</div></div>
+<div class="empire-card" onclick="selectEmpire('ab')"><div class="flag">🇪🇺</div><div class="name">Avrupa Birliği</div><div class="risk">Risk: Merkezi Otorite Dağılması</div></div>
+<div class="empire-card" onclick="selectEmpire('hindistan')"><div class="flag">🇮🇳</div><div class="name">Hindistan</div><div class="risk">Risk: Etnik Kutuplaşma</div></div>
+</div>
+</div>
+
+<div class="panel hidden" id="step1"></div>
+<div class="panel hidden" id="step2"></div>
+<div class="panel hidden" id="step3"></div>
+<div class="panel hidden" id="sonuc"></div>
+</div>
+</main>
+
+<script>
+
+let empire='';
+let scores={kaynak:80,otorite:80,inovasyon:80,kimlik:80,ekoloji:80};
+let kararlar=[];
+
+const senaryolar={
+abd:[
+{title:'Bütçe Krizi: 800 Askerî Üs',desc:'Savunma bütçesi 900 milyar doları aştı. 800+ askeri üs sürdürülemez. Seçmenler "neden başkalarının güvenliğini biz ödüyoruz?" diyor.',opts:[
+{text:'Üsleri Kapat (Roma\'nın Çekilmesi)',fx:{kaynak:+15,otorite:-20,kimlik:+10,inovasyon:0,ekoloji:0}},
+{text:'Müttefiklere Fatura Kes',fx:{kaynak:+10,otorite:-10,kimlik:+5,inovasyon:0,ekoloji:0}},
+{text:'Mevcut Düzeni Koru',fx:{kaynak:-15,otorite:+5,kimlik:-10,inovasyon:0,ekoloji:0}},
+{text:'Teknolojiye Kaydır (Uzaktan Kontrol)',fx:{kaynak:+5,otorite:-5,kimlik:0,inovasyon:+10,ekoloji:0}}
+]},
+{title:'Ambalaj Krizi: Demokrasi İhracı İnandırıcılığı',desc:'Irak, Afganistan, Libya... "Demokrasi ihracı" söylemi dünyada inandırıcılığını yitirdi. Küresel Güney ülkeleri ABD\'yi ikiyüzlülükle suçluyor.',opts:[
+{text:'Söylemi Terk Et (Pragmatizm)',fx:{kaynak:0,otorite:-10,kimlik:-15,inovasyon:+5,ekoloji:0}},
+{text:'Yeni Ambalaj: "Teknoloji Özgürlüğü"',fx:{kaynak:-5,otorite:+5,kimlik:+10,inovasyon:+10,ekoloji:0}},
+{text:'İç Sorunlara Odaklan',fx:{kaynak:+10,otorite:-15,kimlik:+15,inovasyon:0,ekoloji:0}},
+{text:'Mevcut Söyleme Devam',fx:{kaynak:-5,otorite:+5,kimlik:-10,inovasyon:-5,ekoloji:0}}
+]},
+{title:'İç Kutuplaşma: Metropolün Kalbinde Çatlak',desc:'Sosyo-ekonomik uçurum derinleşiyor. Sağ-sol kutuplaşması, iç siyaseti felç etti. Azınlıklar "eşit vatandaşlık" hissetmiyor.',opts:[
+{text:'Ekonomik Eşitlik Reformu',fx:{kaynak:-10,otorite:+5,kimlik:+20,inovasyon:0,ekoloji:0}},
+{text:'Milliyetçi Birlik Söylemi',fx:{kaynak:0,otorite:+10,kimlik:-15,inovasyon:-5,ekoloji:0}},
+{text:'Dış Düşman Yarat (Dikkat Dağıt)',fx:{kaynak:-10,otorite:+5,kimlik:-5,inovasyon:0,ekoloji:0}},
+{text:'Teknokrasi (Uzmanlar Yönetsin)',fx:{kaynak:+5,otorite:-10,kimlik:-5,inovasyon:+15,ekoloji:0}}
+]}],
+cin:[
+{title:'Ekolojik Sınır: Su Krizi',desc:'Kuzey Çin\'de su kaynakları kritik seviyede. Tarım arazileri bozuluyor. 1.4 milyar insanı beslemek giderek zorlaşıyor.',opts:[
+{text:'Devasa Altyapı (Su Transferi)',fx:{kaynak:-15,otorite:+5,kimlik:0,inovasyon:+5,ekoloji:+10}},
+{text:'Tarımı Teknolojiye Dönüştür',fx:{kaynak:-10,otorite:0,kimlik:0,inovasyon:+15,ekoloji:+5}},
+{text:'İthalata Bağlan',fx:{kaynak:+5,otorite:-10,kimlik:-5,inovasyon:0,ekoloji:-10}},
+{text:'Nüfus Kontrolü Sıkılaştır',fx:{kaynak:+10,otorite:+10,kimlik:-15,inovasyon:0,ekoloji:+5}}
+]},
+{title:'Kuşak ve Yol: Borç Bumerangı',desc:'Borçlanan ülkeler (Sri Lanka, Zambiya) geri ödeme yapamıyor. Projelerin %40\'ı sorunlu. Dünya "borç tuzağı diplomasisi" diyor.',opts:[
+{text:'Borçları Sil (İmaj Tazeleme)',fx:{kaynak:-20,otorite:-5,kimlik:+10,inovasyon:0,ekoloji:0}},
+{text:'Varlıklara El Koy (Limanlar)',fx:{kaynak:+10,otorite:+10,kimlik:-15,inovasyon:0,ekoloji:0}},
+{text:'Projeleri Küçült',fx:{kaynak:+5,otorite:-10,kimlik:+5,inovasyon:-5,ekoloji:0}},
+{text:'Yerel Ortaklarla Paylaş',fx:{kaynak:-5,otorite:-5,kimlik:+10,inovasyon:+5,ekoloji:0}}
+]},
+{title:'Entelektüel Kontrol: İnovasyon vs Otorite',desc:'Teknoloji şirketleri (Alibaba, Tencent) çok güçlendi. Merkezi otorite kontrolü sıkılaştırıyor ama bu inovasyonu boğuyor.',opts:[
+{text:'Tam Kontrol (Qing Modeli)',fx:{kaynak:+5,otorite:+15,kimlik:0,inovasyon:-20,ekoloji:0}},
+{text:'Kontrollü Özgürlük',fx:{kaynak:0,otorite:-5,kimlik:+5,inovasyon:+10,ekoloji:0}},
+{text:'Devlet-Özel Füzyon',fx:{kaynak:+5,otorite:+5,kimlik:-5,inovasyon:+5,ekoloji:0}},
+{text:'Serbest Bırak (Batı Modeli)',fx:{kaynak:0,otorite:-20,kimlik:+10,inovasyon:+15,ekoloji:0}}
+]}],
+ab:[
+{title:'Merkez-Çevre Gerilimi',desc:'Macaristan ve Polonya AB kurallarını reddediyor. Brüksel\'in otoritesi sorgulanıyor. "AB bir imparatorluk mu yoksa kulüp mü?" tartışması alevleniyor.',opts:[
+{text:'Sert Yaptırım (Fonları Kes)',fx:{kaynak:+5,otorite:+10,kimlik:-15,inovasyon:0,ekoloji:0}},
+{text:'Çok Hızlı AB (İsteyenler İlerlesin)',fx:{kaynak:0,otorite:-5,kimlik:-10,inovasyon:+10,ekoloji:0}},
+{text:'Diyalog ve Uzlaşı',fx:{kaynak:-5,otorite:-5,kimlik:+10,inovasyon:0,ekoloji:0}},
+{text:'Gevşek Federasyon (Daha Az AB)',fx:{kaynak:+10,otorite:-15,kimlik:+5,inovasyon:-5,ekoloji:0}}
+]},
+{title:'Demografik Kriz: Yaşlanan Nüfus',desc:'Doğum oranları düşüyor, nüfus yaşlanıyor. İş gücü açığı büyüyor. Göç tek çözüm ama toplumsal gerilim yaratıyor.',opts:[
+{text:'Kapıları Aç (Kontrollü Göç)',fx:{kaynak:+10,otorite:-5,kimlik:-15,inovasyon:+5,ekoloji:0}},
+{text:'Otomasyon ve Robot İş Gücü',fx:{kaynak:-10,otorite:0,kimlik:+5,inovasyon:+15,ekoloji:0}},
+{text:'Doğum Teşvikleri',fx:{kaynak:-10,otorite:+5,kimlik:+10,inovasyon:0,ekoloji:0}},
+{text:'Küçülen Ekonomiyi Kabul Et',fx:{kaynak:+5,otorite:-10,kimlik:+5,inovasyon:-10,ekoloji:+5}}
+]},
+{title:'Sömürge Mirası: Küresel Güney ile İlişkiler',desc:'Afrika ve Asya ülkeleri tazminat ve müze eserlerinin iadesi istiyor. AB\'nin "değerler" söylemi ikiyüzlülükle suçlanıyor.',opts:[
+{text:'Tazminat ve İade (Tam Hesaplaşma)',fx:{kaynak:-15,otorite:-5,kimlik:+15,inovasyon:0,ekoloji:0}},
+{text:'Kalkınma Yardımı (Yeni Ambalaj)',fx:{kaynak:-10,otorite:+5,kimlik:+5,inovasyon:0,ekoloji:0}},
+{text:'Reddet (Tarih Tartışılmaz)',fx:{kaynak:+5,otorite:+5,kimlik:-20,inovasyon:0,ekoloji:0}},
+{text:'Ortak Proje (Eşit Ortaklık)',fx:{kaynak:-5,otorite:0,kimlik:+10,inovasyon:+5,ekoloji:0}}
+]}],
+hindistan:[
+{title:'Hindu Milliyetçiliği vs Çoğulculuk',desc:'BJP\'nin Hindu milliyetçi politikaları Müslüman azınlığı ve diğer grupları tedirgin ediyor. "Tek kimlik" dayatması iç gerilimi artırıyor.',opts:[
+{text:'Kapsayıcı Ulusal Kimlik',fx:{kaynak:-5,otorite:-10,kimlik:+20,inovasyon:+5,ekoloji:0}},
+{text:'Hindu Önceliği (Çoğunluk Yönetir)',fx:{kaynak:+5,otorite:+10,kimlik:-20,inovasyon:-5,ekoloji:0}},
+{text:'Ekonomik Birlik (Kimlik İkincil)',fx:{kaynak:+10,otorite:0,kimlik:+5,inovasyon:+10,ekoloji:0}},
+{text:'Federalizmi Güçlendir',fx:{kaynak:-5,otorite:-10,kimlik:+10,inovasyon:0,ekoloji:0}}
+]},
+{title:'İklim Krizi: Tarımsal Çöküş Riski',desc:'Hindistan iklim krizinden en çok etkilenecek ülkelerden. Muson düzensizlikleri, sel ve kuraklık tarımı tehdit ediyor. 600 milyon çiftçi risk altında.',opts:[
+{text:'Yeşil Devrim 2.0 (Teknoloji)',fx:{kaynak:-15,otorite:0,kimlik:+5,inovasyon:+15,ekoloji:+15}},
+{text:'Sanayileşmeye Odaklan (Tarım İkincil)',fx:{kaynak:+10,otorite:+5,kimlik:-10,inovasyon:+5,ekoloji:-15}},
+{text:'Uluslararası İklim Fonu Talep Et',fx:{kaynak:+5,otorite:-5,kimlik:+5,inovasyon:0,ekoloji:+5}},
+{text:'Nükleer Enerji Hamlesi',fx:{kaynak:-10,otorite:+5,kimlik:0,inovasyon:+10,ekoloji:+10}}
+]},
+{title:'Teknoloji Sıçraması vs Altyapı Açığı',desc:'Hindistan dijital ekonomide hızla büyüyor (UPI, Aadhaar). Ama fiziksel altyapı (yollar, su, elektrik) hâlâ yetersiz. İki Hindistan var: dijital ve analog.',opts:[
+{text:'Dijitale Tam Gaz (Analog Beklesin)',fx:{kaynak:+5,otorite:0,kimlik:-10,inovasyon:+15,ekoloji:-5}},
+{text:'Altyapı Öncelikli (Çin Modeli)',fx:{kaynak:-15,otorite:+10,kimlik:+10,inovasyon:-5,ekoloji:-5}},
+{text:'Dengeli Büyüme',fx:{kaynak:-5,otorite:0,kimlik:+5,inovasyon:+5,ekoloji:0}},
+{text:'Özel Sektöre Bırak',fx:{kaynak:+10,otorite:-10,kimlik:-5,inovasyon:+10,ekoloji:-5}}
+]}]
+};
+
+function selectEmpire(e){
+empire=e;
+document.querySelectorAll('.empire-card').forEach(c=>c.classList.remove('selected'));
+event.currentTarget.classList.add('selected');
+setTimeout(()=>{
+document.getElementById('step0').classList.add('hidden');
+showStep(1);
+},500);
+}
+
+function showStep(n){
+let s=senaryolar[empire][n-1];
+let panel=document.getElementById('step'+n);
+panel.classList.remove('hidden');
+let html='<h2>KARAR '+n+': '+s.title+'</h2>';
+html+='<div class="scenario"><p>'+s.desc+'</p></div>';
+html+='<div class="options">';
+s.opts.forEach((o,i)=>{
+let cls=['btn-red','btn-orange','btn-gold','btn-grey'][i];
+html+='<button class="btn '+cls+'" onclick="decide('+n+','+i+')">'+o.text+'</button>';
+});
+html+='</div>';
+panel.innerHTML=html;
+updateBoard();
+}
+
+function decide(step,idx){
+let s=senaryolar[empire][step-1];
+let fx=s.opts[idx].fx;
+kararlar.push(s.opts[idx].text);
+Object.keys(fx).forEach(k=>{scores[k]=Math.max(0,Math.min(100,scores[k]+fx[k]))});
+updateBoard();
+document.getElementById('step'+step).classList.add('hidden');
+if(step<3){showStep(step+1)}else{showSonuc()}
+}
+
+function updateBoard(){
+let board=document.querySelector('.score-board');
+if(!board){
+let b=document.createElement('div');b.className='score-board';
+b.innerHTML=`
+<div class="score-card"><div class="value" style="color:#e30a17" id="vKaynak">${scores.kaynak}</div><div class="label">Kaynak Gücü</div></div>
+<div class="score-card"><div class="value" style="color:#d4620a" id="vOtorite">${scores.otorite}</div><div class="label">Otorite</div></div>
+<div class="score-card"><div class="value" style="color:#c8a415" id="vInovasyon">${scores.inovasyon}</div><div class="label">İnovasyon</div></div>
+<div class="score-card"><div class="value" style="color:#00E0FF" id="vKimlik">${scores.kimlik}</div><div class="label">Sosyal Uyum</div></div>
+<div class="score-card"><div class="value" style="color:#2ecc71" id="vEkoloji">${scores.ekoloji}</div><div class="label">Ekoloji</div></div>`;
+document.querySelector('.container').insertBefore(b,document.getElementById('step0'));
+}else{
+document.getElementById('vKaynak').textContent=scores.kaynak;
+document.getElementById('vOtorite').textContent=scores.otorite;
+document.getElementById('vInovasyon').textContent=scores.inovasyon;
+document.getElementById('vKimlik').textContent=scores.kimlik;
+document.getElementById('vEkoloji').textContent=scores.ekoloji;
+}}
+
+function showSonuc(){
+let panel=document.getElementById('sonuc');panel.classList.remove('hidden');
+let toplam=scores.kaynak+scores.otorite+scores.inovasyon+scores.kimlik+scores.ekoloji;
+let max=500;let pct=Math.round(toplam/max*100);
+let verdict='',color='';
+if(pct>75){verdict='İMPARATORLUK AYAKTA: Fay hatlarını yönettiniz.';color='#2ecc71'}
+else if(pct>55){verdict='GERİLİM ARTIYOR: Çatlaklar büyüyor ama henüz çöküş yok.';color='#c8a415'}
+else if(pct>35){verdict='SİSTEM HATASI: Tarihsel tuzaklara düştünüz.';color='#d4620a'}
+else{verdict='BÜYÜK İFLAS: İmparatorluğunuz çöktü. Tarih tekerrür etti.';color='#e30a17'}
+
+let names={abd:'ABD',cin:'Çin',ab:'Avrupa Birliği',hindistan:'Hindistan'};
+let analojiler={abd:'Roma İmparatorluğu',cin:'Qing Hanedanı / Mayalar',ab:'Kutsal Roma / Bizans',hindistan:'Osmanlı / Avusturya-Macaristan'};
+
+panel.innerHTML=`<h2>SİMÜLASYON SONUCU: ${names[empire]}</h2>
+<div class="result-box"><h3 style="color:${color}">${verdict}</h3>
+<div class="meter"><div class="meter-fill" style="width:${pct}%;background:linear-gradient(90deg,#e30a17,#c8a415,#2ecc71)">Sürdürülebilirlik: ${pct}%</div></div>
+<p style="margin-top:10px"><strong>Tarihsel Analojiniz:</strong> ${analojiler[empire]}</p>
+<p style="margin-top:10px"><strong>Kararlarınız:</strong> ${kararlar.join(' → ')}</p></div>
+<div style="background:#16213e;border-radius:12px;padding:15px;margin-top:15px">
+<h3>Koyuncu Kanunları Değerlendirmesi</h3>
+<p style="margin-top:8px;color:#aaa">İmparatorlukların sonunu getiren şey, kendi başarılarının getirdiği devasa ağırlıktır. Sömürücü sistemi "uygarlık" veya "özgürlük" olarak pazarlamak, içteki yapısal çürümeyi bir süre gizleyebilir.</p>
+<p style="margin-top:8px;color:#c8a415;font-weight:bold">"Eylem değişmiyor, sadece ambalajda inovasyon yapılıyor."</p>
+<p style="margin-top:8px;color:#aaa;font-size:0.85em">Selahaddin Koyuncu | Harb-i Strateji 2026</p></div>`;
+}
+
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

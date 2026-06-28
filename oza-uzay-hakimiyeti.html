@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Uzay Hakimiyeti — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0f17;color:#eaf0f7;font-family:'Segoe UI',system-ui,sans-serif;touch-action:manipulation;user-select:none}
+#app{width:100%;height:100%;display:flex;flex-direction:column}
+#topBar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(10,15,23,.95);border-bottom:1px solid rgba(0,224,255,.15);flex-shrink:0;z-index:10}
+#topBar a{color:#00e0ff;text-decoration:none;font-size:.8rem}
+#topBar .title{font-size:.85rem;font-weight:700;color:#fff}
+#topBar .stats{display:flex;gap:12px;font-size:.75rem}
+#topBar .stats span{color:#c9a24b}
+#gameArea{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+canvas{display:block;background:#0a0f17}
+#hud{position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none;font-size:.75rem}
+#hud .badge{background:rgba(0,0,0,.6);border:1px solid rgba(0,224,255,.3);border-radius:6px;padding:3px 8px}
+#controls{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:12px}
+#controls button{width:52px;height:52px;border-radius:50%;border:2px solid rgba(0,224,255,.4);background:rgba(0,0,0,.5);color:#fff;font-size:1.2rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#controls button:active{background:rgba(0,224,255,.2);transform:scale(.9)}
+#overlay{position:absolute;inset:0;background:rgba(10,15,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;text-align:center;padding:20px}
+#overlay h2{color:#00e0ff;font-size:1.4rem;margin-bottom:8px}
+#overlay p{color:#aaa;font-size:.85rem;margin-bottom:16px;max-width:320px}
+#overlay button{padding:12px 32px;border:2px solid #00e0ff;background:transparent;color:#00e0ff;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:700}
+#overlay button:hover{background:rgba(0,224,255,.1)}
+@media(min-width:769px){#controls{display:none}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div id="app">
+<div id="topBar">
+<a href="oza-hub.html">← OZA</a>
+<span class="title">🛰️ Uzay Hakimiyeti</span>
+<div class="stats"><span id="scoreDisp">0</span> puan</div>
+</div>
+<div id="gameArea">
+<canvas id="gc"></canvas>
+<div id="hud"><div class="badge" id="hudL"></div><div class="badge" id="hudR"></div></div>
+<div id="controls"><button onclick="fireSat()">🎯</button>
+</div>
+<div id="overlay">
+<h2 id="ovTitle">BAŞLA</h2>
+<p id="ovDesc">Dokunarak veya tıklayarak başla</p>
+<button id="ovBtn" onclick="startGame()">▶ BAŞLA</button>
+</div>
+</div>
+</div>
+<script>
+// Audio context
+let audioCtx;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playTone(freq,dur,type){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type||'square';o.frequency.value=freq;g.gain.value=0.08;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur)}
+// Canvas setup
+const canvas=document.getElementById('gc');
+const ctx=canvas.getContext('2d');
+let W,H,gameRunning=false,score=0,level=1;
+function resize(){
+  const area=document.getElementById('gameArea');
+  W=canvas.width=area.clientWidth;
+  H=canvas.height=area.clientHeight;
+}
+window.addEventListener('resize',resize);
+resize();
+function updateScore(v){score+=v;document.getElementById('scoreDisp').textContent=score}
+function showOverlay(t,d,btn){
+  document.getElementById('overlay').style.display='flex';
+  document.getElementById('ovTitle').textContent=t;
+  document.getElementById('ovDesc').textContent=d;
+  document.getElementById('ovBtn').textContent=btn||'▶ TEKRAR';
+}
+function hideOverlay(){document.getElementById('overlay').style.display='none'}
+
+let sats=[],threats=[],orbits=3,satAngle=0,satOrbit=1,satSpeed=0.02,threatTimer=0;
+function startGame(){initAudio();hideOverlay();gameRunning=true;score=0;sats=[];threats=[];
+  sats.push({orbit:0,angle:0},{orbit:1,angle:Math.PI},{orbit:2,angle:Math.PI/2});loop7()}
+function fireSat(){if(!gameRunning)return;playTone(400,.1,'square');
+  let s=sats[satOrbit%sats.length];
+  let cx=W/2,cy=H/2,r=40+s.orbit*50;
+  let bx=cx+Math.cos(s.angle)*r,by=cy+Math.sin(s.angle)*r;
+  // Find nearest threat
+  let nearest=null,minD=Infinity;
+  threats.forEach(t=>{let d=Math.hypot(t.x-bx,t.y-by);if(d<minD){minD=d;nearest=t}});
+  if(nearest&&minD<150){nearest.hp--;if(nearest.hp<=0){threats=threats.filter(t=>t!==nearest);updateScore(15);playTone(700,.15,'sine')}}}
+function loop7(){if(!gameRunning)return;requestAnimationFrame(loop7);update7();draw7()}
+function update7(){
+  sats.forEach((s,i)=>{s.angle+=satSpeed*(1+i*0.3)});
+  threatTimer++;
+  if(threatTimer%90===0){let angle=Math.random()*Math.PI*2;
+    threats.push({x:W/2+Math.cos(angle)*Math.max(W,H),y:H/2+Math.sin(angle)*Math.max(W,H),hp:2+Math.floor(score/50),speed:0.5+score*0.005})}
+  let cx=W/2,cy=H/2;
+  for(let i=threats.length-1;i>=0;i--){let t=threats[i];
+    let a=Math.atan2(cy-t.y,cx-t.x);t.x+=Math.cos(a)*t.speed;t.y+=Math.sin(a)*t.speed;
+    if(Math.hypot(t.x-cx,t.y-cy)<30){gameRunning=false;playTone(100,.5,'sawtooth');
+      showOverlay('DÜNYA VURULDU!','Skor: '+score,'▶ TEKRAR')}}
+  document.getElementById('hudL').textContent='🛰️ '+sats.length;
+  document.getElementById('hudR').textContent='Tehdit: '+threats.length;
+}
+function draw7(){
+  ctx.fillStyle='#020810';ctx.fillRect(0,0,W,H);
+  let cx=W/2,cy=H/2;
+  // Stars
+  for(let i=0;i<50;i++){ctx.fillStyle='rgba(255,255,255,.3)';ctx.fillRect((i*97)%W,(i*53)%H,1,1)}
+  // Earth
+  ctx.beginPath();ctx.arc(cx,cy,25,0,Math.PI*2);
+  let eg=ctx.createRadialGradient(cx,cy,5,cx,cy,25);eg.addColorStop(0,'#1a5fb4');eg.addColorStop(1,'#0d3b66');ctx.fillStyle=eg;ctx.fill();
+  // Orbits
+  for(let i=0;i<orbits;i++){ctx.strokeStyle='rgba(0,224,255,.15)';ctx.beginPath();ctx.arc(cx,cy,40+i*50,0,Math.PI*2);ctx.stroke()}
+  // Satellites
+  sats.forEach((s,i)=>{let r=40+s.orbit*50;let sx=cx+Math.cos(s.angle)*r,sy=cy+Math.sin(s.angle)*r;
+    ctx.fillStyle='#00e0ff';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('🛰️',sx,sy)});
+  // Threats
+  threats.forEach(t=>{ctx.fillStyle='#ff3a4a';ctx.beginPath();ctx.arc(t.x,t.y,6+t.hp*2,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='8px sans-serif';ctx.textAlign='center';ctx.fillText(t.hp,t.x,t.y+3)});
+}
+canvas.addEventListener('click',e=>{fireSat();satOrbit++});
+canvas.addEventListener('touchstart',e=>{e.preventDefault();fireSat();satOrbit++});
+document.addEventListener('keydown',e=>{if(e.key===' ')fireSat();satOrbit++});
+resize();
+
+</script>
+</body>
+</html>

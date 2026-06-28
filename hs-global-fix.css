@@ -1,0 +1,236 @@
+/* ══════════════════════════════════════════════════════════════
+   HARB-İ STRATEJİ — GLOBAL FIX CSS v1.0
+   Tüm sayfalar için okunabilirlik, font, renk, tablo düzeltmeleri
+   ══════════════════════════════════════════════════════════════ */
+
+/* ─── FONT BOYUTLARI — Minimum okunabilirlik ─── */
+body {
+  font-size: clamp(15px, 1.05vw, 18px) !important;
+  line-height: 1.65 !important;
+}
+
+/* Küçük font sorunlarını düzelt */
+p, li, td, th, dd, dt, span, label, .content, .text, article {
+  font-size: clamp(14px, 1rem, 18px);
+  line-height: 1.6;
+}
+
+/* Başlıklar arası boşluk */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.6em;
+  line-height: 1.3;
+}
+
+h1 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+h2 { font-size: clamp(1.3rem, 2.4vw, 1.9rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
+
+/* ─── TABLOLAR — Modern, okunabilir, göz yormayan ─── */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  font-size: clamp(13px, 0.9rem, 16px);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+thead th, table th {
+  background: rgba(100,180,255,0.12) !important;
+  color: #e8eaed !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  padding: 12px 14px;
+  border-bottom: 2px solid rgba(100,180,255,0.25);
+  text-align: left;
+}
+
+tbody td, table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: #cdd6e0;
+  vertical-align: top;
+}
+
+tbody tr:hover {
+  background: rgba(100,180,255,0.06);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Tablo responsive */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  td, th {
+    min-width: 100px;
+    white-space: nowrap;
+  }
+}
+
+/* ─── RENK UYUMU — Koyu tema üzerinde okunabilirlik ─── */
+/* Beyaz arkaplan üzerinde koyu yazı */
+.light-bg, [style*="background:#fff"], [style*="background:white"], [style*="background-color:#fff"], [style*="background-color:white"] {
+  color: #1a1a2e !important;
+}
+
+.light-bg h1, .light-bg h2, .light-bg h3, .light-bg p,
+.light-bg td, .light-bg th, .light-bg li {
+  color: #1a1a2e !important;
+}
+
+/* Koyu arkaplan üzerinde açık yazı */
+body, .dark-bg {
+  color: #e0e4ea;
+}
+
+/* Link renkleri */
+a {
+  color: #64b5f6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: #90caf9;
+  text-decoration: underline;
+}
+
+/* ─── SPACING & LAYOUT ─── */
+.container, main, article, section, .content-wrapper {
+  padding-left: clamp(16px, 4vw, 48px);
+  padding-right: clamp(16px, 4vw, 48px);
+}
+
+/* Kartlar arası boşluk */
+.card, .game-card, .info-card, [class*="card"] {
+  margin-bottom: 1rem;
+}
+
+/* ─── SCROLL & OVERFLOW FIX ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* ─── MOBILE RESPONSIVE ─── */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px !important;
+  }
+  
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.1rem; }
+  
+  .container, main, article, section {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  /* Tablo mobil scroll */
+  table {
+    font-size: 12px;
+  }
+}
+
+/* ─── SIMÜLASYON SAYFALARI ─── */
+.sim-container, .sim-panel, .sim-controls {
+  font-size: clamp(13px, 0.9rem, 16px);
+  line-height: 1.5;
+}
+
+.sim-container h1, .sim-container h2 {
+  font-family: 'Chakra Petch', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Simülasyon butonları */
+.sim-btn, button, .btn, [type="button"], [type="submit"] {
+  font-size: clamp(13px, 0.85rem, 15px);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ─── İNFOGRAFİK SAYFALARI ─── */
+.infographic-text, .info-text, .desc {
+  font-size: clamp(14px, 1rem, 17px);
+  line-height: 1.7;
+  color: #d0d6e0;
+}
+
+/* ─── KÜLLIYAT & SÖZLÜK ─── */
+.entry, .definition, .term-body, .article-body {
+  font-size: clamp(15px, 1rem, 18px);
+  line-height: 1.75;
+  color: #e0e4ea;
+}
+
+/* ─── PANEL / VERİ SAYFALARI ─── */
+.data-panel, .filter-panel {
+  font-size: clamp(13px, 0.85rem, 15px);
+}
+
+.data-panel .item-title {
+  font-size: clamp(14px, 0.95rem, 16px);
+  font-weight: 600;
+}
+
+/* ─── YAZARLAR SAYFASI ─── */
+.author-card, .writer-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 1.2rem;
+}
+
+/* ─── GENEL İYİLEŞTİRMELER ─── */
+/* Görsel galeri placeholder */
+img[src=""], img:not([src]), img[src*="placeholder"] {
+  display: none;
+}
+
+/* Scroll indicator for overflowing content */
+.scroll-hint::after {
+  content: '→ kaydır';
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  display: block;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid #64b5f6;
+  outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(100,180,255,0.3);
+  color: #fff;
+}
+
+/* ─── PRINT STYLES ─── */
+@media print {
+  body { font-size: 12pt; color: #000; background: #fff; }
+  table { border: 1px solid #333; }
+  th, td { border: 1px solid #666; padding: 4px 8px; }
+  a { color: #000; text-decoration: underline; }
+}

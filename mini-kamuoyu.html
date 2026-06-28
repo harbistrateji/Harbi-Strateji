@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Kamuoyu Termometresi — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:440px;margin:0 auto;padding:16px 16px 80px}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;flex:1}
+.sval{font-size:18px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.stage-badge{text-align:center;margin-bottom:10px}
+.stage-pill{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid}
+.s1{border-color:var(--green);color:var(--green)}.s2{border-color:var(--gold);color:var(--gold)}.s3{border-color:var(--red);color:var(--red)}
+.thermo{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px;text-align:center}
+.thermo-title{font-size:12px;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.thermo-meter{height:20px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:8px;position:relative}
+.thermo-fill{height:100%;border-radius:10px;transition:width .3s}
+.thermo-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-bottom:8px}
+.thermo-val{font-size:32px;font-weight:700;margin-bottom:4px}
+.thermo-status{font-size:12px;color:var(--dim)}
+.news-card{background:rgba(0,224,255,.05);border:1px solid rgba(0,224,255,.2);border-radius:12px;padding:14px;margin-bottom:12px}
+.news-tag{font-size:10px;color:var(--cyan);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.news-text{font-size:14px;line-height:1.5;margin-bottom:8px}
+.news-impact{font-size:11px;color:var(--dim)}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.action-btn{padding:12px 8px;border:2px solid var(--line);border-radius:12px;background:var(--panel);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer;transition:.12s;text-align:center;line-height:1.3}
+.action-btn:active{transform:scale(.96)}
+.action-btn.selected{border-color:var(--cyan);background:rgba(0,224,255,.1);color:var(--cyan)}
+.action-btn.good{border-color:var(--green);background:rgba(0,255,136,.1)}
+.action-btn.bad{border-color:var(--red);background:rgba(224,21,21,.1)}
+.feedback{text-align:center;font-size:13px;min-height:18px;margin-bottom:8px}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:var(--cyan);color:#000;margin-bottom:8px}
+.overlay-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+.big{font-size:48px;font-weight:700;color:var(--cyan)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">📢 KAMUOYU TERMOMETRESİ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="stats">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--cyan)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-stage" style="color:var(--gold)">1/3</div><div class="slbl">AŞAMA</div></div>
+  <div class="sbox"><div class="sval" id="s-round" style="color:var(--green)">1/6</div><div class="slbl">TUR</div></div>
+  <div class="sbox"><div class="sval" id="s-time" style="color:var(--red)">—</div><div class="slbl">SÜRE</div></div>
+</div>
+<div class="stage-badge" id="stage-badge"></div>
+<div class="thermo" id="thermo">
+  <div class="thermo-title">📊 KAMUOYU DESTEĞİ</div>
+  <div class="thermo-meter"><div class="thermo-fill" id="thermo-fill" style="width:50%"></div></div>
+  <div class="thermo-labels"><span>❌ Karşı</span><span>⚖️ Nötr</span><span>✅ Destek</span></div>
+  <div class="thermo-val" id="thermo-val">50</div>
+  <div class="thermo-status" id="thermo-status">Destek dengede</div>
+</div>
+<div id="game-area"></div>
+</div>
+<script>
+var STAGES=[
+  {label:'AŞAMA 1 — BARIŞ DÖNEMİ',cls:'s1',sublabel:'Yavaş değişim · 15sn · 6 olay',
+   rounds:6,timeLimit:15,speed:1,minOk:40,maxOk:75,
+   events:[
+     {tag:'EKONOMİ',text:'Savunma bütçesi %15 artırıldı. Vatandaşlar sosyal harcama kesimine tepkili.',
+      actions:[
+        {label:'📢 Ekonomik fayda açıkla',delta:+8,pts:80},
+        {label:'🤫 Sessiz kal',delta:-5,pts:20},
+        {label:'🎯 Güvenlik vurgusu yap',delta:+5,pts:60},
+        {label:'💸 Sosyal yatırım vaat et',delta:+3,pts:40}
+      ]},
+     {tag:'MEDYA',text:'Muhalefet partisi askeri harcamaları eleştiriyor.',
+      actions:[
+        {label:'📊 Veri ile yanıt ver',delta:+10,pts:90},
+        {label:'😤 Sert karşılık ver',delta:-8,pts:10},
+        {label:'🤝 Diyalog teklif et',delta:+6,pts:70},
+        {label:'📰 Basın toplantısı',delta:+4,pts:50}
+      ]},
+     {tag:'ULUSLARARASI',text:'Müttefik ülke ortak tatbikat talep etti.',
+      actions:[
+        {label:'✅ Kabul et',delta:+7,pts:75},
+        {label:'❌ Reddet',delta:-10,pts:15},
+        {label:'🔄 Müzakere et',delta:+4,pts:55},
+        {label:'📢 Kamuoyuna duyur',delta:+5,pts:60}
+      ]}
+   ]},
+  {label:'AŞAMA 2 — GERİLİM',cls:'s2',sublabel:'Hızlı değişim · 12sn · 8 olay',
+   rounds:8,timeLimit:12,speed:1.5,minOk:35,maxOk:70,
+   events:[
+     {tag:'KRİZ',text:'Sınırda silahlı çatışma haberleri yayılıyor. Panik başladı.',
+      actions:[
+        {label:'🎙️ Acil açıklama yap',delta:+12,pts:100},
+        {label:'🔇 Bilgi kilit',delta:-15,pts:5},
+        {label:'🛡️ Güvenlik güvencesi',delta:+8,pts:80},
+        {label:'📡 Sosyal medya yönet',delta:+5,pts:60}
+      ]},
+     {tag:'KAYIP',text:'Askerî operasyonda kayıp haberi geldi.',
+      actions:[
+        {label:'💔 Şeffaf açıklama',delta:+6,pts:70},
+        {label:'🤐 Gizli tut',delta:-12,pts:10},
+        {label:'🎖️ Kahramanlık vurgusu',delta:+4,pts:55},
+        {label:'🏥 Destek programı',delta:+9,pts:85}
+      ]},
+     {tag:'DEZENFORMASYON',text:'Sosyal medyada yanlış bilgi hızla yayılıyor.',
+      actions:[
+        {label:'⚡ Anında çürüt',delta:+14,pts:110},
+        {label:'⏳ Bekle gör',delta:-8,pts:20},
+        {label:'🔍 Bağımsız doğrulama',delta:+10,pts:90},
+        {label:'📱 Platform bildirimi',delta:+6,pts:65}
+      ]}
+   ]},
+  {label:'AŞAMA 3 — SAVAŞ',cls:'s3',sublabel:'Çok hızlı · 8sn · 10 olay',
+   rounds:10,timeLimit:8,speed:2,minOk:30,maxOk:65,
+   events:[
+     {tag:'ACİL',text:'Başkent yakınında patlama sesi duyuldu. Halk panik halinde.',
+      actions:[
+        {label:'🚨 Acil yönetim devreye',delta:+15,pts:120},
+        {label:'📵 İletişim kes',delta:-20,pts:0},
+        {label:'🎙️ Canlı yayın',delta:+10,pts:90},
+        {label:'🏃 Tahliye emri',delta:+8,pts:80}
+      ]},
+     {tag:'PROPAGANDA',text:'Düşman devlet medyası manipülatif içerik yayıyor.',
+      actions:[
+        {label:'⚡ Karşı yayın başlat',delta:+12,pts:110},
+        {label:'🚫 Erişimi engelle',delta:+5,pts:60},
+        {label:'📢 Gerçeği anlat',delta:+14,pts:115},
+        {label:'🤝 Müttefik desteği',delta:+9,pts:85}
+      ]},
+     {tag:'KAYIP HABERI',text:'Ağır kayıp haberleri sızdı. Muhalefet fırsatçılık yapıyor.',
+      actions:[
+        {label:'💔 Şeffaflık + destek',delta:+10,pts:95},
+        {label:'⚖️ Hukuki süreç',delta:-5,pts:30},
+        {label:'🎖️ Fedakarlık vurgusu',delta:+7,pts:75},
+        {label:'🏥 Aile desteği programı',delta:+12,pts:105}
+      ]}
+   ]}
+];
+
+var stage=0,round=0,pts=0,support=50,timer=null,answered=false;
+
+function startStage(){
+  var s=STAGES[stage];
+  round=0;support=50;answered=false;
+  document.getElementById('stage-badge').innerHTML=
+    '<div class="stage-pill '+s.cls+'">'+s.label+'</div>'+
+    '<div style="font-size:11px;color:var(--dim);margin-top:4px">'+s.sublabel+'</div>';
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  updateThermo();
+  nextRound();
+}
+
+function nextRound(){
+  if(round>=STAGES[stage].rounds){endStage();return;}
+  var s=STAGES[stage];
+  answered=false;
+  var ev=s.events[round%s.events.length];
+  var timeLimit=s.timeLimit;
+  document.getElementById('s-round').textContent=(round+1)+'/'+s.rounds;
+  document.getElementById('s-time').textContent=timeLimit+'s';
+  clearInterval(timer);
+  timer=setInterval(function(){
+    timeLimit--;
+    document.getElementById('s-time').textContent=timeLimit+'s';
+    if(timeLimit<=0){clearInterval(timer);if(!answered)autoFail();}
+  },1000);
+  var html='<div class="news-card">';
+  html+='<div class="news-tag">📰 '+ev.tag+'</div>';
+  html+='<div class="news-text">'+ev.text+'</div>';
+  html+='<div class="news-impact">Kamuoyu tepkisi bekleniyor — doğru hamleyi seç!</div>';
+  html+='</div>';
+  html+='<div class="action-grid">';
+  ev.actions.forEach(function(a,i){
+    html+='<button class="action-btn" onclick="chooseAction('+i+','+a.delta+','+a.pts+',this)">'+a.label+'</button>';
+  });
+  html+='</div><div class="feedback" id="feedback"></div>';
+  document.getElementById('game-area').innerHTML=html;
+}
+
+function chooseAction(idx,delta,actionPts,btn){
+  if(answered)return;
+  answered=true;clearInterval(timer);
+  support=Math.max(0,Math.min(100,support+delta));
+  pts+=actionPts;
+  var s=STAGES[stage];
+  var ok=support>=s.minOk&&support<=s.maxOk;
+  btn.classList.add(delta>0?'good':'bad');
+  document.getElementById('feedback').innerHTML='<span style="color:'+(delta>0?'var(--green)':'var(--red)')+'">'+
+    (delta>0?'✅ Destek arttı: +'+delta:'❌ Destek düştü: '+delta)+'</span>';
+  updateThermo();updateStats();
+  if(support<=10){clearInterval(timer);endStage(true);return;}
+  round++;setTimeout(nextRound,1000);
+}
+
+function autoFail(){
+  answered=true;support=Math.max(0,support-10);
+  document.getElementById('feedback').innerHTML='<span style="color:var(--red)">⏱️ Süre doldu! -10 destek</span>';
+  updateThermo();round++;setTimeout(nextRound,1000);
+}
+
+function updateThermo(){
+  var s=STAGES[stage];
+  var ok=support>=s.minOk&&support<=s.maxOk;
+  document.getElementById('thermo-fill').style.width=support+'%';
+  document.getElementById('thermo-fill').style.background=support>60?'var(--green)':support>35?'var(--gold)':'var(--red)';
+  document.getElementById('thermo-val').textContent=support+'%';
+  document.getElementById('thermo-val').style.color=ok?'var(--green)':support<s.minOk?'var(--red)':'var(--gold)';
+  document.getElementById('thermo-status').textContent=ok?'✅ Destek dengede':support<s.minOk?'⚠️ Destek çok düşük!':'⚠️ Aşırı destek — sürdürülemez';
+}
+
+function endStage(crisis){
+  clearInterval(timer);
+  try{var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');sc['mobil-kamuoyu']=Math.max(sc['mobil-kamuoyu']||0,pts);localStorage.setItem('hs_scores',JSON.stringify(sc));}catch(e){}
+  var html='<div class="overlay-card"><div style="font-size:36px">'+(crisis?'💥':stage<2?'🎯':'🏆')+'</div>'+
+    '<div class="big">'+pts+'</div>'+
+    '<div style="font-size:13px;color:var(--dim)">'+(crisis?'Kamuoyu desteği çöktü!':stage<2?'Aşama '+(stage+1)+' tamamlandı!':'Tüm aşamalar tamamlandı!')+'</div>'+
+    '<div style="font-size:13px;color:var(--dim);margin-top:4px">Son destek: %'+support+'</div></div>';
+  document.getElementById('game-area').innerHTML=html;
+  if(!crisis&&stage<2){
+    var btn=document.createElement('button');btn.className='btn';
+    btn.textContent='▶ AŞAMA '+(stage+2);btn.onclick=function(){stage++;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  } else {
+    var btn=document.createElement('button');btn.className='btn';
+    btn.textContent='🔄 BAŞTAN OYNA';btn.onclick=function(){stage=0;pts=0;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  }
+}
+
+function updateStats(){
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+}
+
+startStage();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

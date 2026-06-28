@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Maliyet <em>Terazisi</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Maliyet <em>Terazisi</em></h1>
+  <p class="lead">Asimetrik maliyet-etki analizi — Saldırı ve savunma maliyetlerinin stratejik dengesini simüle edin.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">$50M</span><span class="lbl">Savunma</span></div><div class="hero-stat"><span class="num">$50K</span><span class="lbl">Saldırı</span></div><div class="hero-stat"><span class="num">1000:1</span><span class="lbl">Oran</span></div><div class="hero-stat"><span class="num">5</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+        
+        
+        <!-- GİRİŞ -->
+        <div id="intro-panel" class="panel">
+            <div class="panel-title">📋 BRİFİNG: Asimetrik Maliyet Savaşı</div>
+            <p style="font-size:0.9em; color:#aabbcc; margin-bottom:15px;">Siz ABD Savunma Bütçesi yöneticisisiniz. İran savaşı devam ediyor. Her gün harcama yapıyorsunuz ama İran çok daha az maliyetle saldırıyor. Bütçeniz tükenmeden savaşı sürdürebilecek misiniz?</p>
+            
+            <div class="formula-box">
+                <strong>Koyuncu Maliyet Asimetrisi Formülü:</strong><br>
+                Asimetri Oranı = Savunma Maliyeti / Saldırı Maliyeti<br>
+                Patriot ($2M) / Şahid-136 ($30K) = 66:1<br>
+                Iron Dome ($80K) / Roket ($800) = 100:1<br><br>
+                <strong>Sürdürülebilirlik:</strong> Bütçe / (Günlük Maliyet) = Maksimum Gün
+            </div>
+            
+            <button class="btn btn-primary" onclick="startSim()">⚖️ SİMÜLASYONU BAŞLAT</button>
+        </div>
+        
+        <!-- SİMÜLASYON -->
+        <div id="sim-panel" class="panel hidden">
+            <div class="panel-title">📊 SAVAŞ EKONOMİSİ PANELİ - Gün: <span id="day-counter">1</span>/365</div>
+            
+            <!-- Terazi -->
+            <div class="scale-container">
+                <div class="scale-pivot"></div>
+                <div class="scale-beam" id="scale-beam"></div>
+                <div class="scale-pan scale-pan-left" id="pan-left">$0</div>
+                <div class="scale-pan scale-pan-right" id="pan-right">$0</div>
+                <div class="scale-label scale-label-left">ABD Harcaması</div>
+                <div class="scale-label scale-label-right">İran Harcaması</div>
+                <div class="scale-base"></div>
+            </div>
+            
+            <!-- Bütçe -->
+            <div class="budget-grid">
+                <div class="budget-card">
+                    <h4>🇺🇸 ABD KALAN BÜTÇE</h4>
+                    <div class="budget-value" style="color:#ff3a4a;" id="us-budget">$100B</div>
+                    <div class="budget-bar"><div class="budget-fill" id="us-bar" style="width:100%; background:#ff3a4a;"></div></div>
+                </div>
+                <div class="budget-card">
+                    <h4>🇮🇷 İRAN KALAN BÜTÇE</h4>
+                    <div class="budget-value" style="color:#00E0FF;" id="iran-budget">$15B</div>
+                    <div class="budget-bar"><div class="budget-fill" id="iran-bar" style="width:100%; background:#00E0FF;"></div></div>
+                </div>
+            </div>
+            
+            <!-- Günlük Saldırı Senaryosu -->
+            <div class="panel-title" style="margin-top:15px;">🎯 GÜNLÜK SALDIRI - Savunma Stratejinizi Seçin</div>
+            <p style="font-size:0.85em; color:#aabbcc; margin-bottom:10px;" id="attack-desc">İran bugün 50 Şahid-136 dron + 5 balistik füze gönderiyor.</p>
+            
+            <div class="scenario-grid" id="defense-options">
+                <div class="scenario-card" onclick="selectDefense('full')">
+                    <div class="scenario-icon">🛡️</div>
+                    <div class="scenario-name">Tam Savunma</div>
+                    <div class="scenario-cost">Her hedefe karşılık</div>
+                </div>
+                <div class="scenario-card" onclick="selectDefense('selective')">
+                    <div class="scenario-icon">🎯</div>
+                    <div class="scenario-name">Seçici Savunma</div>
+                    <div class="scenario-cost">Sadece kritik hedefler</div>
+                </div>
+                <div class="scenario-card" onclick="selectDefense('passive')">
+                    <div class="scenario-icon">🏗️</div>
+                    <div class="scenario-name">Pasif Savunma</div>
+                    <div class="scenario-cost">Sığınak + tahliye</div>
+                </div>
+            </div>
+            
+            <!-- Slider: Saldırı Yoğunluğu -->
+            <div class="slider-container">
+                <div class="slider-label"><span>Saldırı Yoğunluğu</span><span id="intensity-val">Orta (50 dron/gün)</span></div>
+                <input type="range" min="1" max="5" value="3" id="intensity-slider" oninput="updateIntensity()">
+            </div>
+            
+            <button class="btn btn-primary" onclick="advanceDay()" id="advance-btn">📅 GÜNÜ İLERLET</button>
+            
+            <!-- Günlük Rapor -->
+            <div id="daily-report" class="hidden" style="margin-top:15px;">
+                <div class="result-bar-chart" id="daily-chart"></div>
+            </div>
+        </div>
+        
+        <!-- SONUÇ -->
+        <div id="result-panel" class="panel hidden">
+            <div class="panel-title">📊 SAVAŞ EKONOMİSİ SONUÇ RAPORU</div>
+            <div id="result-body"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        let state = {
+            day: 0,
+            usBudget: 100000, // $100B (milyon cinsinden)
+            iranBudget: 15000, // $15B
+            usSpent: 0,
+            iranSpent: 0,
+            defense: 'full',
+            intensity: 3,
+            casualties: 0,
+            intercepted: 0,
+            history: []
+        };
+        
+        const intensityLevels = [
+            { drones: 10, missiles: 1, label: 'Düşük (10 dron/gün)' },
+            { drones: 30, missiles: 3, label: 'Orta-Düşük (30 dron/gün)' },
+            { drones: 50, missiles: 5, label: 'Orta (50 dron/gün)' },
+            { drones: 100, missiles: 10, label: 'Yüksek (100 dron/gün)' },
+            { drones: 200, missiles: 20, label: 'Doygunluk (200 dron/gün)' }
+        ];
+        
+        function startSim() {
+            document.getElementById('intro-panel').classList.add('hidden');
+            document.getElementById('sim-panel').classList.remove('hidden');
+            updateDisplay();
+        }
+        
+        function selectDefense(type) {
+            state.defense = type;
+            document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+        
+        function updateIntensity() {
+            state.intensity = parseInt(document.getElementById('intensity-slider').value);
+            const level = intensityLevels[state.intensity - 1];
+            document.getElementById('intensity-val').textContent = level.label;
+            document.getElementById('attack-desc').textContent = `İran bugün ${level.drones} Şahid-136 dron + ${level.missiles} balistik füze gönderiyor.`;
+        }
+        
+        function advanceDay() {
+            state.day += 7; // 7 gün ileri
+            const level = intensityLevels[state.intensity - 1];
+            
+            let usDailyCost = 0;
+            let iranDailyCost = 0;
+            let interceptRate = 0;
+            let damage = 0;
+            
+            // İran maliyeti (7 gün)
+            iranDailyCost = (level.drones * 0.03 + level.missiles * 0.5) * 7; // $30K dron, $500K füze
+            
+            // ABD maliyeti (savunma stratejisine göre)
+            switch(state.defense) {
+                case 'full':
+                    usDailyCost = (level.drones * 2 + level.missiles * 4) * 7; // $2M Patriot per drone, $4M per missile
+                    interceptRate = 0.85;
+                    damage = Math.round(level.drones * 0.15 * 7 * 0.1); // %15 sızıntı
+                    break;
+                case 'selective':
+                    usDailyCost = (level.drones * 0.5 + level.missiles * 4) * 7; // Sadece kritik hedefler
+                    interceptRate = 0.60;
+                    damage = Math.round(level.drones * 0.4 * 7 * 0.05);
+                    break;
+                case 'passive':
+                    usDailyCost = (level.drones * 0.1 + level.missiles * 1) * 7; // Minimal aktif savunma
+                    interceptRate = 0.30;
+                    damage = Math.round(level.drones * 0.7 * 7 * 0.02);
+                    break;
+            }
+            
+            state.usBudget -= usDailyCost;
+            state.iranBudget -= iranDailyCost;
+            state.usSpent += usDailyCost;
+            state.iranSpent += iranDailyCost;
+            state.casualties += damage;
+            state.intercepted += Math.round(level.drones * interceptRate * 7);
+            
+            state.history.push({ day: state.day, usCost: usDailyCost, iranCost: iranDailyCost, ratio: (usDailyCost / Math.max(iranDailyCost, 1)).toFixed(1) });
+            
+            updateDisplay();
+            showDailyReport(usDailyCost, iranDailyCost, interceptRate, damage);
+            
+            // Oyun sonu kontrolü
+            if (state.usBudget <= 0 || state.iranBudget <= 0 || state.day >= 365) {
+                setTimeout(showResult, 2000);
+            }
+        }
+        
+        function updateDisplay() {
+            document.getElementById('day-counter').textContent = state.day;
+            document.getElementById('us-budget').textContent = `$${(state.usBudget / 1000).toFixed(1)}B`;
+            document.getElementById('iran-budget').textContent = `$${(state.iranBudget / 1000).toFixed(1)}B`;
+            document.getElementById('us-bar').style.width = Math.max(0, state.usBudget / 1000) + '%';
+            document.getElementById('iran-bar').style.width = Math.max(0, state.iranBudget / 150) + '%';
+            
+            // Terazi eğimi
+            let ratio = state.usSpent / Math.max(state.iranSpent, 1);
+            let angle = Math.min(15, Math.max(-15, (ratio - 10) * 1.5));
+            document.getElementById('scale-beam').style.transform = `translateX(-50%) rotate(${angle}deg)`;
+            document.getElementById('pan-left').textContent = `$${(state.usSpent / 1000).toFixed(1)}B`;
+            document.getElementById('pan-left').style.top = (90 + angle * 3) + 'px';
+            document.getElementById('pan-right').textContent = `$${(state.iranSpent / 1000).toFixed(1)}B`;
+            document.getElementById('pan-right').style.top = (90 - angle * 3) + 'px';
+        }
+        
+        function showDailyReport(usCost, iranCost, rate, damage) {
+            document.getElementById('daily-report').classList.remove('hidden');
+            let ratio = (usCost / Math.max(iranCost, 1)).toFixed(1);
+            document.getElementById('daily-chart').innerHTML = `
+                <div style="background:#1a2535; padding:12px; border-radius:8px;">
+                    <p style="font-size:0.85em; margin-bottom:8px;"><strong>Haftalık Rapor (Gün ${state.day}):</strong></p>
+                    <div class="chart-row">
+                        <div class="chart-label">ABD Harcama</div>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${Math.min(100, usCost/500)}%; background:#ff3a4a;">$${(usCost/1000).toFixed(1)}B</div></div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-label">İran Harcama</div>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${Math.min(100, iranCost/50)}%; background:#00E0FF;">$${(iranCost/1000).toFixed(2)}B</div></div>
+                    </div>
+                    <p style="font-size:0.8em; color:#C9A24B; margin-top:8px;">⚖️ Asimetri Oranı: <strong>${ratio}:1</strong> | 🎯 Önleme: %${(rate*100).toFixed(0)} | 💥 Hasar: ${damage} birim</p>
+                </div>
+            `;
+        }
+        
+        function showResult() {
+            document.getElementById('sim-panel').classList.add('hidden');
+            document.getElementById('result-panel').classList.remove('hidden');
+            
+            let winner = state.usBudget <= 0 ? 'İran (ABD bütçesi tükendi)' : state.iranBudget <= 0 ? 'ABD (İran bütçesi tükendi)' : 'Belirsiz (1 yıl doldu)';
+            let totalRatio = (state.usSpent / Math.max(state.iranSpent, 1)).toFixed(1);
+            
+            document.getElementById('result-body').innerHTML = `
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:20px;">
+                    <div style="background:#16202d; padding:15px; border-radius:8px; text-align:center;">
+                        <div style="font-size:1.8em; color:#ff3a4a;">$${(state.usSpent/1000).toFixed(1)}B</div>
+                        <div style="font-size:0.75em; color:#8899aa;">ABD Toplam Harcama</div>
+                    </div>
+                    <div style="background:#16202d; padding:15px; border-radius:8px; text-align:center;">
+                        <div style="font-size:1.8em; color:#00E0FF;">$${(state.iranSpent/1000).toFixed(1)}B</div>
+                        <div style="font-size:0.75em; color:#8899aa;">İran Toplam Harcama</div>
+                    </div>
+                    <div style="background:#16202d; padding:15px; border-radius:8px; text-align:center;">
+                        <div style="font-size:1.8em; color:#C9A24B;">${totalRatio}:1</div>
+                        <div style="font-size:0.75em; color:#8899aa;">Asimetri Oranı</div>
+                    </div>
+                </div>
+                
+                <div style="background:#1a2535; padding:15px; border-radius:8px; margin-bottom:15px; border-left:4px solid ${state.usBudget <= 0 ? '#ff3a4a' : '#00C48C'};">
+                    <h4 style="color:${state.usBudget <= 0 ? '#ff3a4a' : '#00C48C'};">Sonuç: ${winner}</h4>
+                    <p style="font-size:0.85em; color:#aabbcc; margin-top:8px;">${state.day} günde savaş ${state.usBudget <= 0 ? 'ABD için ekonomik olarak sürdürülemez hale geldi' : state.iranBudget <= 0 ? 'İran için ekonomik olarak sürdürülemez hale geldi' : 'kararsız kaldı - her iki taraf da yıprandı'}.</p>
+                </div>
+                
+                <div class="formula-box">
+                    <strong>Koyuncu Maliyet Asimetrisi Kanunu:</strong><br><br>
+                    "Savunma maliyeti saldırı maliyetinden yüksek olduğu sürece,<br>
+                    saldırgan stratejik avantajdadır."<br><br>
+                    Bu simülasyonda: ABD her $1'lık İran saldırısına karşı $${totalRatio} harcadı.<br>
+                    <strong>Sürdürülebilirlik sınırı: Asimetri > 20:1 ise savunma çöker.</strong>
+                </div>
+                
+                <div style="background:#1a2535; padding:15px; border-radius:8px; margin-bottom:15px;">
+                    <h4 style="color:#C9A24B; margin-bottom:8px;">💡 Trump Paradoksu Bağlantısı</h4>
+                    <p style="font-size:0.85em; color:#aabbcc;">Trump "bize hiçbir şeye mal olmuyor" derken, günlük $300-500M maliyet gerçeği göz ardı edilmektedir. 105 günde toplam maliyet: ~$42 Milyar. Bu, bilişsel savaşın "maliyet gizleme" boyutudur.</p>
+                </div>
+                
+                <div style="background:#1a2535; padding:15px; border-radius:8px; margin-bottom:15px;">
+                    <h4 style="color:#00E0FF; margin-bottom:8px;">🎯 Alternatif Stratejiler</h4>
+                    <p style="font-size:0.85em; color:#aabbcc;">
+                        <strong>1. Yönlendirilmiş Enerji:</strong> Lazer silahları atış başına $1-10 → Asimetri tersine döner<br>
+                        <strong>2. Sol Kaydırma:</strong> Fırlatıcıları vurmak → Saldırı kapasitesini azaltır<br>
+                        <strong>3. Diplomatik Çözüm:</strong> Maliyet sıfıra iner → En ucuz seçenek<br>
+                        <strong>4. Otonom Savunma:</strong> AI destekli seçici önleme → Maliyet %60 düşer
+                    </p>
+                </div>
+                
+                <button class="btn btn-primary" onclick="location.reload()">🔄 YENİDEN DENE</button>
+                <button class="btn btn-secondary" onclick="window.location='index.html'">← ANA MENÜ</button>
+            `;
+        }
+    
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

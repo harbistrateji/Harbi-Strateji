@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="hud">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Komutan Avı — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.top{position:sticky;top:0;z-index:60;background:rgba(10,15,23,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 20px}
+.top .in{max-width:700px;margin:0 auto;display:flex;align-items:center;gap:14px;min-height:52px}
+.back{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);text-decoration:none}.back:hover{color:#fff}
+.title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;flex:1;text-align:center}
+.hdr-score{font-size:12px;color:var(--gold);font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:700px;margin:0 auto;padding:24px 20px 80px}
+.game-header{text-align:center;margin-bottom:24px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(22px,5vw,36px);color:#fff}
+.game-header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:6px}
+.progress{height:4px;background:var(--panel2);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--red2));transition:width .3s;border-radius:2px}
+.clue-card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.clue-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--red2))}
+.clue-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:.12em;margin-bottom:8px}
+.clue-text{font-family:'IBM Plex Sans',sans-serif;font-size:15px;color:var(--tx);line-height:1.7;margin-bottom:12px}
+.clue-hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);padding:8px 12px;background:rgba(201,162,75,.06);border-radius:6px;border-left:2px solid var(--gold)}
+.timer{text-align:center;margin-bottom:16px}
+.timer-val{font-family:'Chakra Petch',sans-serif;font-size:36px;font-weight:700;color:var(--red2)}
+.timer-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+@media(max-width:500px){.options-grid{grid-template-columns:1fr}}
+.opt-btn{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;text-align:center}
+.opt-btn:hover{border-color:var(--gold);background:rgba(201,162,75,.05)}
+.opt-btn.correct{border-color:var(--green);background:rgba(0,255,136,.08)}
+.opt-btn.wrong{border-color:var(--red2);background:rgba(224,21,21,.08)}
+.opt-btn .name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:600;color:#fff}
+.opt-btn .era{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:4px}
+.reveal-card{display:none;background:linear-gradient(135deg,rgba(201,162,75,.08),rgba(196,30,58,.08));border:1px solid rgba(201,162,75,.2);border-radius:16px;padding:24px;margin:16px 0;text-align:center}
+.reveal-card.show{display:block}
+.reveal-card .icon{font-size:48px;margin-bottom:8px}
+.reveal-card h3{font-family:'Chakra Petch',sans-serif;font-size:20px;color:var(--gold);margin-bottom:8px}
+.reveal-card p{font-size:12px;color:var(--dim);line-height:1.7}
+.next-btn{display:none;margin:16px auto;padding:14px 28px;background:var(--gold);color:#000;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+.next-btn.show{display:block}
+.final-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.9);align-items:center;justify-content:center;padding:20px}
+.final-overlay.show{display:flex}
+.final-box{background:var(--panel);border:2px solid var(--gold);border-radius:20px;padding:36px;max-width:400px;width:100%;text-align:center}
+.final-box h2{font-family:'Chakra Petch',sans-serif;font-size:28px;color:var(--gold);margin-bottom:12px}
+.final-box .score{font-size:48px;font-weight:700;color:var(--green);margin:12px 0}
+.final-box p{font-size:13px;color:var(--dim);margin-bottom:16px}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;padding:12px 20px;border-radius:9px;border:none;cursor:pointer}
+.btn-gold{background:var(--gold);color:#000}
+.btn-outline{background:transparent;color:var(--dim);border:1px solid var(--line2)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="top"><div class="in">
+  <a href="oza-hub.html" class="back">← OZA</a>
+  <span class="title">🎯 Komutan Avı</span>
+  <span class="hdr-score" id="hdr-score">⭐ 0</span>
+</div></header>
+<div class="wrap">
+  <div class="game-header">
+    <h1>KOMUTAN AVI</h1>
+    <div class="sub">İPUÇLARINDAN KOMUTANI BUL · 15 ETAP · ZAMANLA YARIŞ</div>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="timer"><div class="timer-val" id="timer-val">15</div><div class="timer-lbl">Saniye</div></div>
+  <div id="clue-card" class="clue-card"></div>
+  <div id="options-grid" class="options-grid"></div>
+  <div id="reveal-card" class="reveal-card"></div>
+  <button id="next-btn" class="next-btn" onclick="nextRound()">Sonraki Komutan →</button>
+</div>
+<div id="final-overlay" class="final-overlay">
+  <div class="final-box">
+    <h2>Komutan Avı Tamamlandı!</h2>
+    <div class="score" id="final-score">0</div>
+    <p id="final-text"></p>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="location.reload()">Tekrar Oyna</button>
+      <a href="oza-hub.html" class="btn btn-outline">OZA'ya Dön</a>
+    </div>
+  </div>
+</div>
+<script src="hs-engine.js"></script>
+<script>
+var COMMANDERS=[
+  {name:'Mustafa Kemal Atatürk',era:'1881-1938',icon:'🇹🇷',
+   clues:['Çanakkale\'de "Ben size taarruzu değil, ölmeyi emrediyorum" dedi','Sakarya Meydan Muharebesi\'ni komuta etti','Büyük Taarruz ile İzmir\'e ulaştı','Türkiye Cumhuriyeti\'nin kurucusu'],
+   hint:'Türk Kurtuluş Savaşı\'nın başkomutanı',
+   bio:'Çanakkale\'den Sakarya\'ya, askeri deha ve devlet kurucusu. Modern Türkiye\'nin mimarı.',
+   options:['Mustafa Kemal Atatürk','İsmet İnönü','Fevzi Çakmak','Kazım Karabekir']},
+  {name:'Sun Tzu',era:'MÖ 544-496',icon:'🐉',
+   clues:['Savaş Sanatı adlı eserin yazarı','Aldatma savaşın temelidir dedi','Savaşmadan kazanmak en iyisidir felsefesi','Çinli askeri stratejist'],
+   hint:'Dünyanın en eski strateji kitabının yazarı',
+   bio:'2500 yıl önce yazılan Savaş Sanatı, hâlâ askeri akademilerde okutuluyor.',
+   options:['Sun Tzu','Konfüçyüs','Lao Tzu','Zhuge Liang']},
+  {name:'Napolyon Bonaparte',era:'1769-1821',icon:'🦅',
+   clues:['Austerlitz\'te 3 imparatoru yendi','Kolordu sistemini geliştirdi','Mısır Seferi\'ni yönetti','Waterloo\'da yenildi'],
+   hint:'Fransız İmparatoru ve askeri dahi',
+   bio:'Avrupa\'yı fetheden, kolordu sistemini icat eden, sonunda Waterloo\'da düşen askeri deha.',
+   options:['Napolyon Bonaparte','Wellington Dükü','Ney Mareşali','Kutuzov']},
+  {name:'Fatih Sultan Mehmet',era:'1432-1481',icon:'🏰',
+   clues:['21 yaşında İstanbul\'u fetti','Gemileri karadan yürüttü','Topçu teknolojisinde devrim yaptı','Orta Çağ\'ı bitirdi'],
+   hint:'Konstantinopolis\'i alan Osmanlı padişahı',
+   bio:'1453\'te Doğu Roma\'yı yıkan, Orta Çağ\'ı bitiren, yeni bir çağ başlatan fatih.',
+   options:['Fatih Sultan Mehmet','Kanuni Sultan Süleyman','Yavuz Sultan Selim','II. Murad']},
+  {name:'Hannibal Barca',era:'MÖ 247-183',icon:'🐘',
+   clues:['Alpler\'i fillerle geçti','Cannae\'de çifte kuşatma uyguladı','Roma\'yı 15 yıl tehdit etti','Kartacalı general'],
+   hint:'Roma\'nın en büyük kabusu olan Kartacalı',
+   bio:'Cannae çifte kuşatması 2200 yıl sonra hâlâ askeri akademilerde öğretiliyor.',
+   options:['Hannibal Barca','Scipio Africanus','Julius Caesar','Spartacus']},
+  {name:'Erwin Rommel',era:'1891-1944',icon:'🦊',
+   clues:['Çöl Tilkisi lakabıyla tanındı','Kuzey Afrika\'da İngilizlere karşı savaştı','Blitzkrieg taktiklerinin ustasıydı','Hitler suikastı sonrası intihara zorlandı'],
+   hint:'II. Dünya Savaşı\'nın en ünlü Alman generali',
+   bio:'Afrika Kolordusu komutanı, manevra savaşının ustası, trajik sonu ile tarihe geçti.',
+   options:['Erwin Rommel','Heinz Guderian','Erich von Manstein','Karl Dönitz']},
+  {name:'Cengiz Han',era:'1162-1227',icon:'🏹',
+   clues:['Tarihte en geniş kara imparatorluğunu kurdu','Moğol kabilelerini birleştirdi','Psikolojik savaşın öncüsüydü','Harezm İmparatorluğu\'nu yıktı'],
+   hint:'Moğol İmparatorluğu\'nun kurucusu',
+   bio:'30 milyon km²\'lik imparatorluk. Tarihte en büyük kara devletinin kurucusu.',
+   options:['Cengiz Han','Timur','Kubilay Han','Batu Han']},
+  {name:'John Boyd',era:'1927-1997',icon:'🔄',
+   clues:['OODA Döngüsü\'nü geliştirdi','Enerji-Manevra Teorisi\'ni formüle etti','F-16 savaş uçağının tasarımına katkıda bulundu','ABD Hava Kuvvetleri pilotu ve stratejisti'],
+   hint:'Modern savaş teorisinin en etkili düşünürü',
+   bio:'OODA Döngüsü ile karar üstünlüğünü formüle eden, Harb-i Strateji Kanunları\'nın temel referansı.',
+   options:['John Boyd','Carl von Clausewitz','Alfred Thayer Mahan','B.H. Liddell Hart']},
+  {name:'Alparslan',era:'1029-1072',icon:'⚔️',
+   clues:['Malazgirt Meydan Muharebesi\'ni kazandı','Anadolu\'nun kapılarını Türklere açtı','Bizans İmparatoru Romanos\'u esir aldı','Büyük Selçuklu sultanı'],
+   hint:'1071\'de Anadolu\'yu Türklere açan sultan',
+   bio:'Malazgirt zaferi, Türk tarihinin en kritik dönüm noktası. Anadolu\'nun fethi başladı.',
+   options:['Alparslan','Melikşah','Tuğrul Bey','Kılıç Arslan']},
+  {name:'Alexander (Büyük İskender)',era:'MÖ 356-323',icon:'🌍',
+   clues:['32 yaşında dünyanın bilinen kısmını fethetti','Gaugamela\'da Pers İmparatorluğu\'nu yıktı','Aristoteles\'in öğrencisiydi','Hindistan\'a kadar ilerledi'],
+   hint:'Makedonya kralı, tarihin en genç fatihi',
+   bio:'10 yılda Mısır\'dan Hindistan\'a uzanan imparatorluk. Tarihin en büyük askeri dehası.',
+   options:['Alexander','Darius III','Philip II','Pyrrhus']},
+  {name:'Barbaros Hayreddin Paşa',era:'1478-1546',icon:'⚓',
+   clues:['Preveze Deniz Muharebesi\'ni kazandı','Osmanlı Kaptan-ı Deryası','Akdeniz\'i Türk gölü yaptı','Andrea Doria\'yı yendi'],
+   hint:'Osmanlı\'nın efsanevi deniz komutanı',
+   bio:'Preveze zaferi ile Akdeniz hakimiyetini Osmanlı\'ya kazandıran büyük amiral.',
+   options:['Barbaros Hayreddin','Turgut Reis','Piri Reis','Kılıç Ali Paşa']},
+  {name:'Georgy Zhukov',era:'1896-1974',icon:'⭐',
+   clues:['Stalingrad\'da Alman 6. Ordu\'yu kuşattı','Berlin\'i alan Sovyet mareşali','Moskova savunmasını yönetti','II. Dünya Savaşı\'nın en başarılı Sovyet generali'],
+   hint:'Hitler\'i yenen Sovyet mareşali',
+   bio:'Moskova, Stalingrad, Kursk, Berlin — her kritik muharebede zafer kazanan komutan.',
+   options:['Georgy Zhukov','Konstantin Rokossovsky','Ivan Konev','Semyon Timoshenko']},
+  {name:'Khalid bin Walid',era:'592-642',icon:'⚔️',
+   clues:['Hiç yenilmedi — 100+ muharebe','Bizans ve Sasani ordularını yendi','Yermük Muharebesi\'nin kahramanı','Hz. Peygamber ona "Allah\'ın Kılıcı" dedi'],
+   hint:'İslam tarihinin yenilmez komutanı',
+   bio:'100\'den fazla muharebede yenilmeyen, iki süper gücü yıkan eşsiz askeri deha.',
+   options:['Khalid bin Walid','Amr ibn al-As','Saad bin Ebi Vakkas','Tarık bin Ziyad']},
+  {name:'Carl von Clausewitz',era:'1780-1831',icon:'📖',
+   clues:['"Savaş politikanın başka araçlarla devamıdır" dedi','Vom Kriege (Savaş Üzerine) eserini yazdı','Prusyalı general ve savaş filozofu','Sürtünme (friction) kavramını tanımladı'],
+   hint:'Modern savaş felsefesinin babası',
+   bio:'Savaş teorisinin en etkili düşünürü. "Savaş bir bukalemundur" sözüyle tanınır.',
+   options:['Carl von Clausewitz','Antoine-Henri Jomini','Helmuth von Moltke','Friedrich der Große']},
+  {name:'Timur (Aksak Timur)',era:'1336-1405',icon:'🗡️',
+   clues:['Ankara Muharebesi\'nde Yıldırım Bayezid\'ı yendi','Delhi\'den Şam\'a kadar fethetti','Semerkant\'ı başkent yaptı','Cengiz Han\'ın mirasçısı olduğunu iddia etti'],
+   hint:'Orta Asya\'dan dünyayı titreten fatih',
+   bio:'Moğol-Türk geleneğini sürdüren, 4 imparatorluğu yıkan, Semerkant\'ı ihtişamla donatan hükümdar.',
+   options:['Timur','Babür','Şah İsmail','Uzun Hasan']}
+];
+
+var currentRound=0, score=0, timeLeft=15, timer=null, answered=false;
+
+function shuffle(arr){
+  for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}
+  return arr;
+}
+
+function loadRound(){
+  answered=false;
+  timeLeft=15;
+  var cmd=COMMANDERS[currentRound];
+  var clueIdx=Math.min(currentRound%4, cmd.clues.length-1);
+  document.getElementById('clue-card').innerHTML='<div class="clue-num">İPUCU '+(clueIdx+1)+'/'+cmd.clues.length+'</div><div class="clue-text">'+cmd.clues[clueIdx]+'</div><div class="clue-hint">'+cmd.hint+'</div>';
+  var opts=shuffle([...cmd.options]);
+  var html='';
+  opts.forEach(function(o,i){
+    html+='<div class="opt-btn" id="opt-'+i+'" onclick="guess('+i+',\''+o.replace(/'/g,"\\'")+'\')"><div class="name">'+o+'</div></div>';
+  });
+  document.getElementById('options-grid').innerHTML=html;
+  document.getElementById('reveal-card').classList.remove('show');
+  document.getElementById('reveal-card').innerHTML='';
+  document.getElementById('next-btn').classList.remove('show');
+  document.getElementById('progress-fill').style.width=((currentRound/COMMANDERS.length)*100)+'%';
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  document.getElementById('timer-val').textContent=timeLeft;
+  document.getElementById('timer-val').style.color='var(--red2)';
+  timer=setInterval(function(){
+    timeLeft--;
+    document.getElementById('timer-val').textContent=timeLeft;
+    if(timeLeft<=5) document.getElementById('timer-val').style.color='var(--red)';
+    if(timeLeft<=0){clearInterval(timer);if(!answered) timeUp();}
+  },1000);
+}
+
+function timeUp(){
+  answered=true;
+  var cmd=COMMANDERS[currentRound];
+  // Highlight correct
+  var opts=document.querySelectorAll('.opt-btn');
+  opts.forEach(function(o){
+    if(o.querySelector('.name').textContent===cmd.name) o.classList.add('correct');
+  });
+  showReveal(false);
+}
+
+function guess(idx, name){
+  if(answered) return;
+  answered=true;
+  clearInterval(timer);
+  var cmd=COMMANDERS[currentRound];
+  var correct=(name===cmd.name);
+  var el=document.getElementById('opt-'+idx);
+  // Highlight correct answer
+  var opts=document.querySelectorAll('.opt-btn');
+  opts.forEach(function(o){
+    if(o.querySelector('.name').textContent===cmd.name) o.classList.add('correct');
+  });
+  if(!correct) el.classList.add('wrong');
+  if(correct){
+    var pts=10+timeLeft;
+    score+=pts;
+    if(typeof HS!=='undefined'){HS.addScore('komutan-avi',pts);HS.beepWin();}
+  } else {
+    if(typeof HS!=='undefined') HS.beepFail();
+  }
+  document.getElementById('hdr-score').textContent='⭐ '+(typeof HS!=='undefined'?HS.getTotalScore():score);
+  showReveal(correct);
+}
+
+function showReveal(correct){
+  var cmd=COMMANDERS[currentRound];
+  document.getElementById('reveal-card').innerHTML='<div class="icon">'+cmd.icon+'</div><h3>'+cmd.name+' ('+cmd.era+')</h3><p>'+cmd.bio+'</p>';
+  document.getElementById('reveal-card').classList.add('show');
+  document.getElementById('next-btn').classList.add('show');
+  if(currentRound>=COMMANDERS.length-1) document.getElementById('next-btn').textContent='Sonuçları Gör';
+}
+
+function nextRound(){
+  currentRound++;
+  if(currentRound>=COMMANDERS.length){
+    document.getElementById('final-score').textContent=score;
+    var pct=Math.round(score/(COMMANDERS.length*25)*100);
+    document.getElementById('final-text').textContent=pct>=80?'Askeri tarih uzmanı! Muhteşem!':pct>=50?'İyi bilgi. Daha fazlasını öğrenin!':'Komutanları tanımaya devam edin!';
+    document.getElementById('final-overlay').classList.add('show');
+    if(typeof HS!=='undefined'&&score>=150) HS.awardBadge('komutan-avi');
+  } else {
+    loadRound();
+  }
+}
+
+loadRound();
+</script>
+</body>
+</html>

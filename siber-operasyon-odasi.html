@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SİBER OPERASYON ODASI // BÜTÜNCÜL STRATEJİK MATRİS v5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #04060b;
+            color: #94a3b8;
+            overflow-x: hidden;
+        }
+        .cyber-font { font-family: 'Orbitron', sans-serif; }
+        .mono-font { font-family: 'Share Tech Mono', sans-serif; }
+        
+        /* CRT ve Tarama Çizgileri Simülasyonu */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
+            z-index: 99999;
+            opacity: 0.35;
+            pointer-events: none;
+            background-size: 100% 4px, 6px 100%;
+        }
+
+        /* İnteraktif Kart Tasarımları */
+        .interactive-card {
+            background: rgba(10, 15, 30, 0.75);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .interactive-card:hover {
+            transform: translateY(-4px);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.6);
+        }
+
+        .discourse-glow { border-left: 4px solid #ef4444 !important; }
+        .discourse-glow:hover { border-color: #f87171 !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+
+        .reality-glow { border-left: 4px solid #10b981 !important; }
+        .reality-glow:hover { border-color: #34d399 !important; box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+
+        @keyframes custom-pulse {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        .radar-pulse { animation: custom-pulse 2s infinite; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #04060b; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    </style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body class="antialiased pb-12">
+
+    <audio id="bgMusic" loop>
+        <source src="taiwan_emp_music.mp3" type="audio/mpeg">
+    </audio>
+
+    <header class="fixed top-0 left-0 w-full bg-slate-950/90 backdrop-blur-lg z-50 border-b border-slate-900 px-6 md:px-12 py-3 flex justify-between items-center text-xs tracking-widest mono-font">
+        <div class="flex items-center gap-3">
+            <div class="relative w-2 h-2">
+                <span class="absolute inset-0 rounded-full bg-cyan-500 radar-pulse"></span>
+                <span class="absolute inset-0 rounded-full bg-cyan-400 scale-75"></span>
+            </div>
+            <span class="text-slate-200 font-bold uppercase">STRATEGIC DATA ENGINE // FREKANS ANİMASYON MODÜLÜ</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button id="audioControl" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 px-4 py-1.5 rounded-lg text-slate-300 transition duration-200 text-[11px]">
+                <i class="fas fa-play" id="audioIcon"></i> <span id="audioText">MÜZİĞİ BAŞLAT</span>
+            </button>
+            <button id="freqBtn" class="bg-red-950/40 border border-red-900 text-red-400 px-4 py-1.5 rounded-lg hover:bg-red-900/40 transition duration-200 text-[11px] font-bold">
+                <i class="fas fa-wave-square"></i> FREKANS DEĞİŞTİR
+            </button>
+        </div>
+    </header>
+
+    <section class="pt-24 pb-4 px-6 md:px-16 lg:px-24 max-w-[1600px] mx-auto text-center md:text-left">
+        <div class="border border-slate-800 bg-slate-950/50 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <h1 class="cyber-font text-white font-black text-xl tracking-wider uppercase">YAPAY ZEKÂNIN ASKERİLEŞTİRİLMESİ ELEŞTİREL ÇERÇEVESİ</h1>
+                <p class="text-xs text-slate-400 mt-1 mono-font">2024–2026 Dönemi Doktrinlerinin, Kurumsal Ağların ve Operasyonel Bilgilerin Canlı Osiloskop Analizi</p>
+            </div>
+            <div class="flex gap-2 text-[10px] mono-font">
+                <span class="bg-red-950/30 text-red-400 border border-red-900/50 px-3 py-1 rounded-md">SOL PANEL: SÖYLEM</span>
+                <span class="bg-emerald-950/30 text-emerald-400 border border-emerald-900/50 px-3 py-1 rounded-md">SAĞ PANEL: DOĞRULANMIŞ GERÇEKLİK</span>
+            </div>
+        </div>
+    </section>
+
+    <main class="px-6 md:px-16 lg:px-24 max-w-[1600px] mx-auto mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+        
+        <article class="space-y-6">
+            
+            <div class="bg-red-950/10 border border-red-900/30 p-4 rounded-xl flex items-center justify-between">
+                <span class="cyber-font text-xs font-black text-red-500 tracking-widest uppercase"><i class="fas fa-circle text-[8px] mr-2 animate-ping"></i> SÖYLEM DÜZEYİ // FİLTRELENMEMİŞ MANŞETLER</span>
+                <i class="fas fa-bullhorn text-red-500/50"></i>
+            </div>
+
+            <div class="bg-slate-950 p-4 border border-slate-900 rounded-xl h-24 relative overflow-hidden">
+                <span class="absolute top-2 left-3 text-[9px] mono-font text-red-400 tracking-widest">// MEDYATİK SÖYLEM SİNYAL AKIŞI</span>
+                <canvas id="leftWave Canvas" class="w-full h-full opacity-80"></canvas>
+            </div>
+
+            <div class="interactive-card discourse-glow p-5 rounded-xl space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] mono-font text-red-400">// VERİ SETİ: 01 // DOKTRİNEL RETORİK</span>
+                    <span class="text-xs font-bold text-slate-500">Medyatik Algı</span>
+                </div>
+                <h3 class="cyber-font font-bold text-white text-sm uppercase tracking-wide">Yapay Zekâ Savaşı Söylemi ve Yenilmezlik İllüzyonu</h3>
+                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                    Kitle iletişim araçlarında ve popüler teknoloji analizlerinde, Rusya-Ukrayna savaşı, Doğu Akdeniz-Orta Doğu çatışma hatları ile Asya-Pasifik aksındaki küresel rekabet ele alınırken, algoritmalar insan denetiminin tamamen ötesinde konumlandırılmaktadır. Anlatılar operasyonların hatasız ve mutlak bir teknolojik çağda yürütüldüğü algısını yaymaktadır.
+                </p>
+            </div>
+
+            <div class="interactive-card discourse-glow p-5 rounded-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] mono-font text-red-400">// VERİ SETİ: 02 // OPERASYONEL HIZ BALONU</span>
+                    <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase">İran Operasyonu Taktik Hız Anlatısı</h4>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Basında yer alan iddialara göre, Şubat 2026'daki operasyonun ilk dört gününde iki binden fazla hedef tespit edilip vurulmuştur. Bu durum, geleneksel yöntemlerle yürütülen IŞİD operasyonlarındaki altı aylık sürece denk bir hızlanma olarak sunulmaktadır. Modellerin, hedef havuzlarını ve silah tahsislerini insan yardımı olmadan otonom bir hız rekoruyla ortaya koyduğu iddia edilmektedir.
+                </p>
+                <div class="bg-slate-950/80 p-3 rounded-lg border border-slate-900/60 h-40 relative">
+                    <canvas id="leftChart"></canvas>
+                </div>
+            </div>
+
+            <div class="interactive-card discourse-glow p-5 rounded-xl space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] mono-font text-red-400">// VERİ SETİ: 03 // KURUMSAL FİNANS AĞI</span>
+                    <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase">DAWG Bütçesi ve Savunma Teknolojisi Elitleri</h4>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Savunma Otonom Savaş Grubu'na (DAWG) tahsis edilen 54,6 milyar dolarlık bütçe talebi, tüm savunma sistemlerini otomatik olarak kusursuzlaştıracak bir finansal kalkan gibi nitelendirilmektedir. Silikon Vadisi sermaye ağları ile kurulan bu yapılanma, bütçenin mucizevi algoritmik korumalar sağlayacağını ileri sürmektedir.
+                </p>
+            </div>
+
+        </article>
+        
+        <article class="space-y-6">
+            
+            <div class="bg-emerald-950/10 border border-emerald-900/30 p-4 rounded-xl flex items-center justify-between">
+                <span class="cyber-font text-xs font-black text-emerald-500 tracking-widest uppercase"><i class="fas fa-check-circle text-[8px] mr-2"></i> KANITLANMIŞ VERİLER // STRATEJİK REALİTE</span>
+                <i class="fas fa-microchip text-emerald-500/50"></i>
+            </div>
+
+            <div class="bg-slate-950 p-4 border border-slate-900 rounded-xl h-24 relative overflow-hidden">
+                <span class="absolute top-2 left-3 text-[9px] mono-font text-emerald-400 tracking-widest">// ÇEKİRDEK FREKANS REALİTE AKIŞI</span>
+                <canvas id="rightWaveCanvas" class="w-full h-full opacity-80"></canvas>
+            </div>
+
+            <div class="interactive-card reality-glow p-5 rounded-xl space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] mono-font text-emerald-400">// DOĞRULAMA KODU: 01 // ALGORİTMİK LİMİTLER</span>
+                    <span class="text-xs font-bold text-emerald-500">Nesnel Analiz</span>
+                </div>
+                <h3 class="cyber-font font-bold text-white text-sm uppercase tracking-wide">İstihbarat Süzgeci ve Örüntü Çıkarma Katmanları</h3>
+                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                    Saha gerçekliği, yapay zekânın karar verici konumda olmadığını, yalnızca devasa istihbarat yığınları arasından örüntü çıkaran bir otomasyon katmanı olduğunu kanıtlamaktadır. Üretken Yapay Zekâ (Generative AI), tetiğe bağlı sistemlerde görev almaz; analistlerin doğal dilde sorgulama yürüttüğü akıllı bir **arayüz, analiz ve öneri mekanizması** olarak işlev görür. Coğrafi analiz ve hedef tespiti ise klasik Yapay Görme (Computer Vision) mimarileriyle yürütülmektedir.
+                </p>
+            </div>
+
+            <div class="interactive-card reality-glow p-5 rounded-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] mono-font text-emerald-400">// DOĞRULAMA KODU: 02 // GERÇEK ZAMAN PLANLAMASI</span>
+                    <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase">Hedefleme Döngüsünün Doğrulanmış Arka Planı</h4>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    İran operasyonunda elde edilen dört günlük yoğun sonuç, anlık algoritmik işlemlerle değil; istihbarat analistlerinin aylar öncesinden tek tek belirleyip veri tabanlarına işlediği **statik ve hazır hedef veri setleri** sayesinde gerçekleşmiştir. Bağlı platformlar, yalnızca bu mevcut verileri mühimmat tipleriyle hızlı bir şekilde tasnif etmiştir. İnsan operatör denetimi (Human-in-the-loop) her aşamada mevcuttur.
+                </p>
+                <div class="bg-slate-950/80 p-3 rounded-lg border border-slate-900/60 h-40 relative">
+                    <canvas id="rightChart"></canvas>
+                </div>
+            </div>
+
+            <div class="interactive-card reality-glow p-5 rounded-xl space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] mono-font text-emerald-400">// DOĞRULAMA KODU: 03 // SAHA DENEYİMLERİ</span>
+                    <h4 class="cyber-font text-xs font-bold text-slate-300 uppercase">Yıpratma Savaşı Çelişkisi ve Ucuz Platformlar</h4>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Bütçelerin büyük kısmının risk sermayesi ağlarının kontrolündeki test edilmemiş yazılımlara yönlendirilmesi eleştirilmektedir. Ukrayna'daki pratik saha deneyimleri; stratejik başarıyı milyar dolarlık karmaşık modellerin değil, sivil sanayi bileşenleriyle entegre edilen, ucuz, yıpranmaya dirençli, kayıplara dayanıklı ve çok sayıda üretilebilen dron sistemlerinin getirdiğini net bir şekilde ortaya koymaktadır.
+                </p>
+            </div>
+
+        </article>
+
+    </main>
+
+    <footer class="mt-12 border-t border-slate-900 pt-6 px-6 md:px-16 lg:px-24 max-w-[1600px] mx-auto text-center md:text-left text-[11px] mono-font uppercase tracking-widest text-slate-500 flex flex-col md:flex-row justify-between items-center gap-4">
+        <span>[ CENTRAL DECONSTRUCTION INTERACTIVE INTERFACE // CANLI FREKANS ANİMASYONU AKTİFTİR ]</span>
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Matris Kapsamı: 2024–2026 Dönemi Stratejik Akışları</span>
+        </div>
+    </footer>
+
+    <script>
+        const ctxLeft = document.getElementById('leftChart').getContext('2d');
+        const ctxRight = document.getElementById('rightChart').getContext('2d');
+
+        // Sol Grafik: Şişirilmiş Medya Hız Algısı
+        new Chart(ctxLeft, {
+            type: 'bar',
+            data: {
+                labels: ['Geleneksel Süreçler (6 Ay)', 'Medyatik Hız İddiası (4 Gün)'],
+                datasets: [{
+                    data: [180, 4],
+                    backgroundColor: ['rgba(148, 163, 184, 0.2)', 'rgba(239, 68, 68, 0.6)'],
+                    borderColor: ['rgba(148, 163, 184, 0.4)', '#ef4444'],
+                    borderWidth: 1,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#475569', font: { family: 'Share Tech Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.01)' } },
+                    x: { ticks: { color: '#94a3b8', font: { family: 'Share Tech Mono', size: 10 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Sağ Grafik: Gerçek Zaman Dağılımı
+        new Chart(ctxRight, {
+            type: 'bar',
+            data: {
+                labels: ['İstihbarat Toplama (Gün)', 'Algoritmik Filtreleme (Gün)', 'İnsan Doğrulama (Gün)'],
+                datasets: [{
+                    data: [120, 1, 3],
+                    backgroundColor: ['rgba(245, 158, 11, 0.4)', 'rgba(34, 197, 94, 0.5)', 'rgba(59, 130, 246, 0.4)'],
+                    borderColor: ['#f59e0b', '#10b981', '#3b82f6'],
+                    borderWidth: 1,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#475569', font: { family: 'Share Tech Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.01)' } },
+                    x: { ticks: { color: '#94a3b8', font: { family: 'Share Tech Mono', size: 10 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        // --- CANVAS OSİLOSKOP ANİMASYON MOTORU ---
+        const leftCanvas = document.getElementById('leftWave Canvas');
+        const rightCanvas = document.getElementById('rightWaveCanvas');
+        const lCtx = leftCanvas.getContext('2d');
+        const rCtx = rightCanvas.getContext('2d');
+
+        // Kanvas Çözünürlük Kalibrasyonu
+        function resizeCanvases() {
+            leftCanvas.width = leftCanvas.parentElement.clientWidth;
+            leftCanvas.height = leftCanvas.parentElement.clientHeight;
+            rightCanvas.width = rightCanvas.parentElement.clientWidth;
+            rightCanvas.height = rightCanvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        let lTime = 0;
+        let rTime = 0;
+        let speedMultiplier = 1;
+
+        function drawWaves() {
+            // Sol Kanvas Temizliği (Söylem - Kaotik Dalga)
+            lCtx.clearRect(0, 0, leftCanvas.width, leftCanvas.height);
+            lCtx.beginPath();
+            lCtx.lineWidth = 2;
+            lCtx.strokeStyle = '#ef4444';
+            
+            for (let x = 0; x < leftCanvas.width; x++) {
+                // Mod durumuna göre parazit ve genlik artışı (Kaotik dalga yapısı)
+                let noise = speedMultiplier > 1 ? Math.sin(x * 0.1 + lTime * 3) * 4 : 0;
+                let y = leftCanvas.height / 2 + Math.sin(x * 0.05 + lTime) * 12 * (speedMultiplier * 0.8) + noise;
+                if (x === 0) lCtx.moveTo(x, y); else lCtx.lineTo(x, y);
+            }
+            lCtx.stroke();
+
+            // Sağ Kanvas Temizliği (Gerçeklik - Stabil Çekirdek Sinüs Dalgası)
+            rCtx.clearRect(0, 0, rightCanvas.width, rightCanvas.height);
+            rCtx.beginPath();
+            rCtx.lineWidth = 2;
+            rCtx.strokeStyle = speedMultiplier > 1 ? '#34d399' : '#10b981';
+            
+            for (let x = 0; x < rightCanvas.width; x++) {
+                // Her durumda düzenli, pürüzsüz ve stabil sinüs akışı
+                let y = rightCanvas.height / 2 + Math.sin(x * 0.02 + rTime) * 10;
+                if (x === 0) rCtx.moveTo(x, y); else rCtx.lineTo(x, y);
+            }
+            rCtx.stroke();
+
+            lTime += 0.05 * speedMultiplier;
+            rTime += 0.03; // Realite frekansı hız baskısından bağımsız olarak stabil kalır
+            
+            requestAnimationFrame(drawWaves);
+        }
+        drawWaves();
+
+        // --- SES VE GERİLİM FREKANSI YÖNETİMİ ---
+        const audioControl = document.getElementById('audioControl');
+        const freqBtn = document.getElementById('freqBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+        
+        let isPlaying = false;
+        let isTenseMode = false;
+
+        function handleAudioPlay() {
+            if (!isPlaying) {
+                bgMusic.play().then(() => {
+                    audioIcon.className = "fas fa-pause text-green-400";
+                    audioText.innerText = "MÜZİĞİ DURDUR";
+                    isPlaying = true;
+                }).catch(err => console.log(err));
+            } else {
+                bgMusic.pause();
+                audioIcon.className = "fas fa-play";
+                audioText.innerText = "MÜZİĞİ BAŞLAT";
+                isPlaying = false;
+            }
+        }
+        audioControl.addEventListener('click', handleAudioPlay);
+
+        freqBtn.addEventListener('click', () => {
+            if (!isPlaying) handleAudioPlay();
+            
+            isTenseMode = !isTenseMode;
+            if (isTenseMode) {
+                bgMusic.playbackRate = 1.25; // Müziği %25 hızlandırır
+                speedMultiplier = 2.5;       // Sol kanvastaki animasyon dalgasını agresifleştirir
+                freqBtn.innerHTML = '<i class="fas fa-wave-square text-amber-400"></i> ÇEKİRDEK FREKANS';
+                freqBtn.className = "bg-emerald-950/40 border border-emerald-800 text-emerald-400 px-4 py-1.5 rounded-lg hover:bg-emerald-900/40 transition duration-200 text-[11px] font-bold";
+            } else {
+                bgMusic.playbackRate = 1.0;
+                speedMultiplier = 1.0;       // Dalga hareketini normale döndürür
+                freqBtn.innerHTML = '<i class="fas fa-wave-square"></i> FREKANS DEĞİŞTİR';
+                freqBtn.className = "bg-red-950/40 border border-red-900 text-red-400 px-4 py-1.5 rounded-lg hover:bg-red-900/40 transition duration-200 text-[11px] font-bold";
+            }
+        });
+    </script>
+</body>
+</html>

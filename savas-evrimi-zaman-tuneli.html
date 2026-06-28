@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savaşın Evrimi: İnteraktif Zaman Tüneli — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root{--bg:#0a0f17;--surface:#111827;--border:#1f2937;--accent:#f59e0b;--cyan:#00E0FF;--red:#c41e3a;}
+body{background:var(--bg);color:#f1f5f9;font-family:'IBM Plex Sans',sans-serif;margin:0;padding:0;}
+.tl-wrap{max-width:1100px;margin:0 auto;padding:20px;}
+.tl-header{text-align:center;padding:50px 20px 30px;}
+.tl-header h1{font-family:'Chakra Petch',sans-serif;font-size:2.4rem;background:linear-gradient(135deg,#f59e0b,#c41e3a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;}
+.tl-header p{color:#94a3b8;font-size:14px;}
+.tl-stats{display:flex;justify-content:center;gap:30px;margin:20px 0;flex-wrap:wrap;}
+.tl-stat{text-align:center;}
+.tl-stat .num{font-size:1.8rem;font-weight:700;color:var(--accent);font-family:'Chakra Petch',sans-serif;}
+.tl-stat .label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.1em;}
+.tl-filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 30px;padding:16px;background:var(--surface);border-radius:10px;border:1px solid var(--border);}
+.tl-filter{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;transition:all .2s;}
+.tl-filter:hover{border-color:#374151;color:#f1f5f9;}
+.tl-filter.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600;}
+.tl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:768px){.tl-grid{grid-template-columns:1fr;}}
+.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.tl-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,.1);}
+.tl-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--card-color,var(--accent));}
+.tl-card .year{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--card-color,var(--accent));margin-bottom:6px;}
+.tl-card .title{font-size:15px;font-weight:600;margin-bottom:6px;}
+.tl-card .desc{font-size:12px;color:#94a3b8;line-height:1.6;}
+.tl-card .tags{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;}
+.tl-card .tag{font-size:10px;padding:2px 8px;border-radius:3px;background:rgba(245,158,11,.1);color:var(--accent);border:1px solid rgba(245,158,11,.2);}
+.tl-detail{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;overflow-y:auto;padding:40px 20px;}
+.tl-detail.open{display:flex;align-items:flex-start;justify-content:center;}
+.tl-detail-inner{background:var(--surface);border:1px solid var(--border);border-radius:12px;max-width:700px;width:100%;padding:30px;position:relative;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tl-detail-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg);color:#f1f5f9;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.tl-detail-close:hover{border-color:var(--accent);}
+.tl-detail h2{font-family:'Chakra Petch',sans-serif;font-size:1.5rem;margin-bottom:8px;}
+.tl-detail .meta{font-size:12px;color:#64748b;margin-bottom:16px;}
+.tl-detail .content{font-size:13px;line-height:1.8;color:#cbd5e1;}
+.tl-detail .content p{margin-bottom:12px;}
+.tl-detail .impact{margin-top:16px;padding:12px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);border-radius:8px;}
+.tl-detail .impact h4{font-size:12px;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em;}
+.source-note{text-align:center;padding:20px;font-size:11px;color:#64748b;border-top:1px solid var(--border);margin-top:30px;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<script src="hs-nav.js?v=11"></script>
+<div class="tl-wrap">
+  <div class="tl-header">
+    <h1>Savaşın Evrimi: İnteraktif Zaman Tüneli</h1>
+    <p>1648 Westphalia'dan Yapay Zekâ Çağına — Savaş teknolojisi, doktrin ve stratejinin 400 yıllık dönüşümü</p>
+  </div>
+  <div class="tl-stats">
+    <div class="tl-stat"><div class="num">42</div><div class="label">Dönüm Noktası</div></div>
+    <div class="tl-stat"><div class="num">9</div><div class="label">Çağ</div></div>
+    <div class="tl-stat"><div class="num">378</div><div class="label">Yıl</div></div>
+    <div class="tl-stat"><div class="num">&#8734;</div><div class="label">Etki</div></div>
+  </div>
+    <div class="tl-filters" id="filters"></div>
+  <div class="tl-grid" id="grid"></div>
+  <div class="source-note">
+    Kaynak: Harb-i Strateji Kanunlari (Koyuncu &amp; Unlu) | Harb-i Strateji — 21. Yuzyil Savaslari ve Jeopolitik Akademisi | 2026
+  </div>
+</div>
+<div class="tl-detail" id="detail">
+  <div class="tl-detail-inner" id="detailInner">
+    <button class="tl-detail-close" onclick="closeDetail()">&#10005;</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+<script>
+const categories=[
+{id:'all',label:'T\u00fcm\u00fc',color:'#f59e0b'},
+{id:'westphalia',label:'Westphalia \u00c7a\u011f\u0131',color:'#8b5cf6'},
+{id:'napoleon',label:'Napolyon \u00c7a\u011f\u0131',color:'#ef4444'},
+{id:'industrial',label:'End\u00fcstri Devrimi',color:'#6366f1'},
+{id:'ww1',label:'I. D\u00fcnya Sava\u015f\u0131',color:'#dc2626'},
+{id:'ww2',label:'II. D\u00fcnya Sava\u015f\u0131',color:'#b91c1c'},
+{id:'coldwar',label:'So\u011fuk Sava\u015f',color:'#0ea5e9'},
+{id:'info',label:'Bilgi \u00c7a\u011f\u0131',color:'#10b981'},
+{id:'hybrid',label:'Hibrit Sava\u015f',color:'#f97316'},
+{id:'ai',label:'YZ \u00c7a\u011f\u0131',color:'#00E0FF'}
+];
+const events=[
+{id:'w1',year:'1648',title:'Westphalia Bar\u0131\u015f\u0131',cat:'westphalia',color:'#8b5cf6',desc:'Modern devlet sisteminin do\u011fu\u015fu. Egemenlik kavram\u0131, sava\u015f\u0131n devletler aras\u0131 ili\u015fki arac\u0131 olarak kurumsalla\u015fmas\u0131.',detail:'30 Y\u0131l Sava\u015flar\u0131\u2019n\u0131 sona erdiren antla\u015fma, modern uluslararas\u0131 ili\u015fkilerin temelini att\u0131. Devlet egemenli\u011fi, i\u00e7 i\u015flerine kar\u0131\u015fmama ve toprak b\u00fct\u00fcnl\u00fc\u011f\u00fc ilkeleri bu antla\u015fmayla do\u011fdu.',impact:'Devlet sistemi 378 y\u0131ld\u0131r ge\u00e7erli. BM \u015eart\u0131 bile Westphalia prensiplerini temel al\u0131r.'},
+{id:'w2',year:'1700-1721',title:'B\u00fcy\u00fck Kuzey Sava\u015f\u0131',cat:'westphalia',color:'#8b5cf6',desc:'\u0130sve\u00e7\u2019in d\u00fc\u015f\u00fc\u015f\u00fc, Rusya\u2019n\u0131n y\u00fckselisi. Deniz g\u00fcc\u00fc vs kara g\u00fcc\u00fc paradigmas\u0131.',detail:'Karl XII\u2019nin yenilgisi ve Petro\u2019nun reformlar\u0131 Avrupa g\u00fc\u00e7 dengesini k\u00f6kten de\u011fi\u015ftirdi. Rusya bir Avrupa g\u00fcc\u00fc olarak sahneye \u00e7\u0131kt\u0131.',impact:'Rusya\u2019n\u0131n Avrupa\u2019da s\u00f6z sahibi olmas\u0131 300 y\u0131l s\u00fcrecek bir jeopolitik ger\u00e7eklik yaratt\u0131.'},
+{id:'n1',year:'1789-1799',title:'Frans\u0131z Devrimi & Lev\u00e9e en Masse',cat:'napoleon',color:'#ef4444',desc:'Kitle ordular\u0131 \u00e7a\u011f\u0131n\u0131n ba\u015flang\u0131c\u0131. Vatanda\u015f-asker kavram\u0131, toplam sava\u015f ideolojisi.',detail:'Zorunlu askerlik ile ordular 100.000\u2019lerden milyonlara \u00e7\u0131kt\u0131. Sava\u015f art\u0131k profesyonel askerlerin de\u011fil, t\u00fcm ulusun meselesi oldu. Clausewitz\u2019in \u201csava\u015f politikan\u0131n devam\u0131d\u0131r\u201d tezi burada do\u011fdu.',impact:'Kitle ordular\u0131 I. D\u00fcnya Sava\u015f\u0131\u2019na kadar dominant paradigma oldu.'},
+{id:'n2',year:'1805',title:'Trafalgar & Austerlitz',cat:'napoleon',color:'#ef4444',desc:'Deniz hakimiyeti vs kara hakimiyeti ikilemi. Nelson\u2019un taktik dehas\u0131, Napolyon\u2019un operatif sanat\u0131.',detail:'Trafalgar\u2019da \u0130ngiliz deniz \u00fcst\u00fcnl\u00fc\u011f\u00fc kesinle\u015firken, Austerlitz\u2019te Napolyon kara sava\u015f\u0131n\u0131n zirvesini g\u00f6sterdi.',impact:'Deniz g\u00fcc\u00fc = k\u00fcresel g\u00fc\u00e7 form\u00fcl\u00fc 200 y\u0131l ge\u00e7erli kald\u0131. Bug\u00fcn uzay ve siber bu rol\u00fc \u00fcstleniyor.'},
+{id:'i1',year:'1853-1856',title:'K\u0131r\u0131m Sava\u015f\u0131',cat:'industrial',color:'#6366f1',desc:'\u0130lk modern sava\u015f: telgraf, demiryolu, foto\u011fraf muhabirli\u011fi, hem\u015firelik.',detail:'Telgraf ilk kez sava\u015f alan\u0131n\u0131 ba\u015fkente ba\u011flad\u0131. Demiryolu lojisti\u011fi devreye girdi. Florence Nightingale modern sava\u015f t\u0131bb\u0131n\u0131 kurdu.',impact:'Teknoloji + medya + kamuoyu \u00fc\u00e7geni ilk kez sava\u015f\u0131 \u015fekillendirdi.'},
+{id:'i2',year:'1861-1865',title:'Amerikan \u0130\u00e7 Sava\u015f\u0131',cat:'industrial',color:'#6366f1',desc:'End\u00fcstriyel sava\u015f\u0131n prototipi: yivli t\u00fcfek, z\u0131rhl\u0131 gemi, telgraf, toplam sava\u015f.',detail:'Mini\u00e9 mermisi ve yivli t\u00fcfek siperleri zorunlu k\u0131ld\u0131. Monitor vs Virginia ilk z\u0131rhl\u0131 deniz muharebesi. 620.000+ \u00f6l\u00fc.',impact:'I. D\u00fcnya Sava\u015f\u0131\u2019n\u0131n provas\u0131. End\u00fcstriyel \u00fcretim kapasitesi = sava\u015f g\u00fcc\u00fc form\u00fcl\u00fc kan\u0131tland\u0131.'},
+{id:'i3',year:'1870-1871',title:'Sedan Muharebesi & Alman Birli\u011fi',cat:'industrial',color:'#6366f1',desc:'Kurmay sistemi, demiryolu mobilizasyonu, Krupp toplar\u0131. Moltke\u2019nin planlama devrimi.',detail:'Prusya\u2019n\u0131n Fransa\u2019y\u0131 6 haftada yenmesi Avrupa\u2019y\u0131 \u015foke etti. Genel kurmay sistemi t\u00fcm modern ordulara model oldu.',impact:'Kurmay sistemi t\u00fcm modern ordulara model oldu. Alman birli\u011fi Avrupa g\u00fc\u00e7 dengesini 75 y\u0131l bozdu.'},
+{id:'ww1a',year:'1914',title:'I. D\u00fcnya Sava\u015f\u0131 Ba\u015flang\u0131c\u0131',cat:'ww1',color:'#dc2626',desc:'Makinal\u0131 t\u00fcfek + siper + dikenli tel = \u00e7\u0131kmaz. Schlieffen Plan\u0131\u2019n\u0131n \u00e7\u00f6k\u00fc\u015f\u00fc.',detail:'Makinal\u0131 t\u00fcfek savunmay\u0131 mutlak \u00fcst\u00fcn k\u0131ld\u0131. Marne\u2019da Schlieffen Plan\u0131 \u00e7\u00f6kt\u00fc, 4 y\u0131ll\u0131k siper sava\u015f\u0131 ba\u015flad\u0131.',impact:'Taarruz-savunma dengesi 100 y\u0131l boyunca askeri d\u00fc\u015f\u00fcncenin merkezinde kald\u0131.'},
+{id:'ww1b',year:'1915',title:'\u00c7anakkale: \u0130mk\u00e2ns\u0131z Savunma',cat:'ww1',color:'#dc2626',desc:'Deniz g\u00fcc\u00fcn\u00fcn kara savunmas\u0131na yenilmesi. Mustafa Kemal\u2019in liderlik dehas\u0131.',detail:'\u0130tilaf donanmas\u0131 Bo\u011fazlar\u0131 ge\u00e7emedi, kara \u00e7\u0131karmas\u0131 253.000 \u015fehitle durduruldu. Mustafa Kemal \u201cBen size taarruzu de\u011fil, \u00f6lmeyi emrediyorum\u201d dedi.',impact:'T\u00fcrk mill\u00ee bilincinin do\u011fu\u015fu. Amfibi harek\u00e2t\u0131n zorluklar\u0131 D-Day\u2019e kadar unutulmad\u0131.'},
+{id:'ww1c',year:'1916',title:'Somme & Verdun',cat:'ww1',color:'#dc2626',desc:'Y\u0131pratma sava\u015f\u0131n\u0131n zirvesi. 1 milyon+ kay\u0131p, 10 km ilerleme.',detail:'Somme\u2019un ilk g\u00fcn\u00fc 57.000 \u0130ngiliz kayb\u0131 \u2014 tarihin en kanl\u0131 g\u00fcn\u00fc. Verdun\u2019da Falkenhayn \u201cFransa\u2019y\u0131 kan kayb\u0131ndan \u00f6ld\u00fcrmek\u201d istedi.',impact:'\u201cBir daha asla\u201d duygusu Maginot Hatt\u0131\u2019n\u0131, appeasement\u2019\u0131 ve sonunda II. D\u00fcnya Sava\u015f\u0131\u2019n\u0131 do\u011furdu.'},
+{id:'ww1d',year:'1917-1918',title:'Tank, U\u00e7ak ve Yeni Doktrin',cat:'ww1',color:'#dc2626',desc:'Cambrai\u2019de tank, hava ke\u015ffi, infiltrasyon taktikleri. Siper \u00e7\u0131kmaz\u0131n\u0131n k\u0131r\u0131lmas\u0131.',detail:'Tank siperleri a\u015ft\u0131 ama g\u00fcvenilmezdi. U\u00e7aklar ke\u015fif ve taarruz rol\u00fc \u00fcstlendi. Alman Sturmtruppen infiltrasyon taktikleri Blitzkrieg\u2019in atas\u0131yd\u0131.',impact:'Mekanize sava\u015f, hava g\u00fcc\u00fc ve kombine silah doktrini II. D\u00fcnya Sava\u015f\u0131\u2019n\u0131n temelini olu\u015fturdu.'},
+{id:'ww2a',year:'1939-1940',title:'Blitzkrieg: Y\u0131ld\u0131r\u0131m Sava\u015f\u0131',cat:'ww2',color:'#b91c1c',desc:'Tank + u\u00e7ak + telsiz = manevra sava\u015f\u0131. Polonya 35 g\u00fcn, Fransa 46 g\u00fcn.',detail:'Guderian\u2019\u0131n panzer doktrini statik savunmay\u0131 anlams\u0131z k\u0131ld\u0131. OODA d\u00f6ng\u00fcs\u00fc h\u0131z\u0131 rakibi fel\u00e7 etti.',impact:'H\u0131z > k\u00fctle form\u00fcl\u00fc kan\u0131tland\u0131. Harb-i Strateji 3. Kanun: H\u0131z K\u00fctleyi Yener.'},
+{id:'ww2b',year:'1942-1943',title:'Stalingrad & Kursk',cat:'ww2',color:'#b91c1c',desc:'\u015eehir sava\u015f\u0131 ve derinlik savunmas\u0131. 6.000 tank, 2 milyon asker.',detail:'Stalingrad\u2019da Almanlar \u015fehir sava\u015f\u0131n\u0131n cehenneminde eridi. Kursk\u2019ta Sovyet derinlik savunmas\u0131 Blitzkrieg\u2019i durdurdu.',impact:'Derinlik savunmas\u0131 ve y\u0131pratma stratejisi h\u00e2l\u00e2 ge\u00e7erli. Ukrayna 2022 bunu kan\u0131tlad\u0131.'},
+{id:'ww2c',year:'1944',title:'D-Day: Tarihin En B\u00fcy\u00fck Amfibisi',cat:'ww2',color:'#b91c1c',desc:'156.000 asker, 5 sahil, hava indirme, aldatma operasyonu.',detail:'Normandiya \u00e7\u0131karmas\u0131 lojistik dehan\u0131n zirvesi. FORTITUDE aldatma operasyonu Almanlar\u0131 yan\u0131ltt\u0131.',impact:'Amfibi harek\u00e2t kapasitesi h\u00e2l\u00e2 s\u00fcper g\u00fc\u00e7 g\u00f6stergesi. Tayvan senaryosu D-Day\u2019in modern versiyonu.'},
+{id:'ww2d',year:'1945',title:'Hiro\u015fima & Nagasaki',cat:'ww2',color:'#b91c1c',desc:'N\u00fckleer \u00e7a\u011f\u0131n ba\u015flang\u0131c\u0131. Mutlak y\u0131k\u0131m kapasitesi, cayd\u0131r\u0131c\u0131l\u0131k doktrini.',detail:'Little Boy ve Fat Man 200.000+ sivili \u00f6ld\u00fcrd\u00fc. Sava\u015f art\u0131k insanl\u0131\u011f\u0131n sonunu getirebilir hale geldi. MAD doktrini do\u011fdu.',impact:'N\u00fckleer cayd\u0131r\u0131c\u0131l\u0131k 80 y\u0131ld\u0131r b\u00fcy\u00fck g\u00fc\u00e7 sava\u015f\u0131n\u0131 \u00f6nl\u00fcyor.'},
+{id:'c1',year:'1950-1953',title:'Kore Sava\u015f\u0131',cat:'coldwar',color:'#0ea5e9',desc:'S\u0131n\u0131rl\u0131 sava\u015f kavram\u0131. N\u00fckleer \u00e7a\u011fda konvansiyonel \u00e7at\u0131\u015fma.',detail:'N\u00fckleer silahlar kullan\u0131lamad\u0131, sava\u015f s\u0131n\u0131rl\u0131 kald\u0131. Jet sava\u015f\u0131 (MiG-15 vs F-86) ba\u015flad\u0131.',impact:'S\u0131n\u0131rl\u0131 sava\u015f doktrini So\u011fuk Sava\u015f boyunca ge\u00e7erli kald\u0131. Vek\u00e2let sava\u015flar\u0131n\u0131n prototipi.'},
+{id:'c2',year:'1962',title:'K\u00fcba F\u00fcze Krizi',cat:'coldwar',color:'#0ea5e9',desc:'N\u00fckleer e\u015fi\u011fe en yak\u0131n an. Cayd\u0131r\u0131c\u0131l\u0131k teorisinin stres testi.',detail:'13 g\u00fcn boyunca d\u00fcnya n\u00fckleer sava\u015f\u0131n e\u015fi\u011finde durdu. Kennedy ve Kru\u015f\u00e7ev\u2019in ileti\u015fimi felaketi \u00f6nledi.',impact:'Kriz y\u00f6netimi, t\u0131rmanma kontrol\u00fc ve ileti\u015fim kanallar\u0131 modern g\u00fcvenlik mimarisinin temeli oldu.'},
+{id:'c3',year:'1967',title:'Alt\u0131 G\u00fcn Sava\u015f\u0131',cat:'coldwar',color:'#0ea5e9',desc:'\u00d6nleyici sald\u0131r\u0131, hava \u00fcst\u00fcnl\u00fc\u011f\u00fc, h\u0131z. \u0130srail\u2019in OODA \u00fcst\u00fcnl\u00fc\u011f\u00fc.',detail:'\u0130srail 6 g\u00fcnde 3 cephede zafer kazand\u0131. \u0130lk g\u00fcn M\u0131s\u0131r hava kuvvetlerini yerde imha etti.',impact:'Hava \u00fcst\u00fcnl\u00fc\u011f\u00fc = sava\u015f \u00fcst\u00fcnl\u00fc\u011f\u00fc form\u00fcl\u00fc. \u00d6nleyici sald\u0131r\u0131 doktrini tart\u0131\u015fmas\u0131 h\u00e2l\u00e2 s\u00fcr\u00fcyor.'},
+{id:'c4',year:'1973',title:'Yom Kippur & PGM Devrimi',cat:'coldwar',color:'#0ea5e9',desc:'Hassas g\u00fcd\u00fcml\u00fc m\u00fchimmat (PGM) ilk kez belirleyici. SAM tehdidi.',detail:'M\u0131s\u0131r\u2019\u0131n Sagger ATGM\u2019leri \u0130srail tanklar\u0131n\u0131 vurdu. PGM sava\u015f\u0131 demokratikle\u015ftirdi.',impact:'PGM devrimi g\u00fcn\u00fcm\u00fcze kadar s\u00fcrd\u00fc. FPV dron bu trendin son halkas\u0131.'},
+{id:'c5',year:'1991',title:'K\u00f6rfez Sava\u015f\u0131: RMA',cat:'coldwar',color:'#0ea5e9',desc:'Askeri Devrim (RMA): GPS, stealth, PGM, C4ISR. 100 saat kara sava\u015f\u0131.',detail:'ABD teknolojik \u00fcst\u00fcnl\u00fc\u011f\u00fcn\u00fc kan\u0131tlad\u0131. F-117 stealth, Tomahawk cruise, GPS g\u00fcd\u00fcml\u00fc bombalar. Irak ordusu 100 saatte \u00e7\u00f6kt\u00fc.',impact:'RMA paradigmas\u0131 30 y\u0131l ABD askeri d\u00fc\u015f\u00fcncesini domine etti.'},
+{id:'i4',year:'2001-2021',title:'Afganistan & Irak: Asimetrik Sava\u015f',cat:'info',color:'#10b981',desc:'S\u00fcper g\u00fc\u00e7 vs gerilla. Teknolojik \u00fcst\u00fcnl\u00fck zafer garantisi de\u011fil.',detail:'ABD 20 y\u0131lda 8 trilyon dolar harcad\u0131. IED\u2019ler en \u00f6ld\u00fcr\u00fcc\u00fc silah oldu. Drone sava\u015f\u0131 ba\u015flad\u0131. Sonu\u00e7: Stratejik ba\u015far\u0131s\u0131zl\u0131k.',impact:'Harb-i Strateji 4. Kanun: Asimetri Do\u011fan\u0131n Yasas\u0131. G\u00fc\u00e7l\u00fc olan her zaman kazanmaz.'},
+{id:'i5',year:'2008',title:'Rusya-G\u00fcrcistan: 5 G\u00fcn Sava\u015f\u0131',cat:'info',color:'#10b981',desc:'Siber sald\u0131r\u0131 + konvansiyonel g\u00fc\u00e7. Hibrit sava\u015f\u0131n ilk \u00f6rne\u011fi.',detail:'Rusya siber sald\u0131r\u0131larla G\u00fcrcistan\u2019\u0131n ileti\u015fimini fel\u00e7 etti, ard\u0131ndan konvansiyonel g\u00fc\u00e7le girdi.',impact:'Hibrit sava\u015f kavram\u0131n\u0131n do\u011fu\u015fu. Rusya\u2019n\u0131n 2014 ve 2022 operasyonlar\u0131n\u0131n prototipi.'},
+{id:'i6',year:'2010',title:'Stuxnet: \u0130lk Siber Silah',cat:'info',color:'#10b981',desc:'ABD-\u0130srail ortak operasyonu. \u0130ran santrif\u00fcjlerini sabote eden ilk siber sald\u0131r\u0131.',detail:'Stuxnet \u0130ran\u2019\u0131n Natanz tesisindeki 1.000 santrif\u00fcj\u00fc tahrip etti. Fiziksel hasar veren ilk siber silah.',impact:'Siber silahlar art\u0131k her \u00fclkenin cephaneli\u011finde. Kritik altyap\u0131 sald\u0131r\u0131lar\u0131 yeni normal.'},
+{id:'h1',year:'2014',title:'K\u0131r\u0131m \u0130lhak\u0131: Gri B\u00f6lge',cat:'hybrid',color:'#f97316',desc:'Ye\u015fil adamlar, dezenformasyon, fait accompli. Hibrit sava\u015f\u0131n \u015faheseri.',detail:'Rusya resmi olmayan g\u00fc\u00e7lerle K\u0131r\u0131m\u2019\u0131 3 haftada ilhak etti. Medya manip\u00fclasyonu, siber sald\u0131r\u0131lar, yerel vekiller.',impact:'Gri b\u00f6lge operasyonlar\u0131 yeni norm. E\u015fik alt\u0131 sava\u015f konvansiyonel cayd\u0131r\u0131c\u0131l\u0131\u011f\u0131 bypass ediyor.'},
+{id:'h2',year:'2020',title:'\u0130kinci Karaba\u011f: Dron Devrimi',cat:'hybrid',color:'#f97316',desc:'TB2 + MAM-L = oyun de\u011fi\u015ftirici. Ermeni savunmas\u0131 44 g\u00fcnde \u00e7\u00f6kt\u00fc.',detail:'Azerbaycan\u2019\u0131n T\u00fcrk TB2 dronlar\u0131 Ermeni hava savunmas\u0131n\u0131, tanklar\u0131n\u0131 ve top\u00e7usunu imha etti.',impact:'Dron \u00e7a\u011f\u0131 resmen ba\u015flad\u0131. Ucuz, etkili, ink\u00e2r edilebilir. Sava\u015f\u0131n demokratikle\u015fmesi.'},
+{id:'h3',year:'2022-devam',title:'Rusya-Ukrayna: Tam Spektrum',cat:'hybrid',color:'#f97316',desc:'Konvansiyonel + siber + bili\u015fsel + dron + uzay. 21. y\u00fczy\u0131l sava\u015f\u0131n\u0131n laboratuvar\u0131.',detail:'FPV dronlar 500$\u2019a tank imha ediyor. Starlink ileti\u015fimi sa\u011fl\u0131yor. HIMARS hassas at\u0131\u015f yap\u0131yor. Her \u015fey ayn\u0131 anda.',impact:'T\u00fcm sava\u015f teorileri test ediliyor. Y\u0131pratma + teknoloji + irade \u00fc\u00e7geni belirleyici.'},
+{id:'h4',year:'2023',title:'\u0130srail-Hamas: \u015eehir Sava\u015f\u0131 2.0',cat:'hybrid',color:'#f97316',desc:'T\u00fcnel sava\u015f\u0131, sivil kalkan, bili\u015fsel sava\u015f, YZ hedefleme.',detail:'Hamas\u2019\u0131n 7 Ekim s\u00fcrpriz sald\u0131r\u0131s\u0131 istihbarat ba\u015far\u0131s\u0131zl\u0131\u011f\u0131. Lavender YZ sistemi hedef belirledi.',impact:'\u015eehir sava\u015f\u0131 + t\u00fcnel + sivil n\u00fcfus = \u00e7\u00f6z\u00fcms\u00fcz denklem. YZ eti\u011fi tart\u0131\u015fmas\u0131 zirveye \u00e7\u0131kt\u0131.'},
+{id:'a1',year:'2024',title:'YZ Hedefleme Sistemleri',cat:'ai',color:'#00E0FF',desc:'Project Maven, Lavender, JADC2. Karar h\u0131z\u0131 saniyeye indi.',detail:'ABD Project Maven ile YZ hedef tan\u0131ma ba\u015flatt\u0131. JADC2 t\u00fcm sens\u00f6rleri ba\u011fl\u0131yor. OODA d\u00f6ng\u00fcs\u00fc dakikalardan saniyelere indi.',impact:'\u0130nsan karar d\u00f6ng\u00fcs\u00fcnden \u00e7\u0131k\u0131yor mu? Harb-i Strateji 3. Kanun: H\u0131z K\u00fctleyi Yener.'},
+{id:'a2',year:'2024-2025',title:'FPV Dron S\u00fcr\u00fcleri',cat:'ai',color:'#00E0FF',desc:'500$ dron vs 5M$ tank. S\u00fcr\u00fc zekas\u0131 savunmay\u0131 doyuruyor.',detail:'Ukrayna\u2019da g\u00fcnde 3.000+ FPV dron kullan\u0131l\u0131yor. S\u00fcr\u00fc dronlar koordineli sald\u0131r\u0131 yap\u0131yor.',impact:'Kara sava\u015f\u0131n\u0131n gelece\u011fi belirsiz. Tank, z\u0131rhl\u0131 ara\u00e7 konsepti sorgulan\u0131yor.'},
+{id:'a3',year:'2025',title:'Deniz Dronlar\u0131: Karadeniz Dersleri',cat:'ai',color:'#00E0FF',desc:'Ukrayna USV\u2019leri Rus Karadeniz Filosu\u2019nu fel\u00e7 etti.',detail:'Magura V5 ve Sea Baby deniz dronlar\u0131 Rus sava\u015f gemilerini bat\u0131rd\u0131. Maliyet: 1 USV = $250K vs 1 f\u0131rkateyn = $500M.',impact:'Deniz sava\u015f\u0131n\u0131n gelece\u011fi insans\u0131z. B\u00fcy\u00fck su \u00fcst\u00fc gemileri savunmas\u0131z m\u0131?'},
+{id:'a4',year:'2025-2026',title:'Otonom Silah Sistemleri (LAWS)',cat:'ai',color:'#00E0FF',desc:'\u0130nsan d\u00f6ng\u00fcde mi, d\u00f6ng\u00fc \u00fczerinde mi? Etik ve hukuki tart\u0131\u015fma.',detail:'Tam otonom silahlar geli\u015ftiriliyor. T\u00fcrkiye\u2019nin Kargu-2 sistemi ilk otonom sald\u0131r\u0131y\u0131 ger\u00e7ekle\u015ftirdi (Libya 2020).',impact:'Sava\u015f\u0131n eti\u011fi k\u00f6kten de\u011fi\u015fiyor. Yapay zek\u00e2 sava\u015f su\u00e7u i\u015fleyebilir mi?'},
+{id:'a5',year:'2026',title:'Hipersonik Silahlar & Cayd\u0131r\u0131c\u0131l\u0131k',cat:'ai',color:'#00E0FF',desc:'Mach 5+ h\u0131z, mevcut savunma sistemlerini a\u015f\u0131yor.',detail:'Rusya Zircon, \u00c7in DF-ZF, ABD LRHW geli\u015ftiriyor. T\u00fcrkiye Tayfun program\u0131. Hipersonik silahlar mevcut hava savunmas\u0131n\u0131 ge\u00e7ersiz k\u0131l\u0131yor.',impact:'N\u00fckleer cayd\u0131r\u0131c\u0131l\u0131k dengesi bozuluyor mu? First-strike avantaj\u0131 art\u0131yor.'},
+{id:'a6',year:'2026+',title:'Kuantum Bili\u015fim & \u015eifre K\u0131rma',cat:'ai',color:'#00E0FF',desc:'Q-Day: Mevcut \u015fifrelemenin \u00e7\u00f6kt\u00fc\u011f\u00fc g\u00fcn.',detail:'Kuantum bilgisayarlar RSA/AES \u015fifrelemeyi k\u0131rabilir. Post-kuantum kriptografi yar\u0131\u015f\u0131 ba\u015flad\u0131.',impact:'Dijital g\u00fcvenli\u011fin temeli sars\u0131l\u0131yor. Kuantum \u00fcst\u00fcnl\u00fc\u011f\u00fc = istihbarat \u00fcst\u00fcnl\u00fc\u011f\u00fc.'},
+{id:'a7',year:'2027-2030',title:'Uzay Sava\u015f\u0131: Y\u00f6r\u00fcnge H\u00e2kimiyeti',cat:'ai',color:'#00E0FF',desc:'Anti-uydu silahlar\u0131, uzay kuvvetleri, mega tak\u0131my\u0131ld\u0131zlar.',detail:'ABD Space Force, \u00c7in PLA-SSF, Rusya VKS uzay birlikleri kurdu. ASAT silahlar\u0131 test edildi.',impact:'Uzay yeni y\u00fcksek zemin. Kim y\u00f6r\u00fcngeyi kontrol ederse, sava\u015f alan\u0131n\u0131 kontrol eder.'},
+{id:'a8',year:'2030+',title:'\u0130nsan-Makine Tak\u0131mlar\u0131',cat:'ai',color:'#00E0FF',desc:'Loyal Wingman, MUM-T, insan-YZ simbiyozu.',detail:'CCA (Collaborative Combat Aircraft) insanl\u0131 u\u00e7a\u011fa e\u015flik eden otonom dronlar. \u0130nsan strateji belirliyor, makine icra ediyor.',impact:'Sava\u015f\u0131n gelece\u011fi: Az insan + \u00e7ok makine. Say\u0131sal \u00fcst\u00fcnl\u00fck art\u0131k robot say\u0131s\u0131.'},
+{id:'a9',year:'2035+',title:'Yapay Genel Zek\u00e2 (AGI) & Sava\u015f',cat:'ai',color:'#00E0FF',desc:'AGI stratejik planlama yapabilir mi? Singularity ve askeri sonu\u00e7lar\u0131.',detail:'AGI insan d\u00fczeyinde genel zek\u00e2 demek. Askeri AGI ilk geli\u015ftiren \u00fclke mutlak \u00fcst\u00fcnl\u00fck elde eder mi?',impact:'\u0130nsanl\u0131k tarihinin en b\u00fcy\u00fck g\u00fc\u00e7 asimetrisi. Kontrol sorunu \u00e7\u00f6z\u00fclmezse varolus\u015fal risk.'}
+];
+
+const filtersEl=document.getElementById('filters');
+categories.forEach(cat=>{
+const btn=document.createElement('button');
+btn.className='tl-filter'+(cat.id==='all'?' active':'');
+btn.textContent=cat.label;
+btn.onclick=()=>{
+document.querySelectorAll('.tl-filter').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+renderGrid(cat.id==='all'?null:cat.id);
+};
+filtersEl.appendChild(btn);
+});
+
+function renderGrid(filter){
+const grid=document.getElementById('grid');
+const filtered=filter?events.filter(e=>e.cat===filter):events;
+grid.innerHTML='';
+filtered.forEach(ev=>{
+const card=document.createElement('div');
+card.className='tl-card';
+card.style.setProperty('--card-color',ev.color);
+card.innerHTML=`<div class="year">${ev.year}</div><div class="title">${ev.title}</div><div class="desc">${ev.desc}</div><div class="tags"><span class="tag" style="background:${ev.color}20;color:${ev.color};border-color:${ev.color}40">${categories.find(c=>c.id===ev.cat).label}</span></div>`;
+card.onclick=()=>openDetail(ev);
+grid.appendChild(card);
+});
+}
+
+function openDetail(ev){
+const cat=categories.find(c=>c.id===ev.cat);
+document.getElementById('detailContent').innerHTML=`
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:${ev.color}20;color:${ev.color};border:1px solid ${ev.color}40">${cat.label}</span>
+<span style="font-size:12px;color:#64748b;font-family:'IBM Plex Mono',monospace">${ev.year}</span>
+</div>
+<h2 style="color:${ev.color}">${ev.title}</h2>
+<div class="meta">${ev.desc}</div>
+<div class="content"><p>${ev.detail}</p></div>
+<div class="impact"><h4>Stratejik Etki</h4><p style="font-size:12px;color:#cbd5e1;margin:0">${ev.impact}</p></div>`;
+document.getElementById('detail').classList.add('open');
+}
+
+function closeDetail(){document.getElementById('detail').classList.remove('open');}
+document.getElementById('detail').onclick=(e)=>{if(e.target===document.getElementById('detail'))closeDetail();};
+renderGrid(null);
+</script>
+</body>
+</html>

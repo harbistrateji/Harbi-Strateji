@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zihin Savaşları - İnteraktif İnfografik | Selahaddin Koyuncu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --dark-bg: #0F1B3C;
+            --electric-blue: #00D9FF;
+            --gold: #FFB800;
+            --white: #FFFFFF;
+            --red: #FF4444;
+            --green: #44FF44;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0a0f1f 100%);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(15, 27, 60, 0.95);
+            border-bottom: 3px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--electric-blue), var(--red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            color: var(--electric-blue);
+            font-size: 0.9rem;
+        }
+        
+        /* Main */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Comparison Section */
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .comparison-box {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .comparison-box:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .comparison-box h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .comparison-box:nth-child(1) h2 {
+            color: #FFB800;
+        }
+        
+        .comparison-box:nth-child(2) h2 {
+            color: #FF4444;
+        }
+        
+        .comparison-item {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 3px solid var(--electric-blue);
+            border-radius: 5px;
+        }
+        
+        .comparison-item strong {
+            color: var(--electric-blue);
+        }
+        
+        .comparison-item p {
+            color: #ccc;
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Layers Section */
+        .layers-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .layers-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .layers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .layer {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .layer:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .layer-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .layer h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--electric-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .layer p {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .layer-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .layer:hover .layer-details {
+            max-height: 200px;
+        }
+        
+        .layer-details p {
+            color: var(--electric-blue);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Technologies Section */
+        .tech-section {
+            margin-bottom: 3rem;
+        }
+        
+        .tech-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .tech-card {
+            background: rgba(26, 42, 74, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-card:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tech-card h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .tech-card p {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+        
+        /* Threats Section */
+        .threats-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--red);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .threats-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--red);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--red);
+            padding-bottom: 1rem;
+        }
+        
+        .threat-item {
+            background: rgba(15, 27, 60, 0.8);
+            border-left: 4px solid var(--red);
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .threat-item:hover {
+            background: rgba(255, 68, 68, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .threat-item h4 {
+            color: var(--red);
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .threat-item p {
+            color: #ccc;
+        }
+        
+        /* Defense Section */
+        .defense-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--green);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .defense-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--green);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--green);
+            padding-bottom: 1rem;
+        }
+        
+        .defense-level {
+            margin-bottom: 1.5rem;
+        }
+        
+        .defense-level h4 {
+            color: var(--green);
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .defense-item {
+            background: rgba(15, 27, 60, 0.8);
+            border-left: 4px solid var(--green);
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            color: #ccc;
+        }
+        
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 27, 60, 0.98);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
+            animation: popupIn 0.3s ease-out;
+        }
+        
+        @keyframes popupIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .popup.active {
+            display: block;
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .popup-overlay.active {
+            display: block;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--electric-blue);
+            background: transparent;
+            color: var(--electric-blue);
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-close:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+        }
+        
+        .popup h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .popup p {
+            color: #ccc;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+        
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--electric-blue);
+            background: rgba(15, 27, 60, 0.9);
+            color: var(--electric-blue);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(15, 27, 60, 0.95);
+            border-top: 2px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            color: #999;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.3rem; }
+            .comparison-section { grid-template-columns: 1fr; }
+            .layers-grid { grid-template-columns: 1fr; }
+            .tech-grid { grid-template-columns: 1fr; }
+            .popup { max-width: 90%; }
+        }
+    
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+    <header>
+        <h1>🧠 Zihin Savaşları - İnteraktif İnfografik</h1>
+        <p>NATO Raporu & Geleceğin Tehditleri | Tıklayarak detayları keşfedin</p>
+    </header>
+
+    <main>
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <div class="comparison-box" onclick="showPopup('psyops')">
+                <h2>📻 PSYOPS</h2>
+                <div class="comparison-item">
+                    <strong>Davranış Değişimi:</strong>
+                    <p>Tutum ve duygusal tepkileri değiştirir</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Yaygınlık:</strong>
+                    <p>20. yüzyılda yaygın olarak kullanılmıştır</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Hedef Kitle:</strong>
+                    <p>Geniş kitleyi hedef alır</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Mesajlaşma:</strong>
+                    <p>Doğrusal mesajlaşma</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Geri Bildirim:</strong>
+                    <p>Yavaş geri bildirim döngüleri</p>
+                </div>
+            </div>
+            
+            <div class="comparison-box" onclick="showPopup('cognitive')">
+                <h2>🧠 Bilişsel Savaş</h2>
+                <div class="comparison-item">
+                    <strong>Bilişsel Hedef:</strong>
+                    <p>Bilişsel yetenekleri doğrudan hedef alır</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Dönem:</strong>
+                    <p>21. yüzyıl dijital çağı</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Hedef Kitle:</strong>
+                    <p>Mikro-hedefli operasyonlar</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Adaptasyon:</strong>
+                    <p>Adaptif ve doğrusal olmayan</p>
+                </div>
+                <div class="comparison-item">
+                    <strong>Geri Bildirim:</strong>
+                    <p>Gerçek zamanlı geri bildirim</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layers Section -->
+        <div class="layers-section">
+            <h2>🎯 Bilişsel Savaşın 3 Katmanı</h2>
+            <div class="layers-grid">
+                <div class="layer" onclick="showPopup('layer1')">
+                    <div class="layer-number">1️⃣</div>
+                    <h3>Psikolojik Katman</h3>
+                    <p>Zihin Kontrolü</p>
+                    <div class="layer-details">
+                        <p><strong>PSYOPS:</strong> Propaganda, kültürel manipülasyon</p>
+                        <p><strong>Bilişsel:</strong> Duygusal hedefleme, davranış mühendisliği</p>
+                    </div>
+                </div>
+                
+                <div class="layer" onclick="showPopup('layer2')">
+                    <div class="layer-number">2️⃣</div>
+                    <h3>Siber Katman</h3>
+                    <p>Bilgi Dağıtımı</p>
+                    <div class="layer-details">
+                        <p><strong>PSYOPS:</strong> Yayın ağları, elektronik savaş</p>
+                        <p><strong>Bilişsel:</strong> Sosyal medya, algoritma manipülasyonu</p>
+                    </div>
+                </div>
+                
+                <div class="layer" onclick="showPopup('layer3')">
+                    <div class="layer-number">3️⃣</div>
+                    <h3>Bilişsel Katman</h3>
+                    <p>Bilgi İşleme</p>
+                    <div class="layer-details">
+                        <p><strong>PSYOPS:</strong> İnanç etkisi, kültürel etki</p>
+                        <p><strong>Bilişsel:</strong> Nöral etki, karar mühendisliği</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technologies Section -->
+        <div class="tech-section">
+            <h2>🚀 Kritik Teknolojiler</h2>
+            <div class="tech-grid">
+                <div class="tech-card" onclick="showPopup('ai')">
+                    <div class="tech-icon">🤖</div>
+                    <h4>Yapay Zeka</h4>
+                    <p>Tahmine dayalı modeller, davranış analizi</p>
+                </div>
+                
+                <div class="tech-card" onclick="showPopup('neuro')">
+                    <div class="tech-icon">🧬</div>
+                    <h4>Nörotekhnoloji</h4>
+                    <p>Beyin-bilgisayar arayüzleri, doğrudan nöral etki</p>
+                </div>
+                
+                <div class="tech-card" onclick="showPopup('deepfake')">
+                    <div class="tech-icon">🎬</div>
+                    <h4>Deepfake</h4>
+                    <p>Gerçeklik inşası, inanılır yanlış bilgi</p>
+                </div>
+                
+                <div class="tech-card" onclick="showPopup('quantum')">
+                    <div class="tech-icon">📡</div>
+                    <h4>Kuantum</h4>
+                    <p>Şifreleme kırma, masif veri işleme</p>
+                </div>
+                
+                <div class="tech-card" onclick="showPopup('iot')">
+                    <div class="tech-icon">🌐</div>
+                    <h4>IoT</h4>
+                    <p>Yaygın sensörler, çok katmanlı veri toplanması</p>
+                </div>
+                
+                <div class="tech-card" onclick="showPopup('blockchain')">
+                    <div class="tech-icon">🔐</div>
+                    <h4>Blockchain</h4>
+                    <p>Bilgi doğrulama, merkezi olmayan sistemler</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threats Section -->
+        <div class="threats-section">
+            <h2>⚠️ Geleceğin Tehditleri</h2>
+            
+            <div class="threat-item" onclick="showPopup('threat1')">
+                <h4>1. Hiperişlemlenmiş Bilgi Ortamı</h4>
+                <p>AI tarafından oluşturulan içerik, deepfakeler ve sentetik medya, gerçek ile sahte arasındaki çizgiyi bulanıklaştıracak.</p>
+            </div>
+            
+            <div class="threat-item" onclick="showPopup('threat2')">
+                <h4>2. Mikro-Hedefleme Hassasiyeti</h4>
+                <p>Bilişsel savaş, geniş kitleler yerine bireysel düzeyde işleyecek. Her kişinin psikolojik profili haritalanacak.</p>
+            </div>
+            
+            <div class="threat-item" onclick="showPopup('threat3')">
+                <h4>3. Nöral Arayüzler Aracılığıyla Doğrudan Etki</h4>
+                <p>Beyin-bilgisayar arayüzleri yaygınlaştıkça, bilişsel savaş doğrudan sinir sistemine ulaşabilecek.</p>
+            </div>
+            
+            <div class="threat-item" onclick="showPopup('threat4')">
+                <h4>4. Otonom Bilişsel Sistemler</h4>
+                <p>İnsan müdahalesi olmadan, AI tarafından yönetilen bilişsel savaş operasyonları. Hız ve ölçek kontrolden çıkacak.</p>
+            </div>
+            
+            <div class="threat-item" onclick="showPopup('threat5')">
+                <h4>5. Sosyal Uyum Kaybı</h4>
+                <p>Bilişsel savaş, toplumsal kutuplaşmayı derinleştirerek, sosyal uyumu ve güveni yok edebilir.</p>
+            </div>
+        </div>
+
+        <!-- Defense Section -->
+        <div class="defense-section">
+            <h2>🛡️ Savunma Stratejileri</h2>
+            
+            <div class="defense-level">
+                <h4>👤 Bireysel Düzey</h4>
+                <div class="defense-item" onclick="showPopup('def1')">✓ Medya okuryazarlığı ve bilişsel farkındalık eğitimi</div>
+                <div class="defense-item" onclick="showPopup('def2')">✓ Bilgi kaynakları hakkında şüphecilik</div>
+                <div class="defense-item" onclick="showPopup('def3')">✓ Kendi bilişsel önyargılarını tanıma</div>
+                <div class="defense-item" onclick="showPopup('def4')">✓ Dijital hijyen ve gizlilik koruma</div>
+            </div>
+            
+            <div class="defense-level">
+                <h4>🏢 Kurumsal Düzey</h4>
+                <div class="defense-item" onclick="showPopup('def5')">✓ Bilişsel savaş istihbaratı ve erken uyarı sistemleri</div>
+                <div class="defense-item" onclick="showPopup('def6')">✓ Bilişsel güvenlik protokolleri</div>
+                <div class="defense-item" onclick="showPopup('def7')">✓ Hızlı yanıt ekipleri</div>
+                <div class="defense-item" onclick="showPopup('def8')">✓ Bilişsel esneklik ve adaptasyon kapasitesi</div>
+            </div>
+            
+            <div class="defense-level">
+                <h4>🌍 Stratejik Düzey</h4>
+                <div class="defense-item" onclick="showPopup('def9')">✓ Uluslararası bilişsel savaş normaları</div>
+                <div class="defense-item" onclick="showPopup('def10')">✓ Bilişsel savunma altyapısı</div>
+                <div class="defense-item" onclick="showPopup('def11')">✓ Bilişsel dayanıklılık eğitimi</div>
+                <div class="defense-item" onclick="showPopup('def12')">✓ Teknoloji düzenlemesi ve etik çerçeveler</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Popup -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="popup" id="popup">
+        <button class="popup-close" onclick="closePopup()">×</button>
+        <h3 id="popupTitle">Başlık</h3>
+        <p id="popupContent">İçerik</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="control-btn" id="soundToggle" title="Ses Aç/Kapat">🔊</button>
+        <button class="control-btn" id="scrollToTop" title="Başa Dön">⬆️</button>
+    </div>
+
+    <footer>
+        <p><strong>© 2026 Selahaddin Koyuncu | Harb-i Strateji</strong></p>
+        <p>Zihin Savaşları - İnteraktif İnfografik</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem;">Tüm öğeleri tıklayarak detaylı bilgileri keşfedin.</p>
+    </footer>
+
+    <script>
+        const popupData = {
+            psyops: { title: '📻 PSYOPS (Psikolojik Operasyonlar)', content: 'Geleneksel psikolojik operasyonlar, davranış, tutum ve duygusal tepkileri değiştirir. 20. yüzyılda yaygın olarak kullanılmıştır. Geniş kitleyi hedef alır, doğrusal mesajlaşma kullanır ve yavaş geri bildirim döngüleri vardır. Geleneksel medya araçları (radyo, TV, gazete) kullanılır.' },
+            cognitive: { title: '🧠 Bilişsel Savaş (Cognitive Warfare)', content: 'Bilişsel savaş, bilişsel yetenekleri doğrudan hedef alır ve rasyonel düşünme sürecini devre dışı bırakır. 21. yüzyıl dijital çağının ürünüdür. Mikro-hedefli operasyonlar yapar, adaptif ve doğrusal olmayan yapıdadır. Gerçek zamanlı geri bildirim sağlar ve AI ile dijital platformlar kullanır.' },
+            layer1: { title: '1️⃣ Psikolojik Katman: Zihin Kontrolü', content: 'Klasik PSYOPS\'ta propaganda ve kültürel manipülasyon kullanılırken, bilişsel savaşta bilişsel manipülasyon, duygusal hedefleme, dikkat yönetimi, davranış mühendisliği ve arzı tasarım gibi daha sofistike yöntemler kullanılır.' },
+            layer2: { title: '2️⃣ Siber Katman: Bilgi Dağıtımı', content: 'Klasik PSYOPS\'ta yayın ağları ve elektronik savaş kullanılırken, bilişsel savaşta siber operasyonlar, sosyal medya manipülasyonu, veri hasat, algoritmik amplifikasyon ve platform istismarı gibi dijital araçlar kullanılır.' },
+            layer3: { title: '3️⃣ Bilişsel Katman: Bilgi İşleme', content: 'Klasik PSYOPS\'ta inanç etkisi ve kültürel etki hedeflenirken, bilişsel savaşta nöral etki, karar mühendisliği, tahmine dayalı modelleme, kimlik manipülasyonu ve gerçeklik inşası gibi daha derin etkilemeler yapılır.' },
+            ai: { title: '🤖 Yapay Zeka & Makine Öğrenmesi', content: 'AI, tahmine dayalı modeller aracılığıyla insan davranışını analiz eder ve kişiselleştirilmiş hedefleme yapabilir. Sosyal medya platformlarında milyonlarca kişiye aynı anda özel mesajlar gönderebilir. Gerçek zamanlı olarak mesajları optimize edebilir.' },
+            neuro: { title: '🧬 Nörotekhnoloji', content: 'Beyin-bilgisayar arayüzleri geliştikçe, bilişsel savaş doğrudan sinir sistemine ulaşabilecektir. Bilişsel geliştirme ve doğrudan nöral etki mümkün hale gelecektir. Bu, rasyonel düşünmeyi tamamen baypas edebilecektir.' },
+            deepfake: { title: '🎬 Deepfake & Sentetik Medya', content: 'Deepfakeler, gerçekliği inşa ederek inanılır yanlış bilgi yaratır. Kimlik hırsızlığı için kullanılabilir. Lider ve siyasetçilerin sahte videoları yapılabilir. Sosyal uyumu ciddi şekilde zedeleyebilir.' },
+            quantum: { title: '📡 Kuantum Bilişim', content: 'Kuantum bilgisayarlar, mevcut şifreleme yöntemlerini kırabileceğinden, masif veri işleme ve tahmin gücü artacaktır. Kişisel veriler daha kolay erişilebilir hale gelecektir.' },
+            iot: { title: '🌐 İnternet of Things (IoT)', content: 'Milyarlarca sensör aracılığıyla çok katmanlı veri toplanabilecektir. Ortam kontrolü sağlanabilecektir. Kişisel hareketler, alışkanlıklar ve tercihler takip edilebilecektir.' },
+            blockchain: { title: '🔐 Blockchain & Merkezi Olmayan Sistemler', content: 'Blockchain, bilgi doğrulaması için yeni mekanizmalar sağlar. Güven mekanizmaları oluşturur. Merkezi olmayan sistemler, dirençli ağlar oluşturabilir.' },
+            threat1: { title: '⚠️ Hiperişlemlenmiş Bilgi Ortamı', content: 'AI tarafından oluşturulan içerik, deepfakeler ve sentetik medya, gerçek ile sahte arasındaki çizgiyi bulanıklaştıracaktır. Kullanıcılar neye inanacağını bilemeyeceklerdir. Bilgi güvenilirliği sorgulanacaktır.' },
+            threat2: { title: '⚠️ Mikro-Hedefleme Hassasiyeti', content: 'Bilişsel savaş, artık geniş kitleler yerine bireysel düzeyde işleyecektir. Her kişinin psikolojik profili, zayıflıkları ve tetikleyicileri haritalanacaktır. Kişiselleştirilmiş manipülasyon yapılacaktır.' },
+            threat3: { title: '⚠️ Nöral Arayüzler Aracılığıyla Doğrudan Etki', content: 'Beyin-bilgisayar arayüzleri yaygınlaştıkça, bilişsel savaş doğrudan sinir sistemine ulaşabilecektir. Rasyonel düşünmeyi tamamen baypas edebilecektir. İnsan iradesi kontrol edilebilecektir.' },
+            threat4: { title: '⚠️ Otonom Bilişsel Sistemler', content: 'İnsan müdahalesi olmadan, AI tarafından yönetilen bilişsel savaş operasyonları yapılabilecektir. Hız ve ölçek, insanın takip edemeyeceği seviyelere ulaşacaktır. Kontrolsüz yayılma riski vardır.' },
+            threat5: { title: '⚠️ Sosyal Uyum Kaybı', content: 'Bilişsel savaş, toplumsal kutuplaşmayı derinleştirerek, sosyal uyumu ve güveni yok edebilecektir. Kolektif karar alma mekanizmaları çökebilecektir. Toplumlar parçalanabilecektir.' },
+            def1: { title: 'Medya Okuryazarlığı', content: 'Medya okuryazarlığı ve bilişsel farkındalık eğitimi, bireylerin yanlış bilgiyi tanımasına yardımcı olur. Kritik düşünme becerilerini geliştirir.' },
+            def2: { title: 'Bilgi Kaynakları Hakkında Şüphecilik', content: 'Bilgi kaynakları hakkında şüphecilik, yanlış bilgiye maruz kalma riskini azaltır. Kaynakları doğrulamak önemlidir.' },
+            def3: { title: 'Kendi Önyargılarını Tanıma', content: 'Kendi bilişsel önyargılarını tanımak, manipülasyona karşı direnç oluşturur. Önyargılarımızı bilmek, onlardan kurtulmamıza yardımcı olur.' },
+            def4: { title: 'Dijital Hijyen', content: 'Dijital hijyen ve gizlilik koruma, kişisel verilerimizi korur. Güçlü şifreler, iki faktörlü kimlik doğrulama ve VPN kullanımı önemlidir.' },
+            def5: { title: 'Bilişsel Savaş İstihbaratı', content: 'Bilişsel savaş istihbaratı ve erken uyarı sistemleri, tehditleri önceden tespit eder. Hızlı müdahale imkanı sağlar.' },
+            def6: { title: 'Bilişsel Güvenlik Protokolleri', content: 'Bilişsel güvenlik protokolleri, kurumları bilişsel saldırılara karşı korur. Çalışan eğitimi ve farkındalık programları önemlidir.' },
+            def7: { title: 'Hızlı Yanıt Ekipleri', content: 'Hızlı yanıt ekipleri, bilişsel saldırılara derhal müdahale eder. Zarar minimizasyonu sağlar.' },
+            def8: { title: 'Bilişsel Esneklik', content: 'Bilişsel esneklik ve adaptasyon kapasitesi, değişen tehditlere karşı dayanıklılık sağlar. Örgütler hızlı değişebilmelidir.' },
+            def9: { title: 'Uluslararası Normlar', content: 'Uluslararası bilişsel savaş normaları, devletlerin bu tür operasyonları yapmaktan alıkoymaya çalışır. Normatif çerçeveler geliştirilmektedir.' },
+            def10: { title: 'Bilişsel Savunma Altyapısı', content: 'Bilişsel savunma altyapısı, ülkelerin bilişsel saldırılara karşı korunmasını sağlar. Teknoloji ve insan kaynağı yatırımı gereklidir.' },
+            def11: { title: 'Bilişsel Dayanıklılık Eğitimi', content: 'Bilişsel dayanıklılık eğitimi, bireylerin ve kurumların bilişsel saldırılara karşı dirençli olmasını sağlar. Düzenli eğitim programları yapılmalıdır.' },
+            def12: { title: 'Teknoloji Düzenlemesi', content: 'Teknoloji düzenlemesi ve etik çerçeveler, bilişsel savaş araçlarının kötüye kullanılmasını engeller. Uluslararası işbirliği gereklidir.' }
+        };
+        
+        function showPopup(key) {
+            const data = popupData[key];
+            if (data) {
+                document.getElementById('popupTitle').textContent = data.title;
+                document.getElementById('popupContent').textContent = data.content;
+                document.getElementById('popup').classList.add('active');
+                document.getElementById('popupOverlay').classList.add('active');
+                playSound(523, 0.1);
+            }
+        }
+        
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+            document.getElementById('popupOverlay').classList.remove('active');
+            playSound(440, 0.1);
+        }
+        
+        // Sound Effects
+        let soundEnabled = true;
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(frequency, duration = 0.1) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        
+        // Sound Toggle
+        document.getElementById('soundToggle').addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            this.textContent = soundEnabled ? '🔊' : '🔇';
+            playSound(523, 0.2);
+        });
+        
+        // Scroll to Top
+        document.getElementById('scrollToTop').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            playSound(659, 0.15);
+        });
+        
+        // Page load sound
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                playSound(523, 0.1);
+                playSound(659, 0.1);
+                playSound(784, 0.1);
+            }, 500);
+        });
+    </script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

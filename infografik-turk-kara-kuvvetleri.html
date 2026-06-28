@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Türk Kara Kuvvetleri — İnteraktif İnfografik | Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--earth:#0a0f0a;--earth2:#1a2a1a;--gold:#C9A24B;--red:#E01515;--green:#22c55e;--white:#f0f4f8;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--earth);color:var(--white);overflow-x:hidden;}
+a{color:var(--green);text-decoration:none;}
+
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:.8rem 1.5rem;background:rgba(10,15,10,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,197,94,.15);}
+.top-bar a{font-size:.85rem;font-weight:600;letter-spacing:1px;color:var(--green);}
+#soundToggle{background:none;border:1px solid rgba(34,197,94,.3);color:var(--green);padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-size:.8rem;}
+
+.hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.hero canvas{position:absolute;inset:0;z-index:0;}
+.hero-content{position:relative;z-index:2;text-align:center;}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:900;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(135deg,var(--green),#86efac);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero .sub{font-size:clamp(.9rem,2vw,1.3rem);color:rgba(240,244,248,.5);margin-top:1rem;letter-spacing:2px;}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.4);font-size:.8rem;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);}}
+
+.section{padding:5rem 2rem;max-width:1200px;margin:0 auto;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.19,1,.22,1);}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-title{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:800;margin-bottom:2rem;position:relative;padding-left:1.5rem;}
+.section-title::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green);border-radius:2px;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem;margin:2rem 0;}
+.stat-card{background:rgba(34,197,94,.03);border:1px solid rgba(34,197,94,.15);border-radius:12px;padding:1.5rem;text-align:center;transition:all .3s;}
+.stat-card:hover{border-color:var(--green);transform:translateY(-3px);box-shadow:0 10px 30px rgba(34,197,94,.1);}
+.stat-num{font-size:2.2rem;font-weight:900;color:var(--green);font-family:'Courier New',monospace;}
+.stat-label{font-size:.95rem;color:rgba(255,255,255,.6);margin-top:.5rem;text-transform:uppercase;letter-spacing:1px;}
+
+.timeline{position:relative;padding-left:3rem;margin:2rem 0;}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--green),var(--gold),var(--red));}
+.tl-item{position:relative;margin-bottom:2rem;opacity:0;transform:translateX(-20px);transition:all .6s;}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-item::before{content:'';position:absolute;left:-2.4rem;top:.5rem;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--earth);box-shadow:0 0 10px var(--green);}
+.tl-year{font-size:.95rem;color:var(--gold);font-weight:700;letter-spacing:2px;}
+.tl-title{font-size:1rem;font-weight:700;margin:.2rem 0;}
+.tl-desc{font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.4;}
+
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:2rem 0;}
+.platform-card{background:linear-gradient(135deg,rgba(34,197,94,.03),rgba(20,80,20,.05));border:1px solid rgba(34,197,94,.12);border-radius:12px;padding:1.5rem;transition:all .4s;}
+.platform-card:hover{border-color:var(--green);transform:scale(1.02);}
+.platform-icon{font-size:2.5rem;margin-bottom:1rem;}
+.platform-name{font-size:1.2rem;font-weight:700;color:var(--green);margin-bottom:.3rem;}
+.platform-type{font-size:.9rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:.8rem;}
+.platform-specs{list-style:none;font-size:.8rem;color:rgba(255,255,255,.7);}
+.platform-specs li{padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.platform-specs li span{color:var(--green);font-weight:600;}
+
+.compare-bar{display:flex;align-items:center;margin:.8rem 0;gap:1rem;}
+.compare-label{width:120px;font-size:.95rem;color:rgba(255,255,255,.7);text-align:right;}
+.compare-track{flex:1;height:20px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;}
+.compare-fill{height:100%;border-radius:10px;transition:width 1.5s cubic-bezier(.19,1,.22,1);width:0;}
+.compare-val{font-size:.9rem;font-weight:700;position:absolute;right:8px;top:50%;transform:translateY(-50%);color:white;text-shadow:0 1px 3px rgba(0,0,0,.5);}
+
+.footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(34,197,94,.1);font-size:.95rem;color:rgba(255,255,255,.4);}
+
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .platform-grid{grid-template-columns:1fr;}
+  .compare-label{width:80px;font-size:.85rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+
+<div class="top-bar">
+  <a href="index.html">← Harb-i Strateji</a>
+  <button id="soundToggle">🔇</button>
+</div>
+
+<section class="hero">
+  <canvas id="terrainCanvas"></canvas>
+  <div class="hero-content">
+    <div style="font-size:.8rem;letter-spacing:4px;color:var(--gold);margin-bottom:1rem;">TÜRK SİLAHLI KUVVETLERİ</div>
+    <h1>KARA KUVVETLERİ</h1>
+    <div class="sub">MÖ 209 Mete Han'dan Günümüze — Yeryüzünün Kalkanı</div>
+  </div>
+  <div class="scroll-hint">▼ Keşfetmek için kaydırın</div>
+</section>
+
+<div class="section" id="stats">
+  <div class="section-title">Kuvvet Profili 2026</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" data-target="260000">0</div><div class="stat-label">Aktif Personel</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="3022">0</div><div class="stat-label">Tank</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="7550">0</div><div class="stat-label">Zırhlı Araç</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="1800">0</div><div class="stat-label">Topçu Sistemi</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="350">0</div><div class="stat-label">Helikopter</div></div>
+    <div class="stat-card"><div class="stat-num" data-target="9">0</div><div class="stat-label">Kolordu</div></div>
+  </div>
+</div>
+
+<div class="section" id="timeline">
+  <div class="section-title">Tarihsel Dönüm Noktaları</div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-year">MÖ 209</div><div class="tl-title">Mete Han — İlk Türk Ordusu</div><div class="tl-desc">Onlu sistem (onbaşı-yüzbaşı-binbaşı) ile dünyanın ilk düzenli ordusunu kurdu.</div></div>
+    <div class="tl-item"><div class="tl-year">1071</div><div class="tl-title">Malazgirt Meydan Muharebesi</div><div class="tl-desc">Sultan Alparslan, Bizans İmparatoru Romanos'u yenerek Anadolu'nun kapılarını açtı.</div></div>
+    <div class="tl-item"><div class="tl-year">1453</div><div class="tl-title">İstanbul'un Fethi</div><div class="tl-desc">Fatih Sultan Mehmet, dünyanın en güçlü surlarını topçu gücüyle aştı.</div></div>
+    <div class="tl-item"><div class="tl-year">1683</div><div class="tl-title">Viyana — Dönüm Noktası</div><div class="tl-desc">Osmanlı'nın Avrupa'daki en ileri noktası. Geri çekilme dönemi başladı.</div></div>
+    <div class="tl-item"><div class="tl-year">1915</div><div class="tl-title">Çanakkale Kara Savaşları</div><div class="tl-desc">Gelibolu'da İtilaf kuvvetlerine karşı destansı savunma. "Çanakkale Geçilmez!"</div></div>
+    <div class="tl-item"><div class="tl-year">1922</div><div class="tl-title">Büyük Taarruz</div><div class="tl-desc">30 Ağustos — Başkomutanlık Meydan Muharebesi. Yunan ordusu imha edildi.</div></div>
+    <div class="tl-item"><div class="tl-year">1950</div><div class="tl-title">Kore Savaşı</div><div class="tl-desc">Türk Tugayı Kunuri'de BM kuvvetlerini kurtardı. NATO üyeliğinin yolu açıldı.</div></div>
+    <div class="tl-item"><div class="tl-year">1974</div><div class="tl-title">Kıbrıs Barış Harekâtı</div><div class="tl-desc">Amfibi çıkarma ve hava indirme operasyonlarıyla KKTC kuruldu.</div></div>
+    <div class="tl-item"><div class="tl-year">2016-2024</div><div class="tl-title">Suriye Harekâtları</div><div class="tl-desc">Fırat Kalkanı, Zeytin Dalı, Barış Pınarı — modern mekanize harekât.</div></div>
+    <div class="tl-item"><div class="tl-year">2026</div><div class="tl-title">ALTAY Seri Üretim</div><div class="tl-desc">Yerli ana muharebe tankı ALTAY seri üretim hattından çıkıyor.</div></div>
+  </div>
+</div>
+
+<div class="section" id="platforms">
+  <div class="section-title">Yerli Platformlar</div>
+  <div class="platform-grid">
+    <div class="platform-card">
+      <div class="platform-icon">🔩</div>
+      <div class="platform-name">ALTAY Ana Muharebe Tankı</div>
+      <div class="platform-type">3+ Nesil MBT</div>
+      <ul class="platform-specs">
+        <li><span>Ağırlık:</span> 65 ton</li>
+        <li><span>Silah:</span> 120mm L/55</li>
+        <li><span>Motor:</span> 1.500 HP (yerli)</li>
+        <li><span>Zırh:</span> Kompozit + ERA + APS</li>
+        <li><span>Menzil:</span> 500 km</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🚛</div>
+      <div class="platform-name">KAPLAN MT (Harita)</div>
+      <div class="platform-type">Orta Ağırlık Tank</div>
+      <ul class="platform-specs">
+        <li><span>Ağırlık:</span> 35 ton</li>
+        <li><span>Silah:</span> 105mm</li>
+        <li><span>Hız:</span> 70 km/s</li>
+        <li><span>Yüzme:</span> Amfibi</li>
+        <li><span>İhracat:</span> Endonezya, Bangladeş</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🛡️</div>
+      <div class="platform-name">PARS 4x4 / 6x6 / 8x8</div>
+      <div class="platform-type">Tekerlekli Zırhlı</div>
+      <ul class="platform-specs">
+        <li><span>Varyant:</span> 20+ konfigürasyon</li>
+        <li><span>Silah:</span> 25-105mm kule</li>
+        <li><span>Koruma:</span> STANAG 4569 L4</li>
+        <li><span>Hız:</span> 100 km/s</li>
+        <li><span>İhracat:</span> 8 ülke</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🚀</div>
+      <div class="platform-name">TAYFUN Balistik Füze</div>
+      <div class="platform-type">Kısa-Orta Menzil</div>
+      <ul class="platform-specs">
+        <li><span>Menzil:</span> 1.000+ km</li>
+        <li><span>Başlık:</span> Konvansiyonel</li>
+        <li><span>Güdüm:</span> INS + GPS + TRN</li>
+        <li><span>CEP:</span> <10m</li>
+        <li><span>Durum:</span> Seri üretimde</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">🎯</div>
+      <div class="platform-name">T-129 ATAK Helikopteri</div>
+      <div class="platform-type">Taarruz Helikopteri</div>
+      <ul class="platform-specs">
+        <li><span>Silah:</span> 20mm + UMTAS + Cirit</li>
+        <li><span>Hız:</span> 278 km/s</li>
+        <li><span>Menzil:</span> 560 km</li>
+        <li><span>Gece:</span> FLIR + NVG</li>
+        <li><span>İhracat:</span> Pakistan, Filipinler</li>
+      </ul>
+    </div>
+    <div class="platform-card">
+      <div class="platform-icon">💥</div>
+      <div class="platform-name">FIRTINA-2 Obüs</div>
+      <div class="platform-type">155mm K/H Obüs</div>
+      <ul class="platform-specs">
+        <li><span>Kalibre:</span> 155mm/52</li>
+        <li><span>Menzil:</span> 40+ km</li>
+        <li><span>Ateş Hızı:</span> 6-8 atış/dk</li>
+        <li><span>Otomasyon:</span> Tam otomatik</li>
+        <li><span>Navigasyon:</span> INS + GPS</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="compare">
+  <div class="section-title">Bölgesel Kara Gücü Karşılaştırması (Tank)</div>
+  <div style="margin:2rem 0;">
+    <div class="compare-bar"><div class="compare-label">Türkiye</div><div class="compare-track"><div class="compare-fill" data-width="60" style="background:linear-gradient(90deg,var(--green),#166534);"><span class="compare-val">3.022</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">Mısır</div><div class="compare-track"><div class="compare-fill" data-width="85" style="background:linear-gradient(90deg,#eab308,#a16207);"><span class="compare-val">4.295</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">İsrail</div><div class="compare-track"><div class="compare-fill" data-width="48" style="background:linear-gradient(90deg,#3b82f6,#1d4ed8);"><span class="compare-val">2.200</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">Yunanistan</div><div class="compare-track"><div class="compare-fill" data-width="28" style="background:linear-gradient(90deg,#06b6d4,#0e7490);"><span class="compare-val">1.350</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">İran</div><div class="compare-track"><div class="compare-fill" data-width="30" style="background:linear-gradient(90deg,#ef4444,#b91c1c);"><span class="compare-val">1.513</span></div></div></div>
+    <div class="compare-bar"><div class="compare-label">S. Arabistan</div><div class="compare-track"><div class="compare-fill" data-width="20" style="background:linear-gradient(90deg,#a855f7,#7e22ce);"><span class="compare-val">900</span></div></div></div>
+  </div>
+</div>
+
+<div class="footer">HARB-İ STRATEJİ · TÜRK KARA KUVVETLERİ ANALİZİ · 2026</div>
+
+<script>
+let audioCtx, soundEnabled = false;
+document.getElementById('soundToggle').addEventListener('click', function(){
+  soundEnabled = !soundEnabled;
+  this.textContent = soundEnabled ? '🔊' : '🔇';
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+});
+function playTone(freq, dur){
+  if(!soundEnabled || !audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = 'triangle'; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+
+// Terrain canvas - moving ground particles
+const canvas = document.getElementById('terrainCanvas');
+const ctx = canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+
+let particles = [];
+for(let i=0;i<200;i++) particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,a:Math.random()*0.4});
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if(p.x < 0) p.x = canvas.width;
+    if(p.x > canvas.width) p.x = 0;
+    if(p.y < 0) p.y = canvas.height;
+    if(p.y > canvas.height) p.y = 0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(34,197,94,${p.a})`;ctx.fill();
+  });
+  // Grid lines
+  ctx.strokeStyle = 'rgba(34,197,94,0.03)';
+  ctx.lineWidth = 1;
+  for(let x=0;x<canvas.width;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
+  for(let y=0;y<canvas.height;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Scroll observer
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      playTone(400 + Math.random()*200, 0.3);
+      e.target.querySelectorAll('.stat-num[data-target]').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let current = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+          current += step;
+          if(current >= target){current = target; clearInterval(timer);}
+          el.textContent = Math.floor(current).toLocaleString('tr-TR');
+        }, 25);
+      });
+      e.target.querySelectorAll('.compare-fill').forEach(el => {
+        setTimeout(() => {el.style.width = el.dataset.width + '%';}, 300);
+      });
+    }
+  });
+}, {threshold: 0.2});
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+const tlObserver = new IntersectionObserver((entries) => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting) setTimeout(() => {e.target.classList.add('visible');playTone(300,0.1);}, i*80);
+  });
+}, {threshold: 0.3});
+document.querySelectorAll('.tl-item').forEach(t => tlObserver.observe(t));
+</script>
+</body>
+</html>

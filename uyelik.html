@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Üyelik — Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root{--u-bg:#0a0f17;--u-surface:#111827;--u-surface2:#1a2332;--u-border:rgba(255,255,255,.08);--u-border2:rgba(255,255,255,.15);--u-text:#e8edf5;--u-text2:rgba(255,255,255,.6);--u-text3:rgba(255,255,255,.35);--u-cyan:#00E0FF;--u-gold:#C9A24B;--u-red:#E01515;--u-purple:#8B5CF6;--u-green:#22c55e;}
+body{background:var(--u-bg);color:var(--u-text);font-family:'IBM Plex Sans',sans-serif;margin:0;padding:0;}
+
+/* Hero */
+.auth-hero{position:relative;padding:4rem 1.25rem 3rem;text-align:center;overflow:hidden;}
+@media(min-width:768px){.auth-hero{padding:5rem 2rem 3.5rem;}}
+.auth-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,224,255,.06) 0%,transparent 70%);pointer-events:none;}
+.auth-hero-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;background:linear-gradient(135deg,var(--u-cyan),var(--u-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;}
+.auth-hero-sub{font-size:.85rem;color:var(--u-text2);max-width:500px;margin:0 auto 1.5rem;line-height:1.6;}
+
+/* Stats */
+.auth-stats{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+.auth-stat{text-align:center;}
+.auth-stat-val{font-family:'Chakra Petch',sans-serif;font-size:1.4rem;font-weight:700;color:var(--u-cyan);}
+.auth-stat-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--u-text3);margin-top:2px;}
+
+/* Particles */
+.auth-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.auth-particle{position:absolute;width:2px;height:2px;background:var(--u-cyan);border-radius:50%;opacity:.3;animation:floatP 8s infinite ease-in-out;}
+@keyframes floatP{0%,100%{transform:translateY(0) translateX(0);}50%{transform:translateY(-30px) translateX(10px);}}
+
+/* Main layout */
+.auth-layout{max-width:1000px;margin:0 auto;padding:0 1.25rem 3rem;display:grid;grid-template-columns:1fr;gap:2rem;}
+@media(min-width:768px){.auth-layout{grid-template-columns:1fr 1fr;padding:0 2rem 4rem;}}
+
+/* Auth box */
+.auth-box{background:var(--u-surface);border:1px solid var(--u-border);border-radius:16px;padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.auth-logo{text-align:center;margin-bottom:1.25rem;}
+.auth-logo-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(0,224,255,.1),rgba(139,92,246,.1));border:1px solid rgba(0,224,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .6rem;}
+.auth-logo-icon i{font-size:22px;color:var(--u-cyan);}
+.auth-logo h1{font-family:'Chakra Petch',sans-serif;font-size:1rem;font-weight:700;color:var(--u-text);}
+.auth-logo p{font-size:.7rem;color:var(--u-text3);margin-top:.2rem;}
+
+.auth-tabs{display:flex;border-bottom:1px solid var(--u-border);margin-bottom:1.25rem;}
+.auth-tab{flex:1;padding:.6rem;text-align:center;font-family:'Chakra Petch',sans-serif;font-size:.75rem;font-weight:600;color:var(--u-text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+.auth-tab.active{color:var(--u-cyan);border-bottom-color:var(--u-cyan);}
+
+.auth-form{display:none;}
+.auth-form.active{display:block;}
+.auth-field{margin-bottom:.9rem;}
+.auth-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--u-text2);margin-bottom:.35rem;}
+.auth-field input{width:100%;padding:.65rem .9rem;border:1px solid var(--u-border);border-radius:8px;background:var(--u-surface2);color:var(--u-text);font-size:.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color .2s;box-sizing:border-box;}
+.auth-field input:focus{border-color:var(--u-cyan);box-shadow:0 0 0 3px rgba(0,224,255,.08);}
+.auth-btn{width:100%;padding:.75rem;background:linear-gradient(135deg,var(--u-cyan),var(--u-purple));color:#fff;border:none;border-radius:8px;font-family:'Chakra Petch',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:.5rem;}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,224,255,.2);}
+.auth-divider{display:flex;align-items:center;gap:.8rem;margin:1rem 0;color:var(--u-text3);font-size:.65rem;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--u-border);}
+.auth-social{display:flex;gap:.5rem;}
+.auth-social button{flex:1;padding:.55rem;border:1px solid var(--u-border);border-radius:8px;background:var(--u-surface2);color:var(--u-text2);font-size:.72rem;font-family:'IBM Plex Sans',sans-serif;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.auth-social button:hover{border-color:var(--u-cyan);color:var(--u-text);}
+.auth-msg{display:none;padding:.7rem;border-radius:8px;font-size:.72rem;margin-bottom:.9rem;text-align:center;}
+.auth-msg.success{display:block;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);}
+.auth-msg.error{display:block;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);}
+
+/* Benefits panel */
+.auth-benefits-panel{background:var(--u-surface);border:1px solid var(--u-border);border-radius:16px;padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.auth-benefits-panel h2{font-family:'Chakra Petch',sans-serif;font-size:1rem;font-weight:700;color:var(--u-text);margin-bottom:1.25rem;}
+.benefit-card{display:flex;gap:12px;padding:.75rem;border-radius:10px;border:1px solid var(--u-border);margin-bottom:.6rem;transition:all .2s;}
+.benefit-card:hover{border-color:var(--u-border2);background:var(--u-surface2);}
+.benefit-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.benefit-icon i{font-size:16px;}
+.benefit-title{font-size:.75rem;font-weight:500;color:var(--u-text);margin-bottom:2px;}
+.benefit-desc{font-size:.65rem;color:var(--u-text3);line-height:1.4;}
+
+/* XP Preview */
+.xp-preview{background:var(--u-surface2);border:1px solid var(--u-border);border-radius:12px;padding:1rem;margin-top:1rem;}
+.xp-preview-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--u-text3);margin-bottom:.6rem;}
+.xp-levels{display:flex;gap:6px;flex-wrap:wrap;}
+.xp-level{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1px solid var(--u-border);font-size:.6rem;color:var(--u-text2);}
+.xp-level i{font-size:12px;}
+.xp-level.active{background:rgba(0,224,255,.08);border-color:rgba(0,224,255,.2);color:var(--u-cyan);}
+
+/* Gözcü Topics Preview */
+.gozcu-preview{margin-top:1.25rem;}
+.gozcu-preview h3{font-family:'IBM Plex Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--u-text3);margin-bottom:.6rem;}
+.gozcu-topics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.gozcu-topic{text-align:center;padding:.6rem .3rem;border-radius:8px;border:1px solid var(--u-border);transition:all .2s;cursor:pointer;}
+.gozcu-topic:hover{border-color:var(--u-border2);transform:translateY(-1px);}
+.gozcu-topic i{font-size:16px;display:block;margin-bottom:3px;}
+.gozcu-topic span{font-size:.55rem;color:var(--u-text3);}
+
+/* Responsive */
+@media(max-width:767px){.auth-stats{gap:1rem;}.auth-stat-val{font-size:1.1rem;}.gozcu-topics{grid-template-columns:repeat(2,1fr);}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<!-- Hero -->
+<div class="auth-hero">
+  <div class="auth-particles" id="particles"></div>
+  <div class="auth-hero-title">Harb-i Strateji'ye Katıl</div>
+  <div class="auth-hero-sub">Stratejik simülasyonlar, interaktif analizler ve Gözcü konu keşif platformuna erişim için üye ol.</div>
+  <div class="auth-stats">
+    <div class="auth-stat"><div class="auth-stat-val" data-target="1250">0</div><div class="auth-stat-lbl">Aktif Üye</div></div>
+    <div class="auth-stat"><div class="auth-stat-val" data-target="63">0</div><div class="auth-stat-lbl">Oyun & Sim</div></div>
+    <div class="auth-stat"><div class="auth-stat-val" data-target="200">0</div><div class="auth-stat-lbl">İçerik</div></div>
+    <div class="auth-stat"><div class="auth-stat-val" data-target="6">0</div><div class="auth-stat-lbl">Gözcü Konu</div></div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="auth-layout">
+  <!-- Left: Auth Form -->
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><i class="ti ti-shield-check"></i></div>
+      <h1>HARB-İ STRATEJİ</h1>
+      <p>21. Yüzyıl Savaşları ve Jeopolitik Akademisi</p>
+    </div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchTab('login')">Giriş Yap</div>
+      <div class="auth-tab" onclick="switchTab('register')">Kayıt Ol</div>
+    </div>
+
+    <div id="auth-msg" class="auth-msg"></div>
+
+    <!-- LOGIN -->
+    <form id="login-form" class="auth-form active" onsubmit="handleLogin(event)">
+      <div class="auth-field">
+        <label>E-posta veya Kullanıcı Adı</label>
+        <input type="text" id="login-email" placeholder="ornek@email.com" required>
+      </div>
+      <div class="auth-field">
+        <label>Şifre</label>
+        <input type="password" id="login-pass" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="auth-btn">Giriş Yap</button>
+      <div class="auth-divider">veya</div>
+      <div class="auth-social">
+        <button type="button" onclick="socialLogin('google')"><i class="ti ti-brand-google" style="font-size:14px;"></i> Google</button>
+        <button type="button" onclick="socialLogin('github')"><i class="ti ti-brand-github" style="font-size:14px;"></i> GitHub</button>
+        <button type="button" onclick="socialLogin('discord')"><i class="ti ti-brand-discord" style="font-size:14px;"></i> Discord</button>
+      </div>
+    </form>
+
+    <!-- REGISTER -->
+    <form id="register-form" class="auth-form" onsubmit="handleRegister(event)">
+      <div class="auth-field">
+        <label>Kullanıcı Adı</label>
+        <input type="text" id="reg-name" placeholder="stratejist_01" required>
+      </div>
+      <div class="auth-field">
+        <label>E-posta</label>
+        <input type="email" id="reg-email" placeholder="ornek@email.com" required>
+      </div>
+      <div class="auth-field">
+        <label>Şifre</label>
+        <input type="password" id="reg-pass" placeholder="En az 8 karakter" required minlength="8">
+      </div>
+      <div class="auth-field">
+        <label>Şifre Tekrar</label>
+        <input type="password" id="reg-pass2" placeholder="Şifreyi tekrar girin" required>
+      </div>
+      <div class="auth-field">
+        <label>İlgi Alanları</label>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;">
+          <span class="xp-level active" onclick="this.classList.toggle('active')"><i class="ti ti-planet"></i> Uzay</span>
+          <span class="xp-level" onclick="this.classList.toggle('active')"><i class="ti ti-bolt"></i> EW</span>
+          <span class="xp-level active" onclick="this.classList.toggle('active')"><i class="ti ti-rocket"></i> Füze</span>
+          <span class="xp-level" onclick="this.classList.toggle('active')"><i class="ti ti-drone"></i> İHA</span>
+          <span class="xp-level" onclick="this.classList.toggle('active')"><i class="ti ti-shield-lock"></i> Siber</span>
+          <span class="xp-level" onclick="this.classList.toggle('active')"><i class="ti ti-wave-saw-tool"></i> Lazer</span>
+        </div>
+      </div>
+      <button type="submit" class="auth-btn">Kayıt Ol & Başla</button>
+    </form>
+  </div>
+
+  <!-- Right: Benefits -->
+  <div class="auth-benefits-panel">
+    <h2>Üyelik Avantajları</h2>
+
+    <div class="benefit-card">
+      <div class="benefit-icon" style="background:rgba(0,224,255,.1);"><i class="ti ti-chart-line" style="color:var(--u-cyan);"></i></div>
+      <div><div class="benefit-title">XP & Seviye Sistemi</div><div class="benefit-desc">Oyun, quiz ve içerik tüketimiyle XP kazan, seviye atla, rozet topla.</div></div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon" style="background:rgba(139,92,246,.1);"><i class="ti ti-radar-2" style="color:var(--u-purple);"></i></div>
+      <div><div class="benefit-title">Gözcü Erişimi</div><div class="benefit-desc">Reels, Thread, Quiz, Poll — 6 stratejik konuda derinlemesine keşfet.</div></div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon" style="background:rgba(201,162,75,.1);"><i class="ti ti-trophy" style="color:var(--u-gold);"></i></div>
+      <div><div class="benefit-title">Lider Tablosu</div><div class="benefit-desc">OZA oyunlarında skorunu kaydet, haftalık sıralamada yer al.</div></div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon" style="background:rgba(34,197,94,.1);"><i class="ti ti-device-analytics" style="color:var(--u-green);"></i></div>
+      <div><div class="benefit-title">Kişisel Analitik</div><div class="benefit-desc">Hangi konularda güçlüsün, nerede gelişmen gerekiyor — takip et.</div></div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon" style="background:rgba(224,21,21,.1);"><i class="ti ti-bell-ringing" style="color:var(--u-red);"></i></div>
+      <div><div class="benefit-title">Bildirimler</div><div class="benefit-desc">Yeni simülasyon, analiz ve Gözcü konuları eklendiğinde haberdar ol.</div></div>
+    </div>
+
+    <!-- XP Levels Preview -->
+    <div class="xp-preview">
+      <div class="xp-preview-title">Seviye Sistemi</div>
+      <div class="xp-levels">
+        <span class="xp-level active"><i class="ti ti-star"></i> Çaylak</span>
+        <span class="xp-level"><i class="ti ti-sword"></i> Stratejist</span>
+        <span class="xp-level"><i class="ti ti-crown"></i> Komutan</span>
+        <span class="xp-level"><i class="ti ti-diamond"></i> Mareşal</span>
+      </div>
+    </div>
+
+    <!-- Gözcü Topics Preview -->
+    <div class="gozcu-preview">
+      <h3>Gözcü Konuları</h3>
+      <div class="gozcu-topics">
+        <div class="gozcu-topic" onclick="window.location='oza-gozcu.html'"><i class="ti ti-planet" style="color:#B5D4F4;"></i><span>Uzay</span></div>
+        <div class="gozcu-topic" onclick="window.location='oza-gozcu.html'"><i class="ti ti-bolt" style="color:#FAC775;"></i><span>EW</span></div>
+        <div class="gozcu-topic" onclick="window.location='oza-gozcu.html'"><i class="ti ti-rocket" style="color:#F7C1C1;"></i><span>Füze</span></div>
+        <div class="gozcu-topic" onclick="window.location='oza-gozcu.html'"><i class="ti ti-drone" style="color:#CECBF6;"></i><span>İHA</span></div>
+        <div class="gozcu-topic" onclick="window.location='oza-gozcu.html'"><i class="ti ti-shield-lock" style="color:#9FE1CB;"></i><span>Siber</span></div>
+        <div class="gozcu-topic" onclick="window.location='oza-gozcu.html'"><i class="ti ti-wave-saw-tool" style="color:#5DCAA5;"></i><span>Lazer</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="hs-nav.js?v=11"></script>
+<script>
+// Particles
+(function(){
+  const c = document.getElementById('particles');
+  for(let i=0;i<20;i++){
+    const p = document.createElement('div');
+    p.className = 'auth-particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.top = Math.random()*100+'%';
+    p.style.animationDelay = (Math.random()*5)+'s';
+    p.style.animationDuration = (6+Math.random()*6)+'s';
+    c.appendChild(p);
+  }
+})();
+
+// Counter animation
+const counters = document.querySelectorAll('.auth-stat-val[data-target]');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el = e.target;
+      const target = parseInt(el.dataset.target);
+      let current = 0;
+      const step = Math.max(1, Math.ceil(target/40));
+      const timer = setInterval(()=>{
+        current += step;
+        if(current >= target){current = target; clearInterval(timer);}
+        el.textContent = current.toLocaleString('tr-TR') + (target > 100 ? '+' : '');
+      }, 30);
+      observer.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+counters.forEach(c=>observer.observe(c));
+
+// Tab switch
+function switchTab(tab){
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>{
+    t.classList.toggle('active', (tab==='login' && i===0) || (tab==='register' && i===1));
+  });
+  document.getElementById('login-form').classList.toggle('active', tab==='login');
+  document.getElementById('register-form').classList.toggle('active', tab==='register');
+  document.getElementById('auth-msg').className = 'auth-msg';
+}
+
+function showMsg(text, type){
+  const el = document.getElementById('auth-msg');
+  el.textContent = text;
+  el.className = 'auth-msg ' + type;
+}
+
+function handleLogin(e){
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  const pass = document.getElementById('login-pass').value;
+  const users = JSON.parse(localStorage.getItem('hs-users') || '[]');
+  const user = users.find(u => (u.email === email || u.name === email) && u.pass === pass);
+  if(user){
+    localStorage.setItem('hs-current-user', JSON.stringify(user));
+    showMsg('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+    setTimeout(()=> window.location.href = 'profil.html', 1200);
+  } else {
+    showMsg('E-posta veya şifre hatalı.', 'error');
+  }
+}
+
+function handleRegister(e){
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  if(pass !== pass2){
+    showMsg('Şifreler eşleşmiyor.', 'error');
+    return;
+  }
+  const users = JSON.parse(localStorage.getItem('hs-users') || '[]');
+  if(users.find(u => u.email === email)){
+    showMsg('Bu e-posta zaten kayıtlı.', 'error');
+    return;
+  }
+  // Collect interests
+  const interests = [];
+  document.querySelectorAll('.auth-field .xp-level.active').forEach(el=>{
+    interests.push(el.textContent.trim());
+  });
+  const newUser = {
+    id: Date.now(),
+    name: name,
+    email: email,
+    pass: pass,
+    role: 'user',
+    xp: 0,
+    badges: [],
+    interests: interests,
+    joined: new Date().toISOString()
+  };
+  users.push(newUser);
+  localStorage.setItem('hs-users', JSON.stringify(users));
+  localStorage.setItem('hs-current-user', JSON.stringify(newUser));
+  showMsg('Kayıt başarılı! Profilinize yönlendiriliyorsunuz...', 'success');
+  setTimeout(()=> window.location.href = 'profil.html', 1200);
+}
+
+function socialLogin(provider){
+  showMsg(`${provider} ile giriş yakında aktif olacak.`, 'error');
+}
+</script>
+</body>
+</html>

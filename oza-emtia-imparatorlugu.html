@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Emtia İmparatorluğu — Bütçe Yönetimi | OZA</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--card:#1c2128;--border:#30363d;--discord:#5865f2;--green:#3fb950;--gold:#f0b232;--red:#f85149;--cyan:#58a6ff;--text:#e6edf3;--muted:#8b949e;--font-head:"Chakra Petch",sans-serif;--font-mono:"IBM Plex Mono",monospace;--font-sans:"IBM Plex Sans",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--surface:#111827;--card:#1a2332;--border:#2a3a4a;
+  --purple:#5865f2;--cyan:#58a6ff;--gold:#f0b232;--red:#f85149;
+  --green:#3fb950;--orange:#f0b232;
+  --text:#e6edf3;--muted:#8b949e;
+  --profit:#00ff88;--loss:#f85149;
+}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.back-btn{position:fixed;top:16px;left:16px;z-index:100;background:var(--surface);border:1px solid var(--border);color:var(--cyan);padding:8px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-family:'IBM Plex Mono',monospace}
+.back-btn:hover{background:var(--purple);color:#fff}
+
+/* HEADER */
+.game-header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.game-title{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700;color:var(--gold)}
+.game-title span{color:var(--cyan);font-size:12px;font-weight:400;margin-left:8px}
+.header-stats{display:flex;gap:12px;flex-wrap:wrap}
+.h-stat{text-align:center;padding:6px 12px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.h-stat .label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.h-stat .value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600}
+.h-stat .value.profit{color:var(--profit)}
+.h-stat .value.loss{color:var(--loss)}
+.h-stat .value.gold{color:var(--gold)}
+
+/* MAIN LAYOUT */
+.main{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:16px;max-width:1200px;margin:0 auto}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+
+/* MARKET PANEL */
+.market-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.market-header{background:var(--surface);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.market-header h3{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--gold)}
+.market-header .turn{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--cyan)}
+.ticker-bar{background:rgba(201,162,75,.05);border-bottom:1px solid var(--border);padding:8px 16px;overflow:hidden;white-space:nowrap}
+.ticker-text{display:inline-block;animation:scroll-left 25s linear infinite;font-size:11px;color:var(--orange);font-family:'IBM Plex Mono',monospace}
+@keyframes scroll-left{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* COMMODITY TABLE */
+.commodity-table{width:100%;border-collapse:collapse}
+.commodity-table th{font-size:10px;color:var(--muted);text-transform:uppercase;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace}
+.commodity-table td{padding:10px 12px;border-bottom:1px solid rgba(42,58,74,.5);font-size:13px}
+.commodity-table tr:hover{background:rgba(88,101,242,.05)}
+.commodity-name{display:flex;align-items:center;gap:8px}
+.commodity-name .icon{font-size:18px}
+.commodity-name .name{font-weight:600}
+.commodity-name .tag{font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(0,224,255,.1);color:var(--cyan);font-family:'IBM Plex Mono',monospace}
+.price-up{color:var(--profit)}
+.price-down{color:var(--loss)}
+.price-neutral{color:var(--muted)}
+.change-badge{font-size:10px;padding:2px 6px;border-radius:4px;font-family:'IBM Plex Mono',monospace}
+.change-badge.up{background:rgba(0,255,136,.1);color:var(--profit)}
+.change-badge.down{background:rgba(255,71,87,.1);color:var(--loss)}
+.trade-btns{display:flex;gap:6px}
+.trade-btn{padding:5px 12px;border:1px solid;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'IBM Plex Mono',monospace;background:transparent;transition:all .2s}
+.trade-btn.buy{color:var(--profit);border-color:rgba(0,255,136,.4)}
+.trade-btn.buy:hover{background:rgba(0,255,136,.15)}
+.trade-btn.sell{color:var(--loss);border-color:rgba(255,71,87,.4)}
+.trade-btn.sell:hover{background:rgba(255,71,87,.15)}
+.trade-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* PORTFOLIO PANEL */
+.portfolio{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.portfolio-header{background:var(--surface);padding:12px 16px;border-bottom:1px solid var(--border)}
+.portfolio-header h3{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--cyan)}
+.balance-card{padding:16px;border-bottom:1px solid var(--border)}
+.balance-label{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.balance-value{font-family:'Chakra Petch',sans-serif;font-size:24px;font-weight:700;color:var(--gold)}
+.balance-pnl{font-size:12px;margin-top:4px;font-family:'IBM Plex Mono',monospace}
+.pnl-positive{color:var(--profit)}
+.pnl-negative{color:var(--loss)}
+
+/* HOLDINGS */
+.holdings{padding:12px 16px}
+.holdings h4{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.holding-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(42,58,74,.3)}
+.holding-item .left{display:flex;align-items:center;gap:8px}
+.holding-item .icon{font-size:16px}
+.holding-item .info .name{font-size:12px;font-weight:600}
+.holding-item .info .qty{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.holding-item .right{text-align:right}
+.holding-item .right .val{font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.holding-item .right .pnl{font-size:10px;font-family:'IBM Plex Mono',monospace}
+
+/* LEADERBOARD */
+.leaderboard{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-top:16px;overflow:hidden}
+.leaderboard-header{background:var(--surface);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.leaderboard-header h3{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--orange)}
+.leader-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(42,58,74,.3)}
+.leader-item .rank{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;width:24px;text-align:center}
+.leader-item .rank.gold{color:var(--gold)}
+.leader-item .rank.silver{color:#c0c0c0}
+.leader-item .rank.bronze{color:#cd7f32}
+.leader-item .avatar{width:28px;height:28px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:12px}
+.leader-item .name{flex:1;font-size:12px;font-weight:600}
+.leader-item .score{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold)}
+
+/* EVENT POPUP */
+.event-overlay{display:none;position:fixed;inset:0;background:rgba(10,15,23,.85);z-index:200;align-items:center;justify-content:center;padding:20px}
+.event-overlay.active{display:flex}
+.event-card{background:var(--card);border:2px solid var(--gold);border-radius:16px;padding:24px;max-width:500px;width:100%;text-align:center}
+.event-card .tag{font-size:10px;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.event-card h3{font-family:'Chakra Petch',sans-serif;font-size:18px;color:var(--gold);margin-bottom:12px}
+.event-card p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.event-card .effects{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.event-card .effect-tag{font-size:10px;padding:4px 10px;border-radius:6px;font-family:'IBM Plex Mono',monospace}
+.event-card .effect-tag.up{background:rgba(0,255,136,.1);color:var(--profit)}
+.event-card .effect-tag.down{background:rgba(255,71,87,.1);color:var(--loss)}
+.event-btn{padding:12px 28px;background:var(--gold);color:#000;border:none;border-radius:8px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+
+/* BILANÇO */
+.bilanco{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-top:16px;padding:16px}
+.bilanco h4{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);margin-bottom:12px}
+.bilanco-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,58,74,.3);font-size:12px}
+.bilanco-row .label{color:var(--muted)}
+.bilanco-row .value{font-family:'IBM Plex Mono',monospace;font-weight:600}
+.bilanco-row.total{border-top:2px solid var(--gold);border-bottom:none;padding-top:10px;margin-top:6px}
+.bilanco-row.total .label{color:var(--gold);font-weight:700}
+.bilanco-row.total .value{color:var(--gold);font-size:14px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<a href="oza-hub.html" class="back-btn">← OZA Merkezi</a>
+
+<!-- HEADER -->
+<div class="game-header">
+  <div class="game-title">📊 Emtia İmparatorluğu <span>Stratejik Bütçe Yönetimi</span></div>
+  <div class="header-stats">
+    <div class="h-stat"><div class="label">Sermaye</div><div class="value gold" id="capital">$10,000,000</div></div>
+    <div class="h-stat"><div class="label">Kâr/Zarar</div><div class="value profit" id="pnl">+$0</div></div>
+    <div class="h-stat"><div class="label">Tur</div><div class="value" id="turn" style="color:var(--cyan)">1/24</div></div>
+    <div class="h-stat"><div class="label">Sıralama</div><div class="value" id="rank" style="color:var(--orange)">#—</div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- LEFT: MARKET -->
+  <div>
+    <div class="market-panel">
+      <div class="market-header">
+        <h3>🌍 Küresel Emtia Piyasası</h3>
+        <div class="turn">Tur <span id="turnNum">1</span> · <span id="turnEvent">Piyasa Açılışı</span></div>
+      </div>
+      <div class="ticker-bar">
+        <span class="ticker-text" id="ticker">▲ ALTIN $2,340 (+1.2%) · ▼ PETROL $78.5 (-0.8%) · ▲ LİTYUM $42,800 (+3.1%) · ▼ BAKIR $8,920 (-0.4%) · ▲ URANYUM $89 (+2.5%)</span>
+      </div>
+      <table class="commodity-table">
+        <thead>
+          <tr><th>Emtia</th><th>Fiyat</th><th>Değişim</th><th>Stok</th><th>İşlem</th></tr>
+        </thead>
+        <tbody id="commodityBody"></tbody>
+      </table>
+    </div>
+
+    <!-- BİLANÇO -->
+    <div class="bilanco" id="bilancoPanel">
+      <h4>📋 Bilanço — Dönem Özeti</h4>
+      <div id="bilancoRows"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: PORTFOLIO + LEADERBOARD -->
+  <div>
+    <div class="portfolio">
+      <div class="portfolio-header"><h3>💼 Portföyüm</h3></div>
+      <div class="balance-card">
+        <div class="balance-label">Toplam Varlık</div>
+        <div class="balance-value" id="totalAssets">$10,000,000</div>
+        <div class="balance-pnl pnl-positive" id="totalPnl">+$0 (0.00%)</div>
+      </div>
+      <div class="holdings" id="holdingsDiv">
+        <h4>Pozisyonlar</h4>
+        <div id="holdingsList"><p style="font-size:11px;color:var(--muted);padding:12px 0">Henüz pozisyon yok. Emtia satın alarak başlayın.</p></div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="leaderboard">
+      <div class="leaderboard-header">
+        <h3>🏆 En İyi Yöneticiler</h3>
+      </div>
+      <div id="leaderList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT OVERLAY -->
+<div class="event-overlay" id="eventOverlay">
+  <div class="event-card">
+    <div class="tag" id="eventTag">PİYASA OLAYI</div>
+    <h3 id="eventTitle">Olay Başlığı</h3>
+    <p id="eventDesc">Olay açıklaması</p>
+    <div class="effects" id="eventEffects"></div>
+    <button class="event-btn" onclick="closeEvent()">Devam Et →</button>
+  </div>
+</div>
+
+<script>
+// === GAME ENGINE ===
+const INITIAL_CAPITAL = 10000000;
+const MAX_TURNS = 24;
+
+const game = {
+  capital: INITIAL_CAPITAL,
+  turn: 1,
+  holdings: {},
+  history: [],
+  totalBought: 0,
+  totalSold: 0,
+  totalProfit: 0,
+  totalLoss: 0
+};
+
+// === COMMODITIES DATABASE ===
+const commodities = [
+  {id:'gold',name:'Altın',icon:'🥇',price:2340,unit:'oz',volatility:0.03,tag:'Değerli Metal',category:'metal'},
+  {id:'oil',name:'Ham Petrol (Brent)',icon:'🛢️',price:78.5,unit:'varil',volatility:0.05,tag:'Enerji',category:'energy'},
+  {id:'lithium',name:'Lityum',icon:'🔋',price:42800,unit:'ton',volatility:0.08,tag:'Nadir Metal',category:'rare'},
+  {id:'copper',name:'Bakır',icon:'🔶',price:8920,unit:'ton',volatility:0.04,tag:'Endüstriyel',category:'industrial'},
+  {id:'uranium',name:'Uranyum',icon:'☢️',price:89,unit:'lb',volatility:0.06,tag:'Nükleer',category:'energy'},
+  {id:'wheat',name:'Buğday',icon:'🌾',price:680,unit:'bushel',volatility:0.04,tag:'Tarım',category:'agri'},
+  {id:'cobalt',name:'Kobalt',icon:'💎',price:33500,unit:'ton',volatility:0.07,tag:'Nadir Metal',category:'rare'},
+  {id:'natgas',name:'Doğalgaz',icon:'🔥',price:2.85,unit:'MMBtu',volatility:0.06,tag:'Enerji',category:'energy'},
+  {id:'iron',name:'Demir Cevheri',icon:'⛏️',price:118,unit:'ton',volatility:0.04,tag:'Endüstriyel',category:'industrial'},
+  {id:'palladium',name:'Paladyum',icon:'✨',price:1020,unit:'oz',volatility:0.05,tag:'Değerli Metal',category:'metal'},
+  {id:'ree',name:'Nadir Toprak (REE)',icon:'🧲',price:68000,unit:'ton',volatility:0.09,tag:'Kritik Mineral',category:'rare'},
+  {id:'silver',name:'Gümüş',icon:'🪙',price:29.5,unit:'oz',volatility:0.04,tag:'Değerli Metal',category:'metal'}
+];
+
+// === MARKET EVENTS ===
+const events = [
+  {title:'Çin Nadir Toprak İhracat Yasağı',desc:'Çin, ABD\'ye nadir toprak elementleri ihracatını durdurdu. REE ve Lityum fiyatları fırladı.',effects:[{id:'ree',change:0.25},{id:'lithium',change:0.15},{id:'cobalt',change:0.10}]},
+  {title:'Hürmüz Boğazı Krizi',desc:'İran, Hürmüz Boğazı\'nı tehdit etti. Petrol ve doğalgaz fiyatları yükseldi.',effects:[{id:'oil',change:0.18},{id:'natgas',change:0.22}]},
+  {title:'FED Faiz İndirimi',desc:'ABD Merkez Bankası faiz oranlarını 50 baz puan düşürdü. Altın ve gümüş değer kazandı.',effects:[{id:'gold',change:0.08},{id:'silver',change:0.12},{id:'palladium',change:0.06}]},
+  {title:'Ukrayna Tahıl Koridoru Çöktü',desc:'Karadeniz tahıl anlaşması sona erdi. Buğday fiyatları tavan yaptı.',effects:[{id:'wheat',change:0.20}]},
+  {title:'Tesla Yeni Batarya Teknolojisi',desc:'Tesla, kobaltsız batarya teknolojisini duyurdu. Kobalt düştü, lityum yükseldi.',effects:[{id:'cobalt',change:-0.15},{id:'lithium',change:0.10}]},
+  {title:'Küresel Resesyon Korkusu',desc:'IMF büyüme tahminlerini düşürdü. Endüstriyel metaller geriledi.',effects:[{id:'copper',change:-0.12},{id:'iron',change:-0.10},{id:'oil',change:-0.08}]},
+  {title:'Hindistan Nükleer Genişleme',desc:'Hindistan 20 yeni nükleer santral planı açıkladı. Uranyum talebi patladı.',effects:[{id:'uranium',change:0.20}]},
+  {title:'Şili Bakır Madeni Grevi',desc:'Dünyanın en büyük bakır madeninde grev başladı. Arz daralması bekleniyor.',effects:[{id:'copper',change:0.14}]},
+  {title:'ABD-Çin Ticaret Savaşı Tırmanıyor',desc:'Yeni tarifeler açıklandı. Nadir metaller stratejik silah olarak kullanılıyor.',effects:[{id:'ree',change:0.18},{id:'lithium',change:0.08},{id:'cobalt',change:0.12}]},
+  {title:'OPEC+ Üretim Kısıntısı',desc:'Suudi Arabistan liderliğinde günlük 2M varil üretim kesintisi.',effects:[{id:'oil',change:0.15},{id:'natgas',change:0.08}]},
+  {title:'Avrupa Yeşil Dönüşüm Paketi',desc:'AB, 2030 hedeflerini sıkılaştırdı. Yeşil enerji metalleri yükseldi.',effects:[{id:'lithium',change:0.12},{id:'copper',change:0.08},{id:'cobalt',change:0.10}]},
+  {title:'Rusya Paladyum İhracat Kısıtlaması',desc:'Rusya, paladyum ihracatını sınırladı. Otomotiv sektörü endişeli.',effects:[{id:'palladium',change:0.16}]}
+];
+
+// === AI COMPETITORS (Leaderboard) ===
+const competitors = [
+  {name:'StratejistKapan',avatar:'🦅',puan:0,style:'aggressive'},
+  {name:'EmtiaUstasi',avatar:'📊',puan:0,style:'balanced'},
+  {name:'AltınBoğa',avatar:'🐂',puan:0,style:'gold_focused'},
+  {name:'PetrolŞahini',avatar:'🛢️',puan:0,style:'energy'},
+  {name:'NadirMaden42',avatar:'💎',puan:0,style:'rare_metals'},
+  {name:'SavasEkonomisti',avatar:'⚔️',puan:0,style:'contrarian'},
+  {name:'KüreselTüccar',avatar:'🌍',puan:0,style:'diversified'}
+];
+
+// Initialize competitor scores
+competitors.forEach(c=>{
+  c.score = INITIAL_CAPITAL + Math.floor((Math.random()-0.3)*2000000);
+});
+
+// === RENDER FUNCTIONS ===
+function renderMarket(){
+  const tbody = document.getElementById('commodityBody');
+  tbody.innerHTML = commodities.map(c=>{
+    const change = c.lastChange||0;
+    const changeClass = change>0?'up':change<0?'down':'';
+    const priceClass = change>0?'price-up':change<0?'price-down':'price-neutral';
+    const held = game.holdings[c.id]||0;
+    return `<tr>
+      <td><div class="commodity-name"><span class="icon">${c.icon}</span><span class="name">${c.name}</span><span class="tag">${c.tag}</span></div></td>
+      <td class="${priceClass}">$${formatPrice(c.price)}</td>
+      <td><span class="change-badge ${changeClass}">${change>=0?'+':''}${(change*100).toFixed(1)}%</span></td>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)">${held} ${c.unit}</td>
+      <td><div class="trade-btns">
+        <button class="trade-btn buy" onclick="buyDialog('${c.id}')">AL</button>
+        <button class="trade-btn sell" onclick="sellDialog('${c.id}')" ${held<=0?'disabled':''}>SAT</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPortfolio(){
+  const totalAssets = calculateTotalAssets();
+  const pnl = totalAssets - INITIAL_CAPITAL;
+  const pnlPct = (pnl/INITIAL_CAPITAL*100).toFixed(2);
+  
+  document.getElementById('capital').textContent = '$'+formatNum(game.capital);
+  document.getElementById('totalAssets').textContent = '$'+formatNum(totalAssets);
+  document.getElementById('pnl').textContent = (pnl>=0?'+':'')+' $'+formatNum(Math.abs(pnl));
+  document.getElementById('pnl').className = 'value '+(pnl>=0?'profit':'loss');
+  document.getElementById('totalPnl').textContent = `${pnl>=0?'+':''}$${formatNum(Math.abs(pnl))} (${pnlPct}%)`;
+  document.getElementById('totalPnl').className = 'balance-pnl '+(pnl>=0?'pnl-positive':'pnl-negative');
+  document.getElementById('turn').textContent = game.turn+'/'+MAX_TURNS;
+  document.getElementById('turnNum').textContent = game.turn;
+  
+  // Holdings
+  const list = document.getElementById('holdingsList');
+  const heldItems = Object.entries(game.holdings).filter(([k,v])=>v>0);
+  if(heldItems.length===0){
+    list.innerHTML = '<p style="font-size:11px;color:var(--muted);padding:12px 0">Henüz pozisyon yok.</p>';
+  } else {
+    list.innerHTML = heldItems.map(([id,qty])=>{
+      const c = commodities.find(x=>x.id===id);
+      const currentVal = qty * c.price;
+      const avgCost = game.history.filter(h=>h.id===id&&h.type==='buy').reduce((s,h)=>s+h.total,0);
+      const totalSoldVal = game.history.filter(h=>h.id===id&&h.type==='sell').reduce((s,h)=>s+h.total,0);
+      const itemPnl = currentVal + totalSoldVal - avgCost;
+      return `<div class="holding-item">
+        <div class="left"><span class="icon">${c.icon}</span><div class="info"><div class="name">${c.name}</div><div class="qty">${qty} ${c.unit}</div></div></div>
+        <div class="right"><div class="val">$${formatNum(currentVal)}</div><div class="pnl ${itemPnl>=0?'pnl-positive':'pnl-negative'}">${itemPnl>=0?'+':''}$${formatNum(Math.abs(itemPnl))}</div></div>
+      </div>`;
+    }).join('');
+  }
+  
+  // Rank
+  updateRank(totalAssets);
+}
+
+function renderBilanco(){
+  const div = document.getElementById('bilancoRows');
+  const totalAssets = calculateTotalAssets();
+  const holdingsValue = totalAssets - game.capital;
+  const pnl = totalAssets - INITIAL_CAPITAL;
+  
+  div.innerHTML = `
+    <div class="bilanco-row"><span class="label">Başlangıç Sermayesi</span><span class="value">$${formatNum(INITIAL_CAPITAL)}</span></div>
+    <div class="bilanco-row"><span class="label">Nakit</span><span class="value">$${formatNum(game.capital)}</span></div>
+    <div class="bilanco-row"><span class="label">Portföy Değeri</span><span class="value">$${formatNum(holdingsValue)}</span></div>
+    <div class="bilanco-row"><span class="label">Toplam Alım</span><span class="value" style="color:var(--cyan)">$${formatNum(game.totalBought)}</span></div>
+    <div class="bilanco-row"><span class="label">Toplam Satım</span><span class="value" style="color:var(--orange)">$${formatNum(game.totalSold)}</span></div>
+    <div class="bilanco-row"><span class="label">Gerçekleşen Kâr</span><span class="value" style="color:var(--profit)">$${formatNum(game.totalProfit)}</span></div>
+    <div class="bilanco-row"><span class="label">Gerçekleşen Zarar</span><span class="value" style="color:var(--loss)">$${formatNum(game.totalLoss)}</span></div>
+    <div class="bilanco-row total"><span class="label">NET VARLIK</span><span class="value"${pnl>=0?' style="color:var(--profit)"':' style="color:var(--loss)"'}>$${formatNum(totalAssets)}</span></div>
+  `;
+}
+
+function renderLeaderboard(){
+  const totalAssets = calculateTotalAssets();
+  const all = [...competitors, {name:'Sen',avatar:'👤',puan:totalAssets,style:'player'}];
+  all.sort((a,b)=>b.score-a.score);
+  
+  const div = document.getElementById('leaderList');
+  div.innerHTML = all.slice(0,8).map((p,i)=>{
+    const rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const isPlayer = p.style==='player';
+    return `<div class="leader-item" style="${isPlayer?'background:rgba(88,101,242,.1);border-left:3px solid var(--purple)':''}">
+      <div class="rank ${rankClass}">${i+1}</div>
+      <div class="avatar">${p.avatar}</div>
+      <div class="name" style="${isPlayer?'color:var(--cyan)':''}">${p.name}</div>
+      <div class="score">$${formatNum(p.score)}</div>
+    </div>`;
+  }).join('');
+}
+
+// === TRADE FUNCTIONS ===
+function buyDialog(id){
+  const c = commodities.find(x=>x.id===id);
+  const maxQty = Math.floor(game.capital / c.price);
+  if(maxQty <= 0){alert('Yetersiz sermaye!');return;}
+  
+  const qty = parseInt(prompt(`${c.icon} ${c.name} AL\nFiyat: $${formatPrice(c.price)}/${c.unit}\nMaksimum: ${maxQty} ${c.unit}\nKaç ${c.unit} almak istiyorsunuz?`));
+  if(!qty || qty<=0 || qty>maxQty) return;
+  
+  const total = qty * c.price;
+  game.capital -= total;
+  game.holdings[id] = (game.holdings[id]||0) + qty;
+  game.totalBought += total;
+  game.history.push({id, type:'buy', qty, price:c.price, total, turn:game.turn});
+  
+  renderAll();
+}
+
+function sellDialog(id){
+  const c = commodities.find(x=>x.id===id);
+  const held = game.holdings[id]||0;
+  if(held<=0) return;
+  
+  const qty = parseInt(prompt(`${c.icon} ${c.name} SAT\nFiyat: $${formatPrice(c.price)}/${c.unit}\nEldeki: ${held} ${c.unit}\nKaç ${c.unit} satmak istiyorsunuz?`));
+  if(!qty || qty<=0 || qty>held) return;
+  
+  const total = qty * c.price;
+  const avgBuyPrice = getAvgBuyPrice(id);
+  const costBasis = qty * avgBuyPrice;
+  const profit = total - costBasis;
+  
+  game.capital += total;
+  game.holdings[id] -= qty;
+  game.totalSold += total;
+  if(profit >= 0) game.totalProfit += profit;
+  else game.totalLoss += Math.abs(profit);
+  game.history.push({id, type:'sell', qty, price:c.price, total, profit, turn:game.turn});
+  
+  renderAll();
+}
+
+function getAvgBuyPrice(id){
+  const buys = game.history.filter(h=>h.id===id&&h.type==='buy');
+  if(buys.length===0) return 0;
+  const totalCost = buys.reduce((s,h)=>s+h.total,0);
+  const totalQty = buys.reduce((s,h)=>s+h.qty,0);
+  return totalCost/totalQty;
+}
+
+// === TURN SYSTEM ===
+function nextTurn(){
+  if(game.turn >= MAX_TURNS){
+    endGame();
+    return;
+  }
+  game.turn++;
+  
+  // Price movements
+  commodities.forEach(c=>{
+    const change = (Math.random()-0.45) * c.volatility * 2;
+    c.lastChange = change;
+    c.price = Math.max(c.price * 0.3, c.price * (1 + change));
+  });
+  
+  // Competitor movements
+  competitors.forEach(c=>{
+    const change = (Math.random()-0.4) * 0.05;
+    c.score = Math.max(c.score * 0.5, c.score * (1 + change));
+  });
+  
+  // Random event (30% chance)
+  if(Math.random() < 0.3){
+    triggerEvent();
+  }
+  
+  updateTicker();
+  renderAll();
+}
+
+function triggerEvent(){
+  const evt = events[Math.floor(Math.random()*events.length)];
+  document.getElementById('eventTag').textContent = 'PİYASA OLAYI — TUR '+game.turn;
+  document.getElementById('eventTitle').textContent = evt.title;
+  document.getElementById('eventDesc').textContent = evt.desc;
+  document.getElementById('eventEffects').innerHTML = evt.effects.map(e=>{
+    const c = commodities.find(x=>x.id===e.id);
+    c.price *= (1 + e.change);
+    c.lastChange = e.change;
+    return `<span class="effect-tag ${e.change>0?'up':'down'}">${c.icon} ${c.name} ${e.change>0?'+':''}${(e.change*100).toFixed(0)}%</span>`;
+  }).join('');
+  document.getElementById('eventOverlay').classList.add('active');
+}
+
+function closeEvent(){
+  document.getElementById('eventOverlay').classList.remove('active');
+}
+
+function endGame(){
+  const totalAssets = calculateTotalAssets();
+  const pnl = totalAssets - INITIAL_CAPITAL;
+  const pnlPct = (pnl/INITIAL_CAPITAL*100).toFixed(2);
+  
+  // Save score
+  try{
+    const scores = JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    scores['emtia-imparatorlugu'] = Math.max(scores['emtia-imparatorlugu']||0, totalAssets);
+    localStorage.setItem('hs_scores',JSON.stringify(scores));
+  }catch(e){}
+  
+  alert(`🏆 OYUN BİTTİ!\n\nNet Varlık: $${formatNum(totalAssets)}\nKâr/Zarar: ${pnl>=0?'+':''}$${formatNum(Math.abs(pnl))} (${pnlPct}%)\n\nGerçekleşen Kâr: $${formatNum(game.totalProfit)}\nGerçekleşen Zarar: $${formatNum(game.totalLoss)}`);
+}
+
+// === HELPERS ===
+function calculateTotalAssets(){
+  let total = game.capital;
+  Object.entries(game.holdings).forEach(([id,qty])=>{
+    const c = commodities.find(x=>x.id===id);
+    total += qty * c.price;
+  });
+  return total;
+}
+
+function updateRank(totalAssets){
+  const all = [...competitors.map(c=>c.score), totalAssets].sort((a,b)=>b-a);
+  const rank = all.indexOf(totalAssets)+1;
+  document.getElementById('rank').textContent = '#'+rank;
+}
+
+function updateTicker(){
+  const parts = commodities.slice(0,8).map(c=>{
+    const dir = (c.lastChange||0)>=0?'▲':'▼';
+    return `${dir} ${c.name} $${formatPrice(c.price)} (${(c.lastChange||0)>=0?'+':''}${((c.lastChange||0)*100).toFixed(1)}%)`;
+  });
+  document.getElementById('ticker').textContent = parts.join(' · ');
+}
+
+function formatPrice(p){
+  if(p>=1000) return p.toLocaleString('en-US',{maximumFractionDigits:0});
+  if(p>=10) return p.toFixed(1);
+  return p.toFixed(2);
+}
+
+function formatNum(n){
+  return Math.round(n).toLocaleString('en-US');
+}
+
+function renderAll(){
+  renderMarket();
+  renderPortfolio();
+  renderBilanco();
+  renderLeaderboard();
+}
+
+// === AUTO-TURN (every 8 seconds) ===
+let turnInterval = setInterval(nextTurn, 8000);
+
+// === INIT ===
+commodities.forEach(c=>c.lastChange=0);
+renderAll();
+document.getElementById('turnEvent').textContent = 'Piyasa Açılışı — İlk alımlarınızı yapın';
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

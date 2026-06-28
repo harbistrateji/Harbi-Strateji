@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Silah Tarihi Quiz — OZA</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.back{position:fixed;top:15px;left:15px;color:#00e5ff;text-decoration:none;font-size:14px;z-index:100;background:rgba(0,0,0,0.7);padding:8px 16px;border-radius:20px}
+h1{font-size:2em;margin-bottom:10px;color:#ff6b35}
+.subtitle{color:#aaa;margin-bottom:30px;text-align:center}
+.quiz-box{background:rgba(255,107,53,0.05);border:1px solid rgba(255,107,53,0.3);border-radius:16px;padding:30px;max-width:600px;width:100%}
+.progress{display:flex;justify-content:space-between;margin-bottom:20px;font-size:0.85em;color:#aaa}
+.progress-bar{height:4px;background:rgba(255,107,53,0.2);border-radius:2px;margin-bottom:20px}
+.progress-fill{height:100%;background:#ff6b35;border-radius:2px;transition:width 0.3s}
+.question{font-size:1.2em;margin-bottom:20px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:12px}
+.option{padding:14px 18px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;transition:all 0.2s;font-size:0.95em}
+.option:hover{border-color:#ff6b35;background:rgba(255,107,53,0.1)}
+.option.correct{border-color:#4caf50;background:rgba(76,175,80,0.2)}
+.option.wrong{border-color:#f44336;background:rgba(244,67,54,0.2)}
+.option.disabled{pointer-events:none;opacity:0.6}
+.explanation{margin-top:15px;padding:12px;background:rgba(0,229,255,0.1);border-radius:8px;font-size:0.85em;color:#00e5ff;display:none}
+.next-btn{margin-top:20px;padding:12px 24px;background:#ff6b35;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1em;display:none}
+.result{text-align:center;padding:40px}
+.result h2{color:#ffd700;font-size:2em;margin-bottom:15px}
+.result p{color:#aaa;font-size:1.1em}
+.restart{margin-top:20px;padding:12px 24px;background:#00e5ff;color:#0a0e1a;border:none;border-radius:8px;cursor:pointer;font-size:1em;font-weight:bold}
+</style><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" class="back">← OZA Hub</a>
+<h1>⚔️ Silah Tarihi Quiz</h1>
+<p class="subtitle">Antik çağdan modern silah sistemlerine — bilgini test et!</p>
+<div class="quiz-box" id="quiz">
+<div class="progress"><span id="qnum">Soru 1/15</span><span id="score">Puan: 0</span></div>
+<div class="progress-bar"><div class="progress-fill" id="pbar" style="width:6.67%"></div></div>
+<div class="question" id="question"></div>
+<div class="options" id="options"></div>
+<div class="explanation" id="explanation"></div>
+<button class="next-btn" id="nextBtn" onclick="nextQ()">Sonraki →</button>
+</div>
+<script>
+const questions=[
+{q:"Barutun ilk askeri kullanımı hangi ülkede gerçekleşti?",o:["Çin","Osmanlı","İngiltere","Hindistan"],a:0,e:"Çin, 9. yüzyılda barutu askeri amaçla kullanan ilk medeniyettir. Wujing Zongyao (1044) ilk askeri barut reçetesini içerir."},
+{q:"Hasan el-Rammah 1280 yılında kaç farklı barut formülü sundu?",o:["22","50","107","200"],a:2,e:"Suriyeli Hasan el-Rammah, 1280 tarihli kitabında 107 farklı barut formülü ve 22 roket tasarımı sunmuştur."},
+{q:"İstanbul kuşatmasında Şahi toplarının mermi ağırlığı ne kadardı?",o:["100 kg","350 kg","680 kg","1000 kg"],a:2,e:"Fatih Sultan Mehmed'in Şahi topları 680 kg ağırlığında mermi atıyordu. Top 8 metre uzunluğundaydı."},
+{q:"Grek Ateşi neden suda bile yanmaya devam ediyordu?",o:["Fosfor içeriyordu","Sönmemiş kireç suyla tepkimeye giriyordu","Magnezyum bazlıydı","Petrol bazlıydı"],a:1,e:"Grek Ateşi bileşimindeki sönmemiş kireç (CaO) suyla temas edince kuvvetle ısınarak karışımı tutuşturuyordu."},
+{q:"Türk kompozit yayının maksimum menzili ne kadardı?",o:["200 metre","400 metre","600 metre","800 metre"],a:3,e:"Türk kompozit yayı boynuz, sinir ve ahşap katmanlarından yapılırdı ve 800 metreye kadar ok atabiliyordu."},
+{q:"Nobel Barış Ödülü'nü kurmaya Alfred Nobel'i ne itti?",o:["Savaşta yaralanması","Kendi ölüm ilanını okuması","Bir arkadaşının ölümü","Hükümet baskısı"],a:1,e:"Nobel bir gazetede kendi ölüm ilanını okudu: 'Ölüm taciri öldü.' Bu olay onu Nobel Barış Ödülü'nü kurmaya itti."},
+{q:"F-35 programının toplam maliyeti ne kadar?",o:["500 milyar $","1.2 trilyon $","1.7 trilyon $","2.5 trilyon $"],a:2,e:"F-35 programı 1.7 trilyon dolarla tarihin en pahalı silah programıdır."},
+{q:"Shahed-136 drone ile Patriot füzesi arasındaki maliyet oranı yaklaşık kaçtır?",o:["1:10","1:50","1:150","1:1000"],a:2,e:"Shahed-136: ~$20.000, Patriot: ~$3-4 milyon. Oran yaklaşık 1:150-200 arasındadır."},
+{q:"Soğuk Savaş zirvesinde dünyada kaç nükleer başlık vardı?",o:["10.000","30.000","50.000","70.000"],a:3,e:"Soğuk Savaş'ın zirvesinde dünyada 70.000'den fazla nükleer başlık vardı."},
+{q:"Manhattan Projesi'nde kaç kişi çalıştı?",o:["10.000","50.000","130.000","500.000"],a:2,e:"Manhattan Projesi'nde 130.000 kişi çalıştı, 2 milyar $ harcandı. Çoğu çalışan ne yaptığını bilmiyordu."},
+{q:"Dünyada en çok üretilen silah hangisidir?",o:["M16","AK-47","Glock","Beretta"],a:1,e:"AK-47 dünyada 100 milyondan fazla üretildi. 106 ülke ordusunda kullanılıyor."},
+{q:"18. yüzyılda silah ve mühimmat toplam savaş giderinin yüzde kaçını oluşturuyordu?",o:["%1","%5","%12","%25"],a:0,e:"18. yüzyılda silah ve mühimmat toplam savaş giderinin sadece %1'ini oluşturuyordu. Asıl maliyet lojistik ve erzaktaydı."},
+{q:"Babür hangi savaşta topçu üstünlüğüyle Hindistan'ı fethetti?",o:["Talas","Panipat","Çaldıran","Mohacs"],a:1,e:"Babür 1526 Panipat Muharebesi'nde topçu üstünlüğüyle 100.000 kişilik orduyu yendi ve Babür İmparatorluğu'nu kurdu."},
+{q:"Leonardo da Vinci kaçtan fazla askeri tasarım çizdi?",o:["50","100","200","500"],a:2,e:"Leonardo Codex Atlanticus'ta 200'den fazla askeri tasarım çizdi: tank, helikopter, makineli tüfek, zırhlı araç."},
+{q:"Osmanlı Tophane-i Amire'nin özelliği neydi?",o:["İlk deniz üssü","Dünyanın en büyük silah fabrikası","İlk askeri okul","İlk tersane"],a:1,e:"Tophane-i Amire döneminin dünyanın en büyük silah fabrikasıydı. Osmanlı top teknolojisi Avrupa'yı 200 yıl geride bıraktı."}
+];
+let ci=0,sc=0;
+function renderQ(){
+  const q=questions[ci];
+  document.getElementById("qnum").textContent=`Soru ${ci+1}/${questions.length}`;
+  document.getElementById("score").textContent=`Puan: ${sc}`;
+  document.getElementById("pbar").style.width=((ci+1)/questions.length*100)+"%";
+  document.getElementById("question").textContent=q.q;
+  document.getElementById("explanation").style.display="none";
+  document.getElementById("nextBtn").style.display="none";
+  const opts=document.getElementById("options");
+  opts.innerHTML="";
+  q.o.forEach((o,i)=>{
+    const d=document.createElement("div");d.className="option";d.textContent=o;
+    d.onclick=()=>answer(i);opts.appendChild(d);
+  });
+}
+function answer(i){
+  const q=questions[ci];const opts=document.querySelectorAll(".option");
+  opts.forEach((o,idx)=>{o.classList.add("disabled");if(idx===q.a)o.classList.add("correct");if(idx===i&&i!==q.a)o.classList.add("wrong");});
+  if(i===q.a)sc+=10;
+  document.getElementById("explanation").textContent=q.e;
+  document.getElementById("explanation").style.display="block";
+  document.getElementById("nextBtn").style.display="block";
+  document.getElementById("score").textContent=`Puan: ${sc}`;
+}
+function nextQ(){
+  ci++;if(ci>=questions.length){showResult();return;}renderQ();
+}
+function showResult(){
+  const pct=Math.round(sc/(questions.length*10)*100);
+  let msg=pct>=80?"Mükemmel! Silah tarihi uzmanısın!":pct>=50?"İyi! Ama daha öğrenecek çok şey var.":"Daha çalışman gerekiyor!";
+  document.getElementById("quiz").innerHTML=`<div class="result"><h2>${sc}/${questions.length*10} Puan</h2><p>${msg}</p><p style="margin-top:10px;color:#ffd700">%${pct} Başarı</p><button class="restart" onclick="location.reload()">Tekrar Oyna</button></div>`;
+}
+renderQ();
+</script><script src="hs-nav.js?v=11"></script>
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

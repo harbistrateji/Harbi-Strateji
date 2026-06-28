@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Binyıllık Analoglar: 15 Devrimci Eşleşme | Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2332;--gold:#C9A24B;--gold-dim:rgba(201,162,75,.15);--cyan:#00E0FF;--red:#E01515;--text:#e8e6e3;--text-dim:#9ca3af;--accent:#5865f2;--serif:'Playfair Display',serif;--mono:'Chakra Petch',sans-serif;--code:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7;overflow-x:hidden}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .3s}
+nav{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(10,14,26,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,162,75,.1);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+nav a{color:var(--gold);text-decoration:none;font-family:var(--mono);font-size:.8rem;letter-spacing:1px}
+nav .title{color:var(--text);font-family:var(--mono);font-size:.95rem;letter-spacing:2px;text-transform:uppercase}
+#soundBtn{background:none;border:1px solid var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:.9rem;padding:4px 12px;border-radius:4px;cursor:pointer}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(201,162,75,.06) 0%,transparent 60%)}
+.hero-tag{font-family:var(--mono);font-size:.95rem;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;line-height:1.15;margin-bottom:24px;color:#fff}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{max-width:680px;font-size:1.05rem;color:var(--text-dim);line-height:1.8}
+.scroll-hint{position:absolute;bottom:40px;color:var(--text-dim);font-family:var(--mono);font-size:.95rem;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+/* Category Tabs */
+.cat-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:20px 24px;max-width:1100px;margin:0 auto}
+.cat-tab{font-family:var(--mono);font-size:.95rem;padding:8px 18px;border:1px solid rgba(201,162,75,.2);border-radius:20px;cursor:pointer;color:var(--text-dim);transition:all .3s;letter-spacing:1px}
+.cat-tab:hover,.cat-tab.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+/* Sections */
+.section{padding:80px 32px 60px;max-width:1100px;margin:0 auto;opacity:0;transform:translateY(60px);transition:all .8s cubic-bezier(.19,1,.22,1)}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:40px;padding-bottom:16px;border-bottom:1px solid rgba(201,162,75,.15)}
+.section-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--gold-dim);border:2px solid var(--gold);flex-shrink:0}
+.section-header h2{font-family:var(--serif);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:#fff}
+.section-header h2 em{font-style:normal;color:var(--gold)}
+.section-desc{font-size:.95rem;color:var(--text-dim);line-height:1.8;margin-bottom:32px;max-width:800px}
+/* Analog Cards */
+.analog-grid{display:grid;gap:32px}
+.analog-card{background:var(--surface);border:1px solid rgba(201,162,75,.1);border-radius:16px;overflow:hidden;transition:all .4s}
+.analog-card:hover{border-color:var(--gold);box-shadow:0 12px 48px rgba(201,162,75,.12);transform:translateY(-3px)}
+.analog-header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:24px 28px;background:var(--surface2);border-bottom:1px solid rgba(201,162,75,.08)}
+.analog-old,.analog-new{text-align:center}
+.analog-old h4,.analog-new h4{font-family:var(--serif);font-size:1.1rem;color:#fff;margin-bottom:4px}
+.analog-old .era,.analog-new .era{font-family:var(--mono);font-size:.85rem;color:var(--text-dim);letter-spacing:1px}
+.analog-old .era{color:var(--gold)}
+.analog-new .era{color:var(--cyan)}
+.analog-arrow{font-size:1.8rem;color:var(--gold);font-family:var(--mono);animation:arrowPulse 2s infinite}
+@keyframes arrowPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+.analog-body{padding:24px 28px}
+.analog-match{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:12px 16px;background:rgba(201,162,75,.05);border-radius:8px;border-left:3px solid var(--gold)}
+.analog-match .label{font-family:var(--mono);font-size:.85rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;min-width:90px;padding-top:2px}
+.analog-match .value{font-size:.9rem;color:var(--text);line-height:1.6}
+.analog-analysis{font-size:.88rem;color:var(--text-dim);line-height:1.7;padding:12px 0}
+.analog-analysis strong{color:var(--text)}
+.analog-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.analog-tags span{font-family:var(--mono);font-size:.6rem;padding:3px 8px;border-radius:4px;background:var(--gold-dim);color:var(--gold);letter-spacing:.5px}
+/* Conclusion */
+.conclusion{background:var(--surface);border:1px solid rgba(201,162,75,.15);border-radius:16px;padding:48px 40px;margin:60px auto;max-width:1100px;text-align:center}
+.conclusion h2{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.4rem);color:#fff;margin-bottom:24px}
+.conclusion h2 em{font-style:normal;color:var(--gold)}
+.conclusion p{font-size:1rem;color:var(--text-dim);line-height:1.8;max-width:700px;margin:0 auto 16px}
+.conclusion-pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-top:32px}
+.pillar{background:var(--surface2);border:1px solid rgba(201,162,75,.1);border-radius:12px;padding:24px 16px;text-align:center}
+.pillar-icon{font-size:2rem;margin-bottom:8px}
+.pillar h4{font-family:var(--serif);font-size:1rem;color:var(--gold);margin-bottom:4px}
+.pillar p{font-size:.8rem;color:var(--text-dim)}
+/* Sources */
+.sources{background:var(--surface);border-radius:12px;padding:32px;margin:48px auto;max-width:1100px}
+.sources h3{font-family:var(--serif);font-size:1.2rem;color:var(--gold);margin-bottom:16px}
+.sources ul{list-style:none}
+.sources li{font-size:.8rem;color:var(--text-dim);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-family:var(--code)}
+footer{text-align:center;padding:40px 24px;border-top:1px solid rgba(201,162,75,.1)}
+footer a{color:var(--gold);text-decoration:none;font-family:var(--mono);font-size:.8rem}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.content{position:relative;z-index:1}
+@media(max-width:768px){
+  .analog-header{grid-template-columns:1fr;gap:12px;text-align:center}
+  .analog-arrow{transform:rotate(90deg)}
+  nav{padding:10px 16px}
+  .cat-tabs{gap:8px}
+  .cat-tab{font-size:.85rem;padding:6px 12px}
+  .section{padding:60px 16px 40px}
+  .conclusion{padding:32px 20px}
+  .conclusion-pillars{grid-template-columns:1fr 1fr}
+}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div id="progress" style="width:0%"></div>
+<canvas id="particles"></canvas>
+<div class="content">
+
+<nav>
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a>
+  <span class="title">Binyıllık Analoglar</span>
+  <button id="soundBtn">Ses: Kapalı</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Selahaddin Koyuncu · Askerî Analitik</div>
+  <h1>Binyıllık <em>Analoglar</em></h1>
+  <p>Eski savaş teknolojileri ile yükselen teknoloji arasında 15 devrimci eşleşme. 3000 yıllık askerî dehanın değişmeyen kodlarını keşfedin.</p>
+  <div class="scroll-hint">↓ Keşfetmek için kaydırın</div>
+</div>
+
+<!-- Category Tabs -->
+<div class="cat-tabs">
+  <div class="cat-tab active" data-cat="all">Tümü (15)</div>
+  <div class="cat-tab" data-cat="isr">I. ISR & Lojistik</div>
+  <div class="cat-tab" data-cat="kinetik">II. Kinetik Güç</div>
+  <div class="cat-tab" data-cat="asimetrik">III. Asimetrik Avantaj</div>
+  <div class="cat-tab" data-cat="siber">IV. Siber & EH</div>
+  <div class="cat-tab" data-cat="elit">V. Elit Hassasiyet</div>
+</div>
+
+<!-- SECTION I: ISR & LOJİSTİK -->
+<div class="section" data-cat="isr">
+  <div class="section-header">
+    <div class="section-icon">🛰</div>
+    <h2>I. <em>ISR & Lojistik:</em> Bilgi Üstünlüğü</h2>
+  </div>
+  <div class="section-desc">Gözetleme, iletişim ve istihbarat akışı — stratejik üstünlüğün temel üçgeni. Asurluların surlardan görmek istediği bilgi üstünlüğü, bugün küresel ölçekte sağlanıyor.</div>
+  
+  <div class="analog-grid">
+    <!-- 1 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Asur Savaş Kulesi</h4>
+          <div class="era">MÖ 900 – MÖ 600</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>HALE Dron Gözetleme</h4>
+          <div class="era">2020+</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">ISR Platformu — Yüksekten bakarak durumsal farkındalık kazanma</span>
+        </div>
+        <div class="analog-analysis">
+          Asur kuşatma kuleleri <strong>25–30 m</strong> yüksekliğiyle görüş hattını artırarak düşman iç düzenini çözmeyi sağlardı. Modern HALE dronları (Bayraktar Akıncı, Global Hawk) <strong>40.000–60.000 ft</strong> (≈12,2–18,3 km) irtifadan kesintisiz gözetleme yapar. Bu teknoloji, eski "yüksekten bakma" yöntemini küresel ve sürekli gözetleme (Persistent Stare) seviyesine taşır.
+        </div>
+        <div class="analog-tags">
+          <span>Persistent Stare</span><span>ISR</span><span>Bayraktar Akıncı</span><span>Global Hawk</span>
+        </div>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Roma Yol Ağı (Cursus Publicus)</h4>
+          <div class="era">MÖ 300 – MS 400</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Uydu Takımyıldızları</h4>
+          <div class="era">Starlink / Kuiper</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Lojistik Omurga — Hız + süreklilik ile gücün geniş coğrafyaya yayılması</span>
+        </div>
+        <div class="analog-analysis">
+          Roma yol sistemi, imparatorluk genelinde supply chain sürekliliğini temin eden fiziksel omurgaydı. Modern savaş ortamında bu rolü <strong>dijital lojistik + iletişim omurgası</strong> üstlenmektedir. Starlink/Kuiper benzeri uydu takımyıldızları: C4ISR akışının sürekliliğini sağlar, düşük gecikmeli L-Band / Ku-Band / Ka-Band bağlantılarıyla modern komuta-kontrol ağını ayakta tutar.
+        </div>
+        <div class="analog-tags">
+          <span>C4ISR</span><span>Supply Chain</span><span>LEO Uydu</span><span>Dijital Omurga</span>
+        </div>
+      </div>
+    </div>
+    <!-- 3 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Moğol İstihbarat Ağları</h4>
+          <div class="era">MS 1200 – MS 1300</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Veri Füzyonu + ISR Yapay Zekâsı</h4>
+          <div class="era">AI-Powered C²</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Dağıtık Sensör Ağı — Bilgiyi ışık hızıyla doğru kişiye ulaştırma</span>
+        </div>
+        <div class="analog-analysis">
+          Moğol istihbarat sistemi, <strong>Distributed Sensor Network</strong> fikrinin tarihsel öncüsüdür. "Ulaklar" sayesinde bilgi, o çağ için "ışık hızı" sayılabilecek bir hızla doğru kişiye ulaşırdı. Modern dünyada AI tabanlı veri füzyonu: SAR, EO/IR, SIGINT gibi farklı sensörlerden gelen ham veriyi birleştirir, komutanın <strong>OODA döngüsünü</strong> (Observe–Orient–Decide–Act) hızlandırır.
+        </div>
+        <div class="analog-tags">
+          <span>OODA</span><span>Veri Füzyonu</span><span>SIGINT</span><span>AI C²</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION II: KİNETİK GÜÇ -->
+<div class="section" data-cat="kinetik">
+  <div class="section-header">
+    <div class="section-icon">💥</div>
+    <h2>II. <em>Kinetik & Şok Gücü:</em> Fiziksel Kuralları Zorlamak</h2>
+  </div>
+  <div class="section-desc">Hız, kütle ve enerji — savaşın fizik yasalarıyla dans ettiği alan. Kılıçtan railgun'a, mancınıktan yörüngesel bombardımana uzanan kinetik devrim.</div>
+  
+  <div class="analog-grid">
+    <!-- 4 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Hitit Savaş Arabası</h4>
+          <div class="era">MÖ 1500</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Otonom Kara Robotu (UGV)</h4>
+          <div class="era">AI-Güdümlü Platform</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Mobil Şok Platformu — Mobilite + ateş gücü + hızlı manevra</span>
+        </div>
+        <div class="analog-analysis">
+          MÖ 1500'de Hitit arabaları, mobilite ve korumayı birleştiren ilk entegre <strong>Platform Silah Sistemi</strong> olarak kabul edilir. Modern AI güdümlü UGV'ler (Unmanned Ground Vehicles), insan kaybı riskini ortadan kaldırarak ön cephede insansız şok etkisi oluşturur ve asimetrik avantajı artırır.
+        </div>
+        <div class="analog-tags">
+          <span>UGV</span><span>Şok Etkisi</span><span>Platform Silah</span><span>Otonom Manevra</span>
+        </div>
+      </div>
+    </div>
+    <!-- 5 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Roma Torsiyon Mancınığı (Ballista)</h4>
+          <div class="era">MÖ 400 – MS 400</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Elektromanyetik Railgun</h4>
+          <div class="era">Lorentz Kuvveti</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Saf Kinetik Güç — Kimyasal enerji yerine mekanik/elektromanyetik enerji</span>
+        </div>
+        <div class="analog-analysis">
+          Ballista, burulmuş tendonların elastik potansiyel enerjisini kullanarak mühimmatı yüksek hızla fırlatırdı. Railgun ise <strong>Lorentz kuvvetini</strong> kullanarak mühimmatı <strong>Mach 6–7</strong> hızlara çıkarır. Her iki sistemin temel mantığı, kimyasal iticiye ihtiyaç duymadan, depolanmış mekanik/elektriksel enerjiyle maksimum kinetik enerji (E<sub>k</sub>=½mv²) üretmektir.
+        </div>
+        <div class="analog-tags">
+          <span>Railgun</span><span>Mach 6–7</span><span>Kinetik Enerji</span><span>Lorentz</span>
+        </div>
+      </div>
+    </div>
+    <!-- 6 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Ortaçağ Gulyabanileri (Trebuchet)</h4>
+          <div class="era">MS 1100 – MS 1400</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Yörüngesel Bombardıman (Rods from God)</h4>
+          <div class="era">Uzay Çağı Konsepti</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Gravite Silahı — Yerçekimini birincil vurucu güç olarak kullanma</span>
+        </div>
+        <div class="analog-analysis">
+          Trebuchet, uzun menzilli atışlarda yerçekimini birincil vurucu güç olarak kullanan ilk sistemdir. "Rods from God" konseptindeki <strong>tungsten çubukların yörüngeden 10–15 Mach</strong> hızla düşürülmesi, yerçekimini nihai kinetik vuruş gücüne çevirerek Trebuchet'in gravite silahı mantığını uzay çağına taşır.
+        </div>
+        <div class="analog-tags">
+          <span>Tungsten</span><span>Mach 10–15</span><span>Gravite Silahı</span><span>Yörüngesel</span>
+        </div>
+      </div>
+    </div>
+    <!-- 7 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Osmanlı Bombardıcı Topları (Şahi)</h4>
+          <div class="era">MS 1453</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Hipersonik Füzeler (Mach 10–20)</h4>
+          <div class="era">Mach 5+ Penetrasyon</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Kırılma Noktası — "Delinemez" savunmaları yok eden devrimci hız ve güç</span>
+        </div>
+        <div class="analog-analysis">
+          Şahi topları, barut ve döküm teknolojisinin zirvesiydi ve <strong>kale savunma doktrinini yerle bir etti</strong>. Hipersonik füzeler ise, Mach 5 ve üzeri hızları sayesinde, mevcut SM-6 / Patriot gibi hava savunma sistemlerinin hız ve zaman sınırlarını kırarak aynı devrimci penetrasyon etkisi meydana getirir. Sürpriz etkisi ve önleme imkânsızlığı ile eş anlamlıdır.
+        </div>
+        <div class="analog-tags">
+          <span>Hipersonik</span><span>Mach 10–20</span><span>Penetrasyon</span><span>Şahi Topu</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION III: ASİMETRİK AVANTAJ -->
+<div class="section" data-cat="asimetrik">
+  <div class="section-header">
+    <div class="section-icon">⚡</div>
+    <h2>III. <em>Asimetrik Avantaj:</em> Maliyet-Etkinlik & Sürpriz</h2>
+  </div>
+  <div class="section-desc">Minimum kaynakla maksimum etki — düşük maliyetli, hafif ve beklenmedik platformlarla ağır kuvvetlere karşı üstünlük sağlama sanatı.</div>
+  
+  <div class="analog-grid">
+    <!-- 8 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Göktürk Kompozit Yayı</h4>
+          <div class="era">MS 500 – MS 800</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Mikro-Dron Sürüleri (Swarm)</h4>
+          <div class="era">Perdix / Sürü Zekâsı</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Kütle/Öldürücülük Oranı — Minimum kütleyle maksimum enerji aktarımı</span>
+        </div>
+        <div class="analog-analysis">
+          Kompozit yay, ahşap + boynuz + sinir katmanları sayesinde döneminin en yüksek <strong>Özgül Enerji (SE)</strong> yoğunluğunu üretirdi. Mikro sürü dronlar da hafif, düşük maliyetli ve toplu hücum kabiliyetiyle (Saturation Attack) asimetrik baskı oluşturur. Pentagon'un "Perdix" testlerinde <strong>100+ mikro dronun</strong> sürü zekâsıyla tek hedefi doyurarak savunmayı çökerttiği raporlanmıştır.
+        </div>
+        <div class="analog-tags">
+          <span>Swarm</span><span>Saturation Attack</span><span>Kompozit Yay</span><span>Özgül Enerji</span>
+        </div>
+      </div>
+    </div>
+    <!-- 9 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Çin Tekrarlayan Arbaleti (Chu-ko-nu)</h4>
+          <div class="era">MÖ 400 – MS 1600</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Otonom C-UAS Taretleri</h4>
+          <div class="era">ATR Sistemleri</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Hızlı Ateş + Düşük Personel — Mekanik otomasyondan yazılımsal otomasyona</span>
+        </div>
+        <div class="analog-analysis">
+          Chu-ko-nu, basit mekanizması ile yüksek atış hızını acemi askerle bile mümkün kılıyordu. Modern C-UAS taretleri ise <strong>otomatik hedef tanıma (ATR)</strong> ile insan müdahalesine gerek kalmadan yüksek hızlı mikro-dron tehditlerini imha eder. 2020 sonrası C-UAS konseptlerinde "man-in-the-loop" kademeli olarak otomatik modlara taşındı.
+        </div>
+        <div class="analog-tags">
+          <span>C-UAS</span><span>ATR</span><span>Otomasyon</span><span>Hızlı Ateş</span>
+        </div>
+      </div>
+    </div>
+    <!-- 10 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Viking Langskipleri</h4>
+          <div class="era">MS 800 – MS 1100</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Otonom SİDA (ULAQ, Sea Hunter)</h4>
+          <div class="era">İnsansız Deniz Araçları</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Sessizlik + Hız + Sığ Su Manevrası — Gizli yaklaşma & hit-and-run</span>
+        </div>
+        <div class="analog-analysis">
+          Viking gemileri düşük su çekimi sayesinde sığ sulardan saldırı yapabiliyor, kürek + yelken kombinasyonuyla sessiz ve hızlı ilerliyordu. Modern SİDA'lar <strong>elektrikli tahrik, düşük akustik iz</strong> ve otonom rota optimizasyonu sayesinde benzer bir gizli yaklaşma + hızlı kaçış kapasitesi sunuyor. Temel ilke: "Hafif, sessiz ve esnek platform = ağır kuvvetlere karşı beklenmedik saldırı üstünlüğü."
+        </div>
+        <div class="analog-tags">
+          <span>ULAQ</span><span>Sea Hunter</span><span>Hit-and-Run</span><span>Düşük Akustik İz</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION IV: SİBER & ELEKTRONİK HARP -->
+<div class="section" data-cat="siber">
+  <div class="section-header">
+    <div class="section-icon">🔒</div>
+    <h2>IV. <em>Siber & Elektronik Harp:</em> Görünmez Etkisizleştirme</h2>
+  </div>
+  <div class="section-desc">Fiziksel temasta bulunmadan düşmanı çökertme — gizlilik ve işlevsizleştirme üzerine kurulu, şok ve felç etme amaçlı stratejilerin teknolojik devamı.</div>
+  
+  <div class="analog-grid">
+    <!-- 11 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Yunan Ateşi</h4>
+          <div class="era">MS 672 – MS 1200</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Siber Saldırı + Elektronik Harp</h4>
+          <div class="era">GPS Karıştırma / C² Çökertme</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Teknolojik Sır — Tersine mühendislik yapılamayan, anlaşılamadan çökerten silah</span>
+        </div>
+        <div class="analog-analysis">
+          Yunan Ateşi'nin formülü, <strong>teknolojik sır (secret formula)</strong> olarak düşman tarafından tersine mühendislik yapılamayan bir silahtı. Siber saldırılar ve GPS karıştırmaları, görünmeyen algoritmalarla veya elektromanyetik spektrum üzerinden düşman savunma sistemlerini anlamadan, fiziksel temasta bulunmadan çökerten modern analoglardır. Amaç: C² sistemini bozarak moral çöküntüsü ve işlevsizlik oluşturmak.
+        </div>
+        <div class="analog-tags">
+          <span>Siber Saldırı</span><span>EH</span><span>GPS Spoofing</span><span>C² Çökertme</span>
+        </div>
+      </div>
+    </div>
+    <!-- 12 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Trireme Çatıramaları (Ram)</h4>
+          <div class="era">MÖ 700 – MÖ 200</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Elektromanyetik Darbe (EMP) Silahları</h4>
+          <div class="era">HPM / Geniş Alan EMP</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">İşlevsizleştirme (Functional Kill) — Yok etmeden hareketsiz bırakma</span>
+        </div>
+        <div class="analog-analysis">
+          Trireme'lerin bronz mahmuzu, düşman gemisinin gövdesine doğrudan çarpıp gemiyi yüzdürülmez hale getirirdi — <strong>batırmaktan çok işlevsiz bırakma</strong> stratejisi. EMP silahları ise hedefi fiziksel olarak yok etmeden, yüksek güçlü mikrodalga (HPM) veya geniş alan elektromanyetik darbe ile tüm elektronik sistemleri anında kapatır. Aynı "Functional Kill" mantığıyla düşman platformlarının hareket ve iletişim yeteneğini ortadan kaldırır.
+        </div>
+        <div class="analog-tags">
+          <span>EMP</span><span>HPM</span><span>Functional Kill</span><span>Non-Kinetic</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION V: ELİT UZMANLIK -->
+<div class="section" data-cat="elit">
+  <div class="section-header">
+    <div class="section-icon">🎯</div>
+    <h2>V. <em>Elit Uzmanlık & Hassasiyet:</em> Sanat ve Bilim</h2>
+  </div>
+  <div class="section-desc">Yüksek beceri, içeriden savunma ve görünmezlik — savaşın sanat ve bilim olarak icra edildiği en rafine boyut.</div>
+  
+  <div class="analog-grid">
+    <!-- 13 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Orta Asya Süvari Okçuluğu</h4>
+          <div class="era">MÖ 800 – MS 1400</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>YZ Destekli Hava-Hava Füzeleri</h4>
+          <div class="era">AIM-260 / Meteor / PL-15</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Hareketten Hassas Vuruş (High-G Precision) — Dinamik platformdan dinamik hedefi vurma</span>
+        </div>
+        <div class="analog-analysis">
+          At üstünde yüksek hız + yön değiştirme sırasında ok atmak, tarihin en zor "dinamik platformdan dinamik hedefi vurma" becerisidir. İnsan–at–yay üçlemi bir <strong>füzyon sistemi</strong> olarak çalışır. Modern hava-hava füzeleri ise AI tabanlı hedef öngörme (predictive kılavuzluk), High-G manevra ve terminal aşamada otonom hedef seçimi ile aynı sanatı teknolojik düzeye taşır.
+        </div>
+        <div class="analog-tags">
+          <span>AI Kılavuzluk</span><span>No-Escape Zone</span><span>Ramjet</span><span>High-G</span>
+        </div>
+      </div>
+    </div>
+    <!-- 14 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Bizans Varangian Muhafızları</h4>
+          <div class="era">MS 988 – MS 1204</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>Siber Savunma Kırmızı Takımlar</h4>
+          <div class="era">Red Team / Penetrasyon Testi</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">İçeriden Savunma — İç sistem bilgisi + sadakat = maksimum güvenilirlik</span>
+        </div>
+        <div class="analog-analysis">
+          Varangianlar, sarayın iç mekanizmasını, ritüellerini, giriş-çıkış noktalarını, zayıflıkları ve insan faktörünü bilir; <strong>içeriden korurdu</strong>. Modern kırmızı takımlar: sistemlere etik penetrasyon, sosyal mühendislik ve iç tehdit testi, iç zafiyet analizi yaparak savunmayı just-in-time güçlendirir. NIST ve MITRE ATT&CK çerçeveleri bu yapıyı doğrular.
+        </div>
+        <div class="analog-tags">
+          <span>Red Team</span><span>MITRE ATT&CK</span><span>Penetrasyon</span><span>İç Savunma</span>
+        </div>
+      </div>
+    </div>
+    <!-- 15 -->
+    <div class="analog-card">
+      <div class="analog-header">
+        <div class="analog-old">
+          <h4>Japon Ninja Teknolojileri</h4>
+          <div class="era">MS 1400 – MS 1600</div>
+        </div>
+        <div class="analog-arrow">⟶</div>
+        <div class="analog-new">
+          <h4>SOF + Nano Gözetleme Platformları</h4>
+          <div class="era">Özel Kuvvetler / Nano-Dron</div>
+        </div>
+      </div>
+      <div class="analog-body">
+        <div class="analog-match">
+          <span class="label">Mantık</span>
+          <span class="value">Görünmez Operasyon (Denial of Detection) — Algılanmadan etki üretme</span>
+        </div>
+        <div class="analog-analysis">
+          Ninjalar gece baskınları, gölge kamuflajı, sessiz tırmanma, toksinler ve tuzaklar gibi taktiklerle "düşmana görünmeden etki" üretirdi. Modern karşılık: <strong>termal ve radar kamuflaj malzemeleri</strong>, sessiz rotor/motor teknolojileri, nano-dronlar ve mikro gözetleme sensörleri, spektrum yönetimli görünmezlik (IR/EO/RF kaçınma). ABD SOCOM testlerinde nano-dronların 50–100 m iç mekân keşiflerinde tespit edilmeden ilerleyebildiği raporlanmıştır.
+        </div>
+        <div class="analog-tags">
+          <span>Nano-Dron</span><span>SOCOM</span><span>Stealth</span><span>Denial of Detection</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SONUÇ -->
+<div class="conclusion section">
+  <h2>Değişen Araçlar, <em>Değişmeyen Mantık</em></h2>
+  <p>Bu 15 benzersiz eşleştirme, 3000 yıllık askerî stratejinin özünün değişmediğini kanıtlıyor. Askerî bilim, sürekli olarak evrensel stratejik boşlukları doldurmakla ilgilenmiştir.</p>
+  <p>Gelecek; lazerler, kuantum sistemleri ve biyoteknoloji getirecek olsa da, temel stratejik gereksinimler Hititlerin savaş arabasına bindiklerinden beri aynıdır:</p>
+  <div class="conclusion-pillars">
+    <div class="pillar">
+      <div class="pillar-icon">⚡</div>
+      <h4>Hız</h4>
+      <p>Düşmandan önce hareket et, önce vuruş yap</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">💪</div>
+      <h4>Güç</h4>
+      <p>Savunmayı aş, şok etkisi oluştur</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🧠</div>
+      <h4>Bilgi Üstünlüğü</h4>
+      <p>Daha fazla gör, daha hızlı anla, daha iyi karar ver</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">👻</div>
+      <h4>Görünmezlik</h4>
+      <p>Algılanmadan etki üret, sürpriz sağla</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🎯</div>
+      <h4>Hassasiyet</h4>
+      <p>Minimum kaynakla maksimum hasar ver</p>
+    </div>
+  </div>
+</div>
+
+<!-- KAYNAKÇA -->
+<div class="sources">
+  <h3>Kaynakça & Açık Kaynak Referanslar</h3>
+  <ul>
+    <li>[1] Koyuncu, S. (2025). "Binyıllık Analoglar." LinkedIn, 24 Kasım 2025.</li>
+    <li>[2] Keegan, J. (1993). A History of Warfare. Vintage Books.</li>
+    <li>[3] Northrop Grumman. "RQ-4 Global Hawk: High-Altitude Long-Endurance ISR." Resmi Teknik Doküman.</li>
+    <li>[4] SpaceX Starlink. "LEO Satellite Constellation for Military C4ISR." Defense One Analiz, 2023.</li>
+    <li>[5] May, T. (2012). The Mongol Conquests in World History. Reaktion Books.</li>
+    <li>[6] BAE Systems. "Electromagnetic Railgun: Mach 6+ Kinetic Energy Projectile." Naval Research Lab.</li>
+    <li>[7] DARPA. "Perdix Micro-Drone Swarm Test Results." Department of Defense, 2017.</li>
+    <li>[8] Türk Savunma Sanayii. "ULAQ SİDA: Otonom İnsansız Deniz Aracı." SSB Raporu, 2021.</li>
+    <li>[9] NIST / MITRE. "ATT&CK Framework: Red Team Operations." Cybersecurity Framework v2.0.</li>
+    <li>[10] US SOCOM. "Nano-UAV Indoor Reconnaissance Capabilities." Special Operations Technology, 2022.</li>
+    <li>[11] Baykar Technologies. "Bayraktar Akıncı HALE UCAV Specifications." Resmi Doküman, 2023.</li>
+    <li>[12] Singer, P.W. (2009). Wired for War: The Robotics Revolution and Conflict in the 21st Century. Penguin.</li>
+    <li>[13] Scharre, P. (2018). Army of None: Autonomous Weapons and the Future of War. W.W. Norton.</li>
+    <li>[14] Freedman, L. (2013). Strategy: A History. Oxford University Press.</li>
+    <li>[15] Parker, G. (1996). The Military Revolution: Military Innovation and the Rise of the West. Cambridge UP.</li>
+  </ul>
+</div>
+
+<footer>
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a> · Harb-i Strateji · Selahaddin Koyuncu Arşivi
+</footer>
+
+</div><!-- /content -->
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  const p=(window.scrollY/h)*100;
+  document.getElementById('progress').style.width=p+'%';
+});
+// Intersection Observer
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');playReveal()}});
+},{threshold:0.12});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+// Category filter
+document.querySelectorAll('.cat-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const cat=tab.dataset.cat;
+    document.querySelectorAll('.section[data-cat]').forEach(s=>{
+      if(cat==='all'||s.dataset.cat===cat){s.style.display='';} else{s.style.display='none';}
+    });
+  });
+});
+// Particles
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let particles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+for(let i=0;i<50;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2+.5,a:Math.random()*.25+.05})}
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(201,162,75,${p.a})`;ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+// Sound
+let audioCtx=null,soundOn=false;
+document.getElementById('soundBtn').addEventListener('click',()=>{
+  soundOn=!soundOn;
+  document.getElementById('soundBtn').textContent=soundOn?'Ses: Açık':'Ses: Kapalı';
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(soundOn)playAmbient();
+});
+function playAmbient(){
+  if(!audioCtx||!soundOn)return;
+  const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+  osc.type='sine';osc.frequency.value=65;gain.gain.value=0.02;
+  osc.connect(gain);gain.connect(audioCtx.destination);osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+10);
+  osc.stop(audioCtx.currentTime+10);
+}
+function playReveal(){
+  if(!audioCtx||!soundOn)return;
+  const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+  osc.type='triangle';osc.frequency.value=500+Math.random()*500;gain.gain.value=0.04;
+  osc.connect(gain);gain.connect(audioCtx.destination);osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.5);
+  osc.stop(audioCtx.currentTime+.5);
+}
+// Card hover sound
+document.querySelectorAll('.analog-card').forEach(c=>{
+  c.addEventListener('mouseenter',()=>{
+    if(!audioCtx||!soundOn)return;
+    const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+    osc.type='sine';osc.frequency.value=900;gain.gain.value=0.03;
+    osc.connect(gain);gain.connect(audioCtx.destination);osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.12);
+    osc.stop(audioCtx.currentTime+.12);
+  });
+});
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

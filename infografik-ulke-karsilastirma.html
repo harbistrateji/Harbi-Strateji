@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ülke Bazlı Nadir Metal Karşılaştırması — Harb-i Strateji</title>
+<style>
+:root{
+  --bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;
+  --red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;
+  --purple:#9b59b6;--orange:#e67e22;--txt:#e8eaf0;--dim:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f17,#1a0a0a,#0a0f17);padding:60px 20px;text-align:center;border-bottom:2px solid var(--red);position:relative;overflow:hidden;}
+.hero-title{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;line-height:1.1;}
+.hero-title .t1{color:var(--gold);}
+.hero-title .t2{color:var(--red);}
+.hero-sub{font-size:1rem;color:var(--cyan);letter-spacing:2px;margin-top:8px;margin-bottom:32px;}
+.hero-nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.nav-btn{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;padding:8px 16px;color:var(--dim);font-size:.8rem;cursor:pointer;transition:all .2s;text-decoration:none;}
+.nav-btn:hover,.nav-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,224,255,.08);}
+
+/* SECTION */
+.section{max-width:1400px;margin:0 auto;padding:60px 24px;}
+.sec-title{font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.sec-title span{color:var(--gold);}
+.sec-sub{font-size:.85rem;color:var(--dim);margin-bottom:32px;max-width:800px;line-height:1.6;}
+
+/* COUNTRY SELECTOR */
+.country-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+.ctab{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 14px;cursor:pointer;transition:all .2s;font-size:.8rem;color:var(--dim);}
+.ctab:hover,.ctab.active{border-color:var(--gold);color:var(--gold);background:rgba(201,162,75,.08);}
+
+/* RADAR CHART */
+.radar-container{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+.radar-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.radar-title{font-size:.85rem;font-weight:700;color:var(--gold);margin-bottom:12px;text-align:center;}
+
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:.8rem;}
+.comp-table th{background:rgba(0,0,0,.4);padding:10px 12px;text-align:left;color:var(--gold);font-size:.9rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);}
+.comp-table td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04);}
+.comp-table tr:hover td{background:rgba(255,255,255,.02);}
+.dep-cell{display:flex;align-items:center;gap:8px;}
+.dep-mini-bar{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+.dep-mini-fill{height:100%;border-radius:4px;}
+.risk-badge{padding:2px 8px;border-radius:4px;font-size:.85rem;font-weight:700;}
+.risk-critical{background:rgba(224,21,21,.2);color:var(--red);border:1px solid rgba(224,21,21,.4);}
+.risk-high{background:rgba(230,126,34,.2);color:var(--orange);border:1px solid rgba(230,126,34,.4);}
+.risk-medium{background:rgba(201,162,75,.2);color:var(--gold);border:1px solid rgba(201,162,75,.4);}
+.risk-low{background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.3);}
+
+/* BUBBLE CHART */
+.bubble-container{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;overflow:hidden;}
+
+/* HEATMAP */
+.heatmap-container{overflow-x:auto;}
+.heatmap-grid{display:grid;gap:3px;min-width:800px;}
+.hm-cell{border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;position:relative;}
+.hm-cell:hover{transform:scale(1.1);z-index:10;}
+.hm-header{font-size:.85rem;color:var(--dim);text-align:center;padding:4px;}
+.hm-row-label{font-size:.9rem;color:var(--txt);display:flex;align-items:center;gap:4px;padding-right:8px;}
+
+/* TIMELINE RACE */
+.race-container{position:relative;}
+.race-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.race-flag{font-size:1.2rem;width:30px;}
+.race-country{width:100px;font-size:.95rem;color:var(--txt);}
+.race-bar-bg{flex:1;height:32px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;position:relative;}
+.race-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:.95rem;font-weight:700;color:#000;transition:width 1.5s ease;}
+.race-val{width:60px;font-size:.8rem;font-weight:700;text-align:right;}
+
+/* SPIDER COMPARISON */
+.spider-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.spider-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+.spider-card h3{font-size:.85rem;font-weight:700;color:var(--gold);margin-bottom:12px;}
+
+/* WORLD MAP SVG */
+.world-map-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;overflow:hidden;}
+.world-map-wrap svg{width:100%;height:auto;}
+
+/* LEGEND */
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--dim);}
+.leg-dot{width:12px;height:12px;border-radius:50%;}
+
+/* CARDS GRID */
+.country-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.country-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s;}
+.country-card:hover{transform:translateY(-3px);border-color:var(--gold);}
+.cc-header{padding:16px;display:flex;align-items:center;gap:12px;}
+.cc-flag{font-size:2rem;}
+.cc-info h3{font-size:1rem;font-weight:700;}
+.cc-info p{font-size:.72rem;color:var(--dim);margin-top:2px;}
+.cc-body{padding:0 16px 16px;}
+.cc-metric{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.cc-metric .mk{font-size:.72rem;color:var(--dim);}
+.cc-metric .mv{font-size:.78rem;font-weight:700;}
+.cc-metals{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.cc-metal{padding:2px 8px;border-radius:4px;font-size:.62rem;font-weight:700;border:1px solid;}
+.cc-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;margin-top:6px;overflow:hidden;}
+.cc-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+
+/* ANIMATED NUMBERS */
+.anim-num{display:inline-block;}
+
+/* SEPARATOR */
+.sep{border:none;border-top:1px solid var(--border);margin:0;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .radar-container{grid-template-columns:1fr;}
+  .spider-wrap{grid-template-columns:1fr;}
+}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">
+    <div class="t1">KÜRESEL SAVUNMA SANAYİİ</div>
+    <div class="t2">NADİR METAL BAĞIMLILIK HARİTASI</div>
+  </div>
+  <div class="hero-sub">🌍 15 Ülke | 40+ Mineral | Çin Hakimiyeti | Stratejik Riskler</div>
+  <div class="hero-nav">
+    <a href="#country-cards" class="nav-btn">🏳️ Ülke Profilleri</a>
+    <a href="#dependency-race" class="nav-btn">📊 Bağımlılık Yarışı</a>
+    <a href="#heatmap" class="nav-btn">🌡️ Isı Haritası</a>
+    <a href="#radar" class="nav-btn">🕸️ Radar Karşılaştırma</a>
+    <a href="#worldmap" class="nav-btn">🗺️ Dünya Haritası</a>
+    <a href="#timeline" class="nav-btn">📅 Kriz Zaman Çizelgesi</a>
+  </div>
+</div>
+
+<!-- SECTION 1: COUNTRY CARDS -->
+<div class="section" id="country-cards">
+  <div class="sec-title">🏳️ <span>Ülke</span> Profilleri</div>
+  <div class="sec-sub">Her ülkenin savunma sanayii nadir metal bağımlılığı, stratejik rezervleri ve Çin'e karşı kırılganlık skoru.</div>
+  <div class="country-cards" id="countryCards"></div>
+</div>
+
+<hr class="sep">
+
+<!-- SECTION 2: DEPENDENCY RACE -->
+<div class="section" id="dependency-race" style="background:linear-gradient(135deg,rgba(224,21,21,.03),transparent);">
+  <div class="sec-title">📊 Çin Bağımlılığı <span>Yarışı</span></div>
+  <div class="sec-sub">Ülkelerin kritik minerallerde Çin'e bağımlılık oranları. Yüksek skor = yüksek stratejik risk.</div>
+  <div id="dependencyRace"></div>
+</div>
+
+<hr class="sep">
+
+<!-- SECTION 3: HEATMAP -->
+<div class="section" id="heatmap">
+  <div class="sec-title">🌡️ Metal-Ülke <span>Isı Haritası</span></div>
+  <div class="sec-sub">Her ülkenin her kritik minerale olan bağımlılığı. Kırmızı = kritik bağımlılık, yeşil = bağımsız/üretici.</div>
+  <div class="heatmap-container">
+    <canvas id="heatmapCanvas" width="1100" height="500"></canvas>
+  </div>
+</div>
+
+<hr class="sep">
+
+<!-- SECTION 4: RADAR -->
+<div class="section" id="radar">
+  <div class="sec-title">🕸️ Radar <span>Karşılaştırma</span></div>
+  <div class="sec-sub">Ülkelerin savunma sanayii kapasitelerini 6 boyutta karşılaştırın: Mineral bağımsızlığı, üretim kapasitesi, teknoloji, ihracat, AR-GE, stratejik stok.</div>
+  <div class="country-tabs" id="radarTabs"></div>
+  <div class="radar-container">
+    <div class="radar-wrap">
+      <div class="radar-title" id="radarTitle1">Ülke Seçin</div>
+      <canvas id="radarCanvas1" width="400" height="400"></canvas>
+    </div>
+    <div class="radar-wrap">
+      <div class="radar-title" id="radarTitle2">Karşılaştırma için ülke seçin</div>
+      <canvas id="radarCanvas2" width="400" height="400"></canvas>
+    </div>
+  </div>
+</div>
+
+<hr class="sep">
+
+<!-- SECTION 5: WORLD MAP -->
+<div class="section" id="worldmap" style="background:linear-gradient(135deg,rgba(0,224,255,.02),transparent);">
+  <div class="sec-title">🗺️ Stratejik Mineral <span>Dünya Haritası</span></div>
+  <div class="sec-sub">Kritik mineral üretim merkezleri ve savunma sanayii güç dengeleri.</div>
+  <div class="world-map-wrap">
+    <canvas id="worldMapCanvas" width="1200" height="500"></canvas>
+  </div>
+  <div class="legend" id="mapLegend"></div>
+</div>
+
+<hr class="sep">
+
+<!-- SECTION 6: TIMELINE -->
+<div class="section" id="timeline">
+  <div class="sec-title">📅 Kritik Mineral <span>Kriz Zaman Çizelgesi</span></div>
+  <div class="sec-sub">2010-2025 arası küresel nadir metal krizleri ve savunma sanayiine etkileri.</div>
+  <canvas id="timelineCanvas" width="1200" height="400"></canvas>
+</div>
+
+<!-- SECTION 7: COMPARISON TABLE -->
+<div class="section">
+  <div class="sec-title">📋 Detaylı <span>Karşılaştırma Tablosu</span></div>
+  <div class="sec-sub">Ülkelerin mineral bağımlılığı, savunma harcamaları ve stratejik konumları.</div>
+  <div style="overflow-x:auto;">
+    <table class="comp-table" id="compTable"></table>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const COUNTRIES = [
+  {
+    id:'usa',name:'ABD',flag:'🇺🇸',color:'#3498db',
+    chinaPuan:62,mineralIndep:45,prodCapacity:70,techLevel:95,exports:40,rnd:90,strategicStock:85,
+    defBudget:'$916B',weapons:20,
+    keyMinerals:['Ti','Be','Li','Co'],
+    criticalDeps:['Nd','Dy','Ga','Ge','Re'],
+    reserves:'Molycorp kapatıldı, Mountain Pass yeniden açıldı',
+    strategy:'IRA ile yerli üretim teşviki, müttefik kaynak çeşitlendirmesi',
+    risk:'YÜKSEK',
+    metrics:{
+      'Nadir Toprak Üretimi (ton/yıl)':'43,000',
+      'Çin\'e Bağımlılık':'%62',
+      'Stratejik Stok (ay)':'6-12 ay',
+      'Savunma Harcaması':'$916B',
+      'NTE İçeren Silah':'%80+',
+      'Alternatif Tedarik':'Avustralya, Kanada'
+    }
+  },
+  {
+    id:'china',name:'Çin',flag:'🇨🇳',color:'#e74c3c',
+    chinaPuan:5,mineralIndep:95,prodCapacity:98,techLevel:85,exports:95,rnd:80,strategicStock:99,
+    defBudget:'$293B',weapons:10,
+    keyMinerals:['Nd','Dy','Ga','Ge','W','Co','Li'],
+    criticalDeps:[],
+    reserves:'Dünya NTE rezervlerinin %35\'i, üretimin %70\'i',
+    strategy:'Mineral silahlaştırma, ihracat kısıtlamaları, fiyat manipülasyonu',
+    risk:'DÜŞÜK (üretici)',
+    metrics:{
+      'Nadir Toprak Üretimi (ton/yıl)':'140,000',
+      'Küresel NTE Payı':'%70',
+      'Galyum Payı':'%98',
+      'Germanyum Payı':'%67',
+      'Tungsten Payı':'%85',
+      'Kobalt İşleme':'%65'
+    }
+  },
+  {
+    id:'russia',name:'Rusya',flag:'🇷🇺',color:'#e67e22',
+    chinaPuan:40,mineralIndep:75,prodCapacity:65,techLevel:70,exports:35,rnd:60,strategicStock:80,
+    defBudget:'$109B',weapons:9,
+    keyMinerals:['Ti','Ni','Pd','Pt'],
+    criticalDeps:['Nd','Dy','Ga','Ge'],
+    reserves:'Titanyum dünya 1., Nikel dünya 2., Paladyum dünya 1.',
+    strategy:'Titanyum silahı (Boeing/Airbus), Paladyum hakimiyeti',
+    risk:'ORTA',
+    metrics:{
+      'Titanyum Üretimi':'%30 dünya payı',
+      'Paladyum Üretimi':'%40 dünya payı',
+      'Nikel Üretimi':'%11 dünya payı',
+      'Çin\'e Bağımlılık':'%40',
+      'Savunma Harcaması':'$109B',
+      'Mineral İhracatı':'$15B+'
+    }
+  },
+  {
+    id:'turkey',name:'Türkiye',flag:'🇹🇷',color:'#C9A24B',
+    chinaPuan:58,mineralIndep:35,prodCapacity:40,techLevel:65,exports:25,rnd:55,strategicStock:30,
+    defBudget:'$41B',weapons:11,
+    keyMinerals:['B','Cr','Mn','Fe'],
+    criticalDeps:['Nd','Dy','Ga','Ge','Co'],
+    reserves:'Bor dünya 1. (%73), Krom dünya 5., Feldispat dünya 1.',
+    strategy:'Bor entegrasyonu, ASELSAN yerli NTE, KAAN için tedarik çeşitlendirmesi',
+    risk:'YÜKSEK',
+    metrics:{
+      'Bor Rezervi':'%73 dünya payı',
+      'Krom Üretimi':'%5 dünya payı',
+      'Çin\'e Bağımlılık':'%58',
+      'Savunma Harcaması':'$41B',
+      'Yerli Üretim Oranı':'%81 (2025)',
+      'NTE İthalatı':'Kritik bağımlılık'
+    }
+  },
+  {
+    id:'japan',name:'Japonya',flag:'🇯🇵',color:'#e91e63',
+    chinaPuan:52,mineralIndep:30,prodCapacity:55,techLevel:90,exports:30,rnd:88,strategicStock:70,
+    defBudget:'$48B',weapons:6,
+    keyMinerals:['In','Ga'],
+    criticalDeps:['Nd','Dy','Co','Li','Ti'],
+    reserves:'Deniz tabanı mineral araştırması, geri dönüşüm teknolojisi',
+    strategy:'Çin\'den çeşitlendirme (2010 krizinden sonra), Avustralya ortaklığı',
+    risk:'YÜKSEK',
+    metrics:{
+      'NTE Geri Dönüşüm':'Dünya lideri',
+      'Çin\'e Bağımlılık':'%52 (2010\'da %90)',
+      'Savunma Harcaması':'$48B (artıyor)',
+      'Mineral Stoku':'180 gün+',
+      'Teknoloji Seviyesi':'Dünya 3.',
+      'GCAP Programı':'İngiltere-İtalya ortaklığı'
+    }
+  },
+  {
+    id:'india',name:'Hindistan',flag:'🇮🇳',color:'#f39c12',
+    chinaPuan:58,mineralIndep:45,prodCapacity:50,techLevel:65,exports:20,rnd:60,strategicStock:40,
+    defBudget:'$83B',weapons:6,
+    keyMinerals:['Ti','Mn','Fe','Th'],
+    criticalDeps:['Nd','Dy','Co','Li','Ga'],
+    reserves:'Titanyum dünya 5., Toryum dünya 2., Mangan önemli',
+    strategy:'Atmanirbhar Bharat (öz yeterlilik), Rusya ile ortaklık',
+    risk:'YÜKSEK',
+    metrics:{
+      'Titanyum Rezervi':'%8 dünya payı',
+      'Toryum Rezervi':'%25 dünya payı',
+      'Çin\'e Bağımlılık':'%58',
+      'Savunma Harcaması':'$83B',
+      'Yerli Üretim':'%68 (hedef %75)',
+      'BrahMos İhracatı':'Filipinler, diğerleri'
+    }
+  },
+  {
+    id:'uk',name:'İngiltere',flag:'🇬🇧',color:'#2980b9',
+    chinaPuan:60,mineralIndep:25,prodCapacity:45,techLevel:88,exports:35,rnd:82,strategicStock:55,
+    defBudget:'$64B',weapons:4,
+    keyMinerals:[],
+    criticalDeps:['Nd','Dy','Co','Li','Ga','Ti'],
+    reserves:'Sınırlı yerli rezerv, Avustralya/Kanada ortaklığı',
+    strategy:'AUKUS, GCAP, Kritik Mineral Stratejisi (2023)',
+    risk:'YÜKSEK',
+    metrics:{
+      'Çin\'e Bağımlılık':'%60',
+      'Savunma Harcaması':'$64B',
+      'GCAP Programı':'Japonya-İtalya',
+      'Kritik Mineral Stratejisi':'2023 yayınlandı',
+      'DragonFire Lazer':'2024 test',
+      'Mineral İthalatı':'%95+'
+    }
+  },
+  {
+    id:'france',name:'Fransa',flag:'🇫🇷',color:'#3498db',
+    chinaPuan:60,mineralIndep:30,prodCapacity:50,techLevel:85,exports:45,rnd:80,strategicStock:50,
+    defBudget:'$56B',weapons:4,
+    keyMinerals:[],
+    criticalDeps:['Nd','Dy','Co','Li','Ga','Ti'],
+    reserves:'Fransa Guyanası altın, Yeni Kaledonya nikel',
+    strategy:'FCAS programı, AB Kritik Hammadde Yasası',
+    risk:'YÜKSEK',
+    metrics:{
+      'Yeni Kaledonya Nikeli':'%25 dünya rezervi',
+      'Çin\'e Bağımlılık':'%60',
+      'Savunma Harcaması':'$56B',
+      'Rafale İhracatı':'Mısır, Hindistan, BAE, Yunanistan',
+      'FCAS Programı':'2040 hedefi',
+      'AB NTE Yasası':'2024 yürürlük'
+    }
+  },
+  {
+    id:'germany',name:'Almanya',flag:'🇩🇪',color:'#f1c40f',
+    chinaPuan:62,mineralIndep:20,prodCapacity:45,techLevel:88,exports:40,rnd:85,strategicStock:45,
+    defBudget:'$66B',weapons:4,
+    keyMinerals:[],
+    criticalDeps:['Nd','Dy','Co','Li','Ga','Ti','Ge'],
+    reserves:'Almanya Germanyum üreticisi (tarihsel), sınırlı rezerv',
+    strategy:'AB Kritik Hammadde Yasası, Namibya-Şili ortaklıkları',
+    risk:'KRİTİK',
+    metrics:{
+      'Çin\'e Bağımlılık':'%62',
+      'Savunma Harcaması':'$66B (artıyor)',
+      'Leopard İhracatı':'20+ ülke',
+      'Germanyum Üretimi':'Tarihsel lider',
+      'FCAS Programı':'Fransa-İspanya',
+      'Mineral İthalatı':'%95+'
+    }
+  },
+  {
+    id:'southkorea',name:'G.Kore',flag:'🇰🇷',color:'#1abc9c',
+    chinaPuan:55,mineralIndep:35,prodCapacity:60,techLevel:88,exports:55,rnd:85,strategicStock:60,
+    defBudget:'$50B',weapons:4,
+    keyMinerals:[],
+    criticalDeps:['Nd','Dy','Co','Li','Ga'],
+    reserves:'Sınırlı yerli, Avustralya/Kanada ortaklıkları',
+    strategy:'K-방산 (K-Defense) ihracat stratejisi, Polonya büyük anlaşması',
+    risk:'YÜKSEK',
+    metrics:{
+      'Çin\'e Bağımlılık':'%55',
+      'Savunma İhracatı':'$17B (2022)',
+      'Polonya Anlaşması':'$14B K9/K2/FA-50',
+      'KF-21 Programı':'2026 seri üretim',
+      'Mineral Stoku':'90 gün',
+      'Geri Dönüşüm':'Japonya ile ortaklık'
+    }
+  },
+  {
+    id:'israel',name:'İsrail',flag:'🇮🇱',color:'#2ecc71',
+    chinaPuan:65,mineralIndep:15,prodCapacity:40,techLevel:92,exports:50,rnd:90,strategicStock:55,
+    defBudget:'$24B',weapons:5,
+    keyMinerals:[],
+    criticalDeps:['Nd','Dy','Co','Li','Ga','Ge'],
+    reserves:'Neredeyse sıfır yerli mineral rezervi',
+    strategy:'Teknoloji üstünlüğü, ABD tedarik zinciri entegrasyonu',
+    risk:'KRİTİK',
+    metrics:{
+      'Çin\'e Bağımlılık':'%65',
+      'Savunma İhracatı':'$12B (2022)',
+      'Iron Dome':'10+ batarya',
+      'Teknoloji Seviyesi':'Dünya 4.',
+      'Mineral İthalatı':'%99+',
+      'ABD Bağımlılığı':'Yüksek'
+    }
+  },
+  {
+    id:'canada',name:'Kanada',flag:'🇨🇦',color:'#e74c3c',
+    chinaPuan:30,mineralIndep:80,prodCapacity:70,techLevel:75,exports:25,rnd:70,strategicStock:75,
+    defBudget:'$26B',weapons:3,
+    keyMinerals:['Nd','Co','Li','Ni','Cu','Pt','Pd'],
+    criticalDeps:['Ga','Ge','Dy'],
+    reserves:'51 kritik mineralin 31\'inde büyük rezerv, Cobalt Ontario',
+    strategy:'ABD ile Kritik Mineral Ortaklığı, Çin\'e alternatif tedarikçi',
+    risk:'DÜŞÜK',
+    metrics:{
+      'Kritik Mineral Rezervi':'51\'de 31 mineral',
+      'Kobalt Üretimi':'%4 dünya payı',
+      'Nikel Üretimi':'%6 dünya payı',
+      'Çin\'e Bağımlılık':'%30',
+      'ABD Ortaklığı':'Kritik Mineral Anlaşması',
+      'Savunma Harcaması':'$26B'
+    }
+  },
+  {
+    id:'australia',name:'Avustralya',flag:'🇦🇺',color:'#f39c12',
+    chinaPuan:28,mineralIndep:85,prodCapacity:75,techLevel:70,exports:20,rnd:65,strategicStock:70,
+    defBudget:'$32B',weapons:2,
+    keyMinerals:['Li','Co','Nd','Dy','Ni','Ti'],
+    criticalDeps:['Ga','Ge'],
+    reserves:'Lityum dünya 1., Kobalt önemli, NTE büyük rezerv',
+    strategy:'AUKUS, Çin\'e alternatif NTE tedarikçisi, Lynas Corporation',
+    risk:'DÜŞÜK',
+    metrics:{
+      'Lityum Üretimi':'%52 dünya payı',
+      'NTE Üretimi':'Lynas — Çin dışı en büyük',
+      'Kobalt Rezervi':'%17 dünya payı',
+      'Çin\'e Bağımlılık':'%28',
+      'AUKUS Programı':'Nükleer denizaltı',
+      'Mineral İhracatı':'$80B+'
+    }
+  },
+  {
+    id:'sweden',name:'İsveç',flag:'🇸🇪',color:'#3498db',
+    chinaPuan:55,mineralIndep:50,prodCapacity:55,techLevel:82,exports:30,rnd:78,strategicStock:50,
+    defBudget:'$11B',weapons:2,
+    keyMinerals:['Fe','Cu','Zn'],
+    criticalDeps:['Nd','Dy','Co','Li','Ga'],
+    reserves:'Kiruna demir madeni, LKAB NTE keşfi (2023)',
+    strategy:'LKAB\'ın Avrupa\'nın en büyük NTE yatağını keşfetmesi (2023)',
+    risk:'ORTA',
+    metrics:{
+      'LKAB NTE Keşfi':'1M ton+ (2023)',
+      'Kiruna Demir Madeni':'Avrupa en büyüğü',
+      'Çin\'e Bağımlılık':'%55',
+      'Savunma Harcaması':'$11B',
+      'Gripen İhracatı':'10+ ülke',
+      'NATO Üyeliği':'2024'
+    }
+  },
+];
+
+// ===================== RENDER COUNTRY CARDS =====================
+function renderCountryCards(){
+  const grid = document.getElementById('countryCards');
+  grid.innerHTML = COUNTRIES.map(c=>{
+    const riskClass = c.risk.includes('KRİTİK')?'risk-critical':c.risk.includes('YÜKSEK')?'risk-high':c.risk.includes('ORTA')?'risk-medium':'risk-low';
+    const keyMetalTags = c.keyMinerals.slice(0,5).map(m=>`<span class="cc-metal" style="color:#00ff88;border-color:rgba(0,255,136,.3);">${m}</span>`).join('');
+    const depMetalTags = c.criticalDeps.slice(0,4).map(m=>`<span class="cc-metal" style="color:#E01515;border-color:rgba(224,21,21,.3);">${m}</span>`).join('');
+    
+    return `<div class="country-card">
+      <div class="cc-header" style="border-bottom:2px solid ${c.color}22;">
+        <div class="cc-flag">${c.flag}</div>
+        <div class="cc-info">
+          <h3>${c.name}</h3>
+          <p>${c.defBudget} savunma bütçesi | ${c.weapons} sistem</p>
+        </div>
+        <span class="risk-badge ${riskClass}">${c.risk}</span>
+      </div>
+      <div class="cc-body">
+        <div class="cc-metric"><span class="mk">Çin Bağımlılığı</span><span class="mv" style="color:${c.chinaScore>=70?'var(--red)':c.chinaScore>=50?'var(--orange)':'var(--green)'}">%${c.chinaScore}</span></div>
+        <div class="cc-bar"><div class="cc-bar-fill" style="width:${c.chinaScore}%;background:${c.chinaScore>=70?'var(--red)':c.chinaScore>=50?'var(--orange)':'var(--green)'}"></div></div>
+        <div class="cc-metric" style="margin-top:6px;"><span class="mk">Mineral Bağımsızlığı</span><span class="mv" style="color:var(--cyan)">%${c.mineralIndep}</span></div>
+        <div class="cc-bar"><div class="cc-bar-fill" style="width:${c.mineralIndep}%;background:var(--cyan)"></div></div>
+        <div class="cc-metric" style="margin-top:6px;"><span class="mk">Teknoloji Seviyesi</span><span class="mv" style="color:var(--gold)">%${c.techLevel}</span></div>
+        <div class="cc-bar"><div class="cc-bar-fill" style="width:${c.techLevel}%;background:var(--gold)"></div></div>
+        ${keyMetalTags?`<div style="margin-top:8px;font-size:.62rem;color:var(--green);">✅ Yerli: </div><div class="cc-metals">${keyMetalTags}</div>`:''}
+        ${depMetalTags?`<div style="margin-top:6px;font-size:.62rem;color:var(--red);">⚠️ Bağımlı: </div><div class="cc-metals">${depMetalTags}</div>`:''}
+        <div style="margin-top:10px;font-size:.72rem;color:var(--dim);line-height:1.5;">${c.strategy}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== DEPENDENCY RACE =====================
+function renderDependencyRace(){
+  const container = document.getElementById('dependencyRace');
+  const sorted = [...COUNTRIES].sort((a,b)=>b.chinaScore-a.chinaScore);
+  
+  container.innerHTML = sorted.map(c=>{
+    const barColor = c.chinaScore>=70?'var(--red)':c.chinaScore>=50?'var(--orange)':'var(--green)';
+    return `<div class="race-row">
+      <div class="race-flag">${c.flag}</div>
+      <div class="race-country">${c.name}</div>
+      <div class="race-bar-bg">
+        <div class="race-bar-fill" style="width:0%;background:${barColor}" data-w="${c.chinaScore}">
+          %${c.chinaScore} Çin Bağımlılığı
+        </div>
+      </div>
+      <div class="race-val" style="color:${barColor}">%${c.chinaScore}</div>
+    </div>`;
+  }).join('');
+  
+  // Animate
+  setTimeout(()=>{
+    document.querySelectorAll('.race-bar-fill').forEach(bar=>{
+      bar.style.width = bar.dataset.w + '%';
+    });
+  },300);
+}
+
+// ===================== HEATMAP =====================
+function drawHeatmap(){
+  const canvas = document.getElementById('heatmapCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(13,27,42,1)';
+  ctx.fillRect(0,0,W,H);
+  
+  const metals = ['Nd','Dy','Ga','Ge','Co','Li','Ti','W','Ta','Re','Nb','V','Cr','Pt','Pd'];
+  const countries = COUNTRIES.slice(0,12);
+  
+  // Dependency matrix (country x metal)
+  const deps = {
+    usa:    [85,90,85,65,30,25,20,15,10,15,5,10,8,5,5],
+    china:  [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],
+    russia: [70,80,75,60,20,35,15,10,8,10,5,10,8,5,5],
+    turkey: [90,95,90,70,80,40,25,15,20,20,10,15,10,10,8],
+    japan:  [55,60,65,55,40,30,35,20,15,20,8,12,10,8,5],
+    india:  [75,80,75,65,50,35,20,15,12,15,8,10,8,8,5],
+    uk:     [80,85,80,65,45,35,30,20,15,18,8,12,10,8,5],
+    france: [80,85,80,65,45,35,30,20,15,18,8,12,10,8,5],
+    germany:[82,88,82,68,48,38,32,22,18,20,10,14,12,10,8],
+    southkorea:[70,75,70,60,40,30,25,18,12,15,8,10,8,8,5],
+    israel: [85,90,85,70,50,40,35,25,20,22,10,15,12,10,8],
+    canada: [40,45,55,45,15,10,10,8,5,8,3,5,5,3,3],
+  };
+  
+  const padL = 100, padT = 80, padR = 20, padB = 40;
+  const cellW = (W-padL-padR)/metals.length;
+  const cellH = (H-padT-padB)/countries.length;
+  
+  // Metal headers
+  metals.forEach((m,i)=>{
+    ctx.fillStyle = 'rgba(255,255,255,.6)';
+    ctx.font = 'bold 11px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(m, padL+cellW*(i+.5), padT-10);
+  });
+  
+  // Country rows
+  countries.forEach((c,ri)=>{
+    const rowDeps = deps[c.id] || new Array(metals.length).fill(50);
+    
+    // Country label
+    ctx.fillStyle = c.color;
+    ctx.font = '12px Segoe UI';
+    ctx.textAlign = 'right';
+    ctx.fillText(c.flag+' '+c.name, padL-8, padT+cellH*(ri+.5)+4);
+    
+    // Cells
+    metals.forEach((m,ci)=>{
+      const dep = rowDeps[ci];
+      const r = Math.round(dep*2.55);
+      const g = Math.round((100-dep)*1.5);
+      const cellX = padL+cellW*ci;
+      const cellY = padT+cellH*ri;
+      
+      ctx.fillStyle = `rgba(${r},${g},20,0.85)`;
+      ctx.roundRect(cellX+2,cellY+2,cellW-4,cellH-4,4);
+      ctx.fill();
+      
+      if(cellW>30){
+        ctx.fillStyle = dep>60?'rgba(255,255,255,.9)':'rgba(0,0,0,.8)';
+        ctx.font = 'bold 10px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText(dep+'%', cellX+cellW/2, cellY+cellH/2+4);
+      }
+    });
+  });
+  
+  // Title
+  ctx.fillStyle = 'rgba(201,162,75,.8)';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Ülke × Metal Bağımlılık Isı Haritası (%)', W/2, 20);
+  ctx.fillStyle = 'rgba(255,255,255,.3)';
+  ctx.font = '10px Segoe UI';
+  ctx.fillText('Kırmızı = Yüksek Bağımlılık | Yeşil = Bağımsız/Üretici', W/2, 38);
+}
+
+// ===================== RADAR CHART =====================
+let radarSelected = ['usa','china'];
+
+function buildRadarTabs(){
+  const tabs = document.getElementById('radarTabs');
+  tabs.innerHTML = COUNTRIES.map((c,i)=>`
+    <div class="ctab ${i<2?'active':''}" data-id="${c.id}" onclick="selectRadar('${c.id}',this)">${c.flag} ${c.name}</div>
+  `).join('');
+  drawRadar('radarCanvas1','radarTitle1',COUNTRIES[0]);
+  drawRadar('radarCanvas2','radarTitle2',COUNTRIES[1]);
+}
+
+function selectRadar(id, el){
+  const c = COUNTRIES.find(x=>x.id===id);
+  if(!c) return;
+  
+  const activeTabs = document.querySelectorAll('.ctab.active');
+  if(activeTabs.length<2){
+    el.classList.add('active');
+    radarSelected.push(id);
+    if(radarSelected.length===1) drawRadar('radarCanvas1','radarTitle1',c);
+    else drawRadar('radarCanvas2','radarTitle2',c);
+  } else {
+    document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    radarSelected = [id];
+    drawRadar('radarCanvas1','radarTitle1',c);
+    clearCanvas('radarCanvas2');
+    document.getElementById('radarTitle2').textContent = 'Karşılaştırma için ülke seçin';
+  }
+}
+
+function clearCanvas(id){
+  const c = document.getElementById(id);
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+}
+
+function drawRadar(canvasId, titleId, country){
+  document.getElementById(titleId).textContent = country.flag+' '+country.name+' — Savunma Kapasitesi';
+  
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  
+  ctx.fillStyle = 'rgba(13,27,42,.8)';
+  ctx.fillRect(0,0,W,H);
+  
+  const cx = W/2, cy = H/2, r = Math.min(W,H)/2-60;
+  const axes = [
+    {label:'Mineral Bağımsızlığı',val:country.mineralIndep},
+    {label:'Üretim Kapasitesi',val:country.prodCapacity},
+    {label:'Teknoloji Seviyesi',val:country.techLevel},
+    {label:'İhracat Kapasitesi',val:country.exports},
+    {label:'AR-GE Yatırımı',val:country.rnd},
+    {label:'Stratejik Stok',val:country.strategicStock},
+  ];
+  const n = axes.length;
+  
+  // Grid circles
+  [20,40,60,80,100].forEach(pct=>{
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const angle = (Math.PI*2*i/n)-Math.PI/2;
+      const x = cx+r*(pct/100)*Math.cos(angle);
+      const y = cy+r*(pct/100)*Math.sin(angle);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    
+    ctx.fillStyle = 'rgba(255,255,255,.2)';
+    ctx.font = '9px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(pct+'%', cx, cy-r*(pct/100)-3);
+  });
+  
+  // Axis lines
+  axes.forEach((_,i)=>{
+    const angle = (Math.PI*2*i/n)-Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+r*Math.cos(angle), cy+r*Math.sin(angle));
+    ctx.strokeStyle = 'rgba(255,255,255,.15)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+  
+  // Data polygon
+  ctx.beginPath();
+  axes.forEach((a,i)=>{
+    const angle = (Math.PI*2*i/n)-Math.PI/2;
+    const x = cx+r*(a.val/100)*Math.cos(angle);
+    const y = cy+r*(a.val/100)*Math.sin(angle);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = country.color+'33';
+  ctx.fill();
+  ctx.strokeStyle = country.color;
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  
+  // Data points
+  axes.forEach((a,i)=>{
+    const angle = (Math.PI*2*i/n)-Math.PI/2;
+    const x = cx+r*(a.val/100)*Math.cos(angle);
+    const y = cy+r*(a.val/100)*Math.sin(angle);
+    ctx.beginPath();
+    ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fillStyle = country.color;
+    ctx.fill();
+  });
+  
+  // Labels
+  axes.forEach((a,i)=>{
+    const angle = (Math.PI*2*i/n)-Math.PI/2;
+    const lx = cx+(r+30)*Math.cos(angle);
+    const ly = cy+(r+30)*Math.sin(angle);
+    ctx.fillStyle = 'rgba(255,255,255,.7)';
+    ctx.font = 'bold 10px Segoe UI';
+    ctx.textAlign = 'center';
+    const lines = a.label.split(' ');
+    lines.forEach((l,li)=>ctx.fillText(l, lx, ly+li*13));
+    ctx.fillStyle = country.color;
+    ctx.font = 'bold 11px Segoe UI';
+    ctx.fillText(a.val+'%', lx, ly+lines.length*13+4);
+  });
+  
+  // Center label
+  ctx.fillStyle = country.color;
+  ctx.font = 'bold 14px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText(country.flag, cx, cy-8);
+  ctx.fillStyle = 'rgba(255,255,255,.6)';
+  ctx.font = '10px Segoe UI';
+  ctx.fillText(country.name, cx, cy+8);
+}
+
+// ===================== WORLD MAP =====================
+function drawWorldMap(){
+  const canvas = document.getElementById('worldMapCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  
+  ctx.clearRect(0,0,W,H);
+  
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'#0d1b2a');
+  grad.addColorStop(1,'#050d18');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+  
+  // Grid
+  for(let x=0;x<W;x+=80){
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);
+    ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=1;ctx.stroke();
+  }
+  for(let y=0;y<H;y+=80){
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);
+    ctx.strokeStyle='rgba(255,255,255,.03)';ctx.lineWidth=1;ctx.stroke();
+  }
+  
+  // Country positions (approximate)
+  const positions = {
+    usa:    {x:200,y:200},
+    canada: {x:200,y:140},
+    uk:     {x:490,y:160},
+    france: {x:510,y:185},
+    germany:{x:530,y:170},
+    sweden: {x:540,y:140},
+    russia: {x:680,y:140},
+    turkey: {x:600,y:210},
+    israel: {x:610,y:230},
+    india:  {x:720,y:270},
+    china:  {x:820,y:210},
+    japan:  {x:920,y:200},
+    southkorea:{x:900,y:220},
+    australia:{x:880,y:380},
+  };
+  
+  // Draw connections (trade routes)
+  const routes = [
+    {from:'china',to:'usa',color:'#e74c3c',label:'NTE ihracat'},
+    {from:'china',to:'germany',color:'#e74c3c',label:'Ga/Ge'},
+    {from:'china',to:'japan',color:'#e74c3c',label:'NTE'},
+    {from:'australia',to:'usa',color:'#2ecc71',label:'Li/NTE'},
+    {from:'canada',to:'usa',color:'#3498db',label:'Co/Ni'},
+    {from:'russia',to:'china',color:'#e67e22',label:'Ti/Ni'},
+  ];
+  
+  routes.forEach(r=>{
+    const from = positions[r.from];
+    const to = positions[r.to];
+    if(!from||!to) return;
+    
+    const mx = (from.x+to.x)/2;
+    const my = Math.min(from.y,to.y)-40;
+    
+    ctx.beginPath();
+    ctx.moveTo(from.x,from.y);
+    ctx.quadraticCurveTo(mx,my,to.x,to.y);
+    ctx.strokeStyle = r.color+'66';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5,5]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+  
+  // Draw countries
+  COUNTRIES.forEach(c=>{
+    const pos = positions[c.id];
+    if(!pos) return;
+    
+    const riskR = c.chinaScore>=70?20:c.chinaScore>=50?16:12;
+    
+    // Glow
+    const glow = ctx.createRadialGradient(pos.x,pos.y,0,pos.x,pos.y,riskR*2);
+    glow.addColorStop(0,c.color+'44');
+    glow.addColorStop(1,'transparent');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(pos.x,pos.y,riskR*2,0,Math.PI*2);
+    ctx.fill();
+    
+    // Circle
+    ctx.beginPath();
+    ctx.arc(pos.x,pos.y,riskR,0,Math.PI*2);
+    ctx.fillStyle = c.color+'33';
+    ctx.fill();
+    ctx.strokeStyle = c.color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Flag
+    ctx.font = `${Math.max(14,riskR)}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(c.flag, pos.x, pos.y+5);
+    
+    // Label
+    ctx.fillStyle = 'rgba(255,255,255,.7)';
+    ctx.font = '10px Segoe UI';
+    ctx.fillText(c.name, pos.x, pos.y+riskR+14);
+    
+    // China score indicator
+    ctx.fillStyle = c.chinaScore>=70?'var(--red)':c.chinaScore>=50?'var(--orange)':'var(--green)';
+    ctx.font = 'bold 9px Segoe UI';
+    ctx.fillText('%'+c.chinaScore, pos.x, pos.y+riskR+25);
+  });
+  
+  // China dominance overlay
+  ctx.fillStyle = 'rgba(231,76,60,.04)';
+  ctx.beginPath();
+  ctx.arc(820,210,200,0,Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(231,76,60,.15)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8,8]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  ctx.fillStyle = 'rgba(231,76,60,.3)';
+  ctx.font = 'bold 11px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('ÇİN HAKİMİYET ALANI', 820, 80);
+  ctx.font = '9px Segoe UI';
+  ctx.fillStyle = 'rgba(231,76,60,.5)';
+  ctx.fillText('NTE %70 | Ga %98 | Ge %67 | W %85', 820, 95);
+  
+  // Title
+  ctx.fillStyle = 'rgba(201,162,75,.7)';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'left';
+  ctx.fillText('Küresel Stratejik Mineral Güç Haritası — Daire boyutu = Çin bağımlılığı', 20, 22);
+  ctx.fillStyle = 'rgba(255,255,255,.3)';
+  ctx.font = '10px Segoe UI';
+  ctx.fillText('Kesik çizgiler = mineral ticaret rotaları', 20, 38);
+}
+
+// ===================== TIMELINE =====================
+function drawTimeline(){
+  const canvas = document.getElementById('timelineCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(13,27,42,.8)';
+  ctx.roundRect(0,0,W,H,12);
+  ctx.fill();
+  
+  const events = [
+    {year:2010,x:80,title:'Çin-Japonya\nAmbargosu',color:'#e74c3c',impact:90},
+    {year:2015,x:220,title:'Molycorp\nİflası',color:'#e67e22',impact:70},
+    {year:2019,x:360,title:'ABD-Çin\nTicaret Savaşı',color:'#f39c12',impact:75},
+    {year:2022,x:500,title:'Rusya Ti\nYasağı',color:'#E01515',impact:65},
+    {year:2023,x:640,title:'Çin Ga/Ge\nYasağı',color:'#e74c3c',impact:85},
+    {year:2024,x:780,title:'Ukrayna\nMineral Anlaşması',color:'#2ecc71',impact:60},
+    {year:2025,x:920,title:'İsveç LKAB\nNTE Keşfi',color:'#C9A24B',impact:55},
+    {year:2026,x:1060,title:'AB Kritik\nMadde Yasası',color:'#3498db',impact:70},
+  ];
+  
+  const baseY = 250;
+  
+  // Timeline line
+  ctx.beginPath();
+  ctx.moveTo(40,baseY);
+  ctx.lineTo(W-40,baseY);
+  ctx.strokeStyle = 'rgba(255,255,255,.2)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  
+  events.forEach(e=>{
+    const barH = e.impact*1.2;
+    const isPositive = e.color==='#2ecc71'||e.color==='#C9A24B'||e.color==='#3498db';
+    const barY = isPositive ? baseY-barH : baseY;
+    
+    // Bar
+    const grad = ctx.createLinearGradient(0,barY,0,barY+barH);
+    grad.addColorStop(0,e.color);
+    grad.addColorStop(1,e.color+'22');
+    ctx.fillStyle = grad;
+    ctx.roundRect(e.x-18,barY,36,barH,4);
+    ctx.fill();
+    
+    // Dot
+    ctx.beginPath();
+    ctx.arc(e.x,baseY,8,0,Math.PI*2);
+    ctx.fillStyle = e.color;
+    ctx.fill();
+    ctx.strokeStyle = 'var(--bg)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Year
+    ctx.fillStyle = 'rgba(255,255,255,.6)';
+    ctx.font = 'bold 11px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(e.year, e.x, baseY+22);
+    
+    // Title
+    ctx.fillStyle = e.color;
+    ctx.font = 'bold 10px Segoe UI';
+    const lines = e.title.split('\n');
+    const titleY = isPositive ? barY-20 : baseY+barH+35;
+    lines.forEach((l,i)=>ctx.fillText(l, e.x, titleY+i*13));
+    
+    // Impact
+    ctx.fillStyle = 'rgba(255,255,255,.4)';
+    ctx.font = '9px Segoe UI';
+    ctx.fillText('Etki: '+e.impact+'%', e.x, isPositive?barY-5:baseY+barH+20);
+  });
+  
+  ctx.fillStyle = 'rgba(201,162,75,.6)';
+  ctx.font = 'bold 12px Segoe UI';
+  ctx.textAlign = 'left';
+  ctx.fillText('Kritik Mineral Krizleri Zaman Çizelgesi (2010-2026)', 20, 22);
+  ctx.fillStyle = 'rgba(255,255,255,.3)';
+  ctx.font = '10px Segoe UI';
+  ctx.fillText('Yukarı = Olumlu gelişme | Aşağı = Kriz/Risk', 20, 38);
+}
+
+// ===================== COMPARISON TABLE =====================
+function renderCompTable(){
+  const table = document.getElementById('compTable');
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Ülke</th>
+        <th>Çin Bağımlılığı</th>
+        <th>Mineral Bağımsızlığı</th>
+        <th>Teknoloji</th>
+        <th>Savunma Bütçesi</th>
+        <th>Risk</th>
+        <th>Strateji</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${COUNTRIES.map(c=>{
+        const riskClass = c.risk.includes('KRİTİK')?'risk-critical':c.risk.includes('YÜKSEK')?'risk-high':c.risk.includes('ORTA')?'risk-medium':'risk-low';
+        return `<tr>
+          <td><strong>${c.flag} ${c.name}</strong></td>
+          <td>
+            <div class="dep-cell">
+              <div class="dep-mini-bar"><div class="dep-mini-fill" style="width:${c.chinaScore}%;background:${c.chinaScore>=70?'var(--red)':c.chinaScore>=50?'var(--orange)':'var(--green)'}"></div></div>
+              <span style="color:${c.chinaScore>=70?'var(--red)':c.chinaScore>=50?'var(--orange)':'var(--green)'}">%${c.chinaScore}</span>
+            </div>
+          </td>
+          <td>
+            <div class="dep-cell">
+              <div class="dep-mini-bar"><div class="dep-mini-fill" style="width:${c.mineralIndep}%;background:var(--cyan)"></div></div>
+              <span style="color:var(--cyan)">%${c.mineralIndep}</span>
+            </div>
+          </td>
+          <td style="color:var(--gold)">%${c.techLevel}</td>
+          <td>${c.defBudget}</td>
+          <td><span class="risk-badge ${riskClass}">${c.risk}</span></td>
+          <td style="font-size:.72rem;color:var(--dim);max-width:200px;">${c.strategy.substring(0,80)}...</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  `;
+}
+
+// ===================== INIT =====================
+window.addEventListener('load',()=>{
+  renderCountryCards();
+  renderDependencyRace();
+  drawHeatmap();
+  buildRadarTabs();
+  drawWorldMap();
+  drawTimeline();
+  renderCompTable();
+});
+
+window.addEventListener('resize',()=>{
+  drawHeatmap();
+  drawWorldMap();
+  drawTimeline();
+});
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

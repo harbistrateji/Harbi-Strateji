@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Doktrin Testi — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--purple:#c41e3a;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--purple))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-gold{background:var(--gold);color:#000}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* Düşünür kartı */
+.thinker-card{background:rgba(201,162,75,.04);border:2px solid rgba(201,162,75,.3);border-radius:14px;padding:16px;margin-bottom:14px}
+.tc-portrait{font-size:48px;text-align:center;margin-bottom:8px}
+.tc-name{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;text-align:center;margin-bottom:4px;color:var(--gold)}
+.tc-era{font-size:10px;color:var(--dim);text-align:center;margin-bottom:10px}
+.tc-quote{font-size:12px;color:var(--dim);line-height:1.8;font-style:italic;border-left:3px solid var(--gold);padding-left:12px;margin-bottom:10px}
+.tc-scenario{background:var(--panel2);border-radius:10px;padding:12px;font-size:12px;line-height:1.7}
+/* Seçenekler */
+.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.choice{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px;cursor:pointer;transition:.2s}
+.choice:active{transform:scale(.98)}
+.choice.correct{border-color:var(--green);background:rgba(0,255,136,.06)}
+.choice.wrong{border-color:var(--red2);background:rgba(224,21,21,.06)}
+.choice.reveal-correct{border-color:var(--green);background:rgba(0,255,136,.04)}
+.choice-letter{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:var(--gold);margin-right:10px}
+.choice-text{font-size:12px;line-height:1.6}
+/* Açıklama */
+.explanation{background:rgba(0,224,255,.04);border:1px solid rgba(0,224,255,.2);border-radius:12px;padding:14px;margin-bottom:14px;display:none}
+.explanation.show{display:block}
+.exp-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--cyan);margin-bottom:8px}
+.exp-body{font-size:12px;color:var(--dim);line-height:1.8}
+.exp-doctrine{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--gold);margin-top:8px;padding-top:8px;border-top:1px solid var(--line2)}
+/* Timer */
+.timer-bar{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.timer-fill{height:100%;border-radius:3px;background:var(--gold);transition:width 1s linear}
+/* Progress */
+.progress-dots{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.pd{width:12px;height:12px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);transition:.2s}
+.pd.correct{background:var(--green)}.pd.wrong{background:var(--red2)}.pd.active{background:var(--gold);animation:pd-pulse .6s ease-in-out infinite}
+@keyframes pd-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">📖 DOKTRİN TESTİ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">📖 Doktrin Testi</div>
+  <div class="card-sub">Sun Tzu'dan Boyd'a, Clausewitz'den Liddell Hart'a — askeri doktrinleri senaryo üzerinden tanı. Her soru gerçek bir düşünürün öğretisini test eder.</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="dt-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="dt-q" style="color:var(--cyan)">1/12</div><div class="stat-lbl">SORU</div></div>
+    <div class="stat-box"><div class="stat-val" id="dt-correct" style="color:var(--green)">0</div><div class="stat-lbl">DOĞRU</div></div>
+    <div class="stat-box"><div class="stat-val" id="dt-streak" style="color:var(--purple)">0</div><div class="stat-lbl">SERİ</div></div>
+  </div>
+  <div class="progress-dots" id="progress-dots"></div>
+  <div class="timer-bar"><div class="timer-fill" id="dt-timer" style="width:100%"></div></div>
+  <div class="thinker-card" id="thinker-card">
+    <div class="tc-portrait" id="tc-portrait">📚</div>
+    <div class="tc-name" id="tc-name">Oyunu Başlat</div>
+    <div class="tc-era" id="tc-era"></div>
+    <div class="tc-quote" id="tc-quote" style="display:none"></div>
+    <div class="tc-scenario" id="tc-scenario">Askerî doktrin testini başlatmak için aşağıdaki butona bas.</div>
+  </div>
+  <div class="choices" id="choices" style="display:none"></div>
+  <div class="explanation" id="explanation">
+    <div class="exp-title" id="exp-title"></div>
+    <div class="exp-body" id="exp-body"></div>
+    <div class="exp-doctrine" id="exp-doctrine"></div>
+  </div>
+  <button class="btn btn-gold" id="dt-btn" onclick="dtStart()">📖 DOKTRİN TESTİNİ BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var QUESTIONS=[
+  {thinker:'Sun Tzu',portrait:'☯️',era:'M.Ö. 544–496 · Çin Stratejisti',
+   quote:'"Savaşın en yüce sanatı, savaşmadan düşmanı yenmektir."',
+   scenario:'Düşman ordusu 3 kat daha büyük. Lojistik hatları uzun. Moral yüksek ama yorgun. Sun Tzu\'ya göre en doğru strateji hangisidir?',
+   choices:['Doğrudan saldır, moral avantajını kullan','Düşmanı kendi güçlü noktasından değil, zayıf noktasından vur','Savunmaya geç ve takviye bekle','Müttefik ara, güç dengele'],
+   correct:1,
+   exp:'Sun Tzu\'nun temel prensibi: Düşmanın zayıf noktasını bul, güçlü noktasından kaçın. Direkt çatışma yerine dolaylı yaklaşım (shi) tercih edilmeli.',
+   doctrine:'📜 Doktrin: "Dolaylı Yaklaşım" — Düşmanın beklediği yerden değil, beklemediği yerden vur.'},
+  {thinker:'Carl von Clausewitz',portrait:'⚔️',era:'1780–1831 · Prusyalı General',
+   quote:'"Savaş, politikanın başka araçlarla sürdürülmesidir."',
+   scenario:'Askerî zafer kazanıldı ama siyasi hedefler hâlâ belirsiz. Ordu ilerliyor. Clausewitz\'e göre ne yapılmalı?',
+   choices:['Askerî ilerlemeye devam et, zafer tam olsun','Siyasi hedefleri netleştir, askeri harekâtı buna göre şekillendir','Düşmanı tamamen imha et','Barış müzakeresi başlat'],
+   correct:1,
+   exp:'Clausewitz\'e göre savaş, siyasi bir araçtır. Askerî zafer tek başına anlamsızdır — siyasi hedeflere hizmet etmelidir. "Sis ve sürtünme" kavramı: savaşta belirsizlik kaçınılmazdır.',
+   doctrine:'📜 Doktrin: "Savaş Politikanın Devamıdır" — Her askeri karar siyasi hedefe bağlı olmalı.'},
+  {thinker:'John Boyd',portrait:'⚡',era:'1927–1997 · ABD Savaş Pilotu',
+   quote:'"Gözlemle, Yönel, Karar ver, Harekete geç — ve bunu düşmandan hızlı yap."',
+   scenario:'Düşman saldırı başlattı. Bilgi eksik, durum belirsiz. Boyd\'un OODA döngüsüne göre ilk adım ne olmalı?',
+   choices:['Hemen karşı saldırıya geç','Gözlem yap: mevcut durumu tam olarak anla','Savunma pozisyonu al ve bekle','Komuta bildir, emir bekle'],
+   correct:1,
+   exp:'Boyd\'un OODA döngüsü: Observe (Gözlemle) → Orient (Yönel) → Decide (Karar ver) → Act (Harekete geç). İlk adım her zaman gözlemdir. Döngüyü düşmandan hızlı tamamlamak zafer sağlar.',
+   doctrine:'📜 Doktrin: "OODA Döngüsü" — Bilgi işleme ve karar hızı, fiziksel güçten daha belirleyicidir.'},
+  {thinker:'Basil Liddell Hart',portrait:'🗺️',era:'1895–1970 · İngiliz Askerî Teorisyeni',
+   quote:'"Doğrudan yaklaşım, düşmanın beklediği şeydir."',
+   scenario:'Düşmanın ana savunma hattı güçlü. Flanklardan biri zayıf görünüyor. Liddell Hart\'a göre ne yapılmalı?',
+   choices:['Ana hatta güçlü saldırı başlat','Zayıf flanktan sarma hareketi yap','Hava bombardımanıyla ana hattı yıprat','Düşmanı müzakereye zorla'],
+   correct:1,
+   exp:'Liddell Hart\'ın "Dolaylı Yaklaşım" teorisi: Düşmanın güçlü olduğu noktadan değil, zayıf ve beklenmedik noktadan vur. Psikolojik dengesizlik yaratmak fiziksel imhadan daha etkilidir.',
+   doctrine:'📜 Doktrin: "Dolaylı Yaklaşım" — Düşmanı psikolojik olarak dengesizleştir, sonra fiziksel olarak yen.'},
+  {thinker:'Mao Zedong',portrait:'🌟',era:'1893–1976 · Çin Devrimci Stratejisti',
+   quote:'"Düşman ilerlediğinde biz geri çekiliriz; düşman durduğunda biz taciz ederiz."',
+   scenario:'Küçük bir gerilla kuvveti büyük bir düzenli orduya karşı savaşıyor. Mao\'nun stratejisine göre ne yapılmalı?',
+   choices:['Düşmanla doğrudan çatış, moral üstünlüğünü kullan','Halk desteğini kazan, uzun vadeli yıpratma savaşı yürüt','Şehirleri ele geçir, stratejik noktaları kontrol et','Yabancı güçlerden destek iste'],
+   correct:1,
+   exp:'Mao\'nun gerilla savaşı teorisi: Halk desteği olmadan zafer imkânsızdır. Uzun vadeli yıpratma stratejisi, düşmanın lojistik ve moral gücünü aşındırır. "Balık suda yüzer" — gerilla halk içinde yaşar.',
+   doctrine:'📜 Doktrin: "Halk Savaşı" — Halk desteği en güçlü silah; uzun vadeli yıpratma kaçınılmaz zafer getirir.'},
+  {thinker:'Alfred Thayer Mahan',portrait:'⚓',era:'1840–1914 · ABD Deniz Kuvvetleri',
+   quote:'"Denizleri kontrol eden ticaret yollarını, ticaret yollarını kontrol eden dünyayı kontrol eder."',
+   scenario:'İki ülke arasında deniz ticareti rekabeti var. Mahan\'a göre stratejik öncelik ne olmalı?',
+   choices:['Kara kuvvetlerini güçlendir','Güçlü bir deniz kuvveti oluştur ve deniz hatlarını kontrol et','Hava üstünlüğü kur','Ekonomik yaptırım uygula'],
+   correct:1,
+   exp:'Mahan\'ın deniz gücü teorisi: Büyük güç olmak için güçlü deniz kuvvetleri şarttır. Deniz ticaret yollarını kontrol eden ülke küresel ekonomik ve askeri güce sahip olur.',
+   doctrine:'📜 Doktrin: "Deniz Gücü Teorisi" — Denizleri kontrol eden güç, küresel üstünlüğü elde eder.'},
+  {thinker:'Giulio Douhet',portrait:'✈️',era:'1869–1930 · İtalyan Hava Kuvvetleri',
+   quote:'"Gelecekteki savaşlar gökyüzünde kazanılacak."',
+   scenario:'Savaş başladı. Douhet\'e göre ilk ve en kritik hedef nedir?',
+   choices:['Düşman kara kuvvetlerini imha et','Düşmanın hava gücünü ve sanayi altyapısını yok et','Deniz ablukası uygula','Diplomatik çözüm ara'],
+   correct:1,
+   exp:'Douhet\'in hava gücü teorisi: Savaşın geleceği havada kazanılır. Düşmanın hava kuvvetlerini ve sanayi altyapısını imha etmek, kara savaşını gereksiz kılar. Stratejik bombardıman doktrinin temelidir.',
+   doctrine:'📜 Doktrin: "Hava Gücü Üstünlüğü" — Düşmanın üretim kapasitesini ve moralini kır, savaşı havada kazan.'},
+  {thinker:'Antoine-Henri Jomini',portrait:'📐',era:'1779–1869 · İsviçreli Askerî Teorisyeni',
+   quote:'"Savaşın bilimi, doğru yerde doğru zamanda üstün kuvvet toplamaktır."',
+   scenario:'İki ordu karşı karşıya. Jomini\'ye göre zafer için temel ilke nedir?',
+   choices:['Düşmanı psikolojik olarak çök','Kilit noktada üstün kuvvet yoğunlaştır','Gerilla taktiği uygula','Düşmanı yorana kadar bekle'],
+   correct:1,
+   exp:'Jomini\'nin geometrik savaş teorisi: Savaş matematiksel prensiplere dayanır. Kilit noktalarda (interior lines) üstün kuvvet toplamak zafer getirir. Clausewitz\'in aksine savaşı bilimsel olarak ele alır.',
+   doctrine:'📜 Doktrin: "İç Hat Prensibi" — Kilit noktalarda üstün kuvvet yoğunlaştırmak zafer getirir.'},
+  {thinker:'Sun Bin',portrait:'🎯',era:'M.Ö. 380–316 · Çin Stratejisti',
+   quote:'"Düşmanı kendi stratejisini değiştirmeye zorla."',
+   scenario:'Düşman güçlü bir savunma hattı kurdu. Sun Bin\'e göre ne yapılmalı?',
+   choices:['Savunma hattını doğrudan yık','Düşmanın değerli şeyini tehdit et, onu savunmadan çıkmaya zorla','Uzun kuşatma uygula','Hava saldırısıyla zayıflat'],
+   correct:1,
+   exp:'Sun Bin\'in stratejisi: Düşmanı kendi planından saptır. Değer verdiği bir şeyi tehdit ederek savunma pozisyonundan çıkmasını sağla, sonra avantajlı konumda çatış.',
+   doctrine:'📜 Doktrin: "Dolaylı Baskı" — Düşmanı kendi stratejisini terk etmeye zorla.'},
+  {thinker:'Thomas Schelling',portrait:'🎲',era:'1921–2016 · ABD Ekonomisti & Stratejist',
+   quote:'"Caydırıcılık, saldırının maliyetini kabul edilemez kılmaktır."',
+   scenario:'Nükleer silah sahibi iki ülke karşı karşıya. Schelling\'e göre savaşı önlemenin yolu nedir?',
+   choices:['Nükleer silah kullan, üstünlük kur','İkinci vuruş kapasitesini koru, karşılıklı yıkım tehdidini güvenilir kıl','Nükleer silahlardan vazgeç','Konvansiyonel güçle üstünlük sağla'],
+   correct:1,
+   exp:'Schelling\'in caydırıcılık teorisi: MAD (Karşılıklı Güvenceli Yıkım) savaşı önler. İkinci vuruş kapasitesi — ilk saldırıdan sonra bile karşılık verebilme gücü — caydırıcılığın temelidir.',
+   doctrine:'📜 Doktrin: "Nükleer Caydırıcılık" — Savaşı önlemenin yolu, savaşın maliyetini kabul edilemez kılmaktır.'},
+  {thinker:'David Kilcullen',portrait:'🌍',era:'1967– · Avustralyalı Karşı-İsyan Uzmanı',
+   quote:'"İsyanı bastırmak için halkı kazanmak şarttır."',
+   scenario:'Kentsel alanda isyan hareketi büyüyor. Kilcullen\'e göre öncelik nedir?',
+   choices:['Askerî güçle isyancıları imha et','Halkın güvenini kazan, sivil altyapıyı güçlendir','Medyayı kontrol et','Yabancı desteği kes'],
+   correct:1,
+   exp:'Kilcullen\'in karşı-isyan teorisi: "Kalpler ve zihinler" kazanılmadan isyan bastırılamaz. Sivil nüfusun desteği, askeri zaferden daha önemlidir. COIN (Counter-Insurgency) doktrinin modern mimarı.',
+   doctrine:'📜 Doktrin: "COIN — Karşı-İsyan" — Halkı kazanmadan askeri zafer anlamsızdır.'},
+  {thinker:'Emile Simpson',portrait:'🔄',era:'1984– · Çağdaş Stratejist',
+   quote:'"Modern savaş, siyasi anlatılar üzerinden kazanılır."',
+   scenario:'Askerî operasyon başarılı ama uluslararası kamuoyu aleyhte. Savaş devam ediyor. Simpson\'a göre ne yapılmalı?',
+   choices:['Askerî baskıyı artır','Anlatıyı yönet: siyasi meşruiyet ve iletişim stratejisi geliştir','Çekilme planı hazırla','BM kararı bekle'],
+   correct:1,
+   exp:'Simpson\'ın modern savaş teorisi: 21. yüzyılda savaşlar sadece silahla değil, anlatılarla kazanılır. Siyasi meşruiyet ve küresel kamuoyu yönetimi, askeri güçten daha belirleyici olabilir.',
+   doctrine:'📜 Doktrin: "Anlatı Savaşı" — Siyasi meşruiyet ve iletişim stratejisi, modern savaşın temel silahıdır.'}
+];
+
+var dt={pts:0,qIdx:0,correct:0,streak:0,running:false,timer:null,secs:20,results:[]};
+
+function dtStart(){
+  dt={pts:0,qIdx:0,correct:0,streak:0,running:false,timer:null,secs:20,results:[]};
+  document.getElementById('dt-btn').style.display='none';
+  document.getElementById('explanation').classList.remove('show');
+  updateDisplay();
+  dtLoadQ();
+}
+
+function dtLoadQ(){
+  if(dt.qIdx>=QUESTIONS.length){dtEnd();return;}
+  dt.running=true;
+  var q=QUESTIONS[dt.qIdx];
+  document.getElementById('tc-portrait').textContent=q.portrait;
+  document.getElementById('tc-name').textContent=q.thinker;
+  document.getElementById('tc-era').textContent=q.era;
+  document.getElementById('tc-quote').style.display='';
+  document.getElementById('tc-quote').textContent=q.quote;
+  document.getElementById('tc-scenario').textContent=q.scenario;
+  document.getElementById('choices').style.display='';
+  document.getElementById('choices').innerHTML=q.choices.map(function(c,i){
+    return '<div class="choice" id="ch-'+i+'" onclick="dtAnswer('+i+')">'+
+      '<span class="choice-letter">'+['A','B','C','D'][i]+')</span>'+
+      '<span class="choice-text">'+c+'</span>'+
+    '</div>';
+  }).join('');
+  document.getElementById('explanation').classList.remove('show');
+  renderDots();
+  updateDisplay();
+  startTimer();
+}
+
+function dtAnswer(idx){
+  if(!dt.running)return;
+  dt.running=false;
+  if(dt.timer)clearInterval(dt.timer);
+  var q=QUESTIONS[dt.qIdx];
+  var isCorrect=idx===q.correct;
+  // Renk göster
+  document.querySelectorAll('.choice').forEach(function(el,i){
+    if(i===q.correct)el.classList.add('reveal-correct');
+    if(i===idx&&!isCorrect)el.classList.add('wrong');
+    if(i===idx&&isCorrect)el.classList.add('correct');
+    el.style.pointerEvents='none';
+  });
+  if(isCorrect){
+    dt.correct++;dt.streak++;
+    var bonus=dt.streak>=3?50:0;
+    var pts=100+bonus+dt.secs*3;
+    dt.pts+=pts;
+    dt.results.push('correct');
+    beepWin();
+  }else{
+    dt.streak=0;
+    dt.results.push('wrong');
+    beepFail();
+  }
+  // Açıklama göster
+  var exp=document.getElementById('explanation');
+  exp.classList.add('show');
+  document.getElementById('exp-title').textContent=isCorrect?'✅ DOĞRU! +'+dt.pts+' puan':'❌ YANLIŞ — Doğru cevap: '+(q.correct+1)+'. seçenek';
+  document.getElementById('exp-title').style.color=isCorrect?'var(--green)':'var(--red2)';
+  document.getElementById('exp-body').textContent=q.exp;
+  document.getElementById('exp-doctrine').textContent=q.doctrine;
+  updateDisplay();
+  dt.qIdx++;
+  setTimeout(dtLoadQ,2500);
+}
+
+function startTimer(){
+  dt.secs=20;
+  if(dt.timer)clearInterval(dt.timer);
+  var fill=document.getElementById('dt-timer');
+  fill.style.transition='none';fill.style.width='100%';
+  setTimeout(function(){
+    fill.style.transition='width 1s linear';
+    dt.timer=setInterval(function(){
+      dt.secs--;
+      fill.style.width=(dt.secs/20*100)+'%';
+      fill.style.background=dt.secs>10?'var(--gold)':dt.secs>5?'var(--red2)':'var(--red)';
+      if(dt.secs<=0){clearInterval(dt.timer);dtAnswer(-1);}
+    },1000);
+  },50);
+}
+
+function renderDots(){
+  document.getElementById('progress-dots').innerHTML=Array(QUESTIONS.length).fill(0).map(function(_,i){
+    var r=dt.results[i];
+    var cls='pd'+(i<dt.qIdx?(r==='correct'?' correct':' wrong'):i===dt.qIdx?' active':'');
+    return '<div class="'+cls+'"></div>';
+  }).join('');
+}
+
+function updateDisplay(){
+  document.getElementById('dt-pts').textContent=dt.pts;
+  document.getElementById('dt-q').textContent=(dt.qIdx+1)+'/'+QUESTIONS.length;
+  document.getElementById('dt-correct').textContent=dt.correct;
+  document.getElementById('dt-streak').textContent=dt.streak;
+  document.getElementById('dt-streak').style.color=dt.streak>=3?'var(--gold)':'var(--purple)';
+  document.getElementById('hdr-pts').textContent='⭐ '+dt.pts;
+}
+
+function dtEnd(){
+  document.getElementById('choices').style.display='none';
+  document.getElementById('dt-btn').style.display='';
+  document.getElementById('dt-btn').textContent='🔄 TEKRAR';
+  var pct=Math.round(dt.correct/QUESTIONS.length*100);
+  var grade=pct>=90?'🏆 DOKTRIN USTASI':pct>=70?'✅ STRATEJİST':pct>=50?'📚 ÖĞRENCİ':'📖 BAŞLANGIÇ';
+  document.getElementById('tc-name').textContent=grade+' — '+pct+'%';
+  document.getElementById('tc-scenario').textContent=dt.correct+'/'+QUESTIONS.length+' doğru · '+dt.pts+' puan';
+  saveScore();
+  pct>=70?beepWin():beepFail();
+}
+
+function saveScore(){try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['doktrin-testi']=(s['doktrin-testi']||0)+dt.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Tehdit Sırala — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:500px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+.card-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.card-sub{font-size:12px;color:var(--dim);margin-bottom:14px}
+.threats{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.threat-item{background:rgba(150,170,200,.07);border:2px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:.15s;user-select:none}
+.threat-item.selected{border-color:var(--cyan);background:rgba(0,224,255,.08)}
+.threat-item.correct{border-color:var(--green);background:rgba(0,255,136,.08)}
+.threat-item.wrong{border-color:var(--red);background:rgba(224,21,21,.08)}
+.threat-num{width:26px;height:26px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.threat-num.filled{background:var(--cyan);color:#000}
+.threat-icon{font-size:22px;flex-shrink:0}
+.threat-name{font-size:14px;font-weight:600}
+.threat-desc{font-size:11px;color:var(--dim)}
+.drop-zone{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.drop-slot{background:rgba(0,224,255,.04);border:2px dashed rgba(0,224,255,.25);border-radius:10px;padding:10px 14px;min-height:48px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--dim)}
+.drop-slot.filled{border-style:solid;border-color:var(--cyan);background:rgba(0,224,255,.08);color:var(--tx)}
+.slot-num{font-size:11px;color:var(--dim);min-width:20px}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px}
+.btn-cyan{background:var(--cyan);color:#000}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.result-box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px}
+.result-score{font-size:48px;font-weight:700;color:var(--cyan)}
+.result-msg{font-size:14px;color:var(--dim);margin-top:6px}
+.score-row{display:flex;gap:10px;margin-bottom:14px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;flex:1}
+.sval{font-size:20px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">📊 TEHDİT SIRALA</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="score-row">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--cyan)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-round" style="color:var(--gold)">1</div><div class="slbl">TUR</div></div>
+  <div class="sbox"><div class="sval" id="s-best" style="color:var(--green)">0</div><div class="slbl">EN İYİ</div></div>
+</div>
+<div id="game-area"></div>
+</div>
+<script>
+var ROUNDS=[
+  {
+    title:'Anlık Tehdit Önceliği',
+    threats:[
+      {icon:'☢️',name:'Nükleer Tehdit',desc:'Nükleer füze fırlatma hazırlığı'},
+      {icon:'💻',name:'Siber Saldırı',desc:'Kritik altyapıya siber saldırı'},
+      {icon:'💣',name:'Terör Saldırısı',desc:'Büyük şehirde bombalı saldırı'},
+      {icon:'📦',name:'Ambargo',desc:'Kritik hammadde ambargosu'},
+      {icon:'📰',name:'Dezenformasyon',desc:'Büyük çaplı yanlış bilgi kampanyası'}
+    ],
+    correct:[0,1,2,3,4]
+  },
+  {
+    title:'Uzun Vadeli Tehdit Önceliği',
+    threats:[
+      {icon:'🤖',name:'YZ Silahlanması',desc:'Otonom silah sistemleri yarışı'},
+      {icon:'🌊',name:'İklim Değişikliği',desc:'Su kaynaklarında azalma'},
+      {icon:'💊',name:'Biyolojik Tehdit',desc:'Sentetik biyoloji silahları'},
+      {icon:'🛸',name:'Uzay Silahlanması',desc:'Uydu karşıtı silahlar'},
+      {icon:'💰',name:'Ekonomik Bağımlılık',desc:'Kritik tedarik zinciri kırılganlığı'}
+    ],
+    correct:[2,0,3,1,4]
+  },
+  {
+    title:'Hibrit Savaş Tehditleri',
+    threats:[
+      {icon:'📡',name:'Elektronik Harp',desc:'İletişim sistemleri jamming'},
+      {icon:'🕵️',name:'Casusluk',desc:'Kritik istihbarat sızıntısı'},
+      {icon:'🔌',name:'Enerji Kesintisi',desc:'Elektrik altyapısına saldırı'},
+      {icon:'🏦',name:'Finansal Saldırı',desc:'Merkez bankası sistemlerine saldırı'},
+      {icon:'🗳️',name:'Seçim Müdahalesi',desc:'Demokratik süreçlere müdahale'}
+    ],
+    correct:[2,3,0,1,4]
+  }
+];
+
+var pts=0,round=0,selected=[],best=0;
+try{best=parseInt(localStorage.getItem('mini_siralama_best')||'0');}catch(e){}
+document.getElementById('s-best').textContent=best;
+
+function updateHdr(){
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('s-round').textContent=(round+1);
+}
+
+function renderRound(){
+  if(round>=ROUNDS.length){showFinal();return;}
+  var r=ROUNDS[round];
+  var shuffled=r.threats.slice().sort(function(){return Math.random()-.5;});
+  selected=[];
+  var html='<div class="card">';
+  html+='<div class="card-title">'+r.title+'</div>';
+  html+='<div class="card-sub">Tehditleri en yüksek öncelikten en düşüğe sırala. Kartlara sırayla dokun.</div>';
+  html+='<div class="threats" id="threats">';
+  shuffled.forEach(function(t,i){
+    html+='<div class="threat-item" id="ti-'+i+'" onclick="selectThreat('+i+',this)">';
+    html+='<div class="threat-num" id="tn-'+i+'"></div>';
+    html+='<div class="threat-icon">'+t.icon+'</div>';
+    html+='<div><div class="threat-name">'+t.name+'</div><div class="threat-desc">'+t.desc+'</div></div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  html+='<div class="drop-zone" id="drop-zone">';
+  for(var i=0;i<5;i++){
+    html+='<div class="drop-slot" id="slot-'+i+'"><span class="slot-num">'+(i+1)+'.</span><span id="slot-txt-'+i+'">—</span></div>';
+  }
+  html+='</div>';
+  html+='<button class="btn btn-cyan" onclick="checkAnswer('+JSON.stringify(shuffled)+')">✅ KONTROL ET</button>';
+  html+='</div>';
+  document.getElementById('game-area').innerHTML=html;
+  window._shuffled=shuffled;
+  window._correct=r.correct;
+  updateHdr();
+}
+
+function selectThreat(idx,el){
+  if(selected.includes(idx)){
+    selected=selected.filter(function(x){return x!==idx;});
+    el.classList.remove('selected');
+    document.getElementById('tn-'+idx).textContent='';
+    document.getElementById('tn-'+idx).classList.remove('filled');
+  } else if(selected.length<5){
+    selected.push(idx);
+    var pos=selected.length;
+    el.classList.add('selected');
+    document.getElementById('tn-'+idx).textContent=pos;
+    document.getElementById('tn-'+idx).classList.add('filled');
+    document.getElementById('slot-'+( pos-1)).classList.add('filled');
+    document.getElementById('slot-txt-'+(pos-1)).textContent=window._shuffled[idx].icon+' '+window._shuffled[idx].name;
+  }
+}
+
+function checkAnswer(shuffled){
+  if(selected.length<5){alert('Tüm tehditleri sırala!');return;}
+  var r=ROUNDS[round];
+  var correct=0;
+  for(var i=0;i<5;i++){
+    var selectedThreat=shuffled[selected[i]];
+    var correctThreat=r.threats[r.correct[i]];
+    if(selectedThreat.name===correctThreat.name){correct++;}
+  }
+  var earned=correct*40;
+  pts+=earned;
+  if(pts>best){best=pts;try{localStorage.setItem('mini_siralama_best',best);}catch(e){}}
+  try{
+    var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    sc['mobil-siralama']=Math.max(sc['mobil-siralama']||0,pts);
+    localStorage.setItem('hs_scores',JSON.stringify(sc));
+  }catch(e){}
+  var html='<div class="result-box">';
+  html+='<div class="result-score">'+correct+'/5</div>';
+  html+='<div class="result-msg">'+earned+' puan kazandın</div>';
+  html+='</div>';
+  html+='<div class="card"><div class="card-title">Doğru Sıralama:</div>';
+  r.correct.forEach(function(ci,i){
+    var t=r.threats[ci];
+    html+='<div style="padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center"><span style="color:var(--dim);font-size:12px">'+(i+1)+'.</span><span>'+t.icon+'</span><span style="font-size:13px">'+t.name+'</span></div>';
+  });
+  html+='</div>';
+  html+='<button class="btn btn-cyan" onclick="nextRound()">▶ SONRAKI TUR</button>';
+  document.getElementById('game-area').innerHTML=html;
+  updateHdr();
+}
+
+function nextRound(){round++;renderRound();}
+
+function showFinal(){
+  if(pts>best){best=pts;}
+  document.getElementById('s-best').textContent=best;
+  var html='<div class="result-box">';
+  html+='<div style="font-size:40px">🏆</div>';
+  html+='<div class="result-score">'+pts+'</div>';
+  html+='<div class="result-msg">Tüm turlar tamamlandı!</div>';
+  html+='</div>';
+  html+='<button class="btn btn-cyan" onclick="yenidenBaslat()">🔄 YENİDEN OYNA</button>';
+  document.getElementById('game-area').innerHTML=html;
+}
+
+function yenidenBaslat(){round=0;pts=0;renderRound();}
+
+renderRound();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

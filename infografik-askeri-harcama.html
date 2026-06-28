@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Küresel Askerî Harcama Haritası 2025 — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#3b82f6;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:54px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none;padding:5px 12px;border:1px solid var(--line);border-radius:6px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;flex:1;text-align:center;color:var(--gold)}
+.main{max-width:800px;margin:0 auto;padding:70px 16px 40px}
+/* Hero */
+.hero{text-align:center;padding:30px 0 20px}
+.hero-num{font-family:'Chakra Petch',sans-serif;font-size:52px;font-weight:700;color:var(--gold);line-height:1}
+.hero-label{font-size:13px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:2px}
+.hero-sub{font-size:12px;color:var(--tx);margin-top:8px;line-height:1.7}
+/* Region cards */
+.regions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+@media(min-width:600px){.regions{grid-template-columns:repeat(3,1fr)}}
+.region-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.region-card:hover,.region-card.active{border-color:var(--gold);box-shadow:0 0 20px rgba(201,162,75,.15)}
+.region-card.active::before{content:'';position:absolute;inset:0;background:rgba(201,162,75,.05)}
+.rc-flag{font-size:28px;margin-bottom:6px}
+.rc-name{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;margin-bottom:4px}
+.rc-amount{font-family:'Chakra Petch',sans-serif;font-size:16px;color:var(--gold)}
+.rc-change{font-size:13px;margin-top:2px}
+.rc-change.up{color:var(--red)}
+.rc-change.down{color:var(--green)}
+.rc-bar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:8px;overflow:hidden}
+.rc-fill{height:100%;border-radius:2px;transition:width 1s ease}
+/* Detail panel */
+.detail-panel{background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:20px;margin-bottom:20px;display:none}
+.detail-panel.show{display:block}
+.dp-title{font-family:'Chakra Petch',sans-serif;font-size:16px;color:var(--gold);margin-bottom:12px}
+.dp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.dp-stat{background:rgba(255,255,255,.03);border-radius:8px;padding:10px}
+.dp-val{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700}
+.dp-label{font-size:13px;color:var(--dim);margin-top:2px}
+.dp-countries{display:flex;flex-direction:column;gap:6px}
+.dp-country{display:flex;align-items:center;gap:10px}
+.dp-cname{font-size:13px;min-width:100px}
+.dp-cbar{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.dp-cfill{height:100%;border-radius:3px;background:var(--gold)}
+.dp-cval{font-size:13px;color:var(--gold);min-width:50px;text-align:right}
+/* Timeline */
+.timeline-section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px}
+.ts-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--cyan);margin-bottom:14px}
+.timeline-chart{position:relative;height:120px}
+canvas#timeline-canvas{width:100%;height:120px}
+/* Top 10 */
+.top10{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px}
+.t10-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--red);margin-bottom:14px}
+.t10-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.t10-rank{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--dim);min-width:24px}
+.t10-flag{font-size:16px;min-width:24px}
+.t10-name{font-size:13px;min-width:90px}
+.t10-bar{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.t10-fill{height:100%;border-radius:4px;transition:width 1.2s ease}
+.t10-val{font-size:13px;color:var(--gold);min-width:60px;text-align:right}
+/* Insight */
+.insight{background:rgba(0,224,255,.05);border:1px solid rgba(0,224,255,.2);border-radius:12px;padding:14px;margin-bottom:20px}
+.insight-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--cyan);margin-bottom:8px}
+.insight-text{font-size:13px;color:var(--tx);line-height:1.8}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🌍 KÜRESEL ASKERİ HARCAMA HARİTASI 2025</div>
+</header>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-num" id="hero-count">$0</div>
+    <div class="hero-label">Küresel Askerî Harcama — 2025</div>
+    <div class="hero-sub">11. yıl üst üste büyüme · GSYİH'nin %2.5'i · Soğuk Savaş'tan bu yana en yüksek seviye</div>
+  </div>
+
+  <!-- Region cards -->
+  <div class="regions" id="regions"></div>
+
+  <!-- Detail panel -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="dp-title" id="dp-title">—</div>
+    <div class="dp-grid" id="dp-grid"></div>
+    <div style="font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--dim);margin-bottom:8px">ÜLKELER</div>
+    <div class="dp-countries" id="dp-countries"></div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline-section">
+    <div class="ts-title">📈 2009–2025 BÜYÜME TRENDİ (Trilyon $)</div>
+    <div class="timeline-chart"><canvas id="timeline-canvas" height="120"></canvas></div>
+  </div>
+
+  <!-- Top 10 -->
+  <div class="top10">
+    <div class="t10-title">🏆 TOP 10 ASKERİ HARCAMA (2025, Milyar $)</div>
+    <div id="top10-rows"></div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight">
+    <div class="insight-title">🔍 STRATEJİK ANALİZ</div>
+    <div class="insight-text">
+      2025 yılında küresel askeri harcamalar <strong>2.88 trilyon dolar</strong> ile rekor kırdı. Avrupa <strong>+14%</strong> artışla 1953'ten bu yana en yüksek büyümeyi yaşadı. Asya-Okyanusya <strong>+8.1%</strong> ile ikinci sıraya yerleşti. Temel itici güçler: drone tehdidi, hipersonik silahlar, enerji güvenliği ve stok tükenme kaygıları. Türkiye'nin savunma bütçesi %25 artışla stratejik konumunu güçlendirdi.
+    </div>
+  </div>
+</div>
+
+<script>
+var REGIONS=[
+  {id:'usa',flag:'🇺🇸',name:'ABD',amount:'916B',pct:31.8,change:'+3.4%',dir:'up',color:'#3b82f6',
+   stats:{budget:'916 Milyar $',gsyih:'%3.4',artis:'+3.4%',rank:'#1'},
+   countries:[{n:'ABD',v:916,pct:100},{n:'Savunma Bakanlığı',v:858,pct:93.7},{n:'Nükleer',v:58,pct:6.3}]},
+  {id:'china',flag:'🇨🇳',name:'ÇİN',amount:'314B',pct:10.9,change:'+7.2%',dir:'up',color:'#ef4444',
+   stats:{budget:'314 Milyar $',gsyih:'%1.7',artis:'+7.2%',rank:'#2'},
+   countries:[{n:'Çin',v:314,pct:100},{n:'PLA Kara',v:120,pct:38},{n:'PLA Deniz',v:94,pct:30},{n:'PLA Hava',v:100,pct:32}]},
+  {id:'europe',flag:'🇪🇺',name:'AVRUPA',amount:'457B',pct:15.9,change:'+14%',dir:'up',color:'#8b5cf6',
+   stats:{budget:'457 Milyar $',gsyih:'%2.1',artis:'+14%',rank:'Bölge'},
+   countries:[{n:'Almanya',v:97,pct:21},{n:'İngiltere',v:81,pct:18},{n:'Fransa',v:68,pct:15},{n:'Polonya',v:46,pct:10},{n:'Diğer',v:165,pct:36}]},
+  {id:'russia',flag:'🇷🇺',name:'RUSYA',amount:'149B',pct:5.2,change:'+18%',dir:'up',color:'#f97316',
+   stats:{budget:'149 Milyar $',gsyih:'%7.1',artis:'+18%',rank:'#4'},
+   countries:[{n:'Rusya',v:149,pct:100},{n:'Kara Kuvvetleri',v:89,pct:60},{n:'Hava-Uzay',v:45,pct:30},{n:'Deniz',v:15,pct:10}]},
+  {id:'asia',flag:'🌏',name:'ASYA-OKYANUSYA',amount:'595B',pct:20.7,change:'+8.1%',dir:'up',color:'#10b981',
+   stats:{budget:'595 Milyar $',gsyih:'%2.0',artis:'+8.1%',rank:'Bölge'},
+   countries:[{n:'Japonya',v:80,pct:13},{n:'Hindistan',v:83,pct:14},{n:'G.Kore',v:50,pct:8},{n:'Avustralya',v:43,pct:7},{n:'Diğer',v:339,pct:57}]},
+  {id:'turkey',flag:'🇹🇷',name:'TÜRKİYE',amount:'47B',pct:1.6,change:'+25%',dir:'up',color:'#C9A24B',
+   stats:{budget:'47 Milyar $',gsyih:'%2.1',artis:'+25%',rank:'#12'},
+   countries:[{n:'Kara Kuvvetleri',v:18,pct:38},{n:'Hava Kuvvetleri',v:14,pct:30},{n:'Deniz Kuvvetleri',v:8,pct:17},{n:'Ar-Ge',v:7,pct:15}]}
+];
+
+var TOP10=[
+  {flag:'🇺🇸',name:'ABD',val:916,color:'#3b82f6'},
+  {flag:'🇨🇳',name:'Çin',val:314,color:'#ef4444'},
+  {flag:'🇷🇺',name:'Rusya',val:149,color:'#f97316'},
+  {flag:'🇮🇳',name:'Hindistan',val:83,color:'#10b981'},
+  {flag:'🇸🇦',name:'S.Arabistan',val:80,color:'#f59e0b'},
+  {flag:'🇯🇵',name:'Japonya',val:80,color:'#8b5cf6'},
+  {flag:'🇩🇪',name:'Almanya',val:97,color:'#6366f1'},
+  {flag:'🇬🇧',name:'İngiltere',val:81,color:'#ec4899'},
+  {flag:'🇫🇷',name:'Fransa',val:68,color:'#14b8a6'},
+  {flag:'🇹🇷',name:'Türkiye',val:47,color:'#C9A24B'}
+].sort(function(a,b){return b.val-a.val});
+
+var TIMELINE=[1.53,1.63,1.74,1.78,1.75,1.68,1.69,1.74,1.82,1.91,1.98,2.12,2.24,2.44,2.67,2.88];
+var YEARS=['09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25'];
+
+// Animate hero number
+var target=2880;var current=0;
+var heroInterval=setInterval(function(){
+  current+=60;if(current>=target){current=target;clearInterval(heroInterval);}
+  document.getElementById('hero-count').textContent='$'+current.toFixed(0)+'B+';
+},20);
+setTimeout(function(){document.getElementById('hero-count').textContent='$2.88T';},1200);
+
+// Render regions
+var html='';
+REGIONS.forEach(function(r){
+  html+='<div class="region-card" onclick="showDetail(\''+r.id+'\')" id="rc-'+r.id+'">';
+  html+='<div class="rc-flag">'+r.flag+'</div>';
+  html+='<div class="rc-name">'+r.name+'</div>';
+  html+='<div class="rc-amount">'+r.amount+'</div>';
+  html+='<div class="rc-change '+r.dir+'">'+r.change+' (2024→2025)</div>';
+  html+='<div class="rc-bar"><div class="rc-fill" id="rf-'+r.id+'" style="width:0%;background:'+r.color+'"></div></div>';
+  html+='</div>';
+});
+document.getElementById('regions').innerHTML=html;
+setTimeout(function(){
+  REGIONS.forEach(function(r){
+    document.getElementById('rf-'+r.id).style.width=r.pct+'%';
+  });
+},300);
+
+function showDetail(id){
+  var r=REGIONS.find(function(x){return x.id===id;});
+  if(!r)return;
+  document.querySelectorAll('.region-card').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('rc-'+id).classList.add('active');
+  document.getElementById('dp-title').textContent=r.flag+' '+r.name+' — Askerî Harcama Analizi';
+  var sg='';
+  Object.entries(r.stats).forEach(function(e){
+    var labels={budget:'Bütçe',gsyih:'GSYİH Oranı',artis:'Yıllık Artış',rank:'Sıralama'};
+    sg+='<div class="dp-stat"><div class="dp-val" style="color:'+r.color+'">'+e[1]+'</div><div class="dp-label">'+labels[e[0]]+'</div></div>';
+  });
+  document.getElementById('dp-grid').innerHTML=sg;
+  var ch='';
+  r.countries.forEach(function(c){
+    ch+='<div class="dp-country"><div class="dp-cname">'+c.n+'</div><div class="dp-cbar"><div class="dp-cfill" style="width:0%;background:'+r.color+'" data-w="'+c.pct+'"></div></div><div class="dp-cval">'+c.v+'B</div></div>';
+  });
+  document.getElementById('dp-countries').innerHTML=ch;
+  document.getElementById('detail-panel').classList.add('show');
+  setTimeout(function(){
+    document.querySelectorAll('.dp-cfill').forEach(function(el){el.style.width=el.dataset.w+'%';});
+  },100);
+}
+
+// Top 10
+var t10html='';
+TOP10.forEach(function(c,i){
+  var pct=c.val/916*100;
+  t10html+='<div class="t10-row"><div class="t10-rank">#'+(i+1)+'</div><div class="t10-flag">'+c.flag+'</div><div class="t10-name">'+c.name+'</div><div class="t10-bar"><div class="t10-fill" id="t10f-'+i+'" style="width:0%;background:'+c.color+'"></div></div><div class="t10-val">$'+c.val+'B</div></div>';
+});
+document.getElementById('top10-rows').innerHTML=t10html;
+setTimeout(function(){
+  TOP10.forEach(function(c,i){
+    var pct=c.val/916*100;
+    document.getElementById('t10f-'+i).style.width=pct+'%';
+  });
+},500);
+
+// Timeline canvas
+var canvas=document.getElementById('timeline-canvas');
+var ctx=canvas.getContext('2d');
+function drawTimeline(){
+  canvas.width=canvas.offsetWidth;canvas.height=120;
+  var W=canvas.width,H=canvas.height;
+  var pad={l:30,r:10,t:10,b:25};
+  var min=1.4,max=3.0;
+  ctx.clearRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(150,170,200,.08)';ctx.lineWidth=1;
+  for(var i=0;i<=4;i++){var y=pad.t+(H-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();}
+  // Area fill
+  var pts=TIMELINE.map(function(v,i){return{x:pad.l+(W-pad.l-pad.r)*i/(TIMELINE.length-1),y:pad.t+(H-pad.t-pad.b)*(1-(v-min)/(max-min))};});
+  ctx.beginPath();ctx.moveTo(pts[0].x,H-pad.b);
+  pts.forEach(function(p){ctx.lineTo(p.x,p.y);});
+  ctx.lineTo(pts[pts.length-1].x,H-pad.b);ctx.closePath();
+  var grad=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+  grad.addColorStop(0,'rgba(201,162,75,.3)');grad.addColorStop(1,'rgba(201,162,75,.02)');
+  ctx.fillStyle=grad;ctx.fill();
+  // Line
+  ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+  pts.forEach(function(p){ctx.lineTo(p.x,p.y);});
+  ctx.strokeStyle='#C9A24B';ctx.lineWidth=2;ctx.stroke();
+  // Dots
+  pts.forEach(function(p,i){
+    ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fillStyle=i===pts.length-1?'#E01515':'#C9A24B';ctx.fill();
+  });
+  // Labels
+  ctx.fillStyle='rgba(144,161,181,.6)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';
+  pts.forEach(function(p,i){if(i%3===0||i===pts.length-1)ctx.fillText("'"+YEARS[i],p.x,H-pad.b+12);});
+  // Value labels
+  ctx.fillStyle='rgba(201,162,75,.8)';ctx.font='9px IBM Plex Mono';
+  [0,pts.length-1].forEach(function(i){
+    ctx.fillText('$'+TIMELINE[i]+'T',pts[i].x,pts[i].y-6);
+  });
+}
+drawTimeline();window.addEventListener('resize',drawTimeline);
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

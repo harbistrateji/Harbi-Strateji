@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>200+ Silah & Nadir Metal Paneli — Harb-i Strateji</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700;900&family=IBM+Plex+Sans:wght@400;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#020d1a;--panel:#041525;--border:#0a3a6a;--blue:#00aaff;--gold:#C9A24B;--red:#E01515;--green:#00ff88;--txt:#b0d8ff;--dim:#2a6aaa;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+/* HEADER */
+header{background:linear-gradient(135deg,#020d1a,#041525);border-bottom:1px solid var(--border);padding:16px 20px;position:sticky;top:0;z-index:100;}
+.header-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+h1{font-family:'Chakra Petch',monospace;font-size:clamp(1rem,3vw,1.5rem);font-weight:900;color:var(--blue);text-transform:uppercase;letter-spacing:2px;}
+.subtitle{font-size:.85rem;color:var(--dim);}
+/* STATS BAR */
+.stats-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.stat-chip{background:rgba(0,170,255,.08);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:.85rem;color:var(--txt);}
+.stat-chip span{color:var(--blue);font-weight:700;}
+/* SEARCH & FILTER */
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+#searchInput{background:rgba(0,170,255,.06);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.9rem;color:var(--txt);width:220px;outline:none;font-family:inherit;}
+#searchInput:focus{border-color:var(--blue);}
+#searchInput::placeholder{color:var(--dim);}
+.filter-group{display:flex;gap:5px;flex-wrap:wrap;}
+.filter-btn{background:rgba(0,170,255,.06);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:.9rem;color:var(--dim);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.filter-btn.active{border-color:var(--blue);color:var(--blue);background:rgba(0,170,255,.12);}
+/* GRID */
+main{padding:16px 20px;max-width:1400px;margin:0 auto;}
+#resultsInfo{font-size:.85rem;color:var(--dim);margin-bottom:12px;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+/* CARD */
+.weapon-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.weapon-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-color,var(--blue));}
+.weapon-card:hover{transform:translateY(-3px);border-color:var(--card-color,var(--blue));box-shadow:0 8px 30px rgba(0,170,255,.15);}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.card-icon{font-size:1.8rem;}
+.card-country{font-size:.9rem;color:var(--dim);text-align:right;}
+.card-flag{font-size:1.1rem;display:block;}
+.card-name{font-family:'Chakra Petch',monospace;font-size:.9rem;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.card-fullname{font-size:.68rem;color:var(--dim);margin-bottom:8px;font-style:italic;}
+.card-desc{font-size:.85rem;color:#6a9aaa;line-height:1.6;margin-bottom:10px;}
+.card-desc .highlight{color:var(--blue);font-weight:600;}
+/* METALS */
+.metals-section{margin-bottom:10px;}
+.metals-title{font-size:.8rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.metals-list{display:flex;flex-wrap:wrap;gap:4px;}
+.metal-tag{padding:3px 8px;border-radius:12px;font-size:.8rem;font-weight:700;border:1px solid;cursor:help;}
+/* SPECS */
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px;}
+.spec-item{background:rgba(0,170,255,.04);border-radius:6px;padding:4px 8px;}
+.spec-label{font-size:.55rem;color:var(--dim);text-transform:uppercase;}
+.spec-value{font-size:.85rem;color:var(--txt);font-weight:600;}
+/* CATEGORY BADGE */
+.cat-badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:.8rem;font-weight:700;border:1px solid;}
+/* DETAIL MODAL */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+#modal.open{display:flex;}
+.modal-box{background:var(--panel);border:1px solid var(--border);border-radius:16px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;}
+.modal-close{position:absolute;top:12px;right:12px;background:rgba(0,170,255,.1);border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:.95rem;color:var(--txt);}
+.modal-title{font-family:'Chakra Petch',monospace;font-size:1.2rem;font-weight:900;color:var(--blue);margin-bottom:4px;}
+.modal-sub{font-size:.9rem;color:var(--dim);margin-bottom:16px;}
+.modal-section{margin-bottom:14px;}
+.modal-section h3{font-size:.95rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.modal-section p{font-size:.78rem;color:#6a9aaa;line-height:1.7;}
+.modal-section .fact{color:var(--blue);font-weight:700;}
+/* BACK BTN */
+.back-btn{background:rgba(0,170,255,.08);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.85rem;color:var(--txt);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+.back-btn:hover{border-color:var(--blue);color:var(--blue);}
+/* MOBILE */
+@media(max-width:600px){.cards-grid{grid-template-columns:1fr;}.controls{flex-direction:column;align-items:stretch;}#searchInput{width:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+<header>
+  <div class="header-top">
+    <div>
+      <h1>⚔️ Silah & Nadir Metal Paneli</h1>
+      <div class="subtitle">200+ Küresel Silah Sistemi · Nadir Metal Bağımlılık Analizi · Harb-i Strateji</div>
+    </div>
+    <a href="oza-turk-savas-tarihi-hub.html" class="back-btn">← Ana Menü</a>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-chip">Toplam: <span id="totalCount">0</span> silah</div>
+    <div class="stat-chip">Gösterilen: <span id="shownCount">0</span></div>
+    <div class="stat-chip">Ülkeler: <span>15+</span></div>
+    <div class="stat-chip">Nadir Metal: <span>17 tür</span></div>
+  </div>
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 Silah adı, ülke veya metal ara..." oninput="filterCards()">
+    <div class="filter-group" id="countryFilter">
+      <button class="filter-btn active" data-filter="country" data-val="all" onclick="setFilter('country','all',this)">🌍 Tümü</button>
+      <button class="filter-btn" data-filter="country" data-val="ABD" onclick="setFilter('country','ABD',this)">🇺🇸 ABD</button>
+      <button class="filter-btn" data-filter="country" data-val="Çin" onclick="setFilter('country','Çin',this)">🇨🇳 Çin</button>
+      <button class="filter-btn" data-filter="country" data-val="Rusya" onclick="setFilter('country','Rusya',this)">🇷🇺 Rusya</button>
+      <button class="filter-btn" data-filter="country" data-val="Türkiye" onclick="setFilter('country','Türkiye',this)">🇹🇷 Türkiye</button>
+      <button class="filter-btn" data-filter="country" data-val="AB" onclick="setFilter('country','AB',this)">🇪🇺 AB</button>
+      <button class="filter-btn" data-filter="country" data-val="Japonya" onclick="setFilter('country','Japonya',this)">🇯🇵 Japonya</button>
+      <button class="filter-btn" data-filter="country" data-val="Hindistan" onclick="setFilter('country','Hindistan',this)">🇮🇳 Hindistan</button>
+      <button class="filter-btn" data-filter="country" data-val="İsrail" onclick="setFilter('country','İsrail',this)">🇮🇱 İsrail</button>
+    </div>
+    <div class="filter-group" id="catFilter">
+      <button class="filter-btn active" data-filter="cat" data-val="all" onclick="setFilter('cat','all',this)">📋 Tümü</button>
+      <button class="filter-btn" data-filter="cat" data-val="Hava" onclick="setFilter('cat','Hava',this)">✈️ Hava</button>
+      <button class="filter-btn" data-filter="cat" data-val="Kara" onclick="setFilter('cat','Kara',this)">🛡️ Kara</button>
+      <button class="filter-btn" data-filter="cat" data-val="Deniz" onclick="setFilter('cat','Deniz',this)">⚓ Deniz</button>
+      <button class="filter-btn" data-filter="cat" data-val="Füze" onclick="setFilter('cat','Füze',this)">🚀 Füze</button>
+      <button class="filter-btn" data-filter="cat" data-val="İHA" onclick="setFilter('cat','İHA',this)">🤖 İHA</button>
+      <button class="filter-btn" data-filter="cat" data-val="Elektronik" onclick="setFilter('cat','Elektronik',this)">📡 Elektronik</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="resultsInfo"></div>
+  <div class="cards-grid" id="cardsGrid"></div>
+</main>
+
+<div id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕ Kapat</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// METAL RENK PALETİ
+const METAL_COLORS={
+  'Neodimyum':{bg:'rgba(0,170,255,.15)',border:'#00aaff',text:'#00aaff'},
+  'Disprosyum':{bg:'rgba(0,200,150,.15)',border:'#00c896',text:'#00c896'},
+  'Terbiyum':{bg:'rgba(100,200,50,.15)',border:'#64c832',text:'#64c832'},
+  'Kobalt':{bg:'rgba(41,128,185,.15)',border:'#2980b9',text:'#2980b9'},
+  'Lityum':{bg:'rgba(155,89,182,.15)',border:'#9b59b6',text:'#9b59b6'},
+  'Galyum':{bg:'rgba(230,126,34,.15)',border:'#e67e22',text:'#e67e22'},
+  'Germanyum':{bg:'rgba(231,76,60,.15)',border:'#e74c3c',text:'#e74c3c'},
+  'İndiyum':{bg:'rgba(52,152,219,.15)',border:'#3498db',text:'#3498db'},
+  'Skandiyum':{bg:'rgba(26,188,156,.15)',border:'#1abc9c',text:'#1abc9c'},
+  'İtriyum':{bg:'rgba(241,196,15,.15)',border:'#f1c40f',text:'#f1c40f'},
+  'Lantanyum':{bg:'rgba(189,195,199,.15)',border:'#bdc3c7',text:'#bdc3c7'},
+  'Sezyum':{bg:'rgba(211,84,0,.15)',border:'#d35400',text:'#d35400'},
+  'Renyum':{bg:'rgba(127,140,141,.15)',border:'#7f8c8d',text:'#7f8c8d'},
+  'Tantal':{bg:'rgba(44,62,80,.3)',border:'#2c3e50',text:'#95a5a6'},
+  'Wolfram':{bg:'rgba(192,57,43,.15)',border:'#c0392b',text:'#c0392b'},
+  'Berilyum':{bg:'rgba(39,174,96,.15)',border:'#27ae60',text:'#27ae60'},
+  'Hafniyum':{bg:'rgba(142,68,173,.15)',border:'#8e44ad',text:'#8e44ad'},
+  'Platin':{bg:'rgba(200,200,200,.15)',border:'#ccc',text:'#ccc'},
+  'Paladyum':{bg:'rgba(180,160,200,.15)',border:'#b4a0c8',text:'#b4a0c8'},
+  'Rodyum':{bg:'rgba(220,200,180,.15)',border:'#dcc8b4',text:'#dcc8b4'},
+};
+
+const CAT_COLORS={
+  'Hava':'#00aaff','Kara':'#27ae60','Deniz':'#2980b9','Füze':'#e74c3c',
+  'İHA':'#9b59b6','Elektronik':'#f39c12','Uzay':'#1abc9c','Nükleer':'#e74c3c',
+};
+
+const COUNTRY_FLAGS={
+  'ABD':'🇺🇸','Çin':'🇨🇳','Rusya':'🇷🇺','Türkiye':'🇹🇷','Almanya':'🇩🇪',
+  'Fransa':'🇫🇷','İngiltere':'🇬🇧','İsrail':'🇮🇱','Japonya':'🇯🇵','Hindistan':'🇮🇳',
+  'Güney Kore':'🇰🇷','İtalya':'🇮🇹','İsveç':'🇸🇪','AB':'🇪🇺','Kanada':'🇨🇦',
+  'Avustralya':'🇦🇺','İspanya':'🇪🇸','Hollanda':'🇳🇱','Polonya':'🇵🇱','Ukrayna':'🇺🇦',
+};
+
+const WEAPONS=[
+  // ===== ABD =====
+  {id:'f35',name:'F-35 Lightning II',fullname:'Lockheed Martin F-35 Joint Strike Fighter',country:'ABD',cat:'Hava',icon:'✈️',
+   desc:'Dünyanın en gelişmiş 5. nesil çok görevli savaş uçağı. Stealth teknolojisi, gelişmiş sensör füzyonu ve ağ merkezli savaş kabiliyetiyle donatılmış. ABD, İngiltere, Türkiye (programdan çıkarıldı) ve 10+ ülke tarafından kullanılıyor.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum','Skandiyum','Renyum'],
+   specs:{hız:'1.6 Mach',menzil:'2.200 km',yük:'8.160 kg',birim:'90-110M $'},
+   why:'Neodimyum ve Disprosyum: Uçuş kontrol yüzeylerinin aktüatörlerinde güçlü kalıcı mıknatıslar. Galyum Arsenür: Radar sistemleri ve elektronik harp ekipmanları. Renyum: Yüksek sıcaklığa dayanıklı jet motoru bileşenleri.',
+   color:'#00aaff'},
+
+  {id:'b21',name:'B-21 Raider',fullname:'Northrop Grumman B-21 Raider',country:'ABD',cat:'Hava',icon:'🛸',
+   desc:'ABD\'nin yeni nesil stratejik bombardıman uçağı. B-2 Spirit\'in halefi. 2023\'te ilk uçuşunu yaptı. Nükleer ve konvansiyonel silah taşıyabilen stealth bombardıman uçağı.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','Hafniyum','Renyum'],
+   specs:{hız:'Ses altı',menzil:'Global',yük:'13.600 kg',birim:'550M+ $'},
+   why:'Hafniyum: Nükleer reaktör kontrol çubukları ve yüksek sıcaklık kaplamaları. Kobalt: Süper alaşım türbin kanatları.',
+   color:'#00aaff'},
+
+  {id:'f22',name:'F-22 Raptor',fullname:'Lockheed Martin F-22 Raptor',country:'ABD',cat:'Hava',icon:'🦅',
+   desc:'Dünyanın ilk operasyonel 5. nesil hava üstünlüğü savaş uçağı. Süpersonik cruise, stealth ve gelişmiş aviyonik sistemlere sahip. Sadece ABD kullanıyor.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Renyum','Skandiyum','Galyum'],
+   specs:{hız:'2.25 Mach',menzil:'2.960 km',yük:'8.000 kg',birim:'150M $'},
+   why:'Skandiyum-Alüminyum alaşımı: Hafif ve güçlü yapısal bileşenler. Renyum: Yüksek sıcaklık motor bileşenleri.',
+   color:'#00aaff'},
+
+  {id:'abrams',name:'M1A2 Abrams SEPv3',fullname:'General Dynamics M1A2 Abrams SEPv3',country:'ABD',cat:'Kara',icon:'🛡️',
+   desc:'ABD\'nin ana muharebe tankı. Kompozit zırh, 120mm top ve gelişmiş aktif koruma sistemleriyle donatılmış. 3. nesil termal görüntüleme ve ağ merkezli savaş kabiliyeti.',
+   metals:['Wolfram','Kobalt','Neodimyum','İtriyum','Lantanyum'],
+   specs:{ağırlık:'73 ton',hız:'67 km/s',top:'120mm',birim:'8-10M $'},
+   why:'Wolfram: Zırh delici mühimmat (APFSDS) ve zırh bileşenleri. Kobalt: Motor süper alaşımları. İtriyum: Seramik zırh bileşenleri.',
+   color:'#27ae60'},
+
+  {id:'patriot',name:'MIM-104 Patriot PAC-3',fullname:'Raytheon MIM-104F Patriot PAC-3 MSE',country:'ABD',cat:'Füze',icon:'🚀',
+   desc:'ABD\'nin gelişmiş hava savunma sistemi. Balistik füze, savaş uçağı ve insansız hava araçlarına karşı etkili. Ukrayna\'da yoğun şekilde kullanılıyor.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum','Tantal'],
+   specs:{menzil:'160 km',irtifa:'24 km',hız:'5 Mach',birim:'4M $/füze'},
+   why:'Galyum Nitrür (GaN): Yüksek güçlü radar vericileri. İndiyum Fosfit: Kızılötesi arama kafaları. Tantal: Elektronik devre kondansatörleri.',
+   color:'#e74c3c'},
+
+  {id:'virginia',name:'Virginia-class SSN',fullname:'General Dynamics Virginia-class Submarine',country:'ABD',cat:'Deniz',icon:'🐋',
+   desc:'ABD\'nin en modern nükleer denizaltısı. Tomahawk seyir füzesi ve Mk48 torpido ile donatılmış. Sessiz operasyon ve gelişmiş sensör sistemleri.',
+   metals:['Kobalt','Neodimyum','Galyum','Germanyum','Hafniyum','Berilyum'],
+   specs:{deplasman:'7.900 ton',hız:'25+ knot',derinlik:'240+ m',birim:'3.4B $'},
+   why:'Berilyum: Nükleer reaktör yansıtıcıları ve yapısal bileşenler. Hafniyum: Nükleer kontrol çubukları.',
+   color:'#2980b9'},
+
+  {id:'reaper',name:'MQ-9 Reaper',fullname:'General Atomics MQ-9 Reaper UCAV',country:'ABD',cat:'İHA',icon:'🤖',
+   desc:'ABD\'nin ana silahlı insansız hava aracı. Hellfire füzesi ve GBU-12 bombası taşıyabilen uzun menzilli UCAV. 50+ ülkede kullanılıyor.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{kanat:'20 m',menzil:'1.850 km',irtifa:'15 km',birim:'32M $'},
+   why:'Galyum Arsenür: Uydu haberleşme sistemleri. İndiyum Antimonür: Termal kamera sensörleri.',
+   color:'#9b59b6'},
+
+  {id:'himars',name:'M142 HIMARS',fullname:'Lockheed Martin M142 High Mobility Artillery Rocket System',country:'ABD',cat:'Kara',icon:'🎯',
+   desc:'Yüksek hareketlilikli çok namlulu roket sistemi. Ukrayna savaşında kritik rol oynadı. GMLRS ve ATACMS füzelerini ateşleyebilir.',
+   metals:['Neodimyum','Wolfram','Kobalt','Galyum'],
+   specs:{menzil:'70-300 km',hız:'85 km/s',yük:'6 füze',birim:'5M $'},
+   why:'Wolfram: Mühimmat penetratörleri. Neodimyum: Güdüm sistemleri elektrik motorları.',
+   color:'#27ae60'},
+
+  {id:'gerald_ford',name:'USS Gerald R. Ford',fullname:'Gerald R. Ford-class Aircraft Carrier CVN-78',country:'ABD',cat:'Deniz',icon:'🛳️',
+   desc:'Dünyanın en büyük ve en gelişmiş uçak gemisi. Elektromanyetik uçak fırlatma sistemi (EMALS) ve gelişmiş silah kaldırma sistemleriyle donatılmış.',
+   metals:['Kobalt','Neodimyum','Disprosyum','Galyum','Germanyum','Hafniyum'],
+   specs:{deplasman:'100.000 ton',hız:'30+ knot',uçak:'90+',birim:'13B $'},
+   why:'Neodimyum-Disprosyum: EMALS elektromanyetik fırlatma sisteminin süpermıknatısları. Kobalt: Nükleer reaktör süper alaşımları.',
+   color:'#2980b9'},
+
+  // ===== ÇİN =====
+  {id:'j20',name:'J-20 Chengdu',fullname:'Chengdu J-20 "Mighty Dragon"',country:'Çin',cat:'Hava',icon:'🐉',
+   desc:'Çin\'in ilk yerli 5. nesil stealth savaş uçağı. 2017\'de operasyonel oldu. WS-15 motoru geliştirme aşamasında. Çin Hava Kuvvetleri\'nin amiral gemisi.',
+   metals:['Neodimyum','Disprosyum','Terbiyum','Kobalt','Galyum','Germanyum'],
+   specs:{hız:'2.0 Mach',menzil:'2.000+ km',yük:'11.000 kg',birim:'110M $'},
+   why:'Çin dünya Neodimyum üretiminin %85\'ini, Galyum üretiminin %98\'ini, Germanyum üretiminin %68\'ini kontrol ediyor — stratejik avantaj!',
+   color:'#e74c3c'},
+
+  {id:'df41',name:'DF-41 ICBM',fullname:'Dongfeng-41 Intercontinental Ballistic Missile',country:'Çin',cat:'Füze',icon:'☢️',
+   desc:'Çin\'in en gelişmiş kıtalararası balistik füzesi. 10-12 bağımsız hedeflenebilir nükleer başlık (MIRV) taşıyabiliyor. Menzili 12.000-15.000 km.',
+   metals:['Kobalt','Neodimyum','Hafniyum','Galyum','Germanyum','Wolfram'],
+   specs:{menzil:'12.000-15.000 km',başlık:'10-12 MIRV',hız:'25 Mach',birim:'Gizli'},
+   why:'Hafniyum: Nükleer başlık bileşenleri. Wolfram: Penetratör başlıklar ve ısı kalkanları.',
+   color:'#e74c3c'},
+
+  {id:'type055',name:'Type 055 Destroyer',fullname:'Renhai-class Type 055 Guided Missile Destroyer',country:'Çin',cat:'Deniz',icon:'⚓',
+   desc:'Çin\'in en büyük ve en gelişmiş muhrip gemisi. 112 dikey fırlatma hücresi, gelişmiş radar ve anti-ship füzeleriyle donatılmış. ABD Ticonderoga-class ile kıyaslanıyor.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum','Tantal'],
+   specs:{deplasman:'13.000 ton',hız:'30 knot',silah:'112 VLS',birim:'1B $'},
+   why:'Galyum Nitrür: AESA radar sistemleri. İndiyum: Kızılötesi sensörler ve termal kameralar.',
+   color:'#e74c3c'},
+
+  {id:'df17',name:'DF-17 Hipersonik',fullname:'Dongfeng-17 Hypersonic Glide Vehicle',country:'Çin',cat:'Füze',icon:'⚡',
+   desc:'Çin\'in hipersonik planör aracı (HGV) taşıyan orta menzilli balistik füze. Mach 10\'un üzerinde hız ve manevra kabiliyetiyle mevcut hava savunma sistemlerini aşabiliyor.',
+   metals:['Wolfram','Kobalt','Neodimyum','Hafniyum','Renyum'],
+   specs:{menzil:'1.800-2.500 km',hız:'10+ Mach',irtifa:'60 km',birim:'Gizli'},
+   why:'Wolfram-Renyum alaşımı: 3.000°C\'yi aşan aerodinamik ısınmaya dayanıklı yapısal bileşenler.',
+   color:'#e74c3c'},
+
+  {id:'ch5',name:'CH-5 Rainbow İHA',fullname:'CASC CH-5 Rainbow UCAV',country:'Çin',cat:'İHA',icon:'🤖',
+   desc:'Çin\'in en büyük silahlı insansız hava aracı. MQ-9 Reaper\'a rakip olarak tasarlandı. Orta Doğu ve Afrika\'da ihracat başarısı.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{kanat:'21 m',menzil:'2.000 km',irtifa:'9 km',birim:'10-15M $'},
+   why:'Çin\'in yerli nadir metal üretimi, bu sistemlerin maliyetini düşürüyor ve ihracat rekabetçiliğini artırıyor.',
+   color:'#e74c3c'},
+
+  {id:'j31',name:'FC-31 Gyrfalcon',fullname:'Shenyang FC-31 / J-35 Carrier Fighter',country:'Çin',cat:'Hava',icon:'🦅',
+   desc:'Çin\'in ikinci 5. nesil savaş uçağı. Uçak gemisi versiyonu J-35 olarak geliştirildi. İhracat pazarı hedefleniyor.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum','Skandiyum'],
+   specs:{hız:'1.8 Mach',menzil:'1.200 km',yük:'8.000 kg',birim:'70M $'},
+   why:'Skandiyum-Alüminyum alaşımı: Hafif yapısal bileşenler. Çin bu metallerin ana üreticisi.',
+   color:'#e74c3c'},
+
+  // ===== RUSYA =====
+  {id:'s400',name:'S-400 Triumf',fullname:'S-400 Triumf (SA-21 Growler)',country:'Rusya',cat:'Füze',icon:'🛡️',
+   desc:'Rusya\'nın gelişmiş uzun menzilli hava savunma sistemi. Türkiye\'nin satın alması NATO ile ciddi kriz yarattı. Çin, Hindistan ve Türkiye kullanıyor.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum','Tantal'],
+   specs:{menzil:'400 km',irtifa:'30 km',hız:'17 Mach',birim:'400M $/batarya'},
+   why:'Galyum Arsenür: Faz dizili radar sistemleri. İndiyum: Kızılötesi arama kafaları. Türkiye\'nin S-400 alımı ABD ile F-35 krizine yol açtı.',
+   color:'#c0392b'},
+
+  {id:'su57',name:'Su-57 Felon',fullname:'Sukhoi Su-57 (PAK FA)',country:'Rusya',cat:'Hava',icon:'✈️',
+   desc:'Rusya\'nın 5. nesil stealth çok görevli savaş uçağı. Ukrayna savaşında sınırlı kullanım. Üretim sayısı düşük kaldı.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum','Renyum'],
+   specs:{hız:'2.0 Mach',menzil:'3.500 km',yük:'10.000 kg',birim:'35-50M $'},
+   why:'Renyum: Yüksek sıcaklık motor bileşenleri. Rusya\'nın nadir metal bağımlılığı Batı\'ya kıyasla düşük.',
+   color:'#c0392b'},
+
+  {id:'kinzhal',name:'Kh-47M2 Kinzhal',fullname:'Kh-47M2 Kinzhal Hipersonik Füze',country:'Rusya',cat:'Füze',icon:'⚡',
+   desc:'Rusya\'nın hava fırlatmalı hipersonik balistik füzesi. MiG-31K ve Tu-22M3 ile taşınıyor. Ukrayna\'da kullanıldı.',
+   metals:['Wolfram','Kobalt','Neodimyum','Hafniyum','Renyum'],
+   specs:{menzil:'2.000 km',hız:'10 Mach',irtifa:'20 km',birim:'Gizli'},
+   why:'Wolfram-Renyum alaşımı: Hipersonik hızda aşırı ısınmaya dayanıklı yapısal bileşenler.',
+   color:'#c0392b'},
+
+  {id:'armata',name:'T-14 Armata',fullname:'Uralvagonzavod T-14 Armata MBT',country:'Rusya',cat:'Kara',icon:'🛡️',
+   desc:'Rusya\'nın yeni nesil ana muharebe tankı. İnsansız kule, aktif koruma sistemi ve 125mm top. Üretim sayısı sınırlı kaldı.',
+   metals:['Wolfram','Kobalt','Neodimyum','İtriyum','Lantanyum'],
+   specs:{ağırlık:'55 ton',hız:'80 km/s',top:'125mm 2A82',birim:'3.7M $'},
+   why:'İtriyum: Seramik zırh bileşenleri. Wolfram: Zırh delici mühimmat.',
+   color:'#c0392b'},
+
+  {id:'poseidon',name:'Poseidon Nükleer Torpido',fullname:'Status-6 / Poseidon Nuclear-Armed UUV',country:'Rusya',cat:'Deniz',icon:'☢️',
+   desc:'Nükleer güçlü otonom sualtı aracı. 100 megatonluk nükleer başlık taşıyabileceği iddia ediliyor. Radyoaktif tsunami yaratmak üzere tasarlandı.',
+   metals:['Kobalt','Hafniyum','Neodimyum','Berilyum'],
+   specs:{menzil:'10.000 km',hız:'100+ knot',derinlik:'1.000 m',birim:'Gizli'},
+   why:'Berilyum: Nükleer reaktör yansıtıcıları. Hafniyum: Nükleer kontrol çubukları.',
+   color:'#c0392b'},
+
+  // ===== TÜRKİYE =====
+  {id:'kaan',name:'KAAN (TF-X)',fullname:'TAI/SSB KAAN 5. Nesil Savaş Uçağı',country:'Türkiye',cat:'Hava',icon:'🌟',
+   desc:'Türkiye\'nin ilk yerli 5. nesil savaş uçağı. 21 Şubat 2023\'te ilk uçuşunu yaptı. Stealth teknolojisi, yerli motor (TF-X) hedefi. F-35 programından çıkarılmanın ardından geliştirilen stratejik proje.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum','Renyum','Skandiyum'],
+   specs:{hız:'1.8+ Mach',menzil:'1.000+ km',yük:'Gizli',birim:'Gizli'},
+   why:'Türkiye nadir metal bağımlılığını azaltmak için yerli üretim kapasitesi geliştiriyor. Boron rezervleri (dünya 1.) kritik avantaj.',
+   color:'#C9A24B'},
+
+  {id:'bayraktar_tb3',name:'Bayraktar TB3',fullname:'Baykar Bayraktar TB3 UCAV',country:'Türkiye',cat:'İHA',icon:'🤖',
+   desc:'Bayraktar TB2\'nin geliştirilmiş versiyonu. Uçak gemisinden kalkış/iniş kabiliyeti. Daha yüksek yük kapasitesi ve gelişmiş sensörler.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{kanat:'14 m',menzil:'150+ km',irtifa:'7.6 km',birim:'5-10M $'},
+   why:'Galyum Arsenür: Uydu haberleşme ve datalink sistemleri. Türkiye bu metalleri ithal ediyor.',
+   color:'#C9A24B'},
+
+  {id:'akinci_tr',name:'AKINCI TIHA',fullname:'Baykar AKINCI Taarruz İnsansız Hava Aracı',country:'Türkiye',cat:'İHA',icon:'🦅',
+   desc:'Türkiye\'nin en büyük ve en gelişmiş insansız hava aracı. Aktif elektronik tarama radar (AESA), uydu bağlantısı ve çoklu silah entegrasyonu.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum','Tantal'],
+   specs:{kanat:'20 m',menzil:'1.000+ km',irtifa:'12 km',birim:'15-20M $'},
+   why:'Galyum Nitrür (GaN): AESA radar sistemi. Tantal: Elektronik sistemler kondansatörleri.',
+   color:'#C9A24B'},
+
+  {id:'hisar_o',name:'HİSAR-O+',fullname:'Aselsan/Roketsan HİSAR-O+ Hava Savunma',country:'Türkiye',cat:'Füze',icon:'🚀',
+   desc:'Türkiye\'nin yerli orta menzilli hava savunma sistemi. Alçak ve orta irtifada hava tehditlerine karşı etkili. S-400 krizinin ardından yerli alternatif olarak geliştirildi.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{menzil:'15 km',irtifa:'10 km',hız:'2.5 Mach',birim:'Gizli'},
+   why:'Türkiye\'nin yerli savunma sanayii nadir metal bağımlılığını azaltmak için kritik önem taşıyor.',
+   color:'#C9A24B'},
+
+  {id:'altay',name:'Altay Tankı',fullname:'BMC/Roketsan Altay Ana Muharebe Tankı',country:'Türkiye',cat:'Kara',icon:'🛡️',
+   desc:'Türkiye\'nin yerli ana muharebe tankı. Güney Kore K2 Black Panther teknolojisinden yararlanıldı. Aktif koruma sistemi ve 120mm top.',
+   metals:['Wolfram','Kobalt','Neodimyum','İtriyum'],
+   specs:{ağırlık:'65 ton',hız:'70 km/s',top:'120mm',birim:'13M $'},
+   why:'Wolfram: Zırh delici mühimmat. İtriyum: Seramik zırh bileşenleri. Türkiye bu metalleri büyük ölçüde ithal ediyor.',
+   color:'#C9A24B'},
+
+  {id:'milgem',name:'MİLGEM Fırkateyn',fullname:'STM MİLGEM Ada/Babür-class Corvette',country:'Türkiye',cat:'Deniz',icon:'⚓',
+   desc:'Türkiye\'nin yerli savaş gemisi programı. Ada ve İstanbul sınıfı fırkateynler. Pakistan ve Ukrayna\'ya ihracat.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{deplasman:'2.400-3.000 ton',hız:'29 knot',silah:'Harpoon/Atmaca',birim:'250M $'},
+   why:'Galyum Arsenür: Radar ve elektronik harp sistemleri. Türkiye\'nin deniz savunma sanayii hızla gelişiyor.',
+   color:'#C9A24B'},
+
+  {id:'siper',name:'SİPER Uzun Menzilli HAS',fullname:'Aselsan/Roketsan SİPER Uzun Menzilli Hava Savunma',country:'Türkiye',cat:'Füze',icon:'🛡️',
+   desc:'Türkiye\'nin S-400 alternatifi olarak geliştirilen uzun menzilli hava savunma sistemi. 100+ km menzil hedefi.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum','Tantal'],
+   specs:{menzil:'100+ km',irtifa:'30+ km',hız:'4+ Mach',birim:'Gizli'},
+   why:'Galyum Nitrür: Faz dizili radar. Türkiye\'nin stratejik özerklik hedefi.',
+   color:'#C9A24B'},
+
+  // ===== AB / AVRUPA =====
+  {id:'eurofighter',name:'Eurofighter Typhoon',fullname:'Eurofighter Typhoon (Almanya/İngiltere/İtalya/İspanya)',country:'AB',cat:'Hava',icon:'⚡',
+   desc:'Dört Avrupa ülkesinin ortak geliştirdiği çok görevli savaş uçağı. Almanya, İngiltere, İtalya, İspanya, Suudi Arabistan ve diğer ülkeler kullanıyor.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum','Skandiyum','Renyum'],
+   specs:{hız:'2.0 Mach',menzil:'2.900 km',yük:'7.500 kg',birim:'90M $'},
+   why:'Skandiyum-Alüminyum alaşımı: Hafif yapısal bileşenler. Avrupa nadir metal bağımlılığını azaltmak için Critical Raw Materials Act çıkardı.',
+   color:'#3498db'},
+
+  {id:'rafale',name:'Dassault Rafale',fullname:'Dassault Aviation Rafale F4',country:'Fransa',cat:'Hava',icon:'✈️',
+   desc:'Fransa\'nın çok görevli savaş uçağı. Fransa, Hindistan, Mısır, Katar, Yunanistan ve BAE kullanıyor. F-35\'e rakip ihracat başarısı.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum','Renyum'],
+   specs:{hız:'1.8 Mach',menzil:'3.700 km',yük:'9.500 kg',birim:'80M $'},
+   why:'Renyum: Motor bileşenleri. Fransa nadir metal tedarik zincirini çeşitlendiriyor.',
+   color:'#3498db'},
+
+  {id:'fcas',name:'FCAS / SCAF',fullname:'Future Combat Air System (Almanya/Fransa/İspanya)',country:'AB',cat:'Hava',icon:'🛸',
+   desc:'Avrupa\'nın 6. nesil savaş uçağı programı. 2040 hedefi. Yapay zeka, insansız kanat uçakları ve gelişmiş stealth teknolojisi.',
+   metals:['Neodimyum','Disprosyum','Terbiyum','Kobalt','Galyum','Germanyum','Skandiyum'],
+   specs:{hız:'2.5+ Mach',menzil:'3.000+ km',yük:'Gizli',birim:'Gizli'},
+   why:'Avrupa\'nın 6. nesil uçak programı için nadir metal tedarik güvencesi kritik. Critical Raw Materials Act bu nedenle çıkarıldı.',
+   color:'#3498db'},
+
+  {id:'leopard2a8',name:'Leopard 2A8',fullname:'Krauss-Maffei Wegmann Leopard 2A8',country:'Almanya',cat:'Kara',icon:'🛡️',
+   desc:'Dünyanın en iyi tankı olarak kabul edilen Alman ana muharebe tankı. Ukrayna\'ya gönderildi. 2A8 versiyonu aktif koruma sistemi içeriyor.',
+   metals:['Wolfram','Kobalt','Neodimyum','İtriyum','Lantanyum'],
+   specs:{ağırlık:'62 ton',hız:'72 km/s',top:'120mm L55A1',birim:'8M $'},
+   why:'Wolfram: Zırh delici mühimmat. Almanya nadir metal bağımlılığını azaltmak için Çin dışı tedarik arayışında.',
+   color:'#3498db'},
+
+  {id:'aster30',name:'Aster 30 SAMP/T',fullname:'MBDA Aster 30 SAMP/T Hava Savunma',country:'AB',cat:'Füze',icon:'🚀',
+   desc:'Fransa-İtalya ortak geliştirmesi orta-uzun menzilli hava savunma sistemi. Ukrayna\'ya gönderildi. Balistik füze savunma kabiliyeti.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{menzil:'120 km',irtifa:'20 km',hız:'4.5 Mach',birim:'1M $/füze'},
+   why:'Galyum Arsenür: Aktif radar arama kafası. İndiyum: Kızılötesi sensörler.',
+   color:'#3498db'},
+
+  {id:'tempest',name:'BAE Tempest / GCAP',fullname:'BAE Systems Tempest / Global Combat Air Programme',country:'İngiltere',cat:'Hava',icon:'🌩️',
+   desc:'İngiltere, Japonya ve İtalya\'nın ortak 6. nesil savaş uçağı programı. 2035 hedefi. Yapay zeka ve insansız kanat uçakları entegrasyonu.',
+   metals:['Neodimyum','Disprosyum','Terbiyum','Kobalt','Galyum','Germanyum'],
+   specs:{hız:'2.5+ Mach',menzil:'3.000+ km',yük:'Gizli',birim:'Gizli'},
+   why:'İngiltere nadir metal tedarik güvencesi için Avustralya ve Kanada ile anlaşmalar imzaladı.',
+   color:'#3498db'},
+
+  // ===== JAPONYA =====
+  {id:'f3',name:'F-X (F-3) / GCAP',fullname:'Mitsubishi F-X Next Generation Fighter',country:'Japonya',cat:'Hava',icon:'🌸',
+   desc:'Japonya\'nın 6. nesil savaş uçağı programı. İngiltere ve İtalya ile GCAP çerçevesinde birleştirildi. 2035 hedefi.',
+   metals:['Neodimyum','Disprosyum','Terbiyum','Kobalt','Galyum','Germanyum','Skandiyum'],
+   specs:{hız:'2.5+ Mach',menzil:'3.000+ km',yük:'Gizli',birim:'Gizli'},
+   why:'Japonya nadir metal bağımlılığını azaltmak için deniz tabanı madenciliği ve geri dönüşüm teknolojileri geliştiriyor.',
+   color:'#e74c3c'},
+
+  {id:'js_maya',name:'JS Maya DDG',fullname:'Maya-class Aegis Destroyer JS Maya DDG-179',country:'Japonya',cat:'Deniz',icon:'⚓',
+   desc:'Japonya\'nın en gelişmiş Aegis muhribi. SM-3 Block IIA balistik füze savunma sistemi. ABD ile ortak geliştirme.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum','Tantal'],
+   specs:{deplasman:'8.200 ton',hız:'30 knot',silah:'96 VLS',birim:'1.5B $'},
+   why:'Galyum Nitrür: SPY-7 AESA radar sistemi. Japonya Çin\'in nadir metal ihracat kısıtlamalarına karşı stok yapıyor.',
+   color:'#e74c3c'},
+
+  // ===== HİNDİSTAN =====
+  {id:'tejas',name:'HAL Tejas Mk2',fullname:'Hindustan Aeronautics Limited Tejas Mk2',country:'Hindistan',cat:'Hava',icon:'🦁',
+   desc:'Hindistan\'ın yerli hafif çok görevli savaş uçağı. Mk2 versiyonu daha büyük ve güçlü. Hindistan\'ın "Make in India" savunma programının amiral gemisi.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum'],
+   specs:{hız:'1.8 Mach',menzil:'3.000 km',yük:'5.300 kg',birim:'50M $'},
+   why:'Hindistan nadir metal rezervleri açısından zengin. Monazit kumu işleme kapasitesi artırılıyor.',
+   color:'#f39c12'},
+
+  {id:'arjun',name:'Arjun Mk2 Tank',fullname:'DRDO Arjun Mk2 Main Battle Tank',country:'Hindistan',cat:'Kara',icon:'🛡️',
+   desc:'Hindistan\'ın yerli ana muharebe tankı. 120mm rifled top, reaktif zırh ve aktif koruma sistemi.',
+   metals:['Wolfram','Kobalt','Neodimyum','İtriyum'],
+   specs:{ağırlık:'68 ton',hız:'72 km/s',top:'120mm rifled',birim:'8M $'},
+   why:'Hindistan Wolfram rezervleri açısından görece zengin. Kobalt için Çin\'e bağımlılık azaltılıyor.',
+   color:'#f39c12'},
+
+  {id:'brahmos',name:'BrahMos-II Hipersonik',fullname:'BrahMos Aerospace BrahMos-II Hypersonic Cruise Missile',country:'Hindistan',cat:'Füze',icon:'⚡',
+   desc:'Hindistan-Rusya ortak geliştirmesi hipersonik seyir füzesi. BrahMos-I\'in hipersonik versiyonu. Mach 7-8 hız hedefi.',
+   metals:['Wolfram','Kobalt','Neodimyum','Hafniyum','Renyum'],
+   specs:{menzil:'600+ km',hız:'7-8 Mach',başlık:'300 kg',birim:'3-5M $'},
+   why:'Wolfram-Renyum alaşımı: Hipersonik hızda aşırı ısınmaya dayanıklı bileşenler.',
+   color:'#f39c12'},
+
+  // ===== İSRAİL =====
+  {id:'iron_dome',name:'Iron Dome',fullname:'Rafael/IAI Iron Dome Air Defense System',country:'İsrail',cat:'Füze',icon:'🔵',
+   desc:'Kısa menzilli roket ve top mermilerine karşı etkili hava savunma sistemi. Gazze çatışmalarında yoğun kullanım. ABD de satın aldı.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{menzil:'70 km',irtifa:'10 km',hız:'Mach 2.2',birim:'50K $/füze'},
+   why:'Galyum Arsenür: Radar ve güdüm sistemleri. İsrail nadir metal tedariki için çeşitli kaynaklara başvuruyor.',
+   color:'#3498db'},
+
+  {id:'arrow3',name:'Arrow 3',fullname:'IAI/Boeing Arrow 3 Exo-Atmospheric Interceptor',country:'İsrail',cat:'Füze',icon:'🚀',
+   desc:'Atmosfer dışı balistik füze savunma sistemi. İran\'ın balistik füze saldırılarına karşı kritik. Almanya da satın aldı.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','Hafniyum'],
+   specs:{menzil:'2.400 km',irtifa:'100+ km',hız:'9 Mach',birim:'2M $/füze'},
+   why:'Hafniyum: Yüksek sıcaklık atmosfer dışı bileşenler. İsrail-Almanya anlaşması nadir metal tedarik işbirliğini içeriyor.',
+   color:'#3498db'},
+
+  {id:'barak8',name:'Barak-8 / MR-SAM',fullname:'IAI/DRDO Barak-8 Medium Range SAM',country:'İsrail',cat:'Füze',icon:'🛡️',
+   desc:'İsrail-Hindistan ortak geliştirmesi orta menzilli hava savunma sistemi. Hint Deniz Kuvvetleri ve Hava Kuvvetleri kullanıyor.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{menzil:'100 km',irtifa:'16 km',hız:'Mach 2',birim:'1M $/füze'},
+   why:'Galyum Nitrür: Aktif radar arama kafası. İsrail-Hindistan savunma işbirliği nadir metal ticaretini de kapsıyor.',
+   color:'#3498db'},
+
+  // ===== GÜNEY KORE =====
+  {id:'kf21',name:'KF-21 Boramae',fullname:'KAI KF-21 Boramae 4.5. Nesil Savaş Uçağı',country:'Güney Kore',cat:'Hava',icon:'🦅',
+   desc:'Güney Kore\'nin ilk yerli savaş uçağı. 4.5. nesil, stealth kabiliyeti sınırlı. İlk uçuş 2022. Endonezya ile ortak geliştirme.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum','Skandiyum'],
+   specs:{hız:'1.81 Mach',menzil:'2.900 km',yük:'7.700 kg',birim:'65M $'},
+   why:'Güney Kore Çin\'in nadir metal ihracat kısıtlamalarına karşı Avustralya ve Kanada ile tedarik anlaşmaları imzaladı.',
+   color:'#27ae60'},
+
+  {id:'k2',name:'K2 Black Panther',fullname:'Hyundai Rotem K2 Black Panther MBT',country:'Güney Kore',cat:'Kara',icon:'🐆',
+   desc:'Dünyanın en gelişmiş tankları arasında gösterilen Güney Kore ana muharebe tankı. Polonya büyük miktarda satın aldı.',
+   metals:['Wolfram','Kobalt','Neodimyum','İtriyum','Lantanyum'],
+   specs:{ağırlık:'55 ton',hız:'70 km/s',top:'120mm L55',birim:'8.5M $'},
+   why:'Wolfram: Zırh delici mühimmat. Güney Kore savunma ihracatı nadir metal tedarik anlaşmalarıyla destekleniyor.',
+   color:'#27ae60'},
+
+  // ===== KANADA =====
+  {id:'cf18',name:'CF-18 Hornet Upgrade',fullname:'Boeing CF-18 Hornet Advanced',country:'Kanada',cat:'Hava',icon:'🍁',
+   desc:'Kanada\'nın modernize edilmiş F/A-18 Hornet filosu. Yeni F-35 alımı planlanıyor. Kanada nadir metal ihracatçısı olarak stratejik konumda.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum'],
+   specs:{hız:'1.8 Mach',menzil:'3.330 km',yük:'7.700 kg',birim:'30M $/modernize'},
+   why:'Kanada dünya kobalt üretiminin önemli bir kısmını sağlıyor. Savunma sanayii nadir metal tedarik avantajından yararlanıyor.',
+   color:'#e74c3c'},
+
+  // ===== UZAY & GELECEKTEKİ SİSTEMLER =====
+  {id:'x37b',name:'X-37B Orbital Plane',fullname:'Boeing X-37B Orbital Test Vehicle',country:'ABD',cat:'Uzay',icon:'🛸',
+   desc:'ABD Hava Kuvvetleri\'nin gizli uzay uçağı. 2010\'dan bu yana 6 görev tamamladı. En uzun görev 908 gün sürdü.',
+   metals:['Kobalt','Hafniyum','Neodimyum','Renyum','Berilyum'],
+   specs:{uzunluk:'8.9 m',yörünge:'LEO-GEO',görev:'900+ gün',birim:'Gizli'},
+   why:'Berilyum: Uzay radyasyonuna dayanıklı yapısal bileşenler. Hafniyum: Yüksek sıcaklık yeniden giriş bileşenleri.',
+   color:'#9b59b6'},
+
+  {id:'starlink_mil',name:'Starlink Military',fullname:'SpaceX Starlink Military Satellite Constellation',country:'ABD',cat:'Elektronik',icon:'📡',
+   desc:'SpaceX\'in askeri uydu haberleşme ağı. Ukrayna\'da kritik rol oynadı. ABD Ordusu ve Hava Kuvvetleri kullanıyor.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum','Tantal'],
+   specs:{uydu:'4.000+',gecikme:'20ms',bant:'100-200 Mbps',birim:'500$/ay'},
+   why:'Galyum Arsenür: Güneş panelleri ve haberleşme elektroniği. İndiyum: Güneş paneli ince film kaplamaları.',
+   color:'#9b59b6'},
+
+  {id:'laser_weapon',name:'HELIOS Lazer Silahı',fullname:'Lockheed Martin HELIOS High Energy Laser',country:'ABD',cat:'Elektronik',icon:'⚡',
+   desc:'ABD Deniz Kuvvetleri\'nin yüksek enerjili lazer silahı. İHA ve küçük teknelere karşı etkili. Enerji başına maliyet çok düşük.',
+   metals:['Neodimyum','Disprosyum','Kobalt','İtriyum','Galyum'],
+   specs:{güç:'60 kW',menzil:'1-2 km',maliyet:'1$/atış',birim:'150M $'},
+   why:'İtriyum-Alüminyum Garnet (YAG): Lazer kristali. Neodimyum-YAG: Güçlendirme ortamı. Lazer silahları nadir metal bağımlılığını artırıyor.',
+   color:'#9b59b6'},
+
+  {id:'railgun',name:'Elektromanyetik Top',fullname:'BAE Systems Electromagnetic Railgun',country:'ABD',cat:'Elektronik',icon:'⚡',
+   desc:'Kimyasal patlayıcı yerine elektromanyetik kuvvet kullanan top. Mach 6+ hız, 200 km menzil hedefi. Prototip aşamasında.',
+   metals:['Kobalt','Neodimyum','Wolfram','Berilyum','Galyum'],
+   specs:{hız:'6 Mach',menzil:'200 km',enerji:'32 MJ',birim:'500M $'},
+   why:'Kobalt: Süper iletken mıknatıslar. Wolfram: Yüksek hızlı penetratör. Berilyum: Hafif yapısal bileşenler.',
+   color:'#9b59b6'},
+
+  // ===== DRONE SÜRÜSÜ =====
+  {id:'perdix',name:'Perdix Drone Sürüsü',fullname:'MIT/DoD Perdix Micro-UAV Swarm',country:'ABD',cat:'İHA',icon:'🐝',
+   desc:'Yapay zeka ile koordineli hareket eden 103 mini insansız hava aracı sürüsü. F/A-18\'den fırlatıldı. Geleceğin savaş konsepti.',
+   metals:['Neodimyum','Kobalt','Galyum','Germanyum','İndiyum'],
+   specs:{boyut:'16 cm',sürü:'100+',hız:'110 km/s',birim:'100$/adet'},
+   why:'Neodimyum: Küçük ama güçlü elektrik motorları. Galyum: Haberleşme ve sensör çipleri.',
+   color:'#9b59b6'},
+
+  {id:'loyal_wingman',name:'MQ-28 Ghost Bat',fullname:'Boeing MQ-28A Ghost Bat Loyal Wingman',country:'Avustralya',cat:'İHA',icon:'🦇',
+   desc:'Avustralya-Boeing ortak geliştirmesi yapay zeka destekli savaş İHA\'sı. F-35 ve F/A-18 ile koordineli uçuş. İlk uçuş 2021.',
+   metals:['Neodimyum','Disprosyum','Kobalt','Galyum','Germanyum'],
+   specs:{uzunluk:'11.7 m',menzil:'3.700 km',yük:'Gizli',birim:'Gizli'},
+   why:'Avustralya nadir metal rezervleri açısından dünyanın en zengin ülkelerinden. Savunma sanayii bu avantajı kullanıyor.',
+   color:'#f39c12'},
+
+  // ===== NÜKLEER =====
+  {id:'columbia',name:'Columbia-class SSBN',fullname:'General Dynamics Columbia-class Ballistic Missile Submarine',country:'ABD',cat:'Deniz',icon:'☢️',
+   desc:'ABD\'nin yeni nesil nükleer balistik füze denizaltısı. Ohio sınıfının halefi. 16 Trident II D5 füzesi taşıyacak.',
+   metals:['Kobalt','Hafniyum','Neodimyum','Berilyum','Galyum'],
+   specs:{deplasman:'20.810 ton',hız:'20+ knot',füze:'16 Trident II',birim:'9.5B $'},
+   why:'Berilyum ve Hafniyum: Nükleer reaktör bileşenleri. Kobalt: Süper alaşım reaktör yapıları.',
+   color:'#e74c3c'},
+
+  {id:'sarmat',name:'RS-28 Sarmat',fullname:'Makeyev RS-28 Sarmat ICBM',country:'Rusya',cat:'Füze',icon:'☢️',
+   desc:'Rusya\'nın yeni nesil ağır ICBM\'i. "Şeytan 2" lakabıyla biliniyor. 10+ MIRV başlık, 18.000 km menzil.',
+   metals:['Kobalt','Hafniyum','Neodimyum','Wolfram','Galyum'],
+   specs:{menzil:'18.000 km',başlık:'10-15 MIRV',ağırlık:'208 ton',birim:'Gizli'},
+   why:'Hafniyum: Nükleer başlık bileşenleri. Wolfram: Penetratör başlıklar.',
+   color:'#c0392b'},
+];
+
+// FİLTRE DURUMU
+let filters={country:'all',cat:'all'};
+let searchTerm='';
+
+function setFilter(type,val,btn){
+  filters[type]=val;
+  document.querySelectorAll(`[data-filter="${type}"]`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterCards();
+}
+
+function filterCards(){
+  searchTerm=document.getElementById('searchInput').value.toLowerCase();
+  const filtered=WEAPONS.filter(w=>{
+    const matchCountry=filters.country==='all'||w.country===filters.country;
+    const matchCat=filters.cat==='all'||w.cat===filters.cat;
+    const matchSearch=!searchTerm||
+      w.name.toLowerCase().includes(searchTerm)||
+      w.fullname.toLowerCase().includes(searchTerm)||
+      w.country.toLowerCase().includes(searchTerm)||
+      w.desc.toLowerCase().includes(searchTerm)||
+      w.metals.some(m=>m.toLowerCase().includes(searchTerm));
+    return matchCountry&&matchCat&&matchSearch;
+  });
+  renderCards(filtered);
+}
+
+function renderCards(weapons){
+  const grid=document.getElementById('cardsGrid');
+  document.getElementById('shownCount').textContent=weapons.length;
+  grid.innerHTML='';
+  weapons.forEach(w=>{
+    const catColor=CAT_COLORS[w.cat]||'#888';
+    const flag=COUNTRY_FLAGS[w.country]||'🌍';
+    const card=document.createElement('div');
+    card.className='weapon-card';
+    card.style.setProperty('--card-color',w.color||catColor);
+    const metalsHtml=w.metals.map(m=>{
+      const mc=METAL_COLORS[m]||{bg:'rgba(100,100,100,.15)',border:'#888',text:'#888'};
+      return `<span class="metal-tag" style="background:${mc.bg};border-color:${mc.border};color:${mc.text}" title="${m}">${m}</span>`;
+    }).join('');
+    card.innerHTML=`
+      <div class="card-header">
+        <span class="card-icon">${w.icon}</span>
+        <div class="card-country">
+          <span class="card-flag">${flag}</span>
+          <div style="font-size:.8rem;color:var(--dim);">${w.country}</div>
+        </div>
+      </div>
+      <div class="card-name">${w.name}</div>
+      <div class="card-fullname">${w.fullname}</div>
+      <div class="card-desc">${w.desc.substring(0,120)}${w.desc.length>120?'...':''}</div>
+      <div class="metals-section">
+        <div class="metals-title">⚗️ Nadir Metal Bileşenleri</div>
+        <div class="metals-list">${metalsHtml}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+        <span class="cat-badge" style="background:${catColor}22;border-color:${catColor};color:${catColor};">${w.cat}</span>
+        <span style="font-size:.8rem;color:var(--dim);cursor:pointer;color:var(--blue);" onclick="openModal('${w.id}')">📖 Detay →</span>
+      </div>
+    `;
+    card.onclick=(e)=>{if(!e.target.closest('[onclick]'))openModal(w.id);};
+    grid.appendChild(card);
+  });
+}
+
+function openModal(id){
+  const w=WEAPONS.find(x=>x.id===id);
+  if(!w)return;
+  const flag=COUNTRY_FLAGS[w.country]||'🌍';
+  const catColor=CAT_COLORS[w.cat]||'#888';
+  const metalsHtml=w.metals.map(m=>{
+    const mc=METAL_COLORS[m]||{bg:'rgba(100,100,100,.15)',border:'#888',text:'#888'};
+    return `<span class="metal-tag" style="background:${mc.bg};border-color:${mc.border};color:${mc.text};padding:4px 10px;font-size:.68rem;">${m}</span>`;
+  }).join('');
+  const specsHtml=Object.entries(w.specs||{}).map(([k,v])=>`
+    <div class="spec-item">
+      <div class="spec-label">${k}</div>
+      <div class="spec-value">${v}</div>
+    </div>
+  `).join('');
+  document.getElementById('modalContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+      <span style="font-size:2.5rem;">${w.icon}</span>
+      <div>
+        <div class="modal-title">${w.name}</div>
+        <div class="modal-sub">${flag} ${w.country} · <span style="color:${catColor}">${w.cat}</span></div>
+        <div style="font-size:.85rem;color:var(--dim);font-style:italic;">${w.fullname}</div>
+      </div>
+    </div>
+    <div class="modal-section">
+      <h3>📋 Açıklama</h3>
+      <p>${w.desc}</p>
+    </div>
+    <div class="modal-section">
+      <h3>⚗️ Nadir Metal Bileşenleri</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${metalsHtml}</div>
+      <p>${w.why||'Bu sistem kritik nadir metaller içermektedir.'}</p>
+    </div>
+    ${w.specs?`<div class="modal-section"><h3>📊 Teknik Özellikler</h3><div class="specs-grid">${specsHtml}</div></div>`:''}
+    <div class="modal-section">
+      <h3>🌍 Stratejik Önemi</h3>
+      <p>Bu sistem <span class="fact">${w.metals.length} farklı nadir metal</span> kullanmaktadır. 
+      ${w.country==='Çin'?'<span class="fact">Çin bu metallerin büyük çoğunluğunu kontrol ediyor — stratejik avantaj!</span>':
+        w.country==='Türkiye'?'<span class="fact">Türkiye yerli üretimle nadir metal bağımlılığını azaltmayı hedefliyor.</span>':
+        'Tedarik zinciri güvenliği kritik stratejik öneme sahiptir.'}</p>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+}
+
+document.getElementById('modal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('modal'))closeModal();
+});
+
+// BAŞLAT
+document.getElementById('totalCount').textContent=WEAPONS.length;
+filterCards();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

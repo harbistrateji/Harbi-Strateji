@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="hud">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Harbi Quiz — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.top{position:sticky;top:0;z-index:60;background:rgba(10,15,23,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 20px}
+.top .in{max-width:700px;margin:0 auto;display:flex;align-items:center;gap:14px;min-height:52px}
+.back{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);text-decoration:none}.back:hover{color:#fff}
+.title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px}
+.hdr-score{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold)}
+.wrap{max-width:700px;margin:0 auto;padding:24px 20px 80px}
+
+/* ── Başlık ── */
+.game-header{text-align:center;margin-bottom:24px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(28px,6vw,52px);color:#fff;line-height:1}
+.game-header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:.04em}
+
+/* ── Kategori seçici ── */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:24px}
+.cat-btn{background:var(--panel);border:2px solid var(--line2);border-radius:12px;padding:16px 12px;cursor:pointer;text-align:center;transition:.15s;font-family:'IBM Plex Sans',sans-serif;color:var(--tx)}
+.cat-btn:hover{border-color:var(--red2);transform:translateY(-2px)}
+.cat-btn.selected{border-color:var(--red2);background:rgba(224,21,21,.1)}
+.cat-icon{font-size:28px;margin-bottom:8px}
+.cat-name{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:600;color:#fff}
+.cat-count{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-top:3px}
+
+/* ── Quiz alanı ── */
+.quiz-area{display:none}
+.quiz-area.show{display:block}
+
+/* İlerleme ── */
+.progress-wrap{margin-bottom:20px}
+.progress-info{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-bottom:6px}
+.progress-bar{height:6px;background:var(--line2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--cyan));border-radius:3px;transition:width .4s}
+
+/* Geri sayım ── */
+.timer-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.timer-bar{flex:1;height:8px;background:var(--line2);border-radius:4px;overflow:hidden}
+.timer-fill{height:100%;background:var(--red2);border-radius:4px;transition:width .9s linear}
+.timer-num{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:var(--red2);min-width:28px;text-align:right}
+
+/* Soru ── */
+.question-card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--cyan))}
+.q-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--red2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.q-diff{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 8px;border-radius:999px;border:1px solid;margin-left:8px}
+.q-diff.easy{color:#00ff88;border-color:rgba(0,255,136,.4)}
+.q-diff.medium{color:var(--gold);border-color:rgba(201,162,75,.4)}
+.q-diff.hard{color:var(--red2);border-color:rgba(224,21,21,.4)}
+.q-text{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:18px;color:#fff;line-height:1.4}
+
+/* Seçenekler ── */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+@media(max-width:480px){.choices{grid-template-columns:1fr}}
+.choice{background:var(--panel);border:2px solid var(--line2);border-radius:12px;padding:14px;cursor:pointer;text-align:left;transition:.15s;font-family:'IBM Plex Sans',sans-serif;color:var(--tx)}
+.choice:hover:not(.locked){border-color:var(--red);transform:translateY(-1px)}
+.choice.correct{border-color:#00ff88;background:rgba(0,255,136,.1)}
+.choice.wrong{border-color:var(--red2);background:rgba(224,21,21,.1)}
+.choice.locked{cursor:default}
+.choice-letter{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:var(--red2);margin-bottom:4px}
+.choice-text{font-size:13px;line-height:1.5}
+
+/* Açıklama ── */
+.explain-panel{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:16px;margin-bottom:20px;display:none}
+.explain-panel.show{display:block}
+.ep-result{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px}
+.ep-pts{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700;margin-bottom:10px}
+.ep-text{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:14px}
+.ep-source{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;padding:12px 20px;border-radius:9px;border:none;cursor:pointer}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red2)}
+.btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-gold{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+
+/* ── Sonuç ekranı ── */
+.result-screen{display:none;text-align:center;padding:30px 20px}
+.result-screen.show{display:block}
+.rs-icon{font-size:64px;margin-bottom:16px}
+.rs-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:32px;margin-bottom:10px}
+.rs-score{font-family:'IBM Plex Mono',monospace;font-size:52px;font-weight:700;color:var(--red2);margin:12px 0}
+.rs-stats{display:flex;gap:0;justify-content:center;border:1px solid var(--line2);border-radius:10px;overflow:hidden;margin:16px 0}
+.rs-stat{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line2)}
+.rs-stat:last-child{border-right:none}
+.rs-stat-val{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;color:var(--cyan)}
+.rs-stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;margin-top:3px}
+
+/* ── Paylaşım kartı ── */
+.share-card-wrap{background:linear-gradient(135deg,#0f1722,#16202d);border:2px solid var(--gold);border-radius:16px;padding:24px;margin:16px 0;position:relative;overflow:hidden}
+.share-card-wrap::before{content:'HARB-İ STRATEJİ';position:absolute;top:10px;right:14px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:rgba(201,162,75,.5);letter-spacing:.1em}
+.sc-game{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--red2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.sc-score-big{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:52px;color:#fff;line-height:1}
+.sc-sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);margin-top:6px}
+.sc-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.sc-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:4px 10px;border-radius:999px;border:1px solid rgba(201,162,75,.4);color:var(--gold)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="top"><div class="in">
+  <a href="oza-hub.html" class="back">← OZA</a>
+  <span class="title">🎓 Harbi Quiz</span>
+  <span class="hdr-score" id="hdr-score">⭐ 0</span>
+</div></header>
+
+<div class="wrap">
+  <div class="game-header">
+    <h1>HARBİ QUİZ</h1>
+    <div class="sub">STRATEJİ · TEKNOLOJİ · EKONOMİ · TARİH · ROZET KAZAN</div>
+  </div>
+
+  <!-- Kategori seçici -->
+  <div id="cat-screen">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-bottom:14px;text-align:center">KATEGORİ SEÇ:</div>
+    <div class="cat-grid" id="cat-grid"></div>
+    <button class="btn btn-red" style="width:100%;margin-top:4px" onclick="startQuiz()">🎓 QUIZ BAŞLAT</button>
+  </div>
+
+  <!-- Quiz alanı -->
+  <div class="quiz-area" id="quiz-area">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="q-num">Soru 1/10</span>
+        <span id="q-score">Puan: 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="q-progress" style="width:0%"></div></div>
+    </div>
+
+    <div class="timer-row">
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+      <div class="timer-num" id="timer-num">15</div>
+    </div>
+
+    <div class="question-card">
+      <div><span class="q-cat" id="q-cat">KATEGORİ</span><span class="q-diff" id="q-diff">Orta</span></div>
+      <div class="q-text" id="q-text" style="margin-top:10px">Soru yükleniyor…</div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="explain-panel" id="explain-panel">
+      <div class="ep-result" id="ep-result">—</div>
+      <div class="ep-pts" id="ep-pts">+0</div>
+      <div class="ep-text" id="ep-text"></div>
+      <div class="ep-source" id="ep-source"></div>
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn btn-red" onclick="nextQuestion()">Sonraki →</button>
+        <button class="btn btn-outline" onclick="HS.showShareCard({title:'Harbi Quiz',puan:quizScore,game:'harbi-quiz',color:'#E01515'})">📤 Paylaş</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sonuç ekranı -->
+  <div class="result-screen" id="result-screen">
+    <div class="rs-icon" id="rs-icon">🎓</div>
+    <div class="rs-title" id="rs-title">Quiz Tamamlandı</div>
+    <div class="rs-score" id="rs-score">0</div>
+    <div class="rs-stats">
+      <div class="rs-stat"><div class="rs-stat-val" id="rs-correct">0</div><div class="rs-stat-lbl">Doğru</div></div>
+      <div class="rs-stat"><div class="rs-stat-val" id="rs-wrong">0</div><div class="rs-stat-lbl">Yanlış</div></div>
+      <div class="rs-stat"><div class="rs-stat-val" id="rs-streak">0</div><div class="rs-stat-lbl">Max Seri</div></div>
+      <div class="rs-stat"><div class="rs-stat-val" id="rs-time">0</div><div class="rs-stat-lbl">Ort. Süre</div></div>
+    </div>
+
+    <!-- Paylaşım kartı -->
+    <div class="share-card-wrap" id="share-card">
+      <div class="sc-game">🎓 HARBİ QUİZ</div>
+      <div class="sc-score-big" id="sc-score-big">0</div>
+      <div class="sc-sub" id="sc-sub">puan · 10 soru</div>
+      <div class="sc-badges" id="sc-badges"></div>
+    </div>
+
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-red" onclick="yenidenBaslatQuiz()">🔄 Tekrar</button>
+      <button class="btn btn-outline" onclick="copyShareCard()">📤 Paylaş</button>
+      <button class="btn btn-gold" onclick="location.href='oza-hub.html'">🏠 Merkez</button>
+    </div>
+  </div>
+</div>
+
+<script src="hs-engine.js"></script>
+<script>
+var CATEGORIES = [
+  {id:'strateji', name:'Strateji', icon:'⚔️', color:'var(--red2)'},
+  {id:'teknoloji', name:'Teknoloji', icon:'🤖', color:'var(--cyan)'},
+  {id:'ekonomi', name:'Ekonomi', icon:'💰', color:'var(--gold)'},
+  {id:'tarih', name:'Tarih', icon:'📜', color:'#9c88ff'},
+  {id:'siber', name:'Siber', icon:'💻', color:'#00ff88'},
+  {id:'jeopolitik', name:'Jeopolitik', icon:'🌍', color:'#ff9800'}
+];
+
+var QUESTIONS = [
+  // Strateji (8 soru)
+  {cat:'strateji',diff:'medium',q:'OODA döngüsünü geliştiren askeri teorisyen kimdir?',choices:['John Boyd','Sun Tzu','Carl von Clausewitz','Antoine-Henri Jomini'],correct:0,explain:'John Boyd, F-86 pilotu ve askeri stratejist olarak OODA (Gözlemle-Yönel-Karar Ver-Harekete Geç) döngüsünü geliştirdi.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'strateji',diff:'easy',q:'"Savaş, siyasetin başka araçlarla sürdürülmesidir" sözü kime aittir?',choices:['Sun Tzu','Carl von Clausewitz','Machiavelli','Thucydides'],correct:1,explain:'Carl von Clausewitz\'in "Savaş Üzerine" eserindeki bu ünlü söz, savaşın siyasi bir araç olduğunu vurgular.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'strateji',diff:'hard',q:'Hibrit savaşın temel özelliği nedir?',choices:['Sadece konvansiyonel kuvvetler','Düzenli ve düzensiz yöntemlerin kombinasyonu','Yalnızca siber operasyonlar','Nükleer caydırıcılık'],correct:1,explain:'Hibrit savaş; konvansiyonel, düzensiz, siber ve bilgi operasyonlarını eş zamanlı kullanan çok boyutlu bir stratejidir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'strateji',diff:'medium',q:'Sun Tzu\'nun "Savaş Sanatı" eserinde en çok vurgulanan ilke hangisidir?',choices:['Kaba kuvvet','Savaşmadan kazanmak','Sayısal üstünlük','Teknolojik avantaj'],correct:1,explain:'Sun Tzu, en büyük zaferin savaşmadan kazanmak olduğunu vurgular: "Yüz savaşta yüz zafer en iyisi değildir."',source:'Kaynak: Harb-i Strateji'},
+  {cat:'strateji',diff:'hard',q:'"Schwerpunkt" kavramı hangi askeri doktrinin temel unsurudur?',choices:['Deniz hakimiyeti','Blitzkrieg (Yıldırım Savaşı)','Gerilla savaşı','Nükleer caydırıcılık'],correct:1,explain:'Schwerpunkt (ağırlık merkezi), Alman Blitzkrieg doktrininde kuvvetlerin tek bir noktaya yoğunlaştırılması ilkesidir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'strateji',diff:'easy',q:'NATO\'nun kuruluş yılı hangisidir?',choices:['1945','1949','1955','1961'],correct:1,explain:'NATO (Kuzey Atlantik Antlaşması Örgütü) 4 Nisan 1949\'da Washington\'da kurulmuştur.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'strateji',diff:'medium',q:'"A2/AD" (Anti-Access/Area Denial) stratejisi hangi ülkenin doktriniyle özdeşleşmiştir?',choices:['Rusya','ABD','Çin','İran'],correct:2,explain:'A2/AD stratejisi özellikle Çin\'in Güney Çin Denizi\'ndeki askeri doktriniyle özdeşleşmiştir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'strateji',diff:'hard',q:'Türk askeri tarihinde "Turan Taktiği" (Kurt Kapanı) neyi ifade eder?',choices:['Cephe saldırısı','Sahte ricat ile çevirme','Deniz ablukası','Hava bombardımanı'],correct:1,explain:'Turan Taktiği, düşmanı sahte geri çekilmeyle tuzağa düşürüp çevirme hareketiyle imha etme stratejisidir. Malazgirt\'te uygulanmıştır.',source:'Kaynak: Harb-i Strateji'},
+  // Teknoloji (8 soru)
+  {cat:'teknoloji',diff:'medium',q:'Yapay zekânın askeri karar alma süreçlerinde kullanımını tanımlayan kavram nedir?',choices:['LAWS','OODA','C4ISR','HUMINT'],correct:0,explain:'LAWS (Lethal Autonomous Weapons Systems) - Ölümcül Otonom Silah Sistemleri, YZ destekli askeri karar alma sistemlerini tanımlar.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'teknoloji',diff:'easy',q:'Kuantum hesaplama hangi alanda askeri avantaj sağlar?',choices:['Yalnızca iletişim','Şifreleme kırma ve güvenli iletişim','Sadece navigasyon','Yalnızca silah sistemleri'],correct:1,explain:'Kuantum bilgisayarlar mevcut şifreleme sistemlerini kırabilir; kuantum kriptografi ise kırılamaz iletişim sağlar.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'teknoloji',diff:'hard',q:'Elektronik harpte "jamming" (karıştırma) ne anlama gelir?',choices:['Düşman sistemlerini hacklemek','Elektromanyetik sinyalleri bozarak sistemleri etkisiz kılmak','Drone\'ları ele geçirmek','Radar sistemlerini yok etmek'],correct:1,explain:'Jamming, hedef sistemin kullandığı frekans bandında güçlü sinyal yayarak iletişim veya radar sistemlerini bozma tekniğidir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'teknoloji',diff:'easy',q:'Türkiye\'nin 5. nesil savaş uçağı projesinin adı nedir?',choices:['F-16 Viper','Hürjet','KAAN','Bayraktar TB3'],correct:2,explain:'KAAN (TF-X/MMU), Türkiye\'nin TAI tarafından geliştirilen 5. nesil yerli savaş uçağı projesidir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'teknoloji',diff:'medium',q:'Hipersonik silahların hızı kaç Mach üzerindedir?',choices:['Mach 2','Mach 3','Mach 5','Mach 10'],correct:2,explain:'Hipersonik silahlar Mach 5 (ses hızının 5 katı, ~6.000 km/s) üzerinde hareket eden silahlardır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'teknoloji',diff:'hard',q:'"Kill Chain" kavramında hedefleme döngüsünün doğru sırası hangisidir?',choices:['Bul-Sabitle-Takip Et-Hedefle-Vur-Değerlendir','Hedefle-Bul-Vur-Değerlendir','Takip Et-Bul-Vur-Sabitle','Değerlendir-Hedefle-Bul-Vur'],correct:0,explain:'F2T2EA: Find-Fix-Track-Target-Engage-Assess (Bul-Sabitle-Takip Et-Hedefle-Vur-Değerlendir) standart kill chain döngüsüdür.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'teknoloji',diff:'medium',q:'Türkiye\'nin uzun menzilli balistik füze sistemi hangisidir?',choices:['Bora','Gezgin','Tayfun','Hisar'],correct:2,explain:'Tayfun, Türkiye\'nin ROKETSAN tarafından geliştirilen 1.000+ km menzilli balistik füze sistemidir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'teknoloji',diff:'hard',q:'EMP (Elektromanyetik Darbe) silahı ne yapar?',choices:['Biyolojik zarar verir','Elektronik sistemleri devre dışı bırakır','Nükleer radyasyon yayar','Ses dalgasıyla yıkar'],correct:1,explain:'EMP, güçlü elektromanyetik alan oluşturarak hedef bölgedeki tüm elektronik cihaz ve sistemleri devre dışı bırakır.',source:'Kaynak: Harb-i Strateji'},
+  // Ekonomi (8 soru)
+  {cat:'ekonomi',diff:'medium',q:'Savunma ekonomisinde "spin-off" kavramı ne anlama gelir?',choices:['Savunma bütçesi açığı','Askerî teknolojilerin sivil sektöre transferi','Silah ihracatı','Savunma sanayii özelleştirmesi'],correct:1,explain:'Spin-off, askeri Ar-Ge\'den doğan teknolojilerin sivil sektöre aktarılmasıdır. GPS, internet ve mikrodalgalar bu sürecin ürünleridir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'ekonomi',diff:'easy',q:'NATO üyelerinin savunmaya ayırması gereken minimum GDP yüzdesi nedir?',choices:['%1','%2','%3','%4'],correct:1,explain:'NATO\'nun 2014 Galler Zirvesi\'nde belirlenen hedef, üye ülkelerin GDP\'lerinin en az %2\'sini savunmaya ayırmasıdır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'ekonomi',diff:'hard',q:'Kritik mineral tedarik zincirinde Çin\'in küresel nadir toprak üretimindeki payı yaklaşık nedir?',choices:['%20','%40','%60','%80'],correct:3,explain:'Çin küresel nadir toprak elementleri üretiminin yaklaşık %60-85\'ini kontrol etmektedir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'ekonomi',diff:'easy',q:'Dünya petrol ticaretinin yaklaşık yüzde kaçı Hürmüz Boğazı\'ndan geçer?',choices:['%5','%10','%20','%35'],correct:2,explain:'Dünya deniz yoluyla taşınan petrolünün yaklaşık %20-21\'i Hürmüz Boğazı\'ndan geçmektedir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'ekonomi',diff:'medium',q:'"Kaynak laneti" (resource curse) kavramı neyi ifade eder?',choices:['Kaynakların tükenmesi','Doğal kaynak zenginliğinin ekonomik gerilemeye yol açması','Kaynak ithalatı','Enerji krizi'],correct:1,explain:'Kaynak laneti, doğal kaynak zenginliğinin paradoks olarak ekonomik durgunluk, yolsuzluk ve otoriter yönetime yol açmasıdır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'ekonomi',diff:'hard',q:'Türkiye\'nin 2025 savunma sanayii ihracatı yaklaşık kaç milyar dolardır?',choices:['2 milyar','4 milyar','6 milyar','10 milyar'],correct:2,explain:'Türkiye\'nin savunma ve havacılık ihracatı 2024-2025 döneminde yaklaşık 6 milyar dolar seviyesine ulaşmıştır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'ekonomi',diff:'medium',q:'SWIFT sisteminden çıkarılmak bir ülkeyi nasıl etkiler?',choices:['Askeri güç kaybı','Uluslararası finansal işlemlerden izolasyon','Enerji üretimi durması','İnternet erişimi kesilmesi'],correct:1,explain:'SWIFT\'ten çıkarılmak, ülkenin uluslararası bankacılık ve ödeme sistemlerinden izole edilmesi anlamına gelir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'ekonomi',diff:'hard',q:'"Petrodolar" sistemi hangi anlaşmayla başlamıştır?',choices:['Bretton Woods 1944','ABD-Suudi Arabistan 1974','Camp David 1978','Oslo 1993'],correct:1,explain:'1974\'te ABD ile Suudi Arabistan arasındaki anlaşmayla petrol ticaretinin dolar üzerinden yapılması (petrodolar) sistemi kuruldu.',source:'Kaynak: Harb-i Strateji'},
+  // Tarih (8 soru)
+  {cat:'tarih',diff:'medium',q:'Soğuk Savaş döneminde "Karşılıklı Güvenceli Yıkım" doktrini hangi kısaltmayla bilinir?',choices:['MAD','NATO','SALT','MIRV'],correct:0,explain:'MAD (Mutually Assured Destruction) - Karşılıklı Güvenceli Yıkım, nükleer caydırıcılığın temel doktrinidir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'tarih',diff:'easy',q:'1648 Westfalya Antlaşması hangi kavramı uluslararası hukukun temeli olarak belirledi?',choices:['Kolektif güvenlik','Devlet egemenliği','İnsan hakları','Serbest ticaret'],correct:1,explain:'Westfalya Antlaşması, modern uluslararası sistemin temelini oluşturan devlet egemenliği ilkesini yerleştirdi.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'tarih',diff:'hard',q:'Vekâlet savaşı kavramı Soğuk Savaş döneminde hangi ülkeler arasındaki rekabeti tanımlamak için kullanıldı?',choices:['Fransa-Almanya','ABD-SSCB','İngiltere-Çin','Türkiye-Yunanistan'],correct:1,explain:'ABD ve SSCB, doğrudan çatışmak yerine üçüncü ülkelerdeki yerel güçleri destekleyerek vekâlet savaşları yürüttü.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'tarih',diff:'easy',q:'Malazgirt Meydan Muharebesi hangi yıl gerçekleşmiştir?',choices:['1053','1071','1176','1243'],correct:1,explain:'1071 Malazgirt Meydan Muharebesi\'nde Sultan Alparslan, Bizans İmparatoru Romanos Diogenes\'i yenerek Anadolu\'nun kapılarını Türklere açtı.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'tarih',diff:'medium',q:'Çanakkale Savaşı\'nda Osmanlı kuvvetlerinin komutanı kimdir?',choices:['Enver Paşa','Mustafa Kemal','Liman von Sanders','Cevat Paşa'],correct:2,explain:'Çanakkale cephesinin genel komutanı Alman Mareşal Liman von Sanders\'dır. Mustafa Kemal ise Anafartalar Grup Komutanı olarak kritik rol oynamıştır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'tarih',diff:'hard',q:'"Büyük Oyun" (The Great Game) hangi iki imparatorluk arasındaki rekabeti tanımlar?',choices:['Osmanlı-Rusya','İngiltere-Rusya','Fransa-Almanya','ABD-Japonya'],correct:1,explain:'Büyük Oyun, 19. yüzyılda İngiltere ve Rusya arasında Orta Asya hakimiyeti için süren stratejik rekabettir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'tarih',diff:'medium',q:'Preveze Deniz Muharebesi\'ni kazanan Osmanlı amirali kimdir?',choices:['Piri Reis','Turgut Reis','Barbaros Hayreddin Paşa','Kılıç Ali Paşa'],correct:2,explain:'1538 Preveze Deniz Muharebesi\'nde Barbaros Hayreddin Paşa, Haçlı donanmasını yenerek Akdeniz hakimiyetini sağladı.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'tarih',diff:'hard',q:'Birinci Dünya Savaşı\'nda Osmanlı Devleti kaç cephede savaşmıştır?',choices:['3','5','7','9'],correct:2,explain:'Osmanlı Devleti I. Dünya Savaşı\'nda 7 cephede savaşmıştır: Çanakkale, Kafkas, Kanal, Irak, Hicaz-Yemen, İran, Suriye-Filistin.',source:'Kaynak: Harb-i Strateji'},
+  // Siber (8 soru)
+  {cat:'siber',diff:'medium',q:'Stuxnet zararlı yazılımı hangi ülkenin nükleer programını hedef aldı?',choices:['Kuzey Kore','Suriye','İran','Pakistan'],correct:2,explain:'Stuxnet, 2010\'da keşfedilen ve İran\'ın Natanz nükleer tesisindeki uranyum zenginleştirme santrifüjlerini hedef alan ilk siber silah olarak kabul edilir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'siber',diff:'easy',q:'APT (Advanced Persistent Threat) ne anlama gelir?',choices:['Gelişmiş Kalıcı Tehdit','Otomatik Paket Transferi','Aktif Protokol Testi','Anonim Proxy Teknolojisi'],correct:0,explain:'APT, devlet destekli veya organize siber tehdit aktörlerinin uzun süreli, hedefli ve gizli siber operasyonlarını tanımlar.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'siber',diff:'hard',q:'Bilişsel savaşta "slopaganda" kavramı neyi ifade eder?',choices:['Hızlı propaganda','Yavaş etkili, uzun vadeli dezenformasyon','Sosyal medya reklamları','Resmi hükümet açıklamaları'],correct:1,explain:'Slopaganda, yavaş ve kademeli olarak kamuoyu algısını değiştiren, uzun vadeli dezenformasyon stratejisini tanımlar.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'siber',diff:'easy',q:'DDoS saldırısının amacı nedir?',choices:['Veri çalmak','Sistemi aşırı trafikle çökertmek','Şifre kırmak','Fiziksel hasar vermek'],correct:1,explain:'DDoS (Distributed Denial of Service), hedef sisteme aşırı trafik göndererek hizmet veremez hale getirmeyi amaçlar.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'siber',diff:'medium',q:'"Zero-day" açığı ne anlama gelir?',choices:['Sıfır maliyetli saldırı','Henüz yaması olmayan güvenlik açığı','Bir günde gerçekleşen saldırı','Eski sistemlerdeki açık'],correct:1,explain:'Zero-day, üretici tarafından henüz keşfedilmemiş veya yaması yayınlanmamış güvenlik açıklarıdır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'siber',diff:'hard',q:'Türkiye\'nin siber güvenlik koordinasyon merkezi hangisidir?',choices:['TÜBİTAK','USOM','BTK','STM'],correct:1,explain:'USOM (Ulusal Siber Olaylara Müdahale Merkezi), Türkiye\'nin siber güvenlik koordinasyonunu yürüten ana kurumdur.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'siber',diff:'medium',q:'"Deepfake" teknolojisi hangi alanda en büyük tehdit oluşturur?',choices:['Fiziksel güvenlik','Bilgi savaşı ve dezenformasyon','Enerji altyapısı','Uzay sistemleri'],correct:1,explain:'Deepfake, yapay zeka ile üretilen sahte video/ses içerikleriyle bilgi savaşı ve dezenformasyon kampanyalarında kullanılır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'siber',diff:'hard',q:'"Cyber kill chain" modelinde ilk adım hangisidir?',choices:['Silahlandırma','Keşif (Reconnaissance)','Teslimat','Sömürü'],correct:1,explain:'Lockheed Martin\'ın Cyber Kill Chain modelinde ilk adım Keşif (Reconnaissance) - hedef hakkında bilgi toplamadır.',source:'Kaynak: Harb-i Strateji'},
+  // Jeopolitik (8 soru)
+  {cat:'jeopolitik',diff:'medium',q:'Mackinder\'ın "Heartland" teorisine göre dünyaya hâkim olmak için hangi bölgeyi kontrol etmek gerekir?',choices:['Batı Avrupa','Doğu Avrupa ve Orta Asya','Orta Doğu','Pasifik'],correct:1,explain:'Halford Mackinder\'ın 1904 tarihli teorisine göre "Doğu Avrupa\'yı kontrol eden Heartland\'ı kontrol eder."',source:'Kaynak: Harb-i Strateji'},
+  {cat:'jeopolitik',diff:'easy',q:'Çin\'in "Kuşak ve Yol Girişimi" (BRI) hangi yılda ilan edildi?',choices:['2008','2013','2017','2020'],correct:1,explain:'Çin Devlet Başkanı Xi Jinping, Kuşak ve Yol Girişimi\'ni 2013 yılında Kazakistan\'da ilan etti.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'jeopolitik',diff:'hard',q:'"Güç paradoksu" kavramı ne anlama gelir?',choices:['Güçlü devletlerin zayıf devletlere saldırması','Güçlü aktörlerin asimetrik tehditler karşısında etkisiz kalması','Nükleer silahların caydırıcı etkisi','Ekonomik gücün askeri güce dönüşmesi'],correct:1,explain:'Güç paradoksu, en güçlü devletlerin bile küçük asimetrik aktörler karşısında stratejik hedeflerine ulaşmakta zorlandığını tanımlar.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'jeopolitik',diff:'easy',q:'Türkiye hangi denizleri kontrol eden boğazlara sahiptir?',choices:['Kızıldeniz-Akdeniz','Karadeniz-Akdeniz','Hazar-Karadeniz','Basra Körfezi-Hint Okyanusu'],correct:1,explain:'Türkiye, İstanbul ve Çanakkale Boğazları ile Karadeniz-Akdeniz geçişini kontrol eden stratejik konumdadır.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'jeopolitik',diff:'medium',q:'"Thucydides Tuzağı" hangi durumu tanımlar?',choices:['Küçük devletlerin birleşmesi','Yükselen gücün mevcut güçle çatışması','Deniz hakimiyeti kaybı','Ekonomik çöküş'],correct:1,explain:'Thucydides Tuzağı, yükselen bir gücün mevcut hegemon güçle kaçınılmaz çatışmaya girmesi teorisidir (ABD-Çin bağlamı).',source:'Kaynak: Harb-i Strateji'},
+  {cat:'jeopolitik',diff:'hard',q:'"Mavi Vatan" doktrini Türkiye\'nin hangi denizlerdeki hak iddiasını kapsar?',choices:['Sadece Ege','Karadeniz ve Akdeniz','Ege, Doğu Akdeniz ve Karadeniz','Sadece Doğu Akdeniz'],correct:2,explain:'Mavi Vatan doktrini, Türkiye\'nin Ege, Doğu Akdeniz ve Karadeniz\'deki münhasır ekonomik bölge haklarını savunur.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'jeopolitik',diff:'medium',q:'BRICS ittifakının 2024 genişlemesiyle hangi ülke katılmamıştır?',choices:['Mısır','İran','Türkiye','Etiyopya'],correct:2,explain:'2024 BRICS genişlemesinde Mısır, İran, Etiyopya, BAE ve Suudi Arabistan katılmış; Türkiye henüz üye değildir.',source:'Kaynak: Harb-i Strateji'},
+  {cat:'jeopolitik',diff:'hard',q:'"Rimland" teorisini ortaya atan jeopolitik düşünür kimdir?',choices:['Mackinder','Mahan','Spykman','Ratzel'],correct:2,explain:'Nicholas Spykman, Mackinder\'ın Heartland teorisine karşı Rimland (kenar kuşak) teorisini geliştirmiştir.',source:'Kaynak: Harb-i Strateji'}
+];
+
+var selectedCats = [], quizQuestions = [], currentQ = 0, quizScore = 0;
+var correctCount = 0, wrongCount = 0, maxStreak = 0, currentStreak = 0;
+var totalTime = 0, qStartTime = 0;
+var qTimer = null, timeLeft = 15;
+
+function initCatGrid(){
+  var grid = document.getElementById('cat-grid');
+  grid.innerHTML = CATEGORIES.map(function(c){
+    return '<div class="cat-btn" id="cat-'+c.id+'" onclick="toggleCat(\''+c.id+'\')">' +
+      '<div class="cat-icon">'+c.icon+'</div>' +
+      '<div class="cat-name">'+c.name+'</div>' +
+      '<div class="cat-count">'+QUESTIONS.filter(function(q){return q.cat===c.id;}).length+' soru</div>' +
+    '</div>';
+  }).join('');
+  // Hepsini seç varsayılan
+  CATEGORIES.forEach(function(c){ selectedCats.push(c.id); document.getElementById('cat-'+c.id).classList.add('selected'); });
+}
+
+function toggleCat(id){
+  var idx = selectedCats.indexOf(id);
+  if(idx>=0){ selectedCats.splice(idx,1); document.getElementById('cat-'+id).classList.remove('selected'); }
+  else { selectedCats.push(id); document.getElementById('cat-'+id).classList.add('selected'); }
+}
+
+function startQuiz(){
+  if(selectedCats.length===0){ alert('En az bir kategori seç!'); return; }
+  var pool = QUESTIONS.filter(function(q){return selectedCats.includes(q.cat);});
+  quizQuestions = pool.sort(function(){return Math.random()-.5;}).slice(0,15);
+  currentQ=0; quizScore=0; correctCount=0; wrongCount=0; maxStreak=0; currentStreak=0; totalTime=0;
+
+  document.getElementById('cat-screen').style.display='none';
+  document.getElementById('quiz-area').classList.add('show');
+  document.getElementById('result-screen').classList.remove('show');
+  loadQuestion();
+}
+
+function loadQuestion(){
+  if(currentQ >= quizQuestions.length){ endQuiz(); return; }
+  var q = quizQuestions[currentQ];
+  document.getElementById('q-num').textContent = 'Soru '+(currentQ+1)+'/'+quizQuestions.length;
+  document.getElementById('q-score').textContent = 'Puan: '+quizScore;
+  document.getElementById('q-progress').style.width = (currentQ/quizQuestions.length*100)+'%';
+
+  var cat = CATEGORIES.find(function(c){return c.id===q.cat;});
+  document.getElementById('q-cat').textContent = cat ? cat.icon+' '+cat.name.toUpperCase() : q.cat.toUpperCase();
+  var diffEl = document.getElementById('q-diff');
+  diffEl.textContent = {easy:'Kolay',medium:'Orta',hard:'Zor'}[q.diff]||q.diff;
+  diffEl.className = 'q-diff '+q.diff;
+  document.getElementById('q-text').textContent = q.q;
+
+  var letters = ['A','B','C','D'];
+  document.getElementById('choices').innerHTML = q.choices.map(function(c,i){
+    return '<div class="choice" id="ch-'+i+'" onclick="selectChoice('+i+')">' +
+      '<div class="choice-letter">'+letters[i]+'</div>' +
+      '<div class="choice-text">'+c+'</div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('explain-panel').classList.remove('show');
+  startQTimer();
+  qStartTime = Date.now();
+}
+
+function startQTimer(){
+  if(qTimer) clearInterval(qTimer);
+  timeLeft = 15;
+  document.getElementById('timer-fill').style.transition='none';
+  document.getElementById('timer-fill').style.width='100%';
+  document.getElementById('timer-num').textContent='15';
+
+  setTimeout(function(){
+    document.getElementById('timer-fill').style.transition='width 1s linear';
+  },50);
+
+  qTimer = setInterval(function(){
+    timeLeft--;
+    document.getElementById('timer-num').textContent = timeLeft;
+    document.getElementById('timer-fill').style.width = (timeLeft/15*100)+'%';
+    if(timeLeft<=3) document.getElementById('timer-fill').style.background='var(--red2)';
+    if(timeLeft<=0){ clearInterval(qTimer); timeoutQ(); }
+  },1000);
+}
+
+function selectChoice(idx){
+  clearInterval(qTimer);
+  var q = quizQuestions[currentQ];
+  var elapsed = Math.round((Date.now()-qStartTime)/1000);
+  totalTime += elapsed;
+
+  var correct = idx === q.correct;
+  var pts = 0;
+
+  document.querySelectorAll('.choice').forEach(function(el){ el.classList.add('locked'); });
+  document.getElementById('ch-'+q.correct).classList.add('correct');
+
+  if(correct){
+    currentStreak++;
+    if(currentStreak>maxStreak) maxStreak=currentStreak;
+    pts = 10 + Math.max(0, (15-elapsed)*2) + (currentStreak>2?10:0);
+    correctCount++;
+    HS.beepWin(); HS.burst(document.getElementById('ch-'+idx),'#00ff88');
+    HS.flashScreen('rgba(0,255,136,0.15)',300);
+    HS.aiLost();
+  } else {
+    currentStreak=0; wrongCount++;
+    document.getElementById('ch-'+idx).classList.add('wrong');
+    HS.beepFail(); HS.flashScreen('rgba(224,21,21,0.2)',300);
+    HS.aiWon();
+  }
+
+  quizScore += pts;
+  HS.addScore('harbi-quiz', pts);
+  document.getElementById('hdr-score').textContent='⭐ '+HS.getTotalScore();
+
+  document.getElementById('ep-result').textContent = correct ? '✅ Doğru! +'+pts+' puan' : '❌ Yanlış';
+  document.getElementById('ep-result').style.color = correct ? '#00ff88' : 'var(--red2)';
+  document.getElementById('ep-pts').textContent = '+'+pts;
+  document.getElementById('ep-pts').style.color = correct ? '#00ff88' : 'var(--red2)';
+  document.getElementById('ep-text').textContent = q.explain;
+  document.getElementById('ep-source').textContent = q.source;
+  document.getElementById('explain-panel').classList.add('show');
+}
+
+function timeoutQ(){
+  var q = quizQuestions[currentQ];
+  currentStreak=0; wrongCount++;
+  document.querySelectorAll('.choice').forEach(function(el){ el.classList.add('locked'); });
+  document.getElementById('ch-'+q.correct).classList.add('correct');
+  document.getElementById('ep-result').textContent = '⏰ Süre Doldu!';
+  document.getElementById('ep-result').style.color = 'var(--gold)';
+  document.getElementById('ep-pts').textContent = '+0';
+  document.getElementById('ep-pts').style.color = 'var(--gold)';
+  document.getElementById('ep-text').textContent = q.explain;
+  document.getElementById('ep-source').textContent = q.source;
+  document.getElementById('explain-panel').classList.add('show');
+  HS.beepFail();
+}
+
+function nextQuestion(){
+  currentQ++;
+  loadQuestion();
+}
+
+function endQuiz(){
+  document.getElementById('quiz-area').classList.remove('show');
+  var rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+
+  var pct = Math.round(correctCount/quizQuestions.length*100);
+  document.getElementById('rs-icon').textContent = pct>=80?'🏆':pct>=60?'🎓':'📚';
+  document.getElementById('rs-title').textContent = pct>=80?'Strateji Ustası!':pct>=60?'İyi İş!':'Çalışmaya Devam';
+  document.getElementById('rs-score').textContent = quizScore+' puan';
+  document.getElementById('rs-correct').textContent = correctCount;
+  document.getElementById('rs-wrong').textContent = wrongCount;
+  document.getElementById('rs-streak').textContent = maxStreak;
+  document.getElementById('rs-time').textContent = Math.round(totalTime/quizQuestions.length)+'s';
+
+  // Paylaşım kartı
+  document.getElementById('sc-score-big').textContent = quizScore;
+  document.getElementById('sc-sub').textContent = pct+'% doğru · '+quizQuestions.length+' soru';
+
+  var badges = HS.getBadges();
+  document.getElementById('sc-badges').innerHTML = Object.keys(badges).slice(0,4).map(function(b){
+    return '<span class="sc-badge">'+badges[b].label+'</span>';
+  }).join('');
+
+  if(pct>=80) HS.awardBadge('quiz_ustasi');
+  if(pct===100) HS.awardBadge('mukemmel');
+  HS.beepWin();
+}
+
+function copyShareCard(){
+  var text = '🎓 HARBİ QUİZ\n'+quizScore+' puan\n'+document.getElementById('sc-sub').textContent+'\nHarb-i Strateji · OZA Oyun Merkezi';
+  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){ HS.beepOK(); }); }
+  HS.showShareCard({title:'Harbi Quiz',puan:quizScore,game:'harbi-quiz',color:'#E01515'});
+}
+
+function yenidenBaslatQuiz(){
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('cat-screen').style.display='';
+}
+
+initCatGrid();
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

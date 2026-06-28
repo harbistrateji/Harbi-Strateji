@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Savaş Ekonomisi — Harb-i Strateji İnfografik</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh}
+.back{position:fixed;top:15px;left:15px;color:#00e5ff;text-decoration:none;font-size:14px;z-index:100;background:rgba(0,0,0,0.7);padding:8px 16px;border-radius:20px}
+.audio-btn{position:fixed;top:15px;right:15px;background:rgba(0,229,255,0.2);border:1px solid #00e5ff;color:#00e5ff;padding:8px 16px;border-radius:20px;cursor:pointer;z-index:100}
+h1{text-align:center;padding:60px 20px 10px;font-size:2.2em;color:#ffd700}
+.subtitle{text-align:center;color:#aaa;margin-bottom:40px;font-size:0.95em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1100px;margin:0 auto;padding:20px}
+.card{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:16px;padding:24px;transition:all 0.3s}
+.card:hover{transform:translateY(-5px);border-color:#ffd700;box-shadow:0 10px 30px rgba(255,215,0,0.2)}
+.card-icon{font-size:2.5em;margin-bottom:12px}
+.card-title{font-size:1.2em;color:#ffd700;margin-bottom:8px}
+.card-value{font-size:1.8em;color:#00e5ff;font-weight:bold;margin-bottom:8px}
+.card-desc{font-size:0.9em;line-height:1.6;color:#bbb}
+.card-era{display:inline-block;background:rgba(255,215,0,0.2);color:#ffd700;padding:4px 12px;border-radius:12px;font-size:0.75em;margin-top:10px}
+.compare{max-width:1100px;margin:40px auto;padding:20px}
+.compare h2{text-align:center;color:#ffd700;margin-bottom:20px}
+.bar-chart{display:flex;flex-direction:column;gap:12px}
+.bar-item{display:flex;align-items:center;gap:12px}
+.bar-label{width:180px;font-size:0.85em;text-align:right;color:#aaa}
+.bar-fill{height:28px;border-radius:6px;display:flex;align-items:center;padding:0 12px;font-size:0.8em;color:#fff;font-weight:bold;transition:width 1s ease}
+@keyframes grow{from{width:0}to{width:100%}}
+</style><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<a href="infografik.html" class="back">← İnfografikler</a>
+<button class="audio-btn" onclick="let a=document.getElementById('bgm');if(a.paused){a.play();this.textContent='🔊'}else{a.pause();this.textContent='🔇'}">🔊</button>
+<audio id="bgm" loop><source src="Zenith_Unbound.mp3" type="audio/mpeg"></audio>
+<h1>💰 Savaş Ekonomisi</h1>
+<p class="subtitle">Antik çağdan günümüze — savaşın gerçek maliyeti ve ekonomik dönüşümler</p>
+<div class="grid">
+<div class="card"><div class="card-icon">🏛️</div><div class="card-title">Roma Askeri Maaş Sistemi</div><div class="card-value">MÖ 406</div><div class="card-desc">Düzenli askeri maaş sistemi başladı. Vergi gelirlerinin %50-70'i savunmaya ayrıldı. Modern savunma bütçesinin kökeni.</div><div class="card-era">Antik Çağ</div></div>
+<div class="card"><div class="card-icon">⚔️</div><div class="card-title">Şövalye Donanımı Maliyeti</div><div class="card-value">= 1 Köy</div><div class="card-desc">Tam zırh + savaş atı + silah = bir köyün yıllık geliri. Sadece soylular savaşabiliyordu. Feodal sistemin ekonomik temeli.</div><div class="card-era">Ortaçağ</div></div>
+<div class="card"><div class="card-icon">🏭</div><div class="card-title">Krupp Silah İmparatorluğu</div><div class="card-value">400 Yıl</div><div class="card-desc">Alman Krupp ailesi 400 yıl boyunca Avrupa'nın yarısını silahlandırdı. I. Dünya Savaşı'nda 70.000 işçi çalışıyordu.</div><div class="card-era">Sanayi Çağı</div></div>
+<div class="card"><div class="card-icon">💣</div><div class="card-title">Manhattan Projesi</div><div class="card-value">$28 Milyar</div><div class="card-desc">130.000 kişi, 2 milyar $ (bugün 28 milyar $). Çoğu çalışan ne yaptığını bilmiyordu. Tarihin en gizli projesi.</div><div class="card-era">Nükleer Çağ</div></div>
+<div class="card"><div class="card-icon">✈️</div><div class="card-title">F-35 Programı</div><div class="card-value">$1.7 Trilyon</div><div class="card-desc">Tarihin en pahalı silah programı. Tek uçak 80-100 milyon $. 2070'e kadar sürecek. 9 ülke ortak.</div><div class="card-era">Modern</div></div>
+<div class="card"><div class="card-icon">🎯</div><div class="card-title">Asimetrik Maliyet</div><div class="card-value">1:1000</div><div class="card-desc">Shahed-136 drone: $20.000 vs Patriot füzesi: $3-4 milyon. FPV drone: $500 vs T-72 tank: $3 milyon. Maliyet asimetrisi savaşı değiştiriyor.</div><div class="card-era">Günümüz</div></div>
+<div class="card"><div class="card-icon">🇹🇷</div><div class="card-title">Türkiye Savunma Sanayii</div><div class="card-value">%80 Yerlilik</div><div class="card-desc">2002: %20 yerlilik → 2025: %80 yerlilik. İhracat: $5.5 milyar. 2000+ savunma şirketi. KAAN, ALTAY, TB3, Akıncı.</div><div class="card-era">Günümüz</div></div>
+<div class="card"><div class="card-icon">🌍</div><div class="card-title">Küresel Savunma Harcaması</div><div class="card-value">$2.44 Trilyon</div><div class="card-desc">2025 SIPRI verileri. ABD: $916B, Çin: $296B, Rusya: $109B, Türkiye: $25.8B. Son 10 yılda %34 artış.</div><div class="card-era">2025</div></div>
+<div class="card"><div class="card-icon">💸</div><div class="card-title">Savaş Giderlerinin Dağılımı</div><div class="card-value">%1 Silah</div><div class="card-desc">18. yüzyılda silah ve mühimmat toplam giderin sadece %1'i. Lojistik %12, erzak %35, maaş %40, diğer %12. Asıl maliyet insandır.</div><div class="card-era">18. Yüzyıl</div></div>
+</div>
+<div class="compare">
+<h2>📊 Küresel Savunma Harcamaları Karşılaştırması (2025)</h2>
+<div class="bar-chart">
+<div class="bar-item"><div class="bar-label">🇺🇸 ABD</div><div class="bar-fill" style="width:92%;background:linear-gradient(90deg,#1a237e,#42a5f5)">$916 Milyar</div></div>
+<div class="bar-item"><div class="bar-label">🇨🇳 Çin</div><div class="bar-fill" style="width:30%;background:linear-gradient(90deg,#b71c1c,#ef5350)">$296 Milyar</div></div>
+<div class="bar-item"><div class="bar-label">🇷🇺 Rusya</div><div class="bar-fill" style="width:11%;background:linear-gradient(90deg,#1b5e20,#66bb6a)">$109 Milyar</div></div>
+<div class="bar-item"><div class="bar-label">🇮🇳 Hindistan</div><div class="bar-fill" style="width:8.5%;background:linear-gradient(90deg,#e65100,#ff9800)">$83.6 Milyar</div></div>
+<div class="bar-item"><div class="bar-label">🇸🇦 S. Arabistan</div><div class="bar-fill" style="width:7.5%;background:linear-gradient(90deg,#004d40,#26a69a)">$75 Milyar</div></div>
+<div class="bar-item"><div class="bar-label">🇹🇷 Türkiye</div><div class="bar-fill" style="width:2.6%;background:linear-gradient(90deg,#c62828,#ff5252)">$25.8 Milyar</div></div>
+</div>
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body></html>

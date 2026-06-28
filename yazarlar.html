@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Yazarlar — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fafaf8;--card:#fff;--border:#e8e4df;--accent:#c41e3a;--gold:#8b6914;--text:#1a1a1a;--dim:#6b6b6b;--head:'Playfair Display',serif;--body:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7}
+.top-bar{background:#1a1a1a;color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.top-bar a{color:#ccc;text-decoration:none;margin:0 12px;font-family:var(--mono);font-size:13px}
+.top-bar a:hover{color:var(--accent)}
+.top-bar a.active{color:#fff;border-bottom:2px solid var(--accent)}
+header{max-width:1100px;margin:0 auto;padding:40px 20px 20px;border-bottom:3px double var(--border)}
+header h1{font-family:var(--head);font-size:42px;font-weight:900;color:var(--text);margin-bottom:8px}
+header .sub{color:var(--dim);font-size:14px}
+/* Author Profiles */
+.authors-section{max-width:1100px;margin:40px auto;padding:0 20px}
+.section-title{font-family:var(--head);font-size:24px;color:var(--text);margin-bottom:24px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.author-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:48px}
+.author-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:28px;transition:.3s}
+.author-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-2px)}
+.author-card h3{font-family:var(--head);font-size:20px;margin-bottom:4px}
+.author-card .role{color:var(--accent);font-size:12px;font-family:var(--mono);margin-bottom:12px}
+.author-card p{color:var(--dim);font-size:13px;line-height:1.6}
+.author-card .count{margin-top:12px;font-family:var(--mono);font-size:13px;color:var(--gold)}
+/* Filter */
+.filter-bar{max-width:1100px;margin:0 auto;padding:16px 20px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.filter-btn{padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:none;font-size:12px;cursor:pointer;transition:.2s;font-family:var(--mono)}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* Articles */
+.articles{max-width:1100px;margin:32px auto;padding:0 20px}
+.article-item{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--border);transition:.2s}
+.article-item:hover{background:rgba(196,30,58,.02)}
+.article-meta{min-width:100px;text-align:right}
+.article-meta .date{font-family:var(--mono);font-size:13px;color:var(--dim)}
+.article-meta .author{font-size:13px;color:var(--accent);font-weight:600;margin-top:4px}
+.article-content h3{font-family:var(--head);font-size:17px;margin-bottom:6px;cursor:pointer}
+.article-content h3:hover{color:var(--accent)}
+.article-content p{color:var(--dim);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.article-content .tags{margin-top:8px}
+.article-content .tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:13px;font-family:var(--mono);background:#f0ede8;color:var(--gold);margin-right:4px}
+/* Series */
+.series-section{max-width:1100px;margin:48px auto;padding:0 20px}
+.series-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:20px}
+.series-card h3{font-family:var(--head);font-size:18px;margin-bottom:8px}
+.series-card .parts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.series-card .part{padding:6px 12px;border:1px solid var(--border);border-radius:4px;font-size:12px;text-decoration:none;color:var(--text);transition:.2s}
+.series-card .part:hover{border-color:var(--accent);color:var(--accent)}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;overflow-y:auto;padding:40px 20px}
+.modal-content{max-width:800px;margin:0 auto;background:var(--card);border-radius:12px;padding:48px;position:relative}
+.modal-close{position:absolute;top:16px;right:20px;font-size:24px;cursor:pointer;color:var(--dim)}
+.modal-content h2{font-family:var(--head);font-size:28px;margin-bottom:8px}
+.modal-content .meta{color:var(--dim);font-size:12px;font-family:var(--mono);margin-bottom:24px}
+.modal-content .body{font-size:15px;line-height:1.9;color:var(--text)}
+.modal-content .body p{margin-bottom:16px}
+@media(max-width:768px){.article-item{flex-direction:column}.article-meta{text-align:left;min-width:auto}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="top-bar">
+  <div><a href="index.html">← harbistrateji.com</a></div>
+  <nav>
+    <a href="index.html">Ana Sayfa</a>
+    <a href="haberler.html">Haberler</a>
+    <a class="active" href="yazarlar.html">Yazarlar</a>
+    <a href="medeniyet-dinamikleri.html">Medeniyet Dinamikleri</a>
+    <a href="oza-hub.html">OZA</a>
+  </nav>
+</div>
+
+<header>
+  <h1>Yazarlar</h1>
+  <p class="sub">Köşe yazıları, analizler ve seri makaleler — Harb-i Strateji Külliyatı</p>
+</header>
+
+<!-- Author Profiles -->
+<div class="authors-section">
+  <h2 class="section-title">Köşe Yazarları</h2>
+  <div class="author-grid">
+    <div class="author-card">
+      <h3>Bayram Kılınçer</h3>
+      <div class="role">STRATEJİ & JEOPOLİTİK ANALİST</div>
+      <p>Savunma sanayii, uluslararası güvenlik ve Türk dış politikası üzerine analizler. Elektronik harp teknolojileri ve AB güvenlik politikaları konusunda uzman.</p>
+      <div class="count">12 MAKALE · 2 SERİ</div>
+    </div>
+    <div class="author-card">
+      <h3>Selahaddin Koyuncu</h3>
+      <div class="role">STRATEJİK DÜŞÜNCE & KÜLTÜR</div>
+      <p>Türk stratejik düşüncesi, medeniyet perspektifi ve güncel jeopolitik gelişmeler üzerine köşe yazıları. Harb-i Strateji Külliyatı editörü.</p>
+      <div class="count">8 MAKALE</div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterArticles('all')">Tümü</button>
+  <button class="filter-btn" onclick="filterArticles('kilincer')">B. Kılınçer</button>
+  <button class="filter-btn" onclick="filterArticles('koyuncu')">S. Koyuncu</button>
+  <button class="filter-btn" onclick="filterArticles('elektronik-harp')">Elektronik Harp</button>
+  <button class="filter-btn" onclick="filterArticles('euiss')">AB-EUISS</button>
+  <button class="filter-btn" onclick="filterArticles('analiz')">Analiz</button>
+</div>
+
+<!-- Articles List -->
+<div class="articles" id="articlesList">
+  <!-- Bayram Kılınçer Articles -->
+  <div class="article-item" data-author="kilincer" data-cat="elektronik-harp" data-id="eh1">
+    <div class="article-meta"><div class="date">18 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eh1')">Elektronik Harp Teknolojileri — Bölüm 1: Temel Kavramlar</h3>
+      <p>Elektronik harp (EW), elektromanyetik spektrumun askeri amaçlarla kullanılmasıdır. Elektronik taarruz, elektronik koruma ve elektronik destek olmak üzere üç ana kategoride incelenir.</p>
+      <div class="tags"><span class="tag">ELEKTRONİK HARP</span><span class="tag">SERİ</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="elektronik-harp" data-id="eh2">
+    <div class="article-meta"><div class="date">19 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eh2')">Elektronik Harp Teknolojileri — Bölüm 2: Radar ve Karıştırma</h3>
+      <p>Radar sistemlerinin çalışma prensipleri, aktif ve pasif karıştırma teknikleri, DRFM teknolojisi ve modern radar aldatma yöntemleri.</p>
+      <div class="tags"><span class="tag">ELEKTRONİK HARP</span><span class="tag">RADAR</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="elektronik-harp" data-id="eh3">
+    <div class="article-meta"><div class="date">20 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eh3')">Elektronik Harp Teknolojileri — Bölüm 3: İletişim İstihbaratı</h3>
+      <p>SIGINT, COMINT ve ELINT kavramları. Sinyal yakalama, analiz ve yönlendirme teknikleri. Türkiye'nin SIGINT kapasitesi.</p>
+      <div class="tags"><span class="tag">ELEKTRONİK HARP</span><span class="tag">İSTİHBARAT</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="elektronik-harp" data-id="eh4">
+    <div class="article-meta"><div class="date">21 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eh4')">Elektronik Harp Teknolojileri — Bölüm 4: Türk EW Sistemleri</h3>
+      <p>KORAL, REDET, HAVA SOJ, SANCAK ve diğer Türk elektronik harp sistemleri. ASELSAN'ın EW portföyü ve ihracat başarıları.</p>
+      <div class="tags"><span class="tag">ELEKTRONİK HARP</span><span class="tag">TÜRKİYE</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="elektronik-harp" data-id="eh5">
+    <div class="article-meta"><div class="date">22 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eh5')">Elektronik Harp Teknolojileri — Bölüm 5: Geleceğin EW'si</h3>
+      <p>Bilişsel elektronik harp, YZ destekli spektrum yönetimi, kuantum radar ve geleceğin elektromanyetik savaş alanı.</p>
+      <div class="tags"><span class="tag">ELEKTRONİK HARP</span><span class="tag">GELECEK</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="euiss" data-id="eu1">
+    <div class="article-meta"><div class="date">15 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eu1')">AB Güvenlik Araştırmaları Enstitüsü: Türkiye'nin Küresel Etkisi Artıyor — Bölüm 1</h3>
+      <p>EUISS'in Türkiye raporu analizi. Türkiye'nin artan savunma sanayii ihracatı, diplomatik ağırlığı ve bölgesel etki alanı genişlemesi.</p>
+      <div class="tags"><span class="tag">AB-EUISS</span><span class="tag">TÜRKİYE</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="euiss" data-id="eu2">
+    <div class="article-meta"><div class="date">16 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eu2')">AB-EUISS: Türkiye'nin Küresel Etkisi — Bölüm 2: Balkanlar</h3>
+      <p>Türkiye'nin Balkan politikası, TİKA yatırımları, askeri işbirlikleri ve kültürel diplomasi. Osmanlı mirası ve modern etki.</p>
+      <div class="tags"><span class="tag">AB-EUISS</span><span class="tag">BALKANLAR</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="euiss" data-id="eu3">
+    <div class="article-meta"><div class="date">17 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eu3')">AB-EUISS: Türkiye'nin Küresel Etkisi — Bölüm 3: Güney Kafkasya</h3>
+      <p>Karabağ zaferi sonrası Türkiye-Azerbaycan ekseni, Gürcistan ilişkileri, Ermenistan normalleşmesi ve bölgesel denge.</p>
+      <div class="tags"><span class="tag">AB-EUISS</span><span class="tag">KAFKASYA</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="euiss" data-id="eu4">
+    <div class="article-meta"><div class="date">18 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eu4')">AB-EUISS: Türkiye'nin Küresel Etkisi — Bölüm 4: Orta Doğu</h3>
+      <p>Suriye, Irak, Libya operasyonları. İsrail-Filistin tutumu. Körfez ülkeleriyle normalleşme. Türkiye'nin Orta Doğu stratejisi.</p>
+      <div class="tags"><span class="tag">AB-EUISS</span><span class="tag">ORTA DOĞU</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="euiss" data-id="eu5">
+    <div class="article-meta"><div class="date">19 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eu5')">AB-EUISS: Türkiye'nin Küresel Etkisi — Bölüm 5: Afrika</h3>
+      <p>Türkiye'nin Afrika açılımı, 43 büyükelçilik, THY ağı, savunma anlaşmaları, TİKA projeleri ve Somali modeli.</p>
+      <div class="tags"><span class="tag">AB-EUISS</span><span class="tag">AFRİKA</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="euiss" data-id="eu6">
+    <div class="article-meta"><div class="date">20 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('eu6')">AB-EUISS: Türkiye'nin Küresel Etkisi — Bölüm 6: Sonuç ve Değerlendirme</h3>
+      <p>Türkiye'nin çok vektörlü dış politikası, stratejik özerklik arayışı ve AB-Türkiye ilişkilerinin geleceği.</p>
+      <div class="tags"><span class="tag">AB-EUISS</span><span class="tag">SONUÇ</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="kilincer" data-cat="analiz" data-id="turan">
+    <div class="article-meta"><div class="date">14 Haz 2026</div><div class="author">B. Kılınçer</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('turan')">Bir Turan Ordusu Olsaydı</h3>
+      <p>Türk Devletleri Teşkilatı üyelerinin askeri kapasitelerinin birleşik analizi. Ortak savunma potansiyeli ve stratejik derinlik.</p>
+      <div class="tags"><span class="tag">TÜRKİSTAN</span><span class="tag">SAVUNMA</span></div>
+    </div>
+  </div>
+
+  <!-- Selahaddin Koyuncu Articles -->
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk1">
+    <div class="article-meta"><div class="date">23 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk1')">Dünya Bayram Tatili Yapmadı</h3>
+      <p>Bayram tatilinde dünyada yaşanan gelişmeler, jeopolitik hareketlilik ve Türkiye'nin stratejik konumuna etkileri.</p>
+      <div class="tags"><span class="tag">JEOPOLİTİK</span><span class="tag">ANALİZ</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk2">
+    <div class="article-meta"><div class="date">22 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk2')">Türkiye'de Uyanık Kalmak Bütün Mesele Bu</h3>
+      <p>Stratejik farkındalık, ulusal güvenlik bilinci ve toplumsal dayanıklılık üzerine bir değerlendirme.</p>
+      <div class="tags"><span class="tag">STRATEJİ</span><span class="tag">TOPLUM</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk3">
+    <div class="article-meta"><div class="date">20 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk3')">DEAŞ Hortlayan ve Türk Devletleri Teşkilatı</h3>
+      <p>DEAŞ'ın yeniden canlanma girişimleri, Türk Devletleri Teşkilatı'nın güvenlik boyutu ve ortak terörle mücadele.</p>
+      <div class="tags"><span class="tag">TERÖR</span><span class="tag">TDT</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk4">
+    <div class="article-meta"><div class="date">18 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk4')">F-35 Meselesi ve Stratejik Özerklik</h3>
+      <p>F-35 programından çıkarılma süreci, KAAN projesi, savunma sanayii bağımsızlığı ve stratejik dersler.</p>
+      <div class="tags"><span class="tag">SAVUNMA</span><span class="tag">STRATEJİ</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk5">
+    <div class="article-meta"><div class="date">16 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk5')">Akl-ı Devlet ve Oyuncu Gençlik</h3>
+      <p>Devlet aklı geleneği, genç nesillerin stratejik düşünce kapasitesi ve OZA gibi platformların rolü.</p>
+      <div class="tags"><span class="tag">KÜLTÜR</span><span class="tag">GENÇLİK</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk6">
+    <div class="article-meta"><div class="date">14 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk6')">Orta ve Ortak Nokta</h3>
+      <p>Türkiye'nin denge politikası, Doğu-Batı arasında köprü rolü ve çok kutuplu dünyada konumlanma stratejisi.</p>
+      <div class="tags"><span class="tag">JEOPOLİTİK</span><span class="tag">DİPLOMASİ</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk7">
+    <div class="article-meta"><div class="date">12 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk7')">Bakma Gör</h3>
+      <p>Stratejik öngörü, istihbarat analizi ve karar vericilerin bilgi yorumlama kapasitesi üzerine.</p>
+      <div class="tags"><span class="tag">İSTİHBARAT</span><span class="tag">ANALİZ</span></div>
+    </div>
+  </div>
+  <div class="article-item" data-author="koyuncu" data-cat="analiz" data-id="sk8">
+    <div class="article-meta"><div class="date">10 Haz 2026</div><div class="author">S. Koyuncu</div></div>
+    <div class="article-content">
+      <h3 onclick="openArticle('sk8')">Gazzeli</h3>
+      <p>Gazze krizi, insani boyut, uluslararası hukuk ve Türkiye'nin tutumu. Medeniyet perspektifinden bir değerlendirme.</p>
+      <div class="tags"><span class="tag">ORTA DOĞU</span><span class="tag">İNSANİ</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Series Section -->
+<div class="series-section">
+  <h2 class="section-title">Seri Makaleler</h2>
+  <div class="series-card">
+    <h3>Elektronik Harp Teknolojileri</h3>
+    <p style="color:var(--dim);font-size:13px;margin-bottom:4px">Bayram Kılınçer · 5 Bölüm · Haziran 2026</p>
+    <p style="color:var(--dim);font-size:13px">Elektromanyetik spektrumun askeri kullanımından Türkiye'nin EW kapasitesine kapsamlı analiz serisi.</p>
+    <div class="parts">
+      <a href="#" class="part" onclick="openArticle('eh1');return false">1. Temel Kavramlar</a>
+      <a href="#" class="part" onclick="openArticle('eh2');return false">2. Radar & Karıştırma</a>
+      <a href="#" class="part" onclick="openArticle('eh3');return false">3. İletişim İstihbaratı</a>
+      <a href="#" class="part" onclick="openArticle('eh4');return false">4. Türk EW Sistemleri</a>
+      <a href="#" class="part" onclick="openArticle('eh5');return false">5. Geleceğin EW'si</a>
+    </div>
+  </div>
+  <div class="series-card">
+    <h3>AB Güvenlik Araştırmaları Enstitüsü: Türkiye'nin Küresel Etkisi</h3>
+    <p style="color:var(--dim);font-size:13px;margin-bottom:4px">Bayram Kılınçer · 6 Bölüm · Haziran 2026</p>
+    <p style="color:var(--dim);font-size:13px">EUISS raporları üzerinden Türkiye'nin Balkanlar'dan Afrika'ya küresel etki alanı analizi.</p>
+    <div class="parts">
+      <a href="#" class="part" onclick="openArticle('eu1');return false">1. Genel Değerlendirme</a>
+      <a href="#" class="part" onclick="openArticle('eu2');return false">2. Balkanlar</a>
+      <a href="#" class="part" onclick="openArticle('eu3');return false">3. Güney Kafkasya</a>
+      <a href="#" class="part" onclick="openArticle('eu4');return false">4. Orta Doğu</a>
+      <a href="#" class="part" onclick="openArticle('eu5');return false">5. Afrika</a>
+      <a href="#" class="part" onclick="openArticle('eu6');return false">6. Sonuç</a>
+    </div>
+  </div>
+</div>
+
+<!-- Article Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <div class="meta" id="modalMeta"></div>
+    <div class="body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const articles={
+  eh1:{title:'Elektronik Harp Teknolojileri — Bölüm 1: Temel Kavramlar',author:'Bayram Kılınçer',date:'18 Haziran 2026',body:'<p>Elektronik harp (EW), elektromanyetik spektrumun askeri amaçlarla kontrol edilmesi, kullanılması ve korunmasını kapsayan geniş bir disiplindir. NATO tanımına göre üç ana kategoride incelenir:</p><p><strong>Elektronik Taarruz (EA):</strong> Düşmanın elektronik sistemlerini bozmak, aldatmak veya yok etmek için elektromanyetik enerji kullanımı. Karıştırma (jamming), aldatma (deception) ve yönlendirilmiş enerji silahları bu kategoriye girer.</p><p><strong>Elektronik Koruma (EP):</strong> Kendi kuvvetlerinin elektronik sistemlerini düşman EA\'sından korumak. Frekans atlamalı yayın, yayılmış spektrum ve adaptif anten teknolojileri kullanılır.</p><p><strong>Elektronik Destek (ES):</strong> Elektromanyetik ortamdan istihbarat toplama. Sinyal yakalama, analiz, tanımlama ve yön bulma faaliyetlerini kapsar.</p><p>Modern savaş alanında EW, "görünmez cephe" olarak adlandırılır. Bir uçağın radardan kaçması, bir geminin füze savunması, bir birliğin iletişim güvenliği — hepsi EW\'ye bağlıdır.</p>'},
+  eh2:{title:'Elektronik Harp Teknolojileri — Bölüm 2: Radar ve Karıştırma',author:'Bayram Kılınçer',date:'19 Haziran 2026',body:'<p>Radar sistemleri, elektromanyetik dalgaları yayıp geri dönüşlerini analiz ederek hedef tespiti yapar. Modern radarlar AESA (Aktif Elektronik Taramalı Dizi) teknolojisiyle binlerce küçük vericiden oluşur.</p><p><strong>Aktif Karıştırma:</strong> Hedef radarın frekansında güçlü sinyal yayarak ekranını doyurma. Barrage jamming (geniş bant), spot jamming (dar bant) ve sweep jamming (taramalı) türleri vardır.</p><p><strong>DRFM Teknolojisi:</strong> Digital Radio Frequency Memory — düşman radar sinyalini yakalayıp hafızaya alır, modifiye ederek geri gönderir. Sahte hedefler oluşturur, menzil/hız bilgisini bozar.</p><p><strong>Pasif Karıştırma:</strong> Chaff (metal şeritler), flare (kızılötesi aldatma), köşe reflektörler. Düşük maliyetli ama etkili savunma araçları.</p><p><strong>Türkiye\'nin Kapasitesi:</strong> ASELSAN\'ın KORAL sistemi, 200+ km menzille düşman radarlarını tespit edip karıştırabilir. Suriye ve Libya\'da operasyonel olarak kanıtlanmıştır.</p>'},
+  eh3:{title:'Elektronik Harp Teknolojileri — Bölüm 3: İletişim İstihbaratı',author:'Bayram Kılınçer',date:'20 Haziran 2026',body:'<p><strong>SIGINT (Signals Intelligence):</strong> Sinyal istihbaratı, elektromanyetik yayınların toplanması ve analizidir. İki alt dalı vardır:</p><p><strong>COMINT (Communications Intelligence):</strong> İletişim istihbaratı — telefon, telsiz, internet trafiği dinleme ve analizi. Metadata analizi ile iletişim ağlarının haritalanması.</p><p><strong>ELINT (Electronic Intelligence):</strong> Elektronik istihbarat — radar ve silah sistemlerinin sinyal karakteristiklerinin toplanması. Tehdit kütüphanesi oluşturma.</p><p><strong>Türkiye\'nin SIGINT Kapasitesi:</strong> MİT Elektronik İstihbarat Başkanlığı, TÜBİTAK BİLGEM projeleri, ASELSAN dinleme/analiz sistemleri. Bölgesel SIGINT üstünlüğü hedefi.</p><p>Modern SIGINT, yapay zeka ile otomatik sinyal sınıflandırma, doğal dil işleme ile içerik analizi ve büyük veri analitiği ile pattern tespiti kullanır.</p>'},
+  eh4:{title:'Elektronik Harp Teknolojileri — Bölüm 4: Türk EW Sistemleri',author:'Bayram Kılınçer',date:'21 Haziran 2026',body:'<p>Türkiye, elektronik harp alanında NATO\'nun en gelişmiş kapasitelerinden birine sahiptir:</p><p><strong>KORAL:</strong> Karada konuşlu radar elektronik harp sistemi. 200+ km menzil, çoklu radar karıştırma, Suriye\'de S-400 radarlarına karşı test edildi.</p><p><strong>REDET:</strong> Radar Elektronik Destek/Taarruz sistemi. Deniz platformları için tasarlanmış, otomatik tehdit tespiti ve karıştırma.</p><p><strong>HAVA SOJ:</strong> Hava platformu stand-off jammer. Uçak tabanlı, geniş alan karıştırma kapasitesi.</p><p><strong>SANCAK:</strong> Taktik seviye EW sistemi. Zırhlı araçlara entegre, konvoy koruma ve yakın mesafe EW.</p><p><strong>İhracat Başarısı:</strong> Türk EW sistemleri 15+ ülkeye ihraç edilmektedir. Maliyet-etkinlik oranı ve operasyonel kanıtlanmışlık en büyük avantajdır.</p>'},
+  eh5:{title:'Elektronik Harp Teknolojileri — Bölüm 5: Geleceğin EW\'si',author:'Bayram Kılınçer',date:'22 Haziran 2026',body:'<p><strong>Bilişsel Elektronik Harp:</strong> YZ destekli sistemler, düşman sinyallerini gerçek zamanlı analiz edip en etkili karşı tedbiri otomatik uygular. İnsan karar döngüsünden bağımsız çalışır.</p><p><strong>Kuantum Radar:</strong> Kuantum dolanıklık kullanan radarlar, stealth teknolojisini geçersiz kılabilir. Çin\'in kuantum radar deneyleri endişe yaratıyor.</p><p><strong>Yönlendirilmiş Enerji:</strong> Yüksek güçlü mikrodalga (HPM) silahları, elektronik sistemleri kalıcı olarak devre dışı bırakabilir. Drone sürülerine karşı en etkili savunma.</p><p><strong>Spektrum Savaşı:</strong> 5G/6G ile genişleyen spektrum, sivil-askeri kullanım çatışması. Spektrum yönetimi stratejik bir kaynak haline geliyor.</p><p><strong>Türkiye\'nin Yol Haritası:</strong> ASELSAN\'ın YZ-EW entegrasyonu, TÜBİTAK kuantum projeleri, yerli AESA radar geliştirme. 2030 hedefi: tam otonom EW kapasitesi.</p>'},
+  eu1:{title:'AB Güvenlik Araştırmaları Enstitüsü: Türkiye\'nin Küresel Etkisi Artıyor — Bölüm 1',author:'Bayram Kılınçer',date:'15 Haziran 2026',body:'<p>Avrupa Birliği Güvenlik Araştırmaları Enstitüsü (EUISS), 2025 raporunda Türkiye\'nin küresel etkisinin son 10 yılda dramatik biçimde arttığını belgeledi.</p><p><strong>Savunma Sanayii İhracatı:</strong> 2014\'te $1.8B olan ihracat, 2025\'te $10B\'ı aştı. Bayraktar TB2/Akıncı, ANKA, Altay tankı, MİLGEM korveti gibi platformlar 70+ ülkeye satıldı.</p><p><strong>Diplomatik Ağırlık:</strong> 254 dış temsilcilik ile dünyada 5. sırada. BM, G20, NATO, İslam İşbirliği Teşkilatı, Türk Devletleri Teşkilatı\'nda aktif rol.</p><p><strong>Yumuşak Güç:</strong> THY\'nin 340+ destinasyonu, TİKA\'nın 170 ülkedeki projeleri, Yunus Emre Enstitüsü, Maarif Vakfı okulları. Kültürel diplomasi.</p><p>EUISS raporu, Türkiye\'yi "yükselen orta güç" kategorisinden "bölgesel süper güç" kategorisine taşıyor.</p>'},
+  eu2:{title:'AB-EUISS: Türkiye\'nin Küresel Etkisi — Bölüm 2: Balkanlar',author:'Bayram Kılınçer',date:'16 Haziran 2026',body:'<p>Balkanlar, Türkiye\'nin en derin tarihsel ve kültürel bağlara sahip olduğu bölgedir. EUISS raporu, Türkiye\'nin Balkan etkisini üç boyutta analiz eder:</p><p><strong>Ekonomik Boyut:</strong> $8B+ ticaret hacmi, 1.500+ Türk firması, bankacılık sektöründe güçlü varlık. Bosna, Arnavutluk, Kuzey Makedonya\'da en büyük yatırımcılardan.</p><p><strong>Askeri İşbirliği:</strong> NATO çerçevesinde ortak tatbikatlar, savunma sanayii ihracatı, askeri eğitim programları. Kosova\'da KFOR katkısı.</p><p><strong>Kültürel Diplomasi:</strong> TİKA restorasyon projeleri (500+ Osmanlı eseri), Yunus Emre Enstitüleri, Maarif okulları, burslar. Osmanlı mirası üzerinden bağ.</p><p>Rapor, Türkiye\'nin Balkanlar\'daki etkisinin AB ve Rusya ile rekabet halinde olduğunu, ancak "yumuşak güç" odaklı yaklaşımının daha sürdürülebilir olduğunu belirtiyor.</p>'},
+  eu3:{title:'AB-EUISS: Türkiye\'nin Küresel Etkisi — Bölüm 3: Güney Kafkasya',author:'Bayram Kılınçer',date:'17 Haziran 2026',body:'<p>2020 Karabağ Savaşı, Güney Kafkasya\'nın güç dengesini köklü biçimde değiştirdi. Türkiye\'nin rolü belirleyici oldu:</p><p><strong>Azerbaycan Ekseni:</strong> "İki devlet, bir millet" ilkesi. Bayraktar TB2\'nin savaş alanı etkisi, Şuşa Beyannamesi, ortak ordu hedefi. Enerji işbirliği (BTC, TANAP).</p><p><strong>Gürcistan İlişkileri:</strong> Stratejik transit ülke, Bakü-Tiflis-Ceyhan, Bakü-Tiflis-Kars demiryolu. Ekonomik entegrasyon derinleşiyor.</p><p><strong>Ermenistan Normalleşmesi:</strong> Sınır kapılarının açılması müzakereleri, ticaret potansiyeli, bölgesel istikrar perspektifi.</p><p><strong>Rusya Faktörü:</strong> Rusya\'nın Ukrayna\'ya odaklanmasıyla Kafkasya\'daki etkisi azalıyor. Türkiye bu boşluğu dolduruyor.</p><p>EUISS, Türkiye\'nin Kafkasya\'da "güvenlik sağlayıcı" rolüne geçtiğini ve bunun AB için hem fırsat hem risk oluşturduğunu değerlendiriyor.</p>'},
+  eu4:{title:'AB-EUISS: Türkiye\'nin Küresel Etkisi — Bölüm 4: Orta Doğu',author:'Bayram Kılınçer',date:'18 Haziran 2026',body:'<p>Türkiye\'nin Orta Doğu politikası, son 10 yılda "sıfır sorun" dan "aktif müdahale" ye evrildi:</p><p><strong>Suriye:</strong> Fırat Kalkanı, Zeytin Dalı, Barış Pınarı operasyonları. 30 km güvenli bölge, 4M mülteci sorunu, YPG/PKK tehdidi.</p><p><strong>Irak:</strong> Pençe operasyonları serisi, Metina-Zap-Avaşin-Basyan. PKK\'nın Kuzey Irak varlığının tasfiyesi.</p><p><strong>Libya:</strong> Askeri danışmanlık, drone desteği, deniz yetki alanı anlaşması. Doğu Akdeniz stratejisi.</p><p><strong>Körfez Normalleşmesi:</strong> Suudi Arabistan, BAE, Mısır ile ilişkilerin onarımı. Ekonomik işbirliği, yatırım çekme.</p><p><strong>İsrail-Filistin:</strong> Gazze krizi sonrası sert tutum, insani yardım, uluslararası hukuk vurgusu.</p>'},
+  eu5:{title:'AB-EUISS: Türkiye\'nin Küresel Etkisi — Bölüm 5: Afrika',author:'Bayram Kılınçer',date:'19 Haziran 2026',body:'<p>Türkiye\'nin Afrika açılımı, 2005\'ten bu yana sistematik biçimde genişliyor:</p><p><strong>Diplomatik Ağ:</strong> 43 büyükelçilik (2009\'da 12 idi). Afrika Birliği gözlemci üyeliği. 20+ Afrika ülkesiyle askeri anlaşma.</p><p><strong>THY Ağı:</strong> 62 Afrika destinasyonu ile kıtaya en çok uçan havayolu. Ticaret ve turizm kolaylaştırıcı.</p><p><strong>Savunma İhracatı:</strong> Bayraktar TB2 (Etiyopya, Nijer, Togo), zırhlı araçlar (Kenya, Nijerya), deniz platformları. Fransa\'nın geleneksel etkisini sarsıyor.</p><p><strong>TİKA Projeleri:</strong> Hastane, okul, su kuyusu, altyapı. 40+ Afrika ülkesinde aktif proje.</p><p><strong>Somali Modeli:</strong> Askeri üs, eğitim, insani yardım, altyapı — bütüncül yaklaşım. Diğer ülkelere örnek.</p>'},
+  eu6:{title:'AB-EUISS: Türkiye\'nin Küresel Etkisi — Bölüm 6: Sonuç ve Değerlendirme',author:'Bayram Kılınçer',date:'20 Haziran 2026',body:'<p>EUISS raporu, Türkiye\'nin küresel etkisini değerlendirirken şu sonuçlara ulaşıyor:</p><p><strong>Çok Vektörlü Politika:</strong> Türkiye, NATO müttefiki olarak kalırken Rusya ve Çin ile de ilişki yürütebilen nadir ülkelerden. Bu "stratejik özerklik" AB için hem model hem meydan okuma.</p><p><strong>Savunma Sanayii Devrimi:</strong> Yerli savunma sanayii, Türkiye\'ye dış politikada bağımsızlık alanı açtı. Drone diplomasisi yeni bir etki aracı.</p><p><strong>AB-Türkiye İlişkileri:</strong> Üyelik perspektifi zayıflarken, güvenlik işbirliği zorunluluğu artıyor. Göç, terör, enerji konularında karşılıklı bağımlılık.</p><p><strong>Risk Faktörleri:</strong> Ekonomik kırılganlık, iç siyasi gerilimler, çok cepheli angajmanın sürdürülebilirliği.</p><p>Rapor, AB\'nin Türkiye\'yi "stratejik partner" olarak yeniden tanımlaması gerektiğini öneriyor.</p>'},
+  turan:{title:'Bir Turan Ordusu Olsaydı',author:'Bayram Kılınçer',date:'14 Haziran 2026',body:'<p>Türk Devletleri Teşkilatı (TDT) üyelerinin askeri kapasitelerinin birleşik bir güç olarak analizi:</p><p><strong>İnsan Gücü:</strong> Türkiye (500K), Azerbaycan (67K), Kazakistan (39K), Kırgızistan (11K), Özbekistan (48K) = 665.000+ aktif personel.</p><p><strong>Hava Gücü:</strong> Türkiye\'nin F-16/KAAN filosu + Azerbaycan\'ın SİHA kapasitesi + Kazakistan\'ın Su-30\'ları. Bölgesel hava üstünlüğü.</p><p><strong>Zırhlı Güç:</strong> Altay (TR), T-72 modernizasyonları (AZ/KZ). Ortak zırhlı araç üretim potansiyeli.</p><p><strong>Deniz Gücü:</strong> Türkiye\'nin deniz kapasitesi + Hazar Denizi filosu. Karadeniz-Hazar ekseni kontrolü.</p><p><strong>Savunma Sanayii Sinerjisi:</strong> Türk SİHA teknolojisi + Kazak hammadde + Özbek insan gücü = bölgesel savunma ekosistemi.</p><p>Sonuç: Birleşik Turan kuvveti, dünyada ilk 5 askeri güç kapasitesine ulaşabilir. Ancak politik irade, lojistik entegrasyon ve komuta birliği en büyük zorluklar.</p>'},
+  sk1:{title:'Dünya Bayram Tatili Yapmadı',author:'Selahaddin Koyuncu',date:'23 Haziran 2026',body:'<p>Biz bayram namazına giderken dünya dönmeye devam etti. Ukrayna cephesinde yeni bir Rus taarruzu başladı, Tayvan Boğazı\'nda Çin donanması tatbikat yaptı, Sahel\'de darbe girişimi engellendi.</p><p>Türkiye\'nin bayram tatili yapma lüksü yok. Coğrafyamız bize 7/24 uyanık kalmayı dayatıyor. Doğu\'da PKK, güneyde DEAŞ kalıntıları, batıda Ege gerginliği, kuzeyde Karadeniz jeopolitiği.</p><p>Stratejik farkındalık sadece devlet kurumlarının değil, toplumun tamamının sorumluluğudur. Gençlerimizin dünyayı anlaması, analiz etmesi, stratejik düşünmesi gerekiyor.</p><p>Harb-i Strateji Külliyatı tam da bu amaçla var: Bilgiyi erişilebilir kılmak, stratejiyi demokratikleştirmek, gençleri geleceğe hazırlamak.</p>'},
+  sk2:{title:'Türkiye\'de Uyanık Kalmak Bütün Mesele Bu',author:'Selahaddin Koyuncu',date:'22 Haziran 2026',body:'<p>Uyanık kalmak — fiziksel değil, zihinsel bir durum. Stratejik uyanıklık, tehditleri önceden görmek, fırsatları zamanında değerlendirmek demek.</p><p>Türkiye\'nin coğrafi konumu, onu sürekli bir stratejik uyanıklık durumunda tutmayı zorunlu kılıyor. Üç kıtanın kesişiminde, enerji koridorlarının üzerinde, medeniyetlerin buluşma noktasında bir ülke.</p><p>Bu uyanıklık sadece askeri değil: ekonomik, teknolojik, kültürel ve bilişsel boyutları var. Siber saldırılar, dezenformasyon kampanyaları, ekonomik baskılar — hepsi birer savaş biçimi.</p><p>Toplumsal dayanıklılık (resilience) inşa etmek, eğitimden başlıyor. Gençlerimize eleştirel düşünme, medya okuryazarlığı ve stratejik analiz becerileri kazandırmalıyız.</p>'},
+  sk3:{title:'DEAŞ Hortlayan ve Türk Devletleri Teşkilatı',author:'Selahaddin Koyuncu',date:'20 Haziran 2026',body:'<p>DEAŞ\'ın Suriye ve Irak\'taki hücre yapılanmaları yeniden aktifleşiyor. Cezaevlerindeki radikalleşme, kamplardaki yeni nesil militanlar, dijital propaganda — tehdit bitmiş değil.</p><p>Türk Devletleri Teşkilatı\'nın güvenlik boyutu güçlendirilmeli. Ortak istihbarat paylaşımı, sınır güvenliği koordinasyonu, terörle mücadele eğitimi — bunlar artık lüks değil zorunluluk.</p><p>Orta Asya\'daki radikalleşme riski de göz ardı edilemez. Afganistan\'dan yayılan istikrarsızlık, ekonomik sorunlar ve sosyal medya propagandası genç nüfusu tehdit ediyor.</p><p>TDT, sadece kültürel ve ekonomik değil, güvenlik örgütü olarak da evrilmeli. Türkiye\'nin liderliğinde ortak bir terörle mücadele mekanizması kurulmalı.</p>'},
+  sk4:{title:'F-35 Meselesi ve Stratejik Özerklik',author:'Selahaddin Koyuncu',date:'18 Haziran 2026',body:'<p>F-35 programından çıkarılmamız, Türk savunma sanayii için bir kriz değil, bir dönüm noktası oldu. S-400 tercihinin bedeli ağır görünse de, kazanımları daha büyük.</p><p><strong>KAAN Projesi:</strong> Yerli 5. nesil savaş uçağı. 2028\'de envantere girme hedefi. Motordan yazılıma tam bağımsızlık.</p><p><strong>Stratejik Ders:</strong> Hiçbir müttefik, kritik savunma teknolojisinde %100 güvenilir değildir. Yerli üretim = stratejik özerklik.</p><p><strong>Domino Etkisi:</strong> F-35 krizi, ALTAY tankı, MİLGEM fırkateyni, Bayraktar Akıncı gibi projelere ivme kazandırdı. "Yapamayız" psikolojisi kırıldı.</p><p>Bugün Türkiye, dünyanın sayılı tam spektrum savunma sanayii ülkelerinden biri. Bu, F-35 krizinin dolaylı ama en büyük kazanımıdır.</p>'},
+  sk5:{title:'Akl-ı Devlet ve Oyuncu Gençlik',author:'Selahaddin Koyuncu',date:'16 Haziran 2026',body:'<p>"Akl-ı Devlet" — devletin kolektif hafızası, stratejik refleksleri ve uzun vadeli vizyonu. Osmanlı\'dan Cumhuriyet\'e aktarılan bir gelenek.</p><p>Ancak bu gelenek, yeni nesillere aktarılmazsa ölür. Z ve Alfa kuşağı, bilgiyi farklı tüketiyor: kısa, görsel, interaktif, oyunlaştırılmış.</p><p>OZA (Operasyonel Zekâ Arenası) tam da bu ihtiyaca yanıt veriyor. Stratejiyi oyunlaştırarak, jeopolitiği eğlenceli kılarak, tarihi yaşatarak gençlere ulaşıyor.</p><p>Bir gencin OODA döngüsünü öğrenmesi için akademik makale okuması gerekmiyor — bir oyun oynaması yeterli. Hibrit savaşı anlaması için bir simülasyon deneyimi, bin sayfa kitaptan etkili.</p><p>Akl-ı Devlet geleneğini yaşatmanın yolu, onu gençlerin diline çevirmektir. Harb-i Strateji Külliyatı bu köprüyü kuruyor.</p>'},
+  sk6:{title:'Orta ve Ortak Nokta',author:'Selahaddin Koyuncu',date:'14 Haziran 2026',body:'<p>Türkiye, coğrafi olarak "orta"da — Doğu ile Batı, Kuzey ile Güney arasında. Ama bu sadece fiziksel bir konum değil, stratejik bir kimlik.</p><p>"Orta" olmak, iki tarafı da anlamak demek. NATO üyesi ama Rusya ile diyalog kurabilen. AB aday adayı ama Şanghay İşbirliği\'ne gözlemci. Batılı ama Doğulu.</p><p>"Ortak nokta" ise farklı: Herkesin buluşabileceği bir zemin sunmak. Tahıl koridoru diplomasisi, Ukrayna-Rusya arabuluculuğu, İsrail-Hamas esir takası — Türkiye\'nin "ortak nokta" rolü.</p><p>Çok kutuplu dünyada bu konum, zayıflık değil güç. "Herkesle konuşabilmek" stratejik bir varlık. Ancak bu dengeyi sürdürmek, olağanüstü bir diplomatik ustalık gerektiriyor.</p>'},
+  sk7:{title:'Bakma Gör',author:'Selahaddin Koyuncu',date:'12 Haziran 2026',body:'<p>"Bakmak" ile "görmek" arasındaki fark, strateji ile taktik arasındaki fark kadardır. Herkes bakar, az kişi görür.</p><p>İstihbarat analizi tam da bu beceridir: Veri yığınları arasından anlam çıkarmak, pattern\'leri tespit etmek, geleceği öngörmek.</p><p>Açık kaynak istihbaratı (OSINT) çağında herkes "bakabilir" — uydu görüntüleri, sosyal medya, ticaret verileri açık. Ama "görmek" için analitik çerçeve, tarihsel perspektif ve stratejik sezgi gerekir.</p><p>Gençlerimize "bakmayı" değil "görmeyi" öğretmeliyiz. Bir haberin arkasındaki aktörleri, bir krizin olası senaryolarını, bir trendin stratejik sonuçlarını görebilen nesiller yetiştirmeliyiz.</p>'},
+  sk8:{title:'Gazzeli',author:'Selahaddin Koyuncu',date:'10 Haziran 2026',body:'<p>Gazze — 365 km²\'lik bir alanda 2.3 milyon insanın yaşadığı, dünyanın en yoğun nüfuslu bölgelerinden biri. Ve şimdi bir insanlık trajedisinin merkezi.</p><p>Medeniyet perspektifinden bakıldığında Gazze, modern dünyanın ahlaki iflasının sembolüdür. Uluslararası hukuk, BM kararları, insani hukuk — hepsi kağıt üzerinde kaldı.</p><p>Türkiye\'nin tutumu net: İnsani yardım, diplomatik baskı, uluslararası hukuk vurgusu. Mavi Marmara\'dan bugüne tutarlı bir çizgi.</p><p>Ancak tutarlılık yetmez — etkinlik gerekir. Türkiye\'nin bölgesel gücünü, diplomatik ağırlığını ve uluslararası platformlardaki sesini daha etkili kullanması gerekiyor.</p><p>Gazze meselesi sadece Filistin\'in değil, insanlığın meselesidir. Ve insanlık sınavından geçemeyen bir medeniyet, medeniyet adını hak etmez.</p>'}
+};
+
+function filterArticles(cat){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.article-item').forEach(item=>{
+    if(cat==='all'){item.style.display='flex';return}
+    const author=item.dataset.author;
+    const itemCat=item.dataset.cat;
+    item.style.display=(author===cat||itemCat===cat)?'flex':'none';
+  });
+}
+
+function openArticle(id){
+  const a=articles[id];
+  if(!a) return;
+  document.getElementById('modalTitle').textContent=a.title;
+  document.getElementById('modalMeta').textContent=a.author+' · '+a.date;
+  document.getElementById('modalBody').innerHTML=a.body;
+  document.getElementById('modal').style.display='block';
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('modal').style.display='none';
+  document.body.style.overflow='auto';
+}
+
+document.getElementById('modal').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

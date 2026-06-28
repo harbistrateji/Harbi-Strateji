@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Plazma <em>Körlüğü</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Plazma <em>Körlüğü</em></h1>
+  <p class="lead">Hipersonik araçların plazma kılıfı iletişim kesintisi simülasyonu — Mach hızı ve irtifa parametreleriyle RF sinyal kaybını modelleyin.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">Mach 25</span><span class="lbl">Maks Hız</span></div><div class="hero-stat"><span class="num">80km</span><span class="lbl">İrtifa</span></div><div class="hero-stat"><span class="num">30s</span><span class="lbl">Karartma</span></div><div class="hero-stat"><span class="num">4</span><span class="lbl">Frekans</span></div></div>
+</header>
+
+<main class="sim-content">
+
+        
+        
+        <!-- GİRİŞ -->
+        <div id="intro-panel" class="panel">
+            <div class="panel-title">📋 BRİFİNG</div>
+            <div class="info-card">
+                <h4>Görev</h4>
+                <p>Siz bir hava savunma radar operatörüsünüz. İran'ın Fattah-1 hipersonik füzesi Mach 13 hızıyla yaklaşıyor. Füze bu hızda atmosfere girdiğinde etrafında iyonize plazma kılıfı oluşur ve radar sinyallerinizi bloke eder.</p>
+            </div>
+            <div class="info-card">
+                <h4>Zorluk</h4>
+                <p>İnsan biliş döngüsü: 10-30 saniye. Hipersonik füzenin tespit-çarpma süresi: 8-15 saniye. OODA-X paradigması: İnsan hızı yetersiz.</p>
+            </div>
+            <div class="formula-box">
+                <strong>Plazma Yoğunluğu:</strong> n_e = 10¹² – 10¹⁵ m⁻³<br>
+                <strong>Radar Karartma Eşiği:</strong> n_e > 10¹³ m⁻³ → Sinyal kaybı<br>
+                <strong>Karar Penceresi:</strong> t_decision < 15 saniye (Mach 13 @ 500km)
+            </div>
+            <button class="btn btn-primary" onclick="startPlasma()">⚡ SİMÜLASYONU BAŞLAT</button>
+        </div>
+        
+        <!-- SİMÜLASYON -->
+        <div id="sim-panel" class="panel hidden">
+            <div class="panel-title">📡 RADAR EKRANI - <span id="sim-status">Tarama Aktif</span></div>
+            
+            <div class="radar-display" id="radar-display">
+                <div class="radar-scanline"></div>
+                <div class="radar-noise"></div>
+                <div class="missile-track" id="missile-track" style="left:0; top:45%; width:0;"></div>
+                <div class="plasma-effect" id="plasma-effect"></div>
+                <div class="static-noise" id="static-noise"></div>
+            </div>
+            
+            <div class="speed-gauge">
+                <span style="font-size:0.8em; color:#8899aa;">HIZ:</span>
+                <div class="speed-bar"><div class="speed-fill" id="speed-fill" style="width:0%"></div></div>
+                <span class="speed-label" id="speed-label">Mach 0</span>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <span style="font-size:0.8em; color:#8899aa;">Plazma Yoğunluğu:</span>
+                    <span id="plasma-density" style="color:#ff9a3c; font-weight:bold;">0 m⁻³</span>
+                </div>
+                <div class="timer-ring" id="timer-ring">
+                    <svg width="120" height="120">
+                        <circle class="timer-bg" cx="60" cy="60" r="54"></circle>
+                        <circle class="timer-fg" id="timer-circle" cx="60" cy="60" r="54"></circle>
+                    </svg>
+                    <div class="timer-text" id="timer-text">15</div>
+                </div>
+                <div>
+                    <span style="font-size:0.8em; color:#8899aa;">Radar Durumu:</span>
+                    <span id="radar-status" style="color:#00C48C; font-weight:bold;">AKTİF</span>
+                </div>
+            </div>
+            
+            <div id="decision-area" class="hidden">
+                <p style="text-align:center; color:#ff3a4a; font-weight:bold; margin-bottom:10px;">⚠️ KARAR VERİN! Süre doluyor!</p>
+                <div class="decision-grid">
+                    <div class="decision-btn" onclick="makeDecision('patriot')">🚀 Patriot Fırlat<br><small>Klasik önleme</small></div>
+                    <div class="decision-btn" onclick="makeDecision('thaad')">🛡️ THAAD Aktifle<br><small>Yüksek irtifa</small></div>
+                    <div class="decision-btn" onclick="makeDecision('ew')">📡 EH Karıştırma<br><small>Sinyal bozma</small></div>
+                    <div class="decision-btn" onclick="makeDecision('evade')">🏃 Tahliye Emri<br><small>Sivil koruma</small></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SONUÇ -->
+        <div id="result-panel" class="panel hidden">
+            <div class="panel-title" id="result-title">📊 SONUÇ</div>
+            <div id="result-body"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        let simState = { phase: 0, timer: 15, interval: null, missilePos: 0, speed: 0, plasmaActive: false, decisionMade: false, round: 0 };
+        
+        const rounds = [
+            { speed: 5, plasma: false, time: 20, desc: 'Cruise Füze (Mach 5) - Plazma yok' },
+            { speed: 8, plasma: true, time: 12, desc: 'Fattah-1 (Mach 8) - Hafif plazma' },
+            { speed: 13, plasma: true, time: 8, desc: 'Fattah-2 (Mach 13) - Tam plazma karartması' }
+        ];
+        
+        function startPlasma() {
+            document.getElementById('intro-panel').classList.add('hidden');
+            document.getElementById('sim-panel').classList.remove('hidden');
+            simState.round = 0;
+            startRound();
+        }
+        
+        function startRound() {
+            const round = rounds[simState.round];
+            simState.timer = round.time;
+            simState.missilePos = 0;
+            simState.speed = 0;
+            simState.plasmaActive = false;
+            simState.decisionMade = false;
+            
+            document.getElementById('sim-status').textContent = `Rount ${simState.round + 1}/3: ${round.desc}`;
+            document.getElementById('decision-area').classList.add('hidden');
+            document.getElementById('timer-text').textContent = round.time;
+            document.getElementById('timer-circle').style.strokeDashoffset = '0';
+            document.getElementById('timer-circle').style.stroke = '#00C48C';
+            document.getElementById('plasma-effect').style.background = 'rgba(255,100,0,0)';
+            document.getElementById('static-noise').style.opacity = '0';
+            document.getElementById('radar-status').textContent = 'AKTİF';
+            document.getElementById('radar-status').style.color = '#00C48C';
+            document.getElementById('missile-track').style.width = '0';
+            document.getElementById('speed-fill').style.width = '0%';
+            document.getElementById('speed-label').textContent = 'Mach 0';
+            document.getElementById('plasma-density').textContent = '0 m⁻³';
+            
+            // Animasyon başlat
+            let elapsed = 0;
+            const totalTime = round.time;
+            const circumference = 339.292;
+            
+            simState.interval = setInterval(() => {
+                elapsed += 0.1;
+                let progress = elapsed / totalTime;
+                
+                // Füze hareketi
+                simState.missilePos = progress * 100;
+                document.getElementById('missile-track').style.width = simState.missilePos + '%';
+                
+                // Hız artışı
+                simState.speed = round.speed * Math.min(progress * 1.5, 1);
+                document.getElementById('speed-fill').style.width = (simState.speed / 15 * 100) + '%';
+                document.getElementById('speed-label').textContent = `Mach ${simState.speed.toFixed(1)}`;
+                
+                // Plazma etkisi
+                if (round.plasma && progress > 0.3) {
+                    let plasmaIntensity = (progress - 0.3) / 0.7;
+                    let density = (plasmaIntensity * 1e15).toExponential(1);
+                    document.getElementById('plasma-density').textContent = density + ' m⁻³';
+                    document.getElementById('plasma-effect').style.background = `rgba(255,100,0,${plasmaIntensity * 0.4})`;
+                    document.getElementById('static-noise').style.opacity = plasmaIntensity * 0.8;
+                    
+                    if (plasmaIntensity > 0.5) {
+                        document.getElementById('radar-status').textContent = 'KARARTMA!';
+                        document.getElementById('radar-status').style.color = '#ff3a4a';
+                        simState.plasmaActive = true;
+                    }
+                }
+                
+                // Zamanlayıcı
+                let remaining = Math.max(0, totalTime - elapsed);
+                document.getElementById('timer-text').textContent = Math.ceil(remaining);
+                document.getElementById('timer-circle').style.strokeDashoffset = (progress * circumference) + '';
+                
+                if (remaining < 5) {
+                    document.getElementById('timer-circle').style.stroke = '#ff3a4a';
+                } else if (remaining < 10) {
+                    document.getElementById('timer-circle').style.stroke = '#ff9a3c';
+                }
+                
+                // Karar penceresi
+                if (progress > 0.4 && !simState.decisionMade) {
+                    document.getElementById('decision-area').classList.remove('hidden');
+                }
+                
+                // Süre doldu
+                if (elapsed >= totalTime) {
+                    clearInterval(simState.interval);
+                    if (!simState.decisionMade) {
+                        timeOut();
+                    }
+                }
+            }, 100);
+        }
+        
+        function makeDecision(choice) {
+            if (simState.decisionMade) return;
+            simState.decisionMade = true;
+            clearInterval(simState.interval);
+            
+            const round = rounds[simState.round];
+            let success = false;
+            let feedback = '';
+            
+            if (round.speed <= 5) {
+                // Klasik füze - Patriot veya THAAD çalışır
+                if (choice === 'patriot' || choice === 'thaad') {
+                    success = true;
+                    feedback = 'Mach 5 hızında klasik önleme başarılı. Radar aktif, karar süresi yeterli.';
+                } else {
+                    feedback = 'Klasik füzeye karşı kinetik önleme en etkili yöntemdi.';
+                }
+            } else if (round.speed <= 8) {
+                // Orta hipersonik - THAAD kısmen çalışır
+                if (choice === 'thaad') {
+                    success = Math.random() > 0.4;
+                    feedback = success ? 'THAAD yüksek irtifada yakaladı (%60 şans).' : 'Plazma karartması nedeniyle izleme kaybedildi. THAAD ıskaladı.';
+                } else if (choice === 'ew') {
+                    feedback = 'EH karıştırma hipersonik füzelere etkisiz - kendi inertial navigasyonu var.';
+                } else if (choice === 'evade') {
+                    success = true;
+                    feedback = 'Tahliye emri doğru karar. Önleme şansı düşükken sivil koruma öncelikli.';
+                } else {
+                    feedback = 'Patriot, Mach 8 hedefe karşı kinematik olarak yetersiz.';
+                }
+            } else {
+                // Mach 13 - Hiçbir şey çalışmaz
+                if (choice === 'evade') {
+                    success = true;
+                    feedback = 'Doğru karar! Mach 13 hızında hiçbir mevcut sistem önleme yapamaz. Tahliye tek seçenek.';
+                } else {
+                    feedback = `Mach 13 + tam plazma karartması. ${choice === 'patriot' ? 'Patriot' : choice === 'thaad' ? 'THAAD' : 'EH sistemi'} etkisiz. Füze hedefe ulaştı. İnsan karar hızı (${rounds[2].time}s) yetersiz kaldı.`;
+                }
+            }
+            
+            // Buton rengini güncelle
+            document.querySelectorAll('.decision-btn').forEach(btn => {
+                if (btn.onclick.toString().includes(choice)) {
+                    btn.classList.add(success ? 'correct' : 'wrong');
+                }
+            });
+            
+            setTimeout(() => {
+                simState.round++;
+                if (simState.round < rounds.length) {
+                    alert(`${success ? '✅' : '❌'} ${feedback}\n\nSonraki: ${rounds[simState.round].desc}`);
+                    startRound();
+                } else {
+                    showFinalResult(success, feedback);
+                }
+            }, 1500);
+        }
+        
+        function timeOut() {
+            simState.decisionMade = true;
+            document.querySelectorAll('.decision-btn').forEach(btn => btn.classList.add('wrong'));
+            
+            setTimeout(() => {
+                simState.round++;
+                if (simState.round < rounds.length) {
+                    alert(`⏰ SÜRE DOLDU! Karar veremeddiniz. Füze hedefe ulaştı.\n\nSonraki: ${rounds[simState.round].desc}`);
+                    startRound();
+                } else {
+                    showFinalResult(false, 'Süre doldu - insan biliş döngüsü yetersiz.');
+                }
+            }, 1000);
+        }
+        
+        function showFinalResult(lastSuccess, lastFeedback) {
+            document.getElementById('sim-panel').classList.add('hidden');
+            document.getElementById('result-panel').classList.remove('hidden');
+            
+            document.getElementById('result-title').textContent = '📊 OODA-X ANALİZİ: İNSAN vs MAKİNE';
+            document.getElementById('result-body').innerHTML = `
+                <div class="info-card">
+                    <h4>🔑 Ana Bulgu</h4>
+                    <p>Hipersonik füzeler (Mach 8+), insan karar döngüsünü (OODA) aşar. Plazma karartması radar körlüğü yaratır. Bu iki faktör birleştiğinde, mevcut hava savunma sistemleri yapısal olarak yetersiz kalır.</p>
+                </div>
+                
+                <div class="formula-box">
+                    <strong>OODA-X Denklemi:</strong><br>
+                    t_human = 10-30 saniye (Gözlem → Karar)<br>
+                    t_missile = d / (v × 340) saniye<br>
+                    Mach 13 @ 500km: t_missile ≈ 8 saniye<br>
+                    <strong>t_missile < t_human → İNSAN YETERSİZ</strong>
+                </div>
+                
+                <div class="info-card">
+                    <h4>🎯 Trump Paradoksu Bağlantısı</h4>
+                    <p>Trump "yarın biter" derken, İran'ın hipersonik kapasitesinin yarattığı OODA-X krizini göz ardı etmektedir. Savaşı "bitirmek" için önce bu fiziksel sınırı aşmak gerekir - ki bu mevcut teknolojiyle mümkün değildir.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h4>💡 Koyuncu Çözüm Önerisi</h4>
+                    <p><strong>1. Sol Kaydırma (Left of Launch):</strong> Füzeyi fırlatılmadan önce vurmak.<br>
+                    <strong>2. Otonom Karar:</strong> İnsan döngüsünü çıkarıp AI'ya devretmek (etik sorunlar).<br>
+                    <strong>3. Yönlendirilmiş Enerji:</strong> Lazer/mikrodalga silahları (henüz operasyonel değil).<br>
+                    <strong>4. Bilişsel Katman:</strong> Savaşı fiziksel değil diplomatik alanda bitirmek.</p>
+                </div>
+                
+                <button class="btn btn-primary" onclick="location.reload()">🔄 YENİDEN DENE</button>
+                <button class="btn btn-secondary" onclick="window.location='index.html'">← ANA MENÜ</button>
+            `;
+        }
+    
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

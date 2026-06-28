@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harb-i Strateji — Y Kuşağı (25-40)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: #0a0f17;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0a0f17 100%);
+            border-bottom: 3px solid #00E0FF;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .breaking-news {
+            background: linear-gradient(135deg, #E01515 0%, #C01010 100%);
+            color: white;
+            padding: 10px 15px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        
+        .nav a {
+            color: #00E0FF;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .nav a:hover {
+            background: rgba(0, 224, 255, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+            border: 1px solid #00E0FF;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 224, 255, 0.1);
+        }
+        
+        .hero h1 {
+            font-size: 2em;
+            margin-bottom: 12px;
+            color: #00E0FF;
+        }
+        
+        .hero p {
+            font-size: 1em;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: #1a1f2e;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            border-color: #00E0FF;
+            background: #1f2530;
+            box-shadow: 0 0 15px rgba(0, 224, 255, 0.2);
+        }
+        
+        .card h3 {
+            color: #00E0FF;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .card p {
+            color: #b0b0b0;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+        
+        .card-tag {
+            display: inline-block;
+            background: rgba(0, 224, 255, 0.1);
+            color: #00E0FF;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+        
+        .footer {
+            background: #0a0f17;
+            border-top: 1px solid #333;
+            padding: 20px;
+            margin-top: 30px;
+            color: #666;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .hero { padding: 20px; }
+            .hero h1 { font-size: 1.5em; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+    <div class="header">
+        <div class="breaking-news">🔴 CANLI: Sistem Savaşları — Petrodolar Çöküşü</div>
+        <div class="nav">
+            <a href="#">Teknoloji Haritası</a>
+            <a href="#">Sistem Savaşları</a>
+            <a href="#">Ekonomi & Jeopolitik</a>
+            <a href="#">İnteraktif Analiz</a>
+            <a href="#">Podcast</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="hero">
+            <h1>Sistem Savaşları: Finansal Hegemonya Çöküşü</h1>
+            <p>ABD Dolarının Gücü, Kripto Para Devrim ve Yeni Dünya Düzeni</p>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>💰 Petrodolar Sistemi</h3>
+                <p>SWIFT alternatiflerinin yükselişi ve finansal bağımsızlık mücadelesi.</p>
+                <div>
+                    <span class="card-tag">Ekonomi</span>
+                    <span class="card-tag">Jeopolitik</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>🔗 Blockchain & Kripto</h3>
+                <p>Merkez Bankası Dijital Para (CBDC) ve yeni finansal sistemin temelleri.</p>
+                <div>
+                    <span class="card-tag">Teknoloji</span>
+                    <span class="card-tag">Finans</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>🌐 Küresel Sistem</h3>
+                <p>Çok-kutuplu dünya düzeni ve yeni ekonomik bloklar.</p>
+                <div>
+                    <span class="card-tag">Strateji</span>
+                    <span class="card-tag">Analiz</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2026 Harb-i Strateji. Teknoloji ve Strateji Analizi.</p>
+    </div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

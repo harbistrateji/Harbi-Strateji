@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Silah Mühendisleri — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root {--pri:#e91e63;--sec:#3f51b5;--bg:#0a0f17;--text:#e8e6e3;}
+body {font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;overflow-x:hidden;}
+.hero {text-align:center;padding:80px 20px 40px;background:linear-gradient(180deg,rgba(10,15,23,0.9),var(--bg)),radial-gradient(ellipse at 50% 0%,#e91e6322,transparent 70%);position:relative;}
+.hero::after {content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#e91e6360,transparent);}
+.hero .badge {display:inline-block;border:1px solid var(--pri);color:var(--pri);padding:4px 16px;border-radius:20px;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;animation:pulse 2s infinite;}
+.hero h1 {font-family:'Chakra Petch',sans-serif;font-size:clamp(1.8rem,5vw,3rem);margin:0 0 12px;}
+.hero h1 span {color:var(--pri);}
+.hero p {max-width:700px;margin:0 auto;opacity:0.8;line-height:1.7;}
+.audio-btn {position:fixed;top:80px;right:20px;z-index:100;background:var(--pri);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px #e91e6340;}
+.stats {display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:30px 20px;}
+.stat {text-align:center;}
+.stat-val {display:block;font-family:'Chakra Petch',sans-serif;font-size:1.8rem;color:var(--pri);font-weight:700;}
+.stat-label {font-size:0.75rem;opacity:0.6;text-transform:uppercase;letter-spacing:1px;}
+.scenes {max-width:900px;margin:0 auto;padding:0 20px 60px;}
+.scene {display:flex;gap:20px;padding:24px;margin:16px 0;border:1px solid #ffffff10;border-radius:12px;background:#ffffff05;animation:fadeUp 0.6s ease both;transition:all 0.3s;}
+.scene:hover {border-color:var(--pri);background:#ffffff08;transform:translateX(8px);}
+.scene-icon {font-size:2rem;min-width:48px;text-align:center;padding-top:4px;}
+.scene-content h3 {margin:0 0 8px;font-family:'Chakra Petch',sans-serif;font-size:1.1rem;}
+.scene-content p {margin:0 0 12px;opacity:0.8;line-height:1.7;font-size:0.95rem;}
+.tags {display:flex;flex-wrap:wrap;gap:6px;}
+.tag {background:#e91e6315;border:1px solid #e91e6340;color:var(--pri);padding:3px 10px;border-radius:4px;font-size:0.7rem;font-family:'IBM Plex Mono',monospace;}
+.source {text-align:center;padding:40px 20px;opacity:0.5;font-size:0.8rem;border-top:1px solid #ffffff10;}
+.timeline-bar {position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,#e91e63,#3f51b5);width:0;z-index:999;transition:width 0.3s;}
+@keyframes fadeUp {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse {0%,100%{opacity:1}50%{opacity:0.5}}
+@media(max-width:600px){.scene{flex-direction:column;gap:8px;}.stats{gap:20px;}.audio-btn{top:70px;right:10px;width:36px;height:36px;font-size:1rem;}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="timeline-bar" id="tbar"></div>
+<script src="hs-nav.js?v=11"></script>
+<button class="audio-btn" id="audioBtn" title="Ses Aç/Kapat">🔊</button>
+<div class="hero">
+  <span class="badge">Biyografi · Teknoloji · İnovasyon</span>
+  <h1><span>Silah Mühendisleri</span></h1>
+  <p>Tarihte Savaş Teknolojisini Değiştiren 8 Deha: Kallinikos'tan Oppenheimer'a</p>
+</div>
+<div class="stats"><div class="stat"><span class="stat-val">8</span><span class="stat-label">Deha</span></div><div class="stat"><span class="stat-val">1400</span><span class="stat-label">Yıllık Süreç</span></div><div class="stat"><span class="stat-val">100M+</span><span class="stat-label">AK-47 Üretim</span></div><div class="stat"><span class="stat-val">355</span><span class="stat-label">Nobel Patenti</span></div></div>
+<div class="scenes">
+    <div class="scene" style="animation-delay:0.15s">
+      <div class="scene-icon">🔥</div>
+      <div class="scene-content">
+        <h3>Kallinikos (7. yy) — Grek Ateşi</h3>
+        <p>Suriyeli mühendis. Baalbek (Lübnan) doğumlu. 671'de Bizans İmparatoru'na sığınarak sıvı ateş formülünü sundu. Bu silah 7 yüzyıl boyunca İstanbul'u Arap kuşatmalarından korudu. Formül o kadar gizli tutuldu ki bugün bile tam bileşimi tartışmalı.</p>
+        <div class="tags"><span class="tag">671</span><span class="tag">Bizans</span><span class="tag">Gizli Formül</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.3s">
+      <div class="scene-icon">📖</div>
+      <div class="scene-content">
+        <h3>Hasan el-Rammah (ö. 1295) — Barut Ustası</h3>
+        <p>Suriyeli kimyager ve askeri mühendis. Kitab el-Furusiyye: 107 barut formülü, 22 roket tasarımı, torpido, patlayıcı ok. Dünyada ilk kez roket yakıtı oranlarını matematiksel olarak hesapladı.</p>
+        <div class="tags"><span class="tag">1295</span><span class="tag">İslam</span><span class="tag">Roket</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.44999999999999996s">
+      <div class="scene-icon">🎨</div>
+      <div class="scene-content">
+        <h3>Leonardo da Vinci (1452-1519) — Savaş Makineleri</h3>
+        <p>Tank, helikopter, makineli tüfek, zırhlı araç tasarımları. Çoğu zamanının 400 yıl ilerisindeydi. Milano Dükü Ludovico Sforza için çalıştı. Codex Atlanticus'ta 200+ askeri tasarım.</p>
+        <div class="tags"><span class="tag">1500</span><span class="tag">Rönesans</span><span class="tag">Tasarım</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.6s">
+      <div class="scene-icon">🏭</div>
+      <div class="scene-content">
+        <h3>Alfred Krupp (1812-1887) — Çelik İmparatoru</h3>
+        <p>Krupp ailesi 400 yıl boyunca Avrupa'nın silah tedarikçisi. Döküm çelik top: daha hafif, daha dayanıklı, daha uzun menzil. I. Dünya Savaşı'nda 'Büyük Berta' topu. Essen fabrikası 70.000 işçi.</p>
+        <div class="tags"><span class="tag">Krupp</span><span class="tag">Çelik</span><span class="tag">Almanya</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.75s">
+      <div class="scene-icon">💣</div>
+      <div class="scene-content">
+        <h3>Alfred Nobel (1833-1896) — Dinamit</h3>
+        <p>İsveçli kimyager. Nitrogliserini güvenli hale getirdi. 355 patent. 90 fabrika. Balistit (dumansız barut). Ölüm ilanında 'ölüm taciri' yazılınca Nobel Ödülleri'ni kurdu. Savaş ve barış paradoksu.</p>
+        <div class="tags"><span class="tag">1867</span><span class="tag">Dinamit</span><span class="tag">Barış Ödülü</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.8999999999999999s">
+      <div class="scene-icon">🚀</div>
+      <div class="scene-content">
+        <h3>Wernher von Braun (1912-1977) — Roket Bilimi</h3>
+        <p>Nazi Almanyası'nda V-2 roketini geliştirdi. 3.000+ Londra'ya düştü. Savaş sonrası ABD'ye götürüldü. Saturn V roketiyle insanı Ay'a taşıdı. Savaş silahından uzay aracına dönüşüm.</p>
+        <div class="tags"><span class="tag">V-2</span><span class="tag">NASA</span><span class="tag">Ay</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:1.05s">
+      <div class="scene-icon">☢</div>
+      <div class="scene-content">
+        <h3>Robert Oppenheimer (1904-1967) — Atom Bombası</h3>
+        <p>Manhattan Projesi bilimsel direktörü. 'Şimdi ben ölümün ta kendisi oldum, dünyaların yıkıcısı.' Trinity testi: 16 Temmuz 1945. Hiroşima: 6 Ağustos. Sonra nükleer silahlanmaya karşı çıktı.</p>
+        <div class="tags"><span class="tag">1945</span><span class="tag">Nükleer</span><span class="tag">ABD</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:1.2s">
+      <div class="scene-icon">🤖</div>
+      <div class="scene-content">
+        <h3>Mikhail Kalaşnikov (1919-2013) — AK-47</h3>
+        <p>Sovyet tank komutanı. Yaralandıktan sonra silah tasarımına başladı. AK-47: dünyanın en çok üretilen silahı (100 milyon+). Basit, dayanıklı, ucuz. 106 ülke ordusunda. Kalaşnikov: 'Keşke çim biçme makinesi yapsaydım.'</p>
+        <div class="tags"><span class="tag">1947</span><span class="tag">Sovyet</span><span class="tag">Küresel</span></div>
+      </div>
+    </div>
+</div>
+<div class="source">Kaynak: Prof. Dr. Zeki Tez, 2010 · J.R. Partington · Harb-i Strateji Külliyatı</div>
+<script>
+// Scroll progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('tbar').style.width=(window.scrollY/h*100)+'%';
+});
+// Audio
+const AudioContext=window.AudioContext||window.webkitAudioContext;
+let actx,playing=false;
+function playAmbient(){
+  if(!actx) actx=new AudioContext();
+  const osc=actx.createOscillator();
+  const gain=actx.createGain();
+  osc.type='sine';osc.frequency.value=110;
+  gain.gain.value=0.03;
+  osc.connect(gain);gain.connect(actx.destination);
+  osc.start();playing=true;
+  setTimeout(()=>{osc.stop();playing=false;},8000);
+}
+document.getElementById('audioBtn').onclick=()=>{if(!playing) playAmbient();};
+</script>
+</body>
+</html>

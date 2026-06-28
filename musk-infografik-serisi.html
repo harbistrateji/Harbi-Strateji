@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elon Musk: Stratejik Analiz — İnfografik Serisi | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#c41e3a;--bg:#0a0f17;--card:#111827;--text:#e5e7eb;--gold:#c9a84c;--cyan:#00e0ff}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.6}
+.hero{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);color:#fff;margin-bottom:.5rem}
+.hero h1 span{color:var(--red)}
+.hero p{color:#9ca3af;max-width:700px;margin:0 auto;font-size:.95rem}
+.hero .badge{display:inline-block;background:var(--red);color:#fff;padding:.3rem .8rem;border-radius:4px;font-size:.7rem;font-weight:700;margin-bottom:1rem;letter-spacing:1px}
+.stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
+.stats div{text-align:center}
+.stats div strong{display:block;font-size:1.5rem;color:#fff}
+.stats div span{font-size:.7rem;color:#6b7280;text-transform:uppercase;letter-spacing:1px}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+.section-title{font-family:'Playfair Display',serif;font-size:1.5rem;color:#fff;margin-bottom:1.5rem;padding-bottom:.5rem;border-bottom:2px solid var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-bottom:3rem}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;transition:all .3s;cursor:pointer;position:relative}
+.card:hover{transform:translateY(-4px);border-color:var(--red);box-shadow:0 12px 40px rgba(196,30,58,.15)}
+.card img{width:100%;height:200px;object-fit:cover;display:block;transition:transform .3s}
+.card:hover img{transform:scale(1.03)}
+.card .info{padding:1rem}
+.card .info h3{font-size:.9rem;color:#fff;margin-bottom:.3rem}
+.card .info p{font-size:.75rem;color:#9ca3af}
+.card .lang-badge{position:absolute;top:.5rem;right:.5rem;background:rgba(0,0,0,.7);color:var(--cyan);padding:.2rem .5rem;border-radius:4px;font-size:.6rem;font-weight:700;backdrop-filter:blur(4px)}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;justify-content:center;align-items:center;padding:1rem}
+.lightbox.active{display:flex}
+.lightbox img{max-width:95vw;max-height:90vh;border-radius:8px;box-shadow:0 0 60px rgba(196,30,58,.3)}
+.lightbox .close{position:absolute;top:1rem;right:1.5rem;color:#fff;font-size:2rem;cursor:pointer;z-index:10000}
+.article-link{display:inline-flex;align-items:center;gap:.5rem;background:var(--red);color:#fff;padding:.6rem 1.2rem;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600;margin-top:1rem;transition:all .3s}
+.article-link:hover{background:#a01530;transform:translateX(4px)}
+@media(max-width:600px){.grid{grid-template-columns:1fr 1fr}.card img{height:140px}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="hero">
+<span class="badge">MAKALE SERİSİ — İNFOGRAFİK</span>
+<h1>Elon Musk: <span>Stratejik Analiz</span></h1>
+<p>Musk'ın teknoloji ekosisteminden jeopolitik hakimiyetine, askerî bağlantılarından bilişsel savaş stratejilerine kadar kapsamlı infografik serisi.</p>
+<div class="stats">
+<div><strong>16</strong><span>İnfografik</span></div>
+<div><strong>12</strong><span>Türkçe</span></div>
+<div><strong>4</strong><span>İngilizce</span></div>
+<div><strong>8</strong><span>Kategori</span></div>
+</div>
+</div>
+
+<div class="container">
+<h2 class="section-title">Türkçe İnfografikler</h2>
+<div class="grid">
+<div class="card" onclick="openLightbox('musk-tekno-ekosistem-TR.png')">
+<img src="musk-tekno-ekosistem-TR.png" alt="Musk Tekno Ekosistem" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Tekno Ekosistem</h3><p>Tesla, SpaceX, Neuralink, xAI — bütünleşik teknoloji imparatorluğu</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-jeopolitik-hakimiyet-TR.png')">
+<img src="musk-jeopolitik-hakimiyet-TR.png" alt="Jeopolitik Hakimiyet" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Jeopolitik Hakimiyet</h3><p>Starlink, uzay üstünlüğü ve küresel güç projeksiyonu</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-askeri-ekosistem-TR.png')">
+<img src="musk-askeri-ekosistem-TR.png" alt="Askerî Ekosistem" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Askerî Ekosistem</h3><p>Pentagon bağlantıları, savunma sözleşmeleri, uzay kuvvetleri</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-bilissel-savas-TR.png')">
+<img src="musk-bilissel-savas-TR.png" alt="Bilişsel Savaş" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Bilişsel Savaş</h3><p>X platformu, algı yönetimi, dezenformasyon silahı</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-3-asama-vizyon-TR.png')">
+<img src="musk-3-asama-vizyon-TR.png" alt="3 Aşama Vizyon" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>3 Aşamalı Vizyon</h3><p>Dünya → Mars → Çok-gezegenli medeniyet yol haritası</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-disruptor-biyografi-TR.png')">
+<img src="musk-disruptor-biyografi-TR.png" alt="Disruptor Biyografi" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Disruptor Biyografi</h3><p>PayPal'dan SpaceX'e — yıkıcı inovasyon kronolojisi</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-harcanabilir-ordular-TR.png')">
+<img src="musk-harcanabilir-ordular-TR.png" alt="Harcanabilir Ordular" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Harcanabilir Ordular</h3><p>Otonom sistemler, robot ordular, insansız savaş konsepti</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-medeniyet-isletim-sistemi-TR.png')">
+<img src="musk-medeniyet-isletim-sistemi-TR.png" alt="Medeniyet İşletim Sistemi" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Medeniyet İşletim Sistemi</h3><p>Altyapı kontrolü: enerji, iletişim, ulaşım, yapay zekâ</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-orbital-compute-TR.png')">
+<img src="musk-orbital-compute-TR.png" alt="Orbital Compute" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Orbital Hesaplama</h3><p>Uzay tabanlı veri merkezleri ve yörünge bilişimi</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-savas-kurallari-TR.png')">
+<img src="musk-savas-kurallari-TR.png" alt="Savaş Kuralları" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Savaşın Yeni Kuralları</h3><p>Musk çağında değişen savaş paradigmaları</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-siyasi-analiz-TR.png')">
+<img src="musk-siyasi-analiz-TR.png" alt="Siyasi Analiz" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Siyasi Analiz</h3><p>DOGE, Trump ilişkisi, siyasi etki ağı</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-veri-imparatorlugu-TR.png')">
+<img src="musk-veri-imparatorlugu-TR.png" alt="Veri İmparatorluğu" loading="lazy">
+<span class="lang-badge">TR</span>
+<div class="info"><h3>Veri İmparatorluğu</h3><p>X, Grok, xAI — küresel veri toplama ve YZ eğitimi</p></div>
+</div>
+</div>
+
+<h2 class="section-title">English Infographics</h2>
+<div class="grid">
+<div class="card" onclick="openLightbox('musk-techno-ecosystem-EN.png')">
+<img src="musk-techno-ecosystem-EN.png" alt="Techno Ecosystem" loading="lazy">
+<span class="lang-badge">EN</span>
+<div class="info"><h3>Techno Ecosystem</h3><p>Tesla, SpaceX, Neuralink, xAI — integrated tech empire</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-geopolitical-dominance-EN.png')">
+<img src="musk-geopolitical-dominance-EN.png" alt="Geopolitical Dominance" loading="lazy">
+<span class="lang-badge">EN</span>
+<div class="info"><h3>Geopolitical Dominance</h3><p>Starlink, space supremacy, global power projection</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-military-ecosystem-EN.png')">
+<img src="musk-military-ecosystem-EN.png" alt="Military Ecosystem" loading="lazy">
+<span class="lang-badge">EN</span>
+<div class="info"><h3>Military Ecosystem</h3><p>Pentagon contracts, defense integration, Space Force</p></div>
+</div>
+<div class="card" onclick="openLightbox('musk-3-phase-vision-EN.png')">
+<img src="musk-3-phase-vision-EN.png" alt="3-Phase Vision" loading="lazy">
+<span class="lang-badge">EN</span>
+<div class="info"><h3>3-Phase Vision</h3><p>Earth → Mars → Multi-planetary civilization roadmap</p></div>
+</div>
+</div>
+
+<a href="index.html" class="article-link">← Ana Sayfaya Dön</a>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+<span class="close">&times;</span>
+<img id="lightboxImg" src="" alt="İnfografik">
+</div>
+
+<script>
+function openLightbox(src){
+  document.getElementById('lightboxImg').src=src;
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Türk Savaş Zekâsı — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0f17;color:#eaf0f7;font-family:'Segoe UI',system-ui,sans-serif;touch-action:manipulation;user-select:none}
+#app{width:100%;height:100%;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(10,15,23,.95);border-bottom:1px solid rgba(201,162,75,.3);flex-shrink:0}
+.top a{color:#c9a24b;text-decoration:none;font-size:.85rem;font-weight:600}
+.top .t{font-size:.95rem;font-weight:700;color:#fff}
+.top .s{font-size:.85rem;color:#c9a24b;font-weight:600}
+#gameArea{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+#overlay{position:absolute;inset:0;background:rgba(10,15,23,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;text-align:center;padding:24px}
+#overlay h2{color:#c9a24b;font-size:1.6rem;margin-bottom:12px}
+#overlay p{color:#bbb;font-size:.95rem;margin-bottom:20px;max-width:360px;line-height:1.5}
+#overlay button{padding:14px 36px;border:2px solid #c9a24b;background:transparent;color:#c9a24b;border-radius:8px;font-size:1.05rem;cursor:pointer;font-weight:700;transition:all .2s}
+#overlay button:hover{background:rgba(201,162,75,.15);transform:scale(1.02)}
+.hud{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:500px;margin-bottom:12px;font-size:.85rem}
+.hud span{background:rgba(0,0,0,.5);border:1px solid rgba(201,162,75,.3);border-radius:6px;padding:4px 10px}
+.progress-bar{width:100%;max-width:500px;height:6px;background:rgba(201,162,75,.15);border-radius:3px;margin-bottom:16px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a24b,#f0d78c);border-radius:3px;transition:width .4s ease}
+.question-area{width:100%;max-width:500px;text-align:center}
+.battle-name{color:#c9a24b;font-size:1.2rem;font-weight:700;margin-bottom:10px}
+.question-text{color:#fff;font-size:1rem;margin-bottom:18px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px;width:100%}
+.opt-btn{width:100%;padding:14px 18px;background:rgba(30,58,95,.4);border:1px solid rgba(201,162,75,.25);border-radius:8px;color:#eaf0f7;font-size:.95rem;cursor:pointer;transition:all .2s;text-align:left}
+.opt-btn:hover{background:rgba(30,58,95,.7);border-color:rgba(201,162,75,.5);transform:translateX(4px)}
+.opt-btn.correct{background:rgba(34,139,34,.3)!important;border-color:#2ecc40!important;color:#2ecc40!important}
+.opt-btn.wrong{background:rgba(200,30,30,.3)!important;border-color:#e74c3c!important;color:#e74c3c!important}
+.opt-btn.disabled{pointer-events:none;opacity:.6}
+.info-box{width:100%;max-width:500px;margin-top:16px;padding:14px 18px;background:rgba(201,162,75,.08);border:1px solid rgba(201,162,75,.25);border-radius:8px;display:none;text-align:left}
+.info-box p{color:#c9a24b;font-size:.9rem;line-height:1.5}
+.info-box .info-label{font-weight:700;margin-bottom:4px;display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:1px}
+.next-btn{margin-top:14px;padding:10px 24px;background:rgba(201,162,75,.15);border:1px solid #c9a24b;color:#c9a24b;border-radius:6px;font-size:.9rem;cursor:pointer;font-weight:600;transition:all .2s;display:none}
+.next-btn:hover{background:rgba(201,162,75,.25)}
+.result-box{text-align:center;width:100%;max-width:500px}
+.result-box h2{color:#c9a24b;font-size:1.5rem;margin-bottom:12px}
+.result-box .score-big{font-size:2.5rem;color:#f0d78c;font-weight:700;margin:16px 0}
+.result-box .rank{font-size:1.1rem;color:#aaa;margin-bottom:20px}
+.result-box button{padding:12px 28px;border:2px solid #c9a24b;background:transparent;color:#c9a24b;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:700;margin:6px}
+.result-box button:hover{background:rgba(201,162,75,.15)}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;">
+<a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a>
+<a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+</div>
+<div id="app">
+<div class="top">
+<a href="oza-turk-savas-tarihi-hub.html">← Savaş Tarihi</a>
+<span class="t">⚔️ Türk Savaş Zekâsı</span>
+<span class="s" id="sc">0 / 1200</span>
+</div>
+<div id="gameArea">
+<div id="overlay">
+<h2>⚔️ TÜRK SAVAŞ ZEKÂSI</h2>
+<p>12 büyük Türk savaşında kullanılan taktik ve stratejiyi test et! Her doğru cevap 100 puan. Yanlış cevap 0 puan.</p>
+<button onclick="startGame()">▶ BAŞLA</button>
+</div>
+<div class="hud" id="hud" style="display:none"><span id="h1">Savaş 1/12</span><span id="h2">0 puan</span></div>
+<div class="progress-bar" id="pbar" style="display:none"><div class="progress-fill" id="pfill"></div></div>
+<div class="question-area" id="qarea" style="display:none">
+<div class="battle-name" id="bname"></div>
+<div class="question-text" id="qtxt"></div>
+<div class="options" id="opts"></div>
+</div>
+<div class="info-box" id="infoBox"><span class="info-label">Tarihî Bilgi</span><p id="infoText"></p></div>
+<button class="next-btn" id="nextBtn" onclick="nextQuestion()">Sonraki Soru →</button>
+<div class="result-box" id="resultBox" style="display:none"></div>
+</div>
+</div>
+<script>
+let audioCtx;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playTone(f,d,t){if(!audioCtx)return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t||"square";o.frequency.value=f;g.gain.value=0.06;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d)}catch(e){}}
+
+const BATTLES=[
+  {name:"Malazgirt 1071",q:"Alparslan hangi taktiği uyguladı?",opts:["Hilal (Turan) taktiği","Cepheden taarruz","Deniz ablukası"],correct:0,info:"Sahte geri çekilme ve hilal (turan) taktiği ile Bizans ordusunu çembere aldı."},
+  {name:"Miryokefalon 1176",q:"Selçuklu ordusu hangi avantajı kullandı?",opts:["Dar geçit pusu","Deniz üstünlüğü","Sayısal üstünlük"],correct:0,info:"Tzivritze geçidinde pusu kurarak Bizans ağır süvarisini etkisiz hale getirdi."},
+  {name:"Kosova 1389",q:"Osmanlı ordusunun ana gücü neydi?",opts:["Yeniçeri piyadeleri","Akıncı süvarileri","Top bataryaları"],correct:0,info:"Yeniçeriler merkezi tutarken akıncılar kanatları sardı."},
+  {name:"Varna 1444",q:"II. Murad hangi stratejiyi uyguladı?",opts:["Sahte geri çekilme","Gece baskını","Deniz ablukası"],correct:0,info:"Sahte geri çekilme ile Haçlı şövalyelerini tuzağa düşürdü."},
+  {name:"İstanbul 1453",q:"Fatih'in en yenilikçi taktiği?",opts:["Gemileri karadan yürütme","Tünel kazma","Ateşli silah kullanımı"],correct:0,info:"72 gemiyi Kasımpaşa üzerinden Haliç'e indirdi."},
+  {name:"Çaldıran 1514",q:"Yavuz'un Safevi ordusuna karşı avantajı?",opts:["Ateşli silahlar","Sayısal üstünlük","Deniz gücü"],correct:0,info:"Topçu ve tüfekli yeniçeriler, Safevi süvarisini durdurdu."},
+  {name:"Mohaç 1526",q:"Kanuni hangi düzeni kullandı?",opts:["Hilal düzeni + top hattı","Kare düzen","Testudo formasyonu"],correct:0,info:"Hilal düzeninin merkezine topları yerleştirip Macar şövalyelerini ezdi."},
+  {name:"Preveze 1538",q:"Barbaros'un deniz savaşı taktiği?",opts:["Rüzgâr avantajı + hilal","Rampa taktiği","Ateş gemileri"],correct:0,info:"Rüzgârı arkasına alıp hilal düzeninde Haçlı donanmasını sardı."},
+  {name:"Sakarya 1921",q:"Mustafa Kemal'in savunma stratejisi?",opts:["Hat değil, sath-ı müdafaa","Mevzi savaşı","Gerilla taktiği"],correct:0,info:"'Hattı müdafaa yoktur, sathı müdafaa vardır' — derinlikli savunma."},
+  {name:"Büyük Taarruz 1922",q:"26 Ağustos'taki kritik manevra?",opts:["Afyon'dan kuşatma","Cepheden yarma","Denizden çıkarma"],correct:0,info:"Afyon üzerinden kuşatma ile Yunan ordusunun geri çekilme hattını kesti."},
+  {name:"Kıbrıs 1974",q:"TSK hangi yöntemi kullandı?",opts:["Amfibi çıkarma + hava indirme","Sadece deniz","Sadece hava"],correct:0,info:"Eşzamanlı amfibi ve hava indirme operasyonu."},
+  {name:"Karabağ 2020",q:"Azerbaycan-Türkiye ortak taktiği?",opts:["TB2 + loitering + EH","Sadece kara taarruzu","Sadece hava bombardımanı"],correct:0,info:"TB2 İHA + kamikaze İHA + elektronik harp entegrasyonu."}
+];
+
+let running=false,score=0,currentB=0,answered=false;
+
+function startGame(){
+  initAudio();
+  document.getElementById("overlay").style.display="none";
+  document.getElementById("hud").style.display="flex";
+  document.getElementById("pbar").style.display="block";
+  document.getElementById("qarea").style.display="block";
+  document.getElementById("resultBox").style.display="none";
+  running=true;score=0;currentB=0;answered=false;
+  updateScore();
+  renderQuestion();
+}
+
+function updateScore(){
+  document.getElementById("sc").textContent=score+" / "+BATTLES.length*100;
+  document.getElementById("h2").textContent=score+" puan";
+}
+
+function renderQuestion(){
+  if(currentB>=BATTLES.length){showResult();return}
+  answered=false;
+  let b=BATTLES[currentB];
+  document.getElementById("h1").textContent="Savaş "+(currentB+1)+"/"+BATTLES.length;
+  document.getElementById("pfill").style.width=((currentB)/BATTLES.length*100)+"%";
+  document.getElementById("bname").textContent="⚔️ "+b.name;
+  document.getElementById("qtxt").textContent=b.q;
+  document.getElementById("infoBox").style.display="none";
+  document.getElementById("nextBtn").style.display="none";
+  let optsDiv=document.getElementById("opts");
+  optsDiv.innerHTML="";
+  b.opts.forEach(function(opt,i){
+    let btn=document.createElement("button");
+    btn.className="opt-btn";
+    btn.textContent=(i+1)+". "+opt;
+    btn.onclick=function(){selectAnswer(i,btn)};
+    optsDiv.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx,btn){
+  if(answered)return;
+  answered=true;
+  let b=BATTLES[currentB];
+  let btns=document.querySelectorAll(".opt-btn");
+  btns.forEach(function(b){b.classList.add("disabled")});
+  if(idx===b.correct){
+    btn.classList.add("correct");
+    score+=100;
+    updateScore();
+    playTone(700,.15,"sine");
+  } else {
+    btn.classList.add("wrong");
+    btns[b.correct].classList.add("correct");
+    playTone(150,.2,"sawtooth");
+  }
+  // Show info after answer
+  document.getElementById("infoText").textContent=b.info;
+  document.getElementById("infoBox").style.display="block";
+  document.getElementById("nextBtn").style.display="inline-block";
+}
+
+function nextQuestion(){
+  currentB++;
+  if(currentB>=BATTLES.length){showResult()}
+  else{renderQuestion()}
+}
+
+function showResult(){
+  document.getElementById("qarea").style.display="none";
+  document.getElementById("infoBox").style.display="none";
+  document.getElementById("nextBtn").style.display="none";
+  document.getElementById("hud").style.display="none";
+  document.getElementById("pbar").style.display="none";
+  let pct=Math.round(score/(BATTLES.length*100)*100);
+  let rank="Acemi Asker";
+  if(pct>=90) rank="Başkomutan";
+  else if(pct>=75) rank="Mareşal";
+  else if(pct>=60) rank="General";
+  else if(pct>=40) rank="Subay";
+  else if(pct>=20) rank="Er";
+  let box=document.getElementById("resultBox");
+  box.style.display="block";
+  box.innerHTML='<h2>⚔️ SAVAŞ SONA ERDİ</h2>'+
+    '<div class="score-big">'+score+' / '+BATTLES.length*100+'</div>'+
+    '<div class="rank">Rütbe: '+rank+' ('+pct+'%)</div>'+
+    '<button onclick="startGame()">🔄 Tekrar Oyna</button>'+
+    '<button onclick="location.href=\'oza-turk-savas-tarihi-hub.html\'">← Savaş Tarihi</button>';
+  playTone(523,.3,"sine");
+  running=false;
+}
+</script>
+</body>
+</html>

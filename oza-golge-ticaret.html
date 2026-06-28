@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Gölge Ticaret Ağı — Harb-i Strateji OZA</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh;overflow-x:hidden}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 12px;height:52px;gap:10px}
+.hdr-back{font-size:11px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:6px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:13px;flex:1;text-align:center;color:var(--gold)}
+.hdr-score{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--cyan)}
+/* Game screens */
+.screen{display:none;padding:60px 14px 30px;max-width:600px;margin:0 auto}
+.screen.active{display:block}
+/* Intro */
+.intro-card{background:var(--panel);border:1px solid var(--gold);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px}
+.ic-icon{font-size:48px;margin-bottom:12px}
+.ic-title{font-family:'Chakra Petch',sans-serif;font-size:20px;color:var(--gold);margin-bottom:8px}
+.ic-desc{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:16px}
+.ic-phases{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.phase-badge{background:rgba(201,162,75,.1);border:1px solid rgba(201,162,75,.3);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--gold)}
+.btn-start{background:var(--gold);color:#0d0d0d;border:none;border-radius:10px;padding:12px 32px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;cursor:pointer;width:100%}
+/* Game UI */
+.phase-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.phase-tag{background:rgba(201,162,75,.15);border:1px solid rgba(201,162,75,.3);border-radius:8px;padding:4px 10px;font-family:'Chakra Petch',sans-serif;font-size:11px;color:var(--gold)}
+.timer-box{background:rgba(224,21,21,.15);border:1px solid rgba(224,21,21,.3);border-radius:8px;padding:4px 10px;font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--red)}
+/* Supply chain */
+.supply-board{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.sb-title{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--cyan);margin-bottom:12px}
+.route-grid{display:flex;flex-direction:column;gap:8px}
+.route-row{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border-radius:10px;padding:10px;cursor:pointer;border:2px solid transparent;transition:.2s}
+.route-row:hover{border-color:rgba(201,162,75,.3)}
+.route-row.selected{border-color:var(--gold);background:rgba(201,162,75,.08)}
+.route-row.blocked{opacity:.4;cursor:not-allowed}
+.rr-icon{font-size:20px;min-width:28px}
+.rr-info{flex:1}
+.rr-name{font-family:'Chakra Petch',sans-serif;font-size:12px}
+.rr-detail{font-size:10px;color:var(--dim);margin-top:2px}
+.rr-risk{font-size:11px;padding:3px 8px;border-radius:6px;font-family:'Chakra Petch',sans-serif}
+.risk-low{background:rgba(0,255,136,.1);color:var(--green)}
+.risk-med{background:rgba(201,162,75,.1);color:var(--gold)}
+.risk-high{background:rgba(224,21,21,.1);color:var(--red)}
+/* Sanctions meter */
+.sanctions-meter{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.sm-title{font-family:'Chakra Petch',sans-serif;font-size:11px;color:var(--dim);margin-bottom:8px}
+.sm-bar{height:12px;background:rgba(255,255,255,.07);border-radius:6px;overflow:hidden;margin-bottom:6px}
+.sm-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),var(--gold),var(--red));transition:width .5s}
+.sm-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--dim)}
+/* Resources */
+.resources{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.res-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.res-val{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700}
+.res-label{font-size:9px;color:var(--dim);margin-top:2px}
+/* Events */
+.event-panel{background:rgba(224,21,21,.08);border:1px solid rgba(224,21,21,.25);border-radius:12px;padding:12px;margin-bottom:12px;display:none}
+.event-panel.show{display:block}
+.ep-title{font-family:'Chakra Petch',sans-serif;font-size:11px;color:var(--red);margin-bottom:6px}
+.ep-text{font-size:11px;line-height:1.7}
+/* Action buttons */
+.action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.action-btn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;transition:.2s;text-align:center}
+.action-btn:hover{border-color:var(--cyan);background:rgba(0,224,255,.05)}
+.ab-icon{font-size:18px;margin-bottom:4px}
+.ab-name{font-family:'Chakra Petch',sans-serif;font-size:11px;color:var(--cyan)}
+.ab-cost{font-size:10px;color:var(--dim);margin-top:2px}
+/* Progress */
+.progress-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.pb-fill{height:100%;background:var(--gold);border-radius:3px;transition:width .5s}
+/* Result */
+.result-card{background:var(--panel);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px}
+.rc-icon{font-size:52px;margin-bottom:12px}
+.rc-title{font-family:'Chakra Petch',sans-serif;font-size:22px;margin-bottom:8px}
+.rc-score{font-family:'Chakra Petch',sans-serif;font-size:36px;color:var(--gold);margin-bottom:8px}
+.rc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.rc-stat{background:rgba(255,255,255,.03);border-radius:8px;padding:10px}
+.rc-sv{font-family:'Chakra Petch',sans-serif;font-size:16px}
+.rc-sl{font-size:10px;color:var(--dim);margin-top:2px}
+.btn-next{background:var(--cyan);color:#0d0d0d;border:none;border-radius:10px;padding:12px 24px;font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px}
+.btn-retry{background:transparent;color:var(--dim);border:1px solid var(--line);border-radius:10px;padding:10px 24px;font-family:'Chakra Petch',sans-serif;font-size:12px;cursor:pointer;width:100%}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🕵️ GÖLGE TİCARET AĞI</div>
+  <div class="hdr-score">⭐ <span id="total-score">0</span></div>
+</header>
+
+<!-- INTRO -->
+<div class="screen active" id="s-intro">
+  <div class="intro-card">
+    <div class="ic-icon">🕵️</div>
+    <div class="ic-title">GÖLGE TİCARET AĞI</div>
+    <div class="ic-desc">Yaptırım altındaki bir devletin savunma sanayii direktörüsün. Drone üretimi için kritik bileşenleri gizli tedarik ağları üzerinden temin etmek zorundasın. Her karar, tespite yakalanma riskini artırıyor.</div>
+    <div class="ic-phases">
+      <div class="phase-badge">Aşama 1: Tedarik</div>
+      <div class="phase-badge">Aşama 2: Üretim</div>
+      <div class="phase-badge">Aşama 3: Teslimat</div>
+    </div>
+    <button class="btn-start" onclick="startGame()">🚀 OPERASYONU BAŞLAT</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="s-game">
+  <div class="phase-hdr">
+    <div class="phase-tag" id="phase-tag">AŞAMA 1/3</div>
+    <div class="timer-box" id="timer">⏱ 45s</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar"><div class="pb-fill" id="prog-fill" style="width:0%"></div></div>
+
+  <!-- Resources -->
+  <div class="resources">
+    <div class="res-card"><div class="res-val" style="color:var(--gold)" id="res-budget">$50M</div><div class="res-label">Bütçe</div></div>
+    <div class="res-card"><div class="res-val" style="color:var(--red)" id="res-risk">0%</div><div class="res-label">Tespit Riski</div></div>
+    <div class="res-card"><div class="res-val" style="color:var(--green)" id="res-parts">0/5</div><div class="res-label">Bileşen</div></div>
+  </div>
+
+  <!-- Sanctions meter -->
+  <div class="sanctions-meter">
+    <div class="sm-title">🌡️ YAPTIRIM BASINCI</div>
+    <div class="sm-bar"><div class="sm-fill" id="sanction-fill" style="width:20%"></div></div>
+    <div class="sm-labels"><span>Düşük</span><span>Orta</span><span>Kritik</span></div>
+  </div>
+
+  <!-- Supply board -->
+  <div class="supply-board">
+    <div class="sb-title" id="sb-title">📦 TEDARİK ROTASI SEÇ</div>
+    <div class="route-grid" id="route-grid"></div>
+  </div>
+
+  <!-- Event panel -->
+  <div class="event-panel" id="event-panel">
+    <div class="ep-title">⚠️ ACİL DURUM</div>
+    <div class="ep-text" id="event-text"></div>
+  </div>
+
+  <!-- Actions -->
+  <div class="action-grid" id="action-grid"></div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="s-result">
+  <div class="result-card" id="result-card">
+    <div class="rc-icon" id="rc-icon">🏆</div>
+    <div class="rc-title" id="rc-title">—</div>
+    <div class="rc-score" id="rc-score">0</div>
+    <div class="rc-stats" id="rc-stats"></div>
+    <button class="btn-next" onclick="nextPhase()">▶ SONRAKI AŞAMA</button>
+    <button class="btn-retry" onclick="retryGame()">↺ YENİDEN DENE</button>
+  </div>
+</div>
+
+<script>
+var G={phase:1,puan:0,budget:50,risk:0,parts:0,sanction:20,timer:45,interval:null,routes:[],actions:[],events:[]};
+
+var PHASES=[
+  {name:'TEDARİK AŞAMASI',subtitle:'Kritik bileşenleri temin et',target:5,time:45,
+   routes:[
+    {icon:'🚢',name:'Deniz Yolu — Dubai Limanı',detail:'Uzun ama güvenli. 3 hafta.',risk:'Düşük',riskClass:'risk-low',cost:8,parts:1,riskVal:5,blocked:false},
+    {icon:'✈️',name:'Hava Yolu — Üçüncü Ülke',detail:'Hızlı ama pahalı. Gümrük riski.',risk:'Orta',riskClass:'risk-med',cost:15,parts:2,riskVal:15,blocked:false},
+    {icon:'🚛',name:'Kara Yolu — Sınır Kapısı',detail:'Ucuz ama yüksek kontrol.',risk:'Yüksek',riskClass:'risk-high',cost:5,parts:1,riskVal:25,blocked:false},
+    {icon:'🏭',name:'Yerli Üretim — Parça Kopyala',detail:'Yavaş ama bağımsız.',risk:'Düşük',riskClass:'risk-low',cost:20,parts:2,riskVal:3,blocked:false}
+   ],
+   actions:[
+    {icon:'🕵️',name:'Sahte Belge',cost:'$5M',action:'fake_doc'},
+    {icon:'💰',name:'Rüşvet',cost:'$10M',action:'bribe'},
+    {icon:'🔄',name:'Rota Değiştir',cost:'$3M',action:'reroute'},
+    {icon:'⏸️',name:'Bekle',cost:'Ücretsiz',action:'wait'}
+   ]},
+  {name:'ÜRETİM AŞAMASI',subtitle:'Bileşenleri montajla, tespiti önle',target:3,time:40,
+   routes:[
+    {icon:'🏭',name:'Gizli Fabrika — Şehir Altı',detail:'Yüksek kapasite, tespit riski.',risk:'Orta',riskClass:'risk-med',cost:12,parts:1,riskVal:12,blocked:false},
+    {icon:'🏠',name:'Dağıtık Üretim — Evler',detail:'Yavaş ama görünmez.',risk:'Düşük',riskClass:'risk-low',cost:8,parts:1,riskVal:4,blocked:false},
+    {icon:'🤝',name:'Ortak Üretim — Müttefik',detail:'Hızlı ama bağımlılık.',risk:'Orta',riskClass:'risk-med',cost:18,parts:2,riskVal:10,blocked:false},
+    {icon:'🤖',name:'Otomatik Üretim — YZ',detail:'Pahalı ama verimli.',risk:'Düşük',riskClass:'risk-low',cost:25,parts:3,riskVal:2,blocked:false}
+   ],
+   actions:[
+    {icon:'🛡️',name:'Güvenlik Artır',cost:'$8M',action:'security'},
+    {icon:'📡',name:'Sinyal Karıştır',cost:'$6M',action:'jam'},
+    {icon:'🔄',name:'Fabrika Taşı',cost:'$12M',action:'move'},
+    {icon:'⏸️',name:'Bekle',cost:'Ücretsiz',action:'wait'}
+   ]},
+  {name:'TESLİMAT AŞAMASI',subtitle:'Drone\'ları cepheye ulaştır',target:4,time:35,
+   routes:[
+    {icon:'🚁',name:'Hava Koridoru — Gece',detail:'Hızlı, radar riski.',risk:'Yüksek',riskClass:'risk-high',cost:10,parts:2,riskVal:20,blocked:false},
+    {icon:'🚛',name:'Kara Konvoyu — Gizli',detail:'Yavaş ama güvenli.',risk:'Düşük',riskClass:'risk-low',cost:6,parts:1,riskVal:5,blocked:false},
+    {icon:'🚢',name:'Deniz Yolu — Kıyı',detail:'Orta hız, gümrük.',risk:'Orta',riskClass:'risk-med',cost:9,parts:2,riskVal:10,blocked:false},
+    {icon:'🤖',name:'Otonom Teslimat',detail:'Drone ile drone taşı.',risk:'Orta',riskClass:'risk-med',cost:20,parts:3,riskVal:8,blocked:false}
+   ],
+   actions:[
+    {icon:'🎭',name:'Kamuflaj',cost:'$7M',action:'camouflage'},
+    {icon:'🌙',name:'Gece Operasyonu',cost:'$5M',action:'night'},
+    {icon:'📡',name:'Radar Karıştır',cost:'$10M',action:'radar'},
+    {icon:'⏸️',name:'Bekle',cost:'Ücretsiz',action:'wait'}
+   ]}
+];
+
+var EVENTS=[
+  '🚨 İstihbarat uyarısı: Tedarik ağınız izleniyor! Risk +15%',
+  '💸 Bütçe sızıntısı: Muhasebe açığı tespit edildi. Bütçe -$5M',
+  '🔍 Gümrük denetimi: Bir rota geçici olarak kapatıldı.',
+  '📰 Medya haberi: Yaptırım ihlali iddiaları. Baskı artıyor.',
+  '🤝 Yeni ortak: Gizli tedarikçi ağa katıldı. Seçenek açıldı.',
+  '⚡ Siber saldırı: Üretim sistemleri yavaşladı. Süre -5sn'
+];
+
+function startGame(){
+  G.phase=1;G.score=0;G.budget=50;G.risk=0;G.parts=0;G.sanction=20;
+  showScreen('s-game');
+  loadPhase();
+}
+
+function loadPhase(){
+  var ph=PHASES[G.phase-1];
+  G.parts=0;G.timer=ph.time;
+  document.getElementById('phase-tag').textContent='AŞAMA '+G.phase+'/3: '+ph.name;
+  document.getElementById('res-parts').textContent='0/'+ph.target;
+  updateUI();
+  renderRoutes();
+  renderActions();
+  clearInterval(G.interval);
+  G.interval=setInterval(function(){
+    G.timer--;
+    document.getElementById('timer').textContent='⏱ '+G.timer+'s';
+    if(G.timer<=0){clearInterval(G.interval);endPhase(false);}
+    if(Math.random()<0.08)triggerEvent();
+  },1000);
+}
+
+function renderRoutes(){
+  var ph=PHASES[G.phase-1];
+  var html='';
+  ph.routes.forEach(function(r,i){
+    html+='<div class="route-row'+(r.blocked?' blocked':'')+'" onclick="selectRoute('+i+')" id="route-'+i+'">';
+    html+='<div class="rr-icon">'+r.icon+'</div>';
+    html+='<div class="rr-info"><div class="rr-name">'+r.name+'</div><div class="rr-detail">'+r.detail+'</div></div>';
+    html+='<div class="rr-risk '+r.riskClass+'">'+r.risk+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('route-grid').innerHTML=html;
+  document.getElementById('sb-title').textContent='📦 '+PHASES[G.phase-1].subtitle.toUpperCase();
+}
+
+function renderActions(){
+  var ph=PHASES[G.phase-1];
+  var html='';
+  ph.actions.forEach(function(a){
+    html+='<div class="action-btn" onclick="doAction(\''+a.action+'\')">';
+    html+='<div class="ab-icon">'+a.icon+'</div>';
+    html+='<div class="ab-name">'+a.name+'</div>';
+    html+='<div class="ab-cost">'+a.cost+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('action-grid').innerHTML=html;
+}
+
+function selectRoute(i){
+  var ph=PHASES[G.phase-1];
+  var r=ph.routes[i];
+  if(r.blocked||G.budget<r.cost)return;
+  G.budget-=r.cost;
+  G.risk=Math.min(100,G.risk+r.riskVal);
+  G.parts+=r.parts;
+  G.score+=r.parts*100+(45-G.timer)*5;
+  G.sanction=Math.min(100,G.sanction+r.riskVal*0.5);
+  // Visual feedback
+  var el=document.getElementById('route-'+i);
+  el.style.background='rgba(0,255,136,0.15)';
+  el.style.borderColor='var(--green)';
+  setTimeout(function(){el.style.background='';el.style.borderColor='';},600);
+  updateUI();
+  if(G.parts>=ph.target){clearInterval(G.interval);endPhase(true);}
+  if(G.risk>=100){clearInterval(G.interval);endPhase(false,'Tespit edildiniz!');}
+}
+
+function doAction(action){
+  if(action==='fake_doc'&&G.budget>=5){G.budget-=5;G.risk=Math.max(0,G.risk-15);G.score+=50;}
+  else if(action==='bribe'&&G.budget>=10){G.budget-=10;G.sanction=Math.max(0,G.sanction-20);G.score+=80;}
+  else if(action==='reroute'&&G.budget>=3){G.budget-=3;G.risk=Math.max(0,G.risk-10);G.score+=30;}
+  else if(action==='security'&&G.budget>=8){G.budget-=8;G.risk=Math.max(0,G.risk-20);G.score+=60;}
+  else if(action==='jam'&&G.budget>=6){G.budget-=6;G.sanction=Math.max(0,G.sanction-15);G.score+=40;}
+  else if(action==='move'&&G.budget>=12){G.budget-=12;G.risk=Math.max(0,G.risk-25);G.score+=100;}
+  else if(action==='camouflage'&&G.budget>=7){G.budget-=7;G.risk=Math.max(0,G.risk-18);G.score+=55;}
+  else if(action==='night'&&G.budget>=5){G.budget-=5;G.risk=Math.max(0,G.risk-12);G.score+=45;}
+  else if(action==='radar'&&G.budget>=10){G.budget-=10;G.risk=Math.max(0,G.risk-22);G.score+=75;}
+  else if(action==='wait'){G.timer+=10;G.score+=10;}
+  updateUI();
+}
+
+function triggerEvent(){
+  var ev=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+  document.getElementById('event-text').textContent=ev;
+  document.getElementById('event-panel').classList.add('show');
+  if(ev.includes('Risk'))G.risk=Math.min(100,G.risk+15);
+  if(ev.includes('Bütçe'))G.budget=Math.max(0,G.budget-5);
+  if(ev.includes('kapatıldı')){var ph=PHASES[G.phase-1];ph.routes[Math.floor(Math.random()*ph.routes.length)].blocked=true;renderRoutes();}
+  updateUI();
+  setTimeout(function(){document.getElementById('event-panel').classList.remove('show');},3000);
+}
+
+function updateUI(){
+  document.getElementById('res-budget').textContent='$'+G.budget+'M';
+  document.getElementById('res-risk').textContent=G.risk+'%';
+  document.getElementById('res-parts').textContent=G.parts+'/'+(PHASES[G.phase-1]?PHASES[G.phase-1].target:5);
+  document.getElementById('sanction-fill').style.width=G.sanction+'%';
+  document.getElementById('prog-fill').style.width=(G.parts/(PHASES[G.phase-1]?PHASES[G.phase-1].target:5)*100)+'%';
+  document.getElementById('total-score').textContent=G.score;
+  document.getElementById('res-risk').style.color=G.risk>70?'var(--red)':G.risk>40?'var(--gold)':'var(--green)';
+}
+
+function endPhase(success,reason){
+  var ph=PHASES[G.phase-1];
+  var icon=success?'✅':'❌';
+  var title=success?'AŞAMA '+G.phase+' TAMAMLANDI!':'AŞAMA '+G.phase+' BAŞARISIZ';
+  var color=success?'var(--green)':'var(--red)';
+  document.getElementById('rc-icon').textContent=icon;
+  document.getElementById('rc-title').textContent=title;
+  document.getElementById('rc-title').style.color=color;
+  document.getElementById('rc-score').textContent=G.score+' PUAN';
+  var statsHtml='<div class="rc-stat"><div class="rc-sv" style="color:var(--gold)">$'+G.budget+'M</div><div class="rc-sl">Kalan Bütçe</div></div>';
+  statsHtml+='<div class="rc-stat"><div class="rc-sv" style="color:var(--red)">'+G.risk+'%</div><div class="rc-sl">Tespit Riski</div></div>';
+  statsHtml+='<div class="rc-stat"><div class="rc-sv" style="color:var(--green)">'+G.parts+'/'+ph.target+'</div><div class="rc-sl">Bileşen</div></div>';
+  document.getElementById('rc-stats').innerHTML=statsHtml;
+  var nextBtn=document.querySelector('.btn-next');
+  if(G.phase>=3||!success){nextBtn.textContent='🏁 OYUNU BİTİR';nextBtn.onclick=function(){showFinalResult();};}
+  else{nextBtn.textContent='▶ AŞAMA '+(G.phase+1)+"'E GEÇ";nextBtn.onclick=function(){nextPhase();};}
+  showScreen('s-result');
+}
+
+function nextPhase(){
+  if(G.phase>=3){showFinalResult();return;}
+  G.phase++;
+  showScreen('s-game');
+  loadPhase();
+}
+
+function showFinalResult(){
+  var total=G.score;
+  var grade=total>1500?'S':total>1000?'A':total>600?'B':total>300?'C':'D';
+  var titles={S:'GÖLGE AĞIN EFENDİSİ',A:'USTA TEDARİKÇİ',B:'DENEYİMLİ AJAN',C:'ACEMI OPERATÖR',D:'TESPİT EDİLDİ'};
+  document.getElementById('rc-icon').textContent=grade==='S'?'🏆':grade==='A'?'🥇':grade==='B'?'🥈':'🥉';
+  document.getElementById('rc-title').textContent=titles[grade];
+  document.getElementById('rc-score').textContent=total+' PUAN — '+grade+' SINIF';
+  document.getElementById('rc-title').style.color=grade==='S'?'var(--gold)':grade==='A'?'var(--cyan)':'var(--tx)';
+  var statsHtml='<div class="rc-stat"><div class="rc-sv" style="color:var(--gold)">'+G.phase+'/3</div><div class="rc-sl">Aşama</div></div>';
+  statsHtml+='<div class="rc-stat"><div class="rc-sv" style="color:var(--red)">'+G.risk+'%</div><div class="rc-sl">Son Risk</div></div>';
+  statsHtml+='<div class="rc-stat"><div class="rc-sv" style="color:var(--green)">$'+G.budget+'M</div><div class="rc-sl">Kalan Bütçe</div></div>';
+  document.getElementById('rc-stats').innerHTML=statsHtml;
+  document.querySelector('.btn-next').textContent='🔄 YENİDEN OYNA';
+  document.querySelector('.btn-next').onclick=function(){retryGame();};
+  showScreen('s-result');
+  try{var scores=JSON.parse(localStorage.getItem('hs_scores')||'{}');scores['golge-ticaret']=Math.max(scores['golge-ticaret']||0,total);localStorage.setItem('hs_scores',JSON.stringify(scores));}catch(e){}
+}
+
+function retryGame(){startGame();}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

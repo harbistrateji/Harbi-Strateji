@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Savaş Ekonomisi Piramidi — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root {--pri:#00bcd4;--sec:#ff9800;--bg:#0a0f17;--text:#e8e6e3;}
+body {font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;overflow-x:hidden;}
+.hero {text-align:center;padding:80px 20px 40px;background:linear-gradient(180deg,rgba(10,15,23,0.9),var(--bg)),radial-gradient(ellipse at 50% 0%,#00bcd422,transparent 70%);position:relative;}
+.hero::after {content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#00bcd460,transparent);}
+.hero .badge {display:inline-block;border:1px solid var(--pri);color:var(--pri);padding:4px 16px;border-radius:20px;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;animation:pulse 2s infinite;}
+.hero h1 {font-family:'Chakra Petch',sans-serif;font-size:clamp(1.8rem,5vw,3rem);margin:0 0 12px;}
+.hero h1 span {color:var(--pri);}
+.hero p {max-width:700px;margin:0 auto;opacity:0.8;line-height:1.7;}
+.audio-btn {position:fixed;top:80px;right:20px;z-index:100;background:var(--pri);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px #00bcd440;}
+.stats {display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:30px 20px;}
+.stat {text-align:center;}
+.stat-val {display:block;font-family:'Chakra Petch',sans-serif;font-size:1.8rem;color:var(--pri);font-weight:700;}
+.stat-label {font-size:0.75rem;opacity:0.6;text-transform:uppercase;letter-spacing:1px;}
+.scenes {max-width:900px;margin:0 auto;padding:0 20px 60px;}
+.scene {display:flex;gap:20px;padding:24px;margin:16px 0;border:1px solid #ffffff10;border-radius:12px;background:#ffffff05;animation:fadeUp 0.6s ease both;transition:all 0.3s;}
+.scene:hover {border-color:var(--pri);background:#ffffff08;transform:translateX(8px);}
+.scene-icon {font-size:2rem;min-width:48px;text-align:center;padding-top:4px;}
+.scene-content h3 {margin:0 0 8px;font-family:'Chakra Petch',sans-serif;font-size:1.1rem;}
+.scene-content p {margin:0 0 12px;opacity:0.8;line-height:1.7;font-size:0.95rem;}
+.tags {display:flex;flex-wrap:wrap;gap:6px;}
+.tag {background:#00bcd415;border:1px solid #00bcd440;color:var(--pri);padding:3px 10px;border-radius:4px;font-size:0.7rem;font-family:'IBM Plex Mono',monospace;}
+.source {text-align:center;padding:40px 20px;opacity:0.5;font-size:0.8rem;border-top:1px solid #ffffff10;}
+.timeline-bar {position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,#00bcd4,#ff9800);width:0;z-index:999;transition:width 0.3s;}
+@keyframes fadeUp {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse {0%,100%{opacity:1}50%{opacity:0.5}}
+@media(max-width:600px){.scene{flex-direction:column;gap:8px;}.stats{gap:20px;}.audio-btn{top:70px;right:10px;width:36px;height:36px;font-size:1rem;}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="timeline-bar" id="tbar"></div>
+<script src="hs-nav.js?v=11"></script>
+<button class="audio-btn" id="audioBtn" title="Ses Aç/Kapat">🔊</button>
+<div class="hero">
+  <span class="badge">Ekonomi · Strateji · Tarih</span>
+  <h1><span>Savaş Ekonomisi Piramidi</span></h1>
+  <p>Antik Vergiden Dijital Savunma Bütçesine: Savaşın Finansmanı 4000 Yılda Nasıl Değişti?</p>
+</div>
+<div class="stats"><div class="stat"><span class="stat-val">4000</span><span class="stat-label">Yıllık Tarih</span></div><div class="stat"><span class="stat-val">2.4T$</span><span class="stat-label">Küresel Bütçe</span></div><div class="stat"><span class="stat-val">1.7T$</span><span class="stat-label">F-35 Maliyeti</span></div><div class="stat"><span class="stat-val">%10</span><span class="stat-label">Soğuk Savaş/GSYH</span></div></div>
+<div class="scenes">
+    <div class="scene" style="animation-delay:0.15s">
+      <div class="scene-icon">🏛</div>
+      <div class="scene-content">
+        <h3>Antik Çağ: Ganimet ve Vergi (MÖ 2000-MS 476)</h3>
+        <p>Roma İmparatorluğu MÖ 406'da askerlere düzenli maaş ödemeye başladı. Savaş ganimetleri devlet gelirinin %30'unu oluşturuyordu. Asur'un demir silah tekeli rakipsiz güç sağladı. Savaş maliyetinin %1'i silaha, %12'si lojistiğe harcanıyordu.</p>
+        <div class="tags"><span class="tag">Roma</span><span class="tag">Asur</span><span class="tag">Vergi</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.3s">
+      <div class="scene-icon">⚔</div>
+      <div class="scene-content">
+        <h3>Ortaçağ: Feodal Sistem (476-1453)</h3>
+        <p>Şövalye donanımı bir köyün yıllık geliri kadardı. Haçlı Seferleri'nin finansmanı: kilise vergisi, borçlanma, İtalyan bankerleri. Osmanlı tımar sistemi: toprak karşılığı asker. Condottiere (paralı asker) sistemi.</p>
+        <div class="tags"><span class="tag">Feodal</span><span class="tag">Haçlı</span><span class="tag">Tımar</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.44999999999999996s">
+      <div class="scene-icon">🏭</div>
+      <div class="scene-content">
+        <h3>Sanayi Çağı: Kitlesel Üretim (1750-1914)</h3>
+        <p>Krupp çelik imparatorluğu: tek başına Avrupa'nın yarısını silahlandırdı. Carronade topu İskoçya'da üretildi. Le Creusot demir fabrikası XVI. Louis yatırımı. Savaş endüstrisi kavramı 1830'da ortaya çıktı.</p>
+        <div class="tags"><span class="tag">Krupp</span><span class="tag">Sanayi</span><span class="tag">Üretim</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.6s">
+      <div class="scene-icon">💣</div>
+      <div class="scene-content">
+        <h3>Total Savaş: Dünya Savaşları (1914-1945)</h3>
+        <p>I. Dünya Savaşı: 186 milyar dolar (güncel). Tüm ulusun seferberliği. Kadınlar fabrikalarda. II. Dünya Savaşı: 4 trilyon dolar. Manhattan Projesi tek başına 2 milyar. Savaş artık tüm ekonomiyi kapsıyor.</p>
+        <div class="tags"><span class="tag">Total Savaş</span><span class="tag">Seferberlik</span><span class="tag">Dünya Savaşı</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.75s">
+      <div class="scene-icon">🛡</div>
+      <div class="scene-content">
+        <h3>Soğuk Savaş: Caydırıcılık Ekonomisi (1947-1991)</h3>
+        <p>ABD savunma bütçesi GSYH'nin %10'u. Sovyet askeri harcamaları çöküşün nedeni. Nükleer silah yarışı: 70.000+ nükleer başlık. Yıldız Savaşları (SDI) programı. Askeri-endüstriyel kompleks uyarısı.</p>
+        <div class="tags"><span class="tag">Soğuk Savaş</span><span class="tag">Nükleer</span><span class="tag">Caydırıcılık</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.8999999999999999s">
+      <div class="scene-icon">🤖</div>
+      <div class="scene-content">
+        <h3>Dijital Çağ: Akıllı Savunma (1991-günümüz)</h3>
+        <p>Küresel savunma harcaması: 2.4 trilyon dolar (2023). F-35 programı: 1.7 trilyon dolar (tarihte en pahalı). Siber savaş bütçeleri. Yapay zeka ve otonom sistemler. Uzay kuvvetleri. Savunma artık teknoloji şirketlerinin alanı.</p>
+        <div class="tags"><span class="tag">Dijital</span><span class="tag">YZ</span><span class="tag">Siber</span></div>
+      </div>
+    </div>
+</div>
+<div class="source">Kaynak: Harb-i Strateji Külliyatı · McNeill (1982) · SIPRI · Ministère des Armées (2019)</div>
+<script>
+// Scroll progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('tbar').style.width=(window.scrollY/h*100)+'%';
+});
+// Audio
+const AudioContext=window.AudioContext||window.webkitAudioContext;
+let actx,playing=false;
+function playAmbient(){
+  if(!actx) actx=new AudioContext();
+  const osc=actx.createOscillator();
+  const gain=actx.createGain();
+  osc.type='sine';osc.frequency.value=165;
+  gain.gain.value=0.03;
+  osc.connect(gain);gain.connect(actx.destination);
+  osc.start();playing=true;
+  setTimeout(()=>{osc.stop();playing=false;},8000);
+}
+document.getElementById('audioBtn').onclick=()=>{if(!playing) playAmbient();};
+</script>
+</body>
+</html>

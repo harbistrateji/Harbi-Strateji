@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Türklerde Toplum — Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#0a0f17;--bg2:#0f1520;--gold:#C9A24B;--cyan:#00E0FF;--red:#E01515;--text:#e8e6e3;--muted:#8a9bb0;--card:#141c2b;--border:#1e2a3a}body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.8;overflow-x:hidden}#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .1s}.back-btn{position:fixed;top:20px;left:20px;z-index:1000;color:var(--gold);text-decoration:none;font-family:'Chakra Petch',monospace;font-size:.85rem;opacity:.8;transition:.3s}.back-btn:hover{opacity:1;transform:translateX(-3px)}.container{max-width:900px;margin:0 auto;padding:0 24px;position:relative;z-index:1}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 24px}.hero-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:1rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--gold);line-height:1.2;margin-bottom:24px}.hero-sub{font-size:1.1rem;color:var(--muted);max-width:600px;line-height:1.7}.scene{padding:80px 0;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.19,1,.22,1)}.scene.visible{opacity:1;transform:translateY(0)}.scene-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.95rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}.scene h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--gold);margin-bottom:20px;line-height:1.3}.scene p{margin-bottom:16px;color:var(--muted);font-size:1rem}.scene p strong{color:var(--text)}.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:40px 0}.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:24px 0}.grid-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:.3s}.grid-card:hover{border-color:var(--gold);transform:translateY(-4px)}.grid-card .label{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.9rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}.grid-card .value{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:6px}.grid-card .desc{font-size:.85rem;color:var(--muted);line-height:1.6}.hierarchy{display:flex;flex-direction:column;gap:12px;margin:24px 0}.hierarchy-item{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:.3s}.hierarchy-item:hover{border-color:var(--gold)}.hierarchy-item .rank{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);min-width:40px;text-align:center}.hierarchy-item h3{font-size:1rem;color:var(--text);margin-bottom:4px}.hierarchy-item p{font-size:.85rem;color:var(--muted)}.ref-section{padding:60px 0;border-top:1px solid var(--border)}.ref-section h3{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.85rem;letter-spacing:2px;margin-bottom:20px}.ref-section p{font-size:.85rem;color:var(--muted);margin-bottom:8px;padding-left:20px;text-indent:-20px}@media(max-width:600px){.hero h1{font-size:1.8rem}.grid-3{grid-template-columns:1fr}}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div id="progress" style="width:0%"></div>
+<a href="medeniyet-dinamikleri.html" class="back-btn">← Medeniyet Dinamikleri</a>
+<section class="hero">
+<span class="hero-tag">Medeniyet Dinamikleri // Toplum & Sosyal Yapı</span>
+<h1>Türklerde Toplum: Oguş'tan Millet'e</h1>
+<p class="hero-sub">Aile, boy, budun ve il — Türk toplumsal örgütlenmesinin evrimsel yapısı ve sosyal kurumları.</p>
+</section>
+<div class="container">
+
+<section class="scene">
+<span class="scene-tag">Bölüm 1 — Sosyal Yapı</span>
+<h2>Türk Toplumunun Katmanlı Organizasyonu</h2>
+<p>Türk toplumu, <strong>kan bağı</strong> ve <strong>siyasi bağlılık</strong> esasına dayalı iç içe geçmiş halkalardan oluşuyordu. En küçük birimden en büyüğüne doğru:</p>
+<div class="hierarchy">
+  <div class="hierarchy-item"><div class="rank">I</div><div><h3>Oguş (Aile)</h3><p>Çekirdek aile — toplumun en küçük birimi. Baba otoritesi altında, ancak kadın da söz sahibi.</p></div></div>
+  <div class="hierarchy-item"><div class="rank">II</div><div><h3>Urug (Sülale)</h3><p>Birkaç ailenin birleşimi — ortak ata etrafında toplanan akraba grubu.</p></div></div>
+  <div class="hierarchy-item"><div class="rank">III</div><div><h3>Boy (Klan)</h3><p>Birden fazla sülaleyi kapsayan siyasi birim — boy beyi tarafından yönetilir.</p></div></div>
+  <div class="hierarchy-item"><div class="rank">IV</div><div><h3>Budun (Kavim/Halk)</h3><p>Boylar birliği — ortak dil, kültür ve siyasi irade. Kağan'a bağlılık.</p></div></div>
+  <div class="hierarchy-item"><div class="rank">V</div><div><h3>İl (Devlet)</h3><p>En üst siyasi organizasyon — Kağan'ın Kut'u ile meşrulaştırılan egemenlik.</p></div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 2 — Kadının Konumu</span>
+<h2>Hatun: Eşit Egemenlik Ortağı</h2>
+<p>Eski Türk toplumunda kadın, birçok çağdaş medeniyetten farklı olarak <strong>eşit hukuki statüye</strong> sahipti. Kağan'ın yanında <strong>Hatun</strong> da devlet yönetiminde söz sahibiydi. Elçiler hem Kağan'a hem Hatun'a ayrı ayrı hediye sunardı.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Siyasi Güç</div><div class="value">Hatun Unvanı</div><div class="desc">Kurultay'da oy hakkı, elçi kabul etme yetkisi, mühür kullanma</div></div>
+  <div class="grid-card"><div class="label">Ekonomik Hak</div><div class="value">Mülkiyet</div><div class="desc">Kadın kendi malına sahip, miras hakkı eşit, çeyiz geleneği</div></div>
+  <div class="grid-card"><div class="label">Askerî Rol</div><div class="value">Savaşçı Kadın</div><div class="desc">Tomris Hatun, Börte Ujin — kadın komutanlar ve savaşçılar</div></div>
+</div>
+<p><strong>Bilge Kağan Yazıtı</strong>'nda "Türk Budun'u yok olmasın diye... babam Kağan'ı, annem Hatun'u yükseltmiş" ifadesi, kadının devlet kuruculuğundaki rolünü belgeler.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 3 — Hukuk ve Töre</span>
+<h2>Yazısız Anayasa: Töre</h2>
+<p><strong>Töre</strong>, Türk toplumunun yazısız anayasasıydı. Nesilden nesile aktarılan, toplum ve devlet hayatını düzenleyen kurallar bütünü olan Töre, dört temel ilke üzerine kuruluydu:</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">İlke 1</div><div class="value">Könilik (Adalet)</div><div class="desc">Herkese eşit muamele — Kağan bile Töre'ye tabi</div></div>
+  <div class="grid-card"><div class="label">İlke 2</div><div class="value">Tüzlük (Eşitlik)</div><div class="desc">Toplumsal denge ve fırsat eşitliği</div></div>
+  <div class="grid-card"><div class="label">İlke 3</div><div class="value">Uzluk (İyilik)</div><div class="desc">Toplumsal dayanışma ve yardımlaşma</div></div>
+  <div class="grid-card"><div class="label">İlke 4</div><div class="value">Kişilik (İnsanlık)</div><div class="desc">İnsan onuruna saygı ve bireysel haklar</div></div>
+</div>
+<p>Töre'ye uymayan Kağan bile tahttan indirilebilirdi. Bu, modern anayasal monarşi kavramının 1500 yıl öncesindeki Türk versiyonudur.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 4 — Osmanlı Toplumu</span>
+<h2>Millet Sistemi ve Toplumsal Çoğulculuk</h2>
+<p>Osmanlı İmparatorluğu, farklı din ve etnik grupları <strong>Millet Sistemi</strong> ile yönetti. Her dinî cemaat kendi iç işlerinde özerkti — eğitim, evlilik, miras gibi konularda kendi hukukunu uygulardı.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Yönetici</div><div class="value">Askerî Sınıf</div><div class="desc">Padişah, vezirler, ulema, sipahiler — vergi muafiyeti</div></div>
+  <div class="grid-card"><div class="label">Üretici</div><div class="value">Reaya</div><div class="desc">Çiftçi, esnaf, tüccar — vergi mükellefi, ancak korunan haklar</div></div>
+  <div class="grid-card"><div class="label">Çoğulculuk</div><div class="value">Millet Sistemi</div><div class="desc">Rum, Ermeni, Yahudi milletleri — dinî özerklik</div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 5 — Modernleşme</span>
+<h2>Tanzimat'tan Cumhuriyet'e Toplumsal Dönüşüm</h2>
+<p><strong>Tanzimat Fermanı</strong> (1839) ile başlayan modernleşme süreci, toplumsal yapıyı kökten değiştirdi. Vatandaşlık kavramı, din ve etnisite farkı gözetmeksizin eşit haklar vaadi getirdi.</p>
+<p>Cumhuriyet devrimi ile <strong>laiklik</strong>, <strong>kadın hakları</strong> (1930 belediye, 1934 milletvekili seçme-seçilme), <strong>eğitim birliği</strong> ve <strong>harf devrimi</strong> toplumsal yapıyı yeniden biçimlendirdi.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="ref-section">
+<h3>Kaynakça</h3>
+<p>Kafesoğlu, İ. (1977). <em>Türk Millî Kültürü</em>. Ötüken Neşriyat.</p>
+<p>Gökalp, Z. (1923). <em>Türkçülüğün Esasları</em>.</p>
+<p>İnalcık, H. (1973). <em>The Ottoman Empire: The Classical Age 1300-1600</em>. Weidenfeld & Nicolson.</p>
+<p>Ortaylı, İ. (2008). <em>Türkiye Teşkilat ve İdare Tarihi</em>. Cedit Neşriyat.</p>
+</section>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progress').style.width=(s/h*100)+'%'});
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.15});
+document.querySelectorAll('.scene').forEach(s=>obs.observe(s));
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

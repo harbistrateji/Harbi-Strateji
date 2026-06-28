@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mineral Savaşı — Tedarik Zinciri Strateji | OZA</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0f17;color:#e8e8e8;font-family:'IBM Plex Sans',sans-serif;overflow-x:hidden;min-height:100vh}
+.back-btn{position:fixed;top:20px;left:20px;z-index:100;color:#5865f2;text-decoration:none;font-size:14px;opacity:.8}
+.back-btn:hover{opacity:1}
+.game-container{max-width:800px;margin:0 auto;padding:20px;padding-top:60px}
+.game-header{text-align:center;margin-bottom:30px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-size:28px;color:#fff}
+.game-header h1 span{color:#5865f2}
+.game-header p{color:#7a8290;font-size:14px;margin-top:8px}
+
+.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.hud-item{background:#111827;border:1px solid #1e293b;border-radius:10px;padding:12px;text-align:center}
+.hud-label{font-size:10px;color:#7a8290;text-transform:uppercase;letter-spacing:1px}
+.hud-value{font-family:'Chakra Petch',sans-serif;font-size:20px;color:#00e0ff;margin-top:4px}
+
+.round-info{background:linear-gradient(135deg,#111827,#1a2332);border:1px solid #1e293b;border-radius:16px;padding:24px;margin-bottom:20px;text-align:center}
+.round-title{font-family:'Chakra Petch',sans-serif;font-size:20px;color:#fff;margin-bottom:8px}
+.round-desc{font-size:14px;color:#a0a8b4;line-height:1.6}
+.round-timer{font-family:'IBM Plex Mono',monospace;font-size:36px;color:#c41e3a;margin-top:12px}
+
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.choice-btn{background:#111827;border:2px solid #1e293b;border-radius:12px;padding:20px;cursor:pointer;transition:all .3s;text-align:left}
+.choice-btn:hover{border-color:#5865f2;transform:translateY(-2px);box-shadow:0 8px 20px rgba(88,101,242,.15)}
+.choice-btn.selected{border-color:#00e0ff;background:rgba(0,224,255,.05)}
+.choice-title{font-family:'Chakra Petch',sans-serif;font-size:16px;color:#fff;margin-bottom:6px}
+.choice-desc{font-size:12px;color:#a0a8b4;line-height:1.4}
+.choice-cost{font-size:11px;color:#c41e3a;margin-top:8px;font-family:'IBM Plex Mono',monospace}
+.choice-benefit{font-size:11px;color:#00ff88;margin-top:4px}
+
+.action-btn{width:100%;padding:16px;background:linear-gradient(135deg,#5865f2,#4752c4);color:#fff;border:none;border-radius:12px;font-family:'Chakra Petch',sans-serif;font-size:18px;cursor:pointer;transition:all .3s}
+.action-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(88,101,242,.3)}
+.action-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.result-panel{background:#111827;border:1px solid #1e293b;border-radius:16px;padding:24px;margin-top:20px;display:none}
+.result-panel.show{display:block;animation:fadeIn .5s}
+.result-title{font-family:'Chakra Petch',sans-serif;font-size:20px;margin-bottom:12px}
+.result-title.win{color:#00ff88}
+.result-title.lose{color:#c41e3a}
+.result-desc{font-size:14px;color:#a0a8b4;line-height:1.6}
+
+.game-over{text-align:center;padding:40px}
+.game-over h2{font-family:'Chakra Petch',sans-serif;font-size:32px;color:#fff;margin-bottom:16px}
+.game-over .final-score{font-size:48px;color:#5865f2;font-family:'Chakra Petch',sans-serif}
+.game-over .rank{font-size:18px;color:#00e0ff;margin-top:8px}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.hud{grid-template-columns:repeat(2,1fr)}.choices{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<a href="oza-hub.html" class="back-btn">← OZA Hub</a>
+
+<div class="game-container">
+  <div class="game-header">
+    <h1>Mineral <span>Savaşı</span></h1>
+    <p>Kritik mineral kaynaklarını kontrol et, silah üret, rakiplerini geç!</p>
+  </div>
+  
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Tur</div><div class="hud-value" id="round">1/10</div></div>
+    <div class="hud-item"><div class="hud-label">Bütçe</div><div class="hud-value" id="budget">100M</div></div>
+    <div class="hud-item"><div class="hud-label">Güç</div><div class="hud-value" id="power">0</div></div>
+    <div class="hud-item"><div class="hud-label">Risk</div><div class="hud-value" id="risk">20%</div></div>
+  </div>
+
+  <div id="game-area">
+    <div class="round-info">
+      <div class="round-title" id="scenario-title">Yükleniyor...</div>
+      <div class="round-desc" id="scenario-desc"></div>
+      <div class="round-timer" id="timer">10</div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <button class="action-btn" id="confirm-btn" disabled onclick="confirmChoice()">Kararını Onayla</button>
+    <div class="result-panel" id="result-panel">
+      <div class="result-title" id="result-title"></div>
+      <div class="result-desc" id="result-desc"></div>
+    </div>
+  </div>
+  
+  <div id="game-over" style="display:none" class="game-over">
+    <h2>Oyun Bitti!</h2>
+    <div class="final-score" id="final-score">0</div>
+    <div class="rank" id="rank"></div>
+    <button class="action-btn" style="margin-top:20px" onclick="startGame()">Tekrar Oyna</button>
+    <button class="action-btn" style="margin-top:10px;background:#1e293b" onclick="location.href='oza-hub.html'">OZA Hub</button>
+  </div>
+</div>
+
+<script src="hs-nav.js?v=11"></script>
+<script>
+const SCENARIOS = [
+  {title:"Çin Galyum Ambargosu",desc:"Çin, galyum ihracatını durdurdu! Radar ve lazer sistemlerin tehlikede. Ne yaparsın?",
+   choices:[
+    {title:"Avustralya ile Anlaşma",desc:"Yeni maden açılışı 2 yıl sürer ama uzun vadeli güvenli.",cost:-20,power:15,risk:-10,benefit:"+15 Güç, -10 Risk"},
+    {title:"Stokları Kullan",desc:"Mevcut stokları tüket. Kısa vadede sorun yok ama gelecek belirsiz.",cost:0,power:5,risk:+15,benefit:"+5 Güç, +15 Risk"},
+    {title:"Geri Dönüşüm Tesisi",desc:"Elektronik atıklardan galyum geri kazanımı. Pahalı ama sürdürülebilir.",cost:-30,power:10,risk:-15,benefit:"+10 Güç, -15 Risk"},
+    {title:"Diplomatik Baskı",desc:"BM üzerinden baskı yap. Sonuç belirsiz.",cost:-5,power:0,risk:+5,benefit:"Belirsiz"}
+   ]},
+  {title:"Kongo Kobalt Krizi",desc:"İç savaş kobalt madenlerini kapattı! İHA ve drone bataryaları üretilemez. Kararın?",
+   choices:[
+    {title:"Endonezya Nikel-Kobalt",desc:"Alternatif kaynak. Kalite düşük ama hızlı tedarik.",cost:-15,power:8,risk:0,benefit:"+8 Güç"},
+    {title:"Kobaltsız Batarya Ar-Ge",desc:"LFP teknolojisine geç. Uzun vadede bağımsızlık.",cost:-35,power:20,risk:-20,benefit:"+20 Güç, -20 Risk"},
+    {title:"Özel Askeri Şirket",desc:"Madenleri güvenlik altına al. Etik sorunlar var.",cost:-25,power:12,risk:+10,benefit:"+12 Güç, +10 Risk"},
+    {title:"Bekle ve Gör",desc:"Krizin geçmesini bekle. Üretim durur.",cost:0,power:-5,risk:+20,benefit:"-5 Güç, +20 Risk"}
+   ]},
+  {title:"Nadir Toprak Fiyat Patlaması",desc:"Neodimyum fiyatı %400 arttı! Füze güdüm mıknatısları üretilemez. Stratejin?",
+   choices:[
+    {title:"Yerli Maden Aç",desc:"Türkiye\'de nadir toprak araması başlat. 3 yıl sürer.",cost:-40,power:25,risk:-25,benefit:"+25 Güç, -25 Risk"},
+    {title:"Samaryum Alternatifi",desc:"SmCo mıknatıslara geç. Performans %15 düşer.",cost:-10,power:8,risk:-5,benefit:"+8 Güç, -5 Risk"},
+    {title:"Japonya ile Ortak Ar-Ge",desc:"Geri dönüşüm teknolojisi geliştir.",cost:-20,power:15,risk:-10,benefit:"+15 Güç, -10 Risk"},
+    {title:"Piyasadan Al",desc:"Yüksek fiyattan satın al. Bütçe erir.",cost:-50,power:10,risk:0,benefit:"+10 Güç, Pahalı"}
+   ]},
+  {title:"Brezilya Niyobyum Monopolü",desc:"Brezilya niyobyum fiyatını %200 artırdı! Jet motoru türbin kanatçıkları etkileniyor.",
+   choices:[
+    {title:"Kanada Madenleri",desc:"Alternatif niyobyum kaynağı. Daha pahalı ama güvenli.",cost:-25,power:12,risk:-15,benefit:"+12 Güç, -15 Risk"},
+    {title:"Tantal İkamesi",desc:"Bazı uygulamalarda tantal kullan. Kısıtlı çözüm.",cost:-10,power:5,risk:0,benefit:"+5 Güç"},
+    {title:"Stok Yapma Politikası",desc:"5 yıllık stratejik stok oluştur.",cost:-35,power:18,risk:-20,benefit:"+18 Güç, -20 Risk"},
+    {title:"Motor Tasarımını Değiştir",desc:"Niyobyum-az tasarım. Performans kaybı var.",cost:-15,power:3,risk:+5,benefit:"+3 Güç, +5 Risk"}
+   ]},
+  {title:"Germanyum Tedarik Kesintisi",desc:"Çin germanyum ihracatını lisansa bağladı! Gece görüş ve termal sistemler risk altında.",
+   choices:[
+    {title:"Belçika Umicore ile Anlaş",desc:"Avrupa\'nın tek germanyum rafinerisi. Pahalı ama hızlı.",cost:-20,power:10,risk:-10,benefit:"+10 Güç, -10 Risk"},
+    {title:"Silikon Alternatifi",desc:"Si bazlı sensörlere geç. Performans %30 düşer.",cost:-5,power:2,risk:+10,benefit:"+2 Güç, +10 Risk"},
+    {title:"Geri Dönüşüm Ağı",desc:"Eski ekipmanlardan germanyum çıkar.",cost:-15,power:8,risk:-5,benefit:"+8 Güç, -5 Risk"},
+    {title:"Fiber Optik Stoklardan",desc:"Telekomdan germanyum aktar. Geçici çözüm.",cost:-10,power:6,risk:+5,benefit:"+6 Güç, +5 Risk"}
+   ]},
+  {title:"Tungsten Krizi",desc:"Çin tungsten ihracatını kıstı! Zırh delici mermiler ve hipersonik sistemler etkileniyor.",
+   choices:[
+    {title:"Portekiz-İspanya Kaynağı",desc:"Avrupa tungsten madenleri. Kapasite düşük.",cost:-20,power:10,risk:-8,benefit:"+10 Güç, -8 Risk"},
+    {title:"Uranyum Penetratör",desc:"Seyreltilmiş uranyum kullan. Çevresel sorunlar.",cost:-10,power:15,risk:+15,benefit:"+15 Güç, +15 Risk"},
+    {title:"Geri Dönüşüm",desc:"Kullanılmış kesici takımlardan tungsten geri kazan.",cost:-12,power:7,risk:-5,benefit:"+7 Güç, -5 Risk"},
+    {title:"Molibden İkamesi",desc:"Bazı uygulamalarda molibden kullan.",cost:-8,power:5,risk:0,benefit:"+5 Güç"}
+   ]},
+  {title:"Lityum Arz Fazlası Sona Erdi",desc:"Elektrikli araç talebi lityumu tüketti! Askeri bataryalar için lityum bulunamıyor.",
+   choices:[
+    {title:"Şili-Arjantin Anlaşması",desc:"Güney Amerika lityum üçgeni ile uzun vadeli kontrat.",cost:-30,power:15,risk:-15,benefit:"+15 Güç, -15 Risk"},
+    {title:"Sodyum-İyon Batarya",desc:"Lityumsuz batarya teknolojisi. Ağırlık artışı var.",cost:-25,power:12,risk:-20,benefit:"+12 Güç, -20 Risk"},
+    {title:"Deniz Suyu Çıkarımı",desc:"Deniz suyundan lityum. Henüz deneysel.",cost:-20,power:5,risk:+5,benefit:"+5 Güç, +5 Risk"},
+    {title:"Mevcut Stokları Paylaş",desc:"Sivil sektörden askeri sektöre aktar.",cost:0,power:8,risk:+10,benefit:"+8 Güç, +10 Risk"}
+   ]},
+  {title:"Disprosyum Tekeli Kırılıyor",desc:"Çin dışı disprosyum kaynağı bulundu! Ama yatırım gerekiyor. Ne yaparsın?",
+   choices:[
+    {title:"Tam Yatırım",desc:"Yeni madene %100 yatırım. Yüksek getiri potansiyeli.",cost:-45,power:30,risk:-30,benefit:"+30 Güç, -30 Risk"},
+    {title:"Ortaklık",desc:"NATO müttefikleriyle ortak yatırım. Maliyet paylaşımı.",cost:-20,power:20,risk:-20,benefit:"+20 Güç, -20 Risk"},
+    {title:"Sadece İzle",desc:"Başkalarının yatırım yapmasını bekle.",cost:0,power:5,risk:0,benefit:"+5 Güç"},
+    {title:"Ar-Ge: Disprosyumsuz Mıknatıs",desc:"Disprosyum gerektirmeyen mıknatıs geliştir.",cost:-30,power:18,risk:-15,benefit:"+18 Güç, -15 Risk"}
+   ]},
+  {title:"Siber Saldırı: Maden Kontrol Sistemi",desc:"Düşman siber saldırıyla maden otomasyon sistemlerini çökertti! Üretim durdu.",
+   choices:[
+    {title:"Siber Savunma Yatırımı",desc:"OT güvenlik sistemi kur. Gelecek saldırıları engelle.",cost:-20,power:10,risk:-15,benefit:"+10 Güç, -15 Risk"},
+    {title:"Manuel Üretim",desc:"Otomasyonu kapat, elle çalış. Yavaş ama güvenli.",cost:-5,power:3,risk:-5,benefit:"+3 Güç, -5 Risk"},
+    {title:"Karşı Saldırı",desc:"Düşmanın sistemlerine saldır. Tırmanma riski.",cost:-15,power:12,risk:+20,benefit:"+12 Güç, +20 Risk"},
+    {title:"Yedek Sistem Devreye",desc:"Offline yedek sistemi aktive et.",cost:-10,power:8,risk:-10,benefit:"+8 Güç, -10 Risk"}
+   ]},
+  {title:"Stratejik Mineral Zirvesi",desc:"G7 stratejik mineral ittifakı kuruyor. Türkiye davet edildi. Pozisyonun ne?",
+   choices:[
+    {title:"Tam Üyelik",desc:"İttifaka katıl. Bor kartını oyna, karşılığında erişim al.",cost:-10,power:25,risk:-25,benefit:"+25 Güç, -25 Risk"},
+    {title:"Gözlemci Statü",desc:"Bağımsızlığı koru ama bilgi akışından yararlan.",cost:0,power:10,risk:-5,benefit:"+10 Güç, -5 Risk"},
+    {title:"Kendi İttifakını Kur",desc:"Türk Devletleri ile mineral ittifakı. Kazakistan, Kırgızistan.",cost:-20,power:20,risk:-10,benefit:"+20 Güç, -10 Risk"},
+    {title:"Reddet",desc:"Bağımsız kal. Tek başına hareket et.",cost:0,power:0,risk:+10,benefit:"+10 Risk"}
+   ]}
+];
+
+let state = {round:0, budget:100, power:0, risk:20, selectedChoice:null, timer:null};
+
+function startGame(){
+  state = {round:0, budget:100, power:0, risk:20, selectedChoice:null, timer:null};
+  document.getElementById('game-over').style.display='none';
+  document.getElementById('game-area').style.display='block';
+  nextRound();
+}
+
+function nextRound(){
+  if(state.round >= 10){endGame();return;}
+  state.selectedChoice = null;
+  document.getElementById('confirm-btn').disabled = true;
+  document.getElementById('result-panel').classList.remove('show');
+  
+  const scenario = SCENARIOS[state.round];
+  document.getElementById('round').textContent = (state.round+1)+'/10';
+  document.getElementById('budget').textContent = state.budget+'M';
+  document.getElementById('power').textContent = state.power;
+  document.getElementById('risk').textContent = Math.max(0,Math.min(100,state.risk))+'%';
+  
+  document.getElementById('scenario-title').textContent = scenario.title;
+  document.getElementById('scenario-desc').textContent = scenario.desc;
+  
+  const choicesDiv = document.getElementById('choices');
+  choicesDiv.innerHTML = '';
+  scenario.choices.forEach((c,i) => {
+    const btn = document.createElement('div');
+    btn.className = 'choice-btn';
+    btn.innerHTML = '<div class="choice-title">'+c.title+'</div><div class="choice-desc">'+c.desc+'</div><div class="choice-cost">Maliyet: '+(c.cost>=0?'+':'')+c.cost+'M</div><div class="choice-benefit">'+c.benefit+'</div>';
+    btn.onclick = () => selectChoice(i);
+    choicesDiv.appendChild(btn);
+  });
+  
+  // Zamanlayıcı
+  let timeLeft = 10;
+  document.getElementById('timer').textContent = timeLeft;
+  if(state.timer) clearInterval(state.timer);
+  state.timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').textContent = timeLeft;
+    if(timeLeft <= 0){
+      clearInterval(state.timer);
+      if(state.selectedChoice === null){
+        state.selectedChoice = 3; // Varsayılan: son seçenek
+        applyChoice();
+      }
+    }
+  }, 1000);
+}
+
+function selectChoice(i){
+  state.selectedChoice = i;
+  document.querySelectorAll('.choice-btn').forEach((b,idx) => {
+    b.classList.toggle('selected', idx===i);
+  });
+  document.getElementById('confirm-btn').disabled = false;
+}
+
+function confirmChoice(){
+  if(state.selectedChoice === null) return;
+  clearInterval(state.timer);
+  applyChoice();
+}
+
+function applyChoice(){
+  const scenario = SCENARIOS[state.round];
+  const choice = scenario.choices[state.selectedChoice];
+  
+  state.budget += choice.cost;
+  state.power += choice.power;
+  state.risk += choice.risk;
+  
+  // Sonuç göster
+  const panel = document.getElementById('result-panel');
+  const title = document.getElementById('result-title');
+  const desc = document.getElementById('result-desc');
+  
+  if(choice.power > 10){
+    title.textContent = '✓ Stratejik Hamle!';
+    title.className = 'result-title win';
+    desc.textContent = choice.title + ' kararı güç dengesini lehine çevirdi. Bütçe: '+state.budget+'M | Güç: '+state.power+' | Risk: '+state.risk+'%';
+  } else if(choice.risk > 10){
+    title.textContent = '⚠ Riskli Karar!';
+    title.className = 'result-title lose';
+    desc.textContent = choice.title + ' kararı kısa vadede işe yarayabilir ama risk arttı. Bütçe: '+state.budget+'M | Güç: '+state.power+' | Risk: '+state.risk+'%';
+  } else {
+    title.textContent = '→ Dengeli Hamle';
+    title.className = 'result-title';
+    desc.textContent = choice.title + ' kararı uygulandı. Bütçe: '+state.budget+'M | Güç: '+state.power+' | Risk: '+state.risk+'%';
+  }
+  panel.classList.add('show');
+  
+  // HUD güncelle
+  document.getElementById('budget').textContent = state.budget+'M';
+  document.getElementById('power').textContent = state.power;
+  document.getElementById('risk').textContent = Math.max(0,Math.min(100,state.risk))+'%';
+  
+  state.round++;
+  setTimeout(nextRound, 2500);
+}
+
+function endGame(){
+  document.getElementById('game-area').style.display='none';
+  document.getElementById('game-over').style.display='block';
+  
+  // Skor hesapla
+  const score = Math.max(0, state.power * 10 + state.budget - state.risk * 2);
+  document.getElementById('final-score').textContent = score;
+  
+  let rank = '';
+  if(score >= 400) rank = '⭐ Stratejik Deha — Mineral Hakimiyeti!';
+  else if(score >= 300) rank = '🎖️ Uzman Stratejist';
+  else if(score >= 200) rank = '📊 Yetkin Yönetici';
+  else if(score >= 100) rank = '📋 Çırak Analist';
+  else rank = '⚠️ Tedarik Zinciri Çöktü!';
+  document.getElementById('rank').textContent = rank;
+  
+  // localStorage kaydet
+  const prev = parseInt(localStorage.getItem('hs_mineral_best')||'0');
+  if(score > prev) localStorage.setItem('hs_mineral_best', score);
+}
+
+// Oyunu başlat
+startGame();
+</script>
+</body>
+</html>

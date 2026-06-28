@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pax New Turcica: Küresel Düzen Okuması | Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2332;--gold:#C9A24B;--gold-dim:rgba(201,162,75,.15);--cyan:#00E0FF;--red:#E01515;--text:#e8e6e3;--text-dim:#9ca3af;--accent:#5865f2;--serif:'Playfair Display',serif;--mono:'Chakra Petch',sans-serif;--code:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7;overflow-x:hidden}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .3s}
+nav{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(10,14,26,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,162,75,.1);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+nav a{color:var(--gold);text-decoration:none;font-family:var(--mono);font-size:1rem;letter-spacing:1px}
+nav .title{color:var(--text);font-family:var(--mono);font-size:.95rem;letter-spacing:2px;text-transform:uppercase}
+#soundBtn{background:none;border:1px solid var(--gold-dim);color:var(--gold);font-family:var(--mono);font-size:.9rem;padding:4px 12px;border-radius:4px;cursor:pointer}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(201,162,75,.06) 0%,transparent 60%)}
+.hero-tag{font-family:var(--mono);font-size:.95rem;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;line-height:1.15;margin-bottom:24px;color:#fff}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{max-width:680px;font-size:1.05rem;color:var(--text-dim);line-height:1.8}
+.scroll-hint{position:absolute;bottom:40px;color:var(--text-dim);font-family:var(--mono);font-size:.95rem;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.section{min-height:80vh;padding:100px 32px 80px;max-width:1100px;margin:0 auto;opacity:0;transform:translateY(60px);transition:all .8s cubic-bezier(.19,1,.22,1)}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-num{font-family:var(--mono);font-size:.9rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:8px}
+.section-period{font-family:var(--mono);font-size:.9rem;color:var(--text-dim);margin-bottom:24px}
+.section h2{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:16px;color:#fff}
+.section h2 em{font-style:normal;color:var(--gold)}
+.section-lead{font-size:1.05rem;color:var(--text-dim);line-height:1.8;max-width:800px;margin-bottom:40px}
+/* Pax Comparison Table */
+.pax-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:.85rem}
+.pax-table th{background:var(--surface);color:var(--gold);font-family:var(--mono);font-size:.9rem;letter-spacing:1px;text-transform:uppercase;padding:12px 16px;text-align:left;border-bottom:2px solid var(--gold-dim)}
+.pax-table td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-dim)}
+.pax-table tr:hover td{background:rgba(201,162,75,.03);color:var(--text)}
+.pax-table .pax-name{color:var(--gold);font-family:var(--serif);font-weight:700;font-size:1rem}
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin:32px 0}
+.card{background:var(--surface);border:1px solid rgba(201,162,75,.1);border-radius:12px;padding:28px;transition:all .3s;cursor:pointer}
+.card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 40px rgba(201,162,75,.1)}
+.card-icon{font-size:2rem;margin-bottom:12px}
+.card h3{font-family:var(--serif);font-size:1.1rem;color:#fff;margin-bottom:8px}
+.card p{font-size:.85rem;color:var(--text-dim);line-height:1.6}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.card-tags span{font-family:var(--mono);font-size:.85rem;padding:3px 8px;border-radius:4px;background:var(--gold-dim);color:var(--gold)}
+/* Quote */
+.quote{border-left:3px solid var(--gold);padding:20px 24px;margin:32px 0;background:var(--gold-dim);border-radius:0 8px 8px 0}
+.quote p{font-family:var(--serif);font-size:1.1rem;font-style:italic;color:#fff;line-height:1.6}
+.quote cite{display:block;margin-top:8px;font-family:var(--mono);font-size:.9rem;color:var(--gold);font-style:normal}
+/* Formula */
+.formula-box{background:var(--surface);border:1px solid var(--gold-dim);border-radius:12px;padding:32px;margin:32px 0;font-family:var(--code);font-size:.9rem;line-height:2}
+.formula-box .eq{color:var(--gold);font-size:.95rem;margin:8px 0;padding:12px 16px;background:rgba(201,162,75,.05);border-radius:8px;border-left:3px solid var(--gold)}
+.formula-box .label{color:var(--cyan);font-size:.9rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+/* Pillar */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin:32px 0}
+.pillar{background:var(--surface);border:1px solid rgba(201,162,75,.1);border-radius:12px;padding:24px;text-align:center;transition:all .4s}
+.pillar:hover{border-color:var(--gold);transform:scale(1.02)}
+.pillar-icon{font-size:2.5rem;margin-bottom:8px}
+.pillar h4{font-family:var(--serif);font-size:1rem;color:var(--gold);margin-bottom:6px}
+.pillar p{font-size:1rem;color:var(--text-dim)}
+/* Footer */
+footer{text-align:center;padding:40px 24px;border-top:1px solid rgba(201,162,75,.1)}
+footer a{color:var(--gold);text-decoration:none;font-family:var(--mono);font-size:1rem}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.content{position:relative;z-index:1}
+@media(max-width:768px){
+  .pax-table{font-size:.95rem}
+  .pax-table th,.pax-table td{padding:8px}
+  nav{padding:10px 16px}
+  .pillars{grid-template-columns:1fr}
+}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div id="progress" style="width:0%"></div>
+<canvas id="particles"></canvas>
+<nav>
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a>
+  <span class="title">Küresel Düzen Sistemleri</span>
+  <button id="soundBtn">Ses: Kapalı</button>
+</nav>
+
+<div class="content">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Medeniyet Dinamikleri · Küresel Sistem Analizi</div>
+  <h1>Yeni Osmanlı Barışı:<br><em>Pax New Turcica</em></h1>
+  <p>Dünya tarihi, farklı dönemlerde belirli güç merkezlerinin oluşturduğu "uluslararası düzen" modelleriyle şekillenmiştir. Bu düzenler askerî üstünlük, ekonomik ağlar, diplomatik nüfuz ve kültürel yayılımın birleşimiyle ortaya çıkmıştır. Pax Romana'dan Pax Americana'ya — ve şimdi yeni bir kavramsal çerçeve: Pax New Turcica.</p>
+  <div class="scroll-hint">↓ Keşfetmek için kaydır</div>
+</section>
+
+<!-- SECTION 1: PAX SİSTEMLERİ -->
+<div class="section">
+  <div class="section-num">I. Tarihsel Pax Sistemleri</div>
+  <div class="section-period">Güç Merkezli Düzen Modelleri</div>
+  <h2>Uluslararası Düzen:<br><em>Pax Sistemleri Karşılaştırması</em></h2>
+  <p class="section-lead">Siyasal teori literatüründe "Pax" sistemleri, "tam barış"tan ziyade belirli bir güç dengesinin sağladığı göreli istikrar dönemleri olarak değerlendirilir. Her sistem kendi iç mantığı, araçları ve sınırlılıklarıyla çalışır.</p>
+
+  <table class="pax-table">
+    <tr><th>Sistem</th><th>Dönem</th><th>Temel Araç</th><th>Kapsam</th></tr>
+    <tr><td class="pax-name">Pax Romana</td><td>MÖ 27 – MS 180</td><td>Lejyonlar + Hukuk + Yol Ağı</td><td>Akdeniz Havzası</td></tr>
+    <tr><td class="pax-name">Pax Ottomana</td><td>1453 – 1683</td><td>Millet Sistemi + Vakıf + Ticaret</td><td>3 Kıta (Balkanlar, Orta Doğu, K. Afrika)</td></tr>
+    <tr><td class="pax-name">Pax Britannica</td><td>1815 – 1914</td><td>Deniz Gücü + Serbest Ticaret + Altın Standardı</td><td>Küresel (Deniz Yolları)</td></tr>
+    <tr><td class="pax-name">Pax Americana</td><td>1945 – ?</td><td>NATO + Bretton Woods + Kültürel Yayılım</td><td>Küresel (Kara + Deniz + Uzay)</td></tr>
+    <tr><td class="pax-name">Pax Sinica?</td><td>2013 – ?</td><td>Kuşak-Yol + Altyapı + Borç Diplomasisi</td><td>Avrasya + Afrika</td></tr>
+    <tr><td class="pax-name">Pax New Turcica?</td><td>Kavramsal</td><td>Arabuluculuk + Enerji + Kültürel Miras</td><td>Bölgesel → Küresel?</td></tr>
+  </table>
+</div>
+
+<!-- SECTION 2: OSMANLI DENEYİMİ -->
+<div class="section">
+  <div class="section-num">II. Osmanlı Deneyimi</div>
+  <div class="section-period">Çok Katmanlı İmparatorluk Düzeni</div>
+  <h2>Osmanlı Modeli:<br><em>Çoğulcu İstikrar Sistemi</em></h2>
+  <p class="section-lead">Osmanlı İmparatorluğu, modern ulus-devlet sisteminden farklı olarak çok dinli ve çok etnikli bir yönetim modeli geliştirmiştir. Millet sistemi, dini cemaatlerin hukukî tanınması ve uzun süreli sınır istikrarı üretme kapasitesi bu modelin öne çıkan yönleridir.</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🏛️</div>
+      <h3>Millet Sistemi</h3>
+      <p>İdarî özerklik alanları üzerinden farklı dinî ve etnik toplulukların kendi iç hukuk sistemlerini sürdürmesi. Çoğulculuk = güç çarpanı.</p>
+      <div class="card-tags"><span>İdarî Özerklik</span><span>Hukukî Tanınma</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <h3>Sınır İstikrarı</h3>
+      <p>Uzun süreli sınır istikrarı üretme kapasitesi. Fetih sonrası yeniden imar ve entegrasyon politikası. Yok etme değil, yeniden kurma ilkesi.</p>
+      <div class="card-tags"><span>Uzun Süreli Barış</span><span>Entegrasyon</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌍</div>
+      <h3>Çok Katmanlı Yönetim</h3>
+      <p>Merkez-taşra dengesi, eyalet sistemi, tımar düzeni. Farklı coğrafyalara uyarlanabilen esnek yönetim modeli.</p>
+      <div class="card-tags"><span>Esneklik</span><span>Adaptasyon</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: AVRUPA KOLONYALİZMİ -->
+<div class="section">
+  <div class="section-num">III. Avrupa Kolonyal Düzeni</div>
+  <div class="section-period">15.–20. Yüzyıl · Güç Temelli Yayılım</div>
+  <h2>Kolonyal Sistem:<br><em>Sömürge ve Eşitsizlik</em></h2>
+  <p class="section-lead">Avrupa devletleri 15. yüzyıldan itibaren küresel ölçekte genişleyen bir sömürge sistemi kurmuştur. Ticaret yollarının kontrolü, kaynak transferi ve askerî-deniz gücü üstünlüğü üzerinden ilerleyen bu süreç, hem küresel entegrasyonun başlangıcı hem de sömürgecilik ve eşitsizlik üretimi olarak çift yönlü değerlendirilir.</p>
+
+  <div class="formula-box">
+    <div class="label">Kolonyal Formül</div>
+    <div class="eq">Ticaret Yolları Kontrolü + Kaynak Transferi + Deniz Gücü Üstünlüğü = Küresel Hegemonya</div>
+    <div class="label" style="margin-top:16px">Sonuç</div>
+    <div class="eq">Küresel Entegrasyon + Sömürgecilik + Yapısal Eşitsizlik (eş zamanlı)</div>
+  </div>
+</div>
+
+<!-- SECTION 4: ABD SİSTEMİ -->
+<div class="section">
+  <div class="section-num">IV. Pax Americana</div>
+  <div class="section-period">1945 – Günümüz · ABD Merkezli Küresel Sistem</div>
+  <h2>ABD Düzeni:<br><em>Güvenlik + Finans + Kültür</em></h2>
+  <p class="section-lead">II. Dünya Savaşı sonrası dönemde ABD, uluslararası sistemin ana kurucu aktörlerinden biri haline gelmiştir. NATO güvenlik mimarisi, Bretton Woods finans sistemi ve küresel teknoloji-kültürel yayılım ile şekillenen bu düzen, eleştirel literatürde asimetrik güç ilişkileri ve müdahalecilik tartışmalarıyla birlikte ele alınır.</p>
+
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon">🛡️</div>
+      <h4>NATO</h4>
+      <p>Güvenlik mimarisi ve kolektif savunma</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">💵</div>
+      <h4>Bretton Woods</h4>
+      <p>IMF, Dünya Bankası, Dolar hegemonyası</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">📡</div>
+      <h4>Kültürel Yayılım</h4>
+      <p>Hollywood, teknoloji, akademi, medya</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🚀</div>
+      <h4>Teknoloji</h4>
+      <p>Silikon Vadisi, internet, yapay zekâ</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: ÇİN -->
+<div class="section">
+  <div class="section-num">V. Çin Alternatifi</div>
+  <div class="section-period">2013 – Günümüz · Kuşak ve Yol</div>
+  <h2>Pax Sinica?<br><em>Ekonomik Temelli Etki Alanı</em></h2>
+  <p class="section-lead">Çin, Kuşak ve Yol Girişimi ile ekonomik temelli yeni bir etki alanı oluşturmaktadır. Altyapı odaklı küresel entegrasyon, ticaret koridorları üzerinden yumuşak güç genişlemesi ve finansal bağımlılık ağları ile yeni tip bir "ekonomik Pax" modeli tartışmasını doğurmuştur.</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🏗️</div>
+      <h3>Altyapı Diplomasisi</h3>
+      <p>Limanlar, demiryolları, enerji hatları. Fiziksel bağlantı = ekonomik bağımlılık. 140+ ülkede proje.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💳</div>
+      <h3>Borç Tuzağı Tartışması</h3>
+      <p>Finansal bağımlılık ağları. Kredi → Temerrüt → Stratejik varlık devri döngüsü eleştirisi.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <h3>Dijital İpek Yolu</h3>
+      <p>5G altyapısı, veri merkezleri, e-ticaret platformları. Teknolojik ekosistem ihracı.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: BM -->
+<div class="section">
+  <div class="section-num">VI. Birleşmiş Milletler</div>
+  <div class="section-period">Kurumsal Barış Denemesi</div>
+  <h2>BM Sistemi:<br><em>Yönetilen Kriz Mekanizması</em></h2>
+  <p class="section-lead">Birleşmiş Milletler, tek bir güç yerine çok taraflı sistem kurma girişimidir. Ancak veto mekanizmaları, büyük güç rekabeti ve bölgesel savaşları önlemedeki sınırlılıklar nedeniyle "tam bir dünya barışı sistemi" olmaktan ziyade "yönetilen kriz sistemi" olarak değerlendirilir.</p>
+
+  <div class="formula-box">
+    <div class="label">BM'nin Yapısal Sınırlılığı</div>
+    <div class="eq">Veto Mekanizması + Büyük Güç Rekabeti + Uygulama Eksikliği = Yönetilen Kriz (Tam Barış Değil)</div>
+  </div>
+</div>
+
+<!-- SECTION 7: PAX NEW TURCICA -->
+<div class="section">
+  <div class="section-num">VII. Pax New Turcica</div>
+  <div class="section-period">Kavramsal Çerçeve · Normatif Proje</div>
+  <h2>Pax New Turcica:<br><em>Bölgesel Düzen Kurucu Aktör</em></h2>
+  <p class="section-lead">"Pax New Turcica" ifadesi, tarihsel bir gerçeklikten ziyade normatif bir proje fikri olarak okunabilir. Modern uluslararası ilişkiler literatüründe "bölgesel düzen kurucu aktör" (regional order builder) tartışmaları içinde değerlendirilen bu kavram, Türkiye'nin potansiyel rolünü tanımlar.</p>
+
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon">🕊️</div>
+      <h4>Bölgesel İstikrar</h4>
+      <p>İstikrar üretme kapasitesi ve arabuluculuk rolü</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🤝</div>
+      <h4>Diplomatik Arabuluculuk</h4>
+      <p>Krizlerde tarafsız arabulucu konumu</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🏛️</div>
+      <h4>Kültürel Miras</h4>
+      <p>Tarihsel-kültürel miras üzerinden yumuşak güç</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">⚡</div>
+      <h4>Stratejik Konum</h4>
+      <p>Enerji, ticaret ve lojistik hatlar üzerinde kritik pozisyon</p>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <div class="label">Başarı Kriterleri</div>
+    <div class="eq">Kurumsal Kapasite + Ekonomik Sürdürülebilirlik + Uluslararası Meşruiyet = Pax New Turcica'nın Gerçekleşebilirliği</div>
+    <div class="label" style="margin-top:16px">Liderlik Vizyonu</div>
+    <div class="eq">Komşularla Normalleşme + Bölgesel Arabuluculuk + Küresel Sistem Eleştirisi = Dış Politika Vizyonu</div>
+  </div>
+</div>
+
+<!-- SECTION 8: SONUÇ -->
+<div class="section">
+  <div class="section-num">VIII. Sonuç</div>
+  <div class="section-period">Barış, Güç ve Sistem Tasarımı</div>
+  <h2>Hiçbir Pax Modeli<br><em>Mutlak Barış Üretmemiştir</em></h2>
+  <p class="section-lead">Tarihsel deneyim gösteriyor ki hiçbir "Pax" modeli mutlak barış üretmemiştir. Bunun yerine güç dengesi, ekonomik karşılıklı bağımlılık ve kurumsal mekanizmalar üzerinden göreli istikrar dönemleri yaratılmıştır.</p>
+
+  <div class="quote">
+    <p>"Pax New Turcica fikri, gerçeklikten çok bir jeopolitik tahayyül modeli olarak okunmalı; başarısı normatif iddialardan ziyade kurumsal kapasite, ekonomik sürdürülebilirlik ve uluslararası meşruiyet düzeyi ile değerlendirilebilir."</p>
+    <cite>— Analiz Sonucu</cite>
+  </div>
+
+  <div class="formula-box">
+    <div class="label">Evrensel Formül</div>
+    <div class="eq">Güç Dengesi + Ekonomik Karşılıklı Bağımlılık + Kurumsal Mekanizmalar = Göreli İstikrar</div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<footer>
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a> · Harb-i Strateji · Selahaddin Koyuncu Arşivi
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(window.scrollY/h)*100+'%';
+});
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');playReveal()}});
+},{threshold:0.15});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let particles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+for(let i=0;i<35;i++){
+  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.5+.5,a:Math.random()*.25+.05});
+}
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(201,162,75,${p.a})`;ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+let audioCtx=null,soundOn=false;
+document.getElementById('soundBtn').addEventListener('click',()=>{
+  soundOn=!soundOn;
+  document.getElementById('soundBtn').textContent=soundOn?'Ses: Açık':'Ses: Kapalı';
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(soundOn){playAmbient();if(!window.ambientInterval)window.ambientInterval=setInterval(()=>{if(soundOn)playAmbient()},8000);}
+});
+function playAmbient(){
+  if(!audioCtx||!soundOn){if(window.ambientInterval){clearInterval(window.ambientInterval);window.ambientInterval=null;}return;}
+  const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+  osc.type='sine';osc.frequency.value=70;gain.gain.value=0.02;
+  osc.connect(gain);gain.connect(audioCtx.destination);osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+8);
+  osc.stop(audioCtx.currentTime+8);
+}
+function playReveal(){
+  if(!audioCtx||!soundOn)return;
+  const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+  osc.type='triangle';osc.frequency.value=500+Math.random()*300;gain.gain.value=0.03;
+  osc.connect(gain);gain.connect(audioCtx.destination);osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.3);
+  osc.stop(audioCtx.currentTime+.3);
+}
+document.querySelectorAll('.card,.pillar').forEach(c=>{
+  c.addEventListener('click',()=>{
+    if(!audioCtx||!soundOn)return;
+    const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+    osc.type='sine';osc.frequency.value=700;gain.gain.value=0.04;
+    osc.connect(gain);gain.connect(audioCtx.destination);osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.12);
+    osc.stop(audioCtx.currentTime+.12);
+  });
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

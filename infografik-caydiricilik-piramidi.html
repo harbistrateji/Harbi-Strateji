@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Türkiye Stratejik Caydırıcılık Piramidi — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--red:#c41e3a;--gold:#C9A24B;--cyan:#00E0FF;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh;overflow-x:hidden}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:54px;gap:12px;backdrop-filter:blur(10px)}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none;padding:5px 12px;border:1px solid var(--line);border-radius:6px;transition:.3s}
+.hdr-back:hover{border-color:var(--red);color:var(--red)}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;flex:1;text-align:center;color:var(--red);text-transform:uppercase;letter-spacing:1px}
+.main{max-width:850px;margin:0 auto;padding:70px 16px 40px}
+
+/* Animated background particles */
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.particle{position:absolute;width:2px;height:2px;background:var(--red);border-radius:50%;opacity:0.3;animation:floatUp 8s linear infinite}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(1);opacity:0}10%{opacity:0.3}90%{opacity:0.3}100%{transform:translateY(-10vh) scale(0);opacity:0}}
+
+/* Pyramid */
+.pyramid-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:20px;position:relative;z-index:1;overflow:hidden}
+.pyramid-wrap::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(196,30,58,0.03),transparent,rgba(201,162,75,0.03),transparent);animation:rotate 20s linear infinite}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.pw-title{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--gold);margin-bottom:20px;text-align:center;position:relative;z-index:1}
+.pyramid{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+.p-level{border-radius:12px;cursor:pointer;transition:all .4s cubic-bezier(.19,1,.22,1);display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:2px solid transparent;position:relative;overflow:hidden}
+.p-level::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);transition:left .6s}
+.p-level:hover::after{left:100%}
+.p-level:hover{transform:scale(1.03);box-shadow:0 0 30px rgba(196,30,58,.15)}
+.p-level.active{border-color:var(--gold)!important;transform:scale(1.03);box-shadow:0 8px 32px rgba(201,162,75,.2)}
+.p-icon{font-size:22px;min-width:35px;filter:drop-shadow(0 0 8px currentColor)}
+.p-info{flex:1;padding:0 14px}
+.p-name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.5px}
+.p-sub{font-size:13px;color:var(--dim);margin-top:3px}
+.p-range{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;text-align:right}
+
+/* Detail panel */
+.detail{background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:20px;margin-bottom:20px;position:relative;z-index:1;max-height:0;overflow:hidden;opacity:0;transition:all .5s cubic-bezier(.19,1,.22,1)}
+.detail.show{max-height:600px;opacity:1;padding:20px}
+.d-title{font-family:'Chakra Petch',sans-serif;font-size:17px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.d-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.d-stat{background:rgba(255,255,255,.03);border-radius:10px;padding:12px;border:1px solid var(--line);transition:.3s}
+.d-stat:hover{border-color:var(--gold);transform:translateY(-2px)}
+.d-val{font-family:'Chakra Petch',sans-serif;font-size:17px;font-weight:700}
+.d-label{font-size:13px;color:var(--dim);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px}
+.d-desc{font-size:13px;color:var(--tx);line-height:1.9;border-top:1px solid var(--line);padding-top:12px}
+
+/* Range canvas */
+.range-section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px;position:relative;z-index:1}
+.rs-title{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--cyan);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.rs-title::before{content:'';width:8px;height:8px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+canvas#range-canvas{width:100%;height:220px;display:block;border-radius:8px}
+
+/* Motor section */
+.motor-section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px;position:relative;z-index:1}
+.ms-title{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ms-title::before{content:'';width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+.motor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.motor-card{background:rgba(0,255,136,.03);border:1px solid rgba(0,255,136,.12);border-radius:12px;padding:14px;transition:all .3s;position:relative;overflow:hidden}
+.motor-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--green);opacity:0;transition:.3s}
+.motor-card:hover{border-color:rgba(0,255,136,.4);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,255,136,.1)}
+.motor-card:hover::before{opacity:1}
+.mc-name{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--green);margin-bottom:5px;font-weight:700}
+.mc-spec{font-size:13px;color:var(--dim);line-height:1.8}
+
+/* Comparison section */
+.compare-section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px;position:relative;z-index:1}
+.cmp-title{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--red);margin-bottom:14px}
+.cmp-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cmp-label{font-size:13px;color:var(--dim);min-width:60px}
+.cmp-track{flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;position:relative}
+.cmp-fill{height:100%;border-radius:4px;transition:width 1.5s cubic-bezier(.19,1,.22,1);position:relative}
+.cmp-fill::after{content:'';position:absolute;top:0;right:0;width:20px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3));animation:shimmer 2s infinite}
+@keyframes shimmer{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+.cmp-val{font-size:13px;color:var(--tx);min-width:50px;text-align:right;font-weight:600}
+
+/* Footer */
+.footer{text-align:center;padding:20px;color:var(--dim);font-size:13px;position:relative;z-index:1;border-top:1px solid var(--line);margin-top:20px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<header class="hdr">
+  <a href="index.html" class="hdr-back">← Ana Sayfa</a>
+  <div class="hdr-title">🚀 TÜRKİYE STRATEJİK CAYDIRICILIK PİRAMİDİ</div>
+</header>
+
+<!-- Animated particles -->
+<div class="particles" id="particles"></div>
+
+<div class="main">
+  <!-- Pyramid -->
+  <div class="pyramid-wrap">
+    <div class="pw-title">🇹🇷 FÜZE MENZİL HİYERARŞİSİ — Tıkla, İncele</div>
+    <div class="pyramid" id="pyramid"></div>
+  </div>
+
+  <!-- Detail -->
+  <div class="detail" id="detail">
+    <div class="d-title" id="d-title">—</div>
+    <div class="d-grid" id="d-grid"></div>
+    <div class="d-desc" id="d-desc"></div>
+  </div>
+
+  <!-- Range canvas -->
+  <div class="range-section">
+    <div class="rs-title">🗺️ COĞRAFİK KAPSAMA ANİMASYONU</div>
+    <canvas id="range-canvas" height="220"></canvas>
+  </div>
+
+  <!-- Comparison -->
+  <div class="compare-section">
+    <div class="cmp-title">⚖️ BÖLGESEL MENZİL KARŞILAŞTIRMASI</div>
+    <div id="compare-bars"></div>
+  </div>
+
+  <!-- Motor section -->
+  <div class="motor-section">
+    <div class="ms-title">⚙️ MOTOR BAĞIMSIZLIĞI — TEI EKOSİSTEMİ</div>
+    <div class="motor-grid">
+      <div class="motor-card"><div class="mc-name">GÜÇHAN (TF-35000)</div><div class="mc-spec">42.000 lbf itki · KAAN için · 2026 test</div></div>
+      <div class="motor-card"><div class="mc-name">TF-10000</div><div class="mc-spec">10.000 lbf · Orta sınıf · İHA/UAV</div></div>
+      <div class="motor-card"><div class="mc-name">TF-6000</div><div class="mc-spec">6.000 lbf · Hafif sınıf · Seyir füzesi</div></div>
+      <div class="motor-card"><div class="mc-name">ONUR Turbo Şaft</div><div class="mc-spec">Helikopter motoru · T625/T929 için</div></div>
+      <div class="motor-card"><div class="mc-name">KTJ-3200</div><div class="mc-spec">Turbojet · SOM-J, Gezgin seyir füzeleri</div></div>
+      <div class="motor-card"><div class="mc-name">PD-170</div><div class="mc-spec">Piston motor · TB2/ANKA İHA'lar için</div></div>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 HARB-İ STRATEJİ | Türkiye Stratejik Caydırıcılık Analizi</div>
+</div>
+
+<script>
+// Particles
+(function(){
+  var pc=document.getElementById('particles');
+  for(var i=0;i<30;i++){
+    var p=document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDelay=Math.random()*8+'s';
+    p.style.animationDuration=(6+Math.random()*6)+'s';
+    pc.appendChild(p);
+  }
+})();
+
+var MISSILES=[
+  {id:'yildirimhan',icon:'☄️',name:'YILDIRIMHAN',sub:'Stratejik ICBM',range:'6.000+ km',
+   color:'#c41e3a',width:100,
+   stats:{menzil:'6.000+ km',hiz:'Mach 9-25',yuk:'Çok başlıklı (MIRV)',durum:'Geliştirme'},
+   desc:'Türkiye\'nin stratejik caydırıcılık mesajı. Kıtalararası balistik füze programı. Sıvı/katı yakıt hibrit sistemi. Menzil: Avrupa, Orta Doğu, Orta Asya, Kuzey Afrika\'nın tamamı. Jeopolitik mesaj: "Biz de masadayız." Çok başlıklı savaş başlığı taşıma kapasitesi ile stratejik denge unsuru.'},
+  {id:'tayfun4',icon:'🚀',name:'TAYFUN BLOK-4',sub:'Operasyonel Balistik',range:'2.000+ km',
+   color:'#f97316',width:85,
+   stats:{menzil:'2.000+ km',hiz:'Mach 7+',yuk:'500 kg',durum:'Test Aşaması'},
+   desc:'Orta menzilli balistik füze. Türkiye\'nin operasyonel caydırıcılığının omurgası. Katı yakıtlı, mobil fırlatma platformu. Bölgesel güç projeksiyonu için kritik. Avrupa\'nın tamamını, Orta Doğu ve Kuzey Afrika\'yı kapsıyor. Manevra kabiliyetli savaş başlığı.'},
+  {id:'gezgin',icon:'✈️',name:'GEZGİN',sub:'Seyir Füzesi',range:'1.000+ km',
+   color:'#C9A24B',width:70,
+   stats:{menzil:'1.000+ km',hiz:'Subsonic (Mach 0.8)',yuk:'Hassas güdüm',durum:'Operasyonel'},
+   desc:'Yerli seyir füzesi. Düşük irtifada arazi takibi yaparak radar tespitini zorlaştırır. INS/GPS/TERCOM hibrit güdüm. Çoklu platform uyumluluğu: hava (AKINCI), kara (TEL), deniz (TCG İstanbul). Stratejik hedeflere cerrahi vuruş kabiliyeti.'},
+  {id:'tayfun1',icon:'🎯',name:'TAYFUN BLOK-1',sub:'Taktik Balistik',range:'800+ km',
+   color:'#8b5cf6',width:55,
+   stats:{menzil:'800+ km',hiz:'Mach 5+',yuk:'400 kg',durum:'Operasyonel'},
+   desc:'Taktik balistik füze. Bölgesel hedeflere karşı yüksek etkili. Hızlı konuşlanma kapasitesi, mobil TEL platformu. Yüksek hassasiyet (CEP <10m). Quasi-balistik manevra ile savunma sistemlerini aldatma kabiliyeti.'},
+  {id:'bora',icon:'💥',name:'BORA',sub:'Taktik Füze Sistemi',range:'300+ km',
+   color:'#10b981',width:40,
+   stats:{menzil:'300+ km',hiz:'Mach 4',yuk:'470 kg',durum:'Envanterde'},
+   desc:'Türkiye\'nin ilk yerli taktik balistik füzesi. Savaş alanı desteği ve stratejik hedef vurma kapasitesi. Yüksek hassasiyet ve güvenilirlik. Çoklu savaş başlığı seçeneği (HE, penetratör, küme). J-600T ailesinin devamı.'}
+];
+
+var selected=null;
+
+// Render pyramid
+var html='';
+MISSILES.forEach(function(m,i){
+  html+='<div class="p-level" id="pl-'+m.id+'" onclick="selectMissile(\''+m.id+'\')" style="width:'+m.width+'%;background:rgba('+hexToRgb(m.color)+',0.06);border-color:rgba('+hexToRgb(m.color)+',0.25)">';
+  html+='<div class="p-icon">'+m.icon+'</div>';
+  html+='<div class="p-info"><div class="p-name" style="color:'+m.color+'">'+m.name+'</div><div class="p-sub">'+m.sub+'</div></div>';
+  html+='<div class="p-range" style="color:'+m.color+'">'+m.range+'</div>';
+  html+='</div>';
+});
+document.getElementById('pyramid').innerHTML=html;
+
+function hexToRgb(hex){
+  var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return r+','+g+','+b;
+}
+
+function selectMissile(id){
+  var m=MISSILES.find(function(x){return x.id===id;});
+  if(!m)return;
+  selected=m;
+  document.querySelectorAll('.p-level').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('pl-'+id).classList.add('active');
+  document.getElementById('d-title').innerHTML=m.icon+' '+m.name+' — <span style="font-size:12px;color:var(--dim)">'+m.sub+'</span>';
+  document.getElementById('d-title').style.color=m.color;
+  var sg='';
+  var labels={menzil:'Menzil',hiz:'Hız',yuk:'Yük',durum:'Durum'};
+  Object.entries(m.stats).forEach(function(e){
+    sg+='<div class="d-stat"><div class="d-val" style="color:'+m.color+'">'+e[1]+'</div><div class="d-label">'+labels[e[0]]+'</div></div>';
+  });
+  document.getElementById('d-grid').innerHTML=sg;
+  document.getElementById('d-desc').textContent=m.desc;
+  document.getElementById('detail').classList.add('show');
+  drawRangeMap(m);
+  updateComparison(m);
+}
+
+// Comparison bars
+var COUNTRIES=[
+  {name:'Türkiye',range:6000,color:'#c41e3a'},
+  {name:'İsrail',range:4000,color:'#2196f3'},
+  {name:'İran',range:2500,color:'#4caf50'},
+  {name:'S. Arabistan',range:2500,color:'#ff9800'},
+  {name:'Pakistan',range:5000,color:'#9c27b0'},
+  {name:'Hindistan',range:5500,color:'#ff5722'}
+];
+function updateComparison(missile){
+  var maxR=6500;var bhtml='';
+  COUNTRIES.forEach(function(c){
+    var w=Math.round(c.range/maxR*100);
+    var highlight=c.name==='Türkiye'?' style="font-weight:700;color:var(--red)"':'';
+    bhtml+='<div class="cmp-bar"><div class="cmp-label"'+highlight+'>'+c.name+'</div>';
+    bhtml+='<div class="cmp-track"><div class="cmp-fill" style="width:'+w+'%;background:'+c.color+'"></div></div>';
+    bhtml+='<div class="cmp-val" style="color:'+c.color+'">'+c.range.toLocaleString()+' km</div></div>';
+  });
+  document.getElementById('compare-bars').innerHTML=bhtml;
+}
+
+// Range map canvas
+var canvas=document.getElementById('range-canvas');
+var ctx=canvas.getContext('2d');
+var animFrame=0;
+
+function drawRangeMap(missile){
+  canvas.width=canvas.offsetWidth*2;canvas.height=440;
+  ctx.scale(2,2);
+  var W=canvas.offsetWidth,H=220;
+  ctx.clearRect(0,0,W,H);
+  // Background
+  ctx.fillStyle='#060d14';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(196,30,58,.04)';ctx.lineWidth=0.5;
+  for(var x=0;x<W;x+=30){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(var y=0;y<H;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Turkey position
+  var tx=W*0.50,ty=H*0.45;
+  // Range circle
+  var rangeKm=parseInt(missile.range.replace(/[^0-9]/g,''));
+  var maxKm=7000;
+  var r=Math.min(W,H)*0.42*rangeKm/maxKm;
+  // Animated pulse
+  var pulse=Math.sin(animFrame*0.04)*4;
+  // Radar wave animation - expanding rings
+  for(var w=0;w<4;w++){
+    var waveR=((animFrame*0.8+w*60)%(r+40));
+    var waveAlpha=1-waveR/(r+40);
+    if(waveAlpha>0){
+      ctx.beginPath();ctx.arc(tx,ty,waveR,0,Math.PI*2);
+      ctx.strokeStyle='rgba('+hexToRgb(missile.color)+','+waveAlpha*0.4+')';ctx.lineWidth=1.5*waveAlpha;ctx.stroke();
+    }
+  }
+  // Concentric rings
+  for(var ring=3;ring>=1;ring--){
+    var rr=r*ring/3;
+    ctx.beginPath();ctx.arc(tx,ty,rr,0,Math.PI*2);
+    ctx.strokeStyle='rgba('+hexToRgb(missile.color)+','+(0.1+ring*0.05)+')';ctx.lineWidth=0.5;ctx.stroke();
+  }
+  // Range area with glow
+  var grad=ctx.createRadialGradient(tx,ty,0,tx,ty,r+pulse);
+  grad.addColorStop(0,'rgba('+hexToRgb(missile.color)+',0.12)');
+  grad.addColorStop(0.6,'rgba('+hexToRgb(missile.color)+',0.06)');
+  grad.addColorStop(1,'transparent');
+  ctx.beginPath();ctx.arc(tx,ty,r+pulse,0,Math.PI*2);
+  ctx.fillStyle=grad;ctx.fill();
+  // Range border
+  ctx.beginPath();ctx.arc(tx,ty,r+pulse,0,Math.PI*2);
+  ctx.strokeStyle='rgba('+hexToRgb(missile.color)+',0.6)';ctx.lineWidth=1.5;
+  ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+  // Turkey marker
+  ctx.beginPath();ctx.arc(tx,ty,10,0,Math.PI*2);
+  ctx.fillStyle='rgba(196,30,58,0.3)';ctx.fill();
+  ctx.strokeStyle='#c41e3a';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#c41e3a';ctx.font='bold 11px Chakra Petch';ctx.textAlign='center';
+  ctx.fillText('TR',tx,ty+4);
+  // Cities in range
+  var cities=[
+    {n:'Moskova',x:0.58,y:0.18,km:1800},{n:'Londra',x:0.35,y:0.18,km:2800},
+    {n:'Kahire',x:0.52,y:0.62,km:1200},{n:'Tahran',x:0.65,y:0.48,km:1600},
+    {n:'Riyad',x:0.60,y:0.68,km:1800},{n:'Berlin',x:0.42,y:0.20,km:2200},
+    {n:'Paris',x:0.36,y:0.24,km:2800},{n:'Pekin',x:0.88,y:0.28,km:5500},
+    {n:'Delhi',x:0.78,y:0.55,km:4500},{n:'Roma',x:0.42,y:0.38,km:1400}
+  ];
+  cities.forEach(function(c){
+    var cx=c.x*W,cy=c.y*H;
+    var inRange=c.km<=rangeKm;
+    ctx.beginPath();ctx.arc(cx,cy,inRange?5:3,0,Math.PI*2);
+    ctx.fillStyle=inRange?'rgba('+hexToRgb(missile.color)+',0.9)':'rgba(144,161,181,0.25)';ctx.fill();
+    if(inRange){ctx.beginPath();ctx.arc(cx,cy,8,0,Math.PI*2);ctx.strokeStyle='rgba('+hexToRgb(missile.color)+',0.3)';ctx.lineWidth=1;ctx.stroke();}
+    ctx.fillStyle=inRange?missile.color:'rgba(144,161,181,0.4)';
+    ctx.font=(inRange?'bold ':'')+' 9px IBM Plex Mono';ctx.textAlign='center';
+    ctx.fillText(c.n,cx,cy-10);
+    if(inRange){ctx.fillStyle='rgba('+hexToRgb(missile.color)+',0.5)';ctx.font='7px IBM Plex Mono';ctx.fillText(c.km+'km',cx,cy+14);}
+  });
+  // Range label
+  ctx.fillStyle=missile.color;ctx.font='bold 12px Chakra Petch';ctx.textAlign='left';
+  ctx.fillText(missile.name+' — '+missile.range,12,18);
+  // Legend
+  ctx.fillStyle='var(--dim)';ctx.font='9px IBM Plex Mono';ctx.textAlign='right';
+  ctx.fillText('Menzil içi: renkli | Menzil dışı: gri',W-12,H-8);
+  animFrame++;
+  requestAnimationFrame(function(){if(selected&&selected.id===missile.id)drawRangeMap(missile);});
+}
+
+// Init with first missile
+setTimeout(function(){selectMissile('yildirimhan');},500);
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

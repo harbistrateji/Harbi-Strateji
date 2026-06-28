@@ -1,0 +1,292 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+<!-- HARB-İ STRATEJİ İKON SPRİTE — 35 İkon -->
+
+<!-- Savaş / Çatışma -->
+<symbol id="icon-swords" viewBox="0 0 64 64">
+  <path d="M12 8l6 6-2 14 14-2 6 6 2-2-6-6 2-14-14 2-6-6-2 2z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 8l-6 6 2 14-14-2-6 6-2-2 6-6-2-14 14 2 6-6 2 2z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="32" r="4" fill="currentColor" opacity=".3"/>
+</symbol>
+
+<!-- Kalkan / Savunma -->
+<symbol id="icon-shield" viewBox="0 0 64 64">
+  <path d="M32 6L10 16v16c0 14 10 22 22 26 12-4 22-12 22-26V16L32 6z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M32 18v20M22 28h20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<!-- Şimşek / Enerji -->
+<symbol id="icon-bolt" viewBox="0 0 64 64">
+  <path d="M36 6L18 34h12l-4 24 18-28H32l4-24z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+</symbol>
+
+<!-- Bilgisayar / Siber -->
+<symbol id="icon-monitor" viewBox="0 0 64 64">
+  <rect x="10" y="10" width="44" height="32" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M24 42h16M32 42v10M26 52h12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="18" y="18" width="12" height="8" rx="1" fill="currentColor" opacity=".2"/>
+  <path d="M36 18h8M36 22h6M36 26h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+</symbol>
+
+<!-- Robot / Yapay Zekâ -->
+<symbol id="icon-robot" viewBox="0 0 64 64">
+  <rect x="16" y="20" width="32" height="28" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="26" cy="34" r="4" fill="currentColor" opacity=".4"/>
+  <circle cx="38" cy="34" r="4" fill="currentColor" opacity=".4"/>
+  <path d="M26 42h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M32 20v-8M28 12h8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="8" y="30" width="4" height="10" rx="2" fill="currentColor" opacity=".3"/>
+  <rect x="52" y="30" width="4" height="10" rx="2" fill="currentColor" opacity=".3"/>
+</symbol>
+
+<!-- Drone / İHA -->
+<symbol id="icon-drone" viewBox="0 0 64 64">
+  <ellipse cx="16" cy="20" rx="8" ry="3" fill="none" stroke="currentColor" stroke-width="2"/>
+  <ellipse cx="48" cy="20" rx="8" ry="3" fill="none" stroke="currentColor" stroke-width="2"/>
+  <path d="M16 20l8 12h16l8-12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="24" y="30" width="16" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="32" cy="35" r="2" fill="currentColor" opacity=".5"/>
+  <path d="M24 44l-4 8M40 44l4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<!-- Göz / İstihbarat -->
+<symbol id="icon-eye" viewBox="0 0 64 64">
+  <path d="M6 32s10-16 26-16 26 16 26 16-10 16-26 16S6 32 6 32z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="32" cy="32" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="3" fill="currentColor" opacity=".5"/>
+</symbol>
+
+<!-- Küre / Jeopolitik -->
+<symbol id="icon-globe" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <ellipse cx="32" cy="32" rx="10" ry="22" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <path d="M10 24h44M10 40h44" stroke="currentColor" stroke-width="1.5"/>
+</symbol>
+
+<!-- Bayrak / Türkiye -->
+<symbol id="icon-flag-tr" viewBox="0 0 64 64">
+  <rect x="12" y="14" width="40" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="28" cy="28" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+  <path d="M34 24l2 4 4 0-3 3 1 4-4-2-4 2 1-4-3-3 4 0z" fill="currentColor" opacity=".5"/>
+  <path d="M12 14v-6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</symbol>
+
+<!-- NATO -->
+<symbol id="icon-nato" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+  <path d="M32 12v8M32 44v8M12 32h8M44 32h8M18 18l6 6M40 40l6 6M18 46l6-6M40 24l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<!-- Radar / Elektronik Harp -->
+<symbol id="icon-radar" viewBox="0 0 64 64">
+  <circle cx="32" cy="38" r="18" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M32 38V14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M32 38l12-12" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+  <path d="M20 26a16 16 0 0 1 24 0" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+  <path d="M16 30a20 20 0 0 1 32 0" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"/>
+  <circle cx="32" cy="38" r="3" fill="currentColor" opacity=".4"/>
+</symbol>
+
+<!-- Parşömen / Tarih -->
+<symbol id="icon-scroll" viewBox="0 0 64 64">
+  <path d="M16 10c-4 0-6 2-6 6v36c0 4 2 6 6 6h28c4 0 6-2 6-6v-4h4c4 0 6-2 6-6V10c-4 0-6 2-6 6v30c0 2-1 4-4 4H16c-2 0-4-2-4-4V16c0-4 2-6 6-6z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M22 22h16M22 28h12M22 34h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+</symbol>
+
+<!-- Bina / Diplomasi -->
+<symbol id="icon-building" viewBox="0 0 64 64">
+  <path d="M10 54h44" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M16 54V22l16-12 16 12v32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M28 54V42h8v12" stroke="currentColor" stroke-width="2"/>
+  <rect x="22" y="26" width="6" height="6" rx="1" fill="currentColor" opacity=".3"/>
+  <rect x="36" y="26" width="6" height="6" rx="1" fill="currentColor" opacity=".3"/>
+  <rect x="22" y="34" width="6" height="6" rx="1" fill="currentColor" opacity=".3"/>
+  <rect x="36" y="34" width="6" height="6" rx="1" fill="currentColor" opacity=".3"/>
+</symbol>
+
+<!-- Gemi / Deniz -->
+<symbol id="icon-ship" viewBox="0 0 64 64">
+  <path d="M8 40l6-16h36l6 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M20 24V14h24v10" fill="none" stroke="currentColor" stroke-width="2"/>
+  <path d="M32 14V8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M8 40c4 4 8 6 12 6s8-2 12-6c4 4 8 6 12 6s8-2 12-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M8 48c4 4 8 6 12 6s8-2 12-6c4 4 8 6 12 6s8-2 12-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+</symbol>
+
+<!-- Uçak / Hava -->
+<symbol id="icon-jet" viewBox="0 0 64 64">
+  <path d="M32 8l4 20h16l-4 6H36l-4 22-4-22H16l-4-6h16l4-20z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="32" cy="24" r="2" fill="currentColor" opacity=".4"/>
+</symbol>
+
+<!-- Tank / Kara -->
+<symbol id="icon-tank" viewBox="0 0 64 64">
+  <rect x="12" y="30" width="40" height="16" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <rect x="20" y="22" width="24" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M44 26h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="20" cy="38" r="3" fill="currentColor" opacity=".3"/>
+  <circle cx="32" cy="38" r="3" fill="currentColor" opacity=".3"/>
+  <circle cx="44" cy="38" r="3" fill="currentColor" opacity=".3"/>
+</symbol>
+
+<!-- Uydu / Uzay -->
+<symbol id="icon-satellite" viewBox="0 0 64 64">
+  <rect x="24" y="24" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.5" transform="rotate(45 32 32)"/>
+  <path d="M20 20l-8-8M44 44l8 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="6" y="6" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(45 11 11)"/>
+  <rect x="48" y="48" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(45 53 53)"/>
+</symbol>
+
+<!-- Grafik / Ekonomi -->
+<symbol id="icon-chart" viewBox="0 0 64 64">
+  <path d="M10 52V12M10 52h44" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="16" y="36" width="8" height="16" rx="1" fill="currentColor" opacity=".2" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="28" y="24" width="8" height="28" rx="1" fill="currentColor" opacity=".3" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="40" y="16" width="8" height="36" rx="1" fill="currentColor" opacity=".4" stroke="currentColor" stroke-width="1.5"/>
+</symbol>
+
+<!-- Atom / Nükleer -->
+<symbol id="icon-atom" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="4" fill="currentColor" opacity=".5"/>
+  <ellipse cx="32" cy="32" rx="20" ry="8" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(0 32 32)"/>
+  <ellipse cx="32" cy="32" rx="20" ry="8" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(60 32 32)"/>
+  <ellipse cx="32" cy="32" rx="20" ry="8" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-60 32 32)"/>
+</symbol>
+
+<!-- Formül / Matematik -->
+<symbol id="icon-formula" viewBox="0 0 64 64">
+  <rect x="10" y="10" width="44" height="44" rx="6" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <text x="32" y="38" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="currentColor" opacity=".7">G=T×S</text>
+  <path d="M18 48h28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".3"/>
+</symbol>
+
+<!-- Ağ / Network -->
+<symbol id="icon-network" viewBox="0 0 64 64">
+  <circle cx="32" cy="16" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="16" cy="44" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="48" cy="44" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="32" cy="38" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M32 21v12M28 40l-8 2M36 40l8 2M32 16l-14 26M32 16l14 26" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+</symbol>
+
+<!-- Kitap / Külliyat -->
+<symbol id="icon-book" viewBox="0 0 64 64">
+  <path d="M12 10v40c4-2 8-3 12-3s8 1 8 3V10c0-2-4-3-8-3s-8 1-12 3z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M32 10v40c4-2 8-3 12-3s8 1 8 3V10c0-2-4-3-8-3s-8 1-12 3z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M18 20h4M18 26h4M18 32h4M38 20h4M38 26h4M38 32h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+</symbol>
+
+<!-- Harita / Coğrafya -->
+<symbol id="icon-map" viewBox="0 0 64 64">
+  <path d="M10 14l14-4 14 8 14-8v40l-14 4-14-8-14 8V14z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M24 10v40M38 18v40" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+  <circle cx="32" cy="30" r="3" fill="currentColor" opacity=".4"/>
+</symbol>
+
+<!-- Kale / Tarihsel -->
+<symbol id="icon-castle" viewBox="0 0 64 64">
+  <path d="M14 52V28h36v24" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M14 28l4-8h4v4h4v-4h4l4-8 4 8h4v4h4v-4h4l4 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="26" y="38" width="12" height="14" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
+  <path d="M10 52h44" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<!-- Hedef / Crosshair -->
+<symbol id="icon-crosshair" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="18" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+  <path d="M32 8v10M32 46v10M8 32h10M46 32h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="2" fill="currentColor" opacity=".5"/>
+</symbol>
+
+<!-- Megafon / Propaganda -->
+<symbol id="icon-megaphone" viewBox="0 0 64 64">
+  <path d="M12 26h8v12h-8zM20 24l24-10v36L20 40V24z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M44 22c4 2 6 6 6 10s-2 8-6 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+  <path d="M48 18c6 4 8 8 8 14s-2 10-8 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".3"/>
+</symbol>
+
+<!-- Zaman / Saat -->
+<symbol id="icon-clock" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M32 18v14l8 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="32" r="2" fill="currentColor" opacity=".5"/>
+</symbol>
+
+<!-- Dişli / Teknoloji -->
+<symbol id="icon-gear" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M32 8v6M32 50v6M8 32h6M50 32h6M16 16l4 4M44 44l4 4M16 48l4-4M44 20l4-4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</symbol>
+
+<!-- Dalga / Frekans -->
+<symbol id="icon-wave" viewBox="0 0 64 64">
+  <path d="M8 32c4-12 8-12 12 0s8 12 12 0 8-12 12 0 8 12 12 0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M8 42c4-8 8-8 12 0s8 8 12 0 8-8 12 0 8 8 12 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+  <path d="M8 22c4-8 8-8 12 0s8 8 12 0 8-8 12 0 8 8 12 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+</symbol>
+
+<!-- Para / Finans -->
+<symbol id="icon-coins" viewBox="0 0 64 64">
+  <ellipse cx="26" cy="38" rx="14" ry="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M12 38v-8c0-4 6-8 14-8s14 4 14 8v8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M16 30v-8c0-4 6-8 14-8s14 4 14 8v8" fill="none" stroke="currentColor" stroke-width="2"/>
+  <ellipse cx="30" cy="22" rx="14" ry="8" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"/>
+</symbol>
+
+<!-- Beyin / Bilişsel -->
+<symbol id="icon-brain" viewBox="0 0 64 64">
+  <path d="M32 52V32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M22 14c-6 0-10 4-10 10 0 4 2 8 6 10-2 2-4 6-4 10 0 6 4 8 8 8h4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M42 14c6 0 10 4 10 10 0 4-2 8-6 10 2 2 4 6 4 10 0 6-4 8-8 8h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M22 14c0-4 4-6 10-6s10 2 10 6" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M24 28c4-2 8-2 12 0M22 38c4 2 8 2 12 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+</symbol>
+
+<!-- Kriz / Uyarı -->
+<symbol id="icon-alert" viewBox="0 0 64 64">
+  <path d="M32 8L6 54h52L32 8z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M32 24v16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="46" r="2.5" fill="currentColor"/>
+</symbol>
+
+<!-- Video / Medya -->
+<symbol id="icon-video" viewBox="0 0 64 64">
+  <rect x="8" y="14" width="36" height="36" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M44 26l12-6v24l-12-6V26z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="26" cy="32" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity=".4"/>
+  <path d="M24 29l5 3-5 3v-6z" fill="currentColor" opacity=".5"/>
+</symbol>
+
+<!-- Oyun / Gamepad -->
+<symbol id="icon-gamepad" viewBox="0 0 64 64">
+  <path d="M12 24c-4 0-6 4-6 10s2 14 8 14c4 0 6-2 10-8h16c4 6 6 8 10 8 6 0 8-8 8-14s-2-10-6-10H12z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M20 30v8M16 34h8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="40" cy="30" r="2" fill="currentColor" opacity=".5"/>
+  <circle cx="46" cy="34" r="2" fill="currentColor" opacity=".5"/>
+  <circle cx="40" cy="38" r="2" fill="currentColor" opacity=".3"/>
+  <circle cx="34" cy="34" r="2" fill="currentColor" opacity=".3"/>
+</symbol>
+
+<!-- Pusula / Keşif -->
+<symbol id="icon-compass" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M24 40l4-16 16-4-4 16-16 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M28 36l4-8 4 8-4 0z" fill="currentColor" opacity=".3"/>
+  <circle cx="32" cy="32" r="2" fill="currentColor" opacity=".5"/>
+</symbol>
+
+<!-- Zincir / Tedarik -->
+<symbol id="icon-chain" viewBox="0 0 64 64">
+  <path d="M18 28c-6 0-10 4-10 8s4 8 10 8h4c6 0 10-4 10-8s-4-8-10-8h-4z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M42 20c-6 0-10 4-10 8s4 8 10 8h4c6 0 10-4 10-8s-4-8-10-8h-4z" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M28 36l8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<!-- Mineral / Maden -->
+<symbol id="icon-mineral" viewBox="0 0 64 64">
+  <path d="M20 52l-8-20 12-16h16l12 16-8 20H20z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M12 32h40M24 16l-4 16 12 20M40 16l4 16-12 20" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+</symbol>
+
+</svg>

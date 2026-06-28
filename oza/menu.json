@@ -1,0 +1,50 @@
+{
+  "title": "🎮 OZA — Oyunlaştırılmış Strateji Analizi",
+  "items": [
+    {
+      "name": "Oyunlar",
+      "items": [
+        "Sürü Savunması",
+        "Asimetri Topu",
+        "Silah Puzzle",
+        "Mobil Oyunlar (8)"
+      ]
+    },
+    {
+      "name": "Simülasyonlar",
+      "items": [
+        "Algoritmik Harp",
+        "Sürü Otonomisi",
+        "Akış Düğümü",
+        "Spektrum Savaşı",
+        "Geleceğin Askeri"
+      ]
+    },
+    {
+      "name": "Yeni Simülasyonlar",
+      "items": [
+        "Formül Laboratuvarı",
+        "Savaş Ekonomisi",
+        "Yıpratma Ekonomisi",
+        "Tarife Silahı",
+        "Tüccar Sezar",
+        "Kompleksite Çöküş",
+        "Dijital Güç Reaktörü",
+        "Hegemonya Döngüsü",
+        "Asimetrik Etki-Maliyet",
+        "Yumuşak Güç Motoru",
+        "OODA-X Karar Hızı",
+        "Güç Denklemi"
+      ]
+    },
+    {
+      "name": "Etkileşim",
+      "items": [
+        "Leaderboard",
+        "Turnuvalar",
+        "Multiplayer",
+        "Sosyal"
+      ]
+    }
+  ]
+}

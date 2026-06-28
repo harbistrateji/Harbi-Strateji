@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>İstanbul Fethi 1453 — Komutan Modu | OZA</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--bg2:#0d0d0d;--panel:#111111;--border:#1a1a1a;--red:#E01515;--#c41e3a:#c41e3a;--gold:#C9A24B;--green:#c41e3a;--txt:#f0f0f0;--txt2:#f0f0f0;--dim:#888888;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;overflow:hidden;height:100vh;}
+a{text-decoration:none;color:inherit;}
+
+/* LAYOUT */
+.game-wrap{display:grid;grid-template-columns:1fr 360px;grid-template-rows:52px 1fr 140px;height:100vh;gap:0;}
+
+/* TOP BAR */
+.top-bar{grid-column:1/-1;background:rgba(6,12,22,.95);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:16px;z-index:10;}
+.tb-back{color:var(--#c41e3a);font-size:.75rem;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+.tb-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;color:var(--gold);}
+.tb-stats{margin-left:auto;display:flex;gap:10px;}
+.tb-stat{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:4px 10px;text-align:center;}
+.tb-stat b{font-family:'Chakra Petch',monospace;font-size:.85rem;color:var(--gold);display:block;}
+.tb-stat small{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+
+/* MAP AREA */
+.map-area{position:relative;background:linear-gradient(135deg,#111111,#0d0d0d);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:12px;}
+
+/* TIME LAYER */
+.time-layer{background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:16px;}
+.day-info{flex:1;}
+.day-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:900;color:var(--gold);}
+.day-sub{font-size:.65rem;color:var(--dim);margin-top:2px;}
+.day-progress{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:6px;}
+.day-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--red));border-radius:2px;transition:width .5s;}
+.time-detail{display:flex;gap:14px;}
+.td-item{text-align:center;}
+.td-item b{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--#c41e3a);display:block;}
+.td-item small{font-size:.5rem;color:var(--dim);}
+
+/* FRONT LAYER */
+.front-layer{flex:1;display:grid;grid-template-columns:1fr 60px 1fr;gap:6px;align-items:center;padding:0 12px;}
+.front-col{display:flex;flex-direction:column;gap:5px;}
+.front-col h4{font-family:'Chakra Petch',monospace;font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:2px;}
+.unit-row{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:5px 8px;cursor:pointer;transition:all .2s;}
+.unit-row:hover{border-color:var(--gold);background:rgba(201,162,75,.05);}
+.unit-row.selected{border-color:var(--gold);background:rgba(201,162,75,.1);box-shadow:0 0 10px rgba(201,162,75,.15);}
+.unit-icon{font-size:1.1rem;}
+.unit-info{flex:1;}
+.unit-name{font-size:.65rem;font-weight:600;}
+.unit-detail{font-size:.5rem;color:var(--dim);}
+.unit-hp{width:36px;height:4px;background:var(--border);border-radius:2px;}
+.unit-hp-fill{height:100%;background:var(--green);border-radius:2px;transition:width .3s;}
+.sur-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.sur-visual{width:16px;flex:1;min-height:160px;background:linear-gradient(180deg,#333333,#222222);border-radius:4px;position:relative;border:2px solid #444444;overflow:hidden;}
+.sur-hp-bar{position:absolute;bottom:0;left:0;right:0;background:var(--red);transition:height .5s;}
+.sur-label{font-size:.5rem;color:var(--dim);writing-mode:vertical-rl;}
+
+/* RESOURCE LAYER */
+.resource-layer{background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;gap:16px;align-items:center;}
+.res-item{flex:1;}
+.res-label{font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.res-bar{height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.res-bar-fill{height:100%;border-radius:4px;transition:width .5s;}
+.res-val{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--txt2);margin-top:2px;}
+
+/* RIGHT PANEL */
+.right-panel{background:var(--panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.rp-tabs{display:flex;border-bottom:1px solid var(--border);}
+.rp-tab{flex:1;padding:9px 6px;text-align:center;font-size:.6rem;font-weight:600;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.rp-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.rp-content{flex:1;overflow-y:auto;padding:10px;}
+.rp-content::-webkit-scrollbar{width:4px;}
+.rp-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* INTEL CARDS */
+.intel-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;transition:all .2s;cursor:pointer;}
+.intel-card:hover{border-color:var(--#c41e3a);background:rgba(0,224,255,.03);}
+.intel-card.locked{opacity:.6;}
+.intel-card.unlocked{border-color:var(--green);background:rgba(0,255,136,.03);}
+.intel-title{font-size:.72rem;font-weight:700;color:var(--#c41e3a);margin-bottom:3px;}
+.intel-desc{font-size:.62rem;color:var(--txt2);line-height:1.4;margin-bottom:6px;}
+.intel-meta{display:flex;justify-content:space-between;align-items:center;}
+.intel-accuracy{font-size:.55rem;color:var(--gold);}
+.intel-btn{background:var(--#c41e3a);color:#000;border:none;border-radius:5px;padding:3px 8px;font-size:.55rem;font-weight:700;cursor:pointer;}
+
+/* SKILL TREE */
+.skill-tree{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.skill-node{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:8px;width:100%;display:flex;align-items:center;gap:8px;transition:all .2s;cursor:pointer;}
+.skill-node.unlocked{border-color:var(--gold);background:rgba(201,162,75,.05);}
+.skill-node.locked{opacity:.5;}
+.skill-node:hover{border-color:var(--gold);}
+.sk-icon{font-size:1.2rem;}
+.sk-info{flex:1;}
+.sk-name{font-size:.7rem;font-weight:700;}
+.sk-desc{font-size:.55rem;color:var(--dim);}
+.sk-lvl{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--gold);}
+.skill-line{width:2px;height:12px;background:var(--border);}
+
+/* ARTILLERY PARAMS */
+.param-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.param-label{font-size:.55rem;color:var(--dim);width:55px;text-transform:uppercase;}
+.param-slider{flex:1;-webkit-appearance:none;height:5px;background:var(--border);border-radius:3px;outline:none;}
+.param-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--gold);border-radius:50%;cursor:pointer;}
+.param-val{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--#c41e3a);width:45px;text-align:right;}
+.coord-display{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;padding:8px;margin-top:8px;}
+.coord-row{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--txt2);margin-bottom:2px;}
+.coord-row b{color:var(--gold);}
+.risk-box{margin-top:8px;padding:8px;background:rgba(224,21,21,.05);border:1px solid rgba(224,21,21,.2);border-radius:8px;}
+.risk-box .risk-title{font-size:.6rem;color:var(--red);font-weight:600;}
+.risk-box .risk-text{font-size:.55rem;color:var(--txt2);margin-top:3px;}
+
+/* STORY CARDS */
+.story-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;border-left:3px solid var(--gold);}
+.story-card .sc-badge{font-size:.5rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.story-card .sc-text{font-size:.65rem;color:var(--txt);line-height:1.5;}
+.story-card .sc-stat{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--#c41e3a);margin-top:6px;}
+.story-card .sc-link{font-size:.55rem;color:var(--gold);margin-top:4px;cursor:pointer;}
+
+/* BOTTOM PANEL */
+.bottom-panel{grid-column:1/-1;background:rgba(6,12,22,.95);border-top:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:12px;}
+.bp-phase{flex:1;}
+.bp-phase-title{font-family:'Chakra Petch',monospace;font-size:.8rem;font-weight:700;color:var(--gold);}
+.bp-phase-desc{font-size:.65rem;color:var(--txt2);margin-top:2px;}
+.bp-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.action-btn{background:linear-gradient(135deg,var(--gold),#c41e3a);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px;}
+.action-btn:hover{filter:brightness(1.15);transform:translateY(-1px);}
+.action-btn.secondary{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--txt2);}
+.action-btn .cost{font-size:.5rem;opacity:.7;}
+
+/* XP POPUP */
+.xp-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,12,22,.97);border:2px solid var(--gold);border-radius:16px;padding:32px;text-align:center;z-index:100;display:none;animation:popIn .3s ease;}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.8);opacity:0;}to{transform:translate(-50%,-50%) scale(1);opacity:1;}}
+.xp-popup h2{font-family:'Chakra Petch',monospace;font-size:1.2rem;color:var(--gold);margin-bottom:6px;}
+.xp-popup .xp-amount{font-family:'Chakra Petch',monospace;font-size:2rem;font-weight:900;color:var(--#c41e3a);}
+.xp-popup .xp-skill{margin-top:8px;font-size:.75rem;color:var(--txt2);}
+.xp-popup .xp-new{margin-top:8px;font-size:.7rem;color:var(--green);font-weight:600;}
+.xp-popup button{margin-top:14px;background:var(--gold);color:#000;border:none;border-radius:8px;padding:8px 20px;font-weight:700;cursor:pointer;font-size:.75rem;}
+
+/* CINEMATIC */
+.cinematic{position:fixed;inset:0;background:#000;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+.cinematic h1{font-family:'Chakra Petch',monospace;font-size:clamp(2rem,5vw,3rem);color:var(--gold);animation:fadeUp 1s ease;}
+.cinematic p{font-size:1.1rem;color:var(--txt2);margin-top:10px;animation:fadeUp 1s .3s ease both;}
+.cinematic .wave-select{margin-top:24px;display:flex;gap:10px;animation:fadeUp 1s .6s ease both;flex-wrap:wrap;justify-content:center;}
+.cinematic .wave-btn{background:var(--panel);border:2px solid var(--border);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all .2s;text-align:center;min-width:140px;}
+.cinematic .wave-btn:hover{border-color:var(--gold);}
+.cinematic .wave-btn.selected{border-color:var(--gold);background:rgba(201,162,75,.1);}
+.cinematic .wave-btn h3{font-family:'Chakra Petch',monospace;font-size:.8rem;color:var(--gold);}
+.cinematic .wave-btn p{font-size:.6rem;color:var(--dim);margin-top:3px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* INTRO */
+.intro-screen{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+.intro-screen h1{font-family:'Chakra Petch',monospace;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--gold);margin-bottom:10px;}
+.intro-screen p{font-size:.9rem;color:var(--txt2);max-width:480px;line-height:1.7;margin-bottom:20px;}
+.intro-screen .start-btn{background:linear-gradient(135deg,var(--gold),#c41e3a);color:#000;border:none;border-radius:12px;padding:14px 36px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.intro-screen .start-btn:hover{filter:brightness(1.15);transform:translateY(-2px);}
+.intro-screen .mode-tag{margin-top:14px;font-size:.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;}
+
+/* TUTORIAL */
+.tutorial-screen{position:fixed;inset:0;background:var(--bg);z-index:350;display:none;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px;overflow-y:auto;}
+.tutorial-screen.active{display:flex;}
+.tut-header{text-align:center;margin-bottom:20px;}
+.tut-header h1{font-family:'Chakra Petch',monospace;font-size:clamp(1.4rem,3vw,2rem);color:var(--gold);margin-bottom:6px;}
+.tut-header p{font-size:.75rem;color:var(--dim);}
+.tut-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;max-width:900px;width:100%;margin-bottom:20px;}
+.tut-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.tut-card h3{font-family:'Chakra Petch',monospace;font-size:.8rem;color:var(--#c41e3a);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.tut-card p{font-size:.68rem;color:var(--txt2);line-height:1.6;}
+.tut-card .tut-icon{font-size:1.2rem;}
+.tut-flow{max-width:900px;width:100%;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:20px;}
+.tut-flow h3{font-family:'Chakra Petch',monospace;font-size:.75rem;color:var(--gold);margin-bottom:8px;}
+.tut-flow-steps{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.tut-step{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:.6rem;color:var(--txt);}
+.tut-arrow{color:var(--dim);font-size:.7rem;}
+.tut-start-btn{background:linear-gradient(135deg,var(--gold),#c41e3a);color:#000;border:none;border-radius:12px;padding:14px 40px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:10px;transition:all .2s;}
+.tut-start-btn:hover{filter:brightness(1.15);transform:translateY(-2px);}
+
+/* MOBILE */
+@media(max-width:900px){
+  .game-wrap{grid-template-columns:1fr;grid-template-rows:48px 1fr auto 200px;}
+  .right-panel{border-left:none;border-top:1px solid var(--border);}
+  .bottom-panel{flex-direction:column;align-items:stretch;padding:8px 12px;}
+  .bp-actions{justify-content:center;}
+  .time-detail{gap:8px;}
+  .front-layer{grid-template-columns:1fr 40px 1fr;padding:0 6px;}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+
+<!-- INTRO SCREEN -->
+<div class="intro-screen" id="introScreen">
+  <h1>İSTANBUL FETHİ 1453</h1>
+  <p>21 yaşındaki Sultan II. Mehmed olarak 80.000 kişilik orduyu komuta et. 53 günde Konstantinopolis'i fethederek Orta Çağ'ı bitir, Yeni Çağ'ı başlat.</p>
+  <button class="start-btn" onclick="showTutorial()">⚔ Kuşatmayı Başlat</button>
+  <div class="mode-tag">Komutan Modu — Stratejik Karar Oyunu</div>
+</div>
+
+<!-- TUTORIAL SCREEN -->
+<div class="tutorial-screen" id="tutorialScreen">
+  <div class="tut-header"><h1>NASIL OYNANIR?</h1><p>İstanbul Fethi 1453 — Komutan Modu Rehberi</p></div>
+  <div class="tut-grid">
+    <div class="tut-card"><h3><span class="tut-icon">🗺️</span> Harita (Sol Panel)</h3><p>3 katmanlı komutan haritası: <b>Zaman</b> (gün, saat, rüzgâr, moral), <b>Cephe</b> (birimleriniz vs düşman), <b>Kaynak</b> (erzak, moral, cephane, altın). Birimlerinize tıklayarak seçin.</p></div>
+    <div class="tut-card"><h3><span class="tut-icon">⚔️</span> Karar Sistemi</h3><p>Her tur <b>1 hamle</b> seçersiniz. Alt paneldeki aksiyon butonlarına tıklayın. Her hamle zamanı ilerletir (+1 gün) ve kaynakları etkiler. Doğru sıralama kritiktir!</p></div>
+    <div class="tut-card"><h3><span class="tut-icon">🔎</span> Keşif Merkezi</h3><p>Sağ panelde istihbarat kartları var. <b>XP harcayarak</b> bilgi satın alın. Zayıf noktaları keşfedin. Doğruluk oranına dikkat!</p></div>
+    <div class="tut-card"><h3><span class="tut-icon">⭐</span> XP & Seviye</h3><p>Her karar sonrası <b>XP</b> kazanırsınız. XP ile yetenek ağacını açın veya istihbarat satın alın. Seviye atladıkça yeni yetenekler!</p></div>
+    <div class="tut-card"><h3><span class="tut-icon">🌳</span> Yetenek Ağacı</h3><p>Fatih'in 4 yetenek dalı: <b>Topçu Ustası</b> (hasar+), <b>Lojistikçi</b> (kaynak+), <b>Denizci</b> (donanma+), <b>Stratejist</b> (gizli manevralar). XP ile açın!</p></div>
+    <div class="tut-card"><h3><span class="tut-icon">💣</span> Topçu Parametreleri</h3><p>Topçu sekmesinde <b>mesafe, açı, mühimmat</b> slider'larını ayarlayın. Yanlış ayar = top çatlar. Doğru = sur hasarı artar. X,Y,Z koordinatları gösterilir.</p></div>
+    <div class="tut-card"><h3><span class="tut-icon">📖</span> Hikaye Motoru</h3><p>Sağ paneldeki Hikaye sekmesi ilerledikçe açılır. Kuru bilgi değil, <b>kritik anlar ve istatistikler</b> sunar.</p></div>
+    <div class="tut-card"><h3><span class="tut-icon">🎬</span> Sinematik Final</h3><p>29 Mayısta son saldırı! 3 dalga seçimi yaparsınız. Doğru sıra = <b>zafer animasyonu</b>. Yanlış = kapı kapanır!</p></div>
+  </div>
+  <div class="tut-flow"><h3>OYUN AKIŞI</h3><div class="tut-flow-steps"><span class="tut-step">Giriş</span><span class="tut-arrow">→</span><span class="tut-step">Harita</span><span class="tut-arrow">→</span><span class="tut-step">Keşif</span><span class="tut-arrow">→</span><span class="tut-step">Karar</span><span class="tut-arrow">→</span><span class="tut-step">Sonuç</span><span class="tut-arrow">→</span><span class="tut-step">+XP</span><span class="tut-arrow">→</span><span class="tut-step">Yeni Yetenek</span><span class="tut-arrow">→</span><span class="tut-step">Yeni Gün</span><span class="tut-arrow">→</span><span class="tut-step">...</span></div></div>
+  <button class="tut-start-btn" onclick="startGame()">⚔ Anladım, Başla!</button>
+</div>
+
+<!-- GAME LAYOUT -->
+<div class="game-wrap" id="gameWrap" style="display:none;">
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <a href="oza-hub.html" class="tb-back">← OZA</a>
+    <div class="tb-title">İstanbul Fethi 1453</div>
+    <div class="tb-stats">
+      <div class="tb-stat"><b id="statDay">1</b><small>Gün</small></div>
+      <div class="tb-stat"><b id="statArmy">80.000</b><small>Ordu</small></div>
+      <div class="tb-stat"><b id="statSur">100%</b><small>Sur</small></div>
+      <div class="tb-stat"><b id="statXP">0</b><small>XP</small></div>
+      <div class="tb-stat"><b id="statLvl">1</b><small>Svye</small></div>
+    </div>
+  </div>
+
+  <!-- MAP AREA -->
+  <div class="map-area">
+    <!-- TIME -->
+    <div class="time-layer">
+      <div class="day-info">
+        <div class="day-title" id="dayTitle">KUŞATMANIN 1. GÜNÜ</div>
+        <div class="day-sub" id="daySub">6 Nisan 1453 — Topçu Mevzilenmesi</div>
+        <div class="day-progress"><div class="day-progress-fill" id="dayProgress" style="width:2%"></div></div>
+      </div>
+      <div class="time-detail">
+        <div class="td-item"><b id="tdTime">06:00</b><small>Saat</small></div>
+        <div class="td-item"><b id="tdWind">↗ 8km/h</b><small>Rüzgar</small></div>
+        <div class="td-item"><b id="tdMorale">85%</b><small>Moral</small></div>
+      </div>
+    </div>
+
+    <!-- FRONT -->
+    <div class="front-layer">
+      <div class="front-col">
+        <h4>Osmanlı Cephesi</h4>
+        <div class="unit-row selected" id="unit-topcu" onclick="selectUnit('topcu')">
+          <span class="unit-icon">💣</span>
+          <div class="unit-info"><div class="unit-name">Topçu Birliği (68)</div><div class="unit-detail">Şahi + Urban + 66 batarya</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" id="hp-topcu" style="width:100%"></div></div>
+        </div>
+        <div class="unit-row" id="unit-piyade" onclick="selectUnit('piyade')">
+          <span class="unit-icon">🔫</span>
+          <div class="unit-info"><div class="unit-name">Piyade (50.000)</div><div class="unit-detail">Azap + Anadolu + Rumeli</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" id="hp-piyade" style="width:100%"></div></div>
+        </div>
+        <div class="unit-row" id="unit-yeniceri" onclick="selectUnit('yeniceri')">
+          <span class="unit-icon">🔥</span>
+          <div class="unit-info"><div class="unit-name">Yeniçeri (12.000)</div><div class="unit-detail">Elit — Son darbe birliği</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" id="hp-yeniceri" style="width:100%"></div></div>
+        </div>
+        <div class="unit-row" id="unit-donanma" onclick="selectUnit('donanma')">
+          <span class="unit-icon">⛵</span>
+          <div class="unit-info"><div class="unit-name">Donanma (126)</div><div class="unit-detail">Kadırga filosu</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" id="hp-donanma" style="width:100%"></div></div>
+        </div>
+      </div>
+
+      <div class="sur-col">
+        <div class="sur-label">SUR</div>
+        <div class="sur-visual"><div class="sur-hp-bar" id="surBar" style="height:0%"></div></div>
+        <div style="font-size:.55rem;color:var(--dim);" id="surPercent">100%</div>
+      </div>
+
+      <div class="front-col">
+        <h4>Bizans Savunması</h4>
+        <div class="unit-row">
+          <span class="unit-icon">🛡️</span>
+          <div class="unit-info"><div class="unit-name">Garnizon (7.000)</div><div class="unit-detail">Rum + Ceneviz</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" style="width:100%"></div></div>
+        </div>
+        <div class="unit-row">
+          <span class="unit-icon">🔥</span>
+          <div class="unit-info"><div class="unit-name">Rum Ateşi</div><div class="unit-detail">Yanıcı sıvı silah</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" style="width:100%"></div></div>
+        </div>
+        <div class="unit-row">
+          <span class="unit-icon">⚓</span>
+          <div class="unit-info"><div class="unit-name">Haliç Zinciri</div><div class="unit-detail">Deniz bariyeri</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" style="width:100%"></div></div>
+        </div>
+        <div class="unit-row">
+          <span class="unit-icon">🏰</span>
+          <div class="unit-info"><div class="unit-name">Varangian Guard</div><div class="unit-detail">Son elit birlik</div></div>
+          <div class="unit-hp"><div class="unit-hp-fill" style="width:80%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESOURCES -->
+    <div class="resource-layer">
+      <div class="res-item">
+        <div class="res-label">Erzak</div>
+        <div class="res-bar"><div class="res-bar-fill" id="resFood" style="width:90%;background:var(--green)"></div></div>
+        <div class="res-val" id="resFoodVal">90%</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">Moral</div>
+        <div class="res-bar"><div class="res-bar-fill" id="resMorale" style="width:85%;background:var(--#c41e3a)"></div></div>
+        <div class="res-val" id="resMoraleVal">85%</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">Cephane</div>
+        <div class="res-bar"><div class="res-bar-fill" id="resAmmo" style="width:95%;background:var(--gold)"></div></div>
+        <div class="res-val" id="resAmmoVal">95%</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">Altın</div>
+        <div class="res-bar"><div class="res-bar-fill" id="resGold" style="width:80%;background:#ff2d55"></div></div>
+        <div class="res-val" id="resGoldVal">5000 akçe</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="rp-tabs">
+      <div class="rp-tab active" data-tab="intel" onclick="switchTab('intel')">🔎 Keşif</div>
+      <div class="rp-tab" data-tab="skills" onclick="switchTab('skills')">⚔ Yetenek</div>
+      <div class="rp-tab" data-tab="artillery" onclick="switchTab('artillery')">💣 Topçu</div>
+      <div class="rp-tab" data-tab="story" onclick="switchTab('story')">📖 Hikaye</div>
+    </div>
+    <div class="rp-content" id="rpContent"></div>
+  </div>
+
+  <!-- BOTTOM PANEL -->
+  <div class="bottom-panel">
+    <div class="bp-phase">
+      <div class="bp-phase-title" id="phaseTitle">Topçu Mevzilenmesi</div>
+      <div class="bp-phase-desc" id="phaseDesc">68 top bataryasını surların karşısına yerleştirin. Her karar zamanı ilerletir.</div>
+    </div>
+    <div class="bp-actions" id="actionBtns"></div>
+  </div>
+</div>
+
+<!-- XP POPUP -->
+<div class="xp-popup" id="xpPopup">
+  <h2>TUR TAMAMLANDI</h2>
+  <div class="xp-amount" id="xpAmount">+120 XP</div>
+  <div class="xp-skill" id="xpSkill"></div>
+  <div class="xp-new" id="xpNew"></div>
+  <button onclick="closeXP()">Devam Et →</button>
+</div>
+
+<!-- CINEMATIC -->
+<div class="cinematic" id="cinematic"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════
+const G = {
+  day:1, maxDay:53, hour:6, minute:0,
+  sur:100, army:80000, morale:85, food:90, ammo:95, gold:5000,
+  xp:0, level:1, phase:0,
+  skills:{topcu:0,lojistik:0,strateji:0,deniz:0},
+  artParams:{distance:1200,angle:45,ammoType:0},
+  selectedUnit:'topcu', turnsPlayed:0,
+  unitHP:{topcu:100,piyade:100,yeniceri:100,donanma:100}
+};
+
+// ═══════════════════════════════════════════════
+// PHASES
+// ═══════════════════════════════════════════════
+const PHASES = [
+  {title:"Topçu Mevzilenmesi",desc:"68 top bataryasını surların karşısına yerleştirin. Şahi Topunu konumlandırın.",days:[1,8],
+   actions:[
+     {label:"💣 Şahi Konumla",cost:"+1 gün",effect:()=>{G.sur-=4;G.ammo-=2;return"Şahi Topu mevziye girdi. Sur hasarı -4%";}},
+     {label:"🔥 Bataryaları Kur",cost:"+1 gün",effect:()=>{G.sur-=2;G.ammo-=4;return"66 batarya hazır. Sürekli ateş başlayabilir.";}},
+     {label:"🏇 Keşif Gönder",cost:"+1 gün",effect:()=>{G.morale+=3;return"Zayıf nokta tespit edildi. +3 moral";}},
+   ]},
+  {title:"Sürekli Bombardıman",desc:"Surları yıpratın. Cephane ve erzak dengesini koruyun!",days:[9,22],
+   actions:[
+     {label:"💣 Yoğun Bombardıman",cost:"+1 gün, -8 cephane",effect:()=>{G.sur-=7-Math.floor(G.skills.topcu*1.5);G.ammo-=8;G.food-=2;return"Sur hasarı -"+(7-Math.floor(G.skills.topcu*1.5))+"%";}},
+     {label:"🎯 Hassas Atış",cost:"+1 gün, -3 cephane",effect:()=>{let d=3+G.skills.topcu*2;G.sur-=d;G.ammo-=3;return"Hassas atış! Sur -"+d+"%";}},
+     {label:"🚢 Deniz Ablukası",cost:"+1 gün",effect:()=>{G.morale+=4;G.food-=1;return"Bizansa erzak girişi kesildi. +4 moral";}},
+     {label:"⛏️ Lağım Kaz",cost:"+2 gün",effect:()=>{G.day++;G.sur-=3;G.food-=3;return"Tünel kazılıyor... Sur -3%";}},
+   ]},
+  {title:"Gemilerin Karadan Yürütülmesi",desc:"72 kadırgayı Galata sırtlarından Haliçe indir. Tarihin en cesur manevrası!",days:[23,30],
+   actions:[
+     {label:"⛵ Gemileri Taşı",cost:"+3 gün, -500 altın",effect:()=>{G.day+=2;G.morale+=12;G.food-=5;G.gold-=500;return"72 gemi Haliçte! Bizans şokta! +12 moral";}},
+     {label:"💣 Bombardımana Devam",cost:"+1 gün",effect:()=>{G.sur-=5;G.ammo-=5;return"Sur hasarı -5%";}},
+     {label:"🏴 Psikolojik Savaş",cost:"+1 gün",effect:()=>{G.morale+=6;return"Mehter çalıyor! +6 moral";}},
+   ]},
+  {title:"Genel Hücum Hazırlığı",desc:"Son saldırı için birlikleri düzenle. Yeniçerileri hazırla!",days:[31,50],
+   actions:[
+     {label:"💣 Sur Yıkımı",cost:"+1 gün, -10 cephane",effect:()=>{G.sur-=9;G.ammo-=10;return"Gedik açılıyor! Sur -9%";}},
+     {label:"🔫 Deneme Hücumu",cost:"+1 gün, -2000 asker",effect:()=>{G.army-=2000;G.sur-=3;G.morale-=4;return"Kayıp var ama bilgi toplandı.";}},
+     {label:"🏇 Süvari Baskını",cost:"+1 gün",effect:()=>{G.morale+=4;return"Bizansın dikkatini dağıttık. +4 moral";}},
+     {label:"🔥 Ateş Gemisi",cost:"+1 gün",effect:()=>{G.sur-=2;G.morale+=2;return"Haliçten ateş desteği.";}},
+   ]},
+  {title:"SON SALDIRI — 29 Mayıs",desc:"3 dalga ile son hücum! Doğru sıra: Azaplar → Anadolu → Yeniçeri",days:[51,53],
+   actions:[
+     {label:"⚔️ Son Saldırıyı Başlat",cost:"FİNAL",effect:()=>{showCinematic();return null;}},
+   ]},
+];
+
+// ═══════════════════════════════════════════════
+// INTEL DATA
+// ═══════════════════════════════════════════════
+const INTEL = [
+  {icon:"🔎",title:"Blachernae Zayıf Noktası",desc:"Blachernae bölgesinde sur kalınlığı azalıyor. Tek kat sur, hendek sığ.",accuracy:72,cost:200,unlocked:false},
+  {icon:"⚠️",title:"Kerkoporta Kapısı",desc:"Küçük bir kapı açık bırakılmış olabilir. Gece baskını mümkün.",accuracy:65,cost:350,unlocked:false},
+  {icon:"🚢",title:"Haliç Zincir Zayıflığı",desc:"Zincirin orta noktası paslanmış. Ağır gemilerle kırılabilir.",accuracy:58,cost:400,unlocked:false},
+  {icon:"💀",title:"Bizans İç Çatışması",desc:"Ceneviz ve Rum askerleri arasında güvensizlik var. Giustiniani yaralı.",accuracy:80,cost:150,unlocked:false},
+  {icon:"🌙",title:"Ay Tutulması Kehaneti",desc:"22 Mayısta ay tutulması. Bizans morali çökecek — kehanet gerçekleşiyor.",accuracy:90,cost:100,unlocked:false},
+  {icon:"🔥",title:"Urbanın Gizli Planı",desc:"Şahiden daha büyük bir top dökülüyor. 3 gün daha gerekli.",accuracy:45,cost:500,unlocked:false},
+];
+
+// ═══════════════════════════════════════════════
+// SKILLS
+// ═══════════════════════════════════════════════
+const SKILLS = [
+  {id:"topcu",icon:"💣",name:"Topçu Ustası",desc:"Şahi hassasiyeti +20% / seviye",lvl:0,maxLvl:3,xpCost:200},
+  {id:"lojistik",icon:"📦",name:"Lojistikçi",desc:"Erzak kaybı -15% / seviye",lvl:0,maxLvl:3,xpCost:150},
+  {id:"strateji",icon:"🧠",name:"Stratejist",desc:"Gizli manevra + ekstra hamle",lvl:0,maxLvl:3,xpCost:250},
+  {id:"deniz",icon:"⚓",name:"Denizci",desc:"Donanma etkinliği +25% / seviye",lvl:0,maxLvl:3,xpCost:180},
+];
+
+// ═══════════════════════════════════════════════
+// STORY DATA
+// ═══════════════════════════════════════════════
+const STORIES = [
+  {badge:"Kritik Bilgi",text:"Eğer Urbanın topları olmasaydı, fetih ihtimali %42ye düşerdi. Şahi Topu tek başına 11 gedik açtı.",stat:"Fetih ihtimali: %42 → %94"},
+  {badge:"Tarihsel Gerçek",text:"Gemilerin karadan yürütülmesi: 72 kadırga, yağlanmış kızaklar, bir gecede Galata sırtlarından Haliçe.",stat:"Mesafe: 1.5 km, 200 öküz"},
+  {badge:"Komutan Notu",text:"\"Ben size taarruz emri vermiyorum. Ölme emri veriyorum!\" — Mustafa Kemal, Çanakkaleden esinlenme.",stat:""},
+  {badge:"Strateji Dersi",text:"53 gün boyunca 5 farklı taktik denendi. Sadece topçu bombardımanı yetmedi — psikolojik savaş kritikti.",stat:"5 taktik, 53 gün, 1 zafer"},
+  {badge:"Eğer... Senaryosu",text:"Giustiniani yaralanmasaydı ve surları terk etmeseydi, son saldırı başarısız olabilirdi.",stat:"Kelebek etkisi: 1 yara = 1 imparatorluk"},
+];
+
+// ═══════════════════════════════════════════════
+// GAME FUNCTIONS
+// ═══════════════════════════════════════════════
+function showTutorial(){
+  document.getElementById('introScreen').style.display='none';
+  document.getElementById('tutorialScreen').classList.add('active');
+}
+function startGame(){
+  document.getElementById('introScreen').style.display='none';
+  document.getElementById('tutorialScreen').classList.remove('active');
+  document.getElementById('tutorialScreen').style.display='none';
+  document.getElementById('gameWrap').style.display='grid';
+  renderPhase();
+  switchTab('intel');
+}
+
+function renderPhase(){
+  const p=PHASES[G.phase];
+  document.getElementById('phaseTitle').textContent=p.title;
+  document.getElementById('phaseDesc').textContent=p.desc;
+  const c=document.getElementById('actionBtns');
+  c.innerHTML='';
+  p.actions.forEach((a,i)=>{
+    const btn=document.createElement('button');
+    btn.className='action-btn'+(i>0?' secondary':'');
+    btn.innerHTML=a.label+'<span class="cost">'+a.cost+'</span>';
+    btn.onclick=()=>executeAction(a);
+    c.appendChild(btn);
+  });
+  updateUI();
+}
+
+function executeAction(action){
+  const result=action.effect();
+  if(!result) return;
+  G.day=Math.min(G.day+1,G.maxDay);
+  G.hour=6+Math.floor(Math.random()*14);
+  G.minute=Math.floor(Math.random()*60);
+  G.turnsPlayed++;
+  if(G.skills.lojistik>0) G.food=Math.min(100,G.food+G.skills.lojistik);
+  G.sur=Math.max(0,Math.min(100,G.sur));
+  G.morale=Math.max(0,Math.min(100,G.morale));
+  G.food=Math.max(0,Math.min(100,G.food));
+  G.ammo=Math.max(0,Math.min(100,G.ammo));
+  G.gold=Math.max(0,G.gold);
+  const xpGain=80+Math.floor(Math.random()*60);
+  G.xp+=xpGain;
+  const nextLvl=G.level*300;
+  let newSkill='';
+  if(G.xp>=nextLvl){G.level++;newSkill='Seviye '+G.level+' — Yeni yetenek açıldı!';}
+  showXP(xpGain,result,newSkill);
+  const p=PHASES[G.phase];
+  if(G.day>p.days[1]&&G.phase<PHASES.length-1){G.phase++;renderPhase();}
+  if(G.sur<=0){setTimeout(()=>showVictory(),800);}
+  updateUI();
+}
+
+function updateUI(){
+  document.getElementById('statDay').textContent=G.day;
+  document.getElementById('statArmy').textContent=G.army.toLocaleString('tr');
+  document.getElementById('statSur').textContent=G.sur+'%';
+  document.getElementById('statXP').textContent=G.xp;
+  document.getElementById('statLvl').textContent=G.level;
+  document.getElementById('dayTitle').textContent='KUŞATMANIN '+G.day+'. GÜNÜ';
+  document.getElementById('daySub').textContent=getDateStr(G.day)+' — '+PHASES[G.phase].title;
+  document.getElementById('dayProgress').style.width=(G.day/G.maxDay*100)+'%';
+  document.getElementById('tdTime').textContent=String(G.hour).padStart(2,'0')+':'+String(G.minute).padStart(2,'0');
+  const winds=['↗','→','↘','↓','↙','←','↖','↑'];
+  document.getElementById('tdWind').textContent=winds[G.day%8]+' '+(5+G.day%12)+'km/h';
+  document.getElementById('tdMorale').textContent=G.morale+'%';
+  document.getElementById('surBar').style.height=(100-G.sur)+'%';
+  document.getElementById('surPercent').textContent=G.sur+'%';
+  document.getElementById('resFood').style.width=G.food+'%';
+  document.getElementById('resFoodVal').textContent=G.food+'%';
+  document.getElementById('resMorale').style.width=G.morale+'%';
+  document.getElementById('resMoraleVal').textContent=G.morale+'%';
+  document.getElementById('resAmmo').style.width=G.ammo+'%';
+  document.getElementById('resAmmoVal').textContent=G.ammo+'%';
+  document.getElementById('resGold').style.width=Math.min(100,G.gold/50)+'%';
+  document.getElementById('resGoldVal').textContent=G.gold+' akçe';
+  // Color code resources
+  ['resFood','resMorale','resAmmo'].forEach(id=>{
+    const el=document.getElementById(id);
+    const val=parseInt(el.style.width);
+    if(val<30) el.style.background='var(--red)';
+    else if(val<60) el.style.background='var(--gold)';
+  });
+}
+
+function getDateStr(day){
+  const s=new Date(1453,3,6);s.setDate(s.getDate()+day-1);
+  const m=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran'];
+  return s.getDate()+' '+m[s.getMonth()]+' 1453';
+}
+
+function selectUnit(u){
+  document.querySelectorAll('.front-col:first-child .unit-row').forEach(r=>r.classList.remove('selected'));
+  document.getElementById('unit-'+u).classList.add('selected');
+  G.selectedUnit=u;
+}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function switchTab(tab){
+  document.querySelectorAll('.rp-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector('[data-tab="'+tab+'"]').classList.add('active');
+  const el=document.getElementById('rpContent');
+  if(tab==='intel') renderIntel(el);
+  else if(tab==='skills') renderSkills(el);
+  else if(tab==='artillery') renderArtillery(el);
+  else if(tab==='story') renderStory(el);
+}
+
+function renderIntel(el){
+  el.innerHTML='<div style="font-size:.6rem;color:var(--dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:2px;">🔎 İstihbarat Merkezi</div>';
+  INTEL.forEach((intel,i)=>{
+    const card=document.createElement('div');
+    card.className='intel-card'+(intel.unlocked?' unlocked':' locked');
+    card.innerHTML=`
+      <div class="intel-title">${intel.icon} ${intel.title}</div>
+      <div class="intel-desc">${intel.unlocked?intel.desc:'??? — Araştırma gerekli'}</div>
+      <div class="intel-meta">
+        <span class="intel-accuracy">Tahmin: ${intel.unlocked?intel.accuracy+'% doğru':'???'}</span>
+        ${intel.unlocked?'<span style="color:var(--green);font-size:.55rem;">✓ Açık</span>':'<button class="intel-btn" onclick="buyIntel('+i+')">Araştır: '+intel.cost+' akçe</button>'}
+      </div>`;
+    el.appendChild(card);
+  });
+}
+
+function buyIntel(i){
+  if(G.gold>=INTEL[i].cost){G.gold-=INTEL[i].cost;INTEL[i].unlocked=true;switchTab('intel');updateUI();}
+}
+
+function renderSkills(el){
+  el.innerHTML=`<div style="font-size:.6rem;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;">⚔ Komutan Yetenek Ağacı</div>
+  <div style="text-align:center;margin-bottom:10px;"><span style="font-family:'Chakra Petch',monospace;font-size:1.1rem;color:var(--gold);font-weight:900;">FATİH</span><br><span style="font-size:.55rem;color:var(--dim);">Seviye ${G.level} — ${G.xp} XP</span></div>`;
+  const tree=document.createElement('div');tree.className='skill-tree';
+  SKILLS.forEach((sk,i)=>{
+    if(i>0){const l=document.createElement('div');l.className='skill-line';tree.appendChild(l);}
+    const n=document.createElement('div');
+    n.className='skill-node'+(sk.lvl>0?' unlocked':' locked');
+    n.innerHTML=`<div class="sk-icon">${sk.icon}</div><div class="sk-info"><div class="sk-name">${sk.name}</div><div class="sk-desc">${sk.desc}</div></div><div class="sk-lvl">${sk.lvl}/${sk.maxLvl}<br><span style="font-size:.45rem;color:var(--dim)">${sk.xpCost} XP</span></div>`;
+    n.onclick=()=>upgradeSkill(i);
+    tree.appendChild(n);
+  });
+  el.appendChild(tree);
+}
+
+function upgradeSkill(i){
+  const sk=SKILLS[i];
+  if(G.xp>=sk.xpCost&&sk.lvl<sk.maxLvl){G.xp-=sk.xpCost;sk.lvl++;G.skills[sk.id]=sk.lvl;switchTab('skills');updateUI();}
+}
+
+function renderArtillery(el){
+  const types=['Taş Gülle','Demir Gülle','Yangın'];
+  el.innerHTML=`
+    <div style="font-size:.6rem;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;">💣 Topçu Mühendisliği</div>
+    <div class="param-row"><span class="param-label">Mesafe</span><input type="range" class="param-slider" min="400" max="1600" value="${G.artParams.distance}" oninput="updArt('distance',this.value)"><span class="param-val" id="pDist">${G.artParams.distance}m</span></div>
+    <div class="param-row"><span class="param-label">Açı</span><input type="range" class="param-slider" min="20" max="85" value="${G.artParams.angle}" oninput="updArt('angle',this.value)"><span class="param-val" id="pAngle">${G.artParams.angle}°</span></div>
+    <div class="param-row"><span class="param-label">Mühimmat</span><input type="range" class="param-slider" min="0" max="2" value="${G.artParams.ammoType}" step="1" oninput="updArt('ammoType',this.value)"><span class="param-val" id="pAmmo">${types[G.artParams.ammoType]}</span></div>
+    <div class="coord-display">
+      <div style="font-size:.6rem;color:var(--gold);margin-bottom:4px;font-weight:700;">Şahi-01 Koordinatları</div>
+      <div class="coord-row"><span>X:</span><b>420</b></div>
+      <div class="coord-row"><span>Y:</span><b>80</b></div>
+      <div class="coord-row"><span>Z:</span><b>12m</b></div>
+      <div class="coord-row"><span>α:</span><b id="cAlpha">${G.artParams.angle}°</b></div>
+      <div class="coord-row"><span>Menzil:</span><b id="cRange">${(G.artParams.distance/1000).toFixed(1)} km</b></div>
+      <div class="coord-row"><span>Etki:</span><b id="cEffect">████████</b></div>
+    </div>
+    <div class="risk-box"><div class="risk-title">⚠ Risk Analizi</div><div class="risk-text" id="riskText">Mesafe optimal. Top güvenli.</div></div>
+    <button class="action-btn" style="width:100%;justify-content:center;margin-top:10px;" onclick="fireArt()">🔥 Ateş Et (+1 gün)</button>`;
+}
+
+function updArt(p,v){
+  G.artParams[p]=parseInt(v);
+  const types=['Taş Gülle','Demir Gülle','Yangın'];
+  if(p==='distance') document.getElementById('pDist').textContent=v+'m';
+  if(p==='angle'){document.getElementById('pAngle').textContent=v+'°';document.getElementById('cAlpha').textContent=v+'°';}
+  if(p==='ammoType') document.getElementById('pAmmo').textContent=types[v];
+  document.getElementById('cRange').textContent=(G.artParams.distance/1000).toFixed(1)+' km';
+  const r=document.getElementById('riskText');
+  if(G.artParams.angle>75) r.textContent='Açı çok yüksek! Top çatlama riski %30';
+  else if(G.artParams.distance<600) r.textContent='Çok yakın! Karşı ateş riski yüksek';
+  else if(G.artParams.distance>1400) r.textContent='Çok uzak! İsabet düşük';
+  else r.textContent='Mesafe optimal. Top güvenli.';
+  // Effect bar
+  let eff=8;
+  if(G.artParams.angle>75||G.artParams.distance>1400||G.artParams.distance<600) eff=4;
+  document.getElementById('cEffect').textContent='█'.repeat(eff)+'░'.repeat(8-eff);
+}
+
+function fireArt(){
+  if(G.artParams.angle>75&&Math.random()<0.3){
+    G.ammo-=10;G.unitHP.topcu-=10;
+    document.getElementById('hp-topcu').style.width=G.unitHP.topcu+'%';
+    showXP(30,'💥 Top çatladı! Mühimmat ve birlik kaybı.','');
+  } else {
+    let dmg=3+(G.artParams.ammoType+1)*2+G.skills.topcu*2;
+    if(G.artParams.distance>1400||G.artParams.distance<600) dmg=Math.floor(dmg*0.5);
+    G.sur-=dmg;G.ammo-=4;G.day=Math.min(G.day+1,G.maxDay);
+    G.sur=Math.max(0,G.sur);
+    const xp=60+dmg*5;G.xp+=xp;
+    showXP(xp,'Sur hasarı: -'+dmg+'%','');
+  }
+  updateUI();
+}
+
+function renderStory(el){
+  el.innerHTML='<div style="font-size:.6rem;color:var(--dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:2px;">📖 Hikaye Motoru</div>';
+  // Show stories based on progress
+  const shown=Math.min(STORIES.length,Math.ceil(G.day/10)+1);
+  for(let i=0;i<shown;i++){
+    const s=STORIES[i];
+    const card=document.createElement('div');card.className='story-card';
+    card.innerHTML=`<div class="sc-badge">${s.badge}</div><div class="sc-text">${s.text}</div>${s.stat?'<div class="sc-stat">'+s.stat+'</div>':''}`;
+    el.appendChild(card);
+  }
+  if(shown<STORIES.length){
+    const lock=document.createElement('div');
+    lock.innerHTML='<div style="text-align:center;padding:16px;font-size:.6rem;color:var(--dim);">🔒 Daha fazla hikaye ilerledikçe açılır...</div>';
+    el.appendChild(lock);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// XP POPUP
+// ═══════════════════════════════════════════════
+function showXP(amount,text,newSkill){
+  document.getElementById('xpAmount').textContent='+'+amount+' XP';
+  document.getElementById('xpSkill').textContent=text;
+  document.getElementById('xpNew').textContent=newSkill||'';
+  document.getElementById('xpPopup').style.display='block';
+}
+function closeXP(){
+  document.getElementById('xpPopup').style.display='none';
+  const p=PHASES[G.phase];
+  if(G.day>p.days[1]&&G.phase<PHASES.length-1){G.phase++;renderPhase();}
+}
+
+// ═══════════════════════════════════════════════
+// CINEMATIC — SON SALDIRI
+// ═══════════════════════════════════════════════
+function showCinematic(){
+  const cin=document.getElementById('cinematic');
+  cin.style.display='flex';
+  cin.innerHTML=`
+    <h1>29 MAYIS 1453</h1>
+    <p>"Ya fetih, ya şehadet!" — Son saldırı başlıyor.</p>
+    <p style="font-size:.75rem;color:var(--dim);margin-top:8px;">Doğru dalga sırasını seç:</p>
+    <div class="wave-select" id="waveSelect">
+      <div class="wave-btn" onclick="toggleWave(this,0)"><h3>1. Dalga</h3><p>Azaplar — Yıpratma</p></div>
+      <div class="wave-btn" onclick="toggleWave(this,1)"><h3>2. Dalga</h3><p>Anadolu — Baskı</p></div>
+      <div class="wave-btn" onclick="toggleWave(this,2)"><h3>3. Dalga</h3><p>Yeniçeri — Son Darbe</p></div>
+    </div>
+    <button class="action-btn" style="margin-top:20px;padding:12px 28px;font-size:.85rem;" onclick="finishGame()">⚔️ Hücum Emri Ver</button>`;
+}
+
+let waveOrder=[];
+function toggleWave(btn,i){
+  if(waveOrder.includes(i)){waveOrder=waveOrder.filter(x=>x!==i);btn.classList.remove('selected');}
+  else{waveOrder.push(i);btn.classList.add('selected');}
+}
+
+function finishGame(){
+  const cin=document.getElementById('cinematic');
+  const correct=(waveOrder.length===3&&waveOrder[0]===0&&waveOrder[1]===1&&waveOrder[2]===2)||G.sur<=0;
+  if(correct){
+    cin.innerHTML=`
+      <h1 style="color:var(--gold);animation:fadeUp 1s ease;">FETİH TAMAMLANDI!</h1>
+      <p style="animation:fadeUp 1s .3s ease both;">Konstantinopolis artık İstanbul!<br>Orta Çağ sona erdi, Yeni Çağ başladı.</p>
+      <div style="margin-top:20px;animation:fadeUp 1s .6s ease both;">
+        <div style="font-family:'Chakra Petch',monospace;font-size:2rem;color:var(--#c41e3a);">+500 XP</div>
+        <div style="font-size:.7rem;color:var(--dim);margin-top:6px;">${G.day} günde fetih — Komutan Seviyesi: ${G.level}</div>
+        <div style="font-size:.65rem;color:var(--txt2);margin-top:4px;">Toplam ${G.turnsPlayed} stratejik karar verildi</div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:10px;animation:fadeUp 1s .9s ease both;">
+        <a href="oza-hub.html" style="background:var(--gold);color:#000;padding:10px 20px;border-radius:8px;font-weight:700;font-size:.8rem;">← OZAya Dön</a>
+        <button onclick="location.reload()" style="background:rgba(255,255,255,.1);border:1px solid var(--border);color:var(--txt);padding:10px 20px;border-radius:8px;font-weight:600;font-size:.8rem;cursor:pointer;">↻ Tekrar Oyna</button>
+      </div>`;
+  } else {
+    cin.innerHTML=`
+      <h1 style="color:var(--red);animation:fadeUp 1s ease;">HÜCUM BAŞARISIZ!</h1>
+      <p style="animation:fadeUp 1s .3s ease both;">Yanlış dalga sırası! Kerkoporta kapısı kapandı.<br>Doğru sıra: Azaplar → Anadolu → Yeniçeri</p>
+      <button onclick="location.reload()" style="margin-top:20px;background:var(--gold);color:#000;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:.8rem;">Tekrar Dene</button>`;
+  }
+}
+
+function showVictory(){showCinematic();}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

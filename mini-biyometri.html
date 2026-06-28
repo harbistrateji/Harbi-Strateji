@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Biyometri — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:420px;margin:0 auto;padding:16px 16px 80px}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;flex:1}
+.sval{font-size:18px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.stage-badge{text-align:center;margin-bottom:12px}
+.stage-pill{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid}
+.s1{border-color:var(--green);color:var(--green)}.s2{border-color:var(--gold);color:var(--gold)}.s3{border-color:var(--red);color:var(--red)}
+.timer-bar{height:4px;background:var(--line);border-radius:2px;margin-bottom:14px;overflow:hidden}
+.timer-fill{height:100%;background:var(--cyan);transition:width 1s linear}
+.face-card{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden}
+.face-emoji{font-size:80px;line-height:1;margin-bottom:12px;display:block}
+.face-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;text-align:left}
+.detail-item{background:rgba(150,170,200,.06);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.detail-label{font-size:10px;color:var(--dim);text-transform:uppercase;margin-bottom:2px}
+.detail-val{font-size:13px;font-weight:600}
+.anomaly-badge{position:absolute;top:12px;right:12px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.anomaly-real{background:rgba(0,255,136,.15);color:var(--green);border:1px solid var(--green)}
+.anomaly-fake{background:rgba(224,21,21,.15);color:var(--red);border:1px solid var(--red)}
+.choice-row{display:flex;gap:10px;margin-bottom:14px}
+.choice-btn{flex:1;padding:16px 8px;border:2px solid var(--line);border-radius:12px;background:var(--panel);color:var(--tx);font-size:15px;font-weight:700;cursor:pointer;transition:.12s;text-align:center}
+.choice-btn:active{transform:scale(.96)}
+.choice-btn.correct{border-color:var(--green);background:rgba(0,255,136,.1);color:var(--green)}
+.choice-btn.wrong{border-color:var(--red);background:rgba(224,21,21,.1);color:var(--red)}
+.feedback{text-align:center;font-size:14px;min-height:20px;margin-bottom:10px}
+.clue-box{background:rgba(0,224,255,.05);border:1px solid rgba(0,224,255,.2);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--dim);margin-bottom:12px}
+.overlay-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+.big{font-size:48px;font-weight:700;color:var(--cyan)}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:var(--cyan);color:#000;margin-bottom:8px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">👁️ BİYOMETRİ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="stats">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--cyan)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-stage" style="color:var(--gold)">1/3</div><div class="slbl">AŞAMA</div></div>
+  <div class="sbox"><div class="sval" id="s-correct" style="color:var(--green)">0</div><div class="slbl">DOĞRU</div></div>
+  <div class="sbox"><div class="sval" id="s-time" style="color:var(--red)">—</div><div class="slbl">SÜRE</div></div>
+</div>
+<div class="stage-badge" id="stage-badge"></div>
+<div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+<div id="game-area"></div>
+</div>
+<script>
+var STAGES=[
+  {label:'AŞAMA 1 — TEMEL',cls:'s1',sublabel:'Belirgin anomaliler · 15sn · 8 kart',
+   rounds:8,timeLimit:15,clues:true,
+   desc:'Göz kırpma, cilt dokusu ve ışık tutarsızlıklarına bak'},
+  {label:'AŞAMA 2 — İLERİ',cls:'s2',sublabel:'İnce anomaliler · 10sn · 10 kart',
+   rounds:10,timeLimit:10,clues:false,
+   desc:'Piksel sınırları, gölge açıları ve simetri hatalarını analiz et'},
+  {label:'AŞAMA 3 — UZMAN',cls:'s3',sublabel:'Çok ince anomaliler · 7sn · 12 kart',
+   rounds:12,timeLimit:7,clues:false,
+   desc:'Mikro ifadeler, refleks noktaları ve renk geçişlerini incele'}
+];
+
+var FACES=[
+  {emoji:'👨‍💼',name:'Ahmet K.',rank:'Albay',unit:'1. Kolordu',age:45,isReal:true,
+   details:{goz:'Normal kırpma','cilt':'Doğal doku','isik':'Tutarlı','simetri':'Normal'},
+   anomaly:null},
+  {emoji:'🧑‍💻',name:'Mehmet Y.',rank:'Yarbay',unit:'Siber Komuta',age:38,isReal:false,
+   details:{goz:'Kırpmıyor','cilt':'Piksel artefaktı','isik':'Tutarsız','simetri':'Asimetrik'},
+   anomaly:'Göz kırpma yok + cilt dokusu yapay'},
+  {emoji:'👩‍🔬',name:'Ayşe D.',rank:'Binbaşı',unit:'İstihbarat',age:34,isReal:true,
+   details:{goz:'Normal','cilt':'Gerçek pori','isik':'Doğal','simetri':'İnsan normali'},
+   anomaly:null},
+  {emoji:'🧔',name:'Ali R.',rank:'Tuğgeneral',unit:'Kara Kuvvetleri',age:52,isReal:false,
+   details:{goz:'Sabit bakış','cilt':'Düzgün yüzey','isik':'Çift gölge','simetri':'Mükemmel simetri'},
+   anomaly:'Çift gölge + mükemmel simetri (YZ üretimi)'},
+  {emoji:'👱‍♀️',name:'Fatma S.',rank:'Teğmen',unit:'Hava Kuvvetleri',age:26,isReal:true,
+   details:{goz:'Normal kırpma','cilt':'Doğal','isik':'Tek kaynak','simetri':'Normal'},
+   anomaly:null},
+  {emoji:'🧑‍🦱',name:'Kemal B.',rank:'Komiser',unit:'Jandarma',age:41,isReal:false,
+   details:{goz:'Piksel sınırı','cilt':'Renk geçişi hatalı','isik':'Tutarsız','simetri':'Asimetrik'},
+   anomaly:'Renk geçişi hatalı + piksel sınırı görünür'},
+  {emoji:'👨‍🦳',name:'Hasan T.',rank:'Amiral',unit:'Deniz Kuvvetleri',age:58,isReal:true,
+   details:{goz:'Yaşa uygun','cilt':'Kırışıklık doğal','isik':'Tutarlı','simetri':'Normal'},
+   anomaly:null},
+  {emoji:'🧑‍🦲',name:'Ömer A.',rank:'Uzman Çavuş',unit:'Özel Kuvvetler',age:29,isReal:false,
+   details:{goz:'Refleks yok','cilt':'Aşırı pürüzsüz','isik':'Sanal','simetri':'Yapay'},
+   anomaly:'Göz refleksi yok + aşırı pürüzsüz cilt'}
+];
+
+var stage=0,round=0,pts=0,correct=0,timer=null,answered=false;
+
+function startStage(){
+  var s=STAGES[stage];
+  round=0;correct=0;answered=false;
+  document.getElementById('stage-badge').innerHTML=
+    '<div class="stage-pill '+s.cls+'">'+s.label+'</div>'+
+    '<div style="font-size:11px;color:var(--dim);margin-top:4px">'+s.sublabel+'</div>';
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  nextRound();
+}
+
+function nextRound(){
+  if(round>=STAGES[stage].rounds){endStage();return;}
+  var s=STAGES[stage];
+  answered=false;
+  var face=FACES[round%FACES.length];
+  var timeLimit=s.timeLimit;
+  document.getElementById('s-time').textContent=timeLimit+'s';
+  document.getElementById('timer-fill').style.transition='none';
+  document.getElementById('timer-fill').style.width='100%';
+  setTimeout(function(){
+    document.getElementById('timer-fill').style.transition='width '+timeLimit+'s linear';
+    document.getElementById('timer-fill').style.width='0%';
+  },50);
+  clearInterval(timer);
+  timer=setInterval(function(){
+    timeLimit--;
+    document.getElementById('s-time').textContent=timeLimit+'s';
+    if(timeLimit<=0){clearInterval(timer);if(!answered)autoFail(face);}
+  },1000);
+  var html='<div class="face-card">';
+  html+='<span class="face-emoji">'+face.emoji+'</span>';
+  html+='<div style="font-size:16px;font-weight:700;margin-bottom:4px">'+face.name+'</div>';
+  html+='<div style="font-size:12px;color:var(--dim);margin-bottom:12px">'+face.rank+' · '+face.unit+' · '+face.age+' yaş</div>';
+  html+='<div class="face-details">';
+  html+='<div class="detail-item"><div class="detail-label">Göz Kırpma</div><div class="detail-val">'+face.details.goz+'</div></div>';
+  html+='<div class="detail-item"><div class="detail-label">Cilt Dokusu</div><div class="detail-val">'+face.details.cilt+'</div></div>';
+  html+='<div class="detail-item"><div class="detail-label">Işık Kaynağı</div><div class="detail-val">'+face.details.isik+'</div></div>';
+  html+='<div class="detail-item"><div class="detail-label">Simetri</div><div class="detail-val">'+face.details.simetri+'</div></div>';
+  html+='</div>';
+  if(s.clues&&face.anomaly){
+    html+='<div class="clue-box">💡 İpucu: '+face.anomaly+'</div>';
+  }
+  html+='</div>';
+  html+='<div class="choice-row">';
+  html+='<button class="choice-btn" id="btn-real" onclick="answer(true,this)">✅ GERÇEK</button>';
+  html+='<button class="choice-btn" id="btn-fake" onclick="answer(false,this)">🤖 DEEPFAKE</button>';
+  html+='</div>';
+  html+='<div class="feedback" id="feedback"></div>';
+  document.getElementById('game-area').innerHTML=html;
+}
+
+function answer(isReal,btn){
+  if(answered)return;
+  answered=true;
+  clearInterval(timer);
+  var face=FACES[round%FACES.length];
+  var correct_ans=face.isReal;
+  if(isReal===correct_ans){
+    btn.classList.add('correct');
+    correct++;pts+=100;
+    document.getElementById('feedback').innerHTML='<span style="color:var(--green)">✅ Doğru! '+(correct_ans?'Gerçek kişi.':'Deepfake tespit edildi!')+'</span>';
+  } else {
+    btn.classList.add('wrong');
+    var other=isReal?document.getElementById('btn-fake'):document.getElementById('btn-real');
+    other.classList.add('correct');
+    document.getElementById('feedback').innerHTML='<span style="color:var(--red)">❌ Yanlış! '+(correct_ans?'Bu gerçek bir kişiydi.':'Bu bir deepfake idi.')+(face.anomaly?'<br><small>'+face.anomaly+'</small>':'')+'</span>';
+  }
+  updateStats();
+  round++;
+  setTimeout(nextRound,1400);
+}
+
+function autoFail(face){
+  answered=true;
+  document.getElementById('feedback').innerHTML='<span style="color:var(--red)">⏱️ Süre doldu! Cevap: '+(face.isReal?'GERÇEK':'DEEPFAKE')+'</span>';
+  round++;
+  setTimeout(nextRound,1200);
+}
+
+function endStage(){
+  clearInterval(timer);
+  try{
+    var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    sc['mobil-biyometri']=Math.max(sc['mobil-biyometri']||0,pts);
+    localStorage.setItem('hs_scores',JSON.stringify(sc));
+  }catch(e){}
+  var html='<div class="overlay-card"><div style="font-size:36px">'+(stage<2?'🎯':'🏆')+'</div>'+
+    '<div class="big">'+pts+'</div>'+
+    '<div style="font-size:13px;color:var(--dim)">'+correct+'/'+STAGES[stage].rounds+' doğru · '+(stage<2?'Aşama '+(stage+1)+' tamamlandı!':'Tüm aşamalar tamamlandı!')+'</div></div>';
+  document.getElementById('game-area').innerHTML=html;
+  if(stage<2){
+    var btn=document.createElement('button');
+    btn.className='btn';btn.textContent='▶ AŞAMA '+(stage+2);
+    btn.onclick=function(){stage++;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  } else {
+    var btn=document.createElement('button');
+    btn.className='btn';btn.textContent='🔄 BAŞTAN OYNA';
+    btn.onclick=function(){stage=0;pts=0;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  }
+}
+
+function updateStats(){
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('s-correct').textContent=correct;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+}
+
+startStage();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

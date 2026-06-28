@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | FCAS <em>Çöküşü</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>FCAS <em>Çöküşü</em></h1>
+  <p class="lead">Avrupa Gelecek Savaş Uçağı programının teknolojik ve politik çöküş senaryoları simülasyonu.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">€100B</span><span class="lbl">Bütçe</span></div><div class="hero-stat"><span class="num">3</span><span class="lbl">Ülke</span></div><div class="hero-stat"><span class="num">2040</span><span class="lbl">Hedef</span></div><div class="hero-stat"><span class="num">4</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+
+<h1>FCAS ÇÖKÜŞÜ: KARAR SİMÜLASYONU</h1>
+
+
+<div class="sim-panel">
+<h2>Senaryo: Siz Avrupa Savunma Konseyi Başkanısınız</h2>
+<div class="scenario-box">
+<p><strong>Yıl: 2017.</strong> Fransa ve Almanya size geldi. "Geleceğin savaş uçağını birlikte yapalım" diyorlar. Ama her ikisinin de farklı talepleri var. Projeyi yönetmek sizin elinizde. Kararlarınız projenin kaderini belirleyecek.</p>
+</div>
+
+<div class="score-board">
+<div class="score-card"><div class="value" id="budget">100B€</div><div class="label">Bütçe</div></div>
+<div class="score-card"><div class="value" id="trust">100%</div><div class="label">Güven Endeksi</div></div>
+<div class="score-card"><div class="value" id="progress">0%</div><div class="label">Proje İlerleme</div></div>
+</div>
+
+<!-- Karar 1 -->
+<div class="decision-node active" id="decision1">
+<h3>KARAR 1: Fikri Mülkiyet (IP) Paylaşımı</h3>
+<p>Dassault (Fransa): "Kritik yazılım kodları ve uçuş kontrol algoritmaları bende kalmalı. 40 yıllık tecrübem var."</p>
+<p>Airbus (Almanya): "Paranın %50'sini biz veriyoruz. Tüm teknolojiye eşit erişim istiyoruz."</p>
+<div class="options">
+<button class="btn btn-red" onclick="decide(1,'france')">Fransa'yı Destekle (IP Fransa'da)</button>
+<button class="btn btn-orange" onclick="decide(1,'germany')">Almanya'yı Destekle (Eşit Paylaşım)</button>
+<button class="btn btn-gold" onclick="decide(1,'compromise')">Uzlaşma (Katmanlı Erişim)</button>
+</div>
+</div>
+
+<!-- Karar 2 -->
+<div class="decision-node hidden" id="decision2">
+<h3>KARAR 2: Operasyonel Gereksinimler</h3>
+<p>Fransa: "Uçak Charles de Gaulle gemisine inebilmeli ve nükleer silah taşımalı."</p>
+<p>Almanya: "Bize sadece kara üssünden kalkan, hafif ve ucuz bir platform yeter."</p>
+<div class="options">
+<button class="btn btn-red" onclick="decide(2,'naval')">Gemiye İniş Öncelikli (Ağır Tasarım)</button>
+<button class="btn btn-orange" onclick="decide(2,'land')">Kara Üssü Öncelikli (Hafif Tasarım)</button>
+<button class="btn btn-gold" onclick="decide(2,'modular')">Modüler Tasarım (İki Versiyon)</button>
+<button class="btn btn-grey" onclick="decide(2,'cancel')">Projeyi İptal Et</button>
+</div>
+</div>
+
+<!-- Karar 3 -->
+<div class="decision-node hidden" id="decision3">
+<h3>KARAR 3: İhracat Politikası</h3>
+<p>Fransa: "Ürettiğimizi Ortadoğu ve Asya'ya satmalıyız. İhracat geliri projeyi finanse eder."</p>
+<p>Almanya: "Çatışma bölgelerine silah satışı anayasamıza aykırı. Veto hakkımız olmalı."</p>
+<div class="options">
+<button class="btn btn-red" onclick="decide(3,'free')">Serbest İhracat (Fransa Modeli)</button>
+<button class="btn btn-orange" onclick="decide(3,'veto')">Veto Hakkı (Almanya Modeli)</button>
+<button class="btn btn-gold" onclick="decide(3,'committee')">Ortak Komite Kararı</button>
+</div>
+</div>
+
+<!-- Sonuç -->
+<div class="result-box" id="finalResult">
+<h2>SİMÜLASYON SONUCU</h2>
+<div id="resultContent"></div>
+<div class="koyuncu-box">
+<h3>Koyuncu Kanunları Analizi</h3>
+<p><strong>OODA-X Devlet Kapasitesi Modeli:</strong></p>
+<div class="formula">Karar Hızı = f(Bürokratik Katman × Ulusal Ego × Endüstriyel Çıkar)</div>
+<p>FCAS'ın çöküşü, çok uluslu projelerde OODA döngüsünün nasıl felç olduğunu gösterir. Her ülkenin kendi OODA döngüsü olduğunda, ortak karar alma mekanizması geometrik olarak yavaşlar.</p>
+<div class="formula">Maliyet Asimetrisi: 1 FCAS Yılı ≈ 10.000 Dron Sürüsü Maliyeti</div>
+<p><strong>Sonuç:</strong> Devasa bürokratik projeler çağı kapanıyor. Otonom sistemlerin asimetrik çözümler sunduğu bir dönemde, 9 yıllık FCAS macerası "eski savaşın son kalesi" olarak tarihe geçti.</p>
+</div>
+</div>
+</div>
+
+<!-- Tarihsel Karşılaştırma -->
+<div class="sim-panel">
+<h2>Tarihsel Karşılaştırma: Avrupa'nın Tekrarlayan Deseni</h2>
+<div class="tab-container">
+<div class="tab active" onclick="showTab('tab1')">1985: Rafale/Typhoon</div>
+<div class="tab" onclick="showTab('tab2')">1970: MBT-70</div>
+<div class="tab" onclick="showTab('tab3')">2003: Tiger Helikopter</div>
+<div class="tab" onclick="showTab('tab4')">2026: FCAS</div>
+</div>
+<div class="tab-content active" id="tab1">
+<h3>1985: Avrupa Savaş Uçağı Ayrılığı</h3>
+<p>Fransa, ortak Avrupa savaş uçağı projesinden ayrılarak kendi başına Rafale'i geliştirdi. Diğer ülkeler (Almanya, İngiltere, İtalya, İspanya) Eurofighter Typhoon'u üretti. Sebep: IP kontrolü ve operasyonel gereksinim farklılıkları. <strong>Tanıdık geliyor mu?</strong></p>
+</div>
+<div class="tab-content" id="tab2">
+<h3>1970: MBT-70 Tank Projesi İptali</h3>
+<p>ABD ve Almanya'nın ortak ana muharebe tankı projesi. Maliyet patlaması ve tasarım anlaşmazlıkları nedeniyle iptal edildi. ABD M1 Abrams'ı, Almanya Leopard 2'yi kendi başına yaptı. İkisi de dünya klasmanı oldu.</p>
+</div>
+<div class="tab-content" id="tab3">
+<h3>2003: Tiger Helikopter Gecikmesi</h3>
+<p>Fransa-Almanya ortak taarruz helikopteri. Teknik sorunlar ve gereksinim farkları nedeniyle yıllarca gecikti. Sonunda üretildi ama beklenen performansın altında kaldı.</p>
+</div>
+<div class="tab-content" id="tab4">
+<h3>2026: FCAS - Son Perde</h3>
+<p>Tarih bir kez daha tekerrür etti. Aynı ülkeler, aynı sorunlar, aynı sonuç. Fark: Bu sefer dron çağında yaşıyoruz ve 100 milyar Euro'luk bir uçak projesi, 30.000 dolarlık dronlarla asimetrik olarak alt edilebilir.</p>
+</div>
+</div>
+
+<!-- Alternatif Senaryo -->
+<div class="sim-panel">
+<h2>Alternatif Senaryo: Ya Türkiye'nin KAAN'ı Bu Boşluğu Doldurursa?</h2>
+<div class="scenario-box">
+<p>FCAS'ın çöküşü, Avrupa'da 5. nesil savaş uçağı boşluğu yaratıyor. Türkiye'nin KAAN programı, bu boşluğu dolduracak potansiyele sahip mi?</p>
+</div>
+<div class="options">
+<button class="btn btn-red" onclick="showAlternative('kaan')">KAAN Senaryosunu Göster</button>
+<button class="btn btn-orange" onclick="showAlternative('f35')">F-35 Bağımlılığı Senaryosu</button>
+<button class="btn btn-gold" onclick="showAlternative('dron')">Dron Sürüsü Alternatifi</button>
+</div>
+<div class="result-box" id="altResult"></div>
+</div>
+</div>
+</main>
+
+<script>
+
+let budget = 100, trust = 100, progress = 0;
+let decisions = {};
+
+function decide(step, choice) {
+    decisions[step] = choice;
+    
+    if(step === 1) {
+        if(choice === 'france') { trust -= 25; progress += 15; }
+        else if(choice === 'germany') { trust -= 10; progress += 10; budget -= 15; }
+        else { trust -= 5; progress += 20; budget -= 10; }
+        document.getElementById('decision1').classList.remove('active');
+        document.getElementById('decision2').classList.remove('hidden');
+        document.getElementById('decision2').classList.add('active');
+    } else if(step === 2) {
+        if(choice === 'naval') { budget -= 30; trust -= 20; progress += 15; }
+        else if(choice === 'land') { budget -= 10; trust -= 25; progress += 20; }
+        else if(choice === 'modular') { budget -= 40; trust -= 5; progress += 25; }
+        else { showFinalResult('cancel'); return; }
+        document.getElementById('decision2').classList.remove('active');
+        document.getElementById('decision3').classList.remove('hidden');
+        document.getElementById('decision3').classList.add('active');
+    } else if(step === 3) {
+        if(choice === 'free') { trust -= 30; progress += 10; }
+        else if(choice === 'veto') { trust -= 5; progress += 5; budget -= 20; }
+        else { trust -= 15; progress += 8; budget -= 10; }
+        showFinalResult('complete');
+    }
+    
+    updateScores();
+}
+
+function updateScores() {
+    document.getElementById('budget').textContent = Math.max(0, budget) + 'B€';
+    document.getElementById('trust').textContent = Math.max(0, trust) + '%';
+    document.getElementById('progress').textContent = Math.min(100, progress) + '%';
+}
+
+function showFinalResult(type) {
+    let content = '';
+    if(type === 'cancel') {
+        content = '<h3 style="color:#e30a17">PROJE İPTAL EDİLDİ</h3><p>Tıpkı gerçek hayatta olduğu gibi, projeyi erken iptal ettiniz. Bu aslında en rasyonel karar olabilir - çünkü gerçekte 9 yıl ve milyarlarca Euro harcandıktan sonra aynı sonuca ulaşıldı.</p><p><strong>Tarihsel Gerçeklik:</strong> FCAS 2017-2026 arasında 9 yıl sürdü ve sonuçta iptal edildi. Erken iptal, kaynakların dron ve otonom sistemlere yönlendirilmesini sağlayabilirdi.</p>';
+    } else {
+        if(trust < 30) {
+            content = '<h3 style="color:#e30a17">PROJE ÇÖKTÜ - GÜVEN KRİZİ</h3><p>Güven endeksi kritik seviyenin altına düştü. Ortaklar birbirlerine güvenemez hale geldi ve proje çöktü. <strong>Bu tam olarak gerçekte olan şey.</strong></p>';
+        } else if(budget < 20) {
+            content = '<h3 style="color:#d4620a">PROJE ASKIYA ALINDI - BÜTÇE KRİZİ</h3><p>Bütçe tükendi. Maliyet patlaması projeyi sürdürülemez hale getirdi. Gerçekte de FCAS\'ın tahmini maliyeti sürekli arttı.</p>';
+        } else if(progress > 50 && trust > 50) {
+            content = '<h3 style="color:#c8a415">PROJE DEVAM EDİYOR - AMA...</h3><p>Tebrikler! Gerçek hayattan daha iyi bir sonuç elde ettiniz. Ancak unutmayın: Dron çağında 100 milyar Euro\'luk bir jet projesi, stratejik olarak sorgulanmaya devam edecek.</p>';
+        } else {
+            content = '<h3 style="color:#d4620a">PROJE GECİKMELİ - BELİRSİZ GELECEK</h3><p>Proje devam ediyor ama gecikmeler ve güven sorunları birikti. Bu tam olarak 2020-2024 arasındaki FCAS durumuydu.</p>';
+        }
+    }
+    content += '<br><p><strong>Kararlarınız:</strong> IP: ' + (decisions[1]||'iptal') + ' | Operasyon: ' + (decisions[2]||'iptal') + ' | İhracat: ' + (decisions[3]||'-') + '</p>';
+    
+    document.getElementById('resultContent').innerHTML = content;
+    document.getElementById('finalResult').classList.add('show');
+}
+
+function showTab(tabId) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
+
+function showAlternative(scenario) {
+    let content = '';
+    if(scenario === 'kaan') {
+        content = '<h3 style="color:#c8a415">KAAN: Türkiye\'nin Fırsatı</h3><p><strong>Avantajlar:</strong> Tek ülke kararı (OODA hızı yüksek), mevcut dron ekosistemi entegrasyonu, maliyet avantajı (F-35\'in 1/3\'ü), ihracat serbestisi.</p><p><strong>Potansiyel Müşteriler:</strong> FCAS\'ın çöküşüyle Avrupa\'da 5. nesil uçak arayan ülkeler (Belçika, İsviçre, Avusturya). Ayrıca Türk Devletleri ve ODKA bölgesi.</p><p><strong>Koyuncu Analizi:</strong> Tek uluslu karar mekanizması, OODA döngüsünü 10x hızlandırır. Maliyet asimetrisi Türkiye lehinedir.</p>';
+    } else if(scenario === 'f35') {
+        content = '<h3 style="color:#e30a17">F-35 Bağımlılığı: Avrupa\'nın Kaderi?</h3><p>FCAS\'ın çöküşü, Avrupa ülkelerini doğrudan F-35\'e iter. Bu durum:</p><ul style="margin:10px 0;padding-left:20px"><li>ABD\'ye stratejik bağımlılığı artırır</li><li>Macron\'un "stratejik özerklik" vizyonunu bitirir</li><li>Avrupa savunma sanayisini zayıflatır</li><li>Türkiye\'nin KAAN ihracatı için alan açar</li></ul>';
+    } else {
+        content = '<h3 style="color:#d4620a">Dron Sürüsü Alternatifi: Paradigma Değişimi</h3><p><strong>Maliyet Karşılaştırması:</strong></p><div class="formula">1 FCAS Uçağı ≈ 300M€ = 10.000 Otonom Dron ($30K/adet)</div><p>Ukrayna ve İran savaşları gösterdi ki, pahalı platformlar ucuz dron sürülerine karşı savunmasız. FCAS\'ın çöküşü aslında "eski paradigmanın ölümü" olabilir.</p><p><strong>Harb-i Strateji Değerlendirmesi:</strong> Doygunluk Kanunu burada da geçerli. 10.000 dron, en gelişmiş hava savunmasını bile doyurabilir.</p>';
+    }
+    document.getElementById('altResult').innerHTML = content;
+    document.getElementById('altResult').classList.add('show');
+}
+
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

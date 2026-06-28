@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Strateji Reels | Harb-i Strateji OZA</title>
+<meta name="hs-skip" content="true">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;900&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0d0d0d;--card:#1a1a1a;--card2:#222;--red:#c41e3a;--red2:#ff2d55;--white:#f0f0f0;--gray:#888;--gray2:#555;--border:rgba(255,255,255,.1);}
+html,body{height:100%;overflow:hidden;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--white);}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#111;border-bottom:2px solid var(--red);position:fixed;top:0;left:0;right:0;z-index:100;}
+.tb-back{color:var(--red);text-decoration:none;font-size:.75rem;font-weight:700;font-family:'Chakra Petch',monospace;}
+.tb-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:900;color:var(--white);text-transform:uppercase;}
+.tb-stats{display:flex;gap:12px;font-size:.7rem;font-family:'IBM Plex Mono',monospace;}
+.tb-stats span{color:var(--gray);}
+.tb-stats b{color:var(--red2);}
+.main{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 50px);margin-top:50px;}
+.left-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;position:relative;overflow:hidden;}
+.card-box{width:100%;max-width:440px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;position:relative;transition:transform .3s,opacity .3s;}
+.card-box.exit{transform:translateX(-100%);opacity:0;}
+.card-era{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:2px;}
+.card-year{font-family:'Chakra Petch',monospace;font-size:2.2rem;font-weight:900;color:var(--white);margin:4px 0;}
+.card-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:10px;}
+.card-desc{font-size:.8rem;color:var(--gray);line-height:1.7;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.card-q{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:12px;}
+.card-opts{display:flex;flex-direction:column;gap:8px;}
+.opt{padding:12px 16px;background:var(--card2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:.75rem;color:var(--white);transition:all .2s;}
+.opt:hover{border-color:var(--red);background:rgba(196,30,58,.08);}
+.opt.correct{border-color:#4ade80;background:rgba(74,222,128,.1);color:#4ade80;}
+.opt.wrong{border-color:var(--red2);background:rgba(255,45,85,.1);color:var(--red2);}
+.timer{height:4px;background:var(--card2);border-radius:2px;margin-top:14px;overflow:hidden;}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--red2),var(--red));transition:width .1s linear;border-radius:2px;}
+.card-num{position:absolute;top:12px;right:16px;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--gray2);}
+.right-panel{overflow-y:auto;padding:20px;background:#111;display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--border);}
+.right-panel::-webkit-scrollbar{width:4px;}
+.right-panel::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
+.info-card h3{font-family:'Chakra Petch',monospace;font-size:.75rem;font-weight:700;color:var(--red);margin-bottom:8px;text-transform:uppercase;}
+.info-card p{font-size:.7rem;color:var(--gray);line-height:1.7;}
+.score-box{text-align:center;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:8px;}
+.score-box .big{font-family:'Chakra Petch',monospace;font-size:2.2rem;font-weight:900;color:var(--red2);}
+.score-box .lbl{font-size:.65rem;color:var(--gray);margin-top:4px;}
+.streak-dots{display:flex;gap:4px;justify-content:center;margin-top:8px;}
+.streak-dots .dot{width:8px;height:8px;border-radius:50%;background:var(--card2);border:1px solid var(--border);}
+.streak-dots .dot.on{background:var(--red);border-color:var(--red);}
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:.65rem;}
+.hist-item:last-child{border:none;}
+.hist-item .t{color:var(--white);flex:1;}
+.hist-item .r{font-weight:700;font-family:'IBM Plex Mono',monospace;}
+.hist-item .r.ok{color:#4ade80;}
+.hist-item .r.no{color:var(--red2);}
+.intro-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}
+.intro-overlay.hidden{display:none;}
+.intro-overlay h1{font-family:'Chakra Petch',monospace;font-size:2rem;font-weight:900;color:var(--white);text-transform:uppercase;}
+.intro-overlay .sub{font-size:.85rem;color:var(--red);font-family:'IBM Plex Mono',monospace;margin:8px 0 20px;}
+.intro-overlay p{font-size:.8rem;color:var(--gray);max-width:500px;line-height:1.8;margin-bottom:24px;}
+.intro-overlay button{background:var(--red);color:var(--white);border:none;border-radius:6px;padding:14px 40px;font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;cursor:pointer;text-transform:uppercase;}
+.intro-overlay button:hover{background:var(--red2);}
+@media(max-width:900px){.main{grid-template-columns:1fr;}.left-panel{min-height:65vh;}.right-panel{border-top:2px solid var(--red);border-left:none;max-height:50vh;}}
+</style><link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<div class="intro-overlay" id="intro">
+<h1>Strateji Reels</h1>
+<div class="sub">30 Saniyede Tarih | 49 Kart</div>
+<p>Her kart bir tarihsel dönüm noktası. 30 saniyede doğru kararı ver. Seri bonus ile puanını katla.</p>
+<button onclick="startGame()">Başla</button>
+</div>
+<div class="top-bar" id="topBar" style="display:none;padding-left:150px;">
+<a href="oza-harbi-strateji-evren.html" class="tb-back">← OZA</a>
+<div class="tb-title">Strateji Reels</div>
+<div class="tb-stats"><span>Puan: <b id="sTop">0</b></span><span>Seri: <b id="stTop">0</b></span><span>Kart: <b id="cTop">1</b>/49</span></div>
+</div>
+<div class="main" id="mainArea" style="display:none;">
+<div class="left-panel" id="leftP"></div>
+<div class="right-panel" id="rightP">
+<div class="score-box"><div class="big" id="sBig">0</div><div class="lbl">TOPLAM PUAN</div><div class="streak-dots" id="sDots"></div></div>
+<div class="info-card"><h3>Nasıl Oynanır</h3><p>Her kart 30sn. Doğru = +10 puan. Seri: 3 doğru = x2, 5 doğru = x3. Yanlış seriyi kırar.</p></div>
+<div class="info-card" id="factBox" style="display:none;"><h3>Tarihsel Not</h3><p id="factTxt"></p></div>
+<div class="info-card"><h3>Geçmiş</h3><div id="histList"></div></div>
+</div>
+</div>
+<script>
+const C=[
+{y:1071,t:'Malazgirt Muharebesi',d:'Alparslan 50.000 askerle Romen Diyojen\'in 200.000 kişilik ordusunu yendi.',q:'Alparslan hangi taktiği kullandı?',o:['Frontal saldırı','Kuşatma','Geri çekilme','Hilal taktiği'],c:3,f:'Hilal (Turan) taktiği: Merkez geri çekilir, kanatlar sarar. Türk ordularının 1000 yıllık imza taktiği.'},
+{y:1176,t:'Miryokefalon Savaşı',d:'II. Kılıç Arslan, Bizans İmparatoru Manuel\'i pusuya düşürdü.',q:'Bu zafer neyi kesinleştirdi?',o:['İstanbul fethedildi','Anadolu Türk yurdu oldu','Haçlılar yenildi','Bizans çöktü'],c:1,f:'Miryokefalon, Malazgirt\'in teyididir. Bizans bir daha Anadolu\'yu geri alma hayalinden vazgeçti.'},
+{y:1453,t:'İstanbul\'un Fethi',d:'21 yaşındaki Fatih, 1000 yıllık Bizans\'ı 53 günlük kuşatmayla fethetti.',q:'Fethin en kritik hamlesi?',o:['Şahi topunun ateşlenmesi','Surlara tırmanma','Haliç zincirinin kırılması','Gemilerin karadan yürütülmesi'],c:3,f:'72 kadırga Galata sırtlarından yağlanmış kızaklarla Haliç\'e indirildi.'},
+{y:1538,t:'Preveze Deniz Zaferi',d:'Barbaros, Haçlı donanmasını bozguna uğrattı. Akdeniz Türk gölü oldu.',q:'Barbaros\'un avantajı neydi?',o:['Daha fazla gemisi','Ateşli silahlar','Sayısal üstünlük','Rüzgar yönünü kullanması'],c:3,f:'Barbaros rüzgârı arkasına aldı ve hilal formasyonuyla düşmanı sardı.'},
+{y:1683,t:'Viyana Kuşatması',d:'Osmanlı\'nın Avrupa\'daki son büyük taarruzu başarısız oldu.',q:'Kuşatma neden başarısız?',o:['Top yetersizdi','Asker isyan etti','Lehistan yardımı geldi','Kış bastırdı'],c:2,f:'Jan Sobieski komutasındaki Leh süvarileri tarihin en büyük süvari hücumunu yaptı.'},
+{y:1915,t:'Çanakkale Deniz Savaşı',d:'İtilaf donanması Boğaz\'ı geçmeye çalıştı. Türk mayınları 3 zırhlıyı batırdı.',q:'Deniz savaşını çeviren unsur?',o:['Kale topları','Torpido botları','Denizaltılar','Nusret mayın gemisi'],c:3,f:'Nusret gece 26 mayın döşedi. İtilaf donanması bu mayınlara çarptı.'},
+{y:1916,t:'Kut\'ül Amare Zaferi',d:'Halil Paşa komutasında 13.000 İngiliz askeri esir alındı.',q:'Bu zafer neden önemli?',o:['İngiliz tarihinin en büyük teslimiyeti','Bağdat kurtarıldı','Savaş bitti','Osmanlı toparlandı'],c:0,f:'13.309 İngiliz askeri teslim oldu. İngiliz tarihinin en büyük teslimiyetlerinden.'},
+{y:1922,t:'Büyük Taarruz',d:'Mustafa Kemal\'in planladığı taarruz. 26 Ağustos\'ta başladı, 9 Eylül\'de İzmir\'e ulaşıldı.',q:'Taarruzun başarı sırrı?',o:['Sayısal üstünlük','Yabancı yardım','Gizlilik ve sürat','Hava üstünlüğü'],c:2,f:'Hazırlıklar tam gizlilik içinde yapıldı. Yunan istihbaratı saldırıyı 24 saat öncesine kadar fark edemedi.'},
+{y:1974,t:'Kıbrıs Barış Harekâtı',d:'TSK Kıbrıs\'a çıkarma yaptı. Kıbrıs Türklerini soykırımdan kurtardı.',q:'Harekâtın kod adı?',o:['Atilla','Yıldırım','Fırtına','Ayşe tatile çıksın'],c:3,f:'Başbakan Ecevit\'in "Ayşe tatile çıksın" şifresi ile harekât başladı.'},
+{y:334,t:'İskender\'in Asya Seferi',d:'Makedonya Kralı İskender, 35.000 askerle Pers İmparatorluğu\'na saldırdı.',q:'İskender\'in temel taktiği?',o:['Hilal','Falanks','Çekiç ve örs','Gerilla'],c:2,f:'Çekiç ve örs: Piyade falanksi düşmanı sabitler (örs), süvari kanatlardan sarar (çekiç).'},
+{y:216,t:'Cannae Muharebesi',d:'Hannibal 50.000 askerle Roma\'nın 86.000 kişilik ordusunu imha etti.',q:'Hannibal hangi taktiği kullandı?',o:['Frontal saldırı','Geri çekilme','Çift kanat kuşatma','Pusu'],c:2,f:'Tarihte ilk tam çift kanat kuşatma. 70.000 Romalı öldürüldü.'},
+{y:1805,t:'Trafalgar Deniz Savaşı',d:'Nelson\'un İngiliz donanması, Fransız-İspanyol filosunu yok etti.',q:'Nelson\'un yenilikçi taktiği?',o:['Paralel hat','Dikey sütun saldırısı','Ateş gemisi','Abluka'],c:1,f:'Nelson geleneksel paralel hat yerine düşman hattını dik kesen iki sütunla saldırdı.'},
+{y:1940,t:'Fransa\'nın Düşüşü',d:'Alman ordusu 6 haftada Fransa\'yı işgal etti. Maginot Hattı işe yaramadı.',q:'Almanlar nereden saldırdı?',o:['Belçika üzerinden','Maginot Hattından','Ardenler ormanından','Denizden'],c:2,f:'Ardenler "geçilmez" sayılıyordu. Guderian\'ın panzerleri ormanı 3 günde geçti.'},
+{y:1942,t:'Stalingrad Muharebesi',d:'2. Dünya Savaşı\'nın dönüm noktası. Alman 6. Ordu tamamen imha edildi.',q:'Sovyet karşı saldırısının adı?',o:['Operasyon Barbarossa','Operasyon Uranüs','Operasyon Bagration','Operasyon Citadel'],c:1,f:'Uranüs: Sovyetler zayıf Romen kanatlarından saldırıp 300.000 Alman askerini kuşattı.'},
+{y:1944,t:'D-Day Normandiya',d:'Tarihin en büyük amfibi harekâtı. 156.000 asker Fransa kıyılarına çıktı.',q:'Aldatma operasyonunun adı?',o:['Fortitude','Overlord','Market Garden','Dragoon'],c:0,f:'Fortitude: Sahte ordu ile Almanlar asıl çıkarmanın Calais\'e olacağına inandırıldı.'},
+{y:1967,t:'Altı Gün Savaşı',d:'İsrail 6 günde 3 Arap ordusunu yendi. Hava üstünlüğü belirleyici oldu.',q:'İsrail\'in ilk hamlesi?',o:['Mısır hava kuvvetlerini yerde imha','Sina\'ya kara taarruzu','Suriye\'ye saldırı','Deniz ablukası'],c:0,f:'İsrail jetleri sabah 07:45\'te Mısır havaalanlarını vurdu. 300+ uçak yerde imha edildi.'},
+{y:1991,t:'Çöl Fırtınası',d:'ABD koalisyonu 100 saatte Irak ordusunu Kuveyt\'ten çıkardı.',q:'Koalisyonun stratejik avantajı?',o:['Sayısal üstünlük','Hava üstünlüğü + GPS silahlar','Nükleer tehdit','BM desteği'],c:1,f:'38 gün hava bombardımanı + 100 saat kara savaşı. İlk "TV savaşı".'},
+{y:2020,t:'Karabağ Savaşı',d:'Azerbaycan 44 günde Karabağ\'ı geri aldı. TB2 drone\'ları oyun değiştirici oldu.',q:'Savaşı belirleyen teknoloji?',o:['Tank birlikleri','Topçu ateşi','İnsansız hava araçları (İHA/SİHA)','Özel kuvvetler'],c:2,f:'Bayraktar TB2 ve kamikaze dronelar Ermeni zırhlılarını imha etti. Drone savaşı çağı.'},
+{y:1571,t:'İnebahtı Deniz Savaşı',d:'Osmanlı donanması yenildi. Ama 6 ayda yeni donanma inşa edildi.',q:'Sokullu\'nun sözü?',o:['Biz size kol kestik, siz bize sakal','Denizler bizimdir','Savaş bitmedi','Tekrar geleceğiz'],c:0,f:'"Biz size kol kestik, kol yerine gelmez. Siz bize sakal kestiniz, sakal gür biter."'},
+{y:1526,t:'Mohaç Meydan Muharebesi',d:'Kanuni Macar ordusunu 2 saatte imha etti.',q:'Savaş ne kadar sürdü?',o:['1 gün','2 saat','3 gün','1 hafta'],c:1,f:'Tarihin en kısa meydan muharebelerinden. Osmanlı topçusu Macar süvarisini eritti.'},
+{y:1514,t:'Çaldıran Muharebesi',d:'Yavuz, Safevi Şah İsmail\'i yendi. Ateşli silahlar vs. geleneksel süvari.',q:'Osmanlı\'nın belirleyici avantajı?',o:['Süvari','Sayısal üstünlük','Top ve tüfek','Lojistik'],c:2,f:'Safevi süvarisi Osmanlı topçu hattına çarptı ve eridi.'},
+{y:1187,t:'Hıttin Muharebesi',d:'Selahaddin Eyyubi Haçlı ordusunu imha etti. Kudüs geri alındı.',q:'Selahaddin\'in taktiği?',o:['Gece baskını','Susuz bırakma + sahte geri çekilme','Kuşatma','Denizden saldırı'],c:1,f:'Haçlıları su kaynaklarından uzaklaştırdı, susuzluktan bitkin düşen orduyu tuzağa düşürdü.'},
+{y:1863,t:'Gettysburg Muharebesi',d:'Amerikan İç Savaşı\'nın dönüm noktası.',q:'Lee\'nin kritik hatası?',o:['Geri çekilmemek','Pickett Hücumu','Süvari göndermek','Bölünmek'],c:1,f:'12.500 asker 1.6 km açık alanda yürüdü. %50 kayıp. Frontal saldırının intihara eşit olduğunun kanıtı.'},
+{y:1905,t:'Tsushima Deniz Savaşı',d:'Japon donanması Rus Baltık Filosu\'nu imha etti.',q:'Togo\'nun taktiği?',o:['Abluka','Paralel hat','Torpido saldırısı','T pozisyonu (Crossing the T)'],c:3,f:'Amiral Togo düşman hattını dikey keserek tüm toplarını kullandı.'},
+{y:1973,t:'Yom Kippur Savaşı',d:'Mısır ve Suriye İsrail\'e sürpriz saldırı yaptı.',q:'Mısır\'ın sürpriz silahı?',o:['Hava saldırısı','Deniz çıkarması','Paraşütçüler','Su toplarıyla kum duvarı yıkma'],c:3,f:'Yüksek basınçlı su toplarıyla İsrail\'in kum setlerini 2 saatte yıktı.'},
+{y:2003,t:'Irak İşgali',d:'ABD "Şok ve Dehşet" ile Bağdat\'ı 3 haftada düşürdü.',q:'İşgal sonrası en büyük hata?',o:['Ordunun dağıtılması','Yetersiz asker','Hava bombardımanı','BM\'ye danışmama'],c:0,f:'Paul Bremer Irak ordusunu dağıttı. 400.000 silahlı işsiz adam → IŞİD\'in çekirdeği.'},
+{y:1588,t:'İspanyol Armadası',d:'"Yenilmez Armada" İngiliz donanması ve fırtına tarafından yok edildi.',q:'Armada\'nın yenilgi sebebi?',o:['İngiliz topçusu','Hollanda yardımı','İspanyol ihaneti','Ateş gemileri + fırtına'],c:3,f:'İngilizler ateş gemileriyle İspanyol formasyonunu dağıttı.'},
+{y:2022,t:'Ukrayna-Rusya Savaşı',d:'Rusya\'nın 3 günlük planı aylara uzadı.',q:'Ukrayna\'nın en etkili savunma aracı?',o:['Hava üstünlüğü','Nükleer tehdit','NATO müdahalesi','Javelin + HIMARS + TB2'],c:3,f:'Javelin + HIMARS + TB2 üçlüsü Rus zırhlı kollarını durdurdu.'},
+{y:1877,t:'93 Harbi — Plevne',d:'Gazi Osman Paşa 5 ay boyunca 3 kat üstün Rus kuvvetine karşı savundu.',q:'Plevne\'yi kim savundu?',o:['Abdülhamid','Mithat Paşa','Gazi Osman Paşa','Namık Kemal'],c:2,f:'Modern savunma savaşının öncüsü. Dünya basını Osman Paşa\'yı "Plevne Aslanı" olarak adlandırdı.'},
+{y:1950,t:'İnchon Çıkarması',d:'MacArthur\'un dahice planı Kore Savaşı\'nın seyrini değiştirdi.',q:'İnchon neden riskli?',o:['Gelgit farkı çok yüksekti','Düşman güçlüydü','Uzak mesafeydi','Hava kötüydü'],c:0,f:'10 metrelik gelgit farkı. MacArthur "İmkansız olduğu için beklemiyorlar" dedi.'},
+{y:1979,t:'Sovyet Afganistan İşgali',d:'SSCB\'nin "Vietnam\'ı". 10 yıllık savaş Sovyet çöküşünü hızlandırdı.',q:'Mücahitlerin en etkili silahı?',o:['AK-47','RPG','Stinger füzesi','Mayın'],c:2,f:'Stinger hava savunma füzeleri Sovyet helikopter üstünlüğünü kırdı.'},
+{y:1757,t:'Plassey Muharebesi',d:'İngiliz Doğu Hindistan Şirketi Bengal\'i ele geçirdi.',q:'İngilizler nasıl kazandı?',o:['Askerî üstünlük','İhanet satın alma (Mir Jafar)','Deniz gücü','Teknoloji'],c:1,f:'Mir Jafar\'ı satın aldılar. 50.000 kişilik ordunun büyük kısmı savaşmadı.'},
+{y:1815,t:'Waterloo Muharebesi',d:'Napolyon\'un son savaşı.',q:'Napolyon\'un kritik hatası?',o:['Geç saldırmak','Bölünmek','Grouchy hatasını görmemek','Süvari yetersizliği'],c:2,f:'Grouchy Prusya ordusunu takip edemedi. Blücher savaş alanına yetişti.'},
+{y:1914,t:'Marne Muharebesi',d:'Alman Schlieffen Planı Paris önünde durduruldu.',q:'Fransız takviyesi nasıl geldi?',o:['Trenle','Paris taksileriyle','Yürüyerek','Denizden'],c:1,f:'600 Paris taksisi 6.000 askeri cepheye taşıdı. Tarihin ilk motorize takviyesi.'},
+{y:1943,t:'Kursk Muharebesi',d:'Tarihin en büyük tank savaşı. 6.000+ tank çarpıştı.',q:'Sovyetler nasıl hazırlandı?',o:['Sürpriz saldırı','Derin savunma hatları (8 hat)','Hava bombardımanı','Partizan savaşı'],c:1,f:'8 savunma hattı, 1 milyon mayın. Alman taarruzu eriğe saplandı.'},
+{y:1982,t:'Falkland Savaşı',d:'İngiltere 13.000 km uzaktaki adaları geri aldı.',q:'İngiliz donanmasının en büyük kaybı?',o:['Denizaltı saldırısı','Hava bombardımanı','Exocet füzesiyle HMS Sheffield','Mayın'],c:2,f:'Arjantin\'in Exocet füzeleri 2 İngiliz gemisini batırdı.'},
+{y:2011,t:'Bin Laden Operasyonu',d:'SEAL Team 6, Pakistan\'da Usame bin Laden\'i öldürdü.',q:'Operasyonun kod adı?',o:['Geronimo','Neptune Spear','Gothic Serpent','Red Wings'],c:1,f:'2 stealth Black Hawk helikopteri. 38 dakikalık operasyon.'},
+{y:1942,t:'Midway Muharebesi',d:'ABD 4 Japon uçak gemisini batırdı. Pasifik\'in dönüm noktası.',q:'ABD\'nin avantajı?',o:['Sayısal üstünlük','Teknoloji','Japon şifrelerini kırmışlardı','Şans'],c:2,f:'ABD Japon JN-25 şifresini kırdı. Saldırı zamanını biliyorlardı.'},
+{y:751,t:'Talas Savaşı',d:'Türk-İslam ittifakı Çin Tang hanedanını yendi.',q:'Savaşın en önemli sonucu?',o:['Kağıt üretimi Batı\'ya geçti','Çin yıkıldı','İpek Yolu kapandı','İslam Çin\'e yayıldı'],c:0,f:'Karluk Türkleri saf değiştirdi. Kağıt üretimi Batı\'ya geçti. Türklerin İslamlaşması hızlandı.'},
+{y:1962,t:'Küba Füze Krizi',d:'Sovyet füzeleri Küba\'da. ABD\'ye 5 dakika mesafede nükleer başlıklar.',q:'Kennedy ne yaptı?',o:['Deniz ablukası','Küba\'yı bombaladı','Diplomatik nota','Hiçbir şey'],c:0,f:'Kennedy deniz ablukası uyguladı. Kruşçev füzeleri geri çekti. Dünya nükleer savaşın eşiğinden döndü.'},
+{y:1258,t:'Bağdat\'ın Düşüşü',d:'Moğollar Abbasi Halifeliği\'ni yıktı. İslam dünyasının en karanlık günü.',q:'Hülagu kaç kişiyi katletti?',o:['200.000-1.000.000','10.000','50.000','500'],c:0,f:'Dicle nehri mürekkep ve kandan siyaha döndü. Kütüphaneler yakıldı.'},
+{y:1241,t:'Mohi Muharebesi',d:'Moğol ordusu Macaristan\'ı işgal etti.',q:'Moğolların temel stratejisi?',o:['Frontal saldırı','Kuşatma','Sahte geri çekilme + kanat kuşatma','Gece baskını'],c:2,f:'Batu Han sahte geri çekilmeyle Macar ordusunu açık alana çekti.'},
+{y:1281,t:'Kamikaze (İlahi Rüzgar)',d:'Moğol donanması Japonya\'yı işgale çalıştı. Tayfun donanmayı yok etti.',q:'"Kamikaze" ne demek?',o:['Kutsal savaş','Ölüm dalgası','Tanrı ordusu','İlahi rüzgâr'],c:3,f:'Tayfun Moğol donanmasını yok etti. Japonlar bunu tanrıların koruması olarak yorumladı.'},
+{y:2006,t:'İsrail-Hizbullah Savaşı',d:'İsrail\'in teknolojik üstünlüğü asimetrik taktiğe yenildi.',q:'Hizbullah\'ın stratejisi?',o:['Roket saldırıları','Tünel ağı + anti-tank füzeleri','İntihar saldırıları','Deniz saldırısı'],c:1,f:'Tünel ağı + Kornet anti-tank füzeleriyle Merkava tanklarını vurdu.'},
+{y:1798,t:'Mısır Seferi',d:'Napolyon Mısır\'ı işgal etti ama Nelson donanmasını yok etti.',q:'Napolyon neden Mısır\'a gitti?',o:['İngiltere\'nin Hindistan yolunu kesmek','Piramitleri görmek','Osmanlı\'yı yıkmak','Altın aramak'],c:0,f:'Stratejik hedef: Süveyş üzerinden İngiliz Hindistan ticaretini kesmek.'},
+{y:1961,t:'Domuzlar Körfezi',d:'CIA destekli Küba çıkarması fiyaskoyla sonuçlandı.',q:'Operasyon neden başarısız?',o:['Asker yetersizdi','Hava desteği iptal edildi','İstihbarat yanlıştı','Hava kötüydü'],c:1,f:'Kennedy son anda hava desteğini iptal etti. 1.400 sürgün 20.000 askere karşı şanssızdı.'},
+{y:1862,t:'Monitor vs Merrimack',d:'Tarihin ilk zırhlı gemi savaşı.',q:'Bu savaş neyi kanıtladı?',o:['Deniz savaşı önemsiz','Zırhlılar yenilmez','Topçu etkisiz','Ahşap savaş gemileri çağı bitti'],c:3,f:'4 saatlik savaşta hiçbir taraf diğerini batıramadı. Ama ahşap gemiler artık işe yaramıyordu.'}
+];
+let G={puan:0,streak:0,cur:0,hist:[],tmr:null,tl:30};
+function startGame(){document.getElementById('intro').classList.add('hidden');document.getElementById('topBar').style.display='flex';document.getElementById('mainArea').style.display='grid';shuffle();show();}
+function shuffle(){for(let i=C.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[C[i],C[j]]=[C[j],C[i]];}}
+function show(){
+if(G.cur>=C.length){end();return;}
+const c=C[G.cur];
+document.getElementById('leftP').innerHTML=`<div class="card-box"><div class="card-num">${G.cur+1}/${C.length}</div><div class="card-era">${c.y>0?c.y+' MS':'MÖ '+Math.abs(c.y)}</div><div class="card-year">${Math.abs(c.y)}</div><div class="card-title">${c.t}</div><div class="card-desc">${c.d}</div><div class="card-q">${c.q}</div><div class="card-opts">${c.o.map((o,i)=>`<div class="opt" onclick="ans(${i})">${o}</div>`).join('')}</div><div class="timer"><div class="timer-fill" id="tf" style="width:100%"></div></div></div>`;
+G.tl=30;clearInterval(G.tmr);G.tmr=setInterval(()=>{G.tl-=0.1;document.getElementById('tf').style.width=(G.tl/30*100)+'%';if(G.tl<=0){clearInterval(G.tmr);ans(-1);}},100);
+upTop();
+}
+function ans(i){
+clearInterval(G.tmr);const c=C[G.cur];const opts=document.querySelectorAll('.opt');
+opts.forEach((o,j)=>{if(j===c.c)o.classList.add('correct');else if(j===i)o.classList.add('wrong');o.style.pointerEvents='none';});
+const ok=i===c.c;if(ok){G.streak++;const m=G.streak>=5?3:G.streak>=3?2:1;G.score+=10*m;}else{G.streak=0;}
+G.hist.unshift({t:c.t,ok});
+document.getElementById('factBox').style.display='block';document.getElementById('factTxt').textContent=c.f;
+upRight();setTimeout(()=>{G.cur++;show();},2200);
+}
+function upRight(){
+document.getElementById('sBig').textContent=G.score;
+document.getElementById('sDots').innerHTML=Array(5).fill(0).map((_,i)=>`<div class="dot ${i<G.streak?'on':''}"></div>`).join('');
+document.getElementById('histList').innerHTML=G.hist.slice(0,10).map(h=>`<div class="hist-item"><span class="t">${h.t}</span><span class="r ${h.ok?'ok':'no'}">${h.ok?'+10':'✗'}</span></div>`).join('');
+}
+function upTop(){document.getElementById('sTop').textContent=G.score;document.getElementById('stTop').textContent=G.streak;document.getElementById('cTop').textContent=(G.cur+1)+'/'+C.length;}
+function end(){document.getElementById('leftP').innerHTML=`<div style="text-align:center;"><h2 style="font-family:'Chakra Petch',monospace;font-size:1.5rem;color:var(--red);">OYUN BİTTİ</h2><div style="font-size:2.5rem;font-weight:900;margin:12px 0;">${G.score}</div><div style="font-size:.8rem;color:var(--gray);">Doğru: ${G.hist.filter(h=>h.ok).length}/${C.length}</div><button onclick="location.reload()" style="margin-top:20px;background:var(--red);color:var(--white);border:none;border-radius:6px;padding:12px 30px;font-family:'Chakra Petch',monospace;font-weight:700;cursor:pointer;">Tekrar Oyna</button></div>`;}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body></html>

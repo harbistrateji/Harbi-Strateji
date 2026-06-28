@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Füze Güdüm Sistemlerinde Kritik Mineraller | Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0f17;color:#e8e8e8;font-family:'IBM Plex Sans',sans-serif;overflow-x:hidden}
+.back-btn{position:fixed;top:20px;left:20px;z-index:100;color:#00e0ff;text-decoration:none;font-size:14px;opacity:.8}
+.back-btn:hover{opacity:1}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 20px;background:radial-gradient(ellipse at 30% 50%,#1a0a0a 0%,#0a0f17 60%)}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(26px,4.5vw,48px);color:#fff;margin-bottom:16px}
+.hero h1 span{color:#c41e3a}
+.hero p{font-size:16px;color:#a0a8b4;max-width:650px;line-height:1.7}
+
+.missile-anatomy{max-width:1000px;margin:80px auto;padding:0 20px}
+.missile-anatomy h2{font-family:'Chakra Petch',sans-serif;font-size:28px;color:#fff;text-align:center;margin-bottom:50px}
+.missile-anatomy h2 span{color:#c41e3a}
+
+.missile-body{position:relative;background:linear-gradient(90deg,#1a2332,#111827,#1a2332);border:2px solid #2a3a4a;border-radius:60px;padding:40px;margin:0 auto;max-width:900px}
+.missile-section{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:40px}
+.missile-section:last-child{margin-bottom:0}
+.ms-label{font-family:'Chakra Petch',sans-serif;font-size:20px;color:#00e0ff;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ms-label::before{content:'';width:12px;height:12px;border-radius:50%;background:currentColor}
+.ms-desc{font-size:14px;color:#a0a8b4;line-height:1.6;margin-bottom:12px}
+.ms-minerals{display:flex;flex-wrap:wrap;gap:6px}
+.ms-mineral{background:rgba(196,30,58,.15);color:#ff6b6b;padding:5px 12px;border-radius:20px;font-size:12px;font-family:'IBM Plex Mono',monospace;border:1px solid rgba(196,30,58,.3)}
+
+/* Füze Karşılaştırma */
+.comparison{max-width:1100px;margin:80px auto;padding:0 20px}
+.comparison h2{font-family:'Chakra Petch',sans-serif;font-size:28px;color:#fff;text-align:center;margin-bottom:40px}
+.comparison h2 span{color:#c41e3a}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.comp-card{background:#111827;border:1px solid #1e293b;border-radius:16px;padding:24px;transition:all .3s}
+.comp-card:hover{border-color:#c41e3a;transform:translateY(-3px)}
+.comp-name{font-family:'Chakra Petch',sans-serif;font-size:20px;color:#fff;margin-bottom:4px}
+.comp-type{font-size:12px;color:#c41e3a;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.comp-minerals-title{font-size:12px;color:#7a8290;text-transform:uppercase;margin-bottom:8px}
+.comp-list{list-style:none;padding:0}
+.comp-list li{font-size:13px;color:#a0a8b4;padding:6px 0;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between}
+.comp-list li:last-child{border:none}
+.comp-list .mineral-name{color:#00e0ff}
+.comp-list .mineral-role{color:#7a8290;font-size:13px}
+
+/* Tedarik Zinciri Akış */
+.flow-section{max-width:1000px;margin:80px auto;padding:0 20px}
+.flow-section h2{font-family:'Chakra Petch',sans-serif;font-size:28px;color:#fff;text-align:center;margin-bottom:40px}
+.flow-section h2 span{color:#c41e3a}
+.flow-steps{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;align-items:center;gap:20px;padding:20px;background:#111827;border-left:3px solid var(--color);margin-bottom:2px}
+.flow-step:first-child{border-radius:12px 12px 0 0}
+.flow-step:last-child{border-radius:0 0 12px 12px}
+.flow-num{font-family:'Chakra Petch',sans-serif;font-size:24px;color:var(--color);min-width:40px}
+.flow-content h3{font-size:16px;color:#fff;margin-bottom:4px}
+.flow-content p{font-size:13px;color:#a0a8b4}
+.flow-arrow{text-align:center;color:#2a3a4a;font-size:20px;padding:4px 0}
+
+@media(max-width:768px){
+  .missile-section{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<a href="infografik.html" class="back-btn">← İnfografiklere Dön</a>
+
+<section class="hero">
+  <h1>Füze Güdüm Sistemlerinde<br><span>Kritik Mineraller</span></h1>
+  <p>Cruise, gemi-savar ve hava savunma füzelerinin güdüm, itki ve hedefleme sistemlerinde kullanılan nadir toprak elementleri ve stratejik metallerin detaylı analizi</p>
+</section>
+
+<section class="missile-anatomy">
+  <h2>Füze <span>Anatomisi</span> — Mineral Haritası</h2>
+  <div class="missile-body">
+    <div class="missile-section">
+      <div>
+        <div class="ms-label" style="color:#c41e3a">Arayıcı Başlık (Seeker)</div>
+        <div class="ms-desc">Kızılötesi hedefleme, radar arayıcı ve termal görüntüleme bileşenleri. Hedefin ısı imzasını algılar ve kilitlenir.</div>
+        <div class="ms-minerals">
+          <span class="ms-mineral">Germanyum</span>
+          <span class="ms-mineral">Berilyum</span>
+          <span class="ms-mineral">Lantan</span>
+          <span class="ms-mineral">İtriyum</span>
+        </div>
+      </div>
+      <div>
+        <div class="ms-label" style="color:#ffa500">Güdüm & Navigasyon</div>
+        <div class="ms-desc">Atalet navigasyonu, jiroskoplar, GPS ve aktüatörler. Füzenin yörüngesini sürekli düzeltir.</div>
+        <div class="ms-minerals">
+          <span class="ms-mineral">Neodimyum</span>
+          <span class="ms-mineral">Samaryum</span>
+          <span class="ms-mineral">Disprosyum</span>
+          <span class="ms-mineral">Terbiyum</span>
+          <span class="ms-mineral">Praseodimyum</span>
+        </div>
+      </div>
+    </div>
+    <div class="missile-section">
+      <div>
+        <div class="ms-label" style="color:#00e0ff">İtki Sistemi (Motor)</div>
+        <div class="ms-desc">Roket motoru, türbojet veya ramjet. Yüksek sıcaklık süper alaşımları ve nozul malzemeleri.</div>
+        <div class="ms-minerals">
+          <span class="ms-mineral">Kobalt</span>
+          <span class="ms-mineral">Renyum</span>
+          <span class="ms-mineral">Niyobyum</span>
+          <span class="ms-mineral">Tantal</span>
+          <span class="ms-mineral">Tungsten</span>
+        </div>
+      </div>
+      <div>
+        <div class="ms-label" style="color:#9b59b6">Güç Kaynağı</div>
+        <div class="ms-desc">Betavoltaik piller, termal piller ve güdüm elektroniği güç modülleri. Uzun süreli bakımsız enerji.</div>
+        <div class="ms-minerals">
+          <span class="ms-mineral">Prometyum</span>
+          <span class="ms-mineral">Lityum</span>
+          <span class="ms-mineral">Kobalt</span>
+        </div>
+      </div>
+    </div>
+    <div class="missile-section">
+      <div>
+        <div class="ms-label" style="color:#2ecc71">Kanatçık & Kontrol</div>
+        <div class="ms-desc">Uçuş kontrol yüzeyleri, stabilizasyon ve manyetostriktif aktüatörler. Hassas manevra kabiliyeti.</div>
+        <div class="ms-minerals">
+          <span class="ms-mineral">Terbiyum (Terfenol-D)</span>
+          <span class="ms-mineral">Neodimyum</span>
+          <span class="ms-mineral">Disprosyum</span>
+        </div>
+      </div>
+      <div>
+        <div class="ms-label" style="color:#e74c3c">Savaş Başlığı & Penetratör</div>
+        <div class="ms-desc">Kinetik enerji penetratörleri, şekilli harp başlıkları ve zırh delici çekirdekler.</div>
+        <div class="ms-minerals">
+          <span class="ms-mineral">Tungsten</span>
+          <span class="ms-mineral">Tantal</span>
+          <span class="ms-mineral">Hafniyum</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="comparison">
+  <h2>Füze Sistemleri <span>Mineral Profili</span></h2>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-name">Tomahawk (BGM-109)</div>
+      <div class="comp-type">Cruise Füzesi · ABD</div>
+      <div class="comp-minerals-title">Kritik Mineraller</div>
+      <ul class="comp-list">
+        <li><span class="mineral-name">Neodimyum</span><span class="mineral-role">Aktüatör mıknatısları</span></li>
+        <li><span class="mineral-name">Samaryum</span><span class="mineral-role">Atalet navigasyonu</span></li>
+        <li><span class="mineral-name">Renyum</span><span class="mineral-role">Türbojet motor</span></li>
+        <li><span class="mineral-name">Germanyum</span><span class="mineral-role">DSMAC görüntüleme</span></li>
+      </ul>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">Javelin (FGM-148)</div>
+      <div class="comp-type">Tanksavar · ABD</div>
+      <div class="comp-minerals-title">Kritik Mineraller</div>
+      <ul class="comp-list">
+        <li><span class="mineral-name">Germanyum</span><span class="mineral-role">Kızılötesi arayıcı</span></li>
+        <li><span class="mineral-name">Neodimyum</span><span class="mineral-role">Güdüm aktüatörleri</span></li>
+        <li><span class="mineral-name">Tungsten</span><span class="mineral-role">Tandem savaş başlığı</span></li>
+        <li><span class="mineral-name">Tantal</span><span class="mineral-role">Elektronik kapasitörler</span></li>
+      </ul>
+    </div>
+    <div class="comp-card">
+      <div class="comp-name">Patriot (MIM-104)</div>
+      <div class="comp-type">Hava Savunma · ABD</div>
+      <div class="comp-minerals-title">Kritik Mineraller</div>
+      <ul class="comp-list">
+        <li><span class="mineral-name">Samaryum</span><span class="mineral-role">AN/MPQ-65 radar</span></li>
+        <li><span class="mineral-name">Galyum</span><span class="mineral-role">GaN AESA dizileri</span></li>
+        <li><span class="mineral-name">Neodimyum</span><span class="mineral-role">Güdüm mıknatısları</span></li>
+        <li><span class="mineral-name">Disprosyum</span><span class="mineral-role">Isı dayanımı</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="flow-section">
+  <h2>Tedarikten <span>Savaş Alanına</span></h2>
+  <div class="flow-steps">
+    <div class="flow-step" style="--color:#c41e3a"><div class="flow-num">01</div><div class="flow-content"><h3>Maden Çıkarma</h3><p>Çin, Kongo, Brezilya — Hammadde çıkarılır</p></div></div>
+    <div class="flow-step" style="--color:#ffa500"><div class="flow-num">02</div><div class="flow-content"><h3>İşleme & Rafine</h3><p>Çin %85 işleme kapasitesi — Oksitler ayrıştırılır</p></div></div>
+    <div class="flow-step" style="--color:#00e0ff"><div class="flow-num">03</div><div class="flow-content"><h3>Alaşım & Bileşen</h3><p>NdFeB mıknatıs, SmCo mıknatıs, GaN wafer üretimi</p></div></div>
+    <div class="flow-step" style="--color:#9b59b6"><div class="flow-num">04</div><div class="flow-content"><h3>Alt Sistem Entegrasyonu</h3><p>Arayıcı başlık, güdüm modülü, motor montajı</p></div></div>
+    <div class="flow-step" style="--color:#2ecc71"><div class="flow-num">05</div><div class="flow-content"><h3>Silah Sistemi Teslimatı</h3><p>Füze tamamlanır, test edilir, envantere girer</p></div></div>
+  </div>
+</section>
+
+<section class="section" style="text-align:center;padding-bottom:120px">
+  <p style="color:#7a8290;font-size:13px">Kaynak: SFA-Oxford · Critical Minerals in Defence and National Security<br>Harb-i Strateji Külliyatı · Füze Teknolojileri Araştırma Grubu</p>
+</section>
+
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Barut İmparatorlukları — Harb-i Strateji İnfografik</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh}
+.back{position:fixed;top:15px;left:15px;color:#00e5ff;text-decoration:none;font-size:14px;z-index:100;background:rgba(0,0,0,0.7);padding:8px 16px;border-radius:20px}
+.audio-btn{position:fixed;top:15px;right:15px;background:rgba(0,229,255,0.2);border:1px solid #00e5ff;color:#00e5ff;padding:8px 16px;border-radius:20px;cursor:pointer;z-index:100}
+h1{text-align:center;padding:60px 20px 10px;font-size:2.2em;color:#ff6b35}
+.subtitle{text-align:center;color:#aaa;margin-bottom:40px;font-size:0.95em}
+.timeline{max-width:900px;margin:0 auto;padding:20px;position:relative}
+.timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#ff6b35,#00e5ff,#ffd700);transform:translateX(-50%)}
+.era{display:flex;margin-bottom:40px;align-items:center}
+.era:nth-child(odd){flex-direction:row-reverse}
+.era-content{width:45%;padding:20px;background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.3);border-radius:12px;transition:all 0.3s}
+.era-content:hover{transform:scale(1.03);border-color:#ff6b35;box-shadow:0 0 20px rgba(255,107,53,0.3)}
+.era-icon{width:60px;height:60px;background:#ff6b35;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 20px;z-index:2;flex-shrink:0}
+.era-title{font-size:1.3em;color:#ff6b35;margin-bottom:8px}
+.era-date{font-size:0.85em;color:#ffd700;margin-bottom:8px}
+.era-desc{font-size:0.9em;line-height:1.6;color:#ccc}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;max-width:900px;margin:40px auto;padding:0 20px}
+.stat{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);border-radius:12px;padding:20px;text-align:center}
+.stat-num{font-size:2em;color:#00e5ff;font-weight:bold}
+.stat-label{color:#aaa;font-size:0.85em;margin-top:5px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.era{animation:fadeIn 0.6s ease forwards;opacity:0}
+.era:nth-child(1){animation-delay:0.1s}.era:nth-child(2){animation-delay:0.3s}.era:nth-child(3){animation-delay:0.5s}
+.era:nth-child(4){animation-delay:0.7s}.era:nth-child(5){animation-delay:0.9s}.era:nth-child(6){animation-delay:1.1s}
+.era:nth-child(7){animation-delay:1.3s}.era:nth-child(8){animation-delay:1.5s}
+@media(max-width:768px){.timeline::before{left:30px}.era,.era:nth-child(odd){flex-direction:row}.era-content{width:calc(100% - 90px)}.era-icon{width:40px;height:40px;font-size:20px}}
+</style><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<a href="infografik.html" class="back">← İnfografikler</a>
+<button class="audio-btn" onclick="let a=document.getElementById('bgm');if(a.paused){a.play();this.textContent='🔊'}else{a.pause();this.textContent='🔇'}">🔊</button>
+<audio id="bgm" loop><source src="Zenith_Unbound.mp3" type="audio/mpeg"></audio>
+<h1>🔥 Barut İmparatorlukları</h1>
+<p class="subtitle">Barutun keşfinden modern patlayıcılara — 1200 yıllık teknoloji transferi</p>
+<div class="stats">
+<div class="stat"><div class="stat-num">850</div><div class="stat-label">İlk Barut Kaydı (Çin)</div></div>
+<div class="stat"><div class="stat-num">1200+</div><div class="stat-label">Yıllık Tarih</div></div>
+<div class="stat"><div class="stat-num">3</div><div class="stat-label">Kıta Geçişi</div></div>
+<div class="stat"><div class="stat-num">107</div><div class="stat-label">Hasan el-Rammah Formülü</div></div>
+</div>
+<div class="timeline">
+<div class="era"><div class="era-content"><div class="era-title">Çin: Simyadan Silaha</div><div class="era-date">850-1044</div><div class="era-desc">Taocu simyacılar ölümsüzlük iksiri ararken barutu keşfetti. Wujing Zongyao (1044) ilk askeri barut reçetesini içerir. Ateşli oklar, bomba ve roketler geliştirildi.</div></div><div class="era-icon">🐉</div></div>
+<div class="era"><div class="era-content"><div class="era-title">İslam Dünyası: Bilimsel Mükemmelleştirme</div><div class="era-date">1240-1350</div><div class="era-desc">Hasan el-Rammah (1280) 107 barut formülü ve 22 roket tasarımı sundu. Potasyum nitrat saflaştırma tekniği geliştirildi. Torpido ve roket bilimi temelleri atıldı.</div></div><div class="era-icon">☪️</div></div>
+<div class="era"><div class="era-content"><div class="era-title">Osmanlı: Top Dökümhane İmparatorluğu</div><div class="era-date">1389-1700</div><div class="era-desc">Tophane-i Amire dünyanın en büyük silah fabrikası. 1453 İstanbul kuşatmasında Şahi topları: 680kg mermi, 1.5km menzil. Osmanlı top teknolojisi Avrupa'yı 200 yıl geride bıraktı.</div></div><div class="era-icon">🏰</div></div>
+<div class="era"><div class="era-content"><div class="era-title">Avrupa: Kale Yıkan Toplar</div><div class="era-date">1326-1600</div><div class="era-desc">İlk Avrupa topu 1326 (Floransa). Yüzyıl Savaşları'nda topçu birlikler ortaya çıktı. Feodal kale sistemi çöktü, merkezi devletler güçlendi.</div></div><div class="era-icon">⚔️</div></div>
+<div class="era"><div class="era-content"><div class="era-title">Safevi İran: Barut ve İpek Yolu</div><div class="era-date">1501-1736</div><div class="era-desc">Şah Abbas döneminde top dökümhaneleri kuruldu. Osmanlı-Safevi rekabeti barut teknolojisini hızlandırdı. İpek Yolu üzerinden teknoloji transferi.</div></div><div class="era-icon">🕌</div></div>
+<div class="era"><div class="era-content"><div class="era-title">Babür Hindistan: Panipat Zaferi</div><div class="era-date">1526-1857</div><div class="era-desc">Babür 1526 Panipat'ta topçu üstünlüğüyle 100.000 kişilik orduyu yendi. Hindistan'da barut imparatorluğu kurdu. Roket teknolojisi Mysore'da zirveye ulaştı.</div></div><div class="era-icon">🐘</div></div>
+<div class="era"><div class="era-content"><div class="era-title">Sanayi Devrimi: Kitlesel Üretim</div><div class="era-date">1800-1900</div><div class="era-desc">Nobel dinamiti icat etti (1867). Dumansız barut (kordit) geliştirildi. Fabrika üretimi silah maliyetini %90 düşürdü. Savaş endüstrileşti.</div></div><div class="era-icon">🏭</div></div>
+<div class="era"><div class="era-content"><div class="era-title">Modern Çağ: Nükleer ve Ötesi</div><div class="era-date">1945-Günümüz</div><div class="era-desc">Manhattan Projesi: 2 milyar $, 130.000 kişi. Nükleer çağ barutu aştı. Termobarik, elektromanyetik ve yönlendirilmiş enerji silahları. Barut hâlâ küçük silahların temeli.</div></div><div class="era-icon">☢️</div></div>
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body></html>

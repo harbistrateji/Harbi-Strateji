@@ -1,0 +1,534 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><link rel="stylesheet" href="hs-global.css"><script src="hs-nav.js?v=11" defer></script><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+
+<style>
+.page-title{text-align:center;padding:2rem 1rem 1.5rem;border-bottom:1px solid rgba(0,224,255,.1);}
+.page-title h2{font-family:'Oswald','Chakra Petch',sans-serif;font-size:clamp(1.4rem,3.5vw,2.2rem);font-weight:700;background:linear-gradient(135deg,#00E0FF 0%,#00FF88 50%,#00E0FF 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3;max-width:900px;margin:0 auto;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);}
+.w{max-width:1300px;margin:0 auto;padding:2rem 2rem 4rem;}
+
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.logo{display:flex;align-items:center;gap:8px;}
+.lsq{width:30px;height:30px;border-radius:8px;background:#185FA5;display:flex;align-items:center;justify-content:center;}
+.lsq i{font-size:15px;color:#B5D4F4;}
+.lname{font-size:15px;font-weight:500;color:var(--text-primary);}
+.lsub{font-size:13px;color:var(--text-muted);}
+.vtag{font-size:13px;font-weight:500;padding:3px 10px;border-radius:20px;background:var(--bg-accent);color:var(--text-accent);border:0.5px solid var(--border-accent);}
+
+.tabs{display:flex;gap:6px;margin-bottom:1rem;overflow-x:auto;padding-bottom:2px;}
+.tab{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border);font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;background:var(--surface-2);white-space:nowrap;transition:all 0.15s;}
+.tab.on{background:#042C53;color:#B5D4F4;border-color:#185FA5;}
+.tab i{font-size:13px;}
+
+.sl{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-bottom:0.6rem;}
+
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:9px;margin-bottom:1.25rem;}
+.kc{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;}
+.kc:hover{border-color:var(--border-strong);}
+.kc.sel{border:2px solid var(--border-accent);}
+.kc-top{height:66px;display:flex;align-items:center;justify-content:center;position:relative;}
+.kc-iw{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.kc-iw i{font-size:19px;}
+.kc-cat{position:absolute;top:6px;left:6px;font-size:12px;font-weight:500;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;}
+.kc-hot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:#E24B4A;}
+.kc-body{padding:0.55rem 0.7rem 0.7rem;}
+.kc-title{font-size:12px;font-weight:500;color:var(--text-primary);line-height:1.35;margin-bottom:2px;}
+.kc-sub{font-size:13px;color:var(--text-muted);}
+
+.detail{background:var(--surface-2);border:0.5px solid var(--border-accent);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:none;}
+.detail.on{display:block;}
+.dh{display:flex;gap:12px;align-items:flex-start;margin-bottom:0.75rem;}
+.dico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dico i{font-size:20px;}
+.dtitle{font-size:15px;font-weight:500;color:var(--text-primary);margin-bottom:2px;}
+.dsub{font-size:12px;color:var(--text-secondary);}
+.dbody{font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:0.875rem;}
+.dtags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:0.875rem;}
+.dtag{font-size:13px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--border);color:var(--text-secondary);}
+.dact{display:flex;gap:7px;flex-wrap:wrap;}
+.dact button{font-size:12px;}
+
+.anlatim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:9px;margin-bottom:1.25rem;}
+.ac{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:0.875rem;cursor:pointer;transition:border-color 0.15s;}
+.ac:hover{border-color:var(--border-strong);}
+.ac.sel{border:2px solid var(--border-accent);background:var(--bg-accent);}
+.ac-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.ac-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ac-icon i{font-size:15px;}
+.ac-name{font-size:12px;font-weight:500;color:var(--text-primary);}
+.ac-desc{font-size:13px;color:var(--text-muted);line-height:1.4;}
+
+.preview{background:var(--surface-1);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;border:0.5px solid var(--border);display:none;}
+.preview.on{display:block;}
+.prev-label{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:0.75rem;}
+.prev-body{font-size:13px;color:var(--text-primary);line-height:1.6;}
+.prev-body b{font-weight:500;}
+
+.thread-wrap{display:none;}
+.thread-wrap.on{display:block;}
+.tr{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);}
+.tr:last-child{border:none;}
+.tn{width:20px;height:20px;border-radius:50%;background:var(--surface-2);border:0.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:var(--text-secondary);flex-shrink:0;margin-top:1px;}
+.tt2{font-size:13px;color:var(--text-primary);line-height:1.5;}
+.tt2 b{font-weight:500;}
+
+.poll-wrap{display:none;}
+.poll-wrap.on{display:block;margin-bottom:1.25rem;}
+.poll-q{font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:0.75rem;line-height:1.5;}
+.popt{cursor:pointer;border-radius:var(--radius);border:0.5px solid var(--border);overflow:hidden;margin-bottom:6px;transition:border-color 0.12s;}
+.popt:hover{border-color:var(--border-strong);}
+.pbg{background:var(--surface-2);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;position:relative;}
+.pfill{position:absolute;top:0;left:0;height:100%;background:var(--bg-accent);transition:width 0.4s;}
+.plabel{font-size:13px;color:var(--text-primary);position:relative;z-index:1;}
+.ppct{font-size:12px;font-weight:500;color:var(--text-accent);position:relative;z-index:1;}
+.pmeta{font-size:13px;color:var(--text-muted);margin-top:4px;}
+
+.quiz-wrap{display:none;}
+.quiz-wrap.on{display:block;margin-bottom:1.25rem;}
+.qq{font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:0.75rem;line-height:1.5;}
+.qopt{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);border:0.5px solid var(--border);font-size:13px;color:var(--text-secondary);cursor:pointer;margin-bottom:6px;transition:all 0.12s;}
+.qopt:hover{border-color:var(--border-strong);color:var(--text-primary);}
+.qopt.ok{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success);}
+.qopt.no{background:var(--bg-danger);border-color:var(--border-danger);color:var(--text-danger);}
+.qkey{font-size:13px;font-weight:500;color:var(--text-muted);min-width:16px;}
+
+.xpbar{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:0.875rem 1.25rem;}
+.xpav{width:36px;height:36px;border-radius:50%;background:var(--bg-pro);border:2px solid var(--border-pro);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.xpav i{font-size:17px;color:var(--text-pro);}
+.xpinf{flex:1;min-width:0;}
+.xpn{font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;}
+.xpbg{height:4px;border-radius:2px;background:var(--surface-1);overflow:hidden;}
+.xpfill{height:100%;border-radius:2px;background:var(--fill-pro);transition:width 0.4s;}
+.xppts{font-size:13px;color:var(--text-muted);margin-top:4px;}
+</style>
+
+<div class="w">
+<div class="page-title"><h2>Türkiye ve bölge stratejileri konu ve anlatım yöntemi explorer</h2></div>
+
+<div class="top">
+  <div class="logo">
+    <div class="lsq"><i class="ti ti-map-2" aria-hidden="true"></i></div>
+    <div>
+      <div class="lname">Gözcü — Türkiye & Bölge</div>
+      <div class="lsub">Strateji · Savunma · Jeopolitik</div>
+    </div>
+  </div>
+  <span class="vtag">V3 Bölge Odağı</span>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="switchTab('konular',this)"><i class="ti ti-map-pin" aria-hidden="true"></i> Konular</div>
+  <div class="tab" onclick="switchTab('anlatim',this)"><i class="ti ti-presentation" aria-hidden="true"></i> Anlatım</div>
+  <div class="tab" onclick="switchTab('matris',this)"><i class="ti ti-table" aria-hidden="true"></i> Konu × Format</div>
+  <div class="tab" onclick="switchTab('poll',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i> Tartış</div>
+  <div class="tab" onclick="switchTab('quiz',this)"><i class="ti ti-puzzle" aria-hidden="true"></i> Quiz</div>
+</div>
+
+<div id="secKonular">
+  <p class="sl">Türkiye ve bölge stratejisi — konu haritası</p>
+  <div class="kgrid" id="kgrid"></div>
+  <div class="detail" id="kdetail">
+    <div class="dh">
+      <div class="dico" id="dico"></div>
+      <div><div class="dtitle" id="dtitle"></div><div class="dsub" id="dsub"></div></div>
+    </div>
+    <div class="dbody" id="dbody"></div>
+    <div class="dtags" id="dtags"></div>
+    <div class="dact">
+      <button onclick="goThread()">Thread oku ↗</button>
+      <button onclick="goPoll()">Tartışmaya katıl ↗</button>
+      <button onclick="goQuiz()">Quiz başlat ↗</button>
+      <button onclick="cur&&sendPrompt('Şu konuyu Z kuşağına uygun, somut örneklerle açıkla: '+cur.title)">YZ ile derinleş ↗</button>
+    </div>
+  </div>
+  <div class="thread-wrap" id="threadWrap">
+    <p class="sl" id="threadLbl"></p>
+    <div id="threadContent"></div>
+    <div style="margin-top:0.75rem;" id="threadNext"></div>
+  </div>
+</div>
+
+<div id="secAnlatim" style="display:none;">
+  <p class="sl">Anlatım yöntemleri — formatı seç</p>
+  <div class="anlatim-grid" id="agrid"></div>
+  <div class="preview" id="preview">
+    <div class="prev-label" id="prevLabel"></div>
+    <div class="prev-body" id="prevBody"></div>
+    <div style="margin-top:0.875rem;display:flex;gap:7px;flex-wrap:wrap;" id="prevAct"></div>
+  </div>
+</div>
+
+<div id="secMatris" style="display:none;">
+  <p class="sl">Konu × anlatım formatı matrisi</p>
+  <div id="matrisContent"></div>
+</div>
+
+<div class="poll-wrap" id="pollWrap">
+  <p class="sl" id="pollLbl">Tartış</p>
+  <div class="poll-q" id="pollQ"></div>
+  <div id="pollOpts"></div>
+  <div class="pmeta" id="pollMeta"></div>
+</div>
+
+<div class="quiz-wrap" id="quizWrap">
+  <p class="sl" id="quizLbl">Quiz</p>
+  <div class="qq" id="quizQ"></div>
+  <div id="quizOpts"></div>
+</div>
+
+<div style="margin-bottom:1rem;"></div>
+<div class="xpbar">
+  <div class="xpav"><i class="ti ti-sword" aria-hidden="true"></i></div>
+  <div class="xpinf">
+    <div class="xpn">Bölge Stratejisti — Seviye 7</div>
+    <div class="xpbg"><div class="xpfill" id="xpf" style="width:40%;"></div></div>
+    <div class="xppts" id="xpp">800 / 2.000 XP</div>
+  </div>
+</div>
+</div>
+
+<script>
+const KONULAR = [
+  {id:'savtek',cat:'Savunma San.',hot:true,icon:'ti-settings-cog',ib:'#042C53',ic:'#B5D4F4',bg:'#E6F1FB',bb:'#0C447C',bc:'#B5D4F4',
+   title:'Milli savunma sanayii',sub:'ASELSAN · Baykar · ROKETSAN',
+   body:'Türkiye\'nin son 10 yılda %20\'den %80\'e çıkan yerlilik oranı stratejik bağımsızlığın temelini oluşturuyor. AKINCI, KAAN ve SİPER sistemi bu dönüşümün sembolü.',
+   tags:['Baykar','ASELSAN','KAAN','SİPER','AKINCI'],
+   thread:[
+     {n:'1',t:'Durum neydi?',b:'2000\'lerde Türkiye savunma ihtiyacının %80\'ini ithal ediyordu — her kriz bir ambargo riskiydi.'},
+     {n:'2',t:'Ne değişti?',b:'2010 sonrası SSB öncülüğünde 1000+ milli proje başlatıldı; Baykar ve ASELSAN öne çıktı.'},
+     {n:'3',t:'Bayraktar etkisi?',b:'Bayraktar TB2\'nin Karabağ\'daki performansı Türkiye\'yi küresel İHA pazarında birinci sıraya taşıdı.'},
+     {n:'4',t:'KAAN ne anlama gelir?',b:'Milli muharip uçak; F-35 dışında kalan Türkiye\'nin hava gücü egemenliğini garanti altına almaya çalışıyor.'},
+     {n:'5',t:'Önümüzdeki 10 yıl?',b:'Hipersonik, uydu ve deniz platformları gündemde — MÜREN denizaltı savunma projesine bütçe aktarıldı.'},
+   ],
+   poll:{q:'Türkiye\'nin savunma sanayiindeki en kritik sonraki adım ne olmalı?',opts:['Milli savaş gemisi (TF-2000)','Hipersonik füze','Uzay/ASAT kapasitesi','Siber savaş merkezi'],votes:[28,24,30,18]},
+   quiz:{q:'Türkiye\'nin savunma sanayiindeki yerlilik oranı hangi seviyeye ulaştı?',opts:['%40','%60','%80','%95'],ans:2}},
+
+  {id:'nato',cat:'İttifak',hot:true,icon:'ti-shield-half',ib:'#26215C',ic:'#CECBF6',bg:'#EEEDFE',bb:'#3C3489',bc:'#EEEDFE',
+   title:'NATO içinde Türkiye',sub:'Denge · Baskı · Özerklik',
+   body:'2. büyük orduya sahip Türkiye, NATO\'nun güney kanadının kilit ülkesi. İsveç-Finlandiya genişlemesi, S-400 krizi ve F-35 çıkarılması gerilimin simgeleri oldu.',
+   tags:['S-400','F-35','İsveç Üyeliği','Güney Kanat','Boğazlar'],
+   thread:[
+     {n:'1',t:'Neden önemli?',b:'Türkiye olmadan NATO\'nun Karadeniz ve Orta Doğu erişimi büyük ölçüde kısıtlanır.'},
+     {n:'2',t:'S-400 krizi?',b:'Rusya\'dan S-400 alınması NATO ile kriz yarattı; Türkiye F-35 programından çıkarıldı.'},
+     {n:'3',t:'Boğaz silahı?',b:'Montrö Sözleşmesi Türkiye\'ye Boğazları savaş gemilerine kapatma hakkı tanıyor — Rusya-Ukrayna savaşında kullanıldı.'},
+     {n:'4',t:'Genişleme kozu?',b:'İsveç ve Finlandiya üyeliğini onaylamak için PKK/terör talepleri karşılıklı müzakere aracı oldu.'},
+     {n:'5',t:'Gelecek?',b:'Türkiye "stratejik özerklik" politikasını korurken ittifak içindeki ağırlığını artırıyor.'},
+   ],
+   poll:{q:'Türkiye\'nin NATO ile ilişkisi önümüzdeki 10 yılda nasıl şekillenir?',opts:['Daha entegre','Daha özerk ama içinde','Kriz derinleşir','Farklı ittifak arayışı'],votes:[20,45,20,15]},
+   quiz:{q:'Türkiye Boğazları hangi sözleşme kapsamında kontrol eder?',opts:['Lozan Antlaşması','Montrö Sözleşmesi','BM Deniz Hukuku','NATO Statüsü'],ans:1}},
+
+  {id:'suriye',cat:'Çatışma',hot:true,icon:'ti-flame',ib:'#501313',ic:'#F7C1C1',bg:'#FCEBEB',bb:'#791F1F',bc:'#FCEBEB',
+   title:'Suriye ve PKK/YPG meselesi',sub:'Sınır güvenliği · Tampon bölge',
+   body:'Kuzey Suriye\'de 4 operasyon gerçekleştiren Türkiye (Fırat Kalkanı, Zeytin Dalı, Barış Pınarı, Pençe-Kilit) yaklaşık 30 km derinliğinde güvenli bölge oluşturdu. ABD-YPG ilişkisi NATO krizi yaratmaya devam ediyor.',
+   tags:['YPG','Fırat Kalkanı','Zeytin Dalı','SDG','Güvenli Bölge'],
+   thread:[
+     {n:'1',t:'Neden girdik?',b:'PKK bağlantılı YPG\'nin sınır ötesinde örgütlenmesi ve Suriyeli mülteci baskısı.'},
+     {n:'2',t:'Kaç operasyon?',b:'4 büyük operasyon: Fırat Kalkanı (2016), Zeytin Dalı (2018), Barış Pınarı (2019), Pençe-Kilit (2022+).'},
+     {n:'3',t:'ABD gerilimi?',b:'ABD\'nin YPG\'yi IŞİD\'e karşı silahlandırması NATO içinde yapısal bir çelişki oluşturdu.'},
+     {n:'4',t:'Esad sonrası?',b:'2024 sonu Esad\'ın düşmesiyle Türkiye destekli güçler Şam\'a yaklaştı; bölge yeniden şekilleniyor.'},
+     {n:'5',t:'Öne çıkan risk?',b:'Kürt özerk bölgesinin kalıcılaşması Türkiye için kırmızı çizgi olmaya devam ediyor.'},
+   ],
+   poll:{q:'Türkiye\'nin Kuzey Suriye politikası uzun vadede başarılı olacak mı?',opts:['Evet, kalıcı güvenlik sağlandı','Kısmen — çatışma sürer','Hayır, sürdürülemez','Henüz belli değil'],votes:[22,35,18,25]},
+   quiz:{q:'Türkiye\'nin Kuzey Suriye\'ye yönelik ilk askeri operasyonunun adı nedir?',opts:['Zeytin Dalı','Barış Pınarı','Fırat Kalkanı','Pençe-Kilit'],ans:2}},
+
+  {id:'deniz',cat:'Deniz Gücü',hot:true,icon:'ti-anchor',ib:'#04342C',ic:'#9FE1CB',bg:'#E1F5EE',bb:'#085041',bc:'#E1F5EE',
+   title:'Doğu Akdeniz ve Mavi Vatan',sub:'Deniz sınırları · Enerji · Rekabet',
+   body:'"Mavi Vatan" doktrini Türkiye\'nin Ege, Doğu Akdeniz ve Karadeniz\'de toplam 462.000 km² deniz yetki alanı iddiasını tanımlıyor. Yunanistan ve Kıbrıs ile sınır anlaşmazlıkları ve enerji kaynakları çatışmanın odağında.',
+   tags:['Mavi Vatan','EEZ','TCG Anadolu','Doğalgaz','Yunanistan'],
+   thread:[
+     {n:'1',t:'Mavi Vatan nedir?',b:'2006\'dan itibaren şekillenen doktrin: Türkiye\'nin üç denizde hak iddia ettiği 462.000 km² alan.'},
+     {n:'2',t:'Neden tartışmalı?',b:'Yunanistan ve AB bu taleplerin uluslararası hukuka aykırı olduğunu savunuyor.'},
+     {n:'3',t:'TCG Anadolu?',b:'Türkiye\'nin ilk uçak gemisi, aynı zamanda dünyada İHA operasyonu yapan ilk deniz platformu.'},
+     {n:'4',t:'Doğalgaz boyutu?',b:'Kıbrıs, Yunanistan ve İsrail sahasındaki keşifler Türkiye\'nin dışlama korkusunu pekiştiriyor.'},
+     {n:'5',t:'Gelecek gerginlik?',b:'Ege\'de kıta sahanlığı ve hava sahası tartışmaları her kriz döneminde tırmanma potansiyeli taşıyor.'},
+   ],
+   poll:{q:'Doğu Akdeniz\'deki Türkiye-Yunanistan geriliminin çözümü ne olabilir?',opts:['İkili müzakere','Uluslararası tahkim','AB arabuluculuğu','Statüko sürer'],votes:[25,30,20,25]},
+   quiz:{q:'TCG Anadolu hangi özelliğiyle öne çıkıyor?',opts:['Nükleer güç sistemi','İHA operasyonu yapan ilk deniz platformu','En büyük Avrupa deniz kuvvetleri gemisi','Hidrojen yakıtlı'],ans:1}},
+
+  {id:'kafkas',cat:'Bölgesel',hot:false,icon:'ti-mountain',ib:'#412402',ic:'#FAC775',bg:'#FAEEDA',bb:'#633806',bc:'#FAEEDA',
+   title:'Kafkasya: Azerbaycan & Ermenistan',sub:'Karabağ · Koridorlar · Enerji',
+   body:'2020 Karabağ Savaşı\'nda Türkiye-Azerbaycan iş birliği Bayraktar TB2 ile sahadaki dengeleri değiştirdi. Zengezur koridoru ve Azerbaycan-Ermenistan barış süreci bölgesel çıkarları doğrudan etkiliyor.',
+   tags:['Karabağ','TB2','Zengezur','BTC','Azerbaycan'],
+   thread:[
+     {n:'1',t:'2020\'nin önemi?',b:'Türk yapımı İHA\'lar sahadaki dengeyi Azerbaycan lehine çevirdi; Ermenistan 44 günde geri çekildi.'},
+     {n:'2',t:'Zengezur neden kritik?',b:'Azerbaycan ana karasını Nahçıvan\'a bağlayacak koridor, Türkiye için de stratejik köprü.'},
+     {n:'3',t:'Enerji hattı?',b:'BTC (Bakü-Tiflis-Ceyhan) boru hattı Hazar petrolünü Türkiye üzerinden Akdeniz\'e taşıyor.'},
+     {n:'4',t:'Rusya faktörü?',b:'Bölgedeki Rus nüfuzunun zayıflaması Türkiye\'nin manevra alanını genişletti.'},
+     {n:'5',t:'Risk?',b:'Barış sürecinin çökmesi ve Rusya\'nın yeniden devreye girmesi bölgesel dengeleri alt üst edebilir.'},
+   ],
+   poll:{q:'Zengezur koridoru hayata geçerse en kazançlı ülke hangisi olur?',opts:['Azerbaycan','Türkiye','Rusya','İran'],votes:[35,40,10,15]},
+   quiz:{q:'BTC boru hattı hangi şehirden başlayıp nerede sona eriyor?',opts:['Tiflis → Ankara','Bakü → Ceyhan','Baku → İstanbul','Erzurum → Mersin'],ans:1}},
+
+  {id:'orta',cat:'Coğrafya',hot:false,icon:'ti-world',ib:'#0F6E56',ic:'#5DCAA5',bg:'#E1F5EE',bb:'#085041',bc:'#E1F5EE',
+   title:'Orta Asya ve Türk Dünyası',sub:'Türk Devletleri Teşkilatı',
+   body:'Türk Devletleri Teşkilatı (TDT) Azerbaycan, Kazakistan, Kırgızistan, Özbekistan ve Türkiye\'yi kapsıyor. Ortak alfabe, enerji hatları ve savunma iş birliği giderek derinleşiyor.',
+   tags:['TDT','Kazakistan','Özbekistan','Ortak Alfabe','BRI Alternatifi'],
+   thread:[
+     {n:'1',t:'TDT nedir?',b:'2009\'da kurulan Türk Konseyi, 2021\'de Türk Devletleri Teşkilatı adını aldı.'},
+     {n:'2',t:'Ortak alfabe?',b:'Latin alfabesine geçiş süreci dil birliğini ve kültürel bağları pekiştiriyor.'},
+     {n:'3',t:'Enerji boyutu?',b:'Orta Asya\'nın Çin ve Rusya\'ya bağımlılığına alternatif hat arayışında Türkiye köprü ülke konumunda.'},
+     {n:'4',t:'Savunma?',b:'Bayraktar İHA\'ları Kazakistan ve Kırgızistan\'a satıldı; ortak tatbikatlar artıyor.'},
+     {n:'5',t:'Çin rekabeti?',b:'Kuşak ve Yol Girişimi bölgede güçlü; TDT bu etkiye karşı alternatif ağ kurma çabası.'},
+   ],
+   poll:{q:'Türkiye Orta Asya\'da ne kadar etkili olabilir?',opts:['Çok etkili — lider ülke','Orta düzey — Çin/Rusya engeli var','Kültürel etkiyle sınırlı','Henüz potansiyel aşamasında'],votes:[20,40,25,15]},
+   quiz:{q:'Türk Devletleri Teşkilatı kaç kurucu üyeyle yola çıktı?',opts:['3','4','5','6'],ans:1}},
+
+  {id:'insagucu',cat:'Kriz',hot:false,icon:'ti-users',ib:'#993C1D',ic:'#F5C4B3',bg:'#FAECE7',bb:'#712B13',bc:'#F5C4B3',
+   title:'Göç ve insani güç',sub:'4M mülteci · Demografik etki',
+   body:'Dünyada en fazla mülteci barındıran ülke olan Türkiye\'de 4 milyonun üzerinde Suriyeli yaşıyor. Göç hem iç politikayı hem bölgesel müzakere gücünü belirliyor.',
+   tags:['Mülteci','Geri Dönüş','AB Mutabakatı','Demografik Koz','İç Politika'],
+   thread:[
+     {n:'1',t:'Rakamlar?',b:'Yaklaşık 4 milyon Suriyeli — dünyanın en büyük mülteci nüfusu tek bir ülkede.'},
+     {n:'2',t:'AB kozu?',b:'2016 AB-Türkiye Mutabakatı: Türkiye geçişleri kısıtlar, AB finansman sağlar. Yeniden müzakereler sürüyor.'},
+     {n:'3',t:'İç politika?',b:'Mülteci meselesi Türkiye\'de seçimler, ekonomi ve kentsel dönüşümle iç içe geçmiş durumda.'},
+     {n:'4',t:'Geri dönüş?',b:'Kuzey Suriye\'deki güvenli bölgeler kısmen gönüllü geri dönüş için zemin oluşturuyor.'},
+     {n:'5',t:'Stratejik boyut?',b:'Türkiye AB ile her krizde göç kartını bir müzakere enstrümanı olarak kullanabiliyor.'},
+   ],
+   poll:{q:'Suriyeli mülteciler meselesinde Türkiye\'nin önceliği ne olmalı?',opts:['Hızlı geri dönüş programı','AB ile yeni mutabakat','Entegrasyon politikası','Statükoyu koru'],votes:[40,25,20,15]},
+   quiz:{q:'2016 AB-Türkiye Mutabakatı\'nda Türkiye\'nin temel taahhüdü neydi?',opts:['Gümrük birliği','Düzensiz geçişleri kısıtlama','Schengen anlaşması','Savunma sanayii iş birliği'],ans:1}},
+
+  {id:'siber2',cat:'Siber',hot:false,icon:'ti-shield-lock',ib:'#26215C',ic:'#AFA9EC',bg:'#EEEDFE',bb:'#3C3489',bc:'#EEEDFE',
+   title:'Türkiye\'nin siber kapasitesi',sub:'BTK · Siber Ordu · Caydırıcılık',
+   body:'BTK ve Savunma Bakanlığı bünyesinde siber operasyon birimleri kuruluyor. Düşmanca siber saldırılara (Yunanistan, Ermenistan) karşı hem ofansif hem savunma kapasitesi geliştiriliyor.',
+   tags:['BTK','Siber Komuta','SOME','Siber Tatbikat','Kritik Altyapı'],
+   thread:[
+     {n:'1',t:'Mevcut durum?',b:'Türkiye 2013\'te ulusal siber güvenlik stratejisini ilan etti; SOME\'ler kurumsal düzeyde aktif.'},
+     {n:'2',t:'Saldırılar?',b:'Karabağ savaşında Ermenistan altyapısına yönelik atıflar oldu; kaynak atfı tartışmalı.'},
+     {n:'3',t:'Savunma?',b:'KVKK ve siber güvenlik mevzuatı güçleniyor; kritik altyapı tatbikatları düzenleniyor.'},
+     {n:'4',t:'Boşluk?',b:'Özel sektör-devlet koordinasyonu ve siber istihbarat kapasitesi hâlâ gelişme aşamasında.'},
+     {n:'5',t:'Önümüzdeki adım?',b:'Milli işletim sistemi ve donanım bağımsızlığı stratejik hedef olarak gündemde.'},
+   ],
+   poll:{q:'Türkiye\'nin siber savunması en önce hangi alanda güçlendirilmeli?',opts:['Kritik altyapı','Askeri ağlar','Finans sektörü','Seçim güvenliği'],votes:[30,35,20,15]},
+   quiz:{q:'SOME Türkiye\'de neyi temsil ediyor?',opts:['Özel askeri şirket','Siber Olaylara Müdahale Ekipleri','Uzay savunma komitesi','Nükleer güvenlik denetçisi'],ans:1}},
+];
+
+const ANLATIMLAR = [
+  {id:'thread',icon:'ti-messages',ib:'#042C53',ic:'#B5D4F4',name:'Thread / X formatı',
+   desc:'5-7 adım, her biri bağımsız fikir taşır. "1/7" yapısı.',
+   ornek:'<b>1/5</b> — Türkiye neden savunma sanayiine bu kadar yatırım yaptı?<br><br>Cevap: 2007 PKK karşıtı operasyonunda ABD Kongre\'si silah ambargo kararı aldığında, Türkiye elinde silah yoktu.<br><br><b>2/5</b> — Bu kriz bir şeyi net ortaya koydu: dışa bağımlı ordu egemenlik iddiasında bulunamaz.<br><br><b>3/5</b> — Çözüm: yerli üretim. SSB 2010\'da yeniden yapılandı, 1.000\'den fazla milli proje başlatıldı...'},
+  {id:'reel',icon:'ti-player-play',ib:'#412402',ic:'#FAC775',name:'Reel / kısa video',
+   desc:'15-60 sn, tek istatistik veya "bunu bilmiyordun" kancası.',
+   ornek:'<b>[Ekran: harita animasyonu — Türkiye\'nin deniz yetki alanı genişliyor]</b><br><br>Sesli anlatım: "Türkiye 462.000 km² deniz alanı talep ediyor. Bu alan Fransa\'nın kara yüzeyine eşit. Ege\'nin her köşesi tartışma konusu. Neden?"<br><br><b>[Ekran kesilir — "Thread\'e devam" CTA]</b>'},
+  {id:'infografik',icon:'ti-chart-infographic',ib:'#0F6E56',ic:'#5DCAA5',name:'İnteraktif infografik',
+   desc:'Kliklenebilir harita veya zaman çizelgesi.',
+   ornek:'<b>Örnek: "Türkiye\'nin 4 Suriye operasyonu" zaman çizelgesi</b><br><br>• 2016 → Fırat Kalkanı [tıkla: amaç, sonuç, etki]<br>• 2018 → Zeytin Dalı [tıkla: amaç, sonuç, etki]<br>• 2019 → Barış Pınarı [tıkla: amaç, sonuç, etki]<br>• 2022 → Pençe-Kilit [tıkla: amaç, sonuç, etki]<br><br>Her node\'da kısa özet + uluslararası tepkiler.'},
+  {id:'senaryo',icon:'ti-chess',ib:'#501313',ic:'#F7C1C1',name:'Senaryo / "Ya olsaydı?"',
+   desc:'"Eğer X olsaydı ne olurdu?" spekülatif analiz.',
+   ornek:'<b>Senaryo: Yunanistan Ege\'de bir adayı tek taraflı silahlandırırsa?</b><br><br>• Türkiye\'nin olası yanıtları<br>• NATO\'nun pozisyonu<br>• Ekonomik yansımalar<br>• Olasılık skoru: %62 "yüksek gerilim ama kriz yönetimi"<br><br><i>Kullanıcı her seçeneği oylar → topluluk senaryosu şekillenir.</i>'},
+  {id:'karakter',icon:'ti-user-circle',ib:'#993556',ic:'#F4C0D1',name:'Karakter odaklı',
+   desc:'Bir stratejist, analist veya "rol" gözünden anlatım.',
+   ornek:'<b>"Ben Türkiye\'nin deniz komutanıyım" formatı:</b><br><br>"2025 yılı. Yunanistan Rodos açıklarında tatbikat duyurdu. Ekibim 3 seçenek sunuyor:<br><br>A) Karşı tatbikat ilan et<br>B) NATO kanalından itiraz et<br>C) Bekle ve izle<br><br>Hangi kararı alırdın? Oyla — ve neden?"'},
+  {id:'quiz101',icon:'ti-puzzle',ib:'#26215C',ic:'#CECBF6',name:'"101" quiz serisi',
+   desc:'Seviyeli sorularla kavramsal ilerleme.',
+   ornek:'<b>Mavi Vatan 101 — 3 seviye:</b><br><br><b>Başlangıç:</b> Mavi Vatan kavramı hangi yılda ortaya çıktı?<br><b>Orta:</b> Türkiye\'nin EEZ iddiası hangi uluslararası anlaşmayla çelişiyor?<br><b>Uzman:</b> Akdeniz\'de Türkiye\'nin MEB sınırını tanıyan tek NATO üyesi hangisi?<br><br>Her doğru cevap → bir sonraki soruyu açar + XP kazandırır.'},
+  {id:'karsilastir',icon:'ti-scale',ib:'#633806',ic:'#FAC775',name:'Güç karşılaştırması',
+   desc:'Yan yana ülke/sistem/strateji analizi.',
+   ornek:'<b>Türkiye vs Yunanistan — Ege dengesinde kim nerede?</b><br><br>Deniz kuvvetleri tonajı · Hava gücü · İttifak desteği · Ekonomik güç · Diplomatik koz<br><br>Her kategori kaydırılabilir çubuk grafikle gösterilir. Kullanıcı "kim daha güçlü?" oylaması yapar.'},
+  {id:'canli',icon:'ti-live-photo',ib:'#04342C',ic:'#5DCAA5',name:'Canlı olay takibi',
+   desc:'Gerçek zamanlı briefing — "şu an ne oluyor?"',
+   ornek:'<b>Günün brifing formatı — 08:00 push:</b><br><br>"Dün gece Suriye\'nin kuzeyinde... [60 kelime özet]<br><br>→ Bağlam: Pençe-Kilit kapsamı<br>→ Türkiye\'nin tutumu<br>→ Uluslararası tepki<br>→ Ne izlenmeli?<br><br>Okuma süresi: 90 saniye."'},
+];
+
+const MATRIS = [
+  {konu:'Savunma sanayii',formatlar:['Thread','Reel','Güç kar.','Quiz 101']},
+  {konu:'NATO & ittifak',formatlar:['Senaryo','Thread','Karşılaştırma','Canlı']},
+  {konu:'Suriye operasyonları',formatlar:['İnfografik','Karakter','Thread','Canlı']},
+  {konu:'Mavi Vatan',formatlar:['İnfografik','Senaryo','Karşılaştırma','Quiz 101']},
+  {konu:'Kafkasya',formatlar:['Thread','Reel','İnfografik','Senaryo']},
+  {konu:'Orta Asya',formatlar:['Thread','Karakter','Reel','Güç kar.']},
+  {konu:'Mülteci meselesi',formatlar:['Karakter','Canlı','Poll','Thread']},
+  {konu:'Siber kapasite',formatlar:['Quiz 101','Senaryo','Thread','Reel']},
+];
+
+let cur = null;
+let xp = 800;
+let tStep = 0;
+let selAnlatim = null;
+
+function switchTab(t, el) {
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('secKonular').style.display = t==='konular'?'':'none';
+  document.getElementById('secAnlatim').style.display = t==='anlatim'?'':'none';
+  document.getElementById('secMatris').style.display = t==='matris'?'':'none';
+  const pw = document.getElementById('pollWrap');
+  const qw = document.getElementById('quizWrap');
+  pw.classList.remove('on'); qw.classList.remove('on');
+  if(t==='poll') { if(cur) showPoll(); else { pw.innerHTML='<p style="font-size:13px;color:var(--text-muted);">Önce bir konu seç.</p>'; pw.classList.add('on'); } }
+  if(t==='quiz') { if(cur) showQuiz(); else { qw.innerHTML='<p style="font-size:13px;color:var(--text-muted);">Önce bir konu seç.</p>'; qw.classList.add('on'); } }
+  if(t==='konular') buildKonular();
+  if(t==='anlatim') buildAnlatim();
+  if(t==='matris') buildMatris();
+}
+
+function buildKonular() {
+  const g = document.getElementById('kgrid');
+  g.innerHTML = '';
+  KONULAR.forEach(k => {
+    const d = document.createElement('div');
+    d.className = 'kc' + (cur&&cur.id===k.id?' sel':'');
+    d.onclick = () => selectKonu(k);
+    d.innerHTML = `<div class="kc-top" style="background:${k.bg};">
+      <div class="kc-iw" style="background:${k.ib};"><i class="ti ${k.icon}" style="color:${k.ic};" aria-hidden="true"></i></div>
+      <span class="kc-cat" style="background:${k.bb};color:${k.bc};">${k.cat}</span>
+      ${k.hot?'<div class="kc-hot"></div>':''}
+    </div>
+    <div class="kc-body"><div class="kc-title">${k.title}</div><div class="kc-sub">${k.sub}</div></div>`;
+    g.appendChild(d);
+  });
+}
+
+function selectKonu(k) {
+  cur = k;
+  buildKonular();
+  document.getElementById('dico').innerHTML = `<i class="ti ${k.icon}" style="color:${k.ic};" aria-hidden="true"></i>`;
+  document.getElementById('dico').style.background = k.ib;
+  document.getElementById('dtitle').textContent = k.title;
+  document.getElementById('dsub').textContent = k.sub;
+  document.getElementById('dbody').textContent = k.body;
+  document.getElementById('dtags').innerHTML = k.tags.map(t=>`<span class="dtag">${t}</span>`).join('');
+  document.getElementById('kdetail').classList.add('on');
+  document.getElementById('threadWrap').classList.remove('on');
+  gainXP(50);
+}
+
+function goThread() {
+  if(!cur) return;
+  tStep = 0;
+  const tw = document.getElementById('threadWrap');
+  tw.classList.add('on');
+  document.getElementById('threadLbl').textContent = cur.title + ' — thread';
+  renderThreadStep();
+  gainXP(30);
+}
+
+function renderThreadStep() {
+  const c = document.getElementById('threadContent');
+  c.innerHTML = cur.thread.slice(0,tStep+1).map(r=>
+    `<div class="tr"><div class="tn">${r.n}</div><div class="tt2"><b>${r.t}</b> — ${r.b}</div></div>`
+  ).join('');
+  const nb = document.getElementById('threadNext');
+  nb.innerHTML = '';
+  if(tStep < cur.thread.length-1) {
+    const b = document.createElement('button');
+    b.textContent = 'Sonraki ↓';
+    b.style.fontSize = '12px';
+    b.onclick = () => { tStep++; renderThreadStep(); gainXP(25); };
+    nb.appendChild(b);
+  }
+}
+
+function goPoll() {
+  switchTab('poll', document.querySelectorAll('.tab')[3]);
+}
+function goQuiz() {
+  switchTab('quiz', document.querySelectorAll('.tab')[4]);
+}
+
+function showPoll() {
+  const pw = document.getElementById('pollWrap');
+  pw.classList.add('on');
+  document.getElementById('pollLbl').textContent = (cur?cur.title:'') + ' — tartış';
+  document.getElementById('pollQ').textContent = cur.poll.q;
+  renderPollOpts();
+}
+
+function renderPollOpts(voted) {
+  const total = cur.poll.votes.reduce((a,b)=>a+b,0);
+  document.getElementById('pollOpts').innerHTML = cur.poll.opts.map((o,i)=>{
+    const pct = Math.round(cur.poll.votes[i]/total*100);
+    return `<div class="popt${voted!==undefined?' sel':''}" onclick="${voted!==undefined?'':('votePoll('+i+')')}">
+      <div class="pbg">
+        <div class="pfill" style="width:${voted!==undefined?pct:0}%;"></div>
+        <span class="plabel">${o}</span>
+        ${voted!==undefined?`<span class="ppct">${pct}%</span>`:''}
+      </div></div>`;
+  }).join('');
+  document.getElementById('pollMeta').textContent = total.toLocaleString('tr-TR') + ' oy';
+}
+
+window.votePoll = function(i) {
+  cur.poll.votes[i]++;
+  renderPollOpts(i);
+  gainXP(30);
+};
+
+function showQuiz() {
+  const qw = document.getElementById('quizWrap');
+  qw.classList.add('on');
+  document.getElementById('quizLbl').textContent = (cur?cur.title:'') + ' — quiz';
+  document.getElementById('quizQ').textContent = cur.quiz.q;
+  document.getElementById('quizOpts').innerHTML = cur.quiz.opts.map((o,i)=>
+    `<div class="qopt" onclick="ansQuiz(this,${i},${cur.quiz.ans})"><span class="qkey">${String.fromCharCode(65+i)}</span>${o}</div>`
+  ).join('');
+}
+
+window.ansQuiz = function(el,i,ans) {
+  document.querySelectorAll('.qopt').forEach(o=>o.style.pointerEvents='none');
+  el.classList.add(i===ans?'ok':'no');
+  if(i!==ans) document.querySelectorAll('.qopt')[ans].classList.add('ok');
+  if(i===ans) gainXP(150);
+};
+
+function buildAnlatim() {
+  const g = document.getElementById('agrid');
+  g.innerHTML = '';
+  ANLATIMLAR.forEach(a => {
+    const d = document.createElement('div');
+    d.className = 'ac' + (selAnlatim&&selAnlatim.id===a.id?' sel':'');
+    d.onclick = () => selectAnlatim(a);
+    d.innerHTML = `<div class="ac-top">
+      <div class="ac-icon" style="background:${a.ib};"><i class="ti ${a.icon}" style="color:${a.ic};" aria-hidden="true"></i></div>
+      <div class="ac-name">${a.name}</div>
+    </div>
+    <div class="ac-desc">${a.desc}</div>`;
+    g.appendChild(d);
+  });
+}
+
+function selectAnlatim(a) {
+  selAnlatim = a;
+  buildAnlatim();
+  const pv = document.getElementById('preview');
+  pv.classList.add('on');
+  document.getElementById('prevLabel').textContent = a.name + ' — örnek içerik';
+  document.getElementById('prevBody').innerHTML = a.ornek;
+  const pa = document.getElementById('prevAct');
+  pa.innerHTML = '';
+  const b1 = document.createElement('button');
+  b1.textContent = 'Bu formatla içerik üret ↗';
+  b1.style.fontSize = '12px';
+  b1.onclick = () => sendPrompt('Türkiye\'nin savunma sanayiini "' + a.name + '" formatında Z kuşağına uygun anlat');
+  const b2 = document.createElement('button');
+  b2.textContent = 'Başka konuyla dene ↗';
+  b2.style.fontSize = '12px';
+  b2.onclick = () => sendPrompt('"' + a.name + '" formatında Mavi Vatan\'ı anlat');
+  pa.appendChild(b1);
+  pa.appendChild(b2);
+  gainXP(40);
+}
+
+function buildMatris() {
+  const c = document.getElementById('matrisContent');
+  const colors = ['#E6F1FB','#EEEDFE','#FCEBEB','#E1F5EE','#FAEEDA','#FBEAF0','#FAECE7','#EEEDFE'];
+  const tcol = ['#0C447C','#3C3489','#791F1F','#085041','#633806','#72243E','#712B13','#3C3489'];
+  c.innerHTML = MATRIS.map((row,i)=>`
+    <div style="display:flex;gap:8px;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border);">
+      <div style="width:140px;flex-shrink:0;font-size:12px;font-weight:500;color:var(--text-primary);">${row.konu}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+        ${row.formatlar.map(f=>`<span style="font-size:13px;font-weight:500;padding:3px 9px;border-radius:20px;background:${colors[i]};color:${tcol[i]};border:0.5px solid ${tcol[i]}30;">${f}</span>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function gainXP(p) {
+  xp = Math.min(xp+p, 2000);
+  const pct = Math.round(xp/2000*100);
+  document.getElementById('xpf').style.width = pct + '%';
+  document.getElementById('xpp').textContent = xp.toLocaleString('tr-TR') + ' / 2.000 XP';
+}
+
+buildKonular();
+</script>
+</body></html>

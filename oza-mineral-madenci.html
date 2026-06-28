@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>MİNERAL MADENCİSİ — OZA Arcade</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c14;--panel:#0f1722;--accent:#c9a84c;--text:#eaf0f7;--dim:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace}
+.game-wrap{display:grid;grid-template-columns:1fr 360px;height:100vh}
+@media(max-width:900px){.game-wrap{grid-template-columns:1fr;grid-template-rows:60vh 40vh}}
+.mine-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;border-right:1px solid rgba(255,255,255,.06)}
+.mine-rock{width:200px;height:200px;background:radial-gradient(circle at 30% 30%,#4a3728,#2a1f15);border-radius:30% 40% 35% 45%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:60px;transition:transform .05s;box-shadow:0 0 40px rgba(201,168,76,.2);position:relative;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.mine-rock:active{transform:scale(.95)}
+.mine-rock.shake{animation:shake .1s}
+@keyframes shake{0%,100%{transform:translate(0)}25%{transform:translate(-3px,2px)}75%{transform:translate(3px,-2px)}}
+.depth-bar{width:80%;max-width:300px;height:12px;background:var(--panel);border-radius:6px;margin-top:24px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.depth-fill{height:100%;background:linear-gradient(90deg,var(--accent),#ef4444);border-radius:6px;transition:width .3s}
+.depth-label{font-size:10px;color:var(--dim);margin-top:6px}
+.mineral-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:20px;width:80%;max-width:350px}
+.mineral-slot{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:8px;text-align:center;font-size:10px}
+.mineral-slot .emoji{font-size:24px}
+.mineral-slot .count{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--accent);font-size:14px;margin-top:2px}
+.stats-bar{display:flex;gap:16px;margin-bottom:20px}
+.stat{text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.info-panel{background:var(--panel);padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.info-title{font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:800;color:var(--accent);text-transform:uppercase}
+.info-subtitle{font-size:11px;color:var(--dim);margin-top:4px}
+.info-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px}
+.info-section h3{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.info-section li{font-size:12px;line-height:1.8;color:var(--dim);list-style:none}
+.info-section li::before{content:'▸ ';color:var(--accent)}
+.back-btn{position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-size:12px;border:1px solid rgba(0,224,255,.2)}
+.float-text{position:absolute;pointer-events:none;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;color:var(--accent);animation:floatUp .8s forwards}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px)}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" class="back-btn">← OZA Hub</a>
+<div class="game-wrap">
+  <div class="mine-panel">
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-val" id="depth">0m</div><div class="stat-lbl">Derinlik</div></div>
+      <div class="stat"><div class="stat-val" id="total">0</div><div class="stat-lbl">Toplam</div></div>
+      <div class="stat"><div class="stat-val" id="level">1</div><div class="stat-lbl">Seviye</div></div>
+    </div>
+    <div class="mine-rock" id="rock" onclick="mine()">⛏️</div>
+    <div class="depth-bar"><div class="depth-fill" id="depthBar" style="width:0%"></div></div>
+    <div class="depth-label" id="depthLabel">Derinlik: 0m / 100m</div>
+    <div class="mineral-grid" id="minerals"></div>
+  </div>
+  <div class="info-panel">
+    <div>
+      <div class="info-title">⛏️ MİNERAL MADENCİSİ</div>
+      <div class="info-subtitle">Stratejik Mineraller, Derinlik Kazısı</div>
+    </div>
+    <div class="info-section">
+      <h3>Stratejik Mineraller</h3>
+      <ul id="mineral-info">
+        <li><strong>Lityum (Li):</strong> Batarya teknolojisi, EV, enerji depolama</li>
+        <li><strong>Kobalt (Co):</strong> Jet motor alaşımları, batarya katodu</li>
+        <li><strong>Nadir Toprak (REE):</strong> F-35 motorları, lazer sistemleri</li>
+        <li><strong>Tungsten (W):</strong> Zırh delici mühimmat, yüksek ısı</li>
+        <li><strong>Titanyum (Ti):</strong> Uçak gövdesi, denizaltı tekne</li>
+        <li><strong>Uranyum (U):</strong> Nükleer enerji, zırh delici</li>
+        <li><strong>Galyum (Ga):</strong> 5G çipler, radar yarı-iletkenleri</li>
+        <li><strong>Germanyum (Ge):</strong> Fiber optik, kızılötesi optik</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Tedarik Zinciri</h3>
+      <ul>
+        <li>Çin: REE %60, Galyum %80, Germanyum %60</li>
+        <li>Kongo: Kobalt %70</li>
+        <li>Şili/Avustralya: Lityum %75</li>
+        <li>Türkiye: Bor %73, Krom %20</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+const MINERALS=[
+  {name:'Lityum',emoji:'🔋',color:'#00ff88',rarity:3},
+  {name:'Kobalt',emoji:'💎',color:'#00e0ff',rarity:4},
+  {name:'Nadir Toprak',emoji:'🌍',color:'#a855f7',rarity:6},
+  {name:'Tungsten',emoji:'⚡',color:'#f4a261',rarity:5},
+  {name:'Titanyum',emoji:'🛡️',color:'#6b7280',rarity:4},
+  {name:'Uranyum',emoji:'☢️',color:'#ef4444',rarity:8},
+  {name:'Galyum',emoji:'📡',color:'#ec4899',rarity:7},
+  {name:'Germanyum',emoji:'🔬',color:'#c9a84c',rarity:7}
+];
+let depth=0,total=0,level=1,clicks=0;
+const inventory=MINERALS.map(()=>0);
+
+// Build mineral grid
+const grid=document.getElementById('minerals');
+MINERALS.forEach((m,i)=>{
+  grid.innerHTML+=`<div class="mineral-slot"><div class="emoji">${m.emoji}</div><div class="count" id="mc${i}">0</div><div>${m.name}</div></div>`;
+});
+
+function playTone(f,d,t='sine',v=.1){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+
+function mine(){
+  audioCtx.resume();
+  clicks++;depth+=0.5+level*0.2;
+  const rock=document.getElementById('rock');
+  rock.classList.add('shake');setTimeout(()=>rock.classList.remove('shake'),100);
+  playTone(100+Math.random()*200,.05,'triangle',.15);
+  
+  // Check mineral drop
+  MINERALS.forEach((m,i)=>{
+    if(Math.random()*10<(10-m.rarity+level*0.5)/10){
+      inventory[i]++;total++;
+      document.getElementById('mc'+i).textContent=inventory[i];
+      playTone(600+i*100,.1,'sine',.12);
+      // Float text
+      const ft=document.createElement('div');ft.className='float-text';
+      ft.textContent=m.emoji;ft.style.left=Math.random()*60+20+'%';ft.style.top='40%';
+      document.querySelector('.mine-panel').appendChild(ft);
+      setTimeout(()=>ft.remove(),800);
+    }
+  });
+  
+  // Level up every 100m
+  if(depth>level*100){level++;document.getElementById('level').textContent=level;[440,660,880].forEach((f,i)=>setTimeout(()=>playTone(f,.1,'sine',.15),i*60))}
+  
+  document.getElementById('depth').textContent=Math.floor(depth)+'m';
+  document.getElementById('total').textContent=total;
+  document.getElementById('depthBar').style.width=(depth%100)+'%';
+  document.getElementById('depthLabel').textContent=`Derinlik: ${Math.floor(depth)}m / ${level*100}m`;
+}
+// Touch support for mobile
+document.getElementById('rock').addEventListener('touchstart',function(e){e.preventDefault();mine();},{passive:false});
+</script>
+</body>
+</html>

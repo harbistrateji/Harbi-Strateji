@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Yapay Zekâ ve Savaşın Geleceği — İnteraktif İnfografik | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Sans',sans-serif;background:#030712;color:#e2e8f0;overflow-x:hidden;}
+:root{--neon:#00f0ff;--purple:#a855f7;--pink:#ec4899;--red:#ef4444;--green:#22c55e;--bg:#030712;--card:#0f172a;}
+
+.sound-toggle{position:fixed;top:12px;right:12px;z-index:9999;background:rgba(3,7,18,0.95);border:1px solid rgba(0,240,255,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;cursor:pointer;font-size:14px;backdrop-filter:blur(8px);border:none;}
+.sound-toggle.active{color:var(--neon);}
+
+/* NEURAL NETWORK BG */
+.neural-bg{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.1;}
+.neural-bg canvas{width:100%;height:100%;}
+
+/* GLITCH */
+@keyframes glitch{0%{clip-path:inset(40% 0 61% 0);}20%{clip-path:inset(92% 0 1% 0);}40%{clip-path:inset(43% 0 1% 0);}60%{clip-path:inset(25% 0 58% 0);}80%{clip-path:inset(54% 0 7% 0);}100%{clip-path:inset(58% 0 43% 0);}}
+.glitch-text{position:relative;}
+.glitch-text::before,.glitch-text::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;}
+.glitch-text::before{color:var(--neon);animation:glitch 2s infinite linear alternate-reverse;left:2px;}
+.glitch-text::after{color:var(--pink);animation:glitch 3s infinite linear alternate;left:-2px;}
+
+/* HERO */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,240,255,0.05) 0%,transparent 60%);}
+.hero-content{position:relative;z-index:10;text-align:center;}
+.hero-badge{display:inline-block;padding:4px 12px;border:1px solid var(--neon);border-radius:4px;font-size:0.7rem;color:var(--neon);letter-spacing:0.2em;margin-bottom:1rem;opacity:0;animation:fadeUp 1s 0.5s forwards;text-shadow:0 0 10px rgba(0,240,255,0.5);}
+.hero-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,8vw,5rem);font-weight:700;color:#fff;margin:0.5rem 0;opacity:0;animation:fadeUp 1s 0.8s forwards;}
+.hero-title span{color:var(--neon);text-shadow:0 0 30px rgba(0,240,255,0.5);}
+.hero-desc{font-size:clamp(0.9rem,2vw,1.1rem);color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto;opacity:0;animation:fadeUp 1s 1.2s forwards;}
+.hero-stats{display:flex;gap:2rem;justify-content:center;margin-top:2rem;flex-wrap:wrap;opacity:0;animation:fadeUp 1s 1.6s forwards;}
+.hero-stat{text-align:center;padding:1rem;background:rgba(0,240,255,0.03);border:1px solid rgba(0,240,255,0.1);border-radius:8px;}
+.hero-stat-val{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--neon);}
+.hero-stat-lbl{font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-top:0.3rem;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(0,240,255,0.3);font-size:0.75rem;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+/* SECTIONS */
+.section{padding:6rem 1.5rem;max-width:1200px;margin:0 auto;position:relative;z-index:10;}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#fff;margin-bottom:0.5rem;opacity:0;transform:translateY(40px);transition:all 0.8s;}
+.section-title.visible{opacity:1;transform:translateY(0);}
+.section-subtitle{font-size:0.85rem;color:var(--purple);letter-spacing:0.1em;margin-bottom:2rem;opacity:0;transform:translateY(20px);transition:all 0.8s 0.2s;}
+.section-subtitle.visible{opacity:1;transform:translateY(0);}
+
+/* AI SYSTEMS GRID */
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem;}
+.ai-card{background:var(--card);border:1px solid rgba(0,240,255,0.05);border-radius:12px;padding:1.5rem;opacity:0;transform:translateY(25px);transition:all 0.6s;position:relative;overflow:hidden;}
+.ai-card.visible{opacity:1;transform:translateY(0);}
+.ai-card:hover{border-color:var(--neon);box-shadow:0 0 30px rgba(0,240,255,0.05);}
+.ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon),var(--purple),var(--pink));transform:scaleX(0);transition:transform 0.5s;transform-origin:left;}
+.ai-card.visible::before{transform:scaleX(1);}
+.ai-icon{font-size:2rem;margin-bottom:0.8rem;}
+.ai-name{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:0.3rem;}
+.ai-country{font-size:0.7rem;color:var(--neon);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.ai-desc{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.6;}
+.ai-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.6rem;margin-top:0.5rem;background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2);}
+
+/* TIMELINE */
+.timeline{position:relative;margin-top:2rem;padding-left:30px;}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--neon),var(--purple),var(--pink));opacity:0.3;}
+.tl-item{position:relative;margin-bottom:2rem;opacity:0;transform:translateX(-20px);transition:all 0.6s;}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-item::before{content:'';position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--neon);box-shadow:0 0 10px var(--neon);}
+.tl-year{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--neon);margin-bottom:0.3rem;}
+.tl-title{font-family:'Chakra Petch',sans-serif;font-size:1rem;font-weight:600;color:#fff;margin-bottom:0.3rem;}
+.tl-desc{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.5;}
+
+/* RISK METER */
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-top:2rem;}
+.risk-card{background:var(--card);border-radius:12px;padding:1.5rem;opacity:0;transform:scale(0.9);transition:all 0.6s;text-align:center;}
+.risk-card.visible{opacity:1;transform:scale(1);}
+.risk-bar{width:100%;height:6px;background:rgba(255,255,255,0.05);border-radius:3px;margin:1rem 0;overflow:hidden;}
+.risk-fill{height:100%;border-radius:3px;width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);}
+.risk-fill.visible{width:var(--w);}
+.risk-label{font-size:0.75rem;color:rgba(255,255,255,0.5);}
+.risk-val{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:700;margin-top:0.5rem;}
+
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);opacity:0.2;}
+
+@media(max-width:768px){
+  .ai-grid{grid-template-columns:1fr;}
+  .risk-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:1rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="neural-bg"><canvas id="neuralCanvas"></canvas></div>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</button>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">MILITARY ARTIFICIAL INTELLIGENCE</div>
+    <h1 class="hero-title glitch-text" data-text="YAPAY ZEK & SAVAŞ">YAPAY ZEK & <span>SAVAŞ</span></h1>
+    <p class="hero-desc">Otonom silah sistemleri, karar destek YZ'leri ve algoritmik savaş — askeri yapay zekânın geleceği</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val" data-count="120">0</div><div class="hero-stat-lbl">Milyar $ YZ Savunma Bütçesi</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" data-count="40">0</div><div class="hero-stat-lbl">Ülke Otonom Silah Geliştiriyor</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" data-count="2035">0</div><div class="hero-stat-lbl">Tam Otonom Savaş Tahmini</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ Keşfetmek için kaydırın</div>
+</section>
+
+<!-- ASKERİ YZ SİSTEMLERİ -->
+<section class="section">
+  <h2 class="section-title" data-anim>Askeri YZ Sistemleri</h2>
+  <p class="section-subtitle" data-anim>Dünya ordularının geliştirdiği yapay zekâ tabanlı silah ve karar sistemleri</p>
+  
+  <div class="ai-grid">
+    <div class="ai-card" data-anim>
+      <div class="ai-icon">🤖</div>
+      <div class="ai-name">Project Maven</div>
+      <div class="ai-country">ABD — Pentagon</div>
+      <div class="ai-desc">Drone görüntülerini YZ ile analiz eden sistem. Hedef tanıma, nesne sınıflandırma ve istihbarat çıkarımı.</div>
+      <span class="ai-tag">Görüntü İstihbaratı</span>
+    </div>
+    <div class="ai-card" data-anim>
+      <div class="ai-icon">🎯</div>
+      <div class="ai-name">Lavender & Gospel</div>
+      <div class="ai-country">İsrail — IDF</div>
+      <div class="ai-desc">Hedef belirleme YZ'si. İnsan onayı olmadan hedef listesi oluşturuyor. Gazze'de kullanıldığı iddia ediliyor.</div>
+      <span class="ai-tag">Hedefleme</span>
+    </div>
+    <div class="ai-card" data-anim>
+      <div class="ai-icon">🛸</div>
+      <div class="ai-name">Loyal Wingman (MQ-28)</div>
+      <div class="ai-country">Avustralya — Boeing</div>
+      <div class="ai-desc">İnsanlı uçaklarla birlikte uçan otonom savaş dronu. Sürü taktikleri ve YZ karar verme yeteneği.</div>
+      <span class="ai-tag">Otonom Uçuş</span>
+    </div>
+    <div class="ai-card" data-anim>
+      <div class="ai-icon">🧠</div>
+      <div class="ai-name">KAAN YZ Modülü</div>
+      <div class="ai-country">Türkiye — TAI/HAVELSAN</div>
+      <div class="ai-desc">5. nesil savaş uçağı KAAN'ın YZ destekli karar destek sistemi. Sensör füzyonu ve tehdit değerlendirmesi.</div>
+      <span class="ai-tag">Karar Destek</span>
+    </div>
+    <div class="ai-card" data-anim>
+      <div class="ai-icon">🦅</div>
+      <div class="ai-name">Bayraktar Sürü YZ</div>
+      <div class="ai-country">Türkiye — Baykar</div>
+      <div class="ai-desc">TB3 ve Kızılelma platformlarında sürü istihbaratı. Otonom görev planlama ve koordineli saldırı.</div>
+      <span class="ai-tag">Sürü Zekâsı</span>
+    </div>
+    <div class="ai-card" data-anim>
+      <div class="ai-icon">🌊</div>
+      <div class="ai-name">Sea Hunter</div>
+      <div class="ai-country">ABD — DARPA</div>
+      <div class="ai-desc">Otonom denizaltı avcısı. İnsan müdahalesi olmadan aylarca denizde kalabilen insansız gemi.</div>
+      <span class="ai-tag">Deniz Otonomisi</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ZAMAN ÇİZELGESİ -->
+<section class="section">
+  <h2 class="section-title" data-anim>YZ Savaş Evrimi</h2>
+  <p class="section-subtitle" data-anim>Askeri yapay zekânın tarihsel gelişimi ve gelecek projeksiyonu</p>
+  
+  <div class="timeline">
+    <div class="tl-item" data-anim><div class="tl-year">1991</div><div class="tl-title">Akıllı Mühimmat Çağı</div><div class="tl-desc">Körfez Savaşı — İlk hassas güdümlü mühimmatların yaygın kullanımı</div></div>
+    <div class="tl-item" data-anim><div class="tl-year">2001</div><div class="tl-title">İlk Silahlı Drone Saldırısı</div><div class="tl-desc">MQ-1 Predator, Afganistan'da ilk silahlı drone operasyonu</div></div>
+    <div class="tl-item" data-anim><div class="tl-year">2016</div><div class="tl-title">AlphaGo Zaferi</div><div class="tl-desc">DeepMind'ın YZ'si Go şampiyonunu yendi — askeri stratejide YZ potansiyeli kanıtlandı</div></div>
+    <div class="tl-item" data-anim><div class="tl-year">2020</div><div class="tl-title">Karabağ Drone Savaşı</div><div class="tl-desc">Azerbaycan TB2 drone'ları ile modern savaşın kurallarını değiştirdi</div></div>
+    <div class="tl-item" data-anim><div class="tl-year">2023</div><div class="tl-title">LLM Askeri Entegrasyonu</div><div class="tl-desc">Pentagon, GPT tabanlı sistemleri istihbarat analizinde kullanmaya başladı</div></div>
+    <div class="tl-item" data-anim><div class="tl-year">2025</div><div class="tl-title">İlk YZ vs YZ Çatışması</div><div class="tl-desc">Ukrayna'da otonom drone sürüleri birbirine karşı taktik geliştirdi</div></div>
+    <div class="tl-item" data-anim><div class="tl-year">2030+</div><div class="tl-title">Tam Otonom Savaş Alanı</div><div class="tl-desc">İnsansız kara, hava, deniz ve uzay platformlarının tam entegrasyonu</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RİSK DEĞERLENDİRMESİ -->
+<section class="section">
+  <h2 class="section-title" data-anim>Askeri YZ Risk Değerlendirmesi</h2>
+  <p class="section-subtitle" data-anim>Otonom silah sistemlerinin potansiyel riskleri</p>
+  
+  <div class="risk-grid">
+    <div class="risk-card" data-anim>
+      <div class="risk-val" style="color:var(--red);">%92</div>
+      <div class="risk-bar"><div class="risk-fill" style="background:var(--red);--w:92%;"></div></div>
+      <div class="risk-label">Hatalı Hedef Tanıma Riski</div>
+    </div>
+    <div class="risk-card" data-anim>
+      <div class="risk-val" style="color:var(--pink);">%85</div>
+      <div class="risk-bar"><div class="risk-fill" style="background:var(--pink);--w:85%;"></div></div>
+      <div class="risk-label">Silahlanma Yarışı Tırmanması</div>
+    </div>
+    <div class="risk-card" data-anim>
+      <div class="risk-val" style="color:var(--purple);">%78</div>
+      <div class="risk-bar"><div class="risk-fill" style="background:var(--purple);--w:78%;"></div></div>
+      <div class="risk-label">Hesap Verebilirlik Boşluğu</div>
+    </div>
+    <div class="risk-card" data-anim>
+      <div class="risk-val" style="color:var(--neon);">%70</div>
+      <div class="risk-bar"><div class="risk-fill" style="background:var(--neon);--w:70%;"></div></div>
+      <div class="risk-label">Siber Ele Geçirme Riski</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:4rem 1rem;border-top:1px solid rgba(0,240,255,0.05);position:relative;z-index:10;">
+  <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace;">HARB-İ STRATEJİ · YAPAY ZEK & SAVAŞ ANALİZİ · 2026</p>
+</div>
+
+<script>
+// NEURAL NETWORK CANVAS
+(function(){
+  const canvas=document.getElementById('neuralCanvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const nodes=[];for(let i=0;i<40;i++){nodes.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5});}
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>canvas.width)n.vx*=-1;if(n.y<0||n.y>canvas.height)n.vy*=-1;});
+    for(let i=0;i<nodes.length;i++){for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x;const dy=nodes[i].y-nodes[j].y;const d=Math.sqrt(dx*dx+dy*dy);if(d<150){ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=`rgba(0,240,255,${0.3*(1-d/150)})`;ctx.stroke();}}}
+    nodes.forEach(n=>{ctx.beginPath();ctx.arc(n.x,n.y,2,0,Math.PI*2);ctx.fillStyle='rgba(0,240,255,0.5)';ctx.fill();});
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+})();
+
+// SCROLL OBSERVER
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.querySelectorAll('.risk-fill').forEach(f=>f.classList.add('visible'));e.target.querySelectorAll('[data-count]').forEach(c=>animateCounter(c,parseInt(c.dataset.count)));}});},{threshold:0.15});
+document.querySelectorAll('[data-anim]').forEach(el=>obs.observe(el));
+
+// Hero counters
+setTimeout(()=>{document.querySelectorAll('.hero-stat-val[data-count]').forEach(el=>animateCounter(el,parseInt(el.dataset.count)));},2000);
+
+function animateCounter(el,target){
+  if(el.dataset.animated)return;el.dataset.animated='1';
+  let current=0;const step=Math.max(1,target/50);
+  const iv=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(iv);}el.textContent=Math.round(current);},30);
+}
+
+// SOUND
+let audioCtx=null,isPlaying=false;
+function toggleSound(){
+  const btn=document.getElementById('soundToggle');
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(!isPlaying){
+    // Sci-fi ambient
+    const osc1=audioCtx.createOscillator();const gain1=audioCtx.createGain();
+    osc1.type='sine';osc1.frequency.value=220;gain1.gain.value=0.015;
+    const osc2=audioCtx.createOscillator();const gain2=audioCtx.createGain();
+    osc2.type='sine';osc2.frequency.value=223;gain2.gain.value=0.015;
+    const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=400;
+    osc1.connect(filter);osc2.connect(filter);filter.connect(gain1);gain1.connect(audioCtx.destination);
+    osc1.start();osc2.start();
+    // Random chirps
+    window._chirp=setInterval(()=>{
+      const c=audioCtx.createOscillator();const g=audioCtx.createGain();
+      c.type='sine';c.frequency.value=1000+Math.random()*3000;
+      g.gain.value=0.01;g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.15);
+      c.connect(g);g.connect(audioCtx.destination);c.start();c.stop(audioCtx.currentTime+0.15);
+    },3000+Math.random()*4000);
+    window._nodes={osc1,osc2};
+    btn.textContent='🔊';btn.classList.add('active');isPlaying=true;
+  }else{
+    window._nodes.osc1.stop();window._nodes.osc2.stop();clearInterval(window._chirp);
+    btn.textContent='🔇';btn.classList.remove('active');isPlaying=false;
+  }
+}
+</script>
+</body>
+</html>

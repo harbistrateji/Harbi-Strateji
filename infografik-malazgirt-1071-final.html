@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malazgirt 1071 — Hareketli İnfografik</title>
+    <style>
+        :root {
+            --bg: #020406;
+            --gold: #c9a24b;
+            --cyan: #00e0ff;
+            --text: #eaf0f7;
+            --text-dim: #90a1b5;
+            --panel: rgba(5, 8, 12, 0.9);
+            --border: rgba(201, 162, 75, 0.2);
+            --font-title: 'Cinzel', serif;
+            --font-body: 'Montserrat', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); overflow: hidden; }
+
+        #canvas-container { position: fixed; inset: 0; z-index: 1; }
+        .hud-overlay { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; }
+
+        .nav-rail {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 80px;
+            background: rgba(0,0,0,0.5);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .nav-dot {
+            width: 10px; height: 10px;
+            border: 1px solid var(--gold);
+            margin: 15px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--gold);
+            box-shadow: 0 0 15px var(--gold);
+            transform: scale(1.3);
+        }
+
+        .music-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            z-index: 30;
+            pointer-events: auto;
+        }
+
+        .music-btn:hover { background: var(--cyan); }
+
+        .main-stage {
+            flex: 1;
+            margin-left: 80px;
+            padding: 40px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .analogy-container {
+            width: 100%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1.2fr;
+            gap: 40px;
+            pointer-events: auto;
+        }
+
+        .info-side { display: flex; flex-direction: column; gap: 20px; }
+        .header-block h2 { font-family: var(--font-title); font-size: 32px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 5px; }
+        .header-block .category { font-family: var(--font-mono); font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.3em; }
+
+        .comparison-block { background: var(--panel); border: 1px solid var(--border); padding: 25px; backdrop-filter: blur(10px); }
+        .tech-box { margin-bottom: 20px; }
+        .tech-label { font-family: var(--font-mono); font-size: 9px; color: var(--gold); text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .tech-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .tech-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .tech-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+        .visual-side {
+            position: relative;
+            height: 450px;
+            border: 1px solid var(--border);
+            background: rgba(201, 162, 75, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .visualization { width: 80%; height: 80%; z-index: 1; position: relative; }
+
+        .historical-side { display: flex; flex-direction: column; gap: 20px; }
+        .record-card { background: var(--panel); border: 1px solid var(--border); padding: 25px; backdrop-filter: blur(10px); border-left: 3px solid var(--gold); }
+        .record-title { font-family: var(--font-mono); font-size: 10px; color: var(--gold); text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; }
+        .record-item { margin-bottom: 15px; }
+        .record-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; }
+        .record-value { font-size: 13px; color: #fff; line-height: 1.5; font-weight: 500; }
+
+        .top-hud { height: 60px; margin-left: 80px; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.8); }
+        .logo { font-family: var(--font-title); font-size: 18px; color: var(--gold); letter-spacing: 0.2em; }
+        .status { font-family: var(--font-mono); font-size: 10px; color: var(--cyan); }
+
+        .bottom-hud { height: 80px; margin-left: 80px; padding: 0 40px; display: flex; align-items: center; gap: 30px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.8); }
+        .timeline-track { flex: 1; height: 2px; background: var(--border); position: relative; }
+        .timeline-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--gold); transition: 0.5s; }
+        .timeline-cursor { position: absolute; top: -10px; width: 2px; height: 22px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); transition: 0.5s; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-content { animation: slideIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+
+        .master-loader { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .loader-circle { width: 80px; height: 80px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 1.5s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        @keyframes glow { 0%, 100% { filter: drop-shadow(0 0 5px var(--gold)); } 50% { filter: drop-shadow(0 0 15px var(--gold)); } }
+
+        .nav-hint { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); }
+    
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+
+    <div class="master-loader" id="loader">
+        <div class="loader-circle"></div>
+        <div style="margin-top: 20px; font-family: var(--font-title); color: var(--gold); letter-spacing: 0.5em;">MALAZGIRT 1071</div>
+    </div>
+
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔊 MÜZİK AÇ</button>
+
+    <div id="canvas-container"></div>
+
+    <div class="hud-overlay">
+        <div class="nav-rail" id="navRail"></div>
+
+        <div class="top-hud">
+            <div class="logo">HARB-İ STRATEJİ // ARŞİV</div>
+            <div class="status">SİSTEM: AKTİF // VERİ: 4/4 DOĞRULANDI</div>
+        </div>
+
+        <div class="main-stage">
+            <div class="analogy-container animate-content" id="contentStage">
+                <div class="info-side">
+                    <div class="header-block">
+                        <div class="category" id="categoryLabel">🏔️ 1071 M.S.</div>
+                        <h2 id="mainTitle">MALAZGIRT SAVAŞI</h2>
+                    </div>
+                    <div class="comparison-block">
+                        <div class="tech-box">
+                            <div class="tech-label">Stratejik Sonuç</div>
+                            <div class="tech-name" id="modernName">Alparslan Zaferi</div>
+                            <div class="tech-desc" id="modernDesc">Anadolu'nun kapıları Türklere açıldı, Bizans gücü kırıldı.</div>
+                        </div>
+                        <div class="tech-box">
+                            <div class="tech-label">Stratejik Mantık</div>
+                            <div class="tech-desc" id="logicDesc">Hilal taktik: Ön cepheden saldırı, yan ve arka taraftan çevirme.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-side">
+                    <div class="visualization" id="visualization"></div>
+                </div>
+
+                <div class="historical-side">
+                    <div class="record-card">
+                        <div class="record-title">◆ TARİHSEL KAYITLAR</div>
+                        <div class="record-item">
+                            <div class="record-label">Komutan</div>
+                            <div class="record-value" id="ancientName">Sultan Alparslan</div>
+                        </div>
+                        <div class="record-item">
+                            <div class="record-label">Tarih / Yer</div>
+                            <div class="record-value" id="firstUse">26 Ağustos 1071 / Malazgirt Ovası</div>
+                        </div>
+                        <div class="record-item">
+                            <div class="record-label">Tarihsel Özellik</div>
+                            <div class="record-value" id="ancientFeature">Anadolu'nun Türkleşmesinin başlangıcı, Bizans'ın Anadolu'daki hâkimiyetinin sonu.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-hud">
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--gold);">SAHNE: <span id="currentIndex">01</span> / 04</div>
+            <div class="timeline-track">
+                <div class="timeline-fill" id="timelineFill"></div>
+                <div class="timeline-cursor" id="timelineCursor"></div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--cyan);">DÖNEM: <span id="periodLabel">ORTA ÇAĞ</span></div>
+        </div>
+
+        <div class="nav-hint">← SOL/SAĞ OK TUŞU VEYA NAV RAİL'E TIKLA →</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let audioContext = null;
+        let musicInterval=null;let isPlaying = false;
+
+        const scenes = [
+            { 
+                cat: 'TARAFLAR', 
+                title: 'Alparslan vs Romanos IV',
+                modern: 'Ordu Büyüklüğü',
+                mDesc: 'Selçuk: ~60,000 asker | Bizans: ~70,000 asker | Alparslan taktik üstünlüğü sağladı',
+                logic: 'Sayısal eşitlik, taktik avantaj ve komutan yeteneği savaşın sonucunu belirler.',
+                ancient: 'Sultan Alparslan',
+                first: '26 Ağustos 1071 / Malazgirt Ovası',
+                feature: 'Alparslan’ın hilal taktik stratejisi Bizans ordusunu çevreledi. Bu zafer, Anadolu’nun Türkleşmesinin başlangıcıdır.',
+                period: 'ORTA ÇAĞ',
+                viz: 'armies'
+            },
+            { 
+                cat: 'HİLAL TAKTİĞİ', 
+                title: 'Çevirme Stratejisi',
+                modern: 'Askerî Taktik',
+                mDesc: 'Ön cepheden saldırı, yan ve arka taraftan çevirme ile düşman dağılır.',
+                logic: 'Klasik çevirme taktik, modern askeri doktrin’in temeli olmuştur.',
+                ancient: 'Alparslan’ın Taktik Dehası',
+                first: '1071 / Malazgirt',
+                feature: 'Hilal taktik, Türk askeri stratejisinin en ünlü örneğidir. Bugün hâlâ askeri akademilerde öğretilir.',
+                period: 'ORTA ÇAĞ',
+                viz: 'tactical'
+            },
+            { 
+                cat: 'SAVAŞ SONUCU', 
+                title: 'Bizans Mağlubiyeti',
+                modern: 'Jeopolitik Dönüşüm',
+                mDesc: 'İmparator Romanos IV esir alındı, Bizans ordusu dağıldı.',
+                logic: 'Medeniyetler arası güç dengesinin değişmesi tarihsel yönelimi belirler.',
+                ancient: 'Anadolu’nun Fethi',
+                first: '1071 / Malazgirt',
+                feature: 'Bu zafer, Anadolu’nun Türkleşmesinin başlangıcıdır. Bizans’ın Anadolu’daki hâkimiyeti sona erdi.',
+                period: 'ORTA ÇAĞ',
+                viz: 'impact'
+            },
+            { 
+                cat: 'TARİHSEL ETKİ', 
+                title: 'Anadolu’nun Türkleşmesi',
+                modern: 'Medeniyetler Arası Dönüşüm',
+                mDesc: 'Selçuk Türkleri Anadolu’ya yerleşti, 200 yıl boyunca hüküm sürdü.',
+                logic: 'Savaş sonuçları medeniyetleri şekillendirir. Bugünkü Türkiye’nin temeli Malazgirt’te atılmıştır.',
+                ancient: 'Anadolu Selçuklu Devleti',
+                first: '1071 sonrası / Anadolu',
+                feature: 'Malazgirt sonrası Anadolu’ya gelen Türk göçü, 900 yıl sonra bugünkü Türkiye’yi oluşturdu.',
+                period: 'ORTA ÇAĞ',
+                viz: 'culture'
+            }
+        ];
+
+        // Three.js Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        camera.position.z = 100;
+        const grid = new THREE.GridHelper(300, 30, 0xc9a24b, 0x16202d);
+        grid.rotation.x = Math.PI / 3;
+        grid.position.y = -50;
+        scene.add(grid);
+        const light = new THREE.PointLight(0xc9a24b, 1.5, 500);
+        light.position.set(50, 50, 50);
+        scene.add(light);
+        function animateThree() { requestAnimationFrame(animateThree); grid.rotation.z += 0.0005; renderer.render(scene, camera); }
+        animateThree();
+
+        function playMalazgirtMusic() {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const notes = [
+                {freq: 196, dur: 300}, {freq: 220, dur: 300}, {freq: 247, dur: 300}, {freq: 294, dur: 300},
+                {freq: 330, dur: 300}, {freq: 294, dur: 300}, {freq: 247, dur: 300}, {freq: 220, dur: 600},
+                {freq: 294, dur: 300}, {freq: 330, dur: 300}, {freq: 370, dur: 300}, {freq: 415, dur: 300},
+                {freq: 440, dur: 300}, {freq: 415, dur: 300}, {freq: 370, dur: 300}, {freq: 330, dur: 600}
+            ];
+            let time = audioContext.currentTime;
+            notes.forEach(note => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.frequency.value = note.freq;
+                gain.gain.setValueAtTime(0.25, time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + note.dur / 1000);
+                osc.start(time);
+                osc.stop(time + note.dur / 1000);
+                time += note.dur / 1000;
+            });
+        }
+
+        function toggleMusic() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('musicBtn');
+            if (isPlaying) {
+                playMalazgirtMusic();musicInterval=setInterval(function(){if(isPlaying)playMalazgirtMusic()},8000);
+                btn.textContent = '🔊 MÜZİK AÇIK';
+                btn.style.background = 'var(--cyan)';
+            } else {
+                if(musicInterval){clearInterval(musicInterval);musicInterval=null;}
+                btn.textContent = '🔊 MÜZİK AÇ';
+                btn.style.background = 'var(--gold)';
+            }
+        }
+
+        function generateVisualization(type, container) {
+            container.innerHTML = '';
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 200 200');
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+            svg.style.stroke = 'var(--gold)';
+            svg.style.strokeWidth = '1.5';
+            svg.style.fill = 'none';
+            svg.style.filter = 'drop-shadow(0 0 10px var(--gold))';
+
+            const shapes = {
+                armies: '<circle cx="60" cy="100" r="40" style="animation: pulse 2s infinite;"/><text x="60" y="105" font-size="12" text-anchor="middle" fill="var(--cyan)" style="animation: glow 2s infinite;">60K</text><circle cx="140" cy="100" r="35" style="animation: pulse 2s infinite 0.3s;"/><text x="140" y="105" font-size="12" text-anchor="middle" fill="var(--gold)" style="animation: glow 2s infinite 0.3s;">70K</text><line x1="100" y1="100" x2="100" y2="160" stroke-width="2" style="animation: glow 1s infinite;"/>',
+                tactical: '<polygon points="100,50 150,150 50,150" style="animation: pulse 2s infinite;"/><circle cx="100" cy="100" r="30" style="animation: glow 2s infinite;"/><line x1="100" y1="50" x2="100" y2="150" stroke-width="2" style="animation: float 2s infinite;"/><line x1="50" y1="150" x2="150" y2="150" stroke-width="2" style="animation: float 2s infinite 0.3s;"/>',
+                impact: '<circle cx="100" cy="100" r="50" style="animation: pulse 2s infinite;"/><circle cx="100" cy="100" r="35" style="animation: pulse 2s infinite 0.3s;"/><circle cx="100" cy="100" r="20" style="animation: glow 2s infinite;"/><line x1="100" y1="50" x2="100" y2="20" stroke-width="2" style="animation: glow 1s infinite;"/><line x1="150" y1="100" x2="180" y2="100" stroke-width="2" style="animation: glow 1s infinite;"/><line x1="100" y1="150" x2="100" y2="180" stroke-width="2" style="animation: glow 1s infinite;"/><line x1="50" y1="100" x2="20" y2="100" stroke-width="2" style="animation: glow 1s infinite;"/>',
+                culture: '<path d="M 100 30 L 130 80 L 100 70 L 70 80 Z" style="animation: float 2s infinite;"/><circle cx="100" cy="100" r="40" style="animation: pulse 2s infinite;"/><line x1="100" y1="60" x2="100" y2="140" stroke-width="2" style="animation: glow 1s infinite;"/><circle cx="100" cy="100" r="20" style="animation: rotate 4s linear infinite;"/>'
+            };
+
+            svg.innerHTML = shapes[type] || '';
+            container.appendChild(svg);
+        }
+
+        let currentIdx = 0;
+        const rail = document.getElementById('navRail');
+
+        scenes.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => updateUI(i);
+            rail.appendChild(dot);
+        });
+
+        function updateUI(idx) {
+            currentIdx = idx;
+            const s = scenes[idx];
+            
+            document.getElementById('categoryLabel').textContent = s.cat;
+            document.getElementById('mainTitle').textContent = s.title;
+            document.getElementById('modernName').textContent = s.modern;
+            document.getElementById('modernDesc').textContent = s.mDesc;
+            document.getElementById('logicDesc').textContent = s.logic;
+            document.getElementById('ancientName').textContent = s.ancient;
+            document.getElementById('firstUse').textContent = s.first;
+            document.getElementById('ancientFeature').textContent = s.feature;
+            document.getElementById('periodLabel').textContent = s.period;
+            document.getElementById('currentIndex').textContent = String(idx + 1).padStart(2, '0');
+
+            generateVisualization(s.viz, document.getElementById('visualization'));
+
+            document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === idx);
+            });
+
+            const progress = (idx + 1) / scenes.length;
+            document.getElementById('timelineFill').style.width = (progress * 100) + '%';
+            document.getElementById('timelineCursor').style.left = (progress * 100) + '%';
+        }
+
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            updateUI(0);
+        }, 1500);
+
+        // Klavye navigasyonu
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                updateUI((currentIdx + 1) % scenes.length);
+            }
+            if (e.key === 'ArrowLeft') {
+                updateUI((currentIdx - 1 + scenes.length) % scenes.length);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

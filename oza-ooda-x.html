@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="hud">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>OODA-X Düellosu — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.top{position:sticky;top:0;z-index:60;background:rgba(10,15,23,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 20px}
+.top .in{max-width:700px;margin:0 auto;display:flex;align-items:center;gap:14px;min-height:52px}
+.back{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);text-decoration:none}.back:hover{color:#fff}
+.title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px}
+.hdr-score{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold)}
+
+.wrap{max-width:700px;margin:0 auto;padding:24px 20px 80px}
+
+/* ── Başlık ── */
+.game-header{text-align:center;margin-bottom:24px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(28px,6vw,52px);background:linear-gradient(90deg,var(--cyan),#fff);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.game-header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:.04em}
+
+/* ── OODA döngü göstergesi ── */
+.ooda-ring{display:flex;justify-content:center;align-items:center;gap:0;margin-bottom:24px;flex-wrap:wrap}
+.ooda-step{padding:10px 16px;font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:600;border:1px solid var(--line2);background:var(--panel);transition:.3s;text-align:center}
+.ooda-step:first-child{border-radius:10px 0 0 10px}
+.ooda-step:last-child{border-radius:0 10px 10px 0}
+.ooda-step .os-letter{font-size:20px;display:block;color:var(--dim)}
+.ooda-step .os-word{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.ooda-step.active{background:rgba(0,224,255,.12);border-color:var(--cyan)}
+.ooda-step.active .os-letter{color:var(--cyan)}
+.ooda-step.active .os-word{color:var(--cyan)}
+.ooda-step.done{background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.4)}
+.ooda-step.done .os-letter{color:#00ff88}
+.ooda-arrow{font-size:16px;color:var(--dim);padding:0 4px;align-self:center}
+
+/* ── Düello alanı ── */
+.duel-arena{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:24px}
+.fighter{background:var(--panel);border:2px solid var(--line2);border-radius:14px;padding:20px;text-align:center;transition:.3s}
+.fighter.player{border-color:rgba(0,224,255,.4)}
+.fighter.ai{border-color:rgba(224,21,21,.4)}
+.fighter.winner{border-color:#00ff88;box-shadow:0 0 20px rgba(0,255,136,.3)}
+.fighter.loser{border-color:var(--red);opacity:.7}
+.fighter-icon{font-size:36px;margin-bottom:8px}
+.fighter-name{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;margin-bottom:6px}
+.fighter-hp{height:6px;border-radius:3px;background:var(--line2);overflow:hidden;margin-bottom:8px}
+.fighter-hp-fill{height:100%;border-radius:3px;transition:width .5s,background .3s}
+.fighter-stat{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)}
+.vs-badge{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:var(--gold);text-align:center}
+
+/* ── Sinyal ── */
+.signal-zone{text-align:center;margin-bottom:24px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.signal-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.signal-btn{width:160px;height:160px;border-radius:50%;border:none;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;transition:all .15s;position:relative;overflow:hidden}
+.signal-btn.waiting{background:var(--panel2);color:var(--dim);border:3px solid var(--line2)}
+.signal-btn.ready{background:radial-gradient(circle,rgba(0,224,255,.3),rgba(0,224,255,.1));color:var(--cyan);border:3px solid var(--cyan);animation:pulse-ready 0.8s ease-in-out infinite;box-shadow:0 0 30px rgba(0,224,255,.4)}
+.signal-btn.hit{background:radial-gradient(circle,rgba(0,255,136,.4),rgba(0,255,136,.1));color:#00ff88;border:3px solid #00ff88}
+.signal-btn.miss{background:radial-gradient(circle,rgba(224,21,21,.3),rgba(224,21,21,.1));color:var(--red2);border:3px solid var(--red2)}
+@keyframes pulse-ready{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.reaction-time{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:700;margin-top:16px;min-height:40px}
+
+/* ── Senaryo kartı ── */
+.scenario-mini{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:16px;margin-bottom:20px;border-left:3px solid var(--cyan)}
+.sm-phase{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.sm-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:600;color:#fff;margin-bottom:6px}
+.sm-desc{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--dim);line-height:1.5}
+
+/* ── Skor bandı ── */
+.score-band{display:flex;justify-content:center;gap:0;margin-bottom:20px;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.sb-item{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line2)}
+.sb-item:last-child{border-right:none}
+.sb-val{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:var(--cyan)}
+.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+
+/* ── Sonuç ── */
+.round-result{background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:20px;margin-bottom:20px;text-align:center;display:none}
+.round-result.show{display:block}
+.rr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:8px}
+.rr-time{font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:700;margin:8px 0}
+.rr-desc{font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--dim);margin-bottom:16px}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;padding:12px 20px;border-radius:9px;border:none;cursor:pointer}
+.btn-cyan{background:var(--cyan);color:#000}.btn-cyan:hover{opacity:.9}
+.btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+
+/* ── Faz geçiş animasyonu ── */
+@keyframes phase-flash{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+.phase-anim{animation:phase-flash .4s ease-out}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="top"><div class="in">
+  <a href="oza-hub.html" class="back">← OZA</a>
+  <span class="title">⚡ OODA-X Düellosu</span>
+  <span class="hdr-score" id="hdr-score">⭐ 0</span>
+</div></header>
+
+<div class="wrap">
+  <div class="game-header">
+    <h1>OODA-X DÜELLOSU</h1>
+    <div class="sub">GÖZLEMLE · YÖNEL · KARAR VER · HAREKETE GEÇ — 250ms EŞİĞİ</div>
+  </div>
+
+  <!-- OODA Döngü Göstergesi -->
+  <div class="ooda-ring">
+    <div class="ooda-step" id="os-O"><span class="os-letter">O</span><span class="os-word">Gözlemle</span></div>
+    <div class="ooda-arrow">→</div>
+    <div class="ooda-step" id="os-O2"><span class="os-letter">O</span><span class="os-word">Yönel</span></div>
+    <div class="ooda-arrow">→</div>
+    <div class="ooda-step" id="os-D"><span class="os-letter">D</span><span class="os-word">Karar</span></div>
+    <div class="ooda-arrow">→</div>
+    <div class="ooda-step" id="os-A"><span class="os-letter">A</span><span class="os-word">Harekete Geç</span></div>
+  </div>
+
+  <!-- Skor bandı -->
+  <div class="score-band">
+    <div class="sb-item"><div class="sb-val" id="s-wins">0</div><div class="sb-lbl">Galibiyet</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-losses">0</div><div class="sb-lbl">Mağlubiyet</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-best">—</div><div class="sb-lbl">En Hızlı</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-ailv">1</div><div class="sb-lbl">YZ Seviye</div></div>
+  </div>
+
+  <!-- Düello alanı -->
+  <div class="duel-arena">
+    <div class="fighter player" id="f-player">
+      <div class="fighter-icon">🧠</div>
+      <div class="fighter-name">SEN</div>
+      <div class="fighter-hp"><div class="fighter-hp-fill" id="hp-player" style="width:100%;background:var(--cyan)"></div></div>
+      <div class="fighter-stat" id="stat-player">HP: 5/5</div>
+    </div>
+    <div class="vs-badge">VS</div>
+    <div class="fighter ai" id="f-ai">
+      <div class="fighter-icon">🤖</div>
+      <div class="fighter-name" id="ai-name">YZ-α</div>
+      <div class="fighter-hp"><div class="fighter-hp-fill" id="hp-ai" style="width:100%;background:var(--red2)"></div></div>
+      <div class="fighter-stat" id="stat-ai">HP: 5/5</div>
+    </div>
+  </div>
+
+  <!-- Senaryo -->
+  <div class="scenario-mini" id="scenario-mini">
+    <div class="sm-phase" id="sm-phase">FAZA HAZIRLAN</div>
+    <div class="sm-title" id="sm-title">OODA-X Düellosu Başlıyor</div>
+    <div class="sm-desc" id="sm-desc">Sinyal göründüğünde mümkün olan en hızlı şekilde butona bas. 250ms altında karar ver!</div>
+  </div>
+
+  <!-- Sinyal bölgesi -->
+  <div class="signal-zone">
+    <div class="signal-label" id="signal-label">HAZIR OLDUĞUNDA BAŞLAT</div>
+    <button class="signal-btn waiting" id="signal-btn" onclick="handleClick()">
+      BAŞLAT
+    </button>
+    <div class="reaction-time" id="reaction-time"></div>
+  </div>
+
+  <!-- Tur sonucu -->
+  <div class="round-result" id="round-result">
+    <div class="rr-title" id="rr-title">—</div>
+    <div class="rr-time" id="rr-time">—</div>
+    <div class="rr-desc" id="rr-desc"></div>
+    <div class="btn-row">
+      <button class="btn btn-cyan" onclick="nextRound()">Sonraki Tur ⚡</button>
+      <button class="btn btn-outline" onclick="HS.showShareCard({title:'OODA-X Düellosu',puan:totalScore,game:'ooda-x',color:'#c41e3a'})">📤 Paylaş</button>
+    </div>
+  </div>
+</div>
+
+<script src="hs-engine.js">
+// ===== SOUND EFFECTS =====
+var _audioCtx;
+function _getAudio(){if(!_audioCtx)_audioCtx=new(window.AudioContext||window.webkitAudioContext)();return _audioCtx;}
+function sfxBomb(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(150,a.currentTime);o.frequency.exponentialRampToValueAtTime(30,a.currentTime+0.5);g.gain.setValueAtTime(0.4,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.6);o.start();o.stop(a.currentTime+0.6);}
+function sfxAlarm(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='square';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(800,a.currentTime);o.frequency.setValueAtTime(600,a.currentTime+0.15);o.frequency.setValueAtTime(800,a.currentTime+0.3);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.5);o.start();o.stop(a.currentTime+0.5);}
+function sfxSuccess(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(523,a.currentTime);o.frequency.setValueAtTime(659,a.currentTime+0.1);o.frequency.setValueAtTime(784,a.currentTime+0.2);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.4);o.start();o.stop(a.currentTime+0.4);}
+function sfxClick(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=600;o.type='sine';g.gain.setValueAtTime(0.1,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.05);o.start();o.stop(a.currentTime+0.05);}
+</script>
+<script>
+var SCENARIOS_OODA = [
+  {phase:'GÖZLEMLE',title:'Radar Tespiti',desc:'Radar ekranında belirsiz bir sinyal. Dost mu düşman mı? Sinyal göründüğünde hemen karar ver!'},
+  {phase:'YÖNEL',title:'Tehdit Değerlendirmesi',desc:'Birden fazla hedef tespit edildi. Öncelikli tehdidi belirle ve harekete geç!'},
+  {phase:'KARAR VER',title:'Ateş Yetkisi',desc:'Komuta merkezi onay bekliyor. Süre dolmadan karar ver!'},
+  {phase:'HAREKETE GEÇ',title:'Müdahale Emri',desc:'Kuvvetler hazır, emir bekleniyor. Her milisaniye önemli!'},
+  {phase:'DÖNGÜ HIZI',title:'OODA Döngüsü Tamamla',desc:'Rakipten önce tüm döngüyü tamamla. Hız = Zafer!'}
+];
+
+var phase = 'idle', signalTime = 0, reactionMs = 0;
+var playerHP = 5, aiHP = 5, wins = 0, losses = 0, totalScore = 0;
+var bestTime = Infinity, currentRound = 0;
+var signalTimeout = null, waitTimeout = null;
+var OODA_STEPS = ['O','O2','D','A'];
+var currentStep = 0;
+
+function setOODAStep(idx){
+  OODA_STEPS.forEach(function(s,i){
+    var el = document.getElementById('os-'+s);
+    if(!el) return;
+    el.classList.remove('active','done');
+    if(i < idx) el.classList.add('done');
+    else if(i === idx) el.classList.add('active');
+  });
+}
+
+function updateHPBars(){
+  var pp = Math.max(0, playerHP/5*100);
+  var ap = Math.max(0, aiHP/5*100);
+  document.getElementById('hp-player').style.width = pp+'%';
+  document.getElementById('hp-ai').style.width = ap+'%';
+  document.getElementById('hp-player').style.background = pp > 40 ? 'var(--cyan)' : 'var(--gold)';
+  document.getElementById('hp-ai').style.background = ap > 40 ? 'var(--red2)' : 'var(--gold)';
+  document.getElementById('stat-player').textContent = 'HP: '+Math.max(0,playerHP)+'/5';
+  document.getElementById('stat-ai').textContent = 'HP: '+Math.max(0,aiHP)+'/5';
+  document.getElementById('s-wins').textContent = wins;
+  document.getElementById('s-losses').textContent = losses;
+  document.getElementById('s-best').textContent = bestTime < Infinity ? bestTime+'ms' : '—';
+  document.getElementById('s-ailv').textContent = HS.getAILevel();
+  document.getElementById('hdr-score').textContent = '⭐ ' + HS.getTotalScore();
+}
+
+function loadRound(){
+  var sc = SCENARIOS_OODA[currentRound % SCENARIOS_OODA.length];
+  document.getElementById('sm-phase').textContent = sc.phase;
+  document.getElementById('sm-title').textContent = sc.title;
+  document.getElementById('sm-desc').textContent = sc.desc;
+  document.getElementById('scenario-mini').classList.add('phase-anim');
+  setTimeout(function(){ document.getElementById('scenario-mini').classList.remove('phase-anim'); }, 400);
+
+  setOODAStep(currentRound % 4);
+  document.getElementById('round-result').classList.remove('show');
+  document.getElementById('reaction-time').textContent = '';
+
+  var btn = document.getElementById('signal-btn');
+  btn.className = 'signal-btn waiting';
+  btn.textContent = 'HAZIR';
+  document.getElementById('signal-label').textContent = 'HAZIR OLDUĞUNDA TIKLAT';
+  phase = 'idle';
+  updateHPBars();
+}
+
+function handleClick(){
+  if(phase === 'idle'){
+    // Başlatma: rastgele 1-4 saniye bekle
+    phase = 'waiting';
+    var btn = document.getElementById('signal-btn');
+    btn.className = 'signal-btn waiting';
+    btn.textContent = '...';
+    document.getElementById('signal-label').textContent = 'BEKLİYOR…';
+
+    var delay = 1000 + Math.random() * 3000;
+    waitTimeout = setTimeout(function(){
+      phase = 'ready';
+      signalTime = Date.now();
+      btn.className = 'signal-btn ready';
+      btn.textContent = 'ŞİMDİ!';
+      document.getElementById('signal-label').textContent = '⚡ HAREKETE GEÇ!';
+      HS.beep(880, 0.1, 0.3);
+
+      // YZ tepki süresi (adaptif)
+      var aiSeviye = HS.getAILevel();
+      var aiBase = 180 + (HS.hasPerk('hiz_1') ? 50 : 0) + (HS.hasPerk('hiz_2') ? 100 : 0);
+      var aiTime = Math.max(80, aiBase - aiSeviye * 15 + Math.random() * 60);
+      signalTimeout = setTimeout(function(){
+        if(phase === 'ready'){
+          // YZ kazandı
+          phase = 'done';
+          reactionMs = Math.round(aiTime);
+          showRoundResult(false, reactionMs);
+        }
+      }, aiTime);
+    }, delay);
+
+  } else if(phase === 'waiting'){
+    // Erken tıklama
+    clearTimeout(waitTimeout);
+    phase = 'idle';
+    var btn = document.getElementById('signal-btn');
+    btn.className = 'signal-btn miss';
+    btn.textContent = 'ERKEN!';
+    HS.beepFail();
+    HS.flashScreen('rgba(224,21,21,0.3)', 300);
+    document.getElementById('reaction-time').textContent = 'Çok erken! -1 HP';
+    document.getElementById('reaction-time').style.color = 'var(--red2)';
+    playerHP--;
+    updateHPBars();
+    setTimeout(function(){ loadRound(); }, 1500);
+
+  } else if(phase === 'ready'){
+    // Doğru zamanlama
+    clearTimeout(signalTimeout);
+    phase = 'done';
+    reactionMs = Date.now() - signalTime;
+    showRoundResult(true, reactionMs);
+  }
+}
+
+function showRoundResult(playerWon, ms){
+  var btn = document.getElementById('signal-btn');
+  var pts = 0;
+
+  if(playerWon){
+    btn.className = 'signal-btn hit';
+    btn.textContent = ms + 'ms';
+    HS.beepWin();
+    HS.burst(btn, '#00ff88');
+    HS.flashScreen('rgba(0,255,136,0.2)', 300);
+
+    if(ms < bestTime){ bestTime = ms; }
+    aiHP--;
+    wins++;
+    HS.aiLost();
+
+    pts = Math.max(10, Math.floor(500 / ms * 50));
+    if(ms < 250) pts += 50;
+    if(ms < 150) pts += 100;
+    totalScore += pts;
+    HS.addScore('ooda-x', pts);
+
+    if(ms < 250) HS.awardBadge('hizli_top');
+
+    document.getElementById('rr-title').textContent = ms < 250 ? '⚡ SÜPER HIZLI!' : ms < 400 ? '✅ Hızlı Karar' : '✓ Kazandın';
+    document.getElementById('rr-title').style.color = ms < 250 ? 'var(--cyan)' : '#00ff88';
+    document.getElementById('rr-time').textContent = ms + ' ms';
+    document.getElementById('rr-time').style.color = ms < 250 ? 'var(--cyan)' : '#00ff88';
+    document.getElementById('rr-desc').innerHTML =
+      (ms < 250 ? '250ms eşiğini kırdın! Savaş alanında bu hız hayat kurtarır.' :
+       ms < 400 ? 'İyi tepki süresi. Profesyonel eşik 250ms.' :
+       'Kazandın ama hızını artır. Hedef: 250ms altı.') +
+      '<br><span style="color:var(--gold);font-size:11px">+' + pts + ' puan · YZ tepkisi: ~' + Math.round(ms * 0.7) + 'ms</span>';
+
+    document.getElementById('f-ai').classList.add('loser');
+    document.getElementById('f-player').classList.add('winner');
+
+  } else {
+    btn.className = 'signal-btn miss';
+    btn.textContent = 'YZ KAZANDI';
+    HS.beepFail();
+    HS.flashScreen('rgba(224,21,21,0.3)', 400);
+
+    playerHP--;
+    losses++;
+    HS.aiWon();
+
+    document.getElementById('rr-title').textContent = '❌ YZ Daha Hızlıydı!';
+    document.getElementById('rr-title').style.color = 'var(--red2)';
+    document.getElementById('rr-time').textContent = ms + ' ms';
+    document.getElementById('rr-time').style.color = 'var(--red2)';
+    document.getElementById('rr-desc').innerHTML =
+      'YZ rakibin seni geçti. OODA döngüsünü daha hızlı tamamla!' +
+      '<br><span style="color:var(--dim);font-size:11px">YZ tepkisi: ' + ms + 'ms · Seviye: ' + HS.getAILevel() + '</span>';
+
+    document.getElementById('f-player').classList.add('loser');
+    document.getElementById('f-ai').classList.add('winner');
+  }
+
+  updateHPBars();
+  document.getElementById('round-result').classList.add('show');
+
+  // Oyun bitti mi?
+  if(playerHP <= 0 || aiHP <= 0){
+    document.getElementById('rr-title').textContent = playerHP <= 0 ? '💀 OYUN BİTTİ' : '🏆 ZAFER!';
+    if(playerHP <= 0){ HS.flashScreen('rgba(224,21,21,0.5)', 600); }
+    else { HS.beepWin(); HS.burst(document.getElementById('signal-btn'), '#C9A24B'); }
+  }
+}
+
+function nextRound(){
+  currentRound++;
+  document.getElementById('f-player').classList.remove('winner','loser');
+  document.getElementById('f-ai').classList.remove('winner','loser');
+
+  if(playerHP <= 0 || aiHP <= 0){
+    // Yeniden başla
+    playerHP = 5; aiHP = 5; wins = 0; losses = 0; currentRound = 0;
+  }
+  loadRound();
+}
+
+loadRound();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

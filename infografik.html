@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Görsel Brifing — Harb-i Strateji</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<script src="hs-nav.js?v=11" defer></script>
+<style>
+/* ═══ İNFOGRAFİK GALERISI — MODERN DYNAMIC DESIGN ═══ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg,#0a0f17);color:var(--text,#e8eaed);overflow-x:hidden}
+
+/* Hero Section */
+.ig-hero{position:relative;padding:100px 5% 60px;overflow:hidden;min-height:340px;display:flex;align-items:flex-end}
+.ig-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(187,25,25,.15),rgba(0,224,255,.08),rgba(201,168,76,.1));z-index:0}
+.ig-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(0,224,255,.06) 0%,transparent 60%);z-index:0}
+.ig-hero-content{position:relative;z-index:1;max-width:1400px;margin:0 auto;width:100%}
+.ig-hero-label{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan,#00E0FF);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ig-hero-label::before{content:'';width:24px;height:2px;background:var(--cyan)}
+.ig-hero h1{font-family:'Oswald',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;line-height:1.1;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ig-hero-sub{font-size:1rem;color:var(--text-2,#94a3b8);max-width:600px;line-height:1.6}
+.ig-stats{display:flex;gap:32px;margin-top:28px;flex-wrap:wrap}
+.ig-stat{text-align:left}
+.ig-stat-num{font-family:'Oswald',sans-serif;font-size:2rem;font-weight:700;color:var(--gold,#c9a84c);line-height:1}
+.ig-stat-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3,#64748b);margin-top:4px}
+
+/* Floating particles */
+.ig-particles{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.ig-particle{position:absolute;width:3px;height:3px;background:var(--cyan);border-radius:50%;opacity:.3;animation:igFloat 8s infinite ease-in-out}
+@keyframes igFloat{0%,100%{transform:translateY(0) scale(1);opacity:.3}50%{transform:translateY(-40px) scale(1.5);opacity:.6}}
+
+/* Filter Bar */
+.ig-filter-wrap{position:sticky;top:126px;z-index:50;background:rgba(10,15,23,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border,rgba(255,255,255,.08));padding:14px 5%}
+.ig-filter-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:10px;overflow-x:auto;scrollbar-width:none}
+.ig-filter-inner::-webkit-scrollbar{display:none}
+.ig-fbtn{font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:7px 16px;border-radius:20px;border:1px solid var(--border);color:var(--text-2);cursor:pointer;white-space:nowrap;transition:all .25s;background:transparent;letter-spacing:.03em}
+.ig-fbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.ig-fbtn.active{background:var(--crimson,#bb1919);border-color:var(--crimson);color:#fff;font-weight:600}
+.ig-fbtn .count{font-size:.6rem;opacity:.6;margin-left:4px}
+
+/* Grid */
+.ig-grid-wrap{max-width:1400px;margin:0 auto;padding:32px 5% 80px}
+.ig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+
+/* Cards */
+.ig-card{position:relative;border-radius:12px;overflow:hidden;background:var(--bg-card,#111a2b);border:1px solid var(--border);transition:all .35s cubic-bezier(.19,1,.22,1);cursor:pointer;display:block;color:inherit;text-decoration:none}
+.ig-card:hover{transform:translateY(-6px) scale(1.01);border-color:rgba(0,224,255,.3);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 30px rgba(0,224,255,.05)}
+.ig-card-visual{height:180px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ig-card-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(10,15,23,.9) 100%);z-index:1}
+.ig-card-visual .ig-icon{font-size:3.5rem;opacity:.4;z-index:0;filter:drop-shadow(0 0 20px currentColor)}
+.ig-card-visual.cat-nato{background:linear-gradient(135deg,#0d1f3c,#1a3a6b)}
+.ig-card-visual.cat-savunma{background:linear-gradient(135deg,#1a2d1a,#2d5a2d)}
+.ig-card-visual.cat-turkiye{background:linear-gradient(135deg,#3d1515,#6b1a1a)}
+.ig-card-visual.cat-yz{background:linear-gradient(135deg,#1a1a3d,#2d2d6b)}
+.ig-card-visual.cat-siber{background:linear-gradient(135deg,#0d2a2a,#1a4a4a)}
+.ig-card-visual.cat-analog{background:linear-gradient(135deg,#2a1a0d,#4a3a1a)}
+.ig-card-visual.cat-enerji{background:linear-gradient(135deg,#2a2a0d,#4a4a1a)}
+.ig-card-visual.cat-tarih{background:linear-gradient(135deg,#1a0d2a,#3a1a4a)}
+.ig-card-visual.cat-deniz{background:linear-gradient(135deg,#0d1a2a,#1a3a5a)}
+.ig-card-visual.cat-default{background:linear-gradient(135deg,#151a25,#1e2a3f)}
+.ig-card-body{padding:20px;position:relative;z-index:2;margin-top:-40px}
+.ig-card-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:10px}
+.ig-card-tag.t-nato{background:rgba(26,86,219,.2);color:#4a9eff}
+.ig-card-tag.t-savunma{background:rgba(34,197,94,.15);color:#4ade80}
+.ig-card-tag.t-turkiye{background:rgba(187,25,25,.2);color:#ff6b6b}
+.ig-card-tag.t-yz{background:rgba(139,92,246,.2);color:#a78bfa}
+.ig-card-tag.t-siber{background:rgba(0,224,255,.15);color:#00E0FF}
+.ig-card-tag.t-analog{background:rgba(201,168,76,.2);color:#c9a84c}
+.ig-card-tag.t-enerji{background:rgba(234,179,8,.15);color:#facc15}
+.ig-card-tag.t-tarih{background:rgba(168,85,247,.15);color:#c084fc}
+.ig-card-tag.t-deniz{background:rgba(56,189,248,.15);color:#38bdf8}
+.ig-card-tag.t-default{background:rgba(255,255,255,.08);color:var(--text-2)}
+.ig-card-title{font-family:'Oswald',sans-serif;font-size:1.15rem;font-weight:600;line-height:1.3;margin-bottom:6px;color:#fff}
+.ig-card-meta{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text-3);display:flex;align-items:center;gap:8px}
+.ig-card-meta .dot{width:4px;height:4px;border-radius:50%;background:var(--text-3)}
+
+/* Animated border on hover */
+.ig-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--gold),var(--crimson));transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.19,1,.22,1)}
+.ig-card:hover::after{transform:scaleX(1)}
+
+/* Section headers */
+.ig-section-header{max-width:1400px;margin:0 auto;padding:40px 5% 0;display:flex;align-items:center;justify-content:space-between}
+.ig-section-title{font-family:'Oswald',sans-serif;font-size:1.4rem;font-weight:600;display:flex;align-items:center;gap:12px}
+.ig-section-title::before{content:'';width:4px;height:24px;background:var(--crimson);border-radius:2px}
+.ig-section-count{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--text-3);letter-spacing:.1em}
+
+/* Responsive */
+@media(max-width:768px){
+  .ig-grid{grid-template-columns:1fr}
+  .ig-hero{padding:90px 5% 40px;min-height:280px}
+  .ig-stats{gap:20px}
+  .ig-stat-num{font-size:1.5rem}
+  .ig-filter-wrap{top:110px}
+}
+@media(max-width:480px){
+  .ig-hero h1{font-size:1.8rem}
+  .ig-card-visual{height:140px}
+}
+
+/* Entrance animations */
+.ig-card{opacity:0;transform:translateY(30px)}
+.ig-card.visible{opacity:1;transform:translateY(0);transition:opacity .5s ease,transform .5s cubic-bezier(.19,1,.22,1)}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<!-- Hero -->
+<section class="ig-hero">
+  <div class="ig-particles" id="particles"></div>
+  <div class="ig-hero-content">
+    <div class="ig-hero-label">Görsel Brifing — Stratejik İstihbarat</div>
+    <h1>Görsel Brifing</h1>
+    <p class="ig-hero-sub">Savunma sanayii, jeopolitik ve stratejinin görsel dili. NATO'dan yapay zekâya, siberden enerji savaşlarına 70+ interaktif ve statik infografik.</p>
+    <div class="ig-stats">
+      <div class="ig-stat"><div class="ig-stat-num" id="totalCount">70</div><div class="ig-stat-label">İnfografik</div></div>
+      <div class="ig-stat"><div class="ig-stat-num">22</div><div class="ig-stat-label">Kategori</div></div>
+      <div class="ig-stat"><div class="ig-stat-num">45</div><div class="ig-stat-label">İnteraktif</div></div>
+      <div class="ig-stat"><div class="ig-stat-num">25</div><div class="ig-stat-label">Statik Görsel</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Filter -->
+<div class="ig-filter-wrap">
+  <div class="ig-filter-inner" id="filterBar"></div>
+</div>
+
+<!-- Section Header -->
+<div class="ig-section-header">
+  <div class="ig-section-title">Tüm İnfografikler</div>
+  <div class="ig-section-count" id="visibleCount">70 içerik gösteriliyor</div>
+</div>
+
+<!-- Grid -->
+<div class="ig-grid-wrap">
+  <div class="ig-grid" id="cardGrid"></div>
+</div>
+
+<script>
+// ═══ INFOGRAPHIC DATA ═══
+const INFOGRAPHICS = [
+  {href:"infografik-ukrayna-10-ders.html",title:"Ukrayna'dan 10 Yeni Savaş Dersi",tag:"NATO",type:"interactive",icon:"⚔️"},
+  {href:"infografik-dron-cagi.html",title:"Dron Çağı",tag:"Savunma",type:"interactive",icon:"🛸"},
+  {href:"infografik-gelecegin-savasi.html",title:"Geleceğin Savaşı",tag:"Savunma",type:"interactive",icon:"🔮"},
+  {href:"infografik-deniz-hakimiyeti-2050.html",title:"Deniz Hâkimiyeti 2050",tag:"Deniz",type:"interactive",icon:"🚢"},
+  {href:"infografik-cipler-ve-savaslar.html",title:"Çipler ve Savaşlar",tag:"Teknoloji",type:"interactive",icon:"🔬"},
+  {href:"infografik-ukrayna-hazinesi.html",title:"Ukrayna'nın Görünmeyen Hazinesi",tag:"Enerji",type:"interactive",icon:"💎"},
+  {href:"infografik-lubnan-operasyonu.html",title:"2024 Lübnan Çağrı Cihazı Operasyonu",tag:"Siber",type:"interactive",icon:"📡"},
+  {href:"infografik-heartland-elementler.html",title:"Heartland: 2026 Elementler Savaşı",tag:"Siber",type:"interactive",icon:"🌍"},
+  {href:"infografik-nato-kuantum-2025.html",title:"NATO Kuantum Teknolojileri",tag:"NATO",type:"interactive",icon:"⚛️"},
+  {href:"infografik-robotik-otonom.html",title:"Robotik ve Otonom Sistemler",tag:"NATO",type:"interactive",icon:"🤖"},
+  {href:"infografik-binyillik-analoglar.html",title:"Binyıllık Analoglar Serisi",tag:"Analog",type:"interactive",icon:"📜"},
+  {href:"infografik-sanayi-devrimleri.html",title:"Sanayi Devrimleri ve Askerî Güç",tag:"Tarih",type:"interactive",icon:"🏭"},
+  {href:"infografik-caydiricilik-doktrini.html",title:"Türkiye Caydırıcılık Doktrini 2026",tag:"Türkiye",type:"interactive",icon:"🛡️"},
+  {href:"infografik-seffaf-savas.html",title:"Şeffaf Savaş Alanı",tag:"NATO",type:"interactive",icon:"👁️"},
+  {href:"infografik-maliyet-terazisi.html",title:"Maliyet Asimetrisi Terazisi",tag:"Savunma",type:"interactive",icon:"⚖️"},
+  {href:"infografik-mineral-agi.html",title:"Kritik Mineral Ağı",tag:"Enerji",type:"interactive",icon:"⛏️"},
+  {href:"infografik-savas-evrimi.html",title:"Savaş Evrimi Zaman Tüneli",tag:"Tarih",type:"interactive",icon:"⏳"},
+  {href:"infografik-saha2026.html",title:"Saha 2026: Muharebe Alanı",tag:"Savunma",type:"interactive",icon:"🎯"},
+  {href:"infografik-askeri-harcama.html",title:"Küresel Askeri Harcamalar",tag:"Savunma",type:"interactive",icon:"💰"},
+  {href:"infografik-caydiricilik-piramidi.html",title:"Caydırıcılık Piramidi",tag:"Türkiye",type:"interactive",icon:"🔺"},
+  {href:"infografik-drone-devrim.html",title:"Drone Devrimi",tag:"Savunma",type:"interactive",icon:"✈️"},
+  {href:"infografik-bm-reform.html",title:"BM Reform İnfografiği",tag:"NATO",type:"interactive",icon:"🏛️"},
+  {href:"dis_politika_interaktif_infografik.html",title:"Dış Politika İnteraktif Analiz",tag:"Türkiye",type:"interactive",icon:"🌐"},
+  {href:"hibrit_savas_interaktif_infografik.html",title:"Hibrit Savaş İnteraktif",tag:"Siber",type:"interactive",icon:"🕸️"},
+  {href:"infografik-arktik-yarisi.html",title:"Arktik Yarışı",tag:"Enerji",type:"interactive",icon:"❄️"},
+  {href:"infografik-buyuk-muharebeler.html",title:"Büyük Muharebeler",tag:"Tarih",type:"interactive",icon:"⚔️"},
+  {href:"infografik-casuslar-gizli-operasyonlar.html",title:"Casuslar ve Gizli Operasyonlar",tag:"Siber",type:"interactive",icon:"🕵️"},
+  {href:"infografik-hurmuz-bogazi.html",title:"Hürmüz Boğazı Krizi",tag:"Enerji",type:"interactive",icon:"🛢️"},
+  {href:"infografik-jeopolitik-simulator.html",title:"Jeopolitik Simülatör",tag:"NATO",type:"interactive",icon:"🗺️"},
+  {href:"infografik-kuresel-enerji-savaslari.html",title:"Küresel Enerji Savaşlari",tag:"Enerji",type:"interactive",icon:"⚡"},
+  {href:"infografik-modern-savas-akademisi.html",title:"Modern Savaş Akademisi",tag:"Savunma",type:"interactive",icon:"🎓"},
+  {href:"infografik-nadir-madenler-savasi.html",title:"Nadir Madenler Savaşı",tag:"Enerji",type:"interactive",icon:"💎"},
+  {href:"infografik-nato-genislemesi.html",title:"NATO Genislemesi",tag:"NATO",type:"interactive",icon:"🌍"},
+  {href:"infografik-osmanli-padisahlari.html",title:"Osmanli Padisahlari",tag:"Tarih",type:"interactive",icon:"👑"},
+  {href:"infografik-siber-savas-anatomisi.html",title:"Siber Savaş Anatomisi",tag:"Siber",type:"interactive",icon:"💻"},
+  {href:"infografik-su-savaslari.html",title:"Su Savaşlari",tag:"Enerji",type:"interactive",icon:"💧"},
+  {href:"infografik-turk-deniz-gucu.html",title:"Turk Deniz Gucu",tag:"Türkiye",type:"interactive",icon:"⚓"},
+  {href:"infografik-turk-deniz-kuvvetleri.html",title:"Turk Deniz Kuvvetleri",tag:"Türkiye",type:"interactive",icon:"🚢"},
+  {href:"infografik-turk-hava-kuvvetleri.html",title:"Turk Hava Kuvvetleri",tag:"Türkiye",type:"interactive",icon:"✈️"},
+  {href:"infografik-turk-kara-kuvvetleri.html",title:"Turk Kara Kuvvetleri",tag:"Türkiye",type:"interactive",icon:"🪖"},
+  {href:"infografik-turk-savunma-yukselisi.html",title:"Turk Savunma Yukselisi",tag:"Türkiye",type:"interactive",icon:"📈"},
+  {href:"infografik-turklerin-ilkleri.html",title:"Turklerin Ilkleri",tag:"Tarih",type:"interactive",icon:"🏆"},
+  {href:"infografik-ulke-karsilastirma.html",title:"Ulke Karsilastirma",tag:"NATO",type:"interactive",icon:"📊"},
+  {href:"infografik-uzay-hakimiyeti.html",title:"Uzay Hâkimiyeti",tag:"NATO",type:"interactive",icon:"🛰️"},
+  {href:"infografik-yapay-zeka-savas.html",title:"Yapay Zekâ ve Savaş",tag:"YZ",type:"interactive",icon:"🧠"},
+  {href:"infografik-yapay-zeka-yarisi.html",title:"Yapay Zekâ Yarışı",tag:"YZ",type:"interactive",icon:"🤖"},
+  {href:"ooda-dongusu-interaktif.html",title:"OODA Dongusu İnteraktif",tag:"Savunma",type:"interactive",icon:"🔄"},
+  {href:"ooda-x-super-dongu-simulatoru.html",title:"OODA-X Super Dongu Simülatöru",tag:"Savunma",type:"interactive",icon:"⚡"},
+  {href:"savas-evrimi-zaman-tuneli.html",title:"Savaş Evrimi Zaman Tüneli",tag:"Tarih",type:"interactive",icon:"📅"},
+  {href:"blockchain-askeri-lojistik.html",title:"Blockchain Askeri Lojistik",tag:"Siber",type:"interactive",icon:"🔗"},
+  // Analog Serisi (YENİ)
+  {href:"analog_2_roma_starlink(1).png",title:"Roma İmparatorluğu → Starlink",tag:"Analog",type:"static",icon:"🏛️"},
+  {href:"analog_3_mogol_ai(2).png",title:"Moğol Ordusu → Yapay Zekâ",tag:"Analog",type:"static",icon:"🐎"},
+  {href:"analog_4_hitit_ugv(1).png",title:"Hitit Savaş Arabaları → UGV",tag:"Analog",type:"static",icon:"⚔️"},
+  {href:"analog_7_babil_siber(1).png",title:"Babil Surları → Siber Savunma",tag:"Analog",type:"static",icon:"🏰"},
+  {href:"analog_8_aztek_deepfake(1).png",title:"Aztek Ritüelleri → Deepfake",tag:"Analog",type:"static",icon:"🎭"},
+  {href:"analog_9_ipek_yolu_fiber(1).png",title:"İpek Yolu → Fiber Optik",tag:"Analog",type:"static",icon:"🛤️"},
+  {href:"analog_10_truva_stuxnet(1).png",title:"Truva Atı → Stuxnet",tag:"Analog",type:"static",icon:"🐴"},
+  // Veri Özeti İnfografikleri (YENİ)
+  {href:"infografik_algoritmik_harp.webp",title:"Algoritmik Harp",tag:"Savunma",type:"static",icon:"🧮"},
+  {href:"infografik_gelecegin_ordusu.webp",title:"Geleceğin Ordusu",tag:"Savunma",type:"static",icon:"🎖️"},
+  {href:"infografik_hibrit_spektrum.webp",title:"Hibrit Spektrum Savaşı",tag:"Savunma",type:"static",icon:"📡"},
+  {href:"infografik_hormuz_jeopolitik.webp",title:"Hürmüz Jeopolitik Analiz",tag:"Enerji",type:"static",icon:"🛢️"},
+  {href:"infografik_maliyet_asimetrisi.webp",title:"Maliyet Asimetrisi",tag:"Savunma",type:"static",icon:"⚖️"},
+  {href:"infografik_muhimmat_hiyerarsisi.webp",title:"Mühimmat Hiyerarşisi",tag:"Savunma",type:"static",icon:"💣"},
+  {href:"infografik_stratejik_egitim.webp",title:"Stratejik Eğitim",tag:"Savunma",type:"static",icon:"🎓"},
+  {href:"infografik_yeni_nesil_liderlik.webp",title:"Yeni Nesil Liderlik",tag:"Savunma",type:"static",icon:"👨‍✈️"},
+  // Teknik Kartlar (YENİ)
+  {href:"teknik-kartlar.html",title:"Teknik Kartlar: KAAN, Akıncı, Tayfun, SİPER",tag:"Türkiye",type:"interactive",icon:"🛡️"},
+  // Static infographics (PNG)
+  {href:"infog-png/avrupa-stratejik-ikilem-TR.webp",title:"Avrupa'nin Stratejik Ikilemi",tag:"NATO",type:"static",icon:"🇪🇺"},
+  {href:"infog-png/nato-ankara-zirvesi-2026-TR.png",title:"NATO Ankara Zirvesi 2026",tag:"NATO",type:"static",icon:"🏛️"},
+  {href:"infog-png/AI-Askerilestirme-TR.png",title:"AI Askerilestirme",tag:"YZ",type:"static",icon:"🤖"},
+  {href:"infog-png/AI-Enerji-Su-Paradoksu-TR.png",title:"AI Enerji-Su Paradoksu",tag:"YZ",type:"static",icon:"💧"},
+  {href:"infog-png/Bogaz-Analizi-2026-TR.png",title:"Bogaz Analizi 2026",tag:"Türkiye",type:"static",icon:"🌊"},
+  {href:"infog-png/Cin-AI-Casusluk-Agi-TR.png",title:"Cin AI Casusluk Agi",tag:"YZ",type:"static",icon:"🕵️"},
+  {href:"infog-png/Cin-AI-Polis-Zihin-Okuma-TR.png",title:"Cin AI Polis Zihin Okuma",tag:"YZ",type:"static",icon:"🧠"},
+  {href:"infog-png/Darbe-30-State-Merchant-TR.png",title:"Darbe 30 — Tuccar Devlet",tag:"Analog",type:"static",icon:"🏪"},
+  {href:"infog-png/Dunya-Kupasi-2026-Teknoloji-TR.png",title:"Dunya Kupasi 2026 Teknoloji",tag:"Teknoloji",type:"static",icon:"⚽"},
+  {href:"infog-png/FBI-Cin-Siber-Operasyon-TR.png",title:"FBI-Cin Siber Operasyon",tag:"Siber",type:"static",icon:"🔒"},
+  {href:"infog-png/FCAS-Iptali-İnfografik-TR.png",title:"FCAS Iptali",tag:"NATO",type:"static",icon:"✈️"},
+  {href:"infog-png/Geleceğin-Askeri-TR.png",title:"Geleceğin Askeri",tag:"Savunma",type:"static",icon:"🪖"},
+  {href:"infog-png/Harpte-Yeni-Kavramlar-TR.png",title:"Harpte Yeni Kavramlar",tag:"Savunma",type:"static",icon:"📋"},
+  {href:"infog-png/Imparatorluk-Cokusu-Stres-Testi-TR.png",title:"Imparatorluk Cokusu Stres Testi",tag:"Analog",type:"static",icon:"🏚️"},
+  {href:"infog-png/Küresel-Askeri-Sistemler-TR.png",title:"Küresel Askeri Sistemler",tag:"Savunma",type:"static",icon:"🌐"},
+  {href:"infog-png/PLA-AI-Dalkavukluk-TR.png",title:"PLA AI Dalkavukluk Sorunu",tag:"YZ",type:"static",icon:"🇨🇳"},
+  {href:"infog-png/Pentagon-1260H-Listesi-İnfografik-TR.png",title:"Pentagon 1260H Listesi",tag:"NATO",type:"static",icon:"📋"},
+  {href:"infog-png/Qianfan-Starlink-Karsilastirma-TR.png",title:"Qianfan vs Starlink",tag:"YZ",type:"static",icon:"🛰️"},
+  {href:"infog-png/Spektrum-Savaşı-TR.png",title:"Spektrum Savaşı",tag:"Savunma",type:"static",icon:"📡"},
+  {href:"infog-png/Venezuela-NTE-Kaynak-TR.png",title:"Venezuela NTE Kaynak",tag:"Enerji",type:"static",icon:"🇻🇪"},
+  {href:"infografik-savas-teknolojisi-evrimi.html",title:"Savaş Teknolojisi Evrimi",tag:"Savunma",type:"interactive",icon:"🔧"}
+];
+
+// ═══ BUILD FILTERS ═══
+const filterBar = document.getElementById('filterBar');
+const tags = {};
+INFOGRAPHICS.forEach(i => { tags[i.tag] = (tags[i.tag]||0) + 1; });
+const sortedTags = Object.entries(tags).sort((a,b) => b[1]-a[1]);
+
+let filterHTML = `<button class="ig-fbtn active" data-tag="all">Tümü <span class="count">${INFOGRAPHICS.length}</span></button>`;
+sortedTags.forEach(([tag, count]) => {
+  filterHTML += `<button class="ig-fbtn" data-tag="${tag}">${tag} <span class="count">${count}</span></button>`;
+});
+filterBar.innerHTML = filterHTML;
+
+// ═══ BUILD CARDS ═══
+const cardGrid = document.getElementById('cardGrid');
+
+function getTagClass(tag) {
+  const map = {NATO:'nato',Savunma:'savunma','Türkiye':'turkiye',YZ:'yz',Siber:'siber',Analog:'analog',Enerji:'enerji',Tarih:'tarih',Deniz:'deniz'};
+  return map[tag] || 'default';
+}
+
+function renderCards(filter) {
+  const filtered = filter === 'all' ? INFOGRAPHICS : INFOGRAPHICS.filter(i => i.tag === filter);
+  document.getElementById('visibleCount').textContent = `${filtered.length} içerik gösteriliyor`;
+  
+  cardGrid.innerHTML = filtered.map((item, idx) => {
+    const tc = getTagClass(item.tag);
+    const typeLabel = item.type === 'interactive' ? 'İnteraktif' : 'Statik';
+    if(item.type==='static') {
+      return `<a href="javascript:void(0)" class="ig-card" style="transition-delay:${idx*40}ms" onclick="openLightbox('${item.href}','${item.title.replace(/'/g,"\\'")}')"> 
+      <div class="ig-card-visual cat-${tc}">
+        <span class="ig-icon">${item.icon}</span>
+      </div>
+      <div class="ig-card-body">
+        <span class="ig-card-tag t-${tc}">${item.tag}</span>
+        <h3 class="ig-card-title">${item.title}</h3>
+        <div class="ig-card-meta"><span>${typeLabel}</span><span class="dot"></span><span>${item.tag}</span></div>
+      </div>
+    </a>`;
+    } else {
+      return `<a href="${item.href}" class="ig-card" style="transition-delay:${idx*40}ms">
+      <div class="ig-card-visual cat-${tc}">
+        <span class="ig-icon">${item.icon}</span>
+      </div>
+      <div class="ig-card-body">
+        <span class="ig-card-tag t-${tc}">${item.tag}</span>
+        <h3 class="ig-card-title">${item.title}</h3>
+        <div class="ig-card-meta"><span>${typeLabel}</span><span class="dot"></span><span>${item.tag}</span></div>
+      </div>
+    </a>`;
+    }
+  }).join('');
+  
+  // Animate cards in
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.ig-card').forEach((card, i) => {
+      setTimeout(() => card.classList.add('visible'), i * 50);
+    });
+  });
+}
+
+renderCards('all');
+
+// ═══ FILTER CLICK ═══
+filterBar.addEventListener('click', e => {
+  const btn = e.target.closest('.ig-fbtn');
+  if (!btn) return;
+  filterBar.querySelectorAll('.ig-fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(btn.dataset.tag);
+});
+
+// ═══ PARTICLES ═══
+const particlesEl = document.getElementById('particles');
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'ig-particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.top = Math.random() * 100 + '%';
+  p.style.animationDelay = Math.random() * 8 + 's';
+  p.style.animationDuration = (6 + Math.random() * 4) + 's';
+  particlesEl.appendChild(p);
+}
+
+// ═══ INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ═══
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+// Observe cards after initial render
+setTimeout(() => {
+  document.querySelectorAll('.ig-card').forEach(card => observer.observe(card));
+}, 100);
+
+// ═══ LIGHTBOX FOR STATIC IMAGES ═══
+function openLightbox(src, title) {
+  const lb = document.getElementById('imgLightbox');
+  const img = document.getElementById('lbImg');
+  const cap = document.getElementById('lbCaption');
+  img.src = src;
+  cap.textContent = title;
+  lb.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  const lb = document.getElementById('imgLightbox');
+  lb.classList.remove('active');
+  document.body.style.overflow = '';
+  document.getElementById('lbImg').src = '';
+}
+</script>
+
+<!-- Lightbox Modal -->
+<div id="imgLightbox" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;flex-direction:column;cursor:pointer;padding:20px;" onclick="closeLightbox()">
+  <button onclick="closeLightbox()" style="position:absolute;top:20px;right:30px;background:none;border:none;color:#fff;font-size:2.5rem;cursor:pointer;z-index:100000;">&times;</button>
+  <img id="lbImg" src="" style="max-width:90vw;max-height:80vh;object-fit:contain;border-radius:8px;box-shadow:0 0 40px rgba(0,200,255,0.3);" />
+  <p id="lbCaption" style="color:#fff;margin-top:16px;font-size:1.1rem;text-align:center;font-family:inherit;"></p>
+</div>
+<script>
+// Make lightbox show with flex when active
+const lbStyle = document.createElement('style');
+lbStyle.textContent = '#imgLightbox{display:none!important}#imgLightbox.active{display:flex!important}';
+document.head.appendChild(lbStyle);
+</script>
+<script src="tag-colors.js"></script>
+</body>
+</html>

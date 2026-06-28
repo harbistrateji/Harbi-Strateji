@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editör Paneli — Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+.editor-page{padding:2rem 0;min-height:80vh;}
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+.editor-header h1{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--text);}
+.editor-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;}
+.stat-card-val{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--crimson);}
+.stat-card-lbl{font-size:.65rem;color:var(--text-3);margin-top:.2rem;text-transform:uppercase;letter-spacing:.08em;}
+.editor-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.editor-tab{padding:.5rem 1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;font-family:var(--font-display);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-2);}
+.editor-tab.active{background:var(--crimson);color:#fff;border-color:var(--crimson);}
+.editor-panel{display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;}
+.editor-panel.active{display:block;}
+.editor-form{display:grid;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:.3rem;}
+.form-group label{font-family:var(--font-display);font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);}
+.form-group input,.form-group select,.form-group textarea{padding:.6rem .8rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-2);color:var(--text);font-size:.8rem;font-family:var(--font-body);outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--crimson);}
+.form-group textarea{min-height:100px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.form-row{grid-template-columns:1fr;}}
+.btn-primary{padding:.6rem 1.2rem;background:var(--crimson);color:#fff;border:none;border-radius:6px;font-family:var(--font-display);font-size:.72rem;font-weight:700;cursor:pointer;transition:background .2s;}
+.btn-primary:hover{background:var(--crim2);}
+.btn-secondary{padding:.6rem 1.2rem;background:var(--bg-3);color:var(--text);border:1px solid var(--border);border-radius:6px;font-family:var(--font-display);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--crimson);}
+.content-list{margin-top:1rem;}
+.content-item{display:flex;align-items:center;gap:1rem;padding:.8rem;border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;background:var(--bg-2);transition:all .2s;}
+.content-item:hover{border-color:var(--gold);}
+.content-item-title{flex:1;font-family:var(--font-display);font-size:.8rem;font-weight:600;color:var(--text);}
+.content-item-meta{font-family:var(--font-mono);font-size:.6rem;color:var(--text-3);}
+.content-item-actions{display:flex;gap:.3rem;}
+.content-item-actions button{padding:.3rem .5rem;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-2);font-size:.6rem;cursor:pointer;transition:all .15s;}
+.content-item-actions button:hover{border-color:var(--crimson);color:var(--crimson);}
+.json-preview{background:var(--navy);color:var(--cyan);padding:1rem;border-radius:6px;font-family:var(--font-mono);font-size:.7rem;overflow-x:auto;max-height:300px;overflow-y:auto;white-space:pre-wrap;}
+.toast{position:fixed;bottom:2rem;right:2rem;padding:.8rem 1.5rem;background:var(--crimson);color:#fff;border-radius:6px;font-size:.8rem;font-weight:600;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s;}
+.toast.show{transform:translateY(0);opacity:1;}
+.access-gate{text-align:center;padding:3rem;}
+.access-gate h2{font-family:var(--font-display);font-size:1.2rem;color:var(--text);margin-bottom:.5rem;}
+.access-gate p{color:var(--text-3);font-size:.85rem;margin-bottom:1.5rem;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="editor-page container" id="editor-root">
+  <!-- Access gate - shown if not logged in as editor -->
+  <div class="access-gate" id="access-gate" style="display:none;">
+    <h2>Editör Paneli</h2>
+    <p>Bu panele erişim için editör yetkisine sahip olmanız gerekir.</p>
+    <a href="uyelik.html" class="btn-primary" style="text-decoration:none;display:inline-block;">Giriş Yap</a>
+  </div>
+  
+  <!-- Editor content -->
+  <div id="editor-content">
+    <div class="editor-header">
+      <h1>Editör Paneli</h1>
+      <div style="display:flex;gap:.5rem;">
+        <button class="btn-secondary" onclick="exportJSON()">JSON Dışa Aktar</button>
+        <button class="btn-primary" onclick="syncSiteData()">Siteyi Güncelle</button>
+      </div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="editor-stats" id="editor-stats"></div>
+    
+    <!-- Tabs -->
+    <div class="editor-tabs">
+      <div class="editor-tab active" onclick="switchPanel('add-content')">İçerik Ekle</div>
+      <div class="editor-tab" onclick="switchPanel('manage')">İçerik Yönet</div>
+      <div class="editor-tab" onclick="switchPanel('infographic')">İnfografik Ekle</div>
+      <div class="editor-tab" onclick="switchPanel('news')">Haber Ekle</div>
+      <div class="editor-tab" onclick="switchPanel('json-view')">JSON Görüntüle</div>
+      <div class="editor-tab" onclick="switchPanel('settings')">Ayarlar</div>
+    </div>
+    
+    <!-- ADD CONTENT PANEL -->
+    <div class="editor-panel active" id="panel-add-content">
+      <h3 style="font-family:var(--font-display);font-size:.9rem;margin-bottom:1rem;color:var(--text);">Yeni İçerik Ekle</h3>
+      <form class="editor-form" onsubmit="addContent(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>İçerik Türü</label>
+            <select id="content-type">
+              <option value="simulasyon">Simülasyon</option>
+              <option value="oyun">OZA Oyun</option>
+              <option value="infografik">İnfografik</option>
+              <option value="analiz">Analiz/Makale</option>
+              <option value="haber">Haber</option>
+              <option value="video">Video (HSTV)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Kategori</label>
+            <select id="content-cat">
+              <option value="strateji">Strateji</option>
+              <option value="tarih">Tarih</option>
+              <option value="teknoloji">Teknoloji</option>
+              <option value="jeopolitik">Jeopolitik</option>
+              <option value="savunma">Savunma</option>
+              <option value="medeniyet">Medeniyet</option>
+              <option value="siber">Siber</option>
+              <option value="ekonomi">Ekonomi</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Başlık</label>
+          <input type="text" id="content-title" placeholder="İçerik başlığı" required>
+        </div>
+        <div class="form-group">
+          <label>Dosya Adı (URL)</label>
+          <input type="text" id="content-url" placeholder="ornek-icerik.html">
+        </div>
+        <div class="form-group">
+          <label>Açıklama</label>
+          <textarea id="content-desc" placeholder="Kısa açıklama..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Zorluk</label>
+            <select id="content-diff">
+              <option value="kolay">Kolay</option>
+              <option value="orta">Orta</option>
+              <option value="ileri">İleri</option>
+              <option value="uzman">Uzman</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Süre (dk)</label>
+            <input type="number" id="content-duration" value="15">
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;">
+          <button type="submit" class="btn-primary">Ekle & Güncelle</button>
+          <button type="button" class="btn-secondary" onclick="clearForm()">Temizle</button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- MANAGE PANEL -->
+    <div class="editor-panel" id="panel-manage">
+      <h3 style="font-family:var(--font-display);font-size:.9rem;margin-bottom:1rem;color:var(--text);">İçerik Yönetimi</h3>
+      <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+        <input type="text" id="manage-search" placeholder="İçerik ara..." style="flex:1;padding:.5rem .8rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-2);color:var(--text);font-size:.8rem;" oninput="filterContent()">
+        <select id="manage-filter" style="padding:.5rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-2);color:var(--text);font-size:.75rem;" onchange="filterContent()">
+          <option value="all">Tümü</option>
+          <option value="simulasyon">Simülasyon</option>
+          <option value="oyun">Oyun</option>
+          <option value="infografik">İnfografik</option>
+          <option value="analiz">Analiz</option>
+          <option value="haber">Haber</option>
+        </select>
+      </div>
+      <div class="content-list" id="content-list"></div>
+    </div>
+    
+    <!-- INFOGRAPHIC PANEL -->
+    <div class="editor-panel" id="panel-infographic">
+      <h3 style="font-family:var(--font-display);font-size:.9rem;margin-bottom:1rem;color:var(--text);">İnfografik Ekle</h3>
+      <p style="font-size:.75rem;color:var(--text-3);margin-bottom:1rem;">İnfografik eklendiğinde site-data.json otomatik güncellenir ve ilgili hub sayfalarına eklenir.</p>
+      <form class="editor-form" onsubmit="addInfographic(event)">
+        <div class="form-group">
+          <label>İnfografik Başlığı</label>
+          <input type="text" id="infog-title" placeholder="Örn: Türk Savunma Sanayii Haritası" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>HTML Dosya Adı</label>
+            <input type="text" id="infog-html" placeholder="infografik-yeni.html">
+          </div>
+          <div class="form-group">
+            <label>Görsel Dosya Adı</label>
+            <input type="text" id="infog-img" placeholder="infografik-yeni.png">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Kategori Etiketleri (virgülle)</label>
+          <input type="text" id="infog-tags" placeholder="NATO, Savunma, Teknoloji">
+        </div>
+        <div class="form-group">
+          <label>Açıklama</label>
+          <textarea id="infog-desc" placeholder="İnfografik hakkında kısa açıklama"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">İnfografik Ekle</button>
+      </form>
+    </div>
+    
+    <!-- NEWS PANEL -->
+    <div class="editor-panel" id="panel-news">
+      <h3 style="font-family:var(--font-display);font-size:.9rem;margin-bottom:1rem;color:var(--text);">Haber Ekle</h3>
+      <form class="editor-form" onsubmit="addNews(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Kategori</label>
+            <select id="news-cat">
+              <option value="Savunma">Savunma</option>
+              <option value="Siber">Siber</option>
+              <option value="Deniz">Deniz</option>
+              <option value="Hava">Hava</option>
+              <option value="Kara">Kara</option>
+              <option value="Uzay">Uzay</option>
+              <option value="Jeopolitik">Jeopolitik</option>
+              <option value="Ekonomi">Ekonomi</option>
+              <option value="Teknoloji">Teknoloji</option>
+              <option value="Enerji">Enerji</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tarih</label>
+            <input type="date" id="news-date" value="2026-06-26">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Başlık</label>
+          <input type="text" id="news-title" placeholder="Haber başlığı" required>
+        </div>
+        <div class="form-group">
+          <label>Özet</label>
+          <textarea id="news-summary" placeholder="Haber özeti..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Haber Ekle</button>
+      </form>
+    </div>
+    
+    <!-- JSON VIEW PANEL -->
+    <div class="editor-panel" id="panel-json-view">
+      <h3 style="font-family:var(--font-display);font-size:.9rem;margin-bottom:1rem;color:var(--text);">site-data.json Görüntüle</h3>
+      <p style="font-size:.72rem;color:var(--text-3);margin-bottom:.8rem;">Bu dosya tüm sayısal verileri ve içerik kayıtlarını tutar. İçerik eklendiğinde otomatik güncellenir.</p>
+      <div class="json-preview" id="json-preview"></div>
+      <div style="margin-top:.8rem;display:flex;gap:.5rem;">
+        <button class="btn-secondary" onclick="refreshJSON()">Yenile</button>
+        <button class="btn-primary" onclick="downloadJSON()">İndir</button>
+      </div>
+    </div>
+    
+    <!-- SETTINGS PANEL -->
+    <div class="editor-panel" id="panel-settings">
+      <h3 style="font-family:var(--font-display);font-size:.9rem;margin-bottom:1rem;color:var(--text);">Site Ayarları</h3>
+      <form class="editor-form">
+        <div class="form-group">
+          <label>Site Başlığı</label>
+          <input type="text" value="Harb-i Strateji — 21. Yüzyıl Savaşları ve Jeopolitik Akademisi">
+        </div>
+        <div class="form-group">
+          <label>Ticker Metinleri (her satır bir haber)</label>
+          <textarea style="min-height:150px;">NATO Ankara Zirvesi 2026 — Kritik Kararlar Bekleniyor
+Kızılelma İHA İlk Uçuş Testini Başarıyla Tamamladı
+Türkiye Hipersonik Füze Programı Hız Kazanıyor
+KAAN 5. Nesil Savaş Uçağı Seri Üretime Hazırlanıyor</textarea>
+        </div>
+        <button type="button" class="btn-primary" onclick="toast('Ayarlar kaydedildi')">Kaydet</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="hs-nav.js?v=11"></script>
+<script>
+// Check auth
+(function(){
+  const user = JSON.parse(localStorage.getItem('hs-current-user') || 'null');
+  if(!user){
+    document.getElementById('access-gate').style.display = 'block';
+    document.getElementById('editor-content').style.display = 'none';
+  }
+})();
+
+// Content storage
+let siteContent = JSON.parse(localStorage.getItem('hs-editor-content') || '[]');
+
+// Load stats
+function loadStats(){
+  fetch('site-data.json').then(r=>r.json()).then(data=>{
+    const el = document.getElementById('editor-stats');
+    const counters = data.counters;
+    el.innerHTML = Object.entries(counters).map(([k,v])=>`
+      <div class="stat-card">
+        <div class="stat-card-val" data-counter="${k}">${v}</div>
+        <div class="stat-card-lbl">${k}</div>
+      </div>
+    `).join('');
+  }).catch(()=>{});
+}
+loadStats();
+
+function switchPanel(id){
+  document.querySelectorAll('.editor-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.editor-panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+  if(id==='json-view') refreshJSON();
+  if(id==='manage') renderContentList();
+}
+
+function addContent(e){
+  e.preventDefault();
+  const item = {
+    id: Date.now(),
+    type: document.getElementById('content-type').value,
+    category: document.getElementById('content-cat').value,
+    title: document.getElementById('content-title').value,
+    url: document.getElementById('content-url').value,
+    desc: document.getElementById('content-desc').value,
+    difficulty: document.getElementById('content-diff').value,
+    duration: document.getElementById('content-duration').value,
+    date: new Date().toISOString().split('T')[0]
+  };
+  
+  siteContent.push(item);
+  localStorage.setItem('hs-editor-content', JSON.stringify(siteContent));
+  updateCounters(item.type, 1);
+  toast(`"${item.title}" eklendi ve sayaçlar güncellendi.`);
+  clearForm();
+}
+
+function addInfographic(e){
+  e.preventDefault();
+  const item = {
+    id: Date.now(),
+    type: 'infografik',
+    title: document.getElementById('infog-title').value,
+    url: document.getElementById('infog-html').value,
+    img: document.getElementById('infog-img').value,
+    tags: document.getElementById('infog-tags').value.split(',').map(t=>t.trim()),
+    desc: document.getElementById('infog-desc').value,
+    date: new Date().toISOString().split('T')[0]
+  };
+  siteContent.push(item);
+  localStorage.setItem('hs-editor-content', JSON.stringify(siteContent));
+  updateCounters('infografik', 1);
+  toast(`İnfografik "${item.title}" eklendi. site-data.json güncellendi.`);
+  e.target.reset();
+}
+
+function addNews(e){
+  e.preventDefault();
+  const item = {
+    id: Date.now(),
+    type: 'haber',
+    category: document.getElementById('news-cat').value,
+    title: document.getElementById('news-title').value,
+    summary: document.getElementById('news-summary').value,
+    date: document.getElementById('news-date').value
+  };
+  siteContent.push(item);
+  localStorage.setItem('hs-editor-content', JSON.stringify(siteContent));
+  updateCounters('haber', 1);
+  toast(`Haber "${item.title}" eklendi.`);
+  e.target.reset();
+}
+
+function updateCounters(type, delta){
+  // Update local site-data
+  fetch('site-data.json').then(r=>r.json()).then(data=>{
+    if(data.counters[type] !== undefined){
+      data.counters[type] += delta;
+    }
+    // Store updated data locally
+    localStorage.setItem('hs-site-data', JSON.stringify(data));
+    loadStats();
+  }).catch(()=>{});
+}
+
+function renderContentList(){
+  const search = document.getElementById('manage-search').value.toLowerCase();
+  const filter = document.getElementById('manage-filter').value;
+  let items = siteContent;
+  if(filter !== 'all') items = items.filter(i=>i.type === filter);
+  if(search) items = items.filter(i=>i.title.toLowerCase().includes(search));
+  
+  document.getElementById('content-list').innerHTML = items.length === 0 
+    ? '<p style="color:var(--text-3);font-size:.8rem;">Henüz içerik eklenmemiş.</p>'
+    : items.map(i=>`
+      <div class="content-item">
+        <div class="content-item-title">${i.title}</div>
+        <div class="content-item-meta">${i.type} · ${i.date}</div>
+        <div class="content-item-actions">
+          <button onclick="editItem(${i.id})">Düzenle</button>
+          <button onclick="deleteItem(${i.id})">Sil</button>
+        </div>
+      </div>
+    `).join('');
+}
+
+function filterContent(){ renderContentList(); }
+
+function deleteItem(id){
+  siteContent = siteContent.filter(i=>i.id !== id);
+  localStorage.setItem('hs-editor-content', JSON.stringify(siteContent));
+  renderContentList();
+  toast('İçerik silindi.');
+}
+
+function editItem(id){
+  const item = siteContent.find(i=>i.id === id);
+  if(!item) return;
+  switchPanel('add-content');
+  document.querySelector('[onclick="switchPanel(\'add-content\')"]').classList.add('active');
+  document.getElementById('content-type').value = item.type;
+  document.getElementById('content-cat').value = item.category || '';
+  document.getElementById('content-title').value = item.title;
+  document.getElementById('content-url').value = item.url || '';
+  document.getElementById('content-desc').value = item.desc || '';
+  deleteItem(id);
+}
+
+function clearForm(){
+  document.getElementById('content-title').value = '';
+  document.getElementById('content-url').value = '';
+  document.getElementById('content-desc').value = '';
+}
+
+function refreshJSON(){
+  const data = JSON.parse(localStorage.getItem('hs-site-data') || 'null');
+  if(data){
+    document.getElementById('json-preview').textContent = JSON.stringify(data, null, 2);
+  } else {
+    fetch('site-data.json').then(r=>r.json()).then(d=>{
+      document.getElementById('json-preview').textContent = JSON.stringify(d, null, 2);
+    });
+  }
+}
+
+function exportJSON(){
+  const data = JSON.parse(localStorage.getItem('hs-site-data') || '{}');
+  data.editorContent = siteContent;
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'site-data-export.json';
+  a.click();
+  toast('JSON dosyası indirildi.');
+}
+
+function downloadJSON(){ exportJSON(); }
+
+function syncSiteData(){
+  const data = JSON.parse(localStorage.getItem('hs-site-data') || '{}');
+  data.editorContent = siteContent;
+  data.lastUpdated = new Date().toISOString();
+  localStorage.setItem('hs-site-data', JSON.stringify(data));
+  toast('Site verileri senkronize edildi. Sayaçlar güncellendi.');
+  loadStats();
+}
+
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

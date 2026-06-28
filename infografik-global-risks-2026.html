@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Küresel Riskler 2026 — WEF Raporu · Harb-i Strateji İnfografik</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e1a;color:#e0e0e0;overflow-x:hidden}
+.back-nav{position:fixed;top:12px;left:12px;z-index:999;background:rgba(0,0,0,.7);padding:8px 16px;border-radius:20px;font-size:13px}
+.back-nav a{color:#4fc3f7;text-decoration:none}
+.hero{text-align:center;padding:80px 20px 40px;background:linear-gradient(135deg,#1a0000,#2d1b00,#0a0e1a)}
+.hero h1{font-size:2.6em;color:#ef5350;margin-bottom:10px}
+.hero p{color:#90a4ae;font-size:1em;max-width:700px;margin:0 auto}
+.risk-matrix{max-width:1000px;margin:40px auto;padding:20px}
+.risk-matrix h2{text-align:center;color:#ffb74d;font-size:1.6em;margin-bottom:20px}
+.matrix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.risk-card{background:rgba(255,255,255,.04);border-radius:12px;padding:20px;border-left:4px solid;transition:all .3s;cursor:pointer}
+.risk-card:hover{transform:translateX(5px);background:rgba(255,255,255,.08)}
+.risk-card.tech{border-color:#4fc3f7}
+.risk-card.geo{border-color:#ef5350}
+.risk-card.env{border-color:#81c784}
+.risk-card.eco{border-color:#ffb74d}
+.risk-card.soc{border-color:#ce93d8}
+.risk-card .icon{font-size:1.8em;margin-bottom:8px}
+.risk-card .title{font-size:1.1em;font-weight:600;color:#fff;margin-bottom:6px}
+.risk-card .desc{font-size:.85em;color:#b0bec5;line-height:1.5}
+.risk-card .severity{display:inline-block;padding:3px 10px;border-radius:10px;font-size:.75em;margin-top:8px}
+.risk-card .severity.critical{background:rgba(239,83,80,.2);color:#ef5350}
+.risk-card .severity.high{background:rgba(255,183,77,.2);color:#ffb74d}
+.risk-card .severity.medium{background:rgba(79,195,247,.2);color:#4fc3f7}
+.timeline{max-width:800px;margin:40px auto;padding:20px}
+.timeline h2{text-align:center;color:#ce93d8;margin-bottom:30px}
+.tl-item{display:flex;gap:20px;margin-bottom:20px;padding:15px;background:rgba(255,255,255,.03);border-radius:10px}
+.tl-year{min-width:60px;font-size:1.4em;font-weight:700;color:#4fc3f7}
+.tl-content .tl-title{font-weight:600;color:#fff;margin-bottom:4px}
+.tl-content .tl-desc{font-size:.85em;color:#90a4ae}
+.audio-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:#ef5350;border:none;cursor:pointer;font-size:1.5em;z-index:999}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="back-nav"><a href="infografik.html">← İnfografikler</a></div>
+<audio id="bgMusic" loop><source src="Zenith_Unbound.mp3" type="audio/mpeg"></audio>
+<button class="audio-btn" onclick="toggleAudio()">🔊</button>
+
+<div class="hero">
+<h1>⚠️ Küresel Riskler 2026</h1>
+<p>Dünya Ekonomik Forumu (WEF) 21. Baskı — 900+ uzman, 10 yıllık projeksiyon</p>
+</div>
+
+<div class="risk-matrix">
+<h2>🎯 En Kritik 10 Risk (2026-2036)</h2>
+<div class="matrix-grid" id="riskGrid"></div>
+</div>
+
+<div class="timeline">
+<h2>📅 Risk Zaman Çizelgesi</h2>
+<div id="timeline"></div>
+</div>
+
+<script>
+const risks = [
+{icon:"🤖",title:"YZ Dezenformasyon ve Manipülasyon",cat:"tech",severity:"critical",desc:"Deepfake, otonom propaganda botları ve algoritmik manipülasyon. Seçim güvenliği ve toplumsal güven erozyonu.",rank:1},
+{icon:"🌡️",title:"Aşırı Hava Olayları",cat:"env",severity:"critical",desc:"İklim değişikliği kaynaklı seller, kuraklık, orman yangınları. Yıllık 300+ milyar USD hasar.",rank:2},
+{icon:"⚔️",title:"Devletlerarası Silahlı Çatışma",cat:"geo",severity:"critical",desc:"Ukrayna, Gazze, Tayvan gerginliği. Nükleer eşik düşüyor. Proxy savaşlar çoğalıyor.",rank:3},
+{icon:"💻",title:"Siber Güvensizlik",cat:"tech",severity:"critical",desc:"Kritik altyapı saldırıları, fidye yazılımları, devlet destekli siber operasyonlar.",rank:4},
+{icon:"🌊",title:"Biyoçeşitlilik Kaybı",cat:"env",severity:"high",desc:"Ekosistem çöküşü, gıda zinciri kırılganlığı, okyanus asitlenmesi.",rank:5},
+{icon:"💸",title:"Ekonomik Durgunluk",cat:"eco",severity:"high",desc:"Küresel borç krizi, enflasyon sarmalı, tedarik zinciri kırılganlığı.",rank:6},
+{icon:"🧬",title:"Biyolojik Tehditler",cat:"soc",severity:"high",desc:"Pandemi riski, biyoterörizm, antibiyotik direnci. Gain-of-function araştırmaları.",rank:7},
+{icon:"⚡",title:"Enerji Arz Güvenliği",cat:"eco",severity:"high",desc:"Fosil yakıt bağımlılığı, yenilenebilir geçiş zorlukları, enerji silahlaştırması.",rank:8},
+{icon:"🏚️",title:"Zorunlu Göç Dalgaları",cat:"soc",severity:"medium",desc:"İklim göçü, çatışma mültecileri. 2030'a kadar 1.2 milyar iklim göçmeni riski.",rank:9},
+{icon:"🔗",title:"Kritik Mineral Tedarik Krizi",cat:"eco",severity:"medium",desc:"Çin hakimiyeti, nadir toprak bağımlılığı, teknoloji üretim darboğazı.",rank:10}
+];
+
+const timeline = [
+{year:"2024",title:"Seçim Yılı Krizi",desc:"68 ülkede seçim. YZ destekli dezenformasyon zirve yaptı."},
+{year:"2025",title:"Siber Altyapı Saldırıları",desc:"ABD ve AB'de kritik altyapı saldırıları %340 arttı."},
+{year:"2026",title:"İklim Tipping Point",desc:"1.5°C eşiği aşıldı. Arktik buz örtüsü minimum seviyede."},
+{year:"2028",title:"YZ Otonom Silah Krizi",desc:"İlk tam otonom silah kazası. Uluslararası düzenleme baskısı."},
+{year:"2030",title:"Su Savaşları",desc:"Nil, Fırat, İndus havzalarında su paylaşım krizleri derinleşiyor."},
+{year:"2035",title:"Uzay Militarizasyonu",desc:"Yörünge silahları ve anti-uydu sistemleri yaygınlaşıyor."}
+];
+
+document.getElementById('riskGrid').innerHTML = risks.map(r => `
+<div class="risk-card ${r.cat}">
+<div class="icon">${r.icon}</div>
+<div class="title">#${r.rank} ${r.title}</div>
+<div class="desc">${r.desc}</div>
+<span class="severity ${r.severity}">${r.severity==='critical'?'KRİTİK':r.severity==='high'?'YÜKSEK':'ORTA'}</span>
+</div>`).join('');
+
+document.getElementById('timeline').innerHTML = timeline.map(t => `
+<div class="tl-item">
+<div class="tl-year">${t.year}</div>
+<div class="tl-content"><div class="tl-title">${t.title}</div><div class="tl-desc">${t.desc}</div></div>
+</div>`).join('');
+
+let audioPlaying=false;
+function toggleAudio(){const a=document.getElementById('bgMusic');if(audioPlaying){a.pause();document.querySelector('.audio-btn').textContent='🔇'}else{a.play();document.querySelector('.audio-btn').textContent='🔊'}audioPlaying=!audioPlaying}
+</script>
+</body>
+</html>

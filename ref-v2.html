@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARBİ STRATEJİ 2.0 — Jeopolitik Kontrol Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   HARBİ STRATEJİ 2.0 — CYBER-DIPLOMACY CONTROL PANEL
+══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:     #0B0F1A;
+  --panel:  #141A2A;
+  --panel2: #1A2235;
+  --panel3: #1F2840;
+  --border: rgba(0,224,255,.12);
+  --border2:rgba(0,224,255,.24);
+  --cyan:   #00E0FF;
+  --cyan2:  #7EF0FF;
+  --red:    #FF3B3B;
+  --red2:   #FF6B6B;
+  --green:  #00FF88;
+  --gold:   #FFB800;
+  --purple: #A855F7;
+  --text:   #E8EDF5;
+  --text2:  #7A8BA0;
+  --text3:  #3D4F65;
+  --mono:   'IBM Plex Mono',monospace;
+  --display:'Chakra Petch',sans-serif;
+  --body:   'IBM Plex Sans',sans-serif;
+  --glow:   0 0 20px rgba(0,224,255,.25);
+  --glow2:  0 0 40px rgba(0,224,255,.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:2px;opacity:.5;}
+
+/* ─── SCAN LINE OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,224,255,.012) 2px,rgba(0,224,255,.012) 4px);
+}
+/* Grid overlay */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;
+  background-image:linear-gradient(rgba(0,224,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,224,255,.03) 1px,transparent 1px);
+  background-size:80px 80px;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;height:52px;
+  background:rgba(11,15,26,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+  animation:slideDown .6s ease;
+}
+@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.logo-hex{width:28px;height:28px;position:relative;display:flex;align-items:center;justify-content:center;}
+.logo-hex svg{width:100%;height:100%;}
+.logo-text{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:3px;color:var(--text);}
+.logo-ver{font-family:var(--mono);font-size:9px;color:var(--cyan);letter-spacing:2px;background:rgba(0,224,255,.08);border:1px solid var(--border2);padding:2px 6px;border-radius:3px;}
+
+.nav-center{display:flex;align-items:center;gap:2px;}
+.nav-lnk{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);padding:6px 12px;border-radius:3px;transition:all .2s;cursor:pointer;}
+.nav-lnk:hover,.nav-lnk.act{color:var(--cyan);background:rgba(0,224,255,.06);border:1px solid transparent;}
+.nav-lnk.act{border-color:var(--border2);}
+
+.nav-right{display:flex;align-items:center;gap:8px;}
+.risk-pill{display:flex;align-items:center;gap:6px;background:rgba(255,59,59,.08);border:1px solid rgba(255,59,59,.25);border-radius:4px;padding:5px 11px;font-family:var(--mono);font-size:10px;color:var(--red);}
+.risk-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.btn-primary{background:var(--cyan);color:var(--bg);border:none;border-radius:4px;padding:7px 16px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:all .2s;}
+.btn-primary:hover{background:var(--cyan2);box-shadow:0 0 20px rgba(0,224,255,.4);}
+
+/* ─── MAIN ─── */
+main{padding-top:52px;position:relative;z-index:1;}
+.container{max-width:1440px;margin:0 auto;padding:0 18px;}
+
+/* ══════════════════════════════════
+   HERO — GLOBAL RISK PANEL
+══════════════════════════════════ */
+.hero{position:relative;min-height:calc(100vh - 52px);display:flex;flex-direction:column;overflow:hidden;}
+
+/* Map background */
+.map-container{position:absolute;inset:0;z-index:0;}
+.map-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 55%,rgba(0,224,255,.04) 0%,transparent 70%);}
+.world-map{width:100%;height:100%;object-fit:cover;opacity:.18;filter:saturate(0) brightness(.8);}
+
+/* Map SVG overlay with blocs */
+.map-svg-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.map-svg-wrap svg{width:100%;height:100%;max-height:100%;}
+
+/* Hero content */
+.hero-top{position:relative;z-index:2;padding:28px 20px 0;display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;}
+@media(max-width:900px){.hero-top{grid-template-columns:1fr;}}
+
+/* Risk panel overlay */
+.risk-panel{background:rgba(20,26,42,.88);backdrop-filter:blur(20px);border:1px solid var(--border2);border-radius:12px;padding:20px;position:relative;overflow:hidden;}
+.risk-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.risk-panel-title{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.risk-panel-title::before{content:'';width:20px;height:1px;background:var(--cyan);}
+
+.global-risk-score{text-align:center;margin-bottom:20px;padding:16px;background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.15);border-radius:8px;}
+.grs-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;}
+.grs-value{font-family:var(--display);font-size:52px;font-weight:700;color:var(--red);line-height:1;text-shadow:0 0 40px rgba(255,59,59,.4);}
+.grs-max{font-family:var(--mono);font-size:14px;color:var(--text3);}
+.grs-bar-wrap{margin-top:8px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;}
+.grs-bar{height:100%;width:68%;background:linear-gradient(90deg,var(--green),var(--gold),var(--red));border-radius:2px;position:relative;}
+.grs-bar::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);}
+
+.risk-metrics{display:flex;flex-direction:column;gap:10px;}
+.rm-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:6px;}
+.rm-label{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;}
+.rm-value{font-family:var(--display);font-size:12px;font-weight:600;}
+.rm-value.hot{color:var(--red);}
+.rm-value.rising{color:var(--gold);}
+.rm-value.stable{color:var(--green);}
+.rm-value.cyan{color:var(--cyan);}
+
+/* Map info overlay at bottom */
+.hero-bottom{position:relative;z-index:2;padding:20px;display:flex;align-items:flex-end;justify-content:space-between;margin-top:auto;}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;}
+.ml-item{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;}
+.ml-dot{width:8px;height:8px;border-radius:2px;}
+.ml-dot.nato{background:#4a9eff;box-shadow:0 0 8px rgba(74,158,255,.5);}
+.ml-dot.brics{background:#ff7a2e;box-shadow:0 0 8px rgba(255,122,46,.5);}
+.ml-dot.conflict{background:var(--red);animation:blink 1.5s infinite;border-radius:50%;}
+.ml-dot.neutral{background:var(--text3);}
+
+.scroll-hint{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;display:flex;align-items:center;gap:6px;animation:bounce 2s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+/* Conflict pulse zones on map */
+.conflict-zone{position:absolute;border-radius:50%;pointer-events:none;}
+.conflict-zone::before,.conflict-zone::after{content:'';position:absolute;inset:0;border-radius:50%;animation:conflictPulse 2s ease-out infinite;}
+.conflict-zone::after{animation-delay:1s;}
+@keyframes conflictPulse{0%{transform:scale(1);opacity:.8;background:rgba(255,59,59,.4);}100%{transform:scale(3);opacity:0;background:rgba(255,59,59,0);}}
+.cz-inner{width:10px;height:10px;border-radius:50%;background:var(--red);position:absolute;inset:0;margin:auto;box-shadow:0 0 12px var(--red);}
+
+/* Bloc overlays */
+.bloc-tag{position:absolute;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:2px;padding:3px 8px;border-radius:3px;backdrop-filter:blur(8px);}
+.bloc-tag.nato{background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.4);color:#4a9eff;}
+.bloc-tag.brics{background:rgba(255,122,46,.15);border:1px solid rgba(255,122,46,.4);color:#ff7a2e;}
+
+/* ══════════════════════════════════
+   STORY CARDS — 30 SANİYE GÜNDEM
+══════════════════════════════════ */
+.stories-section{padding:32px 0;border-top:1px solid var(--border);}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.sec-title{display:flex;align-items:center;gap:10px;}
+.sec-title-text{font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--text);}
+.sec-title::before{content:'';width:3px;height:20px;background:var(--cyan);border-radius:1px;}
+.sec-badge{font-family:var(--mono);font-size:8px;letter-spacing:2px;background:rgba(0,224,255,.08);border:1px solid var(--border2);color:var(--cyan);padding:3px 8px;border-radius:3px;}
+
+.story-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
+.story-scroll::-webkit-scrollbar{display:none;}
+
+.story-card{flex-shrink:0;width:280px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;scroll-snap-align:start;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.story-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan);opacity:0;transition:opacity .3s;}
+.story-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--glow2);}
+.story-card:hover::before{opacity:1;}
+.story-card.crisis::before{background:var(--red);opacity:1;}
+.story-card.crisis{border-color:rgba(255,59,59,.2);}
+.story-card.positive::before{background:var(--green);opacity:1;}
+
+.sc-cat{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.sc-cat-dot{width:5px;height:5px;border-radius:50%;}
+.sc-title{font-family:var(--display);font-size:14px;font-weight:600;line-height:1.4;color:var(--text);margin-bottom:14px;}
+
+.sc-bullets{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.sc-bullet{font-size:11px;color:var(--text2);display:flex;align-items:flex-start;gap:6px;line-height:1.45;}
+.sc-bullet::before{content:'›';color:var(--cyan);flex-shrink:0;}
+
+.sc-infographic{height:36px;background:rgba(0,224,255,.04);border:1px solid var(--border);border-radius:6px;display:flex;align-items:flex-end;gap:3px;padding:6px 8px;margin-bottom:12px;overflow:hidden;}
+.sc-bar{border-radius:2px;transition:height .6s ease;}
+
+.sc-footer{display:flex;align-items:center;justify-content:space-between;}
+.sc-risk{font-family:var(--mono);font-size:9px;letter-spacing:1px;}
+.sc-risk-label{color:var(--text3);}
+.sc-risk-val{font-weight:700;}
+.sc-risk-val.high{color:var(--red);}
+.sc-risk-val.mid{color:var(--gold);}
+.sc-risk-val.low{color:var(--green);}
+.sc-time{font-family:var(--mono);font-size:8px;color:var(--text3);}
+.sc-impact{font-family:var(--mono);font-size:8px;letter-spacing:1px;padding:3px 7px;border-radius:3px;font-weight:600;}
+.sc-impact.orta{background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.25);color:var(--gold);}
+.sc-impact.yuksek{background:rgba(255,59,59,.1);border:1px solid rgba(255,59,59,.25);color:var(--red);}
+.sc-impact.dusuk{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);color:var(--green);}
+
+/* ══════════════════════════════════
+   DERİN ANALİZ — CHUNKING
+══════════════════════════════════ */
+.analysis-section{padding:32px 0;border-top:1px solid var(--border);}
+.analysis-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+@media(max-width:960px){.analysis-grid{grid-template-columns:1fr;}}
+
+/* Article card */
+.article-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.article-hero-img{height:220px;background:linear-gradient(135deg,#0a1520,#1a2840);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.article-hero-img .art-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.35;}
+.art-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,26,42,1) 0%,transparent 60%);}
+.art-meta{position:absolute;bottom:16px;left:16px;right:16px;}
+.art-cat{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;}
+.art-title-big{font-family:var(--display);font-size:18px;font-weight:700;line-height:1.35;color:var(--text);}
+
+.article-body{padding:20px;}
+
+/* TL;DR Panel */
+.tldr{background:rgba(0,224,255,.04);border:1px solid var(--border2);border-radius:10px;padding:16px;margin-bottom:16px;}
+.tldr-head{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.tldr-head .tag{background:var(--cyan);color:var(--bg);padding:1px 6px;border-radius:2px;font-size:8px;}
+.tldr-rows{display:flex;flex-direction:column;gap:8px;}
+.tldr-row{display:flex;gap:10px;font-size:12px;line-height:1.5;}
+.tldr-icon{font-size:11px;flex-shrink:0;margin-top:1px;}
+.tldr-lbl{font-family:var(--mono);font-size:9px;color:var(--text3);min-width:80px;flex-shrink:0;margin-top:2px;}
+.tldr-val{color:var(--text);}
+.tldr-val strong{color:var(--cyan);}
+.tldr-val.win{color:var(--green);}
+.tldr-val.lose{color:var(--red);}
+
+/* Chunking Tabs */
+.chunk-tabs{display:flex;gap:2px;margin-bottom:14px;background:rgba(0,0,0,.3);border-radius:8px;padding:3px;}
+.chunk-tab{flex:1;font-family:var(--mono);font-size:9px;letter-spacing:1px;text-align:center;padding:7px 4px;border-radius:6px;cursor:pointer;transition:all .2s;color:var(--text3);border:1px solid transparent;}
+.chunk-tab.active{background:var(--panel2);color:var(--text);border-color:var(--border2);}
+.chunk-tab:hover:not(.active){color:var(--text2);}
+.chunk-tab .ct-badge{display:block;font-size:7px;color:var(--text3);margin-top:2px;}
+.chunk-tab.active .ct-badge{color:var(--cyan);}
+
+.chunk-panel{display:none;}
+.chunk-panel.active{display:block;}
+
+/* Seviye 1 */
+.level1-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.data-card{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.dc-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:8px;}
+.dc-chart{height:60px;display:flex;align-items:flex-end;gap:4px;}
+.dc-bar{flex:1;border-radius:2px 2px 0 0;transition:all .3s;position:relative;cursor:help;}
+.dc-bar:hover{filter:brightness(1.3);}
+.dc-bar-label{font-family:var(--mono);font-size:7px;color:var(--text3);text-align:center;margin-top:3px;}
+
+/* Seviye 2 */
+.level2-items{display:flex;flex-direction:column;gap:10px;}
+.l2-item{border-left:2px solid var(--border);padding:0 0 0 12px;cursor:pointer;transition:all .2s;}
+.l2-item:hover{border-left-color:var(--cyan);}
+.l2-num{font-family:var(--mono);font-size:8px;color:var(--cyan);letter-spacing:1px;margin-bottom:4px;}
+.l2-title{font-family:var(--display);font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.l2-text{font-size:12px;color:var(--text2);line-height:1.6;}
+.l2-item.open .l2-text{color:var(--text);}
+
+/* Right analysis panel */
+.analysis-aside{display:flex;flex-direction:column;gap:14px;}
+.aside-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.aside-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.aside-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);}
+.aside-icon{font-size:13px;}
+.aside-body{padding:14px;}
+
+/* Power comparison */
+.power-compare{display:flex;flex-direction:column;gap:8px;}
+.pc-row{display:flex;flex-direction:column;gap:3px;}
+.pc-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--text2);}
+.pc-bar-bg{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.pc-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+
+/* ══════════════════════════════════
+   SENARYO ODASI — GAMIFICATION
+══════════════════════════════════ */
+.scenario-section{padding:32px 0;border-top:1px solid var(--border);}
+.scenario-hero{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:relative;}
+.scenario-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(168,85,247,.08),transparent 70%);}
+.scenario-top{padding:24px 28px;border-bottom:1px solid var(--border);position:relative;z-index:1;}
+.scenario-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);border-radius:4px;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--purple);padding:4px 10px;margin-bottom:14px;}
+.scenario-question{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.35;color:var(--text);max-width:700px;}
+.scenario-context{font-size:13px;color:var(--text2);margin-top:8px;max-width:600px;line-height:1.6;}
+
+.scenario-body{padding:24px 28px;display:grid;grid-template-columns:1fr 300px;gap:24px;position:relative;z-index:1;}
+@media(max-width:860px){.scenario-body{grid-template-columns:1fr;}}
+
+.scenario-options{display:flex;flex-direction:column;gap:10px;}
+.scenario-opt{padding:14px 18px;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .3s;display:flex;gap:14px;align-items:flex-start;}
+.scenario-opt:hover{background:rgba(0,224,255,.04);border-color:var(--border2);}
+.scenario-opt.selected{background:rgba(0,224,255,.08);border-color:rgba(0,224,255,.4);box-shadow:0 0 20px rgba(0,224,255,.1);}
+.scenario-opt.selected .so-letter{background:var(--cyan);color:var(--bg);}
+.so-letter{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-family:var(--mono);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;}
+.so-content{flex:1;}
+.so-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.4;}
+.so-desc{font-size:11px;color:var(--text2);line-height:1.5;}
+
+.vote-bar-wrap{margin-top:8px;}
+.vote-bar-track{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:4px;overflow:hidden;}
+.vote-bar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.vote-pct{font-family:var(--mono);font-size:8px;color:var(--text3);}
+
+.scenario-side{}
+.score-preview{background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:16px;margin-bottom:14px;text-align:center;}
+.sp-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:8px;}
+.sp-score{font-family:var(--display);font-size:42px;font-weight:700;color:var(--purple);line-height:1;}
+.sp-score-label{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px;}
+
+.expert-reveal{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;padding:14px;display:none;}
+.expert-reveal.visible{display:block;}
+.er-header{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.er-header::before{content:'';width:14px;height:1px;background:var(--green);}
+.er-text{font-size:12px;color:var(--text2);line-height:1.7;}
+.er-expert{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:8px;}
+
+.btn-vote{width:100%;padding:11px;background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.1));border:1px solid rgba(168,85,247,.35);border-radius:8px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--purple);cursor:pointer;transition:all .3s;text-transform:uppercase;margin-top:10px;}
+.btn-vote:hover{background:linear-gradient(135deg,rgba(168,85,247,.3),rgba(168,85,247,.15));box-shadow:0 0 20px rgba(168,85,247,.2);}
+
+/* ══════════════════════════════════
+   ROZET SİSTEMİ
+══════════════════════════════════ */
+.badges-section{padding:32px 0;border-top:1px solid var(--border);}
+.badges-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+@media(max-width:800px){.badges-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:480px){.badges-grid{grid-template-columns:repeat(2,1fr);}}
+
+.badge-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .3s;position:relative;}
+.badge-card.unlocked{border-color:var(--border2);}
+.badge-card.locked{opacity:.45;filter:grayscale(.8);}
+.badge-card.current{border-color:var(--cyan);box-shadow:var(--glow);}
+.badge-card.current::after{content:'MEVCUT SEVİYE';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--cyan);color:var(--bg);font-family:var(--mono);font-size:7px;font-weight:700;letter-spacing:1px;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+
+.badge-icon-wrap{width:56px;height:56px;margin:0 auto 10px;position:relative;}
+.badge-hex{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.badge-icon{font-size:22px;position:relative;z-index:1;}
+.badge-name{font-family:var(--display);font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:.5px;}
+.badge-rank{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:8px;}
+.badge-req{font-size:10px;color:var(--text2);line-height:1.45;}
+
+/* ══════════════════════════════════
+   ZAMAN TÜNELİ
+══════════════════════════════════ */
+.timeline-section{padding:32px 0;border-top:1px solid var(--border);}
+.timeline-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.timeline-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.timeline-display{position:relative;height:320px;background:#08101e;overflow:hidden;}
+.timeline-map-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.3;}
+.timeline-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;}
+
+/* Timeline events */
+.tl-event{position:absolute;transform:translate(-50%,-50%);z-index:3;cursor:pointer;}
+.tl-event-dot{width:12px;height:12px;border-radius:50%;border:2px solid;transition:all .3s;}
+.tl-event:hover .tl-event-dot{transform:scale(1.5);}
+.tl-event-label{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);white-space:nowrap;font-family:var(--mono);font-size:8px;letter-spacing:1px;padding:3px 7px;border-radius:3px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.tl-event:hover .tl-event-label{opacity:1;}
+
+.timeline-controls{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;}
+.year-slider{flex:1;-webkit-appearance:none;height:3px;background:linear-gradient(90deg,var(--cyan) var(--val,50%),rgba(255,255,255,.1) var(--val,50%));border-radius:2px;outline:none;cursor:pointer;}
+.year-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--cyan);border:2px solid var(--bg);cursor:pointer;box-shadow:0 0 10px rgba(0,224,255,.5);}
+.year-display{font-family:var(--display);font-size:22px;font-weight:700;color:var(--cyan);min-width:55px;text-align:center;}
+.tl-event-count{font-family:var(--mono);font-size:9px;color:var(--text3);}
+
+/* ══════════════════════════════════
+   WAR ROOM — TOPLULUK
+══════════════════════════════════ */
+.warroom-section{padding:32px 0;border-top:1px solid var(--border);}
+.warroom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:900px){.warroom-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:580px){.warroom-grid{grid-template-columns:1fr;}}
+
+.wr-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s;cursor:pointer;}
+.wr-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.wr-card-top{padding:14px 16px;border-bottom:1px solid var(--border);}
+.wr-card-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:8px;letter-spacing:1.5px;padding:3px 8px;border-radius:3px;margin-bottom:8px;}
+.wr-card-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;}
+.wr-card-body{padding:12px 16px;}
+.wr-stats{display:flex;gap:14px;}
+.wr-stat{font-family:var(--mono);font-size:9px;color:var(--text3);}
+.wr-stat span{color:var(--text2);display:block;font-size:11px;font-weight:600;}
+.wr-live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;display:inline-block;margin-right:4px;}
+
+/* ══════════════════════════════════
+   AI ASISTAN — CHATBOT
+══════════════════════════════════ */
+#ai-chat{
+  position:fixed;bottom:20px;right:20px;z-index:9000;
+  width:320px;
+  background:var(--panel);border:1px solid var(--border2);border-radius:16px;
+  box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 1px rgba(0,224,255,.06),var(--glow);
+  overflow:hidden;display:none;
+  animation:chatSlideIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes chatSlideIn{from{transform:scale(.8) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+#ai-chat.visible{display:flex;flex-direction:column;}
+
+.chat-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(0,224,255,.04);}
+.chat-ai-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,rgba(0,224,255,.2),rgba(0,224,255,.05));border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.chat-ai-name{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--cyan);}
+.chat-ai-status{font-family:var(--mono);font-size:8px;color:var(--green);display:flex;align-items:center;gap:4px;}
+.chat-close{margin-left:auto;width:24px;height:24px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;}
+.chat-close:hover{background:rgba(255,59,59,.1);border-color:rgba(255,59,59,.3);color:var(--red);}
+
+.chat-messages{height:240px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+.chat-messages::-webkit-scrollbar{width:2px;}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border2);}
+
+.msg{max-width:85%;}
+.msg.bot{align-self:flex-start;}
+.msg.user{align-self:flex-end;}
+.msg-bubble{padding:9px 12px;border-radius:10px;font-size:12px;line-height:1.6;}
+.msg.bot .msg-bubble{background:rgba(0,224,255,.06);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:3px;}
+.msg.user .msg-bubble{background:rgba(0,224,255,.14);border:1px solid rgba(0,224,255,.25);color:var(--text);border-bottom-right-radius:3px;}
+.msg-link{font-family:var(--mono);font-size:9px;color:var(--cyan);margin-top:4px;display:flex;align-items:center;gap:4px;cursor:pointer;}
+.msg-link:hover{color:var(--cyan2);}
+
+.chat-suggestions{padding:8px 12px;display:flex;flex-wrap:wrap;gap:5px;border-top:1px solid var(--border);}
+.sug-pill{font-family:var(--mono);font-size:9px;letter-spacing:.5px;background:rgba(0,224,255,.05);border:1px solid var(--border);border-radius:12px;padding:4px 9px;color:var(--text2);cursor:pointer;transition:all .2s;}
+.sug-pill:hover{background:rgba(0,224,255,.1);border-color:var(--border2);color:var(--cyan);}
+
+.chat-input-wrap{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--border);}
+.chat-input{flex:1;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:var(--body);outline:none;transition:border-color .2s;}
+.chat-input:focus{border-color:var(--border2);}
+.chat-input::placeholder{color:var(--text3);}
+.chat-send{width:32px;height:32px;border-radius:8px;background:var(--cyan);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--bg);font-size:13px;transition:all .2s;flex-shrink:0;}
+.chat-send:hover{background:var(--cyan2);box-shadow:0 0 14px rgba(0,224,255,.4);}
+
+/* Chat trigger button */
+#chat-btn{
+  position:fixed;bottom:20px;right:20px;z-index:8999;
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(0,224,255,.2),rgba(0,224,255,.08));
+  border:1px solid var(--border2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:var(--glow);transition:all .3s;
+  animation:floatIn 1s ease 1.5s both;
+}
+#chat-btn:hover{transform:scale(1.08);box-shadow:0 0 30px rgba(0,224,255,.4);}
+@keyframes floatIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ══════════════════════════════════
+   FOOTER
+══════════════════════════════════ */
+footer{border-top:1px solid var(--border);padding:28px 0;}
+.footer-inner{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:24px;}
+@media(max-width:768px){.footer-inner{grid-template-columns:1fr 1fr;}}
+.footer-logo{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:3px;color:var(--text);margin-bottom:6px;}
+.footer-tagline{font-size:12px;color:var(--text3);line-height:1.7;max-width:220px;}
+.footer-col-title{font-family:var(--mono);font-size:8px;letter-spacing:2.5px;color:var(--text3);text-transform:uppercase;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.footer-links{display:flex;flex-direction:column;gap:7px;}
+.footer-links a{font-size:12px;color:var(--text3);transition:color .2s;display:flex;align-items:center;gap:5px;}
+.footer-links a::before{content:'›';color:var(--text3);}
+.footer-links a:hover{color:var(--cyan);}
+.footer-links a:hover::before{color:var(--cyan);}
+.footer-bottom{border-top:1px solid var(--border);margin-top:24px;padding-top:16px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:9px;color:var(--text3);}
+.footer-soc{display:flex;gap:6px;}
+.fsoc{width:28px;height:28px;border-radius:7px;background:var(--panel2);border:1px solid var(--border);color:var(--text3);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.fsoc:hover{background:rgba(0,224,255,.1);border-color:var(--border2);color:var(--cyan);}
+
+/* ─── SCROLL REVEAL ─── */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.rv.rvd{opacity:1;transform:none;}
+.d1{transition-delay:.05s;}.d2{transition-delay:.1s;}.d3{transition-delay:.15s;}.d4{transition-delay:.2s;}.d5{transition-delay:.25s;}
+
+/* ─── MOBILE BOTTOM NAV ─── */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9010;background:rgba(11,15,26,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 16px 14px;}
+.mobile-nav-inner{display:flex;justify-content:space-around;}
+.mn-btn{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--mono);font-size:7px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);cursor:pointer;transition:color .2s;}
+.mn-btn.act{color:var(--cyan);}
+.mn-ico{font-size:16px;}
+@media(max-width:640px){.mobile-nav{display:block;}}
+@media(max-width:640px){main{padding-bottom:70px;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-hex">
+      <svg viewBox="0 0 40 46" fill="none"><path d="M20 1L39 11.5V34.5L20 45L1 34.5V11.5L20 1Z" fill="rgba(0,224,255,.08)" stroke="#00E0FF" stroke-width="1"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" font-weight="700" fill="#00E0FF">HS</text></svg>
+    </div>
+    <div>
+      <div class="logo-text">HARBİ STRATEJİ</div>
+    </div>
+    <div class="logo-ver">2.0</div>
+  </div>
+  <div class="nav-center">
+    <div class="nav-lnk act">Risk Paneli</div>
+    <div class="nav-lnk">Gündem</div>
+    <div class="nav-lnk">Analiz</div>
+    <div class="nav-lnk" onclick="document.querySelector('.scenario-section').scrollIntoView({behavior:'smooth'})">Senaryo Odası</div>
+    <div class="nav-lnk">War Room</div>
+    <div class="nav-lnk">Harita</div>
+  </div>
+  <div class="nav-right">
+    <div class="risk-pill"><div class="risk-dot"></div>RİSK: 6.8/10</div>
+    <button class="btn-primary" onclick="toggleChat()">⚡ Asistan</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══ HERO — GLOBAL RİSK PANELİ ═══ -->
+<section class="hero">
+  <div class="map-container">
+    <div class="map-bg"></div>
+    <!-- Stylized World Map SVG -->
+    <div class="map-svg-wrap">
+      <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" style="opacity:.25">
+        <!-- NATO Bloc - North America -->
+        <path d="M50,120 L180,90 L250,110 L260,180 L200,220 L140,240 L80,200 Z" fill="rgba(74,158,255,.3)" stroke="rgba(74,158,255,.6)" stroke-width="1"/>
+        <!-- NATO - Europe -->
+        <path d="M420,80 L520,70 L560,120 L550,180 L490,200 L430,190 L410,150 Z" fill="rgba(74,158,255,.25)" stroke="rgba(74,158,255,.5)" stroke-width="1"/>
+        <!-- BRICS - Russia -->
+        <path d="M520,60 L750,50 L800,100 L770,160 L650,170 L560,150 L530,120 Z" fill="rgba(255,122,46,.2)" stroke="rgba(255,122,46,.4)" stroke-width="1"/>
+        <!-- BRICS - China -->
+        <path d="M700,150 L820,140 L850,210 L800,260 L720,270 L680,220 Z" fill="rgba(255,122,46,.2)" stroke="rgba(255,122,46,.4)" stroke-width="1"/>
+        <!-- Middle East -->
+        <path d="M560,190 L640,180 L650,240 L600,260 L560,240 Z" fill="rgba(255,59,59,.15)" stroke="rgba(255,59,59,.3)" stroke-width="1"/>
+        <!-- Africa -->
+        <path d="M450,220 L560,210 L580,340 L520,400 L450,390 L420,300 Z" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+        <!-- South America -->
+        <path d="M200,260 L300,240 L320,380 L260,420 L200,400 L180,330 Z" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+        <!-- Grid lines -->
+        <line x1="0" y1="250" x2="1000" y2="250" stroke="rgba(0,224,255,.06)" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="500" y1="0" x2="500" y2="500" stroke="rgba(0,224,255,.06)" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="0" y1="125" x2="1000" y2="125" stroke="rgba(0,224,255,.03)" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="0" y1="375" x2="1000" y2="375" stroke="rgba(0,224,255,.03)" stroke-width="1" stroke-dasharray="4"/>
+        <!-- Longitude lines -->
+        <line x1="250" y1="0" x2="250" y2="500" stroke="rgba(0,224,255,.03)" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="750" y1="0" x2="750" y2="500" stroke="rgba(0,224,255,.03)" stroke-width="1" stroke-dasharray="4"/>
+      </svg>
+    </div>
+
+    <!-- Conflict pulse zones -->
+    <div class="conflict-zone" style="width:30px;height:30px;top:40%;left:56%">
+      <div class="cz-inner"></div>
+    </div>
+    <div class="conflict-zone" style="width:24px;height:24px;top:32%;left:44%;animation-delay:.7s">
+      <div class="cz-inner"></div>
+    </div>
+    <div class="conflict-zone" style="width:20px;height:20px;top:45%;left:72%;animation-delay:1.3s">
+      <div class="cz-inner"></div>
+    </div>
+
+    <!-- Bloc tags -->
+    <div class="bloc-tag nato" style="top:25%;left:14%">NATO BÖLGE</div>
+    <div class="bloc-tag nato" style="top:18%;left:46%">NATO AVRUPA</div>
+    <div class="bloc-tag brics" style="top:16%;left:64%">BRICS+ RUSYA</div>
+    <div class="bloc-tag brics" style="top:38%;left:75%">ÇİN BLOĞU</div>
+  </div>
+
+  <!-- Hero top: map title + risk panel -->
+  <div class="hero-top container">
+    <div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><div class="risk-dot"></div>CANLI — KÜRESELRİSK İZLEME SİSTEMİ</div>
+      <h1 style="font-family:var(--display);font-size:clamp(28px,4vw,52px);font-weight:700;line-height:1.2;color:var(--text);max-width:600px;letter-spacing:.5px;">21. Yüzyıl<br><span style="color:var(--cyan);">Jeopolitik</span><br>Kontrol Paneli</h1>
+      <p style="font-size:14px;color:var(--text2);margin-top:14px;max-width:480px;line-height:1.7;">Stratejik gelişmeleri gerçek zamanlı takip edin. Senaryo odalarına katılın. Uzman analizlerini derinlemesine okuyun.</p>
+      <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="document.querySelector('.scenario-section').scrollIntoView({behavior:'smooth'})">⚡ Senaryo'ya Katıl</button>
+        <button style="background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--text2);border-radius:4px;padding:7px 16px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text2)'">🗺 Haritayı Keşfet</button>
+      </div>
+    </div>
+
+    <!-- Risk Panel -->
+    <div class="risk-panel">
+      <div class="risk-panel-title">GLOBAL RİSK PANELİ</div>
+      <div class="global-risk-score">
+        <div class="grs-label">KÜRESEL RİSK SKORU</div>
+        <div style="display:flex;align-items:baseline;justify-content:center;gap:3px;">
+          <div class="grs-value">6.8</div><div class="grs-max"> / 10</div>
+        </div>
+        <div class="grs-bar-wrap"><div class="grs-bar"></div></div>
+      </div>
+      <div class="risk-metrics">
+        <div class="rm-row">
+          <div class="rm-label">En Sıcak Bölge</div>
+          <div class="rm-value hot">🔴 Doğu Avrupa</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-label">Yükselen Risk</div>
+          <div class="rm-value rising">🟡 Kızıldeniz</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-label">Ateşkes Bölgesi</div>
+          <div class="rm-value stable">🟢 Kafkasya</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-label">Aktif İzleme</div>
+          <div class="rm-value cyan">7 Nokta</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-label">Son Güncelleme</div>
+          <div class="rm-value cyan" id="live-time">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-bottom container">
+    <div class="map-legend">
+      <div class="ml-item"><div class="ml-dot nato"></div>NATO Bloğu</div>
+      <div class="ml-item"><div class="ml-dot brics"></div>BRICS+</div>
+      <div class="ml-item"><div class="ml-dot conflict"></div>Aktif Çatışma</div>
+      <div class="ml-item"><div class="ml-dot neutral"></div>Nötr / Diğer</div>
+    </div>
+    <div class="scroll-hint">▼ Aşağı Kaydır</div>
+  </div>
+</section>
+
+<!-- ═══ STORY CARDS — 30 SANİYE GÜNDEM ═══ -->
+<section class="stories-section">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-title"><span class="sec-title-text">30 Saniyelik Gündem</span></div>
+      <div class="sec-badge">HIZLI OKUMA</div>
+    </div>
+    <div class="story-scroll">
+
+      <!-- Card 1: Crisis -->
+      <div class="story-card crisis rv">
+        <div class="sc-cat"><div class="sc-cat-dot" style="background:var(--red)"></div><span style="color:var(--red);font-size:9px;letter-spacing:1.5px">KRİZ</span></div>
+        <div class="sc-title">Karadeniz'de Denge Değişiyor</div>
+        <div class="sc-bullets">
+          <div class="sc-bullet">NATO deniz varlığı 3 yılın zirvesinde</div>
+          <div class="sc-bullet">Türkiye Montrö Sözleşmesi'ni sıkı tutuyor</div>
+          <div class="sc-bullet">Ukrayna liman ablukası gevşiyor</div>
+        </div>
+        <div class="sc-infographic" id="chart1"></div>
+        <div class="sc-footer">
+          <div class="sc-risk"><span class="sc-risk-label">Risk: </span><span class="sc-risk-val high">YÜK</span></div>
+          <div class="sc-impact yuksek">Stratejik Etki: Yüksek</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Mid -->
+      <div class="story-card rv d2">
+        <div class="sc-cat"><div class="sc-cat-dot" style="background:var(--gold)"></div><span style="color:var(--gold);font-size:9px;letter-spacing:1.5px">DİPLOMASİ</span></div>
+        <div class="sc-title">Türkiye-Mısır Yakınlaşması Hız Kazanıyor</div>
+        <div class="sc-bullets">
+          <div class="sc-bullet">İki yıl aradan sonra büyükelçiler geri döndü</div>
+          <div class="sc-bullet">Libya özel dosyasında mutabakat sinyalleri</div>
+          <div class="sc-bullet">Enerji işbirliği masaya geldi</div>
+        </div>
+        <div class="sc-infographic" id="chart2"></div>
+        <div class="sc-footer">
+          <div class="sc-risk"><span class="sc-risk-label">Risk: </span><span class="sc-risk-val mid">ORTA</span></div>
+          <div class="sc-impact orta">Stratejik Etki: Orta</div>
+        </div>
+      </div>
+
+      <!-- Card 3: Positive -->
+      <div class="story-card positive rv d3">
+        <div class="sc-cat"><div class="sc-cat-dot" style="background:var(--green)"></div><span style="color:var(--green);font-size:9px;letter-spacing:1.5px">GELİŞME</span></div>
+        <div class="sc-title">Kızılelma İHA: Stratejik Oyun Değiştirici</div>
+        <div class="sc-bullets">
+          <div class="sc-bullet">Motor testi resmi olarak tamamlandı</div>
+          <div class="sc-bullet">2026 seri üretim takvimi koruyor</div>
+          <div class="sc-bullet">İhracat görüşmeleri 4 ülkeyle başladı</div>
+        </div>
+        <div class="sc-infographic" id="chart3"></div>
+        <div class="sc-footer">
+          <div class="sc-risk"><span class="sc-risk-label">Risk: </span><span class="sc-risk-val low">DÜŞÜK</span></div>
+          <div class="sc-impact dusuk">Stratejik Etki: Olumlu</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="story-card rv d4">
+        <div class="sc-cat"><div class="sc-cat-dot" style="background:var(--cyan)"></div><span style="color:var(--cyan);font-size:9px;letter-spacing:1.5px">UZAY</span></div>
+        <div class="sc-title">Türksat 6A: Uzay Rekabetinde Yeni Boyut</div>
+        <div class="sc-bullets">
+          <div class="sc-bullet">15 yıllık doğu yörüngesi görevi başlıyor</div>
+          <div class="sc-bullet">İletişim kapasitesi %40 artıyor</div>
+          <div class="sc-bullet">Askeri iletişim entegrasyonu planlandı</div>
+        </div>
+        <div class="sc-infographic" id="chart4"></div>
+        <div class="sc-footer">
+          <div class="sc-risk"><span class="sc-risk-label">Risk: </span><span class="sc-risk-val low">DÜŞÜK</span></div>
+          <div class="sc-impact dusuk">Stratejik Etki: Stratejik</div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="story-card crisis rv d5">
+        <div class="sc-cat"><div class="sc-cat-dot" style="background:var(--red)"></div><span style="color:var(--red);font-size:9px;letter-spacing:1.5px">SİBER</span></div>
+        <div class="sc-title">APT Saldırıları Kritik Altyapıyı Hedefliyor</div>
+        <div class="sc-bullets">
+          <div class="sc-bullet">DARPA bütçe artışı siber savunma odaklı</div>
+          <div class="sc-bullet">Orta Asya enerji ağları hedef haline geldi</div>
+          <div class="sc-bullet">5 NATO üyesi ortak savunma paketi imzaladı</div>
+        </div>
+        <div class="sc-infographic" id="chart5"></div>
+        <div class="sc-footer">
+          <div class="sc-risk"><span class="sc-risk-label">Risk: </span><span class="sc-risk-val high">YÜK</span></div>
+          <div class="sc-impact yuksek">Stratejik Etki: Kritik</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DERİN ANALİZ ═══ -->
+<section class="analysis-section">
+  <div class="container">
+    <div class="sec-header" style="margin-bottom:18px;">
+      <div class="sec-title"><span class="sec-title-text">Derin Analiz</span></div>
+      <div class="sec-badge">KATMANLı İÇERİK</div>
+    </div>
+    <div class="analysis-grid">
+      <div class="article-card rv">
+        <div class="article-hero-img">
+          <div class="art-bg" style="background-image:url('https://i.ytimg.com/vi/ZR1FfWRBS5g/maxresdefault.jpg')"></div>
+          <div class="art-overlay"></div>
+          <div class="art-meta">
+            <div class="art-cat">// TSK — Kuzey Irak Harekâtı</div>
+            <div class="art-title-big">Pençe Operasyonları: Stratejik Hesabın Ötesinde Ne Var?</div>
+          </div>
+        </div>
+        <div class="article-body">
+          <!-- TL;DR -->
+          <div class="tldr">
+            <div class="tldr-head"><span class="tag">TL;DR</span>HIZLI ÖZET</div>
+            <div class="tldr-rows">
+              <div class="tldr-row"><span class="tldr-icon">📌</span><span class="tldr-lbl">Olayın Özü</span><span class="tldr-val">TSK'nın derinleşen kuzey Irak hava harekâtları bölgesel dengeleri yeniden şekillendiriyor.</span></div>
+              <div class="tldr-row"><span class="tldr-icon">🏆</span><span class="tldr-lbl">Kim Kazanıyor</span><span class="tldr-val win">Türkiye operasyonel üstünlüğünü pekiştiriyor. <strong>PKK lojistik hatları daraldı.</strong></span></div>
+              <div class="tldr-row"><span class="tldr-icon">📅</span><span class="tldr-lbl">6 Ay Projeksiyon</span><span class="tldr-val">Irak merkezi hükümetiyle gerilim artışı bekleniyor. ABD-Türkiye koordinasyonu belirleyici olacak.</span></div>
+            </div>
+          </div>
+
+          <!-- Chunk Tabs -->
+          <div class="chunk-tabs">
+            <div class="chunk-tab active" onclick="switchChunk(0)">Seviye 1<span class="ct-badge">60 sn · Veri</span></div>
+            <div class="chunk-tab" onclick="switchChunk(1)">Seviye 2<span class="ct-badge">2 dk · Analiz</span></div>
+            <div class="chunk-tab" onclick="switchChunk(2)">Seviye 3<span class="ct-badge">Derin Rapor</span></div>
+          </div>
+
+          <!-- Seviye 1 -->
+          <div class="chunk-panel active" id="chunk-0">
+            <div class="level1-grid">
+              <div class="data-card">
+                <div class="dc-label">Askeri Güç Karşılaştırması</div>
+                <div class="dc-chart" id="power-chart">
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:85%;background:linear-gradient(180deg,var(--cyan),rgba(0,224,255,.3));border-radius:3px 3px 0 0;" title="Türkiye"></div>
+                    <div class="dc-bar-label" style="font-size:7px;color:var(--text3)">TÜR</div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:45%;background:linear-gradient(180deg,var(--red),rgba(255,59,59,.3));border-radius:3px 3px 0 0;" title="PKK"></div>
+                    <div class="dc-bar-label" style="font-size:7px;color:var(--text3)">PKK</div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:60%;background:linear-gradient(180deg,var(--gold),rgba(255,184,0,.3));border-radius:3px 3px 0 0;" title="Irak"></div>
+                    <div class="dc-bar-label" style="font-size:7px;color:var(--text3)">IRAK</div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:95%;background:linear-gradient(180deg,#4a9eff,rgba(74,158,255,.3));border-radius:3px 3px 0 0;" title="ABD"></div>
+                    <div class="dc-bar-label" style="font-size:7px;color:var(--text3)">ABD</div>
+                  </div>
+                </div>
+              </div>
+              <div class="data-card">
+                <div class="dc-label">Savunma Harcamaları (% GSYH)</div>
+                <div class="dc-chart">
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:40%;background:linear-gradient(180deg,var(--cyan),rgba(0,224,255,.3));border-radius:3px 3px 0 0;"></div>
+                    <div class="dc-bar-label">2.3%</div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:80%;background:linear-gradient(180deg,#4a9eff,rgba(74,158,255,.3));border-radius:3px 3px 0 0;"></div>
+                    <div class="dc-bar-label">3.5%</div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:55%;background:linear-gradient(180deg,var(--gold),rgba(255,184,0,.3));border-radius:3px 3px 0 0;"></div>
+                    <div class="dc-bar-label">2.8%</div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:95%;background:linear-gradient(180deg,var(--red),rgba(255,59,59,.3));border-radius:3px 3px 0 0;"></div>
+                    <div class="dc-bar-label">5.0%</div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div class="dc-bar" style="width:100%;height:30%;background:linear-gradient(180deg,var(--purple),rgba(168,85,247,.3));border-radius:3px 3px 0 0;"></div>
+                    <div class="dc-bar-label">1.6%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="background:rgba(0,224,255,.03);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-size:12px;color:var(--text2);line-height:1.7;font-style:italic;">"Harekâtın bölgesel aktörler üzerindeki caydırıcı etkisi, TSK'nın B‑İHA ekosistemi aracılığıyla yeni bir askeri doktrin ortaya koyduğunu gösteriyor."</div>
+          </div>
+
+          <!-- Seviye 2 -->
+          <div class="chunk-panel" id="chunk-1">
+            <div class="level2-items">
+              <div class="l2-item open">
+                <div class="l2-num">01 / TAKTİK HAMLE</div>
+                <div class="l2-title">Kuzey Irak'ta Derinlik Harekâtı</div>
+                <div class="l2-text">TSK, Zap, Metina ve Avaşin-Basyan bölgelerinde sürekli hava üstünlüğü kurarak PKK'nın lojistik koridorlarını kalıcı biçimde tahrip etmeyi hedefliyor. İHA-SİHA kombinasyonlu harekât doktrini, insan kayıplarını minimize ederken etkinliği maksimize ediyor.</div>
+              </div>
+              <div class="l2-item">
+                <div class="l2-num">02 / STRATEJİK AMAÇ</div>
+                <div class="l2-title">Güvenli Tampon Bölge İnşaatı</div>
+                <div class="l2-text">30-40 km derinliğinde kalıcı bir tampon kuşak oluşturulması, hem güney sınırındaki terör tehdidini bertaraf etmek hem de Kürt siyasi aktörlerle müzakere pozisyonunu güçlendirmek amacına hizmet ediyor.</div>
+              </div>
+              <div class="l2-item">
+                <div class="l2-num">03 / JEOPOLİTİK SONUÇ</div>
+                <div class="l2-title">Bölgesel Güç Projeksiyonu</div>
+                <div class="l2-text">Türkiye, Suriye + Irak + Libya + Azerbaycan ekseninde entegre bir güvenlik mimarisi kuruyor. Bu multi-vektörel varlık, NATO'nun güney kanadında vazgeçilmez aktör konumunu pekiştiriyor.</div>
+              </div>
+              <div class="l2-item">
+                <div class="l2-num">04 / OLASI KARŞI HAMLE</div>
+                <div class="l2-title">Irak - İran Aksı Reaksiyonu</div>
+                <div class="l2-text">Bağdat'ın Türkiye aleyhine Güvenlik Konseyi girişimi riskli ama mümkün. İran destekli milis grupların Suriye hattında gerilimi tırmandırması daha olası senaryo olarak öne çıkıyor.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seviye 3 -->
+          <div class="chunk-panel" id="chunk-2">
+            <div style="padding:16px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:10px;text-align:center;">
+              <div style="font-size:28px;margin-bottom:10px;">📄</div>
+              <div style="font-family:var(--display);font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Tam Stratejik Analiz Raporu</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.6;">32 sayfa · Akademik kaynak · Kaynakça · İnteraktif harita eki<br>Pençe Harekâtı Serisi — No. 7</div>
+              <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                <button style="background:var(--cyan);color:var(--bg);border:none;border-radius:6px;padding:9px 18px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;">PDF İNDİR</button>
+                <button style="background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--text2);border-radius:6px;padding:9px 18px;font-family:var(--mono);font-size:10px;cursor:pointer;">KAYNAKLARI GÖR</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Aside -->
+      <div class="analysis-aside">
+
+        <!-- Power Balance -->
+        <div class="aside-card rv d2">
+          <div class="aside-head">
+            <span class="aside-title">Güç Dengesi</span>
+            <span class="aside-icon">⚖️</span>
+          </div>
+          <div class="aside-body">
+            <div class="power-compare">
+              <div class="pc-row">
+                <div class="pc-label"><span>Hava Kuvveti</span><span style="color:var(--cyan)">Türkiye ↑</span></div>
+                <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:82%;background:linear-gradient(90deg,var(--cyan),rgba(0,224,255,.4))"></div></div>
+              </div>
+              <div class="pc-row" style="margin-top:8px;">
+                <div class="pc-label"><span>Diplomatik Etki</span><span style="color:var(--gold)">Dengeli</span></div>
+                <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:55%;background:linear-gradient(90deg,var(--gold),rgba(255,184,0,.4))"></div></div>
+              </div>
+              <div class="pc-row" style="margin-top:8px;">
+                <div class="pc-label"><span>Yerel Destek</span><span style="color:var(--red)">Zayıf</span></div>
+                <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:28%;background:linear-gradient(90deg,var(--red),rgba(255,59,59,.4))"></div></div>
+              </div>
+              <div class="pc-row" style="margin-top:8px;">
+                <div class="pc-label"><span>İHA Kapasitesi</span><span style="color:var(--green)">Bölgede 1.</span></div>
+                <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:95%;background:linear-gradient(90deg,var(--green),rgba(0,255,136,.4))"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aktörler -->
+        <div class="aside-card rv d3">
+          <div class="aside-head">
+            <span class="aside-title">Kilit Aktörler</span>
+            <span class="aside-icon">🎯</span>
+          </div>
+          <div class="aside-body" style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:rgba(0,224,255,.04);border:1px solid var(--border);border-radius:7px;">
+              <div style="width:8px;height:8px;border-radius:2px;background:var(--cyan);flex-shrink:0;"></div>
+              <div><div style="font-size:12px;font-weight:600;color:var(--text);">Türkiye / TSK</div><div style="font-family:var(--mono);font-size:9px;color:var(--cyan);">ANA AKTÖR — Saldırgan</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:rgba(255,59,59,.04);border:1px solid var(--border);border-radius:7px;">
+              <div style="width:8px;height:8px;border-radius:2px;background:var(--red);flex-shrink:0;"></div>
+              <div><div style="font-size:12px;font-weight:600;color:var(--text);">PKK / HPG</div><div style="font-family:var(--mono);font-size:9px;color:var(--red);">HEDEF — Savunmada</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:rgba(255,184,0,.04);border:1px solid var(--border);border-radius:7px;">
+              <div style="width:8px;height:8px;border-radius:2px;background:var(--gold);flex-shrink:0;"></div>
+              <div><div style="font-size:12px;font-weight:600;color:var(--text);">Irak Merkezi</div><div style="font-family:var(--mono);font-size:9px;color:var(--gold);">İKİNCİL — Pasif reaksiyon</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:rgba(74,158,255,.04);border:1px solid var(--border);border-radius:7px;">
+              <div style="width:8px;height:8px;border-radius:2px;background:#4a9eff;flex-shrink:0;"></div>
+              <div><div style="font-size:12px;font-weight:600;color:var(--text);">ABD / CENTCOM</div><div style="font-family:var(--mono);font-size:9px;color:#4a9eff;">DENGE UNSURU — İzleme</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Senaryo linki -->
+        <div style="background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(168,85,247,.04));border:1px solid rgba(168,85,247,.25);border-radius:12px;padding:16px;cursor:pointer;" onclick="document.querySelector('.scenario-section').scrollIntoView({behavior:'smooth'})">
+          <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;margin-bottom:6px;">🎮 SENARYO ODASI</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Sen olsan ne yapardın?</div>
+          <div style="font-size:11px;color:var(--text2);">Bu gelişmeye Türkiye nasıl tepki vermeli? Senaryo'ya katılın, uzman analizini okuyun.</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--purple);margin-top:8px;">1.247 katılımcı oy kullandı →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SENARYO ODASI ═══ -->
+<section class="scenario-section">
+  <div class="container">
+    <div class="sec-header" style="margin-bottom:18px;">
+      <div class="sec-title"><span class="sec-title-text">Senaryo Odası</span></div>
+      <div class="sec-badge" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.25);color:var(--purple);">GAMIFICATION</div>
+    </div>
+    <div class="scenario-hero rv">
+      <div class="scenario-top">
+        <div class="scenario-tag">🎯 HAFTALIK SENARYO #47</div>
+        <div class="scenario-question">ABD Karadeniz'e kalıcı üs kurarsa Türkiye nasıl tepki vermeli?</div>
+        <div class="scenario-context">Senatoda görüşülen teklif, Karadeniz'de kalıcı ABD deniz varlığı kurmayı hedefliyor. NATO müttefiki Türkiye'nin Montrö Sözleşmesi'nden doğan hakları ve çok yönlü dış politikası bu tartışmayı kritik kılıyor.</div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-options" id="scenario-opts">
+          <div class="scenario-opt" onclick="selectOpt(this,0)">
+            <div class="so-letter">A</div>
+            <div class="so-content">
+              <div class="so-title">Denge Politikası — Montrö'yü Korut</div>
+              <div class="so-desc">Hem NATO dayanışmasını hem de Rusya ile ilişkileri gözeterek Montrö Sözleşmesi'ni katı biçimde uygula; kalıcı üsse izin verme.</div>
+              <div class="vote-bar-wrap" id="vb0" style="display:none;"><div class="vote-pct">%42</div><div class="vote-bar-track"><div class="vote-bar-fill" style="width:0%;background:var(--cyan)"></div></div></div>
+            </div>
+          </div>
+          <div class="scenario-opt" onclick="selectOpt(this,1)">
+            <div class="so-letter">B</div>
+            <div class="so-content">
+              <div class="so-title">NATO İçi Baskı — Koordineli İtiraz</div>
+              <div class="so-desc">Öneriye resmi itiraz sunmak yerine NATO kanalları üzerinden müzakere et; karşı öneri olarak dönemsel rotasyon güçlerine onay ver.</div>
+              <div class="vote-bar-wrap" id="vb1" style="display:none;"><div class="vote-pct">%31</div><div class="vote-bar-track"><div class="vote-bar-fill" style="width:0%;background:var(--gold)"></div></div></div>
+            </div>
+          </div>
+          <div class="scenario-opt" onclick="selectOpt(this,2)">
+            <div class="so-letter">C</div>
+            <div class="so-content">
+              <div class="so-title">Bölgesel Alternatif İttifak Kur</div>
+              <div class="so-desc">Karadeniz kıyısı ülkeleri (Romanya, Bulgaristan) ile özel güvenlik mekanizması kur. Bağımsız Türk deniz varlığını genişlet.</div>
+              <div class="vote-bar-wrap" id="vb2" style="display:none;"><div class="vote-pct">%27</div><div class="vote-bar-track"><div class="vote-bar-fill" style="width:0%;background:var(--purple)"></div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scenario-side">
+          <div class="score-preview">
+            <div class="sp-label">STRATEJİK İSABET SKORU</div>
+            <div class="sp-score" id="score-disp">—</div>
+            <div class="sp-score-label" id="score-lbl">Oylamaya katılın</div>
+          </div>
+          <div class="expert-reveal" id="expert-reveal">
+            <div class="er-header">Uzman Yorumu</div>
+            <div class="er-text" id="expert-text">Seçim A (Denge Politikası) en yüksek stratejik isabeti taşımaktadır. Türkiye'nin Montrö'yü ödünsüz uygulaması hem hukuki meşruiyeti korur hem de Moskova'ya mesaj verir. NATO içi baskı zeminini kaybettirmez.</div>
+            <div class="er-expert" id="expert-name">— Prof. Dr. S. Erdem Aytaç · Boğaziçi Üniversitesi</div>
+          </div>
+          <button class="btn-vote" id="vote-btn" onclick="submitVote()">OY KULLAN →</button>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center;margin-top:8px;">1.247 katılımcı · Süre: 3 gün kaldı</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ROZET SİSTEMİ ═══ -->
+<section class="badges-section">
+  <div class="container">
+    <div class="sec-header" style="margin-bottom:18px;">
+      <div class="sec-title"><span class="sec-title-text">Rütbe Sistemi</span></div>
+      <div class="sec-badge" style="background:rgba(255,184,0,.08);border-color:rgba(255,184,0,.25);color:var(--gold);">GAMIFICATION</div>
+    </div>
+    <div class="badges-grid">
+      <div class="badge-card unlocked rv d1">
+        <div class="badge-icon-wrap">
+          <svg viewBox="0 0 56 56" fill="none" style="position:absolute;inset:0;width:100%;height:100%;"><path d="M28 4L52 17V39L28 52L4 39V17Z" fill="rgba(0,224,255,.08)" stroke="rgba(0,224,255,.3)" stroke-width="1.5"/></svg>
+          <div class="badge-icon" style="font-size:20px;">📋</div>
+        </div>
+        <div class="badge-name">Analist Adayı</div>
+        <div class="badge-rank">// Rütbe 1</div>
+        <div class="badge-req">3 analiz okuma · 1 senaryo katılımı</div>
+      </div>
+      <div class="badge-card current rv d2">
+        <div class="badge-icon-wrap">
+          <svg viewBox="0 0 56 56" fill="none" style="position:absolute;inset:0;width:100%;height:100%;"><path d="M28 4L52 17V39L28 52L4 39V17Z" fill="rgba(0,224,255,.12)" stroke="var(--cyan)" stroke-width="1.5"/></svg>
+          <div class="badge-icon" style="font-size:20px;">🎖️</div>
+        </div>
+        <div class="badge-name">Ataşe</div>
+        <div class="badge-rank">// Rütbe 2</div>
+        <div class="badge-req">10 analiz · %60 doğru tahmin</div>
+      </div>
+      <div class="badge-card locked rv d3">
+        <div class="badge-icon-wrap">
+          <svg viewBox="0 0 56 56" fill="none" style="position:absolute;inset:0;width:100%;height:100%;"><path d="M28 4L52 17V39L28 52L4 39V17Z" fill="rgba(255,184,0,.06)" stroke="rgba(255,184,0,.25)" stroke-width="1.5"/></svg>
+          <div class="badge-icon" style="font-size:20px;">⚔️</div>
+        </div>
+        <div class="badge-name">Stratejist</div>
+        <div class="badge-rank">// Rütbe 3</div>
+        <div class="badge-req">30 analiz · %70 doğru tahmin</div>
+      </div>
+      <div class="badge-card locked rv d4">
+        <div class="badge-icon-wrap">
+          <svg viewBox="0 0 56 56" fill="none" style="position:absolute;inset:0;width:100%;height:100%;"><path d="M28 4L52 17V39L28 52L4 39V17Z" fill="rgba(168,85,247,.06)" stroke="rgba(168,85,247,.25)" stroke-width="1.5"/></svg>
+          <div class="badge-icon" style="font-size:20px;">🏛️</div>
+        </div>
+        <div class="badge-name">Büyükelçi</div>
+        <div class="badge-rank">// Rütbe 4</div>
+        <div class="badge-req">75 analiz · %80 tahmin · Makale katkısı</div>
+      </div>
+      <div class="badge-card locked rv d5">
+        <div class="badge-icon-wrap">
+          <svg viewBox="0 0 56 56" fill="none" style="position:absolute;inset:0;width:100%;height:100%;"><path d="M28 4L52 17V39L28 52L4 39V17Z" fill="rgba(255,59,59,.06)" stroke="rgba(255,59,59,.25)" stroke-width="1.5"/></svg>
+          <div class="badge-icon" style="font-size:20px;">🌐</div>
+        </div>
+        <div class="badge-name">Güvenlik Konseyi</div>
+        <div class="badge-rank">// Rütbe 5 — MAX</div>
+        <div class="badge-req">150 analiz · %85 tahmin · Topluluk onayı</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ZAMAN TÜNELİ ═══ -->
+<section class="timeline-section">
+  <div class="container">
+    <div class="sec-header" style="margin-bottom:18px;">
+      <div class="sec-title"><span class="sec-title-text">İnteraktif Zaman Tüneli</span></div>
+      <div class="sec-badge">SLIDER İLE GEZİN</div>
+    </div>
+    <div class="timeline-card rv">
+      <div class="timeline-header">
+        <div style="font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:1px;color:var(--text);">NATO Genişlemesi & Sınır Değişimleri</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--text3);">1991–2024 · Sürükleyerek Keşfet</div>
+      </div>
+      <div class="timeline-display" id="tl-display">
+        <div class="timeline-map-bg">
+          <svg viewBox="0 0 900 300" style="width:100%;height:100%;opacity:.4">
+            <path d="M100,80 L280,60 L370,100 L380,160 L290,200 L180,210 L100,170 Z" fill="none" stroke="rgba(74,158,255,.4)" stroke-width="1.5"/>
+            <path d="M280,60 L500,40 L560,90 L550,160 L460,185 L380,160 L370,100 Z" fill="none" stroke="rgba(74,158,255,.4)" stroke-width="1.5" stroke-dasharray="4"/>
+            <path d="M450,90 L720,70 L800,130 L780,200 L650,220 L530,190 L490,140 Z" fill="none" stroke="rgba(255,122,46,.3)" stroke-width="1.5"/>
+            <line x1="0" y1="150" x2="900" y2="150" stroke="rgba(0,224,255,.06)" stroke-width="1"/>
+            <line x1="450" y1="0" x2="450" y2="300" stroke="rgba(0,224,255,.06)" stroke-width="1"/>
+          </svg>
+        </div>
+        <div id="tl-events-wrap" style="position:absolute;inset:0;z-index:3;"></div>
+        <div style="position:absolute;top:14px;left:18px;z-index:4;font-family:var(--mono);font-size:8px;color:var(--text3);">NATO GENİŞLEME HARİTASI</div>
+        <div style="position:absolute;top:10px;right:14px;z-index:4;display:flex;flex-direction:column;gap:4px;">
+          <div style="font-family:var(--display);font-size:11px;color:var(--cyan);text-align:right;" id="tl-year-info">1991</div>
+          <div style="font-family:var(--mono);font-size:8px;color:var(--text3);text-align:right;" id="tl-event-count">4 olay</div>
+        </div>
+      </div>
+      <div class="timeline-controls">
+        <div class="year-display" id="tl-year">1991</div>
+        <input type="range" class="year-slider" id="year-slider" min="1991" max="2024" value="1991" oninput="updateTimeline(this.value)">
+        <div class="tl-event-count" id="tl-events-label">1991 — SSCB Dağılması</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WAR ROOM ═══ -->
+<section class="warroom-section">
+  <div class="container">
+    <div class="sec-header" style="margin-bottom:18px;">
+      <div class="sec-title"><span class="sec-title-text">War Room — Topluluk</span></div>
+      <div class="sec-badge" style="background:rgba(0,255,136,.06);border-color:rgba(0,255,136,.2);color:var(--green);"><div class="wr-live-dot"></div>CANLI</div>
+    </div>
+    <div class="warroom-grid">
+      <div class="wr-card rv d1">
+        <div class="wr-card-top">
+          <div class="wr-card-badge" style="background:rgba(255,59,59,.08);border-color:rgba(255,59,59,.25);color:var(--red);"><div class="risk-dot" style="width:4px;height:4px;"></div>CANLIYAYIN</div>
+          <div class="wr-card-title">Karadeniz Harekât Haritası: Canlı Analiz</div>
+        </div>
+        <div class="wr-card-body">
+          <div class="wr-stats">
+            <div class="wr-stat"><span>342</span>İzleyici</div>
+            <div class="wr-stat"><span>Bugün</span>Tarih</div>
+            <div class="wr-stat"><span>📺</span>Yayın</div>
+          </div>
+        </div>
+      </div>
+      <div class="wr-card rv d2">
+        <div class="wr-card-top">
+          <div class="wr-card-badge" style="background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.25);color:var(--purple);">💬 TARTIŞMA</div>
+          <div class="wr-card-title">İHA Savaşları: Ukrayna Sahasından Dersler</div>
+        </div>
+        <div class="wr-card-body">
+          <div class="wr-stats">
+            <div class="wr-stat"><span>89</span>Katılımcı</div>
+            <div class="wr-stat"><span>4</span>Uzman</div>
+            <div class="wr-stat"><span>🔒</span>Moderasyonlu</div>
+          </div>
+        </div>
+      </div>
+      <div class="wr-card rv d3">
+        <div class="wr-card-top">
+          <div class="wr-card-badge" style="background:rgba(0,224,255,.08);border-color:rgba(0,224,255,.2);color:var(--cyan);">⚡ HAFTALIK</div>
+          <div class="wr-card-title">Enerji Jeopolitiği Haftalık Strateji Oturumu</div>
+        </div>
+        <div class="wr-card-body">
+          <div class="wr-stats">
+            <div class="wr-stat"><span>Pzt 20:00</span>Başlangıç</div>
+            <div class="wr-stat"><span>156</span>Kayıtlı</div>
+            <div class="wr-stat"><span>🎙</span>Discord</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:240px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(0,224,255,.15),rgba(0,224,255,.05));border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">💬</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">Discord Topluluğu</div><div style="font-size:11px;color:var(--text2);">3.200+ üye · Strateji kanalları · Uzman sohbetleri</div></div>
+        <button style="margin-left:auto;background:rgba(0,224,255,.08);border:1px solid var(--border2);color:var(--cyan);border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:9px;cursor:pointer;white-space:nowrap;">Katıl →</button>
+      </div>
+      <div style="flex:1;min-width:240px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(255,184,0,.15),rgba(255,184,0,.05));border:1px solid rgba(255,184,0,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">⚡</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">HS Bülten 2.0</div><div style="font-size:11px;color:var(--text2);">Haftada 1 · Risk skoru + senaryo + uzman analizi</div></div>
+        <button style="margin-left:auto;background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.25);color:var(--gold);border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:9px;cursor:pointer;white-space:nowrap;">Abone →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">HARBİ<br>STRATEJİ</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--cyan);letter-spacing:2px;margin-top:4px;margin-bottom:10px;">v2.0 — Cyber-Diplomacy Platform</div>
+        <div class="footer-tagline">Jeopolitik kontrol paneli. Haber sitesi değil, stratejik deneyim platformu. Okuyucu değil, katılımcı topluluk.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <div class="footer-links">
+          <a href="#">Risk Paneli</a><a href="#">Senaryo Odası</a><a href="#">War Room</a>
+          <a href="#">Zaman Tüneli</a><a href="#">Analiz Arşivi</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Kategoriler</div>
+        <div class="footer-links">
+          <a href="#">Türkiye</a><a href="#">NATO/BRICS</a><a href="#">Siber</a>
+          <a href="#">Enerji</a><a href="#">Uzay</a><a href="#">Deniz</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Topluluk</div>
+        <div class="footer-links">
+          <a href="#">Discord</a><a href="#">HS Bülten 2.0</a>
+          <a href="#">Rozet Sistemi</a><a href="#">Hakkımızda</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 HarbiStrateji.com — Tüm hakları saklıdır. · Strateji değil, deneyim.</span>
+      <div class="footer-soc">
+        <a class="fsoc" href="#">▶</a>
+        <a class="fsoc" href="#">𝕏</a>
+        <a class="fsoc" href="#">TG</a>
+        <a class="fsoc" href="#">IG</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ AI ASISTAN ═══ -->
+<div id="ai-chat">
+  <div class="chat-header">
+    <div class="chat-ai-icon">🤖</div>
+    <div>
+      <div class="chat-ai-name">DİPLOMASİ ASİSTANI</div>
+      <div class="chat-ai-status"><div class="risk-dot" style="width:5px;height:5px;background:var(--green)"></div>Aktif · Yanıt hazır</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-msgs">
+    <div class="msg bot">
+      <div class="msg-bubble">Merhaba! Ben HarbiStrateji Diplomasi Asistanı'yım. Jeopolitik kavramlar, aktif çatışmalar veya analiz bağlantıları konusunda yardımcı olabilirim.</div>
+      <div class="msg-link">→ Aktif Risk Raporu'nu Aç</div>
+    </div>
+  </div>
+  <div class="chat-suggestions">
+    <div class="sug-pill" onclick="sendSug('Zorlayıcı diplomasi nedir?')">Zorlayıcı diplomasi?</div>
+    <div class="sug-pill" onclick="sendSug('Montrö Sözleşmesi ne anlama gelir?')">Montrö Sözleşmesi</div>
+    <div class="sug-pill" onclick="sendSug('BRICS+ neden önemli?')">BRICS+</div>
+    <div class="sug-pill" onclick="sendSug('İHA savaşı doktrinini açıkla')">İHA Doktrini</div>
+  </div>
+  <div class="chat-input-wrap">
+    <input type="text" class="chat-input" id="chat-input" placeholder="Bir kavram veya olay sorun…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()">→</button>
+  </div>
+</div>
+
+<button id="chat-btn" onclick="toggleChat()" title="Diplomasi Asistanı">🤖</button>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <div class="mn-btn act"><div class="mn-ico">🌍</div>Harita</div>
+    <div class="mn-btn" onclick="document.querySelector('.analysis-section').scrollIntoView({behavior:'smooth'})"><div class="mn-ico">📊</div>Analiz</div>
+    <div class="mn-btn" onclick="document.querySelector('.scenario-section').scrollIntoView({behavior:'smooth'})"><div class="mn-ico">🎯</div>Senaryo</div>
+    <div class="mn-btn" onclick="document.querySelector('.warroom-section').scrollIntoView({behavior:'smooth'})"><div class="mn-ico">⚔️</div>War Room</div>
+    <div class="mn-btn" onclick="toggleChat()"><div class="mn-ico">🤖</div>Asistan</div>
+  </div>
+</div>
+
+<script>
+/* ─── LIVE TIME ─── */
+function updateTime(){
+  const t=new Date();
+  document.getElementById('live-time').textContent=t.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateTime,1000); updateTime();
+
+/* ─── CHART BARS (story cards) ─── */
+const chartData=[
+  [[85,60,40,75,55],[var_='var(--red)','var(--gold)','var(--cyan)','var(--red)','var(--gold)']],
+  [[45,70,55,80,35],['var(--gold)','var(--cyan)','var(--gold)','var(--green)','var(--cyan)']],
+  [[60,90,75,85,95],['var(--green)','var(--green)','var(--cyan)','var(--green)','var(--cyan)']],
+  [[30,55,80,65,45],['var(--cyan)','var(--cyan)','var(--cyan)','var(--purple)','var(--cyan)']],
+  [[70,90,85,60,75],['var(--red)','var(--red)','var(--gold)','var(--red)','var(--red)']],
+];
+[1,2,3,4,5].forEach(i=>{
+  const el=document.getElementById('chart'+i);
+  if(!el) return;
+  const d=chartData[i-1];
+  d[0].forEach((h,j)=>{
+    const b=document.createElement('div');
+    b.style.cssText=`flex:1;border-radius:2px 2px 0 0;height:${h}%;background:${d[1][j]};opacity:.7;`;
+    el.appendChild(b);
+  });
+});
+
+/* ─── CHUNK TABS ─── */
+function switchChunk(idx){
+  document.querySelectorAll('.chunk-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.chunk-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+/* ─── SCENARIO ─── */
+let selectedOpt=-1,voted=false;
+const voteData=[[42,'var(--cyan)'],[31,'var(--gold)'],[27,'var(--purple)']];
+const expertTexts=[
+  {text:"Seçim A (Denge Politikası) en yüksek stratejik isabeti taşımaktadır. Türkiye'nin Montrö'yü ödünsüz uygulaması hem hukuki meşruiyeti korur hem de Moskova'ya mesaj verir. NATO içi baskı zeminini kaybettirmez.",expert:"— Prof. Dr. S. Erdem Aytaç · Boğaziçi Üniversitesi",puan:"⭐ 87 / 100"},
+  {text:"Seçim B (NATO İçi Baskı) pragmatik ama risk barındırıyor. Dönemsel rotasyon çözümü kalıcı üs sorununu erteler. Orta vadeli strategik kazanç sağlar, ancak Montrö'yü zayıflatan emsal oluşturabilir.",expert:"— Dr. Mitat Çelikpala · Kadir Has Üniversitesi",puan:"⭐ 72 / 100"},
+  {text:"Seçim C (Bölgesel Alternatif) en cesur ama en riskli. Romanya-Bulgaristan ekseni NATO dinamiklerini zorlayabilir. Türk deniz varlığının genişlemesi güvenilir caydırıcılık sağlar; diplomatik maliyet yüksektir.",expert:"— Dr. Alper Coşkun · Carnegie Endowment",puan:"⭐ 65 / 100"}
+];
+function selectOpt(el,idx){
+  if(voted) return;
+  document.querySelectorAll('.scenario-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected'); selectedOpt=idx;
+  document.getElementById('score-disp').textContent=expertTexts[idx].score.split(' ')[1]+' '+expertTexts[idx].score.split(' ')[2];
+  document.getElementById('score-lbl').textContent='Tahmininize göre';
+}
+function submitVote(){
+  if(selectedOpt<0){alert('Lütfen bir seçenek belirleyin.');return;}
+  if(voted) return;
+  voted=true;
+  voteData.forEach((_,i)=>{
+    const vb=document.getElementById('vb'+i);
+    if(vb){vb.style.display='block';setTimeout(()=>{vb.querySelector('.vote-bar-fill').style.width=voteData[i][0]+'%';},100);}
+  });
+  const er=document.getElementById('expert-reveal');
+  er.style.display='block';
+  document.getElementById('expert-text').textContent=expertTexts[selectedOpt].text;
+  document.getElementById('expert-name').textContent=expertTexts[selectedOpt].expert;
+  setTimeout(()=>er.classList.add('visible'),10);
+  document.getElementById('vote-btn').textContent='✓ OY KULLANILDI';
+  document.getElementById('vote-btn').style.opacity='.5';
+  document.getElementById('vote-btn').style.cursor='default';
+}
+
+/* ─── TIMELINE ─── */
+const tlEvents={
+  1991:["SSCB Dağılıyor","Balkanlar Alev Alıyor"],
+  1994:["NATO Barış İçin Ortaklık"],
+  1997:["NATO Genişleme Zirvesi"],
+  1999:["PL/CZ/HU NATO'ya Katıldı","Kosova Harekâtı"],
+  2004:["7 Yeni NATO Üyesi","AB Büyük Genişleme"],
+  2008:["Gürcistan Savaşı","NATO Zirvesi Bükreş"],
+  2014:["Kırım İlhakı","Minsk Süreci"],
+  2022:["Ukrayna Savaşı","İsveç-Finlandiya Başvurusu"],
+  2023:["Finlandiya NATO'ya Katıldı"],
+  2024:["İsveç NATO'ya Katıldı","Yeni NATO Güney Kanadı"]
+};
+function updateTimeline(val){
+  const yr=parseInt(val);
+  document.getElementById('tl-year').textContent=yr;
+  document.getElementById('tl-year-info').textContent=yr;
+  const s=document.getElementById('year-slider');
+  const pct=((yr-1991)/(2024-1991))*100;
+  s.style.setProperty('--val',pct+'%');
+  // Find events up to this year
+  const allEvents=Object.entries(tlEvents).filter(([y])=>parseInt(y)<=yr);
+  const count=allEvents.reduce((acc,[,evs])=>acc+evs.length,0);
+  document.getElementById('tl-events-label').textContent=yr+' — '+(allEvents[allEvents.length-1]?allEvents[allEvents.length-1][1][0]:'Başlangıç');
+  document.getElementById('tl-event-count').textContent=count+' olay';
+  // Render events
+  const wrap=document.getElementById('tl-events-wrap');
+  wrap.innerHTML='';
+  const positions=[[15,35],[25,55],[35,30],[50,65],[60,40],[72,30],[80,55],[40,70],[60,25],[75,45]];
+  allEvents.forEach(([y,evs],i)=>{
+    const pos=positions[i%positions.length];
+    evs.forEach((ev,j)=>{
+      const dot=document.createElement('div');
+      dot.className='tl-event';
+      dot.style.cssText=`left:${pos[0]+j*8}%;top:${pos[1]}%;`;
+      dot.innerHTML=`<div class="tl-event-dot" style="background:var(--cyan);border-color:var(--bg);box-shadow:0 0 8px var(--cyan);"></div><div class="tl-event-label" style="background:var(--panel2);border:1px solid var(--border2);color:var(--text);padding:4px 8px;border-radius:4px;">${y} · ${ev}</div>`;
+      wrap.appendChild(dot);
+    });
+  });
+}
+updateTimeline(1991);
+const sliderEl=document.getElementById('year-slider');
+sliderEl.addEventListener('input',e=>updateTimeline(e.target.value));
+
+/* ─── AI CHAT ─── */
+let chatOpen=false;
+const botReplies={
+  'zorlayıcı diplomasi':"Zorlayıcı diplomasi, bir devletin başka bir devleti belirli bir eylemden caydırmak veya yaptırmak için askeri tehdit ya da sınırlı güç kullanması stratejisidir.\n\nÖrnek: ABD'nin 1962 Küba Füze Krizi'nde Sovyetler'e verdiği nükleer tehdit en klasik örneğidir.\n\nBağlantı: Pençe Harekâtı bu doktrinin bölgesel uygulamasına iyi bir örnek teşkil ediyor →",
+  'montrö':"Montrö Sözleşmesi (1936), Karadeniz'e geçişi düzenleyen uluslararası anlaşmadır.\n\nTemel maddeler: Savaş gemileri barış döneminde Boğazlardan geçebilir; Türkiye savaş halinde geçişi tamamen kapatabilir.\n\nBağlantı: Karadeniz Analizi — Türkiye'nin Montrö Kartı →",
+  'brics':"BRICS+ (Brezilya, Rusya, Hindistan, Çin, G.Afrika + 6 yeni üye), küresel Güney'in Batı liderliğindeki düzene karşı kurduğu ekonomik bloktur.\n\nÖnem: 2024 itibarıyla küresel GSYH'nin %36'sını ve nüfusun %46'sını temsil ediyor.\n\nBağlantı: BRICS+ Güç Analizi Raporu →",
+  'iha':"İHA savaş doktrini; insansız hava araçlarının keşif, hedefleme ve imha fonksiyonlarını entegre biçimde yürüttüğü modern savaş konseptidir.\n\nTürkiye bu alanda BAYRAKTAR TB2 ve Kızılelma ile bölgesel öncü konumundadır.\n\nBağlantı: İHA Savaşları Derin Analiz →",
+};
+function toggleChat(){
+  chatOpen=!chatOpen;
+  const chat=document.getElementById('ai-chat');
+  const btn=document.getElementById('chat-btn');
+  if(chatOpen){chat.classList.add('visible');chat.style.display='flex';btn.style.display='none';}
+  else{chat.classList.remove('visible');chat.style.display='none';btn.style.display='flex';}
+}
+function addMsg(text,role){
+  const msgs=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.className='msg '+role;
+  const hasLink=role==='bot'&&text.includes('→');
+  const parts=hasLink?text.split('\n→ '):[text,null];
+  d.innerHTML=`<div class="msg-bubble">${parts[0].replace(/\n/g,'<br>')}</div>${parts[1]?`<div class="msg-link">→ ${parts[1]}</div>`:''}`;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function sendChat(){
+  const inp=document.getElementById('chat-input');
+  const val=inp.value.trim();
+  if(!val) return;
+  addMsg(val,'user');
+  inp.value='';
+  setTimeout(()=>{
+    const key=Object.keys(botReplies).find(k=>val.toLowerCase().includes(k));
+    const reply=key?botReplies[key]:"Anladım. Bu konu için en güncel analizimizi inceleyebilir, Senaryo Odası'nda benzer tartışmalara katılabilirsiniz. Daha spesifik bir kavram sormak ister misiniz?";
+    addMsg(reply,'bot');
+  },800);
+}
+function sendSug(text){
+  document.getElementById('chat-input').value=text;
+  sendChat();
+}
+
+/* ─── SCROLL REVEAL ─── */
+const srio=new IntersectionObserver(e=>{
+  e.forEach(ev=>{if(ev.isIntersecting){ev.target.classList.add('rvd');srio.unobserve(ev.target);}});
+},{threshold:.06});
+document.querySelectorAll('.rv').forEach(el=>srio.observe(el));
+
+/* ─── VAR HACK for slider ─── */
+document.getElementById('year-slider').addEventListener('input',function(){
+  const pct=((this.value-1991)/(2024-1991))*100;
+  this.style.background=`linear-gradient(90deg,var(--cyan) ${pct}%,rgba(255,255,255,.1) ${pct}%)`;
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

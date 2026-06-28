@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kritik Mineral Bağımlılık Ağı — Harb-i Strateji İnfografik</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#3a7bd5;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:5px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;color:var(--gold)}
+.hero{text-align:center;padding:36px 20px 20px;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-block;padding:4px 14px;border:1px solid var(--gold);border-radius:20px;font-size:13px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(20px,4.5vw,34px);font-weight:700;line-height:1.2;margin-bottom:10px}
+.hero h1 span{color:var(--red)}
+.hero p{font-size:13px;color:var(--dim);line-height:1.8;max-width:620px;margin:0 auto}
+/* Mineral selector */
+.mineral-section{max-width:900px;margin:20px auto;padding:0 16px}
+.mineral-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);text-align:center;margin-bottom:12px}
+.mineral-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.min-btn{padding:10px 16px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--dim);font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+.min-btn:hover{border-color:var(--gold);color:var(--gold)}
+.min-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,162,75,.08)}
+/* Network canvas */
+.network-section{max-width:900px;margin:0 auto;padding:0 16px 20px}
+.network-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative}
+canvas#network{display:block;width:100%;background:#060d14}
+/* Ambargo controls */
+.ambargo-section{max-width:900px;margin:0 auto;padding:0 16px 20px}
+.ambargo-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--red);text-align:center;margin-bottom:12px}
+.ambargo-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.amb-btn{padding:10px 18px;border:2px solid;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:var(--panel);transition:.2s}
+.amb-btn:hover{transform:scale(1.03)}
+/* Chain reaction */
+.chain-section{max-width:900px;margin:0 auto;padding:0 16px 20px}
+.chain-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);margin-bottom:12px}
+.chain-items{display:flex;flex-direction:column;gap:8px}
+.chain-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);transition:.5s}
+.chain-item.blocked{border-color:var(--red);background:rgba(224,21,21,.08)}
+.chain-item.ok{border-color:var(--green);background:rgba(0,255,136,.05)}
+.chain-icon{font-size:20px;min-width:28px;text-align:center}
+.chain-name{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;flex:1}
+.chain-status{font-size:13px;font-weight:700;padding:3px 10px;border-radius:8px}
+.chain-status.ok{background:rgba(0,255,136,.15);color:var(--green)}
+.chain-status.blocked{background:rgba(224,21,21,.15);color:var(--red)}
+/* Mineral data */
+.mineral-data{max-width:900px;margin:0 auto;padding:0 16px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.md-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;transition:.2s}
+.md-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.md-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.md-icon{font-size:28px}
+.md-name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700}
+.md-sub{font-size:13px;color:var(--dim)}
+.md-bar-wrap{height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-bottom:4px}
+.md-bar{height:100%;border-radius:4px;transition:width 1s ease}
+.md-label{font-size:13px;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:8px}
+.md-uses{font-size:13px;color:var(--dim);line-height:1.7}
+.md-risk{font-size:13px;margin-top:8px;padding:4px 10px;border-radius:8px;display:inline-block;font-weight:700}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">⛏️ KRİTİK MİNERAL BAĞIMLILIK AĞI</div>
+  <div style="font-size:13px;color:var(--dim);margin-left:auto">Zincirleme Reaksiyon Simülatörü</div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">İnteraktif İnfografik</div>
+  <h1>Bir <span>Ambargo</span> Tüm Savunma<br>Sanayiini Durdurabilir mi?</h1>
+  <p>Galyum, Lityum, Kobalt — modern silah sistemlerinin omurgası. Çin'in bu minerallerdeki tekeli, küresel savunma sanayii için varoluşsal bir kırılganlık oluşturuyor.</p>
+</div>
+
+<div class="mineral-section">
+  <div class="mineral-title">⛏️ MİNERAL SEÇ — Bağımlılık Ağını Gör</div>
+  <div class="mineral-btns">
+    <button class="min-btn active" onclick="selectMineral('galyum',this)">⚡ Galyum</button>
+    <button class="min-btn" onclick="selectMineral('lityum',this)">🔋 Lityum</button>
+    <button class="min-btn" onclick="selectMineral('kobalt',this)">🔵 Kobalt</button>
+    <button class="min-btn" onclick="selectMineral('nadir',this)">🌟 Nadir Toprak</button>
+    <button class="min-btn" onclick="selectMineral('tungsten',this)">🔩 Tungsten</button>
+  </div>
+</div>
+
+<div class="network-section">
+  <div class="network-wrap">
+    <canvas id="network" height="320"></canvas>
+  </div>
+</div>
+
+<div class="ambargo-section">
+  <div class="ambargo-title">🚫 AMBARGO SİMÜLASYONU</div>
+  <div class="ambargo-btns">
+    <button class="amb-btn" onclick="triggerAmbargo()" style="border-color:var(--red);color:var(--red)">🚫 Çin Ambargosu Başlat</button>
+    <button class="amb-btn" onclick="findAlternative()" style="border-color:var(--green);color:var(--green)">♻️ Alternatif Kaynak Bul</button>
+    <button class="amb-btn" onclick="resetAmbargo()" style="border-color:var(--dim);color:var(--dim)">🔄 Sıfırla</button>
+  </div>
+</div>
+
+<div class="chain-section">
+  <div class="chain-title">⚡ ZİNCİRLEME REAKSİYON</div>
+  <div class="chain-items" id="chain-items">
+    <div class="chain-item ok" id="chain-0"><div class="chain-icon">⛏️</div><div class="chain-name">Maden Üretimi (Çin %90)</div><div class="chain-status ok">✅ AKTİF</div></div>
+    <div class="chain-item ok" id="chain-1"><div class="chain-icon">🏭</div><div class="chain-name">İşleme & Rafine Etme</div><div class="chain-status ok">✅ AKTİF</div></div>
+    <div class="chain-item ok" id="chain-2"><div class="chain-icon">📦</div><div class="chain-name">Tedarik Zinciri Lojistiği</div><div class="chain-status ok">✅ AKTİF</div></div>
+    <div class="chain-item ok" id="chain-3"><div class="chain-icon">🔬</div><div class="chain-name">Yarı İletken / Bileşen Üretimi</div><div class="chain-status ok">✅ AKTİF</div></div>
+    <div class="chain-item ok" id="chain-4"><div class="chain-icon">🚀</div><div class="chain-name">Güdüm Sistemi Üretimi</div><div class="chain-status ok">✅ AKTİF</div></div>
+    <div class="chain-item ok" id="chain-5"><div class="chain-icon">⚙️</div><div class="chain-name">Motor Kontrolü & Aviyonik</div><div class="chain-status ok">✅ AKTİF</div></div>
+    <div class="chain-item ok" id="chain-6"><div class="chain-icon">🛡️</div><div class="chain-name">Silah Sistemi Entegrasyonu</div><div class="chain-status ok">✅ AKTİF</div></div>
+  </div>
+</div>
+
+<div class="mineral-data">
+  <div class="md-card">
+    <div class="md-head"><div class="md-icon">⚡</div><div><div class="md-name">GALYUM</div><div class="md-sub">Yarı İletken Temeli</div></div></div>
+    <div class="md-bar-wrap"><div class="md-bar" style="width:0%;background:var(--red)" data-width="90"></div></div>
+    <div class="md-label"><span>Çin Hakimiyeti</span><span>%90</span></div>
+    <div class="md-uses">GaN (Galyum Nitrür) radar sistemleri, F-35 aviyoniği, 5G baz istasyonları, güdüm sistemleri. 2023'te Çin ihracat kısıtlaması başlattı.</div>
+    <div class="md-risk" style="background:rgba(224,21,21,.15);color:var(--red)">🔴 KRİTİK RİSK</div>
+  </div>
+  <div class="md-card">
+    <div class="md-head"><div class="md-icon">🔋</div><div><div class="md-name">LİTYUM</div><div class="md-sub">Enerji Depolama</div></div></div>
+    <div class="md-bar-wrap"><div class="md-bar" style="width:0%;background:var(--gold)" data-width="60"></div></div>
+    <div class="md-label"><span>Çin İşleme Hakimiyeti</span><span>%60</span></div>
+    <div class="md-uses">Drone bataryaları, insansız araç güç sistemleri, taşınabilir elektronik. Şili, Arjantin, Avustralya üretici ama Çin işliyor.</div>
+    <div class="md-risk" style="background:rgba(201,162,75,.15);color:var(--gold)">🟡 ORTA RİSK</div>
+  </div>
+  <div class="md-card">
+    <div class="md-head"><div class="md-icon">🔵</div><div><div class="md-name">KOBALT</div><div class="md-sub">Süper Alaşım Temeli</div></div></div>
+    <div class="md-bar-wrap"><div class="md-bar" style="width:0%;background:var(--blue)" data-width="70"></div></div>
+    <div class="md-label"><span>Kongo + Çin İşleme</span><span>%70</span></div>
+    <div class="md-uses">Jet motoru türbin kanatları, yüksek sıcaklık alaşımları, nükleer reaktörler. Kongo üretiyor, Çin işliyor.</div>
+    <div class="md-risk" style="background:rgba(224,21,21,.15);color:var(--red)">🔴 KRİTİK RİSK</div>
+  </div>
+  <div class="md-card">
+    <div class="md-head"><div class="md-icon">🌟</div><div><div class="md-name">NADİR TOPRAK</div><div class="md-sub">Mıknatıs & Elektronik</div></div></div>
+    <div class="md-bar-wrap"><div class="md-bar" style="width:0%;background:var(--cyan)" data-width="85"></div></div>
+    <div class="md-label"><span>Çin Hakimiyeti</span><span>%85</span></div>
+    <div class="md-uses">F-35 her birinde 417 kg nadir toprak. Füze güdüm sistemleri, radar, lazer silahları, hibrit araç motorları. Eskişehir Beylikova rezervi henüz operasyonel değil.</div>
+    <div class="md-risk" style="background:rgba(224,21,21,.15);color:var(--red)">🔴 STRATEJİK RİSK</div>
+  </div>
+</div>
+
+<script>
+// Network canvas
+var nCanvas = document.getElementById('network');
+var nCtx = nCanvas.getContext('2d');
+var nW, nH;
+function resizeNet() { nW = nCanvas.offsetWidth; nH = 320; nCanvas.width = nW; nCanvas.height = nH; }
+resizeNet(); window.addEventListener('resize', function() { setTimeout(resizeNet, 100); drawNetwork(); });
+
+var currentMineral = 'galyum';
+var ambargoActive = false;
+var alternativeActive = false;
+var nFrame = 0;
+
+var mineralData = {
+  galyum: {
+    producers: [{name:'🇨🇳 Çin',x:.15,y:.35,pct:90,color:'#E01515'},{name:'🇩🇪 Almanya',x:.45,y:.25,pct:6,color:'#3a7bd5'},{name:'🇰🇷 G.Kore',x:.75,y:.3,pct:4,color:'#c41e3a'}],
+    uses: [{name:'F-35 Aviyonik',x:.8,y:.55},{name:'Radar GaN',x:.85,y:.7},{name:'5G Radar',x:.7,y:.8},{name:'Güdüm',x:.55,y:.75}]
+  },
+  lityum: {
+    producers: [{name:'🇨🇱 Şili',x:.2,y:.65,pct:30,color:'#00ff88'},{name:'🇦🇺 Avustralya',x:.8,y:.65,pct:25,color:'#3a7bd5'},{name:'🇨🇳 Çin (İşleme)',x:.15,y:.35,pct:60,color:'#E01515'}],
+    uses: [{name:'Drone Batarya',x:.8,y:.4},{name:'İHA Güç',x:.85,y:.55},{name:'Taşınabilir EH',x:.7,y:.7}]
+  },
+  kobalt: {
+    producers: [{name:'🇨🇩 Kongo',x:.5,y:.6,pct:70,color:'#C9A24B'},{name:'🇨🇳 Çin (İşleme)',x:.15,y:.35,pct:65,color:'#E01515'},{name:'🇷🇺 Rusya',x:.65,y:.25,pct:5,color:'#8b5cf6'}],
+    uses: [{name:'Jet Motoru',x:.8,y:.45},{name:'Nükleer Reaktör',x:.85,y:.6},{name:'Süper Alaşım',x:.7,y:.75}]
+  },
+  nadir: {
+    producers: [{name:'🇨🇳 Çin',x:.15,y:.35,pct:85,color:'#E01515'},{name:'🇺🇸 ABD',x:.2,y:.55,pct:8,color:'#3a7bd5'},{name:'🇹🇷 Türkiye',x:.45,y:.3,pct:3,color:'#C9A24B'}],
+    uses: [{name:'F-35 (417kg)',x:.8,y:.4},{name:'Füze Güdüm',x:.85,y:.55},{name:'Lazer Silah',x:.75,y:.7},{name:'Radar Mıknatıs',x:.6,y:.8}]
+  },
+  tungsten: {
+    producers: [{name:'🇨🇳 Çin',x:.15,y:.35,pct:80,color:'#E01515'},{name:'🇷🇺 Rusya',x:.65,y:.25,pct:7,color:'#8b5cf6'},{name:'🇻🇳 Vietnam',x:.7,y:.5,pct:5,color:'#00ff88'}],
+    uses: [{name:'Zırh Delici',x:.8,y:.45},{name:'Nükleer Kalkan',x:.85,y:.6},{name:'Kesici Mühimmat',x:.7,y:.75}]
+  }
+};
+
+function drawNetwork() {
+  nCtx.clearRect(0, 0, nW, nH);
+  nCtx.fillStyle = '#060d14'; nCtx.fillRect(0, 0, nW, nH);
+  // Grid
+  nCtx.strokeStyle = 'rgba(0,224,255,0.03)'; nCtx.lineWidth = 1;
+  for (var x = 0; x < nW; x += 40) { nCtx.beginPath(); nCtx.moveTo(x,0); nCtx.lineTo(x,nH); nCtx.stroke(); }
+  for (var y = 0; y < nH; y += 40) { nCtx.beginPath(); nCtx.moveTo(0,y); nCtx.lineTo(nW,y); nCtx.stroke(); }
+
+  var d = mineralData[currentMineral];
+  var centerX = nW * 0.5, centerY = nH * 0.5;
+
+  // Center node (mineral)
+  var pulse = (Math.sin(nFrame * 0.05) + 1) * 0.5;
+  nCtx.beginPath(); nCtx.arc(centerX, centerY, 20 + pulse * 4, 0, Math.PI * 2);
+  nCtx.fillStyle = ambargoActive ? 'rgba(224,21,21,0.3)' : 'rgba(201,162,75,0.3)'; nCtx.fill();
+  nCtx.beginPath(); nCtx.arc(centerX, centerY, 16, 0, Math.PI * 2);
+  nCtx.fillStyle = ambargoActive ? '#E01515' : '#C9A24B'; nCtx.fill();
+  nCtx.fillStyle = '#0a0f17'; nCtx.font = 'bold 14px serif'; nCtx.textAlign = 'center';
+  nCtx.fillText('⛏️', centerX, centerY + 5);
+  nCtx.fillStyle = ambargoActive ? '#E01515' : '#C9A24B'; nCtx.font = 'bold 10px Chakra Petch';
+  nCtx.fillText(currentMineral.toUpperCase(), centerX, centerY + 30);
+
+  // Producer nodes
+  d.producers.forEach(function(p) {
+    var px = p.x * nW, py = p.y * nH;
+    var lineColor = ambargoActive && p.color === '#E01515' ? '#E01515' : (alternativeActive ? '#00ff88' : 'rgba(0,224,255,0.4)');
+    // Connection line
+    nCtx.beginPath(); nCtx.moveTo(px, py); nCtx.lineTo(centerX, centerY);
+    nCtx.strokeStyle = lineColor; nCtx.lineWidth = ambargoActive && p.color === '#E01515' ? 2 : 1;
+    if (ambargoActive && p.color === '#E01515') nCtx.setLineDash([5,5]);
+    nCtx.stroke(); nCtx.setLineDash([]);
+    // Animated particle
+    var t = (nFrame * 0.02) % 1;
+    var partX = px + (centerX - px) * t, partY = py + (centerY - py) * t;
+    nCtx.beginPath(); nCtx.arc(partX, partY, 3, 0, Math.PI * 2);
+    nCtx.fillStyle = ambargoActive && p.color === '#E01515' ? 'rgba(224,21,21,0.6)' : 'rgba(0,224,255,0.6)'; nCtx.fill();
+    // Producer node
+    nCtx.beginPath(); nCtx.arc(px, py, 14, 0, Math.PI * 2);
+    nCtx.fillStyle = ambargoActive && p.color === '#E01515' ? 'rgba(224,21,21,0.2)' : 'rgba(58,123,213,0.2)'; nCtx.fill();
+    nCtx.beginPath(); nCtx.arc(px, py, 14, 0, Math.PI * 2);
+    nCtx.strokeStyle = ambargoActive && p.color === '#E01515' ? '#E01515' : p.color; nCtx.lineWidth = 2; nCtx.stroke();
+    nCtx.fillStyle = '#EAF0F7'; nCtx.font = '10px IBM Plex Mono'; nCtx.textAlign = 'center';
+    nCtx.fillText(p.name, px, py - 20);
+    nCtx.fillStyle = ambargoActive && p.color === '#E01515' ? '#E01515' : p.color;
+    nCtx.font = 'bold 11px Chakra Petch';
+    nCtx.fillText('%' + p.pct, px, py + 4);
+    if (ambargoActive && p.color === '#E01515') {
+      nCtx.fillStyle = '#E01515'; nCtx.font = 'bold 12px Chakra Petch';
+      nCtx.fillText('🚫', px, py + 20);
+    }
+  });
+
+  // Use nodes
+  d.uses.forEach(function(u, i) {
+    var ux = u.x * nW, uy = u.y * nH;
+    var blocked = ambargoActive && !alternativeActive;
+    nCtx.beginPath(); nCtx.moveTo(centerX, centerY); nCtx.lineTo(ux, uy);
+    nCtx.strokeStyle = blocked ? 'rgba(224,21,21,0.4)' : 'rgba(0,224,255,0.2)'; nCtx.lineWidth = 1;
+    if (blocked) nCtx.setLineDash([4,4]);
+    nCtx.stroke(); nCtx.setLineDash([]);
+    nCtx.fillStyle = blocked ? 'rgba(224,21,21,0.15)' : 'rgba(0,224,255,0.08)';
+    nCtx.beginPath(); nCtx.arc(ux, uy, 10, 0, Math.PI * 2); nCtx.fill();
+    nCtx.strokeStyle = blocked ? '#E01515' : 'rgba(0,224,255,0.4)'; nCtx.lineWidth = 1; nCtx.stroke();
+    nCtx.fillStyle = blocked ? '#E01515' : 'rgba(0,224,255,0.8)'; nCtx.font = '9px IBM Plex Mono'; nCtx.textAlign = 'center';
+    nCtx.fillText(u.name, ux, uy + 22);
+    if (blocked) { nCtx.font = '12px serif'; nCtx.fillText('🔴', ux, uy + 4); }
+    else { nCtx.font = '12px serif'; nCtx.fillText('✅', ux, uy + 4); }
+  });
+
+  nCtx.fillStyle = 'rgba(201,162,75,0.5)'; nCtx.font = '10px IBM Plex Mono'; nCtx.textAlign = 'left';
+  nCtx.fillText('MİNERAL BAĞIMLILIK AĞI — ' + currentMineral.toUpperCase(), 10, 16);
+  if (ambargoActive) {
+    nCtx.fillStyle = 'rgba(224,21,21,0.8)'; nCtx.textAlign = 'right';
+    nCtx.fillText('🚫 AMBARGO AKTİF', nW-10, 16);
+  }
+  nFrame++;
+  requestAnimationFrame(drawNetwork);
+}
+
+function selectMineral(min, btn) {
+  currentMineral = min;
+  document.querySelectorAll('.min-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  resetAmbargo();
+}
+
+function triggerAmbargo() {
+  ambargoActive = true; alternativeActive = false;
+  var delay = 0;
+  for (var i = 0; i < 7; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        var item = document.getElementById('chain-' + idx);
+        item.classList.remove('ok'); item.classList.add('blocked');
+        item.querySelector('.chain-status').className = 'chain-status blocked';
+        item.querySelector('.chain-status').textContent = '🚫 BLOKE';
+      }, delay);
+    })(i);
+    delay += 300;
+  }
+}
+
+function findAlternative() {
+  alternativeActive = true;
+  var delay = 0;
+  for (var i = 0; i < 7; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        var item = document.getElementById('chain-' + idx);
+        item.classList.remove('blocked'); item.classList.add('ok');
+        item.querySelector('.chain-status').className = 'chain-status ok';
+        item.querySelector('.chain-status').textContent = '♻️ ALTERNATİF';
+      }, delay);
+    })(i);
+    delay += 200;
+  }
+}
+
+function resetAmbargo() {
+  ambargoActive = false; alternativeActive = false;
+  for (var i = 0; i < 7; i++) {
+    var item = document.getElementById('chain-' + i);
+    item.classList.remove('blocked'); item.classList.add('ok');
+    item.querySelector('.chain-status').className = 'chain-status ok';
+    item.querySelector('.chain-status').textContent = '✅ AKTİF';
+  }
+}
+
+// Bar animation
+var barObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('[data-width]').forEach(function(bar) { bar.style.width = bar.dataset.width + '%'; });
+      barObs.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.3});
+document.querySelectorAll('.md-card').forEach(function(el) { barObs.observe(el); });
+
+drawNetwork();
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

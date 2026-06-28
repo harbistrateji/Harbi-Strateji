@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Kuantum Kilit — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--purple:#c41e3a;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--cyan))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:#9333ea}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.btn-red{background:var(--red);color:#fff}
+.row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* Quantum grid */
+.q-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.q-cell{height:60px;border-radius:10px;border:2px solid var(--line2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;user-select:none}
+.q-cell:active{transform:scale(.93)}
+.q-cell.superpos{border-color:var(--purple);background:rgba(168,85,247,.1);animation:q-flicker .8s ease-in-out infinite}
+.q-cell.entangled{border-color:var(--cyan);background:rgba(0,224,255,.08)}
+.q-cell.collapsed-1{border-color:var(--green);background:rgba(0,255,136,.12);animation:none}
+.q-cell.collapsed-0{border-color:var(--red2);background:rgba(224,21,21,.08);animation:none}
+.q-cell.locked{border-color:var(--gold);background:rgba(201,162,75,.12);cursor:default}
+.q-cell.error-flash{animation:q-error .3s ease-out}
+@keyframes q-flicker{0%,100%{opacity:1;box-shadow:0 0 8px rgba(168,85,247,.4)}50%{opacity:.7;box-shadow:0 0 20px rgba(168,85,247,.8)}}
+@keyframes q-error{0%{background:rgba(224,21,21,.4)}100%{background:var(--panel2)}}
+.q-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.q-leg-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--dim)}
+.q-leg-dot{width:10px;height:10px;border-radius:50%;border:2px solid}
+.q-timer-bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-bottom:12px}
+.q-timer-fill{height:100%;border-radius:4px;transition:width .5s linear}
+.q-pattern{background:var(--panel2);border:1px solid rgba(168,85,247,.3);border-radius:10px;padding:14px;margin-bottom:14px}
+.q-pattern-title{font-size:10px;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.q-pattern-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.q-pat-cell{height:28px;border-radius:4px;border:1px solid var(--line2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:12px}
+.q-pat-cell.target-1{background:rgba(0,255,136,.15);border-color:var(--green)}
+.q-pat-cell.target-0{background:rgba(224,21,21,.08);border-color:rgba(224,21,21,.3)}
+.q-msg{text-align:center;font-family:'Chakra Petch',sans-serif;font-size:14px;min-height:24px;margin-bottom:10px}
+.q-perk-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel);border:2px solid var(--purple);border-radius:12px;padding:12px 24px;font-size:13px;color:var(--purple);z-index:999;pointer-events:none;opacity:0;transition:opacity .4s;white-space:nowrap}
+.wave-indicator{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.wave-dot{width:14px;height:14px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);transition:.2s}
+.wave-dot.done{background:var(--green);border-color:var(--green)}
+.wave-dot.active{background:var(--purple);border-color:var(--purple);animation:q-flicker .8s ease-in-out infinite}
+.wave-dot.fail{background:var(--red2);border-color:var(--red2)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">⚛️ KUANTUM KİLİT</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">⚛️ Kuantum Kilit</div>
+  <div class="card-sub">Kuantum şifreleme protokolünü kır! Hücreleri doğru süperpozisyon durumuna getir. Her başarısız denemede yeni bir güvenlik açığı öğrenilir — rogue-like ilerleme sistemi.</div>
+  <div class="row">
+    <div class="stat-box"><div class="stat-val" id="q-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="q-wave" style="color:var(--purple)">1/8</div><div class="stat-lbl">DALGA</div></div>
+    <div class="stat-box"><div class="stat-val" id="q-lives" style="color:var(--red2)">❤️❤️❤️</div><div class="stat-lbl">CAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="q-perk" style="color:var(--cyan)">0</div><div class="stat-lbl">PERK</div></div>
+  </div>
+  <div class="wave-indicator" id="wave-indicator"></div>
+  <div class="q-timer-bar"><div class="q-timer-fill" id="q-timer-fill" style="width:100%;background:var(--cyan)"></div></div>
+  <div class="q-pattern" id="q-pattern" style="display:none">
+    <div class="q-pattern-title">🎯 Hedef Desen — Bu deseni oluştur:</div>
+    <div class="q-pattern-grid" id="q-pattern-grid"></div>
+  </div>
+  <div class="q-legend">
+    <div class="q-leg-item"><div class="q-leg-dot" style="border-color:var(--purple);background:rgba(168,85,247,.2)"></div>Süperpozisyon (|ψ⟩)</div>
+    <div class="q-leg-item"><div class="q-leg-dot" style="border-color:var(--cyan);background:rgba(0,224,255,.1)"></div>Dolanık (|⟩)</div>
+    <div class="q-leg-item"><div class="q-leg-dot" style="border-color:var(--green);background:rgba(0,255,136,.1)"></div>Çökmüş-1</div>
+    <div class="q-leg-item"><div class="q-leg-dot" style="border-color:var(--red2);background:rgba(224,21,21,.05)"></div>Çökmüş-0</div>
+    <div class="q-leg-item"><div class="q-leg-dot" style="border-color:var(--gold);background:rgba(201,162,75,.1)"></div>Kilitli</div>
+  </div>
+  <div class="q-grid" id="q-grid"></div>
+  <div class="q-msg" id="q-msg" style="color:var(--dim)">Oyunu başlatmak için aşağıdaki butona bas.</div>
+  <button class="btn btn-purple" id="q-btn" onclick="qStart()">⚛️ PROTOKOLÜ BAŞLAT</button>
+  <button class="btn btn-outline" id="q-hint-btn" onclick="qHint()" style="display:none">💡 İPUCU KULLAN (-50 puan)</button>
+</div>
+
+<div class="card" id="q-perk-card" style="display:none">
+  <div class="card-title" style="color:var(--purple)">🔓 Kazanılan Perkler</div>
+  <div id="q-perk-list" style="font-size:12px;line-height:2;color:var(--dim)"></div>
+</div>
+</div>
+<div class="q-perk-toast" id="q-perk-toast"></div>
+
+<script>
+var PERKS=[
+  {id:'scan',name:'Kuantum Tarayıcı',desc:'Bir hücrenin doğru durumunu göster'},
+  {id:'freeze',name:'Zaman Dondurma',desc:'Süreyi 10 saniye durdur'},
+  {id:'shield',name:'Hata Kalkanı',desc:'Bir yanlış hamleyi iptal et'},
+  {id:'reveal',name:'Desen İpucu',desc:'Hedef desenin %50\'sini göster'},
+  {id:'extra-life',name:'Ekstra Can',desc:'Bir can kazan'},
+  {id:'double-pts',name:'Çift Puan',desc:'Bu dalga puanları 2x'},
+  {id:'entangle',name:'Dolanma Ustası',desc:'Dolanık hücreleri otomatik çöz'},
+  {id:'quantum-eye',name:'Kuantum Gözü',desc:'Tüm süperpozisyon hücrelerini göster'},
+  {id:'time-warp',name:'Zaman Bükme',desc:'Süreyi 30 saniyeye sıfırla'},
+  {id:'master-key',name:'Usta Anahtar',desc:'Bir dalga atla'}
+];
+
+var qState={pts:0,wave:0,lives:3,perks:[],activePerks:{},running:false,timer:null,secs:30,cells:[],target:[],doubleNext:false};
+
+function qStart(){
+  qState={pts:0,wave:0,lives:3,perks:[],activePerks:{},running:true,timer:null,secs:30,cells:[],target:[],doubleNext:false};
+  document.getElementById('q-btn').style.display='none';
+  document.getElementById('q-hint-btn').style.display='';
+  document.getElementById('q-perk-card').style.display='none';
+  document.getElementById('q-perk-list').innerHTML='';
+  updateHdr();
+  qNextWave();
+}
+
+function updateHdr(){
+  document.getElementById('hdr-pts').textContent='⭐ '+qState.pts;
+  document.getElementById('q-pts').textContent=qState.pts;
+  document.getElementById('q-wave').textContent=(qState.wave)+'/8';
+  var lives=['','❤️','❤️❤️','❤️❤️❤️'][Math.max(0,Math.min(3,qState.lives))];
+  document.getElementById('q-lives').textContent=lives||'💀';
+  document.getElementById('q-perk').textContent=qState.perks.length;
+}
+
+function qNextWave(){
+  if(qState.wave>=8){qWin();return;}
+  qState.wave++;
+  qState.secs=Math.max(15,35-qState.wave*2);
+  // Build wave indicator
+  var wi=document.getElementById('wave-indicator');
+  wi.innerHTML=Array(8).fill(0).map(function(_,i){
+    var cls='wave-dot'+(i<qState.wave-1?' done':i===qState.wave-1?' active':'');
+    return '<div class="'+cls+'"></div>';
+  }).join('');
+  // Generate target pattern (5x5 = 25 cells, some 1 some 0)
+  var complexity=Math.min(15,5+qState.wave*2);
+  qState.target=Array(25).fill(0).map(function(_,i){return i<complexity?1:0;}).sort(function(){return Math.random()-.5;});
+  // Show pattern
+  document.getElementById('q-pattern').style.display='';
+  var pg=document.getElementById('q-pattern-grid');
+  pg.innerHTML=qState.target.map(function(v){
+    return '<div class="q-pat-cell '+(v?'target-1':'target-0')+'">'+(v?'1':'0')+'</div>';
+  }).join('');
+  // Init cells — random states
+  var states=['superpos','superpos','entangled','collapsed-1','collapsed-0'];
+  qState.cells=Array(25).fill(0).map(function(_,i){
+    return {state:states[Math.floor(Math.random()*states.length)],locked:false,value:null};
+  });
+  renderGrid();
+  qState.msg='⚛️ Dalga '+qState.wave+': Hedef deseni oluştur! ('+qState.secs+'s)';
+  document.getElementById('q-msg').textContent=qState.msg;
+  document.getElementById('q-msg').style.color='var(--cyan)';
+  startTimer();
+  updateHdr();
+}
+
+function renderGrid(){
+  var grid=document.getElementById('q-grid');
+  var icons={superpos:'⚛️',entangled:'🔗','collapsed-1':'✅','collapsed-0':'❌',locked:'🔒'};
+  grid.innerHTML=qState.cells.map(function(c,i){
+    var cls='q-cell '+c.state+(c.locked?' locked':'');
+    var icon=icons[c.state]||'?';
+    return '<div class="'+cls+'" onclick="qTap('+i+')" id="qc'+i+'">'+icon+'</div>';
+  }).join('');
+}
+
+function qTap(i){
+  if(!qState.running)return;
+  var c=qState.cells[i];
+  if(c.locked)return;
+  // Cycle: superpos → collapsed-1 → collapsed-0 → superpos
+  var cycle={'superpos':'collapsed-1','collapsed-1':'collapsed-0','collapsed-0':'superpos','entangled':'collapsed-1'};
+  c.state=cycle[c.state]||'superpos';
+  // Check if matches target
+  var targetVal=qState.target[i];
+  var cellVal=c.state==='collapsed-1'?1:c.state==='collapsed-0'?0:null;
+  c.value=cellVal;
+  var el=document.getElementById('qc'+i);
+  el.className='q-cell '+c.state;
+  var icons={'superpos':'⚛️','entangled':'🔗','collapsed-1':'✅','collapsed-0':'❌','locked':'🔒'};
+  el.textContent=icons[c.state]||'?';
+  // Check win condition
+  checkWaveWin();
+}
+
+function checkWaveWin(){
+  var allMatch=qState.cells.every(function(c,i){
+    var tv=qState.target[i];
+    var cv=c.state==='collapsed-1'?1:c.state==='collapsed-0'?0:null;
+    return cv===tv;
+  });
+  if(allMatch){
+    clearInterval(qState.timer);
+    var bonus=qState.secs*5;
+    var pts=100+bonus+(qState.wave*20);
+    if(qState.doubleNext){pts*=2;qState.doubleNext=false;}
+    qState.pts+=pts;
+    document.getElementById('q-msg').textContent='✅ DALGA '+qState.wave+' TAMAMLANDI! +'+pts+' puan';
+    document.getElementById('q-msg').style.color='var(--green)';
+    beepWin();
+    // Perk kazanma şansı
+    if(Math.random()<0.6){
+      var availPerks=PERKS.filter(function(p){return !qState.perks.includes(p.id);});
+      if(availPerks.length>0){
+        var perk=availPerks[Math.floor(Math.random()*availPerks.length)];
+        qState.perks.push(perk.id);
+        showPerkToast('🔓 YENİ PERK: '+perk.name);
+        updatePerkCard();
+      }
+    }
+    updateHdr();
+    setTimeout(qNextWave,1500);
+  }
+}
+
+function startTimer(){
+  if(qState.timer)clearInterval(qState.timer);
+  var fill=document.getElementById('q-timer-fill');
+  fill.style.transition='none';fill.style.width='100%';
+  fill.style.background=qState.secs>20?'var(--cyan)':qState.secs>10?'var(--gold)':'var(--red2)';
+  setTimeout(function(){
+    fill.style.transition='width '+qState.secs+'s linear';
+    fill.style.width='0%';
+    qState.timer=setInterval(function(){
+      qState.secs--;
+      fill.style.background=qState.secs>15?'var(--cyan)':qState.secs>8?'var(--gold)':'var(--red2)';
+      if(qState.secs<=0){
+        clearInterval(qState.timer);
+        qTimeOut();
+      }
+    },1000);
+  },50);
+}
+
+function qTimeOut(){
+  qState.lives--;
+  updateHdr();
+  if(qState.lives<=0){qGameOver();return;}
+  // Perk öğren (ölünce yeni perk)
+  var availPerks=PERKS.filter(function(p){return !qState.perks.includes(p.id);});
+  if(availPerks.length>0){
+    var perk=availPerks[Math.floor(Math.random()*availPerks.length)];
+    qState.perks.push(perk.id);
+    showPerkToast('💀 Başarısız → 🔓 '+perk.name+' öğrenildi!');
+    updatePerkCard();
+  }
+  document.getElementById('q-msg').textContent='⏰ Süre doldu! Can: '+(qState.lives>0?'❤️'.repeat(qState.lives):'💀');
+  document.getElementById('q-msg').style.color='var(--red2)';
+  beepFail();
+  // Hücreleri sıfırla ve tekrar dene
+  setTimeout(function(){
+    qState.secs=Math.max(15,35-qState.wave*2);
+    qState.cells=qState.cells.map(function(c){return {state:'superpos',locked:false,value:null};});
+    renderGrid();
+    startTimer();
+    document.getElementById('q-msg').textContent='🔄 Tekrar dene! ('+qState.secs+'s)';
+    document.getElementById('q-msg').style.color='var(--gold)';
+  },1200);
+}
+
+function qHint(){
+  if(qState.pts<50)return;
+  qState.pts-=50;
+  updateHdr();
+  // Bir hücreyi doğru duruma getir
+  var wrongCells=qState.cells.map(function(c,i){return {c:c,i:i};}).filter(function(x){
+    var tv=qState.target[x.i];
+    var cv=x.c.state==='collapsed-1'?1:x.c.state==='collapsed-0'?0:null;
+    return cv!==tv&&!x.c.locked;
+  });
+  if(wrongCells.length>0){
+    var pick=wrongCells[Math.floor(Math.random()*wrongCells.length)];
+    var tv=qState.target[pick.i];
+    pick.c.state=tv?'collapsed-1':'collapsed-0';
+    pick.c.locked=true;
+    var el=document.getElementById('qc'+pick.i);
+    el.className='q-cell locked';
+    el.textContent='🔒';
+    checkWaveWin();
+  }
+}
+
+function qGameOver(){
+  qState.running=false;
+  document.getElementById('q-msg').textContent='💀 PROTOKOL ÇÖKTÜ! Toplam: '+qState.pts+' puan';
+  document.getElementById('q-msg').style.color='var(--red2)';
+  document.getElementById('q-btn').style.display='';
+  document.getElementById('q-btn').textContent='🔄 TEKRAR DENE';
+  document.getElementById('q-hint-btn').style.display='none';
+  beepFail();
+  updatePerkCard();
+  saveScore();
+}
+
+function qWin(){
+  qState.running=false;
+  document.getElementById('q-msg').textContent='🏆 TÜM PROTOKOLLER ÇÖZÜLDÜ! '+qState.pts+' puan';
+  document.getElementById('q-msg').style.color='var(--gold)';
+  document.getElementById('q-btn').style.display='';
+  document.getElementById('q-btn').textContent='🔄 YENİDEN OYNA';
+  document.getElementById('q-hint-btn').style.display='none';
+  beepWin();
+  updatePerkCard();
+  saveScore();
+}
+
+function updatePerkCard(){
+  if(qState.perks.length===0)return;
+  document.getElementById('q-perk-card').style.display='';
+  document.getElementById('q-perk-list').innerHTML=qState.perks.map(function(pid){
+    var p=PERKS.find(function(x){return x.id===pid;});
+    return p?'<div style="margin-bottom:6px"><span style="color:var(--purple)">🔓 '+p.name+'</span><br><span style="font-size:10px;color:var(--dim)">'+p.desc+'</span></div>':'';
+  }).join('');
+}
+
+function showPerkToast(msg){
+  var t=document.getElementById('q-perk-toast');
+  t.textContent=msg;
+  t.style.opacity='1';
+  setTimeout(function(){t.style.opacity='0';},2500);
+}
+
+function saveScore(){
+  try{
+    var scores=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    scores['kuantum-kilit']=(scores['kuantum-kilit']||0)+qState.pts;
+    localStorage.setItem('hs_scores',JSON.stringify(scores));
+  }catch(e){}
+}
+
+function beepWin(){
+  try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(880,a.currentTime);o.frequency.exponentialRampToValueAtTime(1760,a.currentTime+.15);g.gain.setValueAtTime(.3,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){
+  try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(220,a.currentTime);o.frequency.exponentialRampToValueAtTime(110,a.currentTime+.3);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.4);o.start();o.stop(a.currentTime+.4);}catch(e){}}
+
+// ===== SOUND EFFECTS =====
+var _audioCtx;
+function _getAudio(){if(!_audioCtx)_audioCtx=new(window.AudioContext||window.webkitAudioContext)();return _audioCtx;}
+function sfxBomb(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(150,a.currentTime);o.frequency.exponentialRampToValueAtTime(30,a.currentTime+0.5);g.gain.setValueAtTime(0.4,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.6);o.start();o.stop(a.currentTime+0.6);}
+function sfxAlarm(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='square';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(800,a.currentTime);o.frequency.setValueAtTime(600,a.currentTime+0.15);o.frequency.setValueAtTime(800,a.currentTime+0.3);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.5);o.start();o.stop(a.currentTime+0.5);}
+function sfxSuccess(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(523,a.currentTime);o.frequency.setValueAtTime(659,a.currentTime+0.1);o.frequency.setValueAtTime(784,a.currentTime+0.2);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.4);o.start();o.stop(a.currentTime+0.4);}
+function sfxClick(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=600;o.type='sine';g.gain.setValueAtTime(0.1,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.05);o.start();o.stop(a.currentTime+0.05);}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Şifreli Mesaj — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:440px;margin:0 auto;padding:16px 16px 80px}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;flex:1}
+.sval{font-size:18px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.stage-badge{text-align:center;margin-bottom:10px}
+.stage-pill{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid}
+.s1{border-color:var(--green);color:var(--green)}.s2{border-color:var(--gold);color:var(--gold)}.s3{border-color:var(--red);color:var(--red)}
+.timer-bar{height:4px;background:var(--line);border-radius:2px;margin-bottom:12px;overflow:hidden}
+.timer-fill{height:100%;background:var(--cyan);transition:width 1s linear}
+.cipher-box{background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center}
+.cipher-label{font-size:11px;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.cipher-text{font-size:22px;font-family:monospace;letter-spacing:.15em;color:var(--cyan);word-break:break-all;line-height:1.5}
+.ref-table{background:rgba(0,224,255,.04);border:1px solid rgba(0,224,255,.15);border-radius:10px;padding:10px;margin-bottom:12px}
+.ref-title{font-size:11px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;text-align:center}
+.ref-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.ref-item{text-align:center;font-size:11px;background:rgba(150,170,200,.05);border-radius:4px;padding:3px 2px}
+.ref-sym{font-size:13px;color:var(--cyan);display:block}
+.ref-ltr{color:var(--dim)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.choice{padding:14px 8px;border:2px solid var(--line);border-radius:12px;background:var(--panel);color:var(--tx);font-size:16px;font-weight:700;cursor:pointer;transition:.12s;text-align:center;font-family:monospace}
+.choice:active{transform:scale(.96)}
+.choice.correct{border-color:var(--green);background:rgba(0,255,136,.12);color:var(--green)}
+.choice.wrong{border-color:var(--red);background:rgba(224,21,21,.12);color:var(--red)}
+.feedback{text-align:center;font-size:13px;min-height:18px;margin-bottom:8px}
+.overlay-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+.big{font-size:48px;font-weight:700;color:var(--cyan)}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:var(--cyan);color:#000;margin-bottom:8px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🔐 ŞİFRELİ MESAJ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="stats">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--cyan)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-stage" style="color:var(--gold)">1/3</div><div class="slbl">AŞAMA</div></div>
+  <div class="sbox"><div class="sval" id="s-correct" style="color:var(--green)">0</div><div class="slbl">DOĞRU</div></div>
+  <div class="sbox"><div class="sval" id="s-time" style="color:var(--red)">—</div><div class="slbl">SÜRE</div></div>
+</div>
+<div class="stage-badge" id="stage-badge"></div>
+<div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+<div id="game-area"></div>
+</div>
+<script>
+// Morse kodu tablosu
+var MORSE={'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..'};
+var MORSE_REV={};Object.keys(MORSE).forEach(function(k){MORSE_REV[MORSE[k]]=k;});
+
+// Sembol şifresi (basit ikame)
+var SYMBOLS={'A':'α','B':'β','C':'γ','D':'δ','E':'ε','F':'ζ','G':'η','H':'θ','I':'ι','J':'κ','K':'λ','L':'μ','M':'ν','N':'ξ','O':'ο','P':'π','R':'ρ','S':'σ','T':'τ','U':'υ','V':'φ','Y':'ψ','Z':'ω'};
+var SYMBOLS_REV={};Object.keys(SYMBOLS).forEach(function(k){SYMBOLS_REV[SYMBOLS[k]]=k;});
+
+// NATO fonetik alfabe
+var NATO={'A':'ALFA','B':'BRAVO','C':'CHARLIE','D':'DELTA','E':'ECHO','F':'FOXTROT','G':'GOLF','H':'HOTEL','I':'INDIA','J':'JULIET','K':'KILO','L':'LIMA','M':'MIKE','N':'NOVEMBER','O':'OSCAR','P':'PAPA','R':'ROMEO','S':'SIERRA','T':'TANGO','U':'UNIFORM','V':'VICTOR','Y':'YANKEE','Z':'ZULU'};
+var NATO_REV={};Object.keys(NATO).forEach(function(k){NATO_REV[NATO[k]]=k;});
+
+var WORDS=['ALFA','BETA','KALE','TANK','HAVA','DENIZ','KARA','RADAR','DRONE','HEDEF','KUVVET','TAKTIK'];
+
+var STAGES=[
+  {label:'AŞAMA 1 — MORSE',cls:'s1',sublabel:'Morse kodunu çöz · 20sn · 8 tur',
+   rounds:8,timeLimit:20,type:'morse',showRef:true},
+  {label:'AŞAMA 2 — SEMBOL',cls:'s2',sublabel:'Yunan sembollerini çöz · 15sn · 10 tur',
+   rounds:10,timeLimit:15,type:'symbol',showRef:true},
+  {label:'AŞAMA 3 — NATO',cls:'s3',sublabel:'NATO fonetik alfabesi · 10sn · 12 tur',
+   rounds:12,timeLimit:10,type:'nato',showRef:false}
+];
+
+var stage=0,round=0,pts=0,correct=0,timer=null,answered=false;
+
+function startStage(){
+  var s=STAGES[stage];
+  round=0;correct=0;answered=false;
+  document.getElementById('stage-badge').innerHTML=
+    '<div class="stage-pill '+s.cls+'">'+s.label+'</div>'+
+    '<div style="font-size:11px;color:var(--dim);margin-top:4px">'+s.sublabel+'</div>';
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  nextRound();
+}
+
+function nextRound(){
+  if(round>=STAGES[stage].rounds){endStage();return;}
+  var s=STAGES[stage];
+  answered=false;
+  var letter=Object.keys(MORSE)[Math.floor(Math.random()*Object.keys(MORSE).length)];
+  var encoded,question;
+  if(s.type==='morse'){encoded=MORSE[letter];question='Morse kodu nedir?';}
+  else if(s.type==='symbol'){encoded=SYMBOLS[letter]||'?';question='Bu sembol hangi harf?';}
+  else{encoded=NATO[letter]||letter;question='NATO fonetik kodu hangi harf?';}
+  var timeLimit=s.timeLimit;
+  document.getElementById('s-time').textContent=timeLimit+'s';
+  document.getElementById('timer-fill').style.transition='none';
+  document.getElementById('timer-fill').style.width='100%';
+  setTimeout(function(){
+    document.getElementById('timer-fill').style.transition='width '+timeLimit+'s linear';
+    document.getElementById('timer-fill').style.width='0%';
+  },50);
+  clearInterval(timer);
+  timer=setInterval(function(){
+    timeLimit--;
+    document.getElementById('s-time').textContent=timeLimit+'s';
+    if(timeLimit<=0){clearInterval(timer);if(!answered)autoFail(letter);}
+  },1000);
+  // Generate wrong answers
+  var allLetters=Object.keys(MORSE);
+  var wrongs=[];
+  while(wrongs.length<3){
+    var w=allLetters[Math.floor(Math.random()*allLetters.length)];
+    if(w!==letter&&!wrongs.includes(w))wrongs.push(w);
+  }
+  var choices=[letter].concat(wrongs).sort(function(){return Math.random()-.5;});
+  var html='<div class="cipher-box">';
+  html+='<div class="cipher-label">'+question+'</div>';
+  html+='<div class="cipher-text">'+encoded+'</div>';
+  html+='</div>';
+  // Reference table
+  if(s.showRef){
+    html+='<div class="ref-table"><div class="ref-title">📖 Referans Tablosu</div><div class="ref-grid">';
+    var keys=Object.keys(MORSE).slice(0,12);
+    keys.forEach(function(k){
+      var sym=s.type==='morse'?MORSE[k]:(SYMBOLS[k]||k);
+      html+='<div class="ref-item"><span class="ref-sym">'+sym+'</span><span class="ref-ltr">'+k+'</span></div>';
+    });
+    html+='</div></div>';
+  }
+  html+='<div class="choices">';
+  choices.forEach(function(ch){
+    html+='<button class="choice" onclick="answer(\''+ch+'\',\''+letter+'\',this)">'+ch+'</button>';
+  });
+  html+='</div><div class="feedback" id="feedback"></div>';
+  document.getElementById('game-area').innerHTML=html;
+}
+
+function answer(val,correct_ans,btn){
+  if(answered)return;
+  answered=true;clearInterval(timer);
+  if(val===correct_ans){
+    btn.classList.add('correct');correct++;pts+=100;
+    document.getElementById('feedback').innerHTML='<span style="color:var(--green)">✅ Doğru!</span>';
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.choice').forEach(function(b){if(b.textContent===correct_ans)b.classList.add('correct');});
+    document.getElementById('feedback').innerHTML='<span style="color:var(--red)">❌ Cevap: '+correct_ans+'</span>';
+  }
+  updateStats();round++;
+  setTimeout(nextRound,900);
+}
+
+function autoFail(correct_ans){
+  answered=true;
+  document.getElementById('feedback').innerHTML='<span style="color:var(--red)">⏱️ Cevap: '+correct_ans+'</span>';
+  round++;setTimeout(nextRound,1000);
+}
+
+function endStage(){
+  clearInterval(timer);
+  try{var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');sc['mobil-sifreli']=Math.max(sc['mobil-sifreli']||0,pts);localStorage.setItem('hs_scores',JSON.stringify(sc));}catch(e){}
+  var html='<div class="overlay-card"><div style="font-size:36px">'+(stage<2?'🎯':'🏆')+'</div>'+
+    '<div class="big">'+pts+'</div>'+
+    '<div style="font-size:13px;color:var(--dim)">'+correct+'/'+STAGES[stage].rounds+' doğru</div></div>';
+  document.getElementById('game-area').innerHTML=html;
+  if(stage<2){
+    var btn=document.createElement('button');btn.className='btn';
+    btn.textContent='▶ AŞAMA '+(stage+2);btn.onclick=function(){stage++;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  } else {
+    var btn=document.createElement('button');btn.className='btn';
+    btn.textContent='🔄 BAŞTAN OYNA';btn.onclick=function(){stage=0;pts=0;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  }
+}
+
+function updateStats(){
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('s-correct').textContent=correct;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+}
+
+startStage();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

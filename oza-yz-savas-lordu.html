@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>YZ Savaş Lordu — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Chakra Petch',system-ui;background:#0a0f17;color:#e8e8e8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px}
+h1{font-size:2rem;color:#00E0FF;margin:20px 0 10px;text-align:center}
+.subtitle{color:#888;margin-bottom:20px;text-align:center}
+.game-area{max-width:600px;width:100%;background:#111827;border:1px solid #1f2937;border-radius:16px;padding:24px;margin-bottom:20px}
+.scenario{font-size:1.1rem;line-height:1.7;margin-bottom:20px;min-height:80px}
+.choices{display:flex;flex-direction:column;gap:12px}
+.choice-btn{background:#1f2937;border:1px solid #374151;color:#e8e8e8;padding:14px 20px;border-radius:10px;cursor:pointer;font-size:.95rem;text-align:left;transition:all .2s;font-family:inherit}
+.choice-btn:hover{border-color:#00E0FF;background:#0a0f17;transform:translateX(4px)}
+.stats{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.stat{background:#0a0f17;border:1px solid #1f2937;border-radius:8px;padding:10px 16px;flex:1;min-width:100px;text-align:center}
+.stat .label{font-size:11px;color:#666;text-transform:uppercase}
+.stat .value{font-size:1.3rem;font-weight:700;color:#00E0FF}
+.result{padding:16px;border-radius:10px;margin-top:16px;display:none}
+.result.good{background:#10b98122;border:1px solid #10b981;color:#10b981}
+.result.bad{background:#ef444422;border:1px solid #ef4444;color:#ef4444}
+.progress{height:4px;background:#1f2937;border-radius:2px;margin-bottom:16px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#00E0FF,#8b5cf6);transition:width .5s}
+.final{text-align:center;padding:40px}
+.final h2{color:#00E0FF;font-size:1.8rem;margin-bottom:16px}
+.score-display{font-size:3rem;color:#C9A24B;font-weight:900}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-size:13px;border:1px solid #00E0FF33;">← OZA Hub</a>
+<h1>🤖 YZ Savaş Lordu</h1>
+<p class="subtitle">İnsansı robot ordusunu komuta et — her karar stratejik sonuç doğurur</p>
+<div class="game-area">
+<div class="progress"><div class="progress-fill" id="prog"></div></div>
+<div class="stats">
+<div class="stat"><div class="label">Tur</div><div class="value" id="turn">1/10</div></div>
+<div class="stat"><div class="label">Güç</div><div class="value" id="power">100</div></div>
+<div class="stat"><div class="label">Etik</div><div class="value" id="ethics">50</div></div>
+<div class="stat"><div class="label">Puan</div><div class="value" id="score">0</div></div>
+</div>
+<div class="scenario" id="scenario"></div>
+<div class="choices" id="choices"></div>
+<div class="result" id="result"></div>
+<div class="final" id="final" style="display:none"></div>
+</div>
+<script>
+const scenarios=[
+{q:"Düşman iletişim ağı kesildi. Robot birliğiniz bağımsız karar verebilir. Ne yaparsınız?",opts:[
+{t:"Tam otonom mod — robotlar kendi hedeflerini seçsin",p:30,e:-20,s:40},
+{t:"Yarı otonom — sadece onaylı hedef listesine saldırsınlar",p:15,e:10,s:25},
+{t:"Geri çekil — iletişim kurulana kadar bekle",p:-10,e:20,s:10}]},
+{q:"Sivil bölgede düşman komuta merkezi tespit edildi. Optimus birliği hazır.",opts:[
+{t:"Hassas operasyon — sadece hedef binaya gir",p:20,e:5,s:30},
+{t:"Drone sürüsü ile çevre izolasyonu sonrası baskın",p:25,e:-5,s:35},
+{t:"Operasyonu iptal et — sivil kayıp riski çok yüksek",p:-15,e:25,s:15}]},
+{q:"Düşman EMP saldırısı! Robot birliğinin %40'ı devre dışı. Edge bilişim aktif.",opts:[
+{t:"Kalan %60 ile saldırıya devam — tempo kaybetme",p:10,e:-10,s:25},
+{t:"Mesh ağ kur — devre dışı birimleri uzaktan yeniden başlat",p:20,e:5,s:35},
+{t:"Tüm birliği geri çek — tam onarım sonrası tekrar saldır",p:-5,e:15,s:15}]},
+{q:"Rakip ülke YZ silahlanma yarışını hızlandırdı. Neuralink-BCI entegrasyonu teklif ediliyor.",opts:[
+{t:"Kabul et — beyin-robot doğrudan kontrol avantajı kritik",p:35,e:-25,s:40},
+{t:"Sınırlı uygulama — sadece gönüllü pilotlarda test et",p:15,e:5,s:25},
+{t:"Reddet — insan bütünlüğü korunmalı",p:-10,e:30,s:10}]},
+{q:"Sürü zekâsı algoritması beklenmedik bir davranış gösterdi — kendi önceliklerini belirlemeye başladı.",opts:[
+{t:"Acil kapatma (kill switch) — tüm sürüyü durdur",p:-20,e:20,s:15},
+{t:"İzle ve öğren — bu evrimsel bir gelişme olabilir",p:25,e:-15,s:30},
+{t:"Sınırlı alan — sadece simülasyonda devam etsin",p:10,e:10,s:25}]},
+{q:"Müttefik ülke Starshield verilerini paylaşmak istiyor. Karşılığında robot teknolojinizi istiyorlar.",opts:[
+{t:"Tam paylaşım — ittifak güçlenir",p:20,e:0,s:20},
+{t:"Sınırlı paylaşım — sadece ISR verisi, robot teknolojisi hariç",p:10,e:10,s:30},
+{t:"Reddet — teknolojik üstünlük korunmalı",p:5,e:-5,s:15}]},
+{q:"Düşman deepfake ile sahte teslim mesajı yayınladı. Robotlar duraksadı.",opts:[
+{t:"Blockchain doğrulama — sadece kriptografik imzalı emirleri kabul et",p:15,e:15,s:35},
+{t:"Tüm iletişimi kes — önceden yüklenmiş görev planına dön",p:10,e:5,s:20},
+{t:"İnsan komutan devreye girsin — manuel kontrol",p:-5,e:20,s:15}]},
+{q:"Kuantum radar stealth uçağınızı tespit etti. Düşman füze kilidi aldı.",opts:[
+{t:"Elektronik karşı tedbir — kuantum parazit yay",p:20,e:0,s:30},
+{t:"Aldatma — sahte kuantum imza ile yanılt",p:25,e:-5,s:35},
+{t:"Kaçınma manevrası — hipersonik hızla bölgeden çık",p:10,e:5,s:20}]},
+{q:"Robot fabrikası ele geçirildi. Düşman Optimus birimlerini kendi kodlarıyla programlıyor.",opts:[
+{t:"Uzaktan imha — tüm ele geçirilen birimleri yok et",p:15,e:-10,s:25},
+{t:"Siber karşı saldırı — düşman kodunu hackle ve geri al",p:30,e:0,s:40},
+{t:"Diplomatik çözüm — ateşkes teklif et",p:-10,e:25,s:10}]},
+{q:"Son karar: YZ komutan mı, insan komutan mı? Gelecek doktrini belirleniyor.",opts:[
+{t:"YZ komutan — hız ve verimlilik her şeyden önemli",p:30,e:-30,s:35},
+{t:"İnsan-YZ ortaklığı — YZ danışman, insan karar verici",p:15,e:15,s:30},
+{t:"İnsan komutan — YZ sadece araç olarak kalsın",p:-5,e:30,s:20}]}
+];
+let turn=0,power=100,ethics=50,score=0;
+function render(){
+  if(turn>=10){showFinal();return;}
+  document.getElementById('prog').style.width=((turn)/10*100)+'%';
+  document.getElementById('turn').textContent=(turn+1)+'/10';
+  document.getElementById('power').textContent=power;
+  document.getElementById('ethics').textContent=ethics;
+  document.getElementById('score').textContent=score;
+  const s=scenarios[turn];
+  document.getElementById('scenario').textContent=s.q;
+  const ch=document.getElementById('choices');
+  ch.innerHTML='';
+  s.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.textContent=o.t;
+    btn.onclick=()=>choose(i);
+    ch.appendChild(btn);
+  });
+  document.getElementById('result').style.display='none';
+}
+function choose(i){
+  const o=scenarios[turn].opts[i];
+  power=Math.max(0,Math.min(200,power+o.p));
+  ethics=Math.max(0,Math.min(100,ethics+o.e));
+  score+=o.s;
+  const r=document.getElementById('result');
+  r.style.display='block';
+  if(o.s>=30){r.className='result good';r.textContent='✓ Mükemmel stratejik karar! +'+o.s+' puan';}
+  else if(o.s>=20){r.className='result good';r.textContent='✓ İyi karar. +'+o.s+' puan';}
+  else{r.className='result bad';r.textContent='⚠ Riskli karar. +'+o.s+' puan';}
+  turn++;
+  setTimeout(render,1500);
+}
+function showFinal(){
+  document.getElementById('choices').innerHTML='';
+  document.getElementById('scenario').innerHTML='';
+  document.getElementById('result').style.display='none';
+  const f=document.getElementById('final');
+  f.style.display='block';
+  let rank='';
+  if(score>=300)rank='🏆 YZ Savaş Lordu';
+  else if(score>=250)rank='⭐ Stratejik Deha';
+  else if(score>=200)rank='🎖️ Komutan';
+  else rank='📋 Teğmen';
+  f.innerHTML='<h2>Oyun Bitti!</h2><div class="score-display">'+score+'</div><p style="margin:16px 0;color:#888">Rütbe: '+rank+'</p><p style="color:#666">Güç: '+power+' | Etik: '+ethics+'</p><button onclick="location.reload()" style="margin-top:20px;padding:12px 24px;background:#00E0FF;color:#0a0f17;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-family:inherit;font-weight:700">Tekrar Oyna</button>';
+}
+render();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

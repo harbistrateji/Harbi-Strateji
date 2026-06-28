@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html data-hs-skip lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadir Metal Taktik — CS Tarzı</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--txt:#e8eaf0;--dim:#6b7280;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#000;overflow:hidden;height:100vh;font-family:'Segoe UI',monospace;}
+canvas{display:block;cursor:crosshair;}
+/* HUD */
+#hud{position:fixed;top:0;left:0;right:0;pointer-events:none;z-index:10;padding:8px 14px;background:linear-gradient(180deg,rgba(0,0,0,.8),transparent);display:flex;justify-content:space-between;align-items:center;}
+.hud-stat{display:flex;align-items:center;gap:6px;font-size:.78rem;}
+.hud-val{font-weight:900;color:var(--cyan);}
+.hp-bar{width:100px;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;}
+.hp-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .2s;}
+/* WEAPON SELECT */
+#weaponBar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;background:rgba(0,0,0,.8);border:1px solid var(--border);border-radius:10px;padding:8px;pointer-events:auto;}
+.w-slot{width:64px;height:64px;border:2px solid var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:rgba(0,0,0,.5);}
+.w-slot.active{border-color:var(--gold);background:rgba(201,162,75,.15);}
+.w-icon{font-size:1.6rem;}
+.w-name{font-size:.55rem;color:var(--dim);text-align:center;margin-top:2px;}
+.w-ammo{font-size:.6rem;color:var(--cyan);font-weight:700;}
+/* MINIMAP */
+#minimap{position:fixed;top:60px;right:10px;background:rgba(0,0,0,.7);border:1px solid var(--border);border-radius:6px;padding:4px;}
+/* ROUND INFO */
+#roundInfo{position:fixed;top:50px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;}
+.round-title{font-size:1.2rem;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(201,162,75,.5);}
+.round-sub{font-size:.75rem;color:var(--dim);}
+/* KILL FEED */
+#killFeed{position:fixed;top:60px;left:10px;pointer-events:none;}
+.kf-item{font-size:.72rem;background:rgba(0,0,0,.6);border-left:3px solid var(--red);padding:3px 8px;margin-bottom:3px;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
+/* INTRO */
+#intro{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.intro-title{font-size:2.5rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;}
+.intro-title span{color:var(--red);}
+.weapon-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:600px;margin:16px 0 24px;}
+.wg-card{background:var(--panel);border:2px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .2s;text-align:center;}
+.wg-card:hover,.wg-card.sel{border-color:var(--gold);background:rgba(201,162,75,.1);}
+.wg-icon{font-size:2rem;margin-bottom:4px;}
+.wg-name{font-size:.78rem;font-weight:700;color:var(--gold);}
+.wg-stats{font-size:.62rem;color:var(--dim);margin-top:4px;line-height:1.5;}
+.wg-metals{font-size:.6rem;color:var(--cyan);margin-top:3px;}
+.btn-play{background:linear-gradient(135deg,var(--red),#a00);color:#fff;border:none;border-radius:8px;padding:14px 36px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:2px;text-transform:uppercase;}
+/* OYUN BİTTİ */
+#gameOver{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
+#gameOver.show{display:flex;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+<canvas id="c"></canvas>
+
+<!-- HUD -->
+<div id="hud">
+  <div style="display:flex;gap:16px;align-items:center;">
+    <div class="hud-stat">❤️ <div class="hp-bar"><div class="hp-fill" id="hpFill" style="width:100%"></div></div></div>
+    <div class="hud-stat">🎯 <span class="hud-val" id="killsVal">0</span> öldürme</div>
+  </div>
+  <div id="roundInfo">
+    <div class="round-title" id="roundTitle">ROUND 1</div>
+    <div class="round-sub" id="roundSub">Düşmanları temizle</div>
+  </div>
+  <div style="display:flex;gap:16px;align-items:center;">
+    <div class="hud-stat">🏆 <span class="hud-val" id="scoreVal">0</span></div>
+    <div class="hud-stat">🔫 <span class="hud-val" id="ammoVal">30/30</span></div>
+  </div>
+</div>
+
+<!-- KILL FEED -->
+<div id="killFeed"></div>
+
+<!-- MINIMAP -->
+<canvas id="minimap" width="120" height="120"></canvas>
+
+<!-- WEAPON BAR -->
+<div id="weaponBar" style="display:none;"></div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-title">🎯 NADİR METAL <span>TAKTİK</span></div>
+  <div style="font-size:.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:12px;">CS Tarzı Top-Down Taktik Nişancı</div>
+  <div style="font-size:.82rem;color:var(--dim);max-width:500px;line-height:1.7;margin-bottom:16px;">
+    Nadir metallerden üretilmiş silahlarla düşman kuvvetlerini durdur!<br>
+    Her silah farklı nadir metal gerektirir — Çin ambargosu silahını etkiler!
+  </div>
+  <div style="font-size:.8rem;color:var(--gold);margin-bottom:10px;">Başlangıç Silahını Seç:</div>
+  <div class="weapon-grid" id="weaponGrid"></div>
+  <button class="btn-play" onclick="startGame()">🎯 SAVAŞA GİR</button>
+</div>
+
+<!-- OYUN BİTTİ -->
+<div id="gameOver">
+  <div style="font-size:3rem;margin-bottom:12px;" id="goIcon">💀</div>
+  <div style="font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:8px;" id="goTitle">ROUND BİTTİ</div>
+  <div style="font-size:3rem;font-weight:900;color:var(--cyan);margin:12px 0;" id="goScore">0</div>
+  <div style="display:flex;gap:12px;margin-top:16px;">
+    <button class="btn-play" onclick="yenidenBaslatGame()">🔄 Tekrar</button>
+    <button style="background:transparent;color:var(--cyan);border:1px solid var(--cyan);border-radius:8px;padding:14px 24px;cursor:pointer;" onclick="location.reload()">🏠 Menü</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const mm = document.getElementById('minimap');
+const mctx = mm.getContext('2d');
+
+// ===== WEAPONS =====
+const WEAPONS_DATA = [
+  {id:'ak47',name:'AK-47',icon:'🔫',damage:35,rng:300,fireRate:150,ammo:30,maxAmmo:30,speed:0.8,color:'#e67e22',metals:'Co+Cr+Ni',metalReq:{Co:1},desc:'Güvenilir, yüksek hasar'},
+  {id:'m4',name:'M4A1',icon:'🔫',damage:28,rng:350,fireRate:100,ammo:30,maxAmmo:30,speed:1,color:'#3498db',metals:'Ti+Cr+Nd',metalReq:{Ti:1},desc:'Hassas, hızlı atış'},
+  {id:'awp',name:'AWP Keskin',icon:'🎯',damage:120,rng:600,fireRate:1200,ammo:5,maxAmmo:5,speed:0.6,color:'#9b59b6',metals:'Ti+W+Nd',metalReq:{W:1},desc:'Tek atım öldürme'},
+  {id:'railgun',name:'Raylı Top',icon:'⚡',damage:200,rng:800,fireRate:2000,ammo:3,maxAmmo:3,speed:0.5,color:'#c41e3a',metals:'Nd+Dy+Ga',metalReq:{Nd:2,Dy:1},desc:'Nadir metal lazer'},
+  {id:'shotgun',name:'Av Tüfeği',icon:'💥',damage:80,rng:150,fireRate:600,ammo:8,maxAmmo:8,speed:0.7,color:'#e74c3c',metals:'Ti+Co',metalReq:{Co:1},desc:'Yakın mesafe etkili'},
+  {id:'smg',name:'MP5',icon:'🔫',damage:18,rng:200,fireRate:80,ammo:45,maxAmmo:45,speed:1.2,color:'#27ae60',metals:'Co+Cr',metalReq:{Co:1},desc:'Hızlı, çok mermi'},
+];
+
+// ===== MAP =====
+const TILE = 32;
+const MAP_W = 30, MAP_H = 22;
+let mapData = [];
+
+function generateMap(){
+  mapData = [];
+  for(let r=0;r<MAP_H;r++){
+    mapData[r]=[];
+    for(let c=0;c<MAP_W;c++){
+      // Border walls
+      if(r===0||r===MAP_H-1||c===0||c===MAP_W-1){mapData[r][c]=1;continue;}
+      mapData[r][c]=0;
+    }
+  }
+  // Interior walls (CS-style cover)
+  const walls=[
+    [3,3,5,1],[3,8,1,4],[8,3,1,5],[12,5,4,1],[6,12,1,4],[14,10,1,5],
+    [18,3,1,5],[22,6,4,1],[25,3,1,4],[20,14,4,1],[10,16,1,4],[16,16,4,1],
+    [5,18,4,1],[22,18,1,3],[8,8,3,1],[15,8,1,3],[18,12,3,1],[12,14,1,3],
+  ];
+  walls.forEach(([c,r,w,h])=>{
+    for(let dr=0;dr<h;dr++) for(let dc=0;dc<w;dc++) if(r+dr<MAP_H&&c+dc<MAP_W) mapData[r+dr][c+dc]=1;
+  });
+}
+
+// ===== GAME STATE =====
+let G = {
+  player:{x:3*TILE+16,y:3*TILE+16,angle:0,hp:100,maxHp:100,speed:3},
+  enemies:[],
+  bullets:[],
+  particles:[],
+  weapons:[...WEAPONS_DATA],
+  currentWeapon:0,
+  puan:0,kills:0,round:1,
+  lastShot:0,
+  running:false,
+  selectedWeaponId:'m4',
+};
+
+function spawnEnemies(){
+  const count = 3 + G.round * 2;
+  G.enemies = [];
+  const spawnPoints = [[26*TILE,20*TILE],[28*TILE,2*TILE],[26*TILE,10*TILE],[2*TILE,20*TILE],[14*TILE,20*TILE]];
+  for(let i=0;i<count;i++){
+    const sp = spawnPoints[i%spawnPoints.length];
+    G.enemies.push({
+      x:sp[0]+(Math.random()-.5)*TILE*2,
+      y:sp[1]+(Math.random()-.5)*TILE*2,
+      hp:30+G.round*10,maxHp:30+G.round*10,
+      angle:0,speed:0.8+G.round*0.1,
+      shootTimer:Math.random()*2000,
+      color:`hsl(${Math.random()*60},70%,50%)`,
+      type:Math.random()<.2?'heavy':'normal',
+    });
+  }
+}
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  generateMap();
+  G.running=true;
+  G.currentWeapon=WEAPONS_DATA.findIndex(w=>w.id===G.selectedWeaponId);
+  if(G.currentWeapon<0) G.currentWeapon=1;
+  spawnEnemies();
+  buildWeaponBar();
+  document.getElementById('weaponBar').style.display='flex';
+  loop();
+}
+
+function yenidenBaslatGame(){
+  document.getElementById('gameOver').classList.remove('show');
+  G.player.hp=G.player.maxHp;
+  G.score=0;G.kills=0;G.round=1;
+  G.bullets=[];G.particles=[];
+  document.getElementById('scoreVal').textContent='0';
+  document.getElementById('killsVal').textContent='0';
+  document.getElementById('hpFill').style.width='100%';
+  spawnEnemies();
+  G.running=true;
+}
+
+// ===== INPUT =====
+let keys={}, mouse={x:0,y:0,down:false};
+document.addEventListener('keydown',e=>{keys[e.key]=true;e.preventDefault();});
+document.addEventListener('keyup',e=>keys[e.key]=false);
+canvas.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+canvas.addEventListener('mousedown',e=>{mouse.down=true;shoot();});
+canvas.addEventListener('mouseup',e=>mouse.down=false);
+document.addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<='6') selectWeapon(parseInt(e.key)-1);
+  if(e.key==='r'||e.key==='R') reload();
+});
+
+function selectWeapon(i){
+  if(i<G.weapons.length){
+    G.currentWeapon=i;
+    buildWeaponBar();
+  }
+}
+
+function buildWeaponBar(){
+  const bar=document.getElementById('weaponBar');
+  bar.innerHTML=G.weapons.map((w,i)=>`
+    <div class="w-slot ${i===G.currentWeapon?'active':''}" onclick="selectWeapon(${i})">
+      <div class="w-icon">${w.icon}</div>
+      <div class="w-name">${w.name}</div>
+      <div class="w-ammo">${w.ammo}/${w.maxAmmo}</div>
+    </div>
+  `).join('');
+}
+
+function reload(){
+  const w=G.weapons[G.currentWeapon];
+  w.ammo=w.maxAmmo;
+  buildWeaponBar();
+  updateAmmoUI();
+  addKillFeed('🔄 Şarjör değiştirildi');
+}
+
+function updateAmmoUI(){
+  const w=G.weapons[G.currentWeapon];
+  document.getElementById('ammoVal').textContent=`${w.ammo}/${w.maxAmmo}`;
+}
+
+// ===== SHOOTING =====
+function shoot(){
+  if(!G.running) return;
+  const w=G.weapons[G.currentWeapon];
+  const now=Date.now();
+  if(now-G.lastShot<w.fireRate) return;
+  if(w.ammo<=0){addKillFeed('⚠️ Mermi bitti! R ile yenile');return;}
+  G.lastShot=now;
+  w.ammo--;
+  updateAmmoUI();
+  buildWeaponBar();
+  
+  const cx=canvas.width/2, cy=canvas.height/2;
+  const angle=Math.atan2(mouse.y-cy,mouse.x-cx);
+  const spread=(w.id==='shotgun')?0.3:0.05;
+  
+  const count=w.id==='shotgun'?5:1;
+  for(let i=0;i<count;i++){
+    const a=angle+(Math.random()-.5)*spread;
+    G.bullets.push({
+      x:G.player.x,y:G.player.y,
+      vx:Math.cos(a)*12,vy:Math.sin(a)*12,
+      damage:w.damage,range:w.rng,traveled:0,
+      color:w.color,owner:'player',
+      size:w.id==='railgun'?4:2,
+    });
+  }
+  
+  // Muzzle flash
+  for(let i=0;i<8;i++){
+    G.particles.push({x:G.player.x,y:G.player.y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,life:12,color:w.color,size:3});
+  }
+}
+
+// ===== UPDATE =====
+function update(){
+  if(!G.running) return;
+  
+  // Player movement
+  const spd=G.player.speed;
+  if(keys['ArrowUp']||keys['w']||keys['W']) tryMove(0,-spd);
+  if(keys['ArrowDown']||keys['s']||keys['S']) tryMove(0,spd);
+  if(keys['ArrowLeft']||keys['a']||keys['A']) tryMove(-spd,0);
+  if(keys['ArrowRight']||keys['d']||keys['D']) tryMove(spd,0);
+  
+  // Auto-fire
+  if(mouse.down) shoot();
+  
+  // Player angle
+  const cx=canvas.width/2, cy=canvas.height/2;
+  G.player.angle=Math.atan2(mouse.y-cy,mouse.x-cx);
+  
+  // Bullets
+  G.bullets=G.bullets.filter(b=>{
+    b.x+=b.vx; b.y+=b.vy; b.traveled+=Math.sqrt(b.vx*b.vx+b.vy*b.vy);
+    if(b.traveled>b.range) return false;
+    
+    // Wall collision
+    const col=Math.floor(b.x/TILE), row=Math.floor(b.y/TILE);
+    if(row<0||row>=MAP_H||col<0||col>=MAP_W||mapData[row][col]===1){
+      spawnHitParticles(b.x,b.y,'#aaa');
+      return false;
+    }
+    
+    // Enemy hit
+    if(b.owner==='player'){
+      for(let i=G.enemies.length-1;i>=0;i--){
+        const e=G.enemies[i];
+        const dx=b.x-e.x, dy=b.y-e.y;
+        if(Math.sqrt(dx*dx+dy*dy)<16){
+          e.hp-=b.damage;
+          spawnHitParticles(b.x,b.y,'#e74c3c');
+          if(e.hp<=0){
+            G.enemies.splice(i,1);
+            G.kills++;G.score+=100+G.round*50;
+            document.getElementById('killsVal').textContent=G.kills;
+            document.getElementById('scoreVal').textContent=G.score.toLocaleString();
+            addKillFeed(`💀 Düşman öldürüldü! +${100+G.round*50}`);
+            spawnDeathParticles(e.x,e.y);
+          }
+          return false;
+        }
+      }
+    }
+    
+    // Player hit
+    if(b.owner==='enemy'){
+      const dx=b.x-G.player.x, dy=b.y-G.player.y;
+      if(Math.sqrt(dx*dx+dy*dy)<16){
+        G.player.hp-=b.damage;
+        document.getElementById('hpFill').style.width=Math.max(0,G.player.hp/G.player.maxHp*100)+'%';
+        spawnHitParticles(b.x,b.y,'#3498db');
+        if(G.player.hp<=0){
+          G.running=false;
+          showGameOver();
+        }
+        return false;
+      }
+    }
+    return true;
+  });
+  
+  // Enemies
+  G.enemies.forEach(e=>{
+    const dx=G.player.x-e.x, dy=G.player.y-e.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    e.angle=Math.atan2(dy,dx);
+    
+    if(dist>60){
+      const nx=dx/dist, ny=dy/dist;
+      const nx2=e.x+nx*e.speed, ny2=e.y+ny*e.speed;
+      const col=Math.floor(nx2/TILE), row=Math.floor(ny2/TILE);
+      if(row>=0&&row<MAP_H&&col>=0&&col<MAP_W&&mapData[row][col]!==1){
+        e.x=nx2; e.y=ny2;
+      }
+    }
+    
+    // Enemy shoot
+    e.shootTimer-=16;
+    if(e.shootTimer<=0&&dist<300){
+      e.shootTimer=1500+Math.random()*1000;
+      const spread=0.15;
+      G.bullets.push({
+        x:e.x,y:e.y,
+        vx:Math.cos(e.angle+( Math.random()-.5)*spread)*8,
+        vy:Math.sin(e.angle+(Math.random()-.5)*spread)*8,
+        damage:e.type==='heavy'?20:10,range:280,traveled:0,
+        color:'#e74c3c',owner:'enemy',size:2,
+      });
+    }
+  });
+  
+  // Particles
+  G.particles=G.particles.filter(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life--;
+    return p.life>0;
+  });
+  
+  // Round complete
+  if(G.enemies.length===0&&G.running){
+    G.round++;
+    G.score+=500;
+    document.getElementById('scoreVal').textContent=G.score.toLocaleString();
+    document.getElementById('roundTitle').textContent=`ROUND ${G.round}`;
+    addKillFeed(`🏆 Round ${G.round-1} tamamlandı! +500`);
+    G.player.hp=Math.min(G.player.maxHp,G.player.hp+30);
+    document.getElementById('hpFill').style.width=(G.player.hp/G.player.maxHp*100)+'%';
+    spawnEnemies();
+    // Reload all weapons
+    G.weapons.forEach(w=>w.ammo=w.maxAmmo);
+    buildWeaponBar();updateAmmoUI();
+  }
+}
+
+function tryMove(dx,dy){
+  const nx=G.player.x+dx, ny=G.player.y+dy;
+  const col=Math.floor(nx/TILE), row=Math.floor(ny/TILE);
+  if(row>=0&&row<MAP_H&&col>=0&&col<MAP_W&&mapData[row][col]!==1){
+    G.player.x=nx; G.player.y=ny;
+  }
+}
+
+function spawnHitParticles(x,y,color){
+  for(let i=0;i<5;i++) G.particles.push({x,y,vx:(Math.random()-.5)*5,vy:(Math.random()-.5)*5,life:15,color,size:2});
+}
+function spawnDeathParticles(x,y){
+  for(let i=0;i<12;i++) G.particles.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,life:30,color:'#e74c3c',size:3});
+}
+
+// ===== RENDER =====
+function render(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  
+  const offX=canvas.width/2-G.player.x;
+  const offY=canvas.height/2-G.player.y;
+  
+  ctx.save();
+  ctx.translate(offX,offY);
+  
+  // Floor
+  ctx.fillStyle='#1a1a2e';
+  ctx.fillRect(0,0,MAP_W*TILE,MAP_H*TILE);
+  
+  // Floor tiles
+  for(let r=0;r<MAP_H;r++) for(let c=0;c<MAP_W;c++){
+    if((r+c)%2===0){ctx.fillStyle='rgba(255,255,255,.02)';ctx.fillRect(c*TILE,r*TILE,TILE,TILE);}
+  }
+  
+  // Walls
+  for(let r=0;r<MAP_H;r++) for(let c=0;c<MAP_W;c++){
+    if(mapData[r][c]===1){
+      ctx.fillStyle='#2c3e50';
+      ctx.fillRect(c*TILE,r*TILE,TILE,TILE);
+      ctx.fillStyle='rgba(255,255,255,.05)';
+      ctx.fillRect(c*TILE,r*TILE,TILE,3);
+      ctx.fillRect(c*TILE,r*TILE,3,TILE);
+      ctx.fillStyle='rgba(0,0,0,.3)';
+      ctx.fillRect(c*TILE+TILE-3,r*TILE,3,TILE);
+      ctx.fillRect(c*TILE,r*TILE+TILE-3,TILE,3);
+    }
+  }
+  
+  // Bullets
+  G.bullets.forEach(b=>{
+    ctx.beginPath();
+    ctx.arc(b.x,b.y,b.size,0,Math.PI*2);
+    ctx.fillStyle=b.color;
+    ctx.shadowColor=b.color;
+    ctx.shadowBlur=8;
+    ctx.fill();
+    ctx.shadowBlur=0;
+  });
+  
+  // Enemies
+  G.enemies.forEach(e=>{
+    // Shadow
+    ctx.beginPath();ctx.ellipse(e.x,e.y+14,12,5,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,.4)';ctx.fill();
+    
+    // Body
+    ctx.save();ctx.translate(e.x,e.y);ctx.rotate(e.angle);
+    ctx.fillStyle=e.type==='heavy'?'#8e44ad':'#c0392b';
+    ctx.fillRect(-12,-12,24,24);
+    ctx.fillStyle='rgba(255,255,255,.2)';
+    ctx.fillRect(-12,-12,24,4);
+    ctx.fillStyle='#e74c3c';
+    ctx.fillRect(8,-4,8,8); // gun
+    ctx.restore();
+    
+    // HP bar
+    const bw=28, bh=4;
+    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(e.x-bw/2,e.y-20,bw,bh);
+    ctx.fillStyle=e.hp/e.maxHp>0.5?'#27ae60':'#e74c3c';
+    ctx.fillRect(e.x-bw/2,e.y-20,bw*(e.hp/e.maxHp),bh);
+  });
+  
+  // Player
+  ctx.save();ctx.translate(G.player.x,G.player.y);ctx.rotate(G.player.angle);
+  // Body
+  ctx.fillStyle='#3498db';
+  ctx.beginPath();ctx.arc(0,0,14,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#2980b9';
+  ctx.beginPath();ctx.arc(0,0,10,0,Math.PI*2);ctx.fill();
+  // Gun
+  const w=G.weapons[G.currentWeapon];
+  ctx.fillStyle=w.color;
+  ctx.fillRect(8,-3,16,6);
+  ctx.fillStyle='rgba(255,255,255,.3)';
+  ctx.fillRect(8,-3,16,2);
+  ctx.restore();
+  
+  // Particles
+  G.particles.forEach(p=>{
+    ctx.globalAlpha=p.life/30;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fillStyle=p.color;ctx.fill();
+    ctx.globalAlpha=1;
+  });
+  
+  ctx.restore();
+  
+  // Minimap
+  renderMinimap();
+}
+
+function renderMinimap(){
+  const scale=120/(MAP_W*TILE);
+  mctx.fillStyle='rgba(0,0,0,.8)';
+  mctx.fillRect(0,0,120,120);
+  for(let r=0;r<MAP_H;r++) for(let c=0;c<MAP_W;c++){
+    if(mapData[r][c]===1){mctx.fillStyle='#2c3e50';mctx.fillRect(c*TILE*scale,r*TILE*scale,TILE*scale,TILE*scale);}
+  }
+  mctx.fillStyle='#3498db';
+  mctx.beginPath();mctx.arc(G.player.x*scale,G.player.y*scale,3,0,Math.PI*2);mctx.fill();
+  G.enemies.forEach(e=>{
+    mctx.fillStyle='#e74c3c';
+    mctx.beginPath();mctx.arc(e.x*scale,e.y*scale,2,0,Math.PI*2);mctx.fill();
+  });
+}
+
+function addKillFeed(text){
+  const kf=document.getElementById('killFeed');
+  const item=document.createElement('div');
+  item.className='kf-item';item.textContent=text;
+  kf.appendChild(item);
+  setTimeout(()=>item.remove(),3000);
+  while(kf.children.length>5) kf.removeChild(kf.firstChild);
+}
+
+function showGameOver(){
+  document.getElementById('goIcon').textContent='💀';
+  document.getElementById('goTitle').textContent=`ROUND ${G.round} — OYUN BİTTİ`;
+  document.getElementById('goScore').textContent=G.score.toLocaleString()+' PUAN';
+  document.getElementById('gameOver').classList.add('show');
+}
+
+// ===== WEAPON SELECT UI =====
+function buildWeaponSelectUI(){
+  const grid=document.getElementById('weaponGrid');
+  grid.innerHTML=WEAPONS_DATA.map(w=>`
+    <div class="wg-card ${w.id===G.selectedWeaponId?'sel':''}" onclick="selectStartWeapon('${w.id}',this)">
+      <div class="wg-icon">${w.icon}</div>
+      <div class="wg-name">${w.name}</div>
+      <div class="wg-stats">Hasar: ${w.damage} | Menzil: ${w.rng}<br>Ateş Hızı: ${1000/w.fireRate|0}/sn</div>
+      <div class="wg-metals">⚗️ ${w.metals}</div>
+    </div>
+  `).join('');
+}
+function selectStartWeapon(id,el){
+  document.querySelectorAll('.wg-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  G.selectedWeaponId=id;
+}
+buildWeaponSelectUI();
+
+// ===== LOOP =====
+function loop(){
+  if(!G.running){requestAnimationFrame(loop);return;}
+  update();render();
+  requestAnimationFrame(loop);
+}
+loop();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

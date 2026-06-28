@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="hud">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Saat Gibi İşleyen Ordular — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.top{position:sticky;top:0;z-index:60;background:rgba(10,15,23,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 20px}
+.top .in{max-width:700px;margin:0 auto;display:flex;align-items:center;gap:14px;min-height:52px}
+.back{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);text-decoration:none}.back:hover{color:#fff}
+.title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;flex:1;text-align:center}
+.hdr-score{font-size:12px;color:var(--gold);font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:700px;margin:0 auto;padding:24px 20px 80px}
+.game-header{text-align:center;margin-bottom:24px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(22px,5vw,36px);color:#fff}
+.game-header .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:6px}
+.score-band{display:flex;justify-content:center;gap:0;margin-bottom:24px;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.sb-item{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line2)}
+.sb-item:last-child{border-right:none}
+.sb-val{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:var(--red2)}
+.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.era-card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.era-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan))}
+.era-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.era-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:#fff;margin-bottom:10px}
+.era-body{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:14px}
+.era-fact{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);padding:10px;background:rgba(201,162,75,.08);border-radius:8px;border-left:3px solid var(--gold)}
+.choices{display:grid;grid-template-columns:1fr;gap:10px;margin:20px 0}
+.choice-btn{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px 18px;cursor:pointer;transition:all .2s;text-align:left}
+.choice-btn:hover{border-color:var(--gold);background:rgba(201,162,75,.05)}
+.choice-btn.correct{border-color:var(--green);background:rgba(0,255,136,.08)}
+.choice-btn.wrong{border-color:var(--red2);background:rgba(224,21,21,.08)}
+.choice-btn h4{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.choice-btn p{font-size:11px;color:var(--dim)}
+.result-panel{display:none;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:20px;margin:16px 0;text-align:center}
+.result-panel.show{display:block}
+.res-icon{font-size:40px;margin-bottom:8px}
+.res-text{font-size:13px;color:var(--dim);line-height:1.7}
+.next-btn{display:none;margin:16px auto;padding:14px 28px;background:var(--gold);color:#000;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+.next-btn.show{display:block}
+.final-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.9);align-items:center;justify-content:center;padding:20px}
+.final-overlay.show{display:flex}
+.final-box{background:var(--panel);border:2px solid var(--gold);border-radius:20px;padding:36px;max-width:400px;width:100%;text-align:center}
+.final-box h2{font-family:'Chakra Petch',sans-serif;font-size:28px;color:var(--gold);margin-bottom:12px}
+.final-box .score{font-size:48px;font-weight:700;color:var(--green);margin:12px 0}
+.final-box p{font-size:13px;color:var(--dim);margin-bottom:16px}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;padding:12px 20px;border-radius:9px;border:none;cursor:pointer}
+.btn-gold{background:var(--gold);color:#000}
+.btn-outline{background:transparent;color:var(--dim);border:1px solid var(--line2)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="top"><div class="in">
+  <a href="oza-hub.html" class="back">← OZA</a>
+  <span class="title">⏰ Saat Gibi İşleyen Ordular</span>
+  <span class="hdr-score" id="hdr-score">⭐ 0</span>
+</div></header>
+<div class="wrap">
+  <div class="game-header">
+    <h1>SAAT GİBİ İŞLEYEN ORDULAR</h1>
+    <div class="sub">MEKANİK REJİM · VESTFALİYA'DAN ENDÜSTRİYE · 12 ETAP</div>
+  </div>
+  <div class="score-band">
+    <div class="sb-item"><div class="sb-val" id="s-score">0</div><div class="sb-lbl">Puan</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-round">1/12</div><div class="sb-lbl">Etap</div></div>
+    <div class="sb-item"><div class="sb-val" id="s-streak">0</div><div class="sb-lbl">Seri</div></div>
+  </div>
+  <div id="era-card" class="era-card"></div>
+  <div id="choices" class="choices"></div>
+  <div id="result-panel" class="result-panel"></div>
+  <button id="next-btn" class="next-btn" onclick="nextRound()">Sonraki Etap →</button>
+</div>
+<div id="final-overlay" class="final-overlay">
+  <div class="final-box">
+    <h2>Tebrikler!</h2>
+    <div class="score" id="final-score">0</div>
+    <p id="final-text">Mekanik Rejim uzmanı oldunuz!</p>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="location.reload()">Tekrar Oyna</button>
+      <a href="oza-hub.html" class="btn btn-outline">OZA'ya Dön</a>
+    </div>
+  </div>
+</div>
+<script src="hs-engine.js"></script>
+<script>
+var ERAS = [
+  {tag:'1648 · VESTFALİYA',title:'Devlet Tekeli Doğuyor',
+   body:'Vestfalya Anlaşması ile savaş, dini ve hanedanlık hiyerarşilerinden sıyrılarak devletin tekelinde, kurumsal ve rasyonel bir faaliyet haline geldi.',
+   fact:'1648 sonrası ordular "Newton Saati" gibi çizgisel, geometrik ve disiplinli hareket etmeye başladı.',
+   question:'Vestfalya Anlaşması savaşı hangi alandan çıkardı?',
+   choices:['Dini ve hanedanlık alanından','Ekonomik rekabet alanından','Deniz ticareti alanından','Sömürge yarışı alanından'],
+   correct:0,
+   explain:'Vestfalya, savaşı din savaşlarından çıkarıp devletler arası egemenlik meselesine dönüştürdü.'},
+  {tag:'1700 · LİNEER SAVAŞ',title:'Çizgisel Muharebe Düzeni',
+   body:'18. yüzyıl orduları tıpkı bir saat mekanizması gibi çalışıyordu: düzenli sıralar, eşzamanlı ateş, geometrik manevralar.',
+   fact:'Prusya Kralı II. Friedrich, ordusunu bir "saat mekanizması" olarak tanımladı — her parça mükemmel uyum içinde çalışmalıydı.',
+   question:'18. yüzyıl lineer savaş düzeninin temel prensibi neydi?',
+   choices:['Geometrik düzen ve eşzamanlı ateş','Gerilla taktikleri ve pusu','Deniz üstünlüğü ve abluka','Süvari hücumu ve kuşatma'],
+   correct:0,
+   explain:'Lineer savaş, disiplin ve geometriye dayalıydı. Ordular satranç taşları gibi hareket ederdi.'},
+  {tag:'1789 · FRANSIZ DEVRİMİ',title:'Kitle Ordusu (Levée en Masse)',
+   body:'Fransız Devrimi ile zorunlu askerlik doğdu. Artık ordular profesyonel küçük birimler değil, milyonluk kitle ordularıydı.',
+   fact:'1793 Levée en Masse kararnamesi ile Fransa 750.000 kişilik ordu topladı — tarihin ilk genel seferberliği.',
+   question:'Levée en Masse kavramı neyi ifade eder?',
+   choices:['Genel seferberlik ve zorunlu askerlik','Paralı asker sistemi','Gönüllü ordu oluşturma','Deniz kuvvetleri reformu'],
+   correct:0,
+   explain:'Levée en Masse, tüm vatandaşların askere alınması demekti — savaş artık tüm toplumun meselesiydi.'},
+  {tag:'1805 · NAPOLYON',title:'Kolordu Sistemi',
+   body:'Napolyon, ordusunu bağımsız hareket edebilen kolordulara böldü. Her kolordu kendi başına savaşabilir, gerektiğinde birleşebilirdi.',
+   fact:'Austerlitz Muharebesi (1805): Napolyon, 73.000 askerle 85.000 kişilik Avusturya-Rus ordusunu yendi — kolordu sistemi sayesinde.',
+   question:'Napolyon\'un kolordu sisteminin avantajı neydi?',
+   choices:['Bağımsız hareket ve hızlı birleşme','Daha fazla top gücü','Daha iyi lojistik','Daha ucuz asker besleme'],
+   correct:0,
+   explain:'Kolordu sistemi, esneklik ve hız sağladı. Her birim bağımsız savaşabilir, stratejik anda birleşebilirdi.'},
+  {tag:'1815 · CLAUSEWITZ',title:'Savaşın Doğası Teorisi',
+   body:'Carl von Clausewitz "Savaş Üzerine" eserinde savaşı "politikanın başka araçlarla devamı" olarak tanımladı.',
+   fact:'"Savaş bir bukalemun gibidir — her seferinde rengini değiştirir." — Clausewitz, Vom Kriege (1832)',
+   question:'Clausewitz\'e göre savaş nedir?',
+   choices:['Politikanın başka araçlarla devamı','Ekonomik rekabetin sonucu','Doğal seçilimin uzantısı','Teknolojik üstünlük yarışı'],
+   correct:0,
+   explain:'Clausewitz\'in ünlü formülü: Savaş = Politika + Şiddet. Her savaşın arkasında politik bir amaç vardır.'},
+  {tag:'1854 · KIRIM SAVAŞI',title:'Telgraf ve Demiryolu Devrimi',
+   body:'Kırım Savaşı, telgraf ve demiryolunun ilk kez stratejik olarak kullanıldığı savaştır. Komutanlar artık anlık bilgi alabiliyordu.',
+   fact:'İngiliz komutanları Londra\'dan telgrafla emir alıyordu — tarihte ilk kez savaş alanı ile başkent anlık bağlantıdaydı.',
+   question:'Kırım Savaşı hangi teknolojik yeniliği savaşa taşıdı?',
+   choices:['Telgraf ve demiryolu','Uçak ve tank','Denizaltı ve torpido','Makineli tüfek ve dikenli tel'],
+   correct:0,
+   explain:'Telgraf iletişimi, demiryolu lojistiği devrimleştirdi. Savaş artık endüstriyel bir faaliyet oluyordu.'},
+  {tag:'1866 · PRUSYA',title:'Kurmay Sistemi ve Planlama',
+   body:'Prusya Genelkurmayı (Moltke), savaşı bilimsel planlama ile yönetmeye başladı. Demiryolu takvimi, mobilizasyon planları.',
+   fact:'1866 Königgrätz: Prusya, Avusturya\'yı 7 haftada yendi — mükemmel demiryolu planlaması sayesinde.',
+   question:'Prusya kurmay sisteminin temel yeniliği neydi?',
+   choices:['Bilimsel planlama ve demiryolu mobilizasyonu','Daha büyük ordular','Daha iyi silahlar','Deniz üstünlüğü'],
+   correct:0,
+   explain:'Moltke\'nin kurmay sistemi, savaşı bir bilim haline getirdi. Planlama ve lojistik her şeyden önemliydi.'},
+  {tag:'1914 · I. DÜNYA SAVAŞI',title:'Makineli Tüfek Cehennemi',
+   body:'Makineli tüfeklerin dakikada 500+ atış hızı, süvari hücumlarını ve lineer düzeni tamamen geçersiz kıldı. Siper savaşı başladı.',
+   fact:'Somme Muharebesi 1. günü (1916): İngilizler 57.000 kayıp verdi — tarihte tek günde en yüksek kayıp.',
+   question:'I. Dünya Savaşı\'nda siper savaşının temel nedeni neydi?',
+   choices:['Makineli tüfeğin savunma üstünlüğü','Komutanların yetersizliği','Hava kuvvetlerinin yokluğu','Lojistik sorunlar'],
+   correct:0,
+   explain:'Makineli tüfek, savunmayı taarruza karşı ezici üstün kıldı. Sonuç: 4 yıl siper savaşı.'},
+  {tag:'1939 · BLİTZKRİEG',title:'Yıldırım Savaşı Doktrini',
+   body:'Almanya\'nın tank ve uçak füzyonuna dayalı Blitzkrieg doktrini, statik savunma hatlarını anlamsız kıldı.',
+   fact:'Fransa\'nın düşüşü (1940): 6 hafta. Maginot Hattı bypass edildi — mekanize kuvvetler Ardenler\'den geçti.',
+   question:'Blitzkrieg\'in temel prensibi neydi?',
+   choices:['Hız, sürpriz ve konsantrasyon','Sayısal üstünlük','Hava bombardımanı','Deniz ablukası'],
+   correct:0,
+   explain:'Blitzkrieg = Schwerpunkt (ağırlık noktası) + hız + tank-uçak koordinasyonu. Düşmanın karar döngüsünü kır.'},
+  {tag:'1943 · TOPLAM SAVAŞ',title:'Fabrikaların Savaşı',
+   body:'II. Dünya Savaşı, fabrikaların ve lojistik üretim kapasitelerinin kazandığı endüstriyel bir yıkım makinesine dönüştü.',
+   fact:'ABD 1943-45 arası 300.000 uçak, 86.000 tank, 2.7 milyon makineli tüfek üretti — savaşı endüstri kazandı.',
+   question:'II. Dünya Savaşı\'nı hangi faktör belirleyici şekilde kazandırdı?',
+   choices:['Endüstriyel üretim kapasitesi','Askeri deha','Nükleer silah','Deniz üstünlüğü'],
+   correct:0,
+   explain:'Toplam savaşta fabrikalar cepheden daha önemlidir. ABD\'nin üretim kapasitesi Mihver\'i ezdi.'},
+  {tag:'1945 · NÜKLEER ÇAĞ',title:'Mutlak Yıkım Kapasitesi',
+   body:'Hiroşima ve Nagazaki, savaşın doğasını kökten değiştirdi. Artık bir savaş tüm insanlığı yok edebilirdi.',
+   fact:'Little Boy (Hiroşima): 15 kiloton. Tek bir bomba 80.000 kişiyi anında öldürdü. Mekanik rejim sona erdi.',
+   question:'Nükleer silahlar savaş teorisini nasıl değiştirdi?',
+   choices:['Karşılıklı yıkım garantisi (MAD) caydırıcılığı','Savaşları hızlandırdı','Kara savaşını bitirdi','Deniz savaşını önemsiz kıldı'],
+   correct:0,
+   explain:'MAD doktrini: İki nükleer güç birbirini yok edebilir → savaş imkânsız hale gelir. Caydırıcılık çağı.'},
+  {tag:'SONUÇ · TERMODİNAMİK GEÇİŞ',title:'Mekanikten Karmaşıklığa',
+   body:'Mekanik rejim (1648-1945) sona erdi. Savaş artık çizgisel değil, kaotik ve karmaşık bir sistem. Bilgi çağı yeni kurallar getiriyor.',
+   fact:'Harb-i Strateji Kanunları: "Savaş, Newton fiziğinden kuantum fiziğine geçiş yaptı." — Koyuncu & Ünlü',
+   question:'Mekanik rejimden sonra savaş hangi paradigmaya geçti?',
+   choices:['Karmaşıklık ve bilgi paradigması','Daha büyük ordular paradigması','Uzay savaşı paradigması','Ekonomik savaş paradigması'],
+   correct:0,
+   explain:'Koyuncu & Ünlü tezine göre savaş artık doğrusal değil, karmaşık adaptif bir sistem. OODA, siber, bilişsel savaş.'}
+];
+
+var currentRound=0, score=0, streak=0, answered=false;
+
+function loadRound(){
+  answered=false;
+  var e=ERAS[currentRound];
+  document.getElementById('era-card').innerHTML='<div class="era-tag">'+e.tag+'</div><div class="era-title">'+e.title+'</div><div class="era-body">'+e.body+'</div><div class="era-fact">'+e.fact+'</div>';
+  var html='';
+  e.choices.forEach(function(c,i){
+    html+='<div class="choice-btn" id="ch-'+i+'" onclick="answer('+i+')"><h4>'+String.fromCharCode(65+i)+'. '+c+'</h4></div>';
+  });
+  document.getElementById('choices').innerHTML=html;
+  document.getElementById('result-panel').classList.remove('show');
+  document.getElementById('result-panel').innerHTML='';
+  document.getElementById('next-btn').classList.remove('show');
+  document.getElementById('s-round').textContent=(currentRound+1)+'/12';
+}
+
+function answer(idx){
+  if(answered) return;
+  answered=true;
+  var e=ERAS[currentRound];
+  var correct=(idx===e.correct);
+  document.getElementById('ch-'+e.correct).classList.add('correct');
+  if(!correct) document.getElementById('ch-'+idx).classList.add('wrong');
+  if(correct){
+    streak++;
+    var pts=10+streak*5;
+    score+=pts;
+    document.getElementById('result-panel').innerHTML='<div class="res-icon">✅</div><div class="res-text"><strong>Doğru! +'+pts+' puan</strong><br>'+e.explain+'</div>';
+    if(typeof HS!=='undefined'){HS.addScore('saat-ordular',pts);HS.beepWin();}
+  } else {
+    streak=0;
+    document.getElementById('result-panel').innerHTML='<div class="res-icon">❌</div><div class="res-text"><strong>Yanlış!</strong><br>'+e.explain+'</div>';
+    if(typeof HS!=='undefined') HS.beepFail();
+  }
+  document.getElementById('result-panel').classList.add('show');
+  document.getElementById('s-score').textContent=score;
+  document.getElementById('s-streak').textContent=streak;
+  document.getElementById('next-btn').classList.add('show');
+  if(currentRound>=ERAS.length-1) document.getElementById('next-btn').textContent='Sonuçları Gör';
+}
+
+function nextRound(){
+  currentRound++;
+  if(currentRound>=ERAS.length){
+    document.getElementById('final-score').textContent=score;
+    var pct=Math.round(score/(ERAS.length*15)*100);
+    document.getElementById('final-text').textContent=pct>=80?'Mekanik Rejim uzmanı! Mükemmel!':pct>=50?'İyi bir performans. Tekrar deneyin!':'Daha fazla çalışma gerekiyor.';
+    document.getElementById('final-overlay').classList.add('show');
+    if(typeof HS!=='undefined'&&score>=100) HS.awardBadge('saat-ordular');
+  } else {
+    loadRound();
+  }
+}
+
+loadRound();
+</script>
+</body>
+</html>

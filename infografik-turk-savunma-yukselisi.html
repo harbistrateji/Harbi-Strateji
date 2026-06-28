@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Türk Savunma Sanayii Yükselişi — İnteraktif İnfografik | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Sans',sans-serif;background:#040810;color:#e2e8f0;overflow-x:hidden;}
+:root{--red:#c41e3a;--cyan:#00e0ff;--gold:#c9a24b;--bg:#040810;--card:#0d1520;}
+
+.sound-toggle{position:fixed;top:12px;right:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;cursor:pointer;font-size:14px;font-family:monospace;backdrop-filter:blur(8px);border:none;}
+.sound-toggle:hover{color:#fff;}
+.sound-toggle.active{color:var(--cyan);}
+
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.4);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:0.6;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.2),transparent);animation:scanDown 8s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+
+/* HERO */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 70%,#1a0a0a 0%,#040810 70%);}
+.hero-flag{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:200px;opacity:0.05;}
+.hero-content{position:relative;z-index:10;text-align:center;}
+.hero-subtitle{font-family:'Chakra Petch',sans-serif;font-size:clamp(0.7rem,1.5vw,0.9rem);letter-spacing:0.4em;color:var(--gold);opacity:0;animation:fadeUp 1s 0.5s forwards;}
+.hero-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,7vw,4.5rem);font-weight:700;letter-spacing:0.1em;background:linear-gradient(135deg,var(--red),#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0;opacity:0;animation:fadeUp 1s 0.8s forwards;}
+.hero-year{font-family:'IBM Plex Mono',monospace;font-size:clamp(3rem,10vw,6rem);font-weight:700;color:rgba(255,255,255,0.03);position:absolute;top:20%;left:50%;transform:translateX(-50%);letter-spacing:0.3em;}
+.hero-desc{font-size:clamp(0.9rem,2vw,1.1rem);color:rgba(255,255,255,0.6);max-width:600px;margin:0 auto;opacity:0;animation:fadeUp 1s 1.2s forwards;}
+.hero-counters{display:flex;gap:2.5rem;justify-content:center;margin-top:2.5rem;flex-wrap:wrap;opacity:0;animation:fadeUp 1s 1.6s forwards;}
+.hero-counter{text-align:center;}
+.hero-counter-val{font-family:'IBM Plex Mono',monospace;font-size:2.5rem;font-weight:700;color:var(--red);}
+.hero-counter-lbl{font-size:0.7rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.3rem;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.3);font-size:0.75rem;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+/* SECTIONS */
+.section{padding:6rem 1.5rem;max-width:1200px;margin:0 auto;position:relative;}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#fff;margin-bottom:0.5rem;opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1);}
+.section-title.visible{opacity:1;transform:translateY(0);}
+.section-subtitle{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:2rem;opacity:0;transform:translateY(20px);transition:all 0.8s 0.2s cubic-bezier(0.16,1,0.3,1);}
+.section-subtitle.visible{opacity:1;transform:translateY(0);}
+
+/* PROGRESS BAR */
+.progress-section{margin-bottom:2rem;opacity:0;transform:translateY(20px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1);}
+.progress-section.visible{opacity:1;transform:translateY(0);}
+.progress-label{display:flex;justify-content:space-between;margin-bottom:0.4rem;}
+.progress-name{font-size:0.85rem;color:#fff;}
+.progress-val{font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--cyan);}
+.progress-bar{width:100%;height:10px;background:#1a2332;border-radius:5px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--red),var(--gold));width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);}
+.progress-fill.visible{width:var(--w);}
+
+/* PLATFORM CARDS */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem;}
+.platform-card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:1.5rem;position:relative;overflow:hidden;opacity:0;transform:translateY(30px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1);cursor:pointer;}
+.platform-card.visible{opacity:1;transform:translateY(0);}
+.platform-card:hover{border-color:var(--accent,var(--red));transform:translateY(-4px);box-shadow:0 12px 40px rgba(196,30,58,0.15);}
+.platform-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--red));transform:scaleX(0);transition:transform 0.5s;}
+.platform-card.visible::before{transform:scaleX(1);}
+.platform-icon{font-size:2.5rem;margin-bottom:1rem;}
+.platform-name{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:0.3rem;}
+.platform-type{font-size:0.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem;}
+.platform-specs{list-style:none;padding:0;}
+.platform-specs li{font-size:0.8rem;color:rgba(255,255,255,0.5);padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.03);}
+.platform-specs li span{color:var(--cyan);font-family:'IBM Plex Mono',monospace;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:3rem;margin-top:2rem;}
+.timeline::before{content:'';position:absolute;left:1rem;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--red),var(--gold),var(--cyan));}
+.tl-item{position:relative;margin-bottom:2.5rem;opacity:0;transform:translateX(-20px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1);}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-item::before{content:'';position:absolute;left:-2.35rem;top:0.5rem;width:12px;height:12px;border-radius:50%;background:var(--red);border:2px solid var(--gold);box-shadow:0 0 10px rgba(196,30,58,0.5);}
+.tl-year{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--gold);}
+.tl-title{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;font-weight:600;color:#fff;margin:0.2rem 0;}
+.tl-desc{font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;}
+
+/* GLOW DIVIDER */
+.glow-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent);margin:0;opacity:0.3;}
+
+/* EXPORT STATS */
+.export-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:2rem;}
+.export-card{background:rgba(196,30,58,0.05);border:1px solid rgba(196,30,58,0.1);border-radius:10px;padding:1.2rem;text-align:center;opacity:0;transform:scale(0.9);transition:all 0.5s cubic-bezier(0.16,1,0.3,1);}
+.export-card.visible{opacity:1;transform:scale(1);}
+.export-val{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--red);}
+.export-lbl{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:0.3rem;text-transform:uppercase;}
+
+@media(max-width:768px){
+  .hero-counters{gap:1.5rem;}
+  .platform-grid{grid-template-columns:1fr;}
+  .export-grid{grid-template-columns:repeat(2,1fr);}
+  .section{padding:4rem 1rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="particles" id="particles"></div>
+<div class="scan-line"></div>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</button>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-year">2024</div>
+  <div class="hero-content">
+    <div class="hero-subtitle">MİLLÎ TEKNOLOJİ HAMLESİ</div>
+    <h1 class="hero-title">TÜRK SAVUNMA SANAYİİ<br>YÜKSELİŞİ</h1>
+    <p class="hero-desc">Bağımlılıktan bağımsızlığa — Türkiye'nin savunma sanayii dönüşümünün stratejik analizi</p>
+    <div class="hero-counters">
+      <div class="hero-counter"><div class="hero-counter-val" data-count="80">0</div><div class="hero-counter-lbl">Yerlilik Oranı %</div></div>
+      <div class="hero-counter"><div class="hero-counter-val" data-count="12">0</div><div class="hero-counter-lbl">Milyar $ İhracat</div></div>
+      <div class="hero-counter"><div class="hero-counter-val" data-count="2000">0</div><div class="hero-counter-lbl">Aktif Proje</div></div>
+      <div class="hero-counter"><div class="hero-counter-val" data-count="7">0</div><div class="hero-counter-lbl">Top-100 Şirket</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ Keşfetmek için kaydırın</div>
+</section>
+
+<!-- YERLİLİK ORANLARI -->
+<section class="section">
+  <h2 class="section-title" data-anim>Yerlilik Oranları</h2>
+  <p class="section-subtitle" data-anim>2002'de %20 olan yerlilik oranı, 2024'te %80'e ulaştı</p>
+  
+  <div class="progress-section" data-anim>
+    <div class="progress-label"><span class="progress-name">Kara Platformları (ALTAY, BARKAN)</span><span class="progress-val">%85</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="--w:85%;"></div></div>
+  </div>
+  <div class="progress-section" data-anim>
+    <div class="progress-label"><span class="progress-name">Hava Platformları (KAAN, HÜRJET)</span><span class="progress-val">%75</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="--w:75%;"></div></div>
+  </div>
+  <div class="progress-section" data-anim>
+    <div class="progress-label"><span class="progress-name">Deniz Platformları (TF-2000, MİLGEM)</span><span class="progress-val">%70</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="--w:70%;"></div></div>
+  </div>
+  <div class="progress-section" data-anim>
+    <div class="progress-label"><span class="progress-name">İHA/SİHA Sistemleri (TB2, ANKA, KIZILELMA)</span><span class="progress-val">%95</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="--w:95%;"></div></div>
+  </div>
+  <div class="progress-section" data-anim>
+    <div class="progress-label"><span class="progress-name">Füze Sistemleri (TAYFUN, BORA, HİSAR)</span><span class="progress-val">%90</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="--w:90%;"></div></div>
+  </div>
+  <div class="progress-section" data-anim>
+    <div class="progress-label"><span class="progress-name">Elektronik Harp (KORAL, REDET)</span><span class="progress-val">%88</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="--w:88%;"></div></div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- PLATFORMLAR -->
+<section class="section">
+  <h2 class="section-title" data-anim>Amiral Gemisi Platformlar</h2>
+  <p class="section-subtitle" data-anim>Türk savunma sanayiinin dünya çapında tanınan projeleri</p>
+  
+  <div class="platform-grid">
+    <div class="platform-card" data-anim style="--accent:var(--red);">
+      <div class="platform-icon">✈️</div>
+      <div class="platform-name">KAAN (TF-X)</div>
+      <div class="platform-type">5. Nesil Savaş Uçağı</div>
+      <ul class="platform-specs">
+        <li>Maks Hız: <span>Mach 2.0+</span></li>
+        <li>Menzil: <span>1.100+ km</span></li>
+        <li>Stealth: <span>Düşük RCS</span></li>
+        <li>İlk Uçuş: <span>2024</span></li>
+      </ul>
+    </div>
+    <div class="platform-card" data-anim style="--accent:var(--cyan);transition-delay:0.1s;">
+      <div class="platform-icon">🚁</div>
+      <div class="platform-name">BAYRAKTAR KIZILELMA</div>
+      <div class="platform-type">İnsansız Muharip Uçak</div>
+      <ul class="platform-specs">
+        <li>Maks Hız: <span>Mach 0.9</span></li>
+        <li>Tavan: <span>35.000 ft</span></li>
+        <li>Silah: <span>1.500 kg</span></li>
+        <li>Otonom: <span>Sürü YZ</span></li>
+      </ul>
+    </div>
+    <div class="platform-card" data-anim style="--accent:var(--gold);transition-delay:0.2s;">
+      <div class="platform-icon">🚀</div>
+      <div class="platform-name">TAYFUN</div>
+      <div class="platform-type">Balistik Füze</div>
+      <ul class="platform-specs">
+        <li>Menzil: <span>2.000+ km</span></li>
+        <li>Başlık: <span>Manevra kabiliyetli</span></li>
+        <li>CEP: <span><50m</span></li>
+        <li>Durum: <span>Seri üretim</span></li>
+      </ul>
+    </div>
+    <div class="platform-card" data-anim style="--accent:#43b581;transition-delay:0.3s;">
+      <div class="platform-icon">🛥️</div>
+      <div class="platform-name">TCG ANADOLU</div>
+      <div class="platform-type">Amfibi Hücum Gemisi / Drone Carrier</div>
+      <ul class="platform-specs">
+        <li>Deplasman: <span>27.000 ton</span></li>
+        <li>Uzunluk: <span>231 m</span></li>
+        <li>İHA Kapasitesi: <span>50+ SİHA</span></li>
+        <li>Durum: <span>Aktif</span></li>
+      </ul>
+    </div>
+    <div class="platform-card" data-anim style="--accent:#8b5cf6;transition-delay:0.4s;">
+      <div class="platform-icon">🛡️</div>
+      <div class="platform-name">HİSAR O+</div>
+      <div class="platform-type">Uzun Menzilli Hava Savunma</div>
+      <ul class="platform-specs">
+        <li>Menzil: <span>100+ km</span></li>
+        <li>İrtifa: <span>25 km</span></li>
+        <li>Hedef: <span>Balistik füze</span></li>
+        <li>Radar: <span>AESA</span></li>
+      </ul>
+    </div>
+    <div class="platform-card" data-anim style="--accent:#f59e0b;transition-delay:0.5s;">
+      <div class="platform-icon">🔫</div>
+      <div class="platform-name">ALTAY MBT</div>
+      <div class="platform-type">Ana Muharebe Tankı</div>
+      <ul class="platform-specs">
+        <li>Motor: <span>1.500 HP yerli</span></li>
+        <li>Zırh: <span>Kompozit + ERA</span></li>
+        <li>Silah: <span>120mm L55</span></li>
+        <li>Durum: <span>Seri üretim</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- TARİHSEL GELİŞİM -->
+<section class="section">
+  <h2 class="section-title" data-anim>Tarihsel Gelişim</h2>
+  <p class="section-subtitle" data-anim>Ambargolardan bağımsızlığa uzanan yol</p>
+  
+  <div class="timeline">
+    <div class="tl-item" data-anim>
+      <div class="tl-year">1974</div>
+      <div class="tl-title">Kıbrıs Ambargosu — Kırılma Noktası</div>
+      <div class="tl-desc">ABD silah ambargosu, Türkiye'yi yerli savunma sanayii kurmaya zorladı. ASELSAN, HAVELSAN, ROKETSAN'ın temelleri atıldı.</div>
+    </div>
+    <div class="tl-item" data-anim>
+      <div class="tl-year">1985</div>
+      <div class="tl-title">SSB Kuruluşu</div>
+      <div class="tl-desc">Savunma Sanayii Başkanlığı kuruldu. Merkezi koordinasyon ve stratejik planlama dönemi başladı.</div>
+    </div>
+    <div class="tl-item" data-anim>
+      <div class="tl-year">2004</div>
+      <div class="tl-title">MİLGEM Projesi Başlangıcı</div>
+      <div class="tl-desc">Millî savaş gemisi projesi. İlk gemi TCG Heybeliada 2011'de teslim edildi. Şimdi Pakistan, Ukrayna'ya ihracat.</div>
+    </div>
+    <div class="tl-item" data-anim>
+      <div class="tl-year">2014</div>
+      <div class="tl-title">Bayraktar TB2 İlk Uçuş</div>
+      <div class="tl-desc">Dünyayı değiştiren SİHA. Libya, Suriye, Karabağ, Ukrayna'da savaşın kurallarını yeniden yazdı.</div>
+    </div>
+    <div class="tl-item" data-anim>
+      <div class="tl-year">2019</div>
+      <div class="tl-title">S-400 Krizi ve F-35 Çıkarılması</div>
+      <div class="tl-desc">Türkiye F-35 programından çıkarıldı. KAAN (TF-X) projesi hızlandırıldı. Millî motor geliştirme kararı.</div>
+    </div>
+    <div class="tl-item" data-anim>
+      <div class="tl-year">2024</div>
+      <div class="tl-title">KAAN İlk Uçuş</div>
+      <div class="tl-desc">5. nesil savaş uçağı KAAN gökyüzüyle buluştu. Türkiye, kendi savaş uçağını üreten 4. Avrupa ülkesi oldu.</div>
+    </div>
+    <div class="tl-item" data-anim>
+      <div class="tl-year">2025</div>
+      <div class="tl-title">$12 Milyar İhracat Rekoru</div>
+      <div class="tl-desc">Savunma ihracatı tüm zamanların rekorunu kırdı. 180+ ülkeye ihracat. SİHA diplomasisi küresel etki yarattı.</div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- İHRACAT -->
+<section class="section">
+  <h2 class="section-title" data-anim>İhracat Haritası</h2>
+  <p class="section-subtitle" data-anim>180+ ülkeye savunma ürünü ihracatı</p>
+  
+  <div class="export-grid">
+    <div class="export-card" data-anim><div class="export-val" data-count="12">0</div><div class="export-lbl">Milyar $ İhracat</div></div>
+    <div class="export-card" data-anim><div class="export-val" data-count="180">0</div><div class="export-lbl">Ülke</div></div>
+    <div class="export-card" data-anim><div class="export-val" data-count="7">0</div><div class="export-lbl">Top-100 Şirket</div></div>
+    <div class="export-card" data-anim><div class="export-val" data-count="2000">0</div><div class="export-lbl">Aktif Proje</div></div>
+    <div class="export-card" data-anim><div class="export-val" data-count="80000">0</div><div class="export-lbl">Mühendis</div></div>
+    <div class="export-card" data-anim><div class="export-val" data-count="1500">0</div><div class="export-lbl">KOBİ</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:4rem 1rem;border-top:1px solid rgba(255,255,255,0.05);">
+  <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace;">HARB-İ STRATEJİ · MİLLÎ SAVUNMA SANAYİİ ANALİZİ · 2026</p>
+</div>
+
+<script>
+// PARTICLES
+(function(){const c=document.getElementById('particles');for(let i=0;i<25;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(8+Math.random()*15)+'s');p.style.animationDelay=Math.random()*15+'s';c.appendChild(p);}})();
+
+// SCROLL OBSERVER
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.querySelectorAll('.progress-fill').forEach(f=>f.classList.add('visible'));e.target.querySelectorAll('[data-count]').forEach(c=>animateCounter(c,parseInt(c.dataset.count)));}});},{threshold:0.15});
+document.querySelectorAll('[data-anim]').forEach(el=>obs.observe(el));
+
+// Hero counters
+setTimeout(()=>{document.querySelectorAll('.hero-counter-val[data-count]').forEach(el=>animateCounter(el,parseInt(el.dataset.count)));},2000);
+
+function animateCounter(el,target){
+  if(el.dataset.animated)return;el.dataset.animated='1';
+  let current=0;const step=Math.max(1,target/50);
+  const iv=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(iv);}
+  el.textContent=target>=1000?Math.round(current).toLocaleString('tr-TR'):Math.round(current);},30);
+}
+
+// SOUND
+let audioCtx=null,isPlaying=false;
+function toggleSound(){
+  const btn=document.getElementById('soundToggle');
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(!isPlaying){
+    const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+    const filter=audioCtx.createBiquadFilter();
+    osc.type='sawtooth';osc.frequency.value=55;
+    filter.type='lowpass';filter.frequency.value=150;
+    gain.gain.value=0.03;
+    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+    osc.start();
+    const lfo=audioCtx.createOscillator();const lg=audioCtx.createGain();
+    lfo.frequency.value=0.1;lg.gain.value=20;
+    lfo.connect(lg);lg.connect(filter.frequency);lfo.start();
+    window._nodes={osc,lfo};
+    btn.textContent='🔊';btn.classList.add('active');isPlaying=true;
+  }else{
+    window._nodes.osc.stop();window._nodes.lfo.stop();
+    btn.textContent='🔇';btn.classList.remove('active');isPlaying=false;
+  }
+}
+</script>
+</body>
+</html>

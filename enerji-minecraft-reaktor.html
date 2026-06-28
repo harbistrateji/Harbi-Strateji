@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enerji Reaktörü İnşa — Minecraft Tarzı</title>
+<style>
+:root{--bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#e67e22;--purple:#9b59b6;--txt:#e8eaf0;--dim:#6b7280;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',monospace,sans-serif;overflow:hidden;height:100vh;}
+canvas{display:block;}
+/* HUD */
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;pointer-events:none;padding:8px 14px;background:linear-gradient(180deg,rgba(0,0,0,.8),transparent);display:flex;justify-content:space-between;align-items:center;}
+.hud-stat{font-size:.78rem;display:flex;align-items:center;gap:5px;}
+.hv{font-weight:900;color:var(--cyan);}
+.energy-bar{width:140px;height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;}
+.energy-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:5px;transition:width .3s;}
+/* HOTBAR */
+#hotbar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px;background:rgba(0,0,0,.75);border:1px solid var(--border);border-radius:10px;padding:6px;pointer-events:auto;}
+.hb-slot{width:56px;height:56px;border:2px solid var(--border);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:rgba(0,0,0,.4);position:relative;}
+.hb-slot.active{border-color:var(--gold);}
+.hb-icon{font-size:1.5rem;}
+.hb-name{font-size:.5rem;color:var(--dim);text-align:center;margin-top:1px;}
+.hb-key{position:absolute;top:2px;left:4px;font-size:.5rem;color:var(--dim);}
+/* REACTOR PANEL */
+#reactorPanel{position:fixed;right:10px;top:60px;background:rgba(13,27,42,.95);border:1px solid var(--border);border-radius:10px;padding:12px;width:210px;pointer-events:auto;}
+.rp-title{font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;}
+.rp-metric{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.72rem;}
+.rp-val{font-weight:700;}
+.rp-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;margin:3px 0;overflow:hidden;}
+.rp-fill{height:100%;border-radius:3px;transition:width .5s;}
+/* TECH TREE */
+#techTree{position:fixed;left:10px;top:60px;background:rgba(13,27,42,.95);border:1px solid var(--border);border-radius:10px;padding:12px;width:180px;pointer-events:auto;}
+.tech-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:6px;padding:6px;margin-bottom:5px;cursor:pointer;transition:all .15s;font-size:.7rem;}
+.tech-item:hover{border-color:var(--cyan);}
+.tech-item.unlocked{border-color:var(--green);background:rgba(0,255,136,.05);}
+.tech-item.locked{opacity:.5;cursor:not-allowed;}
+/* MSGS */
+#msgs{position:fixed;top:70px;left:50%;transform:translateX(-50%);pointer-events:none;z-index:20;}
+.msg{background:rgba(0,0,0,.85);border:1px solid var(--cyan);border-radius:6px;padding:5px 14px;font-size:.76rem;margin-bottom:4px;animation:mIn .3s ease,mOut .3s 2.5s ease forwards;}
+@keyframes mIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes mOut{to{opacity:0;}}
+/* INTRO */
+#intro{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.it{font-size:2.2rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;}
+.it span{color:var(--cyan);}
+.reactor-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:600px;margin:16px 0 24px;}
+.rc-card{background:var(--panel);border:2px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .2s;text-align:center;}
+.rc-card:hover,.rc-card.sel{border-color:var(--gold);}
+.rc-icon{font-size:2rem;margin-bottom:4px;}
+.rc-name{font-size:.78rem;font-weight:700;color:var(--gold);}
+.rc-desc{font-size:.62rem;color:var(--dim);margin-top:4px;line-height:1.5;}
+.rc-metals{font-size:.6rem;color:var(--cyan);margin-top:3px;}
+.btn-play{background:linear-gradient(135deg,var(--cyan),#0080aa);color:#000;border:none;border-radius:8px;padding:14px 36px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:2px;text-transform:uppercase;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <div style="display:flex;gap:14px;align-items:center;">
+    <div class="hud-stat">⚡ <div class="energy-bar"><div class="energy-fill" id="energyFill" style="width:0%"></div></div></div>
+    <div class="hud-stat"><span class="hv" id="mwVal">0</span> MW</div>
+  </div>
+  <div style="text-align:center;">
+    <div style="font-size:.85rem;font-weight:900;color:var(--gold);letter-spacing:2px;">⚛️ ENERJİ REAKTÖRÜ İNŞA</div>
+    <div style="font-size:.65rem;color:var(--dim);">Blok: <span id="selectedBlockName" style="color:var(--cyan)">Nükleer Yakıt Çubuğu</span></div>
+  </div>
+  <div style="display:flex;gap:14px;align-items:center;">
+    <div class="hud-stat">🏆 <span class="hv" id="scoreVal">0</span></div>
+    <div class="hud-stat">🌡️ <span class="hv" id="tempVal">20°C</span></div>
+  </div>
+</div>
+
+<div id="msgs"></div>
+
+<!-- HOTBAR -->
+<div id="hotbar"></div>
+
+<!-- REACTOR PANEL -->
+<div id="reactorPanel">
+  <div class="rp-title">⚛️ Reaktör Durumu</div>
+  <div class="rp-metric"><span>Güç Çıkışı</span><span class="rp-val" id="rp-power" style="color:var(--cyan)">0 MW</span></div>
+  <div class="rp-bar"><div class="rp-fill" id="rp-power-bar" style="width:0%;background:var(--cyan)"></div></div>
+  <div class="rp-metric"><span>Sıcaklık</span><span class="rp-val" id="rp-temp" style="color:var(--green)">20°C</span></div>
+  <div class="rp-bar"><div class="rp-fill" id="rp-temp-bar" style="width:2%;background:var(--green)"></div></div>
+  <div class="rp-metric"><span>Soğutma</span><span class="rp-val" id="rp-cool" style="color:var(--cyan)">0%</span></div>
+  <div class="rp-bar"><div class="rp-fill" id="rp-cool-bar" style="width:0%;background:var(--cyan)"></div></div>
+  <div class="rp-metric"><span>Verimlilik</span><span class="rp-val" id="rp-eff" style="color:var(--gold)">0%</span></div>
+  <div class="rp-bar"><div class="rp-fill" id="rp-eff-bar" style="width:0%;background:var(--gold)"></div></div>
+  <div style="margin-top:8px;font-size:.65rem;color:var(--dim);">Nadir Metal Kullanımı:</div>
+  <div id="metalUsage" style="margin-top:4px;font-size:.65rem;"></div>
+</div>
+
+<!-- TECH TREE -->
+<div id="techTree">
+  <div class="rp-title">🔬 Teknoloji Ağacı</div>
+  <div id="techList"></div>
+</div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="it">⚛️ ENERJİ REAKTÖRÜ <span>İNŞA</span></div>
+  <div style="font-size:.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:12px;">Minecraft Tarzı Enerji Simülatörü</div>
+  <div style="font-size:.82rem;color:var(--dim);max-width:500px;line-height:1.7;margin-bottom:16px;">
+    Nadir metallerden reaktör inşa et, enerji üret, şehri besle!<br>
+    <strong>İtriyum, Hafniyum, Neodimyum, Galyum</strong> kritik bileşenler.<br>
+    Aşırı ısınmaya dikkat — soğutma sistemi kurmayı unutma!
+  </div>
+  <div style="font-size:.8rem;color:var(--gold);margin-bottom:10px;">Reaktör Tipini Seç:</div>
+  <div class="reactor-cards" id="reactorCards"></div>
+  <button class="btn-play" onclick="startGame()">⚛️ İNŞAATA BAŞLA</button>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const TILE = 36;
+
+// ===== REACTOR TYPES =====
+const REACTORS = [
+  {id:'nuclear',name:'Nükleer Fisyon',icon:'☢️',color:'#e74c3c',maxMW:1000,desc:'Uranyum yakıtlı, yüksek güç, yüksek risk',metals:'Y+Hf+Zr'},
+  {id:'fusion',name:'Füzyon (ITER)',icon:'🌟',color:'#c41e3a',maxMW:5000,desc:'Trityum-Döteryum, geleceğin enerjisi',metals:'Nd+Dy+Li+Be'},
+  {id:'solar',name:'Güneş Çiftliği',icon:'☀️',color:'#f39c12',maxMW:500,desc:'Galyum arsenid güneş panelleri',metals:'Ga+In+Se+Te'},
+  {id:'wind',name:'Rüzgar Çiftliği',icon:'🌬️',color:'#27ae60',maxMW:400,desc:'Neodimyum mıknatıslı türbinler',metals:'Nd+Dy+Co'},
+  {id:'hydrogen',name:'Hidrojen Yakıt',icon:'💧',color:'#3498db',maxMW:300,desc:'PEM elektroliz, Pt katalizör',metals:'Pt+Ir+Ti'},
+  {id:'smr',name:'Küçük Modüler (SMR)',icon:'🔬',color:'#9b59b6',maxMW:300,desc:'NuScale tarzı kompakt reaktör',metals:'Zr+Hf+Y'},
+];
+
+// ===== BLOCK TYPES =====
+const BLOCKS = {
+  0:{name:'Hava',color:'transparent',solid:false},
+  1:{name:'Zemin',color:'#2c3e50',solid:true,hardness:1},
+  2:{name:'Beton',color:'#7f8c8d',solid:true,hardness:2},
+  3:{name:'Çelik',color:'#95a5a6',solid:true,hardness:3},
+  // Reactor blocks
+  10:{name:'Nükleer Yakıt Çubuğu',icon:'☢️',color:'#e74c3c',solid:true,power:50,heat:30,metals:{Y:1,Hf:1},emoji:'☢️'},
+  11:{name:'Soğutma Sistemi',icon:'❄️',color:'#3498db',solid:true,cooling:40,metals:{Ti:1},emoji:'❄️'},
+  12:{name:'Kontrol Çubuğu',icon:'🔧',color:'#7f8c8d',solid:true,control:true,metals:{Hf:2},emoji:'🔧'},
+  13:{name:'Güneş Paneli',icon:'☀️',color:'#f39c12',solid:true,power:20,heat:5,metals:{Ga:1,In:1},emoji:'☀️'},
+  14:{name:'Rüzgar Türbini',icon:'🌬️',color:'#27ae60',solid:true,power:15,heat:2,metals:{Nd:2,Dy:1},emoji:'🌬️'},
+  15:{name:'Füzyon Plazma Odası',icon:'🌟',color:'#c41e3a',solid:true,power:200,heat:80,metals:{Nd:3,Li:2,Be:1},emoji:'🌟'},
+  16:{name:'Süperiletken Mıknatıs',icon:'🧲',color:'#9b59b6',solid:true,power:0,cooling:20,metals:{Nd:2,Dy:1},emoji:'🧲'},
+  17:{name:'Hidrojen Depolama',icon:'💧',color:'#3498db',solid:true,power:10,heat:3,metals:{Ti:1,Pt:1},emoji:'💧'},
+  18:{name:'Jeneratör',icon:'⚡',color:'#C9A24B',solid:true,power:30,heat:10,metals:{Co:1,Nd:1},emoji:'⚡'},
+  19:{name:'Güç Hattı',icon:'🔌',color:'#e67e22',solid:true,power:0,heat:1,metals:{Co:1},emoji:'🔌'},
+  20:{name:'Isı Değiştirici',icon:'🌡️',color:'#e74c3c',solid:true,cooling:30,heat:-20,metals:{Ti:1,Ni:1},emoji:'🌡️'},
+};
+
+// ===== HOTBAR ITEMS =====
+const HOTBAR = [10,11,12,13,14,15,16,17,18,19];
+
+// ===== WORLD =====
+const COLS = 30, ROWS = 20;
+let world = [];
+let player = {x:5*TILE+18,y:2*TILE+18,vx:0,vy:0};
+let camera = {x:0,y:0};
+let selectedBlock = 10;
+let selectedSlot = 0;
+let score = 0;
+let reactor = {power:0,heat:20,cooling:0,efficiency:0};
+let metalInventory = {Y:5,Hf:5,Ti:10,Ga:5,In:5,Nd:10,Dy:5,Li:8,Be:3,Co:8,Pt:3,Ni:5,Zr:5};
+let techs = {advanced_cooling:false,superconductor:false,plasma_boost:false,smart_grid:false};
+let selectedReactorType = 'nuclear';
+let gameRunning = false;
+let particles = [];
+
+function generateWorld(){
+  world=[];
+  for(let r=0;r<ROWS;r++){
+    world[r]=[];
+    for(let c=0;c<COLS;c++){
+      if(r===ROWS-1||(r===ROWS-2&&(c<3||c>COLS-4))) world[r][c]=1;
+      else if(r===0||c===0||c===COLS-1) world[r][c]=2;
+      else world[r][c]=0;
+    }
+  }
+  // Foundation row
+  for(let c=0;c<COLS;c++) world[ROWS-1][c]=1;
+}
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  generateWorld();
+  gameRunning=true;
+  buildHotbar();
+  buildTechTree();
+  loop();
+  setInterval(updateReactor,500);
+}
+
+// ===== PHYSICS =====
+const GRAVITY=0.35, JUMP=-8, SPEED=3;
+let keys={};
+document.addEventListener('keydown',e=>{
+  keys[e.key]=true;
+  if(e.key>='1'&&e.key<='9') selectHotbarSlot(parseInt(e.key)-1);
+  if(e.key==='0') selectHotbarSlot(9);
+  if(e.key===' '||e.key==='ArrowUp'||e.key==='w'||e.key==='W'){e.preventDefault();if(onGround()) player.vy=JUMP;}
+});
+document.addEventListener('keyup',e=>keys[e.key]=false);
+
+function onGround(){
+  const col=Math.floor((player.x)/TILE), row=Math.floor((player.y+TILE)/TILE);
+  return row<ROWS&&world[row]&&world[row][col]&&BLOCKS[world[row][col]].solid;
+}
+
+function updatePlayer(){
+  if(keys['ArrowLeft']||keys['a']||keys['A']) player.vx=-SPEED;
+  else if(keys['ArrowRight']||keys['d']||keys['D']) player.vx=SPEED;
+  else player.vx*=0.8;
+  player.vy+=GRAVITY;
+  player.vy=Math.min(player.vy,10);
+  
+  player.x+=player.vx;
+  player.x=Math.max(TILE,Math.min(player.x,(COLS-2)*TILE));
+  const col=Math.floor(player.x/TILE);
+  const rT=Math.floor(player.y/TILE), rB=Math.floor((player.y+TILE-2)/TILE);
+  if(world[rT]&&world[rT][col]&&BLOCKS[world[rT][col]].solid) player.x-=player.vx;
+  if(world[rB]&&world[rB][col]&&BLOCKS[world[rB][col]].solid) player.x-=player.vx;
+  
+  player.y+=player.vy;
+  const cL=Math.floor(player.x/TILE), cR=Math.floor((player.x+TILE-2)/TILE);
+  const rBt=Math.floor((player.y+TILE)/TILE), rTp=Math.floor(player.y/TILE);
+  if(player.vy>0){
+    if(rBt<ROWS&&((world[rBt]&&world[rBt][cL]&&BLOCKS[world[rBt][cL]].solid)||(world[rBt]&&world[rBt][cR]&&BLOCKS[world[rBt][cR]].solid))){
+      player.y=rBt*TILE-TILE; player.vy=0;
+    }
+  } else {
+    if(rTp>=0&&((world[rTp]&&world[rTp][cL]&&BLOCKS[world[rTp][cL]].solid)||(world[rTp]&&world[rTp][cR]&&BLOCKS[world[rTp][cR]].solid))){
+      player.y=rTp*TILE+TILE; player.vy=0;
+    }
+  }
+  player.y=Math.max(0,Math.min(player.y,(ROWS-2)*TILE));
+  
+  camera.x+=(player.x-canvas.width/2-camera.x)*0.1;
+  camera.y+=(player.y-canvas.height/2-camera.y)*0.1;
+  camera.x=Math.max(0,Math.min(camera.x,(COLS*TILE-canvas.width)));
+  camera.y=Math.max(0,Math.min(camera.y,(ROWS*TILE-canvas.height)));
+}
+
+// ===== PLACE/BREAK BLOCKS =====
+canvas.addEventListener('click',e=>{
+  if(!gameRunning) return;
+  const wx=Math.floor((e.clientX+camera.x)/TILE);
+  const wy=Math.floor((e.clientY+camera.y)/TILE);
+  placeBlock(wx,wy);
+});
+canvas.addEventListener('contextmenu',e=>{
+  e.preventDefault();
+  if(!gameRunning) return;
+  const wx=Math.floor((e.clientX+camera.x)/TILE);
+  const wy=Math.floor((e.clientY+camera.y)/TILE);
+  breakBlock(wx,wy);
+});
+
+function placeBlock(col,row){
+  if(row<0||row>=ROWS||col<0||col>=COLS) return;
+  if(world[row][col]!==0) return;
+  const bid=selectedBlock;
+  const b=BLOCKS[bid];
+  if(!b||!b.solid) return;
+  
+  // Check metals
+  if(b.metals){
+    const canPlace=Object.entries(b.metals).every(([m,v])=>(metalInventory[m]||0)>=v);
+    if(!canPlace){
+      showMsg(`⚠️ Yeterli metal yok! Gerekli: ${Object.entries(b.metals).map(([m,v])=>`${m}:${v}`).join(', ')}`,'red');
+      return;
+    }
+    Object.entries(b.metals).forEach(([m,v])=>metalInventory[m]-=v);
+  }
+  
+  world[row][col]=bid;
+  score+=10;
+  document.getElementById('scoreVal').textContent=score.toLocaleString();
+  spawnParticles(col*TILE+18,row*TILE+18-camera.y,b.color);
+  showMsg(`✅ ${b.emoji||''} ${b.name} yerleştirildi`,'green');
+  updateReactor();
+}
+
+function breakBlock(col,row){
+  if(row<0||row>=ROWS||col<0||col>=COLS) return;
+  const bid=world[row][col];
+  if(!bid||bid===0||bid===1||bid===2) return;
+  const b=BLOCKS[bid];
+  world[row][col]=0;
+  // Refund half metals
+  if(b.metals) Object.entries(b.metals).forEach(([m,v])=>metalInventory[m]=(metalInventory[m]||0)+Math.floor(v/2));
+  showMsg(`🔨 ${b.name} söküldü`,'cyan');
+  updateReactor();
+}
+
+// ===== REACTOR SIMULATION =====
+function updateReactor(){
+  let totalPower=0, totalHeat=0, totalCooling=0, blockCount=0;
+  
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const bid=world[r][c];
+    if(!bid||bid<10) continue;
+    const b=BLOCKS[bid];
+    if(b.power) totalPower+=b.power;
+    if(b.heat) totalHeat+=b.heat;
+    if(b.cooling) totalCooling+=b.cooling;
+    blockCount++;
+  }
+  
+  // Adjacency bonus
+  for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
+    const bid=world[r][c];
+    if(bid<10) continue;
+    const b=BLOCKS[bid];
+    if(!b.power) continue;
+    const neighbors=[world[r-1][c],world[r+1][c],world[r][c-1],world[r][c+1]];
+    const coolNeighbors=neighbors.filter(n=>n===11||n===20||n===16).length;
+    if(coolNeighbors>0) totalPower+=b.power*coolNeighbors*0.2;
+  }
+  
+  reactor.power=totalPower;
+  reactor.heat=Math.max(20,Math.min(1200,20+totalHeat-totalCooling));
+  reactor.cooling=totalCooling;
+  
+  const maxMW=REACTORS.find(r=>r.id===selectedReactorType)?.maxMW||1000;
+  reactor.efficiency=Math.min(100,Math.round(totalPower/maxMW*100));
+  
+  // Overheat
+  if(reactor.heat>800){
+    showMsg('🔥 AŞIRI ISINMA! Soğutma sistemi ekle!','red');
+    score=Math.max(0,score-20);
+  }
+  
+  // Update UI
+  document.getElementById('mwVal').textContent=totalPower.toFixed(0);
+  document.getElementById('energyFill').style.width=Math.min(100,totalPower/maxMW*100)+'%';
+  document.getElementById('tempVal').textContent=reactor.heat.toFixed(0)+'°C';
+  document.getElementById('rp-power').textContent=totalPower.toFixed(0)+' MW';
+  document.getElementById('rp-power-bar').style.width=Math.min(100,totalPower/maxMW*100)+'%';
+  const tempPct=Math.min(100,(reactor.heat-20)/1180*100);
+  document.getElementById('rp-temp').textContent=reactor.heat.toFixed(0)+'°C';
+  document.getElementById('rp-temp').style.color=tempPct>70?'var(--red)':tempPct>40?'var(--orange)':'var(--green)';
+  document.getElementById('rp-temp-bar').style.width=tempPct+'%';
+  document.getElementById('rp-temp-bar').style.background=tempPct>70?'var(--red)':tempPct>40?'var(--orange)':'var(--green)';
+  document.getElementById('rp-cool').textContent=totalCooling+' birim';
+  document.getElementById('rp-cool-bar').style.width=Math.min(100,totalCooling/200*100)+'%';
+  document.getElementById('rp-eff').textContent=reactor.efficiency+'%';
+  document.getElementById('rp-eff-bar').style.width=reactor.efficiency+'%';
+  
+  // Metal usage
+  const metals={};
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const bid=world[r][c];
+    if(bid<10) continue;
+    const b=BLOCKS[bid];
+    if(b.metals) Object.entries(b.metals).forEach(([m,v])=>metals[m]=(metals[m]||0)+v);
+  }
+  document.getElementById('metalUsage').innerHTML=Object.entries(metals).map(([m,v])=>`<span style="color:var(--cyan);margin-right:6px;">${m}:${v}</span>`).join('');
+  
+  score+=Math.floor(totalPower/100);
+  document.getElementById('scoreVal').textContent=score.toLocaleString();
+}
+
+// ===== TECH TREE =====
+const TECH_DATA = [
+  {id:'advanced_cooling',name:'Gelişmiş Soğutma',icon:'❄️',cost:{Ti:5,Nd:3},desc:'Soğutma +50%',unlocked:false},
+  {id:'superconductor',name:'Süperiletken',icon:'🧲',cost:{Nd:8,Dy:4},desc:'Güç kaybı -30%',unlocked:false},
+  {id:'plasma_boost',name:'Plazma Güçlendirme',icon:'🌟',cost:{Li:5,Be:3,Nd:5},desc:'Füzyon güç +100%',unlocked:false},
+  {id:'smart_grid',name:'Akıllı Şebeke',icon:'🔌',cost:{Ga:4,Ge:3},desc:'Verimlilik +25%',unlocked:false},
+];
+
+function buildTechTree(){
+  const list=document.getElementById('techList');
+  list.innerHTML=TECH_DATA.map(t=>`
+    <div class="tech-item ${techs[t.id]?'unlocked':'locked'}" onclick="unlockTech('${t.id}')">
+      <div style="font-size:.75rem;font-weight:700;color:${techs[t.id]?'var(--green)':'var(--gold)'};">${t.icon} ${t.name}</div>
+      <div style="font-size:.6rem;color:var(--dim);margin-top:2px;">${t.desc}</div>
+      <div style="font-size:.58rem;color:var(--cyan);margin-top:2px;">${Object.entries(t.cost).map(([m,v])=>`${m}:${v}`).join(' ')}</div>
+    </div>
+  `).join('');
+}
+
+function unlockTech(id){
+  if(techs[id]){showMsg('✅ Zaten açık!','cyan');return;}
+  const t=TECH_DATA.find(x=>x.id===id);
+  const canUnlock=Object.entries(t.cost).every(([m,v])=>(metalInventory[m]||0)>=v);
+  if(!canUnlock){showMsg('⚠️ Yeterli metal yok!','red');return;}
+  Object.entries(t.cost).forEach(([m,v])=>metalInventory[m]-=v);
+  techs[id]=true;
+  score+=500;
+  showMsg(`🔬 ${t.name} açıldı! +500 puan`,'gold');
+  buildTechTree();
+  updateReactor();
+}
+
+// ===== HOTBAR =====
+function buildHotbar(){
+  const bar=document.getElementById('hotbar');
+  bar.innerHTML=HOTBAR.map((bid,i)=>{
+    const b=BLOCKS[bid];
+    return `<div class="hb-slot ${i===selectedSlot?'active':''}" onclick="selectHotbarSlot(${i})">
+      <span class="hb-key">${i<9?i+1:0}</span>
+      <div class="hb-icon">${b.emoji||'🔲'}</div>
+      <div class="hb-name">${b.name.substring(0,10)}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectHotbarSlot(i){
+  selectedSlot=i;
+  selectedBlock=HOTBAR[i];
+  const b=BLOCKS[selectedBlock];
+  document.getElementById('selectedBlockName').textContent=b.name;
+  buildHotbar();
+}
+
+// ===== PARTICLES =====
+function spawnParticles(x,y,color){
+  for(let i=0;i<6;i++) particles.push({x,y,vx:(Math.random()-.5)*5,vy:(Math.random()-1)*4,life:25,color});
+}
+function updateParticles(){
+  particles=particles.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.2;p.life--;return p.life>0;});
+}
+
+// ===== RENDER =====
+function render(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  
+  const sky=ctx.createLinearGradient(0,0,0,canvas.height);
+  sky.addColorStop(0,'#050d18');
+  sky.addColorStop(1,'#0d1b2a');
+  ctx.fillStyle=sky;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  
+  const startC=Math.max(0,Math.floor(camera.x/TILE));
+  const endC=Math.min(COLS,startC+Math.ceil(canvas.width/TILE)+2);
+  const startR=Math.max(0,Math.floor(camera.y/TILE));
+  const endR=Math.min(ROWS,startR+Math.ceil(canvas.height/TILE)+2);
+  
+  for(let r=startR;r<endR;r++) for(let c=startC;c<endC;c++){
+    const bid=world[r][c];
+    if(!bid||bid===0) continue;
+    const b=BLOCKS[bid];
+    const sx=c*TILE-camera.x, sy=r*TILE-camera.y;
+    
+    ctx.fillStyle=b.color;
+    ctx.fillRect(sx,sy,TILE,TILE);
+    
+    if(bid>=10){
+      // Glow for energy blocks
+      ctx.shadowColor=b.color;
+      ctx.shadowBlur=12;
+      ctx.font='18px serif';
+      ctx.textAlign='center';
+      ctx.fillStyle='rgba(255,255,255,.9)';
+      ctx.fillText(b.emoji||'⚡',sx+TILE/2,sy+TILE/2+6);
+      ctx.shadowBlur=0;
+      
+      // Power indicator
+      if(b.power){
+        ctx.fillStyle='rgba(0,255,136,.6)';
+        ctx.font='bold 8px monospace';
+        ctx.fillText('+'+b.power+'MW',sx+TILE/2,sy+TILE-4);
+      }
+      if(b.cooling){
+        ctx.fillStyle='rgba(0,224,255,.6)';
+        ctx.font='bold 8px monospace';
+        ctx.fillText('-'+b.cooling+'°',sx+TILE/2,sy+TILE-4);
+      }
+    } else {
+      ctx.fillStyle='rgba(0,0,0,.2)';
+      ctx.fillRect(sx,sy,TILE,2);
+      ctx.fillRect(sx,sy,2,TILE);
+    }
+  }
+  
+  // Player
+  const px=player.x-camera.x, py=player.y-camera.y;
+  ctx.fillStyle='#c41e3a';
+  ctx.fillRect(px+4,py,TILE-8,TILE);
+  ctx.fillStyle='#0080aa';
+  ctx.fillRect(px+4,py,TILE-8,10);
+  ctx.fillStyle='#f39c12';
+  ctx.fillRect(px+10,py+3,12,7);
+  // Hard hat
+  ctx.fillStyle='#e67e22';
+  ctx.fillRect(px+2,py-4,TILE-4,6);
+  
+  // Particles
+  particles.forEach(p=>{
+    ctx.globalAlpha=p.life/25;
+    ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fillStyle=p.color;ctx.fill();
+    ctx.globalAlpha=1;
+  });
+  
+  // Grid overlay (faint)
+  ctx.strokeStyle='rgba(255,255,255,.03)';
+  ctx.lineWidth=1;
+  for(let c=startC;c<endC;c++){ctx.beginPath();ctx.moveTo(c*TILE-camera.x,0);ctx.lineTo(c*TILE-camera.x,canvas.height);ctx.stroke();}
+  for(let r=startR;r<endR;r++){ctx.beginPath();ctx.moveTo(0,r*TILE-camera.y);ctx.lineTo(canvas.width,r*TILE-camera.y);ctx.stroke();}
+  
+  // Block preview
+  const mx=Math.floor((canvas.width/2)/TILE)*TILE, my=Math.floor((canvas.height/2)/TILE)*TILE;
+  ctx.strokeStyle='rgba(255,255,255,.3)';
+  ctx.lineWidth=2;
+  ctx.setLineDash([4,4]);
+  ctx.strokeRect(mx,my,TILE,TILE);
+  ctx.setLineDash([]);
+}
+
+function showMsg(text,type='cyan'){
+  const colors={cyan:'var(--cyan)',green:'var(--green)',red:'var(--red)',gold:'var(--gold)'};
+  const m=document.createElement('div');
+  m.className='msg';m.style.borderColor=colors[type]||colors.cyan;m.textContent=text;
+  document.getElementById('msgs').appendChild(m);
+  setTimeout(()=>m.remove(),2800);
+}
+
+// ===== REACTOR SELECT =====
+function buildReactorCards(){
+  const cards=document.getElementById('reactorCards');
+  cards.innerHTML=REACTORS.map(r=>`
+    <div class="rc-card ${r.id===selectedReactorType?'sel':''}" onclick="selectReactor('${r.id}',this)">
+      <div class="rc-icon">${r.icon}</div>
+      <div class="rc-name">${r.name}</div>
+      <div class="rc-desc">${r.desc}</div>
+      <div class="rc-metals">⚗️ ${r.metals}</div>
+      <div style="font-size:.62rem;color:var(--gold);margin-top:3px;">Max: ${r.maxMW} MW</div>
+    </div>
+  `).join('');
+}
+function selectReactor(id,el){
+  document.querySelectorAll('.rc-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedReactorType=id;
+}
+buildReactorCards();
+
+function loop(){
+  if(!gameRunning) return;
+  updatePlayer();
+  updateParticles();
+  render();
+  requestAnimationFrame(loop);
+}
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

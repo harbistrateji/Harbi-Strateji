@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Türklerde Spor — Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#0a0f17;--bg2:#0f1520;--gold:#C9A24B;--cyan:#00E0FF;--red:#E01515;--text:#e8e6e3;--muted:#8a9bb0;--card:#141c2b;--border:#1e2a3a}body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.8;overflow-x:hidden}#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .1s}.back-btn{position:fixed;top:20px;left:20px;z-index:1000;color:var(--gold);text-decoration:none;font-family:'Chakra Petch',monospace;font-size:.85rem;opacity:.8;transition:.3s}.back-btn:hover{opacity:1;transform:translateX(-3px)}.container{max-width:900px;margin:0 auto;padding:0 24px;position:relative;z-index:1}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 24px}.hero-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:1rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--gold);line-height:1.2;margin-bottom:24px}.hero-sub{font-size:1.1rem;color:var(--muted);max-width:600px;line-height:1.7}.scene{padding:80px 0;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.19,1,.22,1)}.scene.visible{opacity:1;transform:translateY(0)}.scene-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.95rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}.scene h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--gold);margin-bottom:20px;line-height:1.3}.scene p{margin-bottom:16px;color:var(--muted);font-size:1rem}.scene p strong{color:var(--text)}.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:40px 0}.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:24px 0}.grid-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:.3s}.grid-card:hover{border-color:var(--gold);transform:translateY(-4px)}.grid-card .label{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.9rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}.grid-card .value{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:6px}.grid-card .desc{font-size:.85rem;color:var(--muted);line-height:1.6}.sport-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:16px 0;transition:.3s;display:flex;gap:20px;align-items:flex-start}.sport-card:hover{border-color:var(--gold)}.sport-card .icon{font-size:2.5rem;min-width:60px;text-align:center}.sport-card h3{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;margin-bottom:8px}.sport-card p{font-size:.9rem;color:var(--muted);line-height:1.6}.ref-section{padding:60px 0;border-top:1px solid var(--border)}.ref-section h3{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.85rem;letter-spacing:2px;margin-bottom:20px}.ref-section p{font-size:.85rem;color:var(--muted);margin-bottom:8px;padding-left:20px;text-indent:-20px}@media(max-width:600px){.hero h1{font-size:1.8rem}.grid-3{grid-template-columns:1fr}.sport-card{flex-direction:column}}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div id="progress" style="width:0%"></div>
+<a href="medeniyet-dinamikleri.html" class="back-btn">← Medeniyet Dinamikleri</a>
+<section class="hero">
+<span class="hero-tag">Medeniyet Dinamikleri // Spor & Beden Kültürü</span>
+<h1>Türklerde Spor: Savaş Sanatından Olimpiyat Kürsüsüne</h1>
+<p class="hero-sub">Atlı okçuluktan güreşe, ciritten polo'ya — Türk spor geleneğinin askerî kökenli evrimi ve modern dönüşümü.</p>
+</section>
+<div class="container">
+
+<section class="scene">
+<span class="scene-tag">Bölüm 1 — Bozkır Spor Geleneği</span>
+<h2>Askerî Eğitim Olarak Spor</h2>
+<p>Türklerde spor, eğlence değil <strong>hayatta kalma</strong> ve <strong>savaşa hazırlık</strong> aracıydı. Bozkır yaşamının zorlu koşulları, çocukluktan itibaren fiziksel dayanıklılık eğitimini zorunlu kılıyordu. Hunlar'da çocuklar <strong>koyun sırtında</strong> at binmeyi, <strong>kuş ve fare</strong> avlayarak ok atmayı öğrenirdi.</p>
+<p><strong>Mete Han</strong>'ın (MÖ 209) ordusunu eğitirken kullandığı "ıslık çalan ok" (ming-di) yöntemi, hem disiplin hem de atıcılık eğitiminin bir arada verildiğini gösterir. Türk savaşçısının temel becerileri: <strong>at binme, ok atma, kılıç kullanma, güreş ve avcılık</strong>.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Temel Beceri</div><div class="value">Atlı Okçuluk</div><div class="desc">Dört nala giderken geriye dönerek ok atma — Part Atışı</div></div>
+  <div class="grid-card"><div class="label">Dayanıklılık</div><div class="value">Sürek Avı</div><div class="desc">Binlerce kişilik organize av — savaş tatbikatı niteliğinde</div></div>
+  <div class="grid-card"><div class="label">Güç & Teknik</div><div class="value">Güreş</div><div class="desc">Tüm Türk boylarında ortak — en eski spor dalı</div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 2 — Geleneksel Sporlar</span>
+<h2>Türk Spor Dalları Ansiklopedisi</h2>
+
+<div class="sport-card"><div class="icon">🏇</div><div><h3>Cirit</h3><p>Atlı iki takım arasında oynanan, mızrak atma ve kaçınma becerisi gerektiren savaş oyunu. Osmanlı döneminde padişahların da katıldığı en prestijli spor. Evliya Çelebi'ye göre İstanbul'da 12.000 ciritçi vardı.</p></div></div>
+
+<div class="sport-card"><div class="icon">🤼</div><div><h3>Yağlı Güreş</h3><p>Kırkpınar geleneği 1362'den beri kesintisiz devam eden dünyanın en eski spor organizasyonu. Pehlivanlar zeytinyağıyla yağlanır, kıspet giyer. Başpehlivan unvanı en yüksek onur.</p></div></div>
+
+<div class="sport-card"><div class="icon">🏹</div><div><h3>Okçuluk</h3><p>Ok Meydanı geleneği — Osmanlı'da 900 metreyi aşan menzil atışları. II. Selim'in 1282 gez (yaklaşık 845 m) atışı tarihi rekor. Kemankeş unvanı en iyi okçulara verilirdi.</p></div></div>
+
+<div class="sport-card"><div class="icon">🐴</div><div><h3>Çevgan (Polo)</h3><p>Atlı çevgan oyunu — modern polo'nun atası. Selçuklu ve Osmanlı saraylarında oynanan aristokrat sporu. Meydanlar özel olarak inşa edilirdi.</p></div></div>
+
+<div class="sport-card"><div class="icon">⚔️</div><div><h3>Matrak</h3><p>Nasuh Matrakçı'nın (16. yy) geliştirdiği kılıç-kalkan savaş sanatı. Padişah Kanuni'nin de öğrencisi olduğu Matrakçı Nasuh, hem savaşçı hem de minyatürcüydü.</p></div></div>
+
+<div class="sport-card"><div class="icon">🏋️</div><div><h3>Ağırlık Kaldırma</h3><p>Şerbet taşı, gülle atma ve taş kaldırma gelenekleri. Osmanlı'da "zorhane" denilen mekanlar modern spor salonlarının öncüsüydü.</p></div></div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 3 — Osmanlı Spor Kurumları</span>
+<h2>Enderun'dan Ok Meydanı'na</h2>
+<p><strong>Enderun Mektebi</strong>, yalnızca devlet adamı değil, aynı zamanda üstün fiziksel kapasiteye sahip bireyler yetiştiriyordu. Güreş, cirit, okçuluk, binicilik ve yüzme zorunlu müfredattaydı. Enderun'dan yetişen sporcular <strong>Solaklar</strong> (padişahın özel muhafızları) arasına seçilirdi.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Eğitim Merkezi</div><div class="value">Enderun</div><div class="desc">7-14 yıl süren kapsamlı beden eğitimi programı</div></div>
+  <div class="grid-card"><div class="label">Atıcılık</div><div class="value">Ok Meydanı</div><div class="desc">İstanbul Okmeydanı — menzil ve hedef atış yarışmaları</div></div>
+  <div class="grid-card"><div class="label">Güreş</div><div class="value">Tekke & Zorhaneler</div><div class="desc">Pehlivan yetiştiren kurumlar — Ahi geleneğiyle bağlantılı</div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 4 — Modern Dönem</span>
+<h2>Cumhuriyet ve Modern Spor</h2>
+<p>Atatürk'ün <strong>"Sağlam kafa, sağlam vücutta bulunur"</strong> ilkesi, Cumhuriyet'in spor politikasının temelini oluşturdu. 1926'da kurulan <strong>Türkiye İdman Cemiyetleri İttifakı</strong> (bugünkü Türkiye Olimpiyat Komitesi), modern spor örgütlenmesinin başlangıcıydı.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">1936 Berlin</div><div class="value">İlk Olimpiyat</div><div class="desc">Türkiye'nin ilk resmi olimpiyat katılımı</div></div>
+  <div class="grid-card"><div class="label">1948 Londra</div><div class="value">İlk Altın</div><div class="desc">Güreşçi Yaşar Doğu — serbest stil 66 kg</div></div>
+  <div class="grid-card"><div class="label">Günümüz</div><div class="value">102 Madalya</div><div class="desc">Olimpiyat tarihinde toplam madalya — güreş, halter, boks ağırlıklı</div></div>
+</div>
+<p>Türkiye'nin olimpiyat madalyalarının <strong>%60'ından fazlası</strong> güreş branşından gelir — bozkır geleneğinin modern yansıması.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="ref-section">
+<h3>Kaynakça</h3>
+<p>Kahraman, A. (1995). <em>Osmanlı Devletinde Spor</em>. Kültür Bakanlığı Yayınları.</p>
+<p>Fişek, K. (1985). <em>100 Soruda Türkiye Spor Tarihi</em>. Gerçek Yayınevi.</p>
+<p>Güven, Ö. (1999). <em>Türklerde Spor Kültürü</em>. Atatürk Kültür Merkezi Yayınları.</p>
+<p>Evliya Çelebi. <em>Seyahatnâme</em>. (Çev. R. Dankoff).</p>
+</section>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progress').style.width=(s/h*100)+'%'});
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.15});
+document.querySelectorAll('.scene').forEach(s=>obs.observe(s));
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

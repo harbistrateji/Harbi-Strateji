@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Nadir Metaller Savaşı — Harb-i Strateji</title>
+<style>
+:root{
+  --bg:#0d0d0d;--panel:#111827;--border:#1e2d40;
+  --red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;
+  --purple:#9b59b6;--orange:#e67e22;
+  --txt:#e8eaf0;--dim:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* CANVAS BG */
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.18;}
+
+/* HEADER */
+.header{position:relative;z-index:10;background:linear-gradient(135deg,#0d1b2a,#1a0a0a);border-bottom:2px solid var(--red);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.header h1{font-size:1.3rem;font-weight:800;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.header h1 span{color:var(--red);}
+.hdr-stats{display:flex;gap:16px;}
+.hdr-stat{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;padding:6px 14px;text-align:center;}
+.hdr-stat .val{font-size:1.1rem;font-weight:700;color:var(--cyan);}
+.hdr-stat .lbl{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+
+/* MAIN LAYOUT */
+.main{position:relative;z-index:5;display:grid;grid-template-columns:280px 1fr 260px;gap:16px;padding:16px;max-width:1400px;margin:0 auto;}
+
+/* PANELS */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.panel-title{font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px;}
+
+/* WORLD MAP */
+.map-container{position:relative;background:#0d1b2a;border-radius:8px;overflow:hidden;aspect-ratio:2/1;cursor:pointer;}
+.map-container svg{width:100%;height:100%;}
+.country-region{transition:all .3s;cursor:pointer;}
+.country-region:hover{filter:brightness(1.5);}
+.map-tooltip{position:absolute;background:rgba(10,15,23,.95);border:1px solid var(--cyan);border-radius:6px;padding:8px 12px;font-size:.75rem;pointer-events:none;z-index:100;display:none;max-width:200px;}
+
+/* METAL CARDS */
+.metal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.metal-card{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.metal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-color,var(--cyan));}
+.metal-card:hover{border-color:var(--card-color,var(--cyan));transform:translateY(-2px);}
+.metal-card.selected{border-color:var(--card-color,var(--cyan));background:rgba(0,224,255,.08);}
+.metal-card.embargoed{border-color:var(--red);opacity:.7;}
+.metal-card.embargoed::after{content:'AMBARGO';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);font-size:.9rem;font-weight:900;color:var(--red);opacity:.8;letter-spacing:2px;}
+.mc-symbol{font-size:1.4rem;font-weight:900;color:var(--card-color,var(--cyan));}
+.mc-name{font-size:.7rem;color:var(--txt);margin-top:2px;}
+.mc-stock{font-size:.65rem;color:var(--dim);margin-top:4px;}
+.mc-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:6px;}
+.mc-fill{height:100%;border-radius:2px;background:var(--card-color,var(--cyan));transition:width .5s;}
+
+/* PRODUCTION QUEUE */
+.prod-item{display:flex;align-items:center;gap:10px;padding:8px;background:rgba(0,0,0,.2);border-radius:6px;margin-bottom:6px;border:1px solid var(--border);}
+.prod-icon{font-size:1.4rem;}
+.prod-info{flex:1;}
+.prod-name{font-size:.8rem;font-weight:600;}
+.prod-req{font-size:.65rem;color:var(--dim);}
+.prod-progress{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:4px;}
+.prod-prog-fill{height:100%;border-radius:2px;background:var(--green);transition:width .3s;}
+.btn-produce{background:var(--green);color:#000;border:none;border-radius:4px;padding:4px 10px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-produce:hover{filter:brightness(1.2);}
+.btn-produce:disabled{background:var(--dim);color:var(--bg);cursor:not-allowed;}
+
+/* EVENTS */
+.event-card{background:linear-gradient(135deg,rgba(224,21,21,.1),rgba(0,0,0,.3));border:1px solid var(--red);border-radius:8px;padding:12px;margin-bottom:8px;animation:slideIn .4s ease;}
+@keyframes slideIn{from{transform:translateX(-20px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.event-title{font-size:.8rem;font-weight:700;color:var(--red);}
+.event-desc{font-size:.7rem;color:var(--dim);margin-top:4px;}
+.event-btns{display:flex;gap:6px;margin-top:8px;}
+.event-btn{flex:1;padding:6px;border:none;border-radius:4px;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.event-btn.accept{background:var(--green);color:#000;}
+.event-btn.reject{background:var(--red);color:#fff;}
+.event-btn:hover{filter:brightness(1.2);}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:8px;padding:6px;border-radius:4px;margin-bottom:4px;}
+.lb-row:nth-child(1){background:rgba(201,162,75,.1);}
+.lb-row:nth-child(2){background:rgba(192,192,192,.05);}
+.lb-row:nth-child(3){background:rgba(205,127,50,.05);}
+.lb-rank{font-size:.8rem;font-weight:700;color:var(--gold);width:20px;}
+.lb-name{flex:1;font-size:.75rem;}
+.lb-score{font-size:.75rem;color:var(--cyan);}
+
+/* PHASE INDICATOR */
+.phase-bar{display:flex;gap:4px;margin-bottom:12px;}
+.phase-dot{flex:1;height:6px;border-radius:3px;background:var(--border);transition:all .3s;}
+.phase-dot.active{background:var(--gold);}
+.phase-dot.done{background:var(--green);}
+
+/* TURN TIMER */
+.turn-timer{text-align:center;padding:10px;background:rgba(0,0,0,.3);border-radius:8px;margin-bottom:12px;}
+.timer-val{font-size:2rem;font-weight:900;color:var(--cyan);font-family:monospace;}
+.timer-lbl{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+.timer-val.urgent{color:var(--red);animation:pulse .5s infinite alternate;}
+@keyframes pulse{from{opacity:1;}to{opacity:.5;}}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;display:flex;align-items:center;justify-content:center;display:none;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--panel);border:2px solid var(--gold);border-radius:12px;padding:24px;max-width:500px;width:90%;position:relative;}
+.modal h2{color:var(--gold);font-size:1.1rem;margin-bottom:12px;}
+.modal p{font-size:.85rem;color:var(--dim);line-height:1.6;margin-bottom:8px;}
+.modal-close{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--dim);font-size:1.2rem;cursor:pointer;}
+.modal-close:hover{color:var(--txt);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--panel);border:1px solid var(--cyan);border-radius:8px;padding:12px 16px;z-index:2000;font-size:.85rem;animation:toastIn .3s ease;max-width:300px;}
+@keyframes toastIn{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* BUTTONS */
+.btn-primary{background:linear-gradient(135deg,var(--red),#a00);color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:.85rem;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
+.btn-primary:hover{filter:brightness(1.2);transform:translateY(-1px);}
+.btn-secondary{background:transparent;color:var(--cyan);border:1px solid var(--cyan);border-radius:6px;padding:8px 16px;font-size:.8rem;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{background:rgba(0,224,255,.1);}
+
+/* INTRO SCREEN */
+#introScreen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+#introScreen h1{font-size:2.5rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:4px;margin-bottom:8px;}
+#introScreen h1 span{color:var(--red);}
+#introScreen .subtitle{font-size:1rem;color:var(--cyan);margin-bottom:24px;letter-spacing:2px;}
+#introScreen .desc{max-width:600px;font-size:.9rem;color:var(--dim);line-height:1.7;margin-bottom:32px;}
+.difficulty-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:500px;margin-bottom:24px;}
+.diff-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;transition:all .2s;}
+.diff-card:hover,.diff-card.selected{border-color:var(--gold);background:rgba(201,162,75,.1);}
+.diff-card .diff-icon{font-size:1.8rem;margin-bottom:8px;}
+.diff-card .diff-name{font-size:.85rem;font-weight:700;color:var(--gold);}
+.diff-card .diff-desc{font-size:.7rem;color:var(--dim);margin-top:4px;}
+
+/* OYUN BİTTİ */
+#gameOver{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
+#gameOver.show{display:flex;}
+#gameOver h2{font-size:2rem;font-weight:900;color:var(--red);margin-bottom:8px;}
+#gameOver .go-score{font-size:3rem;font-weight:900;color:var(--gold);margin:16px 0;}
+#gameOver .go-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin-bottom:24px;}
+#gameOver .go-stat{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px;}
+#gameOver .go-stat .val{font-size:1.3rem;font-weight:700;color:var(--cyan);}
+#gameOver .go-stat .lbl{font-size:.65rem;color:var(--dim);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .main{grid-template-columns:1fr;grid-template-rows:auto;}
+  .hdr-stats{display:none;}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- INTRO SCREEN -->
+<div id="introScreen">
+  <h1>NADİR METALLER <span>SAVAŞI</span></h1>
+  <div class="subtitle">⚗️ Stratejik Mineral Hakimiyeti Simülatörü</div>
+  <div class="desc">
+    Tezden gerçek verilerle: 21 kritik mineral, küresel tedarik zincirleri, Çin ambargoları ve Türkiye'nin stratejik konumu.<br>
+    Kaynakları kontrol et, silah sistemleri üret, ambargolara karşı koy — <strong>küresel güç dengesini şekillendir!</strong>
+  </div>
+  <div class="difficulty-grid">
+    <div class="diff-card selected" data-diff="easy">
+      <div class="diff-icon">🟢</div>
+      <div class="diff-name">Diplomat</div>
+      <div class="diff-desc">Yavaş ambargo, bol kaynak</div>
+    </div>
+    <div class="diff-card" data-diff="medium">
+      <div class="diff-icon">🟡</div>
+      <div class="diff-name">Stratejist</div>
+      <div class="diff-desc">Dengeli zorluk</div>
+    </div>
+    <div class="diff-card" data-diff="hard">
+      <div class="diff-icon">🔴</div>
+      <div class="diff-name">Komutan</div>
+      <div class="diff-desc">Çin baskısı, kriz senaryoları</div>
+    </div>
+  </div>
+  <button class="btn-primary" id="startBtn" onclick="startGame()">⚔️ SAVAŞI BAŞLAT</button>
+</div>
+
+<!-- OYUN BİTTİ -->
+<div id="gameOver">
+  <h2 id="goTitle">OYUN BİTTİ</h2>
+  <div class="go-score" id="goScore">0</div>
+  <div class="go-stats">
+    <div class="go-stat"><div class="val" id="goTurns">0</div><div class="lbl">Tur</div></div>
+    <div class="go-stat"><div class="val" id="goWeapons">0</div><div class="lbl">Silah</div></div>
+    <div class="go-stat"><div class="val" id="goEmbargoSurvived">0</div><div class="lbl">Ambargo Atlatıldı</div></div>
+  </div>
+  <div style="display:flex;gap:12px;">
+    <button class="btn-primary" onclick="yenidenBaslatGame()">🔄 Tekrar Oyna</button>
+    <button class="btn-secondary" onclick="shareScore()">📤 Paylaş</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="header h1" style="font-size:1.1rem;font-weight:900;letter-spacing:2px;color:#C9A24B;text-transform:uppercase;">
+      ⚗️ NADİR METALLER SAVAŞI <span style="color:#E01515;">| HARB-İ STRATEJİ</span>
+    </div>
+    <div style="font-size:.65rem;color:#6b7280;letter-spacing:1px;">STRATEJİK MİNERAL HAKİMİYETİ SİMÜLATÖRÜ</div>
+  </div>
+  <div class="hdr-stats">
+    <div class="hdr-stat"><div class="val" id="hdrScore">0</div><div class="lbl">Puan</div></div>
+    <div class="hdr-stat"><div class="val" id="hdrTurn">1</div><div class="lbl">Tur</div></div>
+    <div class="hdr-stat"><div class="val" id="hdrPower">0%</div><div class="lbl">Güç</div></div>
+    <div class="hdr-stat"><div class="val" id="hdrPhase">Faz 1</div><div class="lbl">Aşama</div></div>
+  </div>
+</div>
+
+<!-- MAIN GAME -->
+<div class="main" id="gameMain" style="display:none;">
+
+  <!-- LEFT: METALS -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">⚗️ Kritik Mineral Stokları</div>
+      <div class="metal-grid" id="metalGrid"></div>
+    </div>
+    <div class="panel" style="margin-top:12px;">
+      <div class="panel-title">🌍 Tedarik Kaynakları</div>
+      <div id="supplyList"></div>
+    </div>
+  </div>
+
+  <!-- CENTER: MAP + EVENTS -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">🗺️ Küresel Mineral Haritası</div>
+      <div class="phase-bar" id="phaseBar"></div>
+      <div class="map-container" id="mapContainer">
+        <svg viewBox="0 0 800 400" id="worldSvg"></svg>
+        <div class="map-tooltip" id="mapTooltip"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;" id="mapLegend"></div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <div class="panel-title">⚡ Kriz Olayları</div>
+      <div id="eventList">
+        <div style="color:var(--dim);font-size:.8rem;text-align:center;padding:20px;">Olaylar bekleniyor...</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <div class="panel-title">🏭 Silah Üretim Hattı</div>
+      <div id="productionQueue"></div>
+      <div id="availableWeapons" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: TURN + STATS -->
+  <div>
+    <div class="panel">
+      <div class="turn-timer">
+        <div class="timer-val" id="timerVal">30</div>
+        <div class="timer-lbl">Tur Süresi</div>
+      </div>
+      <button class="btn-primary" style="width:100%;margin-bottom:8px;" onclick="endTurn()">⏭️ TUR BİTİR</button>
+      <button class="btn-secondary" style="width:100%;" onclick="showHowToPlay()">❓ Nasıl Oynanır</button>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <div class="panel-title">📊 Güç Göstergeleri</div>
+      <div id="powerMetrics"></div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <div class="panel-title">🏆 Skor Tablosu</div>
+      <div id="leaderboard"></div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <div class="panel-title">📋 Görev Günlüğü</div>
+      <div id="missionLog" style="max-height:200px;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- HOW TO PLAY MODAL -->
+<div class="modal-overlay" id="howModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('howModal')">✕</button>
+    <h2>⚗️ Nasıl Oynanır?</h2>
+    <p><strong>Amaç:</strong> Kritik mineralleri kontrol ederek silah sistemleri üret ve küresel güç dengesinde üstünlük sağla.</p>
+    <p><strong>Mineraller:</strong> Sol panelden mineral kartlarına tıklayarak stok satın al veya tedarik zinciri kur.</p>
+    <p><strong>Üretim:</strong> Yeterli minerale sahipsen silah sistemlerini üretim hattına ekle.</p>
+    <p><strong>Krizler:</strong> Çin ambargoları, savaşlar ve tedarik kesintileri gibi olaylara karar ver.</p>
+    <p><strong>Aşamalar:</strong> 3 faz var — Tedarik (1-5), Üretim (6-10), Hakimiyet (11-15).</p>
+    <p><strong>Puan:</strong> Üretilen silah × mineral çeşitliliği × kriz yönetimi = final skor.</p>
+    <button class="btn-primary" onclick="closeModal('howModal')" style="margin-top:12px;">Anladım!</button>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const METALS = [
+  {id:'nd',sym:'Nd',name:'Neodimyum',color:'#c41e3a',uses:'Kalıcı mıknatıslar, füze güdüm',stock:50,max:100,price:12,source:'Çin %85',critical:true},
+  {id:'dy',sym:'Dy',name:'Disprozyum',color:'#9b59b6',uses:'Yüksek ısı mıknatısları, radar',stock:30,max:80,price:18,source:'Çin %99',critical:true},
+  {id:'tb',sym:'Tb',name:'Terbiyum',color:'#e67e22',uses:'Lazer sistemleri, sonar',stock:25,max:60,price:22,source:'Çin %90',critical:true},
+  {id:'sm',sym:'Sm',name:'Samaryum',color:'#00ff88',uses:'Füze güdümü, elektronik harp',stock:40,max:80,price:15,source:'Çin %80',critical:true},
+  {id:'y',sym:'Y',name:'İtriyum',color:'#C9A24B',uses:'Radar, lazer hedefleme',stock:35,max:70,price:10,source:'Çin %75',critical:true},
+  {id:'co',sym:'Co',name:'Kobalt',color:'#3498db',uses:'Süper alaşımlar, piller',stock:60,max:120,price:8,source:'Kongo %70',critical:true},
+  {id:'li',sym:'Li',name:'Lityum',color:'#e74c3c',uses:'Bataryalar, elektronik',stock:80,max:150,price:5,source:'Şili/Avustralya',critical:false},
+  {id:'w',sym:'W',name:'Tungsten',color:'#95a5a6',uses:'Zırh delici mühimmat',stock:45,max:90,price:9,source:'Çin %85',critical:true},
+  {id:'ti',sym:'Ti',name:'Titanyum',color:'#1abc9c',uses:'Uçak gövdesi, zırh',stock:70,max:140,price:7,source:'Rusya/Çin',critical:false},
+  {id:'ga',sym:'Ga',name:'Galyum',color:'#f39c12',uses:'Yarı iletkenler, radar',stock:20,max:50,price:25,source:'Çin %98',critical:true},
+  {id:'ge',sym:'Ge',name:'Germanyum',color:'#e91e63',uses:'Gece görüş, fiber optik',stock:15,max:40,price:30,source:'Çin %67',critical:true},
+  {id:'ta',sym:'Ta',name:'Tantal',color:'#8bc34a',uses:'Elektronik, uzay araçları',stock:25,max:60,price:20,source:'Kongo/Ruanda',critical:true},
+];
+
+const WEAPONS = [
+  {id:'tomahawk',name:'Tomahawk Füzesi',icon:'🚀',req:{nd:15,dy:8,sm:10},power:25,turns:3,desc:'Seyir füzesi — Nd,Dy,Sm mıknatısları'},
+  {id:'f35',name:'F-35 Savaş Uçağı',icon:'✈️',req:{nd:30,ti:40,co:20,ga:10},power:50,turns:5,desc:'5. nesil uçak — 920 kg nadir metal'},
+  {id:'predator',name:'Predator İHA',icon:'🛸',req:{nd:10,tb:5,li:20},power:20,turns:2,desc:'İnsansız hava aracı — Nd mıknatısları'},
+  {id:'patriot',name:'Patriot Füze Sistemi',icon:'🎯',req:{nd:20,dy:12,y:15,sm:8},power:35,turns:4,desc:'Hava savunma — çok sayıda NTE'},
+  {id:'laser',name:'Lazer Silah Sistemi',icon:'⚡',req:{y:20,tb:15,ga:8},power:40,turns:4,desc:'Yönlendirilmiş enerji — Y,Tb,Ga'},
+  {id:'railgun',name:'Elektromanyetik Raylı Silah',icon:'🔫',req:{co:30,li:25,ge:10},power:45,turns:5,desc:'Raylı silah — enerji depolama'},
+  {id:'bayraktar',name:'Bayraktar TB3',icon:'🚁',req:{nd:8,co:15,li:18,ti:12},power:22,turns:2,desc:'Türk İHA — yerli üretim'},
+  {id:'kaan',name:'KAAN Savaş Uçağı',icon:'🦅',req:{nd:25,ti:35,co:18,ta:10},power:48,turns:5,desc:'Türkiye 5. nesil uçak'},
+  {id:'sonar',name:'Gelişmiş Sonar Sistemi',icon:'🔊',req:{sm:12,y:10,nd:8},power:18,turns:2,desc:'Denizaltı tespiti — Sm,Y,Nd'},
+  {id:'radar',name:'Aktif Faz Dizili Radar',icon:'📡',req:{ga:15,ge:8,dy:10},power:30,turns:3,desc:'AESA radar — Ga,Ge yarı iletkenler'},
+];
+
+const EVENTS = [
+  {id:'china_embargo',title:'🚨 ÇİN AMBARGOSU',desc:'Çin, galyum ve germanyum ihracatını kısıtladı! (2023 gerçek olay)',type:'crisis',effect:{ga:-15,ge:-10},options:[{text:'Alternatif tedarik kur (+maliyet)',fn:'alternativeSupply'},{text:'Stok kullan (-stok)',fn:'useStock'}]},
+  {id:'congo_war',title:'⚔️ KONGO KRİZİ',desc:'Demokratik Kongo\'da çatışma! Kobalt madenleri tehlikede.',type:'crisis',effect:{co:-20,ta:-10},options:[{text:'Özel güvenlik gönder (+güç)',fn:'sendSecurity'},{text:'Alternatif kaynak bul',fn:'findAlternative'}]},
+  {id:'ukraine_minerals',title:'🇺🇦 UKRAYNA MİNERAL ANLAŞMASI',desc:'Ukrayna\'nın kritik mineral rezervleri müzakereye açıldı!',type:'opportunity',effect:{ti:+20,li:+15},options:[{text:'Anlaşmayı imzala (+kaynak)',fn:'signDeal'},{text:'Bekle ve izle',fn:'waitAndSee'}]},
+  {id:'turkey_bor',title:'🇹🇷 TÜRKİYE BOR REZERVI',desc:'Türkiye\'nin dünya bor rezervlerinin %73\'üne sahip olduğu doğrulandı!',type:'opportunity',effect:{li:+25},options:[{text:'Bor üretimini artır',fn:'increaseBor'},{text:'Stratejik stok oluştur',fn:'buildStock'}]},
+  {id:'russia_titanium',title:'🇷🇺 RUSYA TİTANYUM YASAĞI',desc:'Rusya, Batı\'ya titanyum ihracatını durdurdu!',type:'crisis',effect:{ti:-25},options:[{text:'Japonya\'dan tedarik et',fn:'japanSupply'},{text:'Kompozit malzeme geliştir',fn:'developComposite'}]},
+  {id:'tech_breakthrough',title:'💡 TEKNOLOJİK ATILIM',desc:'Neodimyum kullanımını %30 azaltan yeni mıknatıs teknolojisi!',type:'opportunity',effect:{nd:+20},options:[{text:'Teknolojiyi uygula',fn:'applyTech'},{text:'Araştırmayı sat',fn:'sellResearch'}]},
+  {id:'south_africa_pgm',title:'🇿🇦 G.AFRİKA PLATIN KRİZİ',desc:'Güney Afrika\'daki grevler platin grubu metal üretimini durdurdu!',type:'crisis',effect:{co:-15},options:[{text:'Acil ithalat yap',fn:'emergencyImport'},{text:'Geri dönüşüm programı başlat',fn:'recyclingProgram'}]},
+  {id:'china_dominance',title:'🐉 ÇİN BASKISI',desc:'Çin, nadir toprak elementlerinde küresel fiyatları manipüle ediyor!',type:'crisis',effect:{nd:-10,dy:-8,tb:-6},options:[{text:'WTO\'ya başvur',fn:'wtoComplaint'},{text:'Müttefik stok havuzu kur',fn:'allyStockpile'}]},
+];
+
+// ===================== GAME STATE =====================
+let G = {
+  metals: {},
+  puan: 0,
+  turn: 1,
+  maxTurns: 15,
+  phase: 1,
+  power: 0,
+  weapons: [],
+  production: [],
+  events: [],
+  embargoedMetals: [],
+  embargoSurvived: 0,
+  difficulty: 'easy',
+  timer: 30,
+  timerInterval: null,
+  log: [],
+};
+
+function initMetals(){
+  METALS.forEach(m=>{
+    G.metals[m.id] = {
+      stock: m.stock + (G.difficulty==='easy'?20:G.difficulty==='hard'?-10:0),
+      max: m.max,
+      embargoed: false
+    };
+  });
+}
+
+// ===================== CANVAS BG =====================
+const bgCanvas = document.getElementById('bgCanvas');
+const bgCtx = bgCanvas.getContext('2d');
+let bgParticles = [];
+
+function initBgCanvas(){
+  bgCanvas.width = window.innerWidth;
+  bgCanvas.height = window.innerHeight;
+  bgParticles = [];
+  for(let i=0;i<60;i++){
+    bgParticles.push({
+      x:Math.random()*bgCanvas.width,
+      y:Math.random()*bgCanvas.height,
+      r:Math.random()*2+0.5,
+      vx:(Math.random()-.5)*.3,
+      vy:(Math.random()-.5)*.3,
+      color:['#c41e3a','#C9A24B','#E01515','#9b59b6'][Math.floor(Math.random()*4)]
+    });
+  }
+}
+
+function animateBg(){
+  bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
+  bgParticles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=bgCanvas.width;
+    if(p.x>bgCanvas.width)p.x=0;
+    if(p.y<0)p.y=bgCanvas.height;
+    if(p.y>bgCanvas.height)p.y=0;
+    bgCtx.beginPath();
+    bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    bgCtx.fillStyle=p.color;
+    bgCtx.fill();
+  });
+  // Draw connections
+  bgParticles.forEach((p,i)=>{
+    bgParticles.slice(i+1).forEach(q=>{
+      const d=Math.hypot(p.x-q.x,p.y-q.y);
+      if(d<100){
+        bgCtx.beginPath();
+        bgCtx.moveTo(p.x,p.y);
+        bgCtx.lineTo(q.x,q.y);
+        bgCtx.strokeStyle=`rgba(0,224,255,${.15*(1-d/100)})`;
+        bgCtx.lineWidth=.5;
+        bgCtx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(animateBg);
+}
+
+// ===================== WORLD MAP (SVG) =====================
+const REGIONS = [
+  {id:'china',name:'Çin',x:580,y:140,w:120,h:80,color:'#e74c3c',minerals:['nd','dy','tb','sm','y','ga','ge','w'],share:'%70-99'},
+  {id:'congo',name:'Kongo',x:360,y:220,w:50,h:40,color:'#9b59b6',minerals:['co','ta'],share:'%70 kobalt'},
+  {id:'russia',name:'Rusya',x:480,y:80,w:150,h:60,color:'#3498db',minerals:['ti'],share:'%30 titanyum'},
+  {id:'turkey',name:'Türkiye',x:430,y:130,w:50,h:35,color:'#C9A24B',minerals:['li'],share:'%73 bor'},
+  {id:'chile',name:'Şili',x:200,y:280,w:30,h:60,color:'#2ecc71',minerals:['li'],share:'%30 lityum'},
+  {id:'australia',name:'Avustralya',x:620,y:270,w:80,h:60,color:'#f39c12',minerals:['li','ti'],share:'Lityum/Ti'},
+  {id:'usa',name:'ABD',x:80,y:120,w:100,h:70,color:'#1abc9c',minerals:['co'],share:'Berilyum'},
+  {id:'ukraine',name:'Ukrayna',x:430,y:100,w:40,h:30,color:'#3498db',minerals:['ti'],share:'Kritik mineraller'},
+  {id:'southafrica',name:'G.Afrika',x:380,y:270,w:50,h:40,color:'#e67e22',minerals:['co'],share:'PGM'},
+];
+
+function buildWorldMap(){
+  const svg = document.getElementById('worldSvg');
+  svg.innerHTML = '';
+  
+  // Background
+  const bg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  bg.setAttribute('width','800');bg.setAttribute('height','400');
+  bg.setAttribute('fill','#0d1b2a');
+  svg.appendChild(bg);
+  
+  // Grid lines
+  for(let x=0;x<800;x+=80){
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',x);l.setAttribute('y1',0);l.setAttribute('x2',x);l.setAttribute('y2',400);
+    l.setAttribute('stroke','rgba(255,255,255,.05)');l.setAttribute('stroke-width','1');
+    svg.appendChild(l);
+  }
+  for(let y=0;y<400;y+=80){
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',0);l.setAttribute('y1',y);l.setAttribute('x2',800);l.setAttribute('y2',y);
+    l.setAttribute('stroke','rgba(255,255,255,.05)');l.setAttribute('stroke-width','1');
+    svg.appendChild(l);
+  }
+  
+  // Regions
+  REGIONS.forEach(r=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','country-region');
+    g.setAttribute('data-id',r.id);
+    
+    const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x',r.x);rect.setAttribute('y',r.y);
+    rect.setAttribute('width',r.w);rect.setAttribute('height',r.h);
+    rect.setAttribute('rx','6');
+    rect.setAttribute('fill',r.color+'33');
+    rect.setAttribute('stroke',r.color);
+    rect.setAttribute('stroke-width','2');
+    
+    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',r.x+r.w/2);txt.setAttribute('y',r.y+r.h/2);
+    txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','middle');
+    txt.setAttribute('fill',r.color);txt.setAttribute('font-size','11');txt.setAttribute('font-weight','700');
+    txt.textContent=r.name;
+    
+    const share=document.createElementNS('http://www.w3.org/2000/svg','text');
+    share.setAttribute('x',r.x+r.w/2);share.setAttribute('y',r.y+r.h/2+14);
+    share.setAttribute('text-anchor','middle');share.setAttribute('fill','rgba(255,255,255,.6)');
+    share.setAttribute('font-size','8');
+    share.textContent=r.share;
+    
+    g.appendChild(rect);g.appendChild(txt);g.appendChild(share);
+    
+    g.addEventListener('mouseenter',e=>{
+      const tt=document.getElementById('mapTooltip');
+      const metals=r.minerals.map(mid=>{
+        const m=METALS.find(x=>x.id===mid);
+        return m?`${m.sym}: ${G.metals[mid]?G.metals[mid].stock:0} birim`:'';
+      }).filter(Boolean).join('<br>');
+      tt.innerHTML=`<strong style="color:${r.color}">${r.name}</strong><br>${metals}<br><span style="color:#6b7280;font-size:.65rem;">${r.share}</span>`;
+      tt.style.display='block';
+      tt.style.left=(e.offsetX+10)+'px';
+      tt.style.top=(e.offsetY+10)+'px';
+    });
+    g.addEventListener('mouseleave',()=>{
+      document.getElementById('mapTooltip').style.display='none';
+    });
+    g.addEventListener('click',()=>tradeWithRegion(r));
+    
+    svg.appendChild(g);
+  });
+  
+  // Animated trade routes
+  drawTradeRoutes(svg);
+}
+
+function drawTradeRoutes(svg){
+  const routes=[
+    {from:[640,180],to:[430,148],color:'#e74c3c'},
+    {from:[385,240],to:[430,148],color:'#9b59b6'},
+    {from:[555,110],to:[430,148],color:'#3498db'},
+  ];
+  routes.forEach((r,i)=>{
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const mx=(r.from[0]+r.to[0])/2;
+    const my=Math.min(r.from[1],r.to[1])-40;
+    path.setAttribute('d',`M${r.from[0]},${r.from[1]} Q${mx},${my} ${r.to[0]},${r.to[1]}`);
+    path.setAttribute('stroke',r.color);
+    path.setAttribute('stroke-width','1.5');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-dasharray','6,4');
+    path.setAttribute('opacity','.5');
+    const anim=document.createElementNS('http://www.w3.org/2000/svg','animate');
+    anim.setAttribute('attributeName','stroke-dashoffset');
+    anim.setAttribute('from','0');anim.setAttribute('to','-20');
+    anim.setAttribute('dur',`${1.5+i*.3}s`);anim.setAttribute('repeatCount','indefinite');
+    path.appendChild(anim);
+    svg.appendChild(path);
+  });
+}
+
+// ===================== RENDER FUNCTIONS =====================
+function renderMetalGrid(){
+  const grid=document.getElementById('metalGrid');
+  grid.innerHTML='';
+  METALS.forEach(m=>{
+    const state=G.metals[m.id];
+    const pct=Math.round((state.stock/m.max)*100);
+    const div=document.createElement('div');
+    div.className='metal-card'+(state.embargoed?' embargoed':'');
+    div.style.setProperty('--card-color',m.color);
+    div.innerHTML=`
+      <div class="mc-symbol" style="color:${m.color}">${m.sym}</div>
+      <div class="mc-name">${m.name}</div>
+      <div class="mc-stock">${state.stock}/${m.max} birim</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:${pct}%;background:${m.color}"></div></div>
+    `;
+    div.title=`${m.name}: ${m.uses}\nKaynak: ${m.source}`;
+    div.onclick=()=>buyMetal(m.id);
+    grid.appendChild(div);
+  });
+}
+
+function renderSupplyList(){
+  const list=document.getElementById('supplyList');
+  const criticals=METALS.filter(m=>m.critical);
+  list.innerHTML=criticals.map(m=>{
+    const state=G.metals[m.id];
+    const risk=state.stock<20?'🔴':state.stock<40?'🟡':'🟢';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:5px;border-bottom:1px solid var(--border);">
+      <span style="color:${m.color};font-weight:700;font-size:.75rem;width:24px;">${m.sym}</span>
+      <span style="flex:1;font-size:.7rem;color:var(--dim);">${m.source}</span>
+      <span>${risk}</span>
+      <span style="font-size:.7rem;color:var(--cyan);">${state.stock}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderProduction(){
+  const pq=document.getElementById('productionQueue');
+  const aw=document.getElementById('availableWeapons');
+  
+  if(G.production.length===0){
+    pq.innerHTML='<div style="color:var(--dim);font-size:.75rem;text-align:center;padding:10px;">Üretim hattı boş</div>';
+  } else {
+    pq.innerHTML=G.production.map((p,i)=>`
+      <div class="prod-item">
+        <div class="prod-icon">${p.icon}</div>
+        <div class="prod-info">
+          <div class="prod-name">${p.name}</div>
+          <div class="prod-req">Kalan: ${p.turnsLeft} tur</div>
+          <div class="prod-progress"><div class="prod-prog-fill" style="width:${((p.totalTurns-p.turnsLeft)/p.totalTurns)*100}%"></div></div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  // Available weapons to build
+  const available=WEAPONS.filter(w=>!G.production.find(p=>p.id===w.id));
+  aw.innerHTML='<div style="font-size:.7rem;color:var(--dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">Üretilebilir Sistemler</div>'+
+    available.slice(0,4).map(w=>{
+      const canBuild=Object.entries(w.req).every(([k,v])=>G.metals[k]&&G.metals[k].stock>=v);
+      const reqStr=Object.entries(w.req).map(([k,v])=>{
+        const m=METALS.find(x=>x.id===k);
+        const has=G.metals[k]?G.metals[k].stock:0;
+        const ok=has>=v;
+        return `<span style="color:${ok?'var(--green)':'var(--red)'}">${m?m.sym:'?'}:${v}</span>`;
+      }).join(' ');
+      return `<div class="prod-item">
+        <div class="prod-icon">${w.icon}</div>
+        <div class="prod-info">
+          <div class="prod-name">${w.name}</div>
+          <div class="prod-req">${reqStr}</div>
+        </div>
+        <button class="btn-produce" ${canBuild?'':'disabled'} onclick="startProduction('${w.id}')">${canBuild?'ÜRETİ':'YETERSİZ'}</button>
+      </div>`;
+    }).join('');
+}
+
+function renderPowerMetrics(){
+  const pm=document.getElementById('powerMetrics');
+  const metalDiversity=Object.values(G.metals).filter(m=>m.stock>10).length;
+  const weaponCount=G.weapons.length;
+  const totalPower=G.weapons.reduce((a,w)=>a+w.power,0);
+  
+  const metrics=[
+    {label:'Mineral Çeşitliliği',val:`${metalDiversity}/${METALS.length}`,color:'var(--cyan)'},
+    {label:'Silah Sistemi',val:weaponCount,color:'var(--gold)'},
+    {label:'Toplam Güç',val:totalPower,color:'var(--green)'},
+    {label:'Ambargo Riski',val:G.embargoedMetals.length>0?'YÜKSEK':'DÜŞÜK',color:G.embargoedMetals.length>0?'var(--red)':'var(--green)'},
+    {label:'Faz',val:`${G.phase}/3`,color:'var(--purple)'},
+  ];
+  
+  pm.innerHTML=metrics.map(m=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.7rem;color:var(--dim);">${m.label}</span>
+      <span style="font-size:.8rem;font-weight:700;color:${m.color};">${m.val}</span>
+    </div>
+  `).join('');
+}
+
+function renderLeaderboard(){
+  const lb=document.getElementById('leaderboard');
+  const scores=JSON.parse(localStorage.getItem('nm_scores')||'[]');
+  scores.push({name:'Sen',puan:G.score});
+  scores.sort((a,b)=>b.score-a.score);
+  const top5=scores.slice(0,5);
+  lb.innerHTML=top5.map((s,i)=>`
+    <div class="lb-row">
+      <div class="lb-rank">${['🥇','🥈','🥉','4.','5.'][i]}</div>
+      <div class="lb-name">${s.name}</div>
+      <div class="lb-score">${s.score.toLocaleString()}</div>
+    </div>
+  `).join('');
+}
+
+function renderPhaseBar(){
+  const bar=document.getElementById('phaseBar');
+  bar.innerHTML=Array.from({length:G.maxTurns},(_,i)=>`
+    <div class="phase-dot ${i<G.turn-1?'done':i===G.turn-1?'active':''}"></div>
+  `).join('');
+}
+
+function renderEvents(){
+  const el=document.getElementById('eventList');
+  if(G.events.length===0){
+    el.innerHTML='<div style="color:var(--dim);font-size:.8rem;text-align:center;padding:20px;">Olaylar bekleniyor...</div>';
+    return;
+  }
+  el.innerHTML=G.events.map((ev,i)=>`
+    <div class="event-card">
+      <div class="event-title">${ev.title}</div>
+      <div class="event-desc">${ev.desc}</div>
+      <div class="event-btns">
+        ${ev.options.map(opt=>`
+          <button class="event-btn ${opt.fn.includes('Supply')||opt.fn.includes('sign')||opt.fn.includes('apply')||opt.fn.includes('increase')?'accept':'reject'}" 
+            onclick="resolveEvent(${i},'${opt.fn}')">${opt.text}</button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderMissionLog(){
+  const ml=document.getElementById('missionLog');
+  ml.innerHTML=G.log.slice(-8).reverse().map(l=>`
+    <div style="font-size:.7rem;color:var(--dim);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+      <span style="color:var(--gold);">[T${l.turn}]</span> ${l.msg}
+    </div>
+  `).join('');
+}
+
+function renderAll(){
+  renderMetalGrid();
+  renderSupplyList();
+  renderProduction();
+  renderPowerMetrics();
+  renderLeaderboard();
+  renderPhaseBar();
+  renderEvents();
+  renderMissionLog();
+  buildWorldMap();
+  
+  // Update header
+  document.getElementById('hdrScore').textContent=G.score.toLocaleString();
+  document.getElementById('hdrTurn').textContent=G.turn;
+  const totalPower=G.weapons.reduce((a,w)=>a+w.power,0);
+  G.power=totalPower;
+  document.getElementById('hdrPower').textContent=totalPower+'%';
+  document.getElementById('hdrPhase').textContent='Faz '+G.phase;
+}
+
+// ===================== GAME ACTIONS =====================
+function buyMetal(id){
+  const m=METALS.find(x=>x.id===id);
+  const state=G.metals[id];
+  if(state.embargoed){showToast('⛔ Bu mineral ambargo altında!','red');return;}
+  if(state.stock>=state.max){showToast('⚠️ Maksimum stok doldu!','orange');return;}
+  const amount=10;
+  state.stock=Math.min(state.max,state.stock+amount);
+  G.score+=5;
+  addLog(`${m.name} satın alındı (+${amount} birim)`);
+  renderAll();
+  showToast(`✅ ${m.sym} +${amount} birim eklendi`,'green');
+}
+
+function tradeWithRegion(region){
+  const minerals=region.minerals.map(id=>METALS.find(m=>m.id===id)).filter(Boolean);
+  if(minerals.length===0)return;
+  minerals.forEach(m=>{
+    if(!G.metals[m.id].embargoed){
+      G.metals[m.id].stock=Math.min(G.metals[m.id].max,G.metals[m.id].stock+15);
+    }
+  });
+  G.score+=20;
+  addLog(`${region.name} ile ticaret anlaşması yapıldı`);
+  renderAll();
+  showToast(`🤝 ${region.name} ile ticaret! +15 mineral`,'cyan');
+}
+
+function startProduction(weaponId){
+  const w=WEAPONS.find(x=>x.id===weaponId);
+  if(!w)return;
+  
+  // Consume metals
+  Object.entries(w.req).forEach(([k,v])=>{
+    G.metals[k].stock=Math.max(0,G.metals[k].stock-v);
+  });
+  
+  G.production.push({...w,turnsLeft:w.turns,totalTurns:w.turns});
+  addLog(`${w.name} üretim hattına eklendi (${w.turns} tur)`);
+  renderAll();
+  showToast(`🏭 ${w.name} üretimi başladı!`,'green');
+}
+
+function resolveEvent(idx,fn){
+  const ev=G.events[idx];
+  
+  switch(fn){
+    case 'alternativeSupply':
+      G.score+=50;
+      addLog(`Alternatif tedarik kuruldu: ${ev.title}`);
+      showToast('✅ Alternatif tedarik kuruldu! +50 puan','green');
+      break;
+    case 'useStock':
+      Object.entries(ev.effect).forEach(([k,v])=>{
+        if(G.metals[k])G.metals[k].stock=Math.max(0,G.metals[k].stock+v*2);
+      });
+      addLog(`Stok kullanıldı: ${ev.title}`);
+      showToast('⚠️ Stok kullanıldı','orange');
+      break;
+    case 'signDeal':
+    case 'increaseBor':
+    case 'applyTech':
+    case 'buildStock':
+      Object.entries(ev.effect).forEach(([k,v])=>{
+        if(G.metals[k])G.metals[k].stock=Math.min(G.metals[k].max,G.metals[k].stock+Math.abs(v));
+      });
+      G.score+=80;
+      addLog(`Fırsat değerlendirildi: ${ev.title}`);
+      showToast('🎯 Fırsat değerlendirildi! +80 puan','cyan');
+      break;
+    case 'sendSecurity':
+    case 'japanSupply':
+    case 'emergencyImport':
+    case 'wtoComplaint':
+      G.score+=30;
+      G.embargoSurvived++;
+      addLog(`Kriz yönetildi: ${ev.title}`);
+      showToast('🛡️ Kriz yönetildi! +30 puan','gold');
+      break;
+    default:
+      G.score+=10;
+  }
+  
+  G.events.splice(idx,1);
+  renderAll();
+}
+
+function endTurn(){
+  clearInterval(G.timerInterval);
+  
+  // Process production
+  G.production.forEach(p=>{p.turnsLeft--;});
+  const completed=G.production.filter(p=>p.turnsLeft<=0);
+  completed.forEach(p=>{
+    G.weapons.push(p);
+    G.score+=p.power*10;
+    addLog(`✅ ${p.name} üretimi tamamlandı! +${p.power*10} puan`);
+    showToast(`🎉 ${p.icon} ${p.name} hazır!`,'gold');
+  });
+  G.production=G.production.filter(p=>p.turnsLeft>0);
+  
+  // Random events
+  if(Math.random()<(G.difficulty==='hard'?.6:G.difficulty==='medium'?.4:.25)){
+    const available=EVENTS.filter(e=>!G.events.find(x=>x.id===e.id));
+    if(available.length>0){
+      const ev=available[Math.floor(Math.random()*available.length)];
+      G.events.push({...ev});
+      addLog(`⚡ Yeni olay: ${ev.title}`);
+    }
+  }
+  
+  // Metal decay (use over time)
+  Object.keys(G.metals).forEach(k=>{
+    G.metals[k].stock=Math.max(0,G.metals[k].stock-Math.floor(Math.random()*3));
+  });
+  
+  // Phase progression
+  G.turn++;
+  if(G.turn<=5)G.phase=1;
+  else if(G.turn<=10)G.phase=2;
+  else G.phase=3;
+  
+  // Score bonus
+  G.score+=G.turn*5;
+  
+  if(G.turn>G.maxTurns){
+    endGame(true);
+    return;
+  }
+  
+  // Check defeat
+  const criticalLow=METALS.filter(m=>m.critical&&G.metals[m.id].stock<5).length;
+  if(criticalLow>=5){
+    endGame(false);
+    return;
+  }
+  
+  startTimer();
+  renderAll();
+}
+
+function startTimer(){
+  const duration=G.difficulty==='hard'?20:G.difficulty==='medium'?25:30;
+  G.timer=duration;
+  const tv=document.getElementById('timerVal');
+  tv.textContent=G.timer;
+  tv.classList.remove('urgent');
+  
+  clearInterval(G.timerInterval);
+  G.timerInterval=setInterval(()=>{
+    G.timer--;
+    tv.textContent=G.timer;
+    if(G.timer<=5)tv.classList.add('urgent');
+    if(G.timer<=0){
+      clearInterval(G.timerInterval);
+      endTurn();
+    }
+  },1000);
+}
+
+function endGame(victory){
+  clearInterval(G.timerInterval);
+  const go=document.getElementById('gameOver');
+  document.getElementById('goTitle').textContent=victory?'🏆 ZAFER!':'💀 YENILGI';
+  document.getElementById('goTitle').style.color=victory?'var(--gold)':'var(--red)';
+  document.getElementById('goScore').textContent=G.score.toLocaleString();
+  document.getElementById('goTurns').textContent=G.turn-1;
+  document.getElementById('goWeapons').textContent=G.weapons.length;
+  document.getElementById('goEmbargoSurvived').textContent=G.embargoSurvived;
+  
+  // Save score
+  const scores=JSON.parse(localStorage.getItem('nm_scores')||'[]');
+  scores.push({name:'Oyuncu',puan:G.score,date:new Date().toLocaleDateString('tr')});
+  scores.sort((a,b)=>b.score-a.score);
+  localStorage.setItem('nm_scores',JSON.stringify(scores.slice(0,10)));
+  
+  go.classList.add('show');
+}
+
+function addLog(msg){
+  G.log.push({turn:G.turn,msg});
+}
+
+// ===================== UI HELPERS =====================
+function showToast(msg,type='cyan'){
+  const colors={cyan:'var(--cyan)',green:'var(--green)',red:'var(--red)',gold:'var(--gold)',orange:'var(--orange)'};
+  const t=document.createElement('div');
+  t.className='toast';
+  t.style.borderColor=colors[type]||colors.cyan;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+function showHowToPlay(){
+  document.getElementById('howModal').classList.add('show');
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+}
+
+function shareScore(){
+  const txt=`⚗️ Nadir Metaller Savaşında ${G.score.toLocaleString()} puan kazandım! ${G.weapons.length} silah sistemi ürettim. #HarbIStrateji #NadirMetaller`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('📋 Paylaşım metni kopyalandı!','gold'));
+}
+
+// ===================== GAME INIT =====================
+function startGame(){
+  document.getElementById('introScreen').style.display='none';
+  document.getElementById('gameMain').style.display='grid';
+  
+  initMetals();
+  G.turn=1;G.score=0;G.phase=1;G.weapons=[];G.production=[];G.events=[];G.log=[];G.embargoSurvived=0;
+  
+  // Initial event
+  G.events.push({...EVENTS[4]});// Turkey bor event
+  addLog('Oyun başladı. Mineral stoklarını kontrol et!');
+  
+  buildWorldMap();
+  renderAll();
+  startTimer();
+}
+
+function yenidenBaslatGame(){
+  document.getElementById('gameOver').classList.remove('show');
+  document.getElementById('introScreen').style.display='flex';
+}
+
+// Difficulty selection
+document.querySelectorAll('.diff-card').forEach(card=>{
+  card.addEventListener('click',()=>{
+    document.querySelectorAll('.diff-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    G.difficulty=card.dataset.diff;
+  });
+});
+
+// Init
+window.addEventListener('resize',initBgCanvas);
+initBgCanvas();
+animateBg();
+
+// Keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('gameMain').style.display!=='none')endTurn();
+  if(e.key==='Escape')document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('show'));
+});
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

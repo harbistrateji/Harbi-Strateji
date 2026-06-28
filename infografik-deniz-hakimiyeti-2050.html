@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deniz Hâkimiyeti 2050 — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'IBM Plex Sans','Segoe UI',sans-serif;background:#0a0f17;color:#e8e6e3;overflow-x:hidden;}
+.dh-wrap{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.dh-hero{text-align:center;padding:3rem 0 2.5rem;position:relative;overflow:hidden;}
+.dh-hero::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#0077b6,#00E0FF,#0077b6,transparent);}
+.dh-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:#0077b6;border:1px solid rgba(0,119,182,.4);padding:.3rem .8rem;border-radius:3px;margin-bottom:1rem;}
+.dh-hero h1{font-family:'Chakra Petch',sans-serif;font-size:2.2rem;font-weight:800;margin-bottom:.8rem;}
+.dh-hero h1 span{color:#00E0FF;}
+.dh-hero p{font-size:.85rem;color:rgba(255,255,255,.5);max-width:650px;margin:0 auto;line-height:1.7;}
+.dh-sections{display:flex;flex-direction:column;gap:3rem;margin-top:3rem;}
+.dh-section{padding:2rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:16px;position:relative;overflow:hidden;}
+.dh-section::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#0077b6,#00E0FF);}
+.dh-section-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;}
+.dh-section-icon{width:48px;height:48px;background:rgba(0,119,182,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.dh-section-title{font-family:'Chakra Petch',sans-serif;font-size:1.3rem;font-weight:700;}
+.dh-section-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:#00E0FF;letter-spacing:.08em;}
+.dh-section-text{font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:1.2rem;padding-left:1rem;}
+.dh-tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;padding-left:1rem;}
+.dh-tech{padding:1rem;background:rgba(0,119,182,.05);border:1px solid rgba(0,119,182,.15);border-radius:10px;}
+.dh-tech-name{font-family:'IBM Plex Mono',monospace;font-size:.9rem;font-weight:600;color:#fff;margin-bottom:.3rem;}
+.dh-tech-desc{font-size:.6rem;color:rgba(255,255,255,.5);line-height:1.5;}
+.dh-tech-stat{font-family:'Chakra Petch',sans-serif;font-size:.9rem;font-weight:700;color:#00E0FF;margin-top:.3rem;}
+.dh-karadeniz{margin-top:3rem;padding:2rem;background:linear-gradient(135deg,rgba(0,119,182,.08),rgba(196,30,58,.05));border:1px solid rgba(0,119,182,.2);border-radius:16px;}
+.dh-karadeniz h3{font-family:'Chakra Petch',sans-serif;font-size:1.2rem;margin-bottom:1rem;text-align:center;}
+.dh-karadeniz-text{font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.8;text-align:center;max-width:700px;margin:0 auto 1.5rem;}
+.dh-impact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;}
+.dh-impact{text-align:center;padding:1rem;background:rgba(0,0,0,.2);border-radius:10px;}
+.dh-impact-num{font-family:'Chakra Petch',sans-serif;font-size:1.5rem;font-weight:800;color:#c41e3a;}
+.dh-impact-label{font-size:.6rem;color:rgba(255,255,255,.5);margin-top:.2rem;}
+.dh-turkey{margin-top:2rem;padding:1.5rem;border:1px solid rgba(201,162,75,.2);border-radius:12px;background:rgba(201,162,75,.03);}
+.dh-turkey h4{font-family:'Chakra Petch',sans-serif;font-size:1rem;color:#C9A24B;margin-bottom:.8rem;}
+.dh-turkey-items{display:flex;flex-wrap:wrap;gap:.8rem;}
+.dh-turkey-item{font-family:'IBM Plex Mono',monospace;font-size:.85rem;padding:.4rem .8rem;background:rgba(201,162,75,.1);border:1px solid rgba(201,162,75,.2);border-radius:6px;color:#C9A24B;}
+[data-theme="light"] body{background:#f8f9fa;color:#1a1a2e;}
+[data-theme="light"] .dh-section{background:rgba(0,0,0,.02);border-color:#dee2e6;}
+[data-theme="light"] .dh-section-text{color:#475569;}
+[data-theme="light"] .dh-hero p{color:#64748b;}
+[data-theme="light"] .dh-tech{background:rgba(0,119,182,.03);border-color:#dee2e6;}
+[data-theme="light"] .dh-tech-desc{color:#64748b;}
+[data-theme="light"] .dh-karadeniz{background:rgba(0,119,182,.03);border-color:#dee2e6;}
+[data-theme="light"] .dh-karadeniz-text{color:#475569;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="dh-wrap">
+  <div class="dh-hero">
+    <div class="dh-badge">Stratejik Analiz / 4 Bolum</div>
+    <h1>Deniz Hâkimiyeti <span>2050</span></h1>
+    <p>Karadeniz deneyimleri büyük dönüşüm yarattı. Deniz dronlari, insansız filolar, denizaltı sensör ağları ve yapay zeka destekli görevler — okyanuslarin kontrolu için yeni kurallar yaziliyor.</p>
+  </div>
+
+  <div class="dh-sections">
+    <div class="dh-section">
+      <div class="dh-section-header">
+        <div class="dh-section-icon">&#9875;</div>
+        <div><div class="dh-section-title">Deniz Dronlari</div><div class="dh-section-sub">Unmanned Surface/Underwater Vehicles</div></div>
+      </div>
+      <div class="dh-section-text">Ukrayna'nın Magura V5 ve Sea Baby deniz dronlari, $250.000 maliyetle $750 milyonluk savaş gemilerini batirdi. Bu asimetri deniz savaşınin temel paradigmasini değiştirdi. Artık büyük su ustu savaş gemileri "yuzey hedefi" — ucuz, sarf edilebilir, otonom deniz dronlari karşısında savunmasiz.</div>
+      <div class="dh-tech-grid">
+        <div class="dh-tech"><div class="dh-tech-name">Magura V5</div><div class="dh-tech-desc">Ukrayna suustu kamikaze dronu</div><div class="dh-tech-stat">800km menzil</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">ULAQ</div><div class="dh-tech-desc">Turk insansız deniz araci</div><div class="dh-tech-stat">400km menzil</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">Sea Hunter</div><div class="dh-tech-desc">ABD otonom denizaltı avcisi</div><div class="dh-tech-stat">10.000nm menzil</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">Orca XLUUV</div><div class="dh-tech-desc">Boeing insansız denizaltı</div><div class="dh-tech-stat">6.500nm otonom</div></div>
+      </div>
+    </div>
+
+    <div class="dh-section">
+      <div class="dh-section-header">
+        <div class="dh-section-icon">&#128674;</div>
+        <div><div class="dh-section-title">İnsansız Filolar</div><div class="dh-section-sub">Ghost Fleet / Distributed Maritime Ops</div></div>
+      </div>
+      <div class="dh-section-text">ABD Donanmasi'nin "Ghost Fleet" konsepti: İnsansız savaş gemileri filosu, insanli gemilerin onunde kesif, mayin temizleme ve ilk temas gorevi yapiyor. 2030'a kadar 150+ insansız gemi planlaniyorl. Dağıtık deniz operasyonları (DMO): Büyük gemiler yerine cok sayida küçük, ag-bağlantılı platform.</div>
+      <div class="dh-tech-grid">
+        <div class="dh-tech"><div class="dh-tech-name">Ghost Fleet</div><div class="dh-tech-desc">150+ insansız gemi filosu</div><div class="dh-tech-stat">2030 Hedef</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">DMO</div><div class="dh-tech-desc">Dağıtık Deniz Operasyonlari</div><div class="dh-tech-stat">Yeni Doktrin</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">MUSV</div><div class="dh-tech-desc">Orta boy insansız su ustu</div><div class="dh-tech-stat">2.000 ton</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">LUSV</div><div class="dh-tech-desc">Büyük insansız su ustu</div><div class="dh-tech-stat">VLS entegreli</div></div>
+      </div>
+    </div>
+
+    <div class="dh-section">
+      <div class="dh-section-header">
+        <div class="dh-section-icon">&#128225;</div>
+        <div><div class="dh-section-title">Denizaltı Sensor Aglari</div><div class="dh-section-sub">Undersea Surveillance Networks</div></div>
+      </div>
+      <div class="dh-section-text">Okyanus tabani artık "sensör tarlasi". Fiber optik kablolar, akustik sensörler, deniz tabani istasyonlari — denizaltılarin gizliligi tehdit altinda. Cin'in "Denizaltı Büyük Duvar" projesi, ABD'nin IUSS/SOSUS mirasi. Kuantum sensör teknolojisi 2035'te denizaltılari tamamen şeffaf kilabilir.</div>
+      <div class="dh-tech-grid">
+        <div class="dh-tech"><div class="dh-tech-name">SOSUS/IUSS</div><div class="dh-tech-desc">ABD okyanus gozetleme sistemi</div><div class="dh-tech-stat">Soguk Savaş mirasi</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">Cin Deniz Duvari</div><div class="dh-tech-desc">Guney Cin Denizi sensör agi</div><div class="dh-tech-stat">Aktif gelistirme</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">Kuantum Sensor</div><div class="dh-tech-desc">Manyetik anomali tespiti</div><div class="dh-tech-stat">2035 projeksiyonu</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">UUV Aglari</div><div class="dh-tech-desc">Otonom sualti gozetleme</div><div class="dh-tech-stat">7/24 devriye</div></div>
+      </div>
+    </div>
+
+    <div class="dh-section">
+      <div class="dh-section-header">
+        <div class="dh-section-icon">&#129302;</div>
+        <div><div class="dh-section-title">Yapay Zeka Destekli Gorevler</div><div class="dh-section-sub">AI-Enabled Naval Operations</div></div>
+      </div>
+      <div class="dh-section-text">YZ artık deniz operasyonlarınin her asamasinda: Rota optimizasyonu, tehdit degerlendirmesi, otonom navigasyon, sürü koordinasyonu, lojistik planlama. ABD Donanmasi'nin Project Overmatch: Tum deniz platformlarini tek bir YZ ag ile birlestirme. Karar süresi saatlerden dakikalara dusuyor.</div>
+      <div class="dh-tech-grid">
+        <div class="dh-tech"><div class="dh-tech-name">Project Overmatch</div><div class="dh-tech-desc">ABD deniz YZ entegrasyonu</div><div class="dh-tech-stat">Tum filo bağlı</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">Otonom Navigasyon</div><div class="dh-tech-desc">GPS-denied ortamda seyir</div><div class="dh-tech-stat">INS + YZ</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">Tehdit Siniflandirma</div><div class="dh-tech-desc">Gerçek zamanli analiz</div><div class="dh-tech-stat">ms seviyesi</div></div>
+        <div class="dh-tech"><div class="dh-tech-name">Prediktif Bakim</div><div class="dh-tech-desc">Ariza oncesi tespit</div><div class="dh-tech-stat">%40 maliyet azalma</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dh-karadeniz">
+    <h3>Karadeniz Dersleri: Paradigma Degisimi</h3>
+    <div class="dh-karadeniz-text">Ukrayna-Rusya catışmasinda Karadeniz, deniz savaşınin geleceğini gosteren bir laboratuvar oldu. Ucuz deniz dronlari, pahali savaş gemilerini batirdi. Kiyi savunmasi, acik deniz hâkimiyetinden daha kritik hale geldi. Turkiye'nin Mavi Vatan doktrini bu yeni gerçeklige uygun konumda.</div>
+    <div class="dh-impact-grid">
+      <div class="dh-impact"><div class="dh-impact-num">15+</div><div class="dh-impact-label">Batirilan/Hasar Goren Rus Gemisi</div></div>
+      <div class="dh-impact"><div class="dh-impact-num">$3.5B+</div><div class="dh-impact-label">Toplam Hasar Degeri</div></div>
+      <div class="dh-impact"><div class="dh-impact-num">1:3000</div><div class="dh-impact-label">Maliyet Asimetrisi</div></div>
+      <div class="dh-impact"><div class="dh-impact-num">%60</div><div class="dh-impact-label">Karadeniz Filosu Kaybi</div></div>
+    </div>
+  </div>
+
+  <div class="dh-turkey">
+    <h4>Turkiye'nin Deniz Gucu Vizyonu</h4>
+    <div class="dh-turkey-items">
+      <span class="dh-turkey-item">TCG Istanbul (I sinifi)</span>
+      <span class="dh-turkey-item">TF-2000 Hava Savunma</span>
+      <span class="dh-turkey-item">ULAQ İnsansız</span>
+      <span class="dh-turkey-item">Mavi Vatan Doktrini</span>
+      <span class="dh-turkey-item">Reis Sinifi Denizaltı</span>
+      <span class="dh-turkey-item">MilGem Programi</span>
+      <span class="dh-turkey-item">TCG Anadolu (LHD)</span>
+      <span class="dh-turkey-item">Kizilelma (Deniz)</span>
+    </div>
+  </div>
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

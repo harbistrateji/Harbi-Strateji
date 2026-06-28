@@ -1,0 +1,623 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gözcü — Stratejik İstihbarat Merkezi | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="stylesheet" href="hs-global.css">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{--bg:#0a0f17;--sf:#111827;--sf2:#1a2332;--bd:#1e293b;--bda:#00e0ff30;--cy:#00E0FF;--rd:#E01515;--gd:#C9A24B;--gn:#10b981;--pr:#8b5cf6;--or:#f59e0b;--pk:#ec4899;--tx:#e2e8f0;--tx2:#94a3b8;--tx3:#64748b}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;min-height:100vh}
+a{color:var(--cy);text-decoration:none}
+.gz-hero{text-align:center;padding:5rem 2rem 2rem;position:relative}
+.gz-hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(2.5rem,6vw,4rem);font-weight:700;background:linear-gradient(135deg,var(--cy),var(--gn));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+.gz-hero .sub{color:var(--tx2);font-size:1rem;margin-bottom:1.5rem}
+.gz-live{display:inline-flex;align-items:center;gap:6px;background:#10b98120;border:1px solid #10b98140;border-radius:20px;padding:4px 14px;font-size:.8rem;color:var(--gn)}
+.gz-live::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--gn);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.gz-stats{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin:1.5rem auto;max-width:900px}
+.gz-stat{background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.5rem;min-width:110px;text-align:center}
+.gz-stat .n{font-family:'Chakra Petch',sans-serif;font-size:1.6rem;font-weight:700;color:var(--cy)}
+.gz-stat .l{font-size:.7rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+.gz-nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:1rem 2rem;position:sticky;top:126px;z-index:50;background:var(--bg)}
+.gz-tab{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:1px solid var(--bd);font-size:.75rem;font-weight:500;color:var(--tx2);cursor:pointer;background:var(--sf);white-space:nowrap;transition:all .2s}
+.gz-tab:hover{border-color:var(--cy);color:var(--tx)}
+.gz-tab.on{background:#00e0ff15;border-color:var(--cy);color:var(--cy)}
+.gz-tab i{font-size:.9rem}
+.gz-wrap{max-width:1300px;margin:0 auto;padding:0 2rem 4rem}
+.gz-sec{display:none}.gz-sec.on{display:block}
+.gz-stitle{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.gz-stitle i{color:var(--cy)}
+.gz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem}
+.gz-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all .2s;position:relative}
+.gz-card:hover{border-color:var(--cy);transform:translateY(-2px);box-shadow:0 8px 24px #00e0ff10}
+.gz-card .hot{position:absolute;top:12px;right:12px;width:8px;height:8px;border-radius:50%;background:var(--rd);animation:pulse 1.5s infinite}
+.gz-card .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:10px;display:inline-block;margin-bottom:8px;font-weight:600}
+.gz-card h3{font-size:.9rem;font-weight:600;margin-bottom:4px}
+.gz-card .desc{font-size:.78rem;color:var(--tx2);line-height:1.5}
+.gz-card .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.gz-card .tg{font-size:.6rem;padding:2px 7px;border-radius:10px;border:1px solid var(--bd);color:var(--tx2)}
+.gz-det{background:var(--sf);border:1px solid var(--bda);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;display:none}
+.gz-det.on{display:block;animation:fi .3s}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.gz-det h2{font-family:'Chakra Petch',sans-serif;font-size:1.2rem;margin-bottom:.5rem}
+.gz-det .body{font-size:.85rem;color:var(--tx2);line-height:1.7;margin-bottom:1rem}
+.gz-det .acts{display:flex;flex-wrap:wrap;gap:8px}
+.gz-det .acts button{background:var(--sf2);border:1px solid var(--bd);color:var(--tx);padding:7px 14px;border-radius:8px;font-size:.75rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.gz-det .acts button:hover{border-color:var(--cy);color:var(--cy)}
+.gz-thr{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.25rem;margin-bottom:1rem;display:none}
+.gz-thr.on{display:block}
+.gz-thr .step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.gz-thr .step:last-child{border:none}
+.gz-thr .sn{width:24px;height:24px;border-radius:50%;background:var(--sf2);border:1px solid var(--cy);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:var(--cy);flex-shrink:0}
+.gz-thr .st{font-size:.82rem;line-height:1.6}.gz-thr .st b{color:var(--cy)}
+.gz-poll{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.25rem;margin-bottom:1rem;display:none}
+.gz-poll.on{display:block}
+.gz-poll .q{font-size:.9rem;font-weight:500;margin-bottom:1rem}
+.gz-poll .opt{cursor:pointer;border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:8px;transition:border-color .2s}
+.gz-poll .opt:hover{border-color:var(--cy)}
+.gz-poll .oi{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:relative}
+.gz-poll .fl{position:absolute;top:0;left:0;height:100%;background:var(--cy);opacity:.1;transition:width .4s}
+.gz-poll .pct{font-size:.75rem;font-weight:600;color:var(--cy)}
+.gz-quiz{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.25rem;margin-bottom:1rem;display:none}
+.gz-quiz.on{display:block}
+.gz-quiz .q{font-size:.9rem;font-weight:500;margin-bottom:1rem}
+.gz-quiz .opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--bd);border-radius:8px;font-size:.82rem;cursor:pointer;margin-bottom:8px;transition:all .2s}
+.gz-quiz .opt:hover{border-color:var(--cy);color:var(--cy)}
+.gz-quiz .opt.ok{background:#10b98120;border-color:var(--gn);color:var(--gn)}
+.gz-quiz .opt.no{background:#ef444420;border-color:var(--rd);color:var(--rd)}
+.gz-quiz .key{font-size:.65rem;font-weight:600;color:var(--tx3);min-width:18px}
+.gz-risk{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.gz-rcard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1rem;text-align:center}
+.gz-rcard .ic{font-size:1.8rem;margin-bottom:.4rem}
+.gz-rcard .nm{font-size:.82rem;font-weight:500;margin-bottom:.5rem}
+.gz-rcard .bar{height:6px;border-radius:3px;background:var(--sf2);overflow:hidden;margin-bottom:4px}
+.gz-rcard .bf{height:100%;border-radius:3px;transition:width .6s}
+.gz-rcard .vl{font-size:.7rem;font-weight:600}
+.gz-dash{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:2rem}
+.gz-dcard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1rem;text-align:center}
+.gz-dcard .lb{font-size:.65rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.gz-dcard .vl{font-family:'IBM Plex Mono',monospace;font-size:1.3rem;font-weight:600;color:var(--cy)}
+.gz-dcard .ch{font-size:.65rem;margin-top:4px}
+.gz-dcard .up{color:var(--gn)}.gz-dcard .dn{color:var(--rd)}
+.gz-intel{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-bottom:2rem}
+.gz-icard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.25rem;border-left:3px solid var(--cy)}
+.gz-icard .meta{display:flex;justify-content:space-between;margin-bottom:.5rem}
+.gz-icard .time{font-size:.65rem;color:var(--tx3)}
+.gz-icard .rbadge{font-size:.6rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.gz-icard h4{font-size:.85rem;margin-bottom:.4rem}
+.gz-icard .sum{font-size:.78rem;color:var(--tx2);line-height:1.5}
+.gz-files{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:2rem}
+.gz-fcard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all .2s}
+.gz-fcard:hover{border-color:var(--gd);box-shadow:0 4px 16px #c9a24b10}
+.gz-fcard .ic{font-size:1.8rem;color:var(--gd);margin-bottom:.5rem}
+.gz-fcard h4{font-size:.88rem;margin-bottom:.25rem}
+.gz-fcard .desc{font-size:.78rem;color:var(--tx2);line-height:1.4}
+.gz-agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem;margin-bottom:1.5rem}
+.gz-acard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1rem;cursor:pointer;transition:all .2s}
+.gz-acard:hover{border-color:var(--pr)}
+.gz-acard.sel{border:2px solid var(--pr);background:#8b5cf610}
+.gz-acard .ic{font-size:1.3rem;margin-bottom:.4rem;color:var(--pr)}
+.gz-acard .nm{font-size:.8rem;font-weight:500;margin-bottom:3px}
+.gz-acard .desc{font-size:.68rem;color:var(--tx2)}
+.gz-mrow{display:flex;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}
+.gz-mrow .kn{width:150px;flex-shrink:0;font-size:.78rem;font-weight:500}
+.gz-mrow .fmts{display:flex;gap:5px;flex-wrap:wrap}
+.gz-mrow .fmt{font-size:.6rem;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--sf2);border:1px solid var(--bd);color:var(--tx2)}
+.gz-xp{display:flex;align-items:center;gap:14px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.5rem;margin-top:2rem}
+.gz-xp .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--pr));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gz-xp .av i{font-size:1.2rem;color:#fff}
+.gz-xp .inf{flex:1}
+.gz-xp .lv{font-size:.85rem;font-weight:500;margin-bottom:4px}
+.gz-xp .bar{height:5px;border-radius:3px;background:var(--sf2);overflow:hidden}
+.gz-xp .bf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--cy),var(--pr));transition:width .4s}
+.gz-xp .pts{font-size:.7rem;color:var(--tx2);margin-top:4px}
+.gz-flt{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.5rem}
+.gz-flt .f{padding:6px 12px;border-radius:20px;border:1px solid var(--bd);font-size:.72rem;color:var(--tx2);cursor:pointer;transition:all .2s}
+.gz-flt .f:hover{border-color:var(--cy);color:var(--tx)}
+.gz-flt .f.on{background:var(--cy);color:var(--bg);border-color:var(--cy);font-weight:600}
+@media(max-width:768px){.gz-hero h1{font-size:2rem}.gz-stats{gap:.5rem}.gz-stat{min-width:80px;padding:.6rem .8rem}.gz-stat .n{font-size:1.2rem}.gz-nav{gap:4px;padding:.5rem 1rem}.gz-tab{padding:5px 10px;font-size:.65rem}.gz-wrap{padding:0 1rem 3rem}.gz-grid{grid-template-columns:1fr}}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);}
+.cl-w{padding:1rem 0;}
+
+.cl-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.cl-logo{display:flex;align-items:center;gap:8px;}
+.cl-lsq{width:30px;height:30px;border-radius:8px;background:#0C447C;display:flex;align-items:center;justify-content:center;}
+.cl-lsq i{font-size:15px;color:#B5D4F4;}
+.cl-lname{font-size:15px;font-weight:500;color:var(--text-primary);}
+.cl-lsub{font-size:11px;color:var(--text-muted);}
+.cl-src-pills{display:flex;gap:6px;}
+.cl-sp{font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;border:0.5px solid var(--border);color:var(--text-secondary);}
+.cl-sp.m{background:#E6F1FB;color:#042C53;border-color:#185FA5;}
+.cl-sp.h{background:#FAEEDA;color:#633806;border-color:#B87A2A;}
+
+.cl-tabs{display:flex;gap:6px;margin-bottom:1rem;overflow-x:auto;padding-bottom:2px;}
+.cl-tab{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border);font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;background:var(--surface-2);white-space:nowrap;transition:all 0.15s;}
+.cl-tab.on{background:#042C53;color:#B5D4F4;border-color:#185FA5;}
+
+.cl-pulse-bar{display:flex;align-items:center;gap:8px;background:#500A0A;border-radius:var(--radius);padding:0.5rem 0.875rem;margin-bottom:1rem;}
+.cl-pulse-dot{width:7px;height:7px;border-radius:50%;background:#E24B4A;animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+.cl-pulse-txt{font-size:12px;color:#F7C1C1;flex:1;}
+.cl-pulse-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:#791F1F;color:#F7C1C1;}
+
+.cl-sl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-bottom:0.6rem;}
+
+/* Büyük öne çıkan haber */
+.cl-featured{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1rem;cursor:pointer;transition:border-color 0.15s;}
+.cl-featured:hover{border-color:var(--border-strong);}
+.cl-feat-top{height:110px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(135deg,#0C1E3B 0%,#1A0A3B 100%);}
+.cl-feat-icon{font-size:40px;}
+.cl-feat-cat{position:absolute;top:10px;left:10px;font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;}
+.cl-feat-src{position:absolute;top:10px;right:10px;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;}
+.cl-feat-body{padding:0.875rem 1.25rem;}
+.cl-feat-title{font-size:15px;font-weight:500;color:var(--text-primary);line-height:1.4;margin-bottom:6px;}
+.cl-feat-meta{font-size:11px;color:var(--text-muted);display:flex;gap:10px;align-items:center;margin-bottom:0.75rem;}
+.cl-feat-ozet{font-size:13px;color:var(--text-secondary);line-height:1.6;}
+.cl-feat-acts{display:flex;gap:7px;margin-top:0.875rem;flex-wrap:wrap;}
+.cl-feat-acts button{font-size:12px;}
+
+/* Grid kartlar */
+.cl-hgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1.25rem;}
+.hc{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;}
+.hc:hover{border-color:var(--border-strong);}
+.hc.sel{border:2px solid var(--border-accent);}
+.hc-top{height:70px;display:flex;align-items:center;justify-content:center;position:relative;}
+.hc-icon{font-size:28px;}
+.hc-cat{position:absolute;top:7px;left:7px;font-size:9px;font-weight:500;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;}
+.hc-src{position:absolute;top:7px;right:7px;font-size:9px;font-weight:500;padding:2px 6px;border-radius:20px;}
+.hc-body{padding:0.6rem 0.75rem 0.75rem;}
+.hc-title{font-size:12px;font-weight:500;color:var(--text-primary);line-height:1.35;margin-bottom:4px;}
+.hc-meta{font-size:10px;color:var(--text-muted);}
+
+/* Detay panel */
+.cl-dpanel{background:var(--surface-2);border:0.5px solid var(--border-accent);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:none;}
+.cl-dpanel.on{display:block;}
+.cl-dp-header{display:flex;gap:10px;align-items:flex-start;margin-bottom:0.75rem;}
+.cl-dp-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cl-dp-title{font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:2px;}
+.cl-dp-src{font-size:11px;color:var(--text-muted);}
+.cl-dp-body{font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:0.75rem;}
+.cl-dp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:0.75rem;}
+.cl-dp-tag{font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--border);color:var(--text-secondary);}
+.cl-dp-acts{display:flex;gap:7px;flex-wrap:wrap;}
+.cl-dp-acts button{font-size:12px;}
+
+/* Thread */
+.cl-thread-box{display:none;background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;}
+.cl-thread-box.on{display:block;}
+.tr{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);}
+.tr:last-child{border:none;}
+.tn{width:20px;height:20px;border-radius:50%;background:var(--surface-1);border:0.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--text-secondary);flex-shrink:0;margin-top:1px;}
+.tt{font-size:13px;color:var(--text-primary);line-height:1.5;}
+.tt b{font-weight:500;}
+
+/* Poll */
+.cl-poll-box{display:none;background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;}
+.cl-poll-box.on{display:block;}
+.cl-pq{font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:0.75rem;line-height:1.5;}
+.cl-po{cursor:pointer;border-radius:var(--radius);border:0.5px solid var(--border);overflow:hidden;margin-bottom:6px;}
+.pb{background:var(--surface-1);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;position:relative;}
+.pf{position:absolute;top:0;left:0;height:100%;background:var(--bg-accent);transition:width 0.4s;}
+.pl{font-size:13px;color:var(--text-primary);position:relative;z-index:1;}
+.pp{font-size:12px;font-weight:500;color:var(--text-accent);position:relative;z-index:1;}
+.cl-pm{font-size:11px;color:var(--text-muted);margin-top:6px;}
+.cl-cbox{display:flex;gap:8px;margin-top:0.75rem;}
+.cl-cbox input{flex:1;font-size:12px;}
+.cl-clist{display:flex;flex-direction:column;gap:6px;margin-top:0.75rem;}
+.ci{background:var(--surface-1);border-radius:var(--radius);padding:7px 12px;font-size:12px;color:var(--text-secondary);}
+.ci b{font-weight:500;color:var(--text-primary);}
+
+/* Quiz */
+.cl-quiz-box{display:none;background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;}
+.cl-quiz-box.on{display:block;}
+.cl-qq{font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:0.75rem;line-height:1.5;}
+.cl-qo{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);border:0.5px solid var(--border);font-size:13px;color:var(--text-secondary);cursor:pointer;margin-bottom:6px;transition:all 0.12s;}
+.cl-qo:hover{border-color:var(--border-strong);color:var(--text-primary);}
+.cl-qo.ok{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success);}
+.cl-qo.no{background:var(--bg-danger);border-color:var(--border-danger);color:var(--text-danger);}
+.qk{font-size:11px;font-weight:500;color:var(--text-muted);min-width:16px;}
+
+.cl-xpbar{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:0.875rem 1.25rem;}
+.cl-xpav{width:36px;height:36px;border-radius:50%;background:var(--bg-pro);border:2px solid var(--border-pro);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cl-xpav i{font-size:17px;color:var(--text-pro);}
+.cl-xpinf{flex:1;min-width:0;}
+.cl-xpn{font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;}
+.cl-xpbg{height:4px;border-radius:2px;background:var(--surface-1);overflow:hidden;}
+.cl-xpfl{height:100%;border-radius:2px;background:var(--fill-pro);transition:width 0.4s;}
+.cl-xppt{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+</style><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<script src="hs-nav.js?v=11"></script>
+<div class="gz-hero">
+<a href="oza-hub.html" style="display:inline-block;margin-bottom:1rem;font-size:.82rem;color:var(--tx2)">← OZA</a>
+<h1>Gözcü</h1>
+<p class="sub">Stratejik İstihbarat Merkezi — Savunma · Jeopolitik · Teknoloji · Ekonomi · Medeniyet</p>
+<div class="gz-live">Canlı Takip</div>
+<div class="gz-stats">
+<div class="gz-stat"><div class="n" data-t="28">0</div><div class="l">Konu</div></div>
+<div class="gz-stat"><div class="n" data-t="11">0</div><div class="l">Bölüm</div></div>
+<div class="gz-stat"><div class="n" data-t="150">0</div><div class="l">Quiz</div></div>
+<div class="gz-stat"><div class="n" data-t="28">0</div><div class="l">Thread</div></div>
+<div class="gz-stat"><div class="n" data-t="28">0</div><div class="l">Tartışma</div></div>
+<div class="gz-stat"><div class="n" data-t="8">0</div><div class="l">Gösterge</div></div>
+</div></div>
+<div class="gz-nav">
+<div class="gz-tab on" onclick="goSec('acil',this)"><i class="ti ti-alert-triangle"></i> Acil</div>
+<div class="gz-tab" onclick="goSec('dunya',this)"><i class="ti ti-world"></i> Dünya</div>
+<div class="gz-tab" onclick="goSec('savunma',this)"><i class="ti ti-rocket"></i> Savunma</div>
+<div class="gz-tab" onclick="goSec('teknoloji',this)"><i class="ti ti-cpu"></i> Teknoloji</div>
+<div class="gz-tab" onclick="goSec('ekonomi',this)"><i class="ti ti-currency-lira"></i> Ekonomi</div>
+<div class="gz-tab" onclick="goSec('bilim',this)"><i class="ti ti-dna"></i> Bilim</div>
+<div class="gz-tab" onclick="goSec('trend',this)"><i class="ti ti-trending-up"></i> Trend</div>
+<div class="gz-tab" onclick="goSec('dosya',this)"><i class="ti ti-target"></i> Dosyalar</div>
+<div class="gz-tab" onclick="goSec('intel',this)"><i class="ti ti-notebook"></i> İstihbarat</div>
+<div class="gz-tab" onclick="goSec('risk',this)"><i class="ti ti-alert-circle"></i> Risk</div>
+<div class="gz-tab" onclick="goSec('panel',this)"><i class="ti ti-chart-bar"></i> Panel</div>
+<div class="gz-tab" onclick="goSec('turkiye',this)"><i class="ti ti-map-2"></i> Türkiye</div>
+<div class="gz-tab" onclick="goSec('anlatim',this)"><i class="ti ti-presentation"></i> Anlatım</div>
+<div class="gz-tab" onclick="goSec('canli',this)" style="background:#e0151520;border-color:#E01515;color:#E01515"><i class="ti ti-broadcast"></i> Canlı Haberler</div>
+</div>
+<div class="gz-wrap">
+<div class="gz-sec on" id="sec-acil"><div class="gz-stitle"><i class="ti ti-alert-triangle"></i> Acil Gelişmeler — Kırmızı Alarm</div><div class="gz-grid" id="g-acil"></div><div class="gz-det" id="d-acil"></div><div class="gz-thr" id="t-acil"></div><div class="gz-poll" id="p-acil"></div><div class="gz-quiz" id="q-acil"></div></div>
+<div class="gz-sec" id="sec-dunya"><div class="gz-stitle"><i class="ti ti-world"></i> Dünya Gündemi</div><div class="gz-flt" id="fl-dunya"></div><div class="gz-grid" id="g-dunya"></div><div class="gz-det" id="d-dunya"></div><div class="gz-thr" id="t-dunya"></div><div class="gz-poll" id="p-dunya"></div><div class="gz-quiz" id="q-dunya"></div></div>
+<div class="gz-sec" id="sec-savunma"><div class="gz-stitle"><i class="ti ti-rocket"></i> Savunma ve Güvenlik</div><div class="gz-grid" id="g-savunma"></div><div class="gz-det" id="d-savunma"></div><div class="gz-thr" id="t-savunma"></div><div class="gz-poll" id="p-savunma"></div><div class="gz-quiz" id="q-savunma"></div></div>
+<div class="gz-sec" id="sec-teknoloji"><div class="gz-stitle"><i class="ti ti-cpu"></i> Teknoloji Takibi</div><div class="gz-grid" id="g-teknoloji"></div><div class="gz-det" id="d-teknoloji"></div><div class="gz-thr" id="t-teknoloji"></div><div class="gz-poll" id="p-teknoloji"></div><div class="gz-quiz" id="q-teknoloji"></div></div>
+<div class="gz-sec" id="sec-ekonomi"><div class="gz-stitle"><i class="ti ti-currency-lira"></i> Ekonomi ve Ticaret</div><div class="gz-grid" id="g-ekonomi"></div><div class="gz-det" id="d-ekonomi"></div><div class="gz-thr" id="t-ekonomi"></div><div class="gz-poll" id="p-ekonomi"></div><div class="gz-quiz" id="q-ekonomi"></div></div>
+<div class="gz-sec" id="sec-bilim"><div class="gz-stitle"><i class="ti ti-dna"></i> Bilim ve Gelecek</div><div class="gz-grid" id="g-bilim"></div><div class="gz-det" id="d-bilim"></div><div class="gz-thr" id="t-bilim"></div><div class="gz-poll" id="p-bilim"></div><div class="gz-quiz" id="q-bilim"></div></div>
+<div class="gz-sec" id="sec-trend"><div class="gz-stitle"><i class="ti ti-trending-up"></i> Trend Analizi</div><div class="gz-grid" id="g-trend"></div></div>
+<div class="gz-sec" id="sec-dosya"><div class="gz-stitle"><i class="ti ti-target"></i> Stratejik Dosyalar</div><div class="gz-files" id="g-dosya"></div></div>
+<div class="gz-sec" id="sec-intel"><div class="gz-stitle"><i class="ti ti-notebook"></i> İstihbarat Notları</div><div class="gz-intel" id="g-intel"></div></div>
+<div class="gz-sec" id="sec-risk"><div class="gz-stitle"><i class="ti ti-alert-circle"></i> Risk Merkezi</div><div class="gz-risk" id="g-risk"></div></div>
+<div class="gz-sec" id="sec-panel">
+<div class="gz-stitle"><i class="ti ti-chart-bar"></i> Gösterge Paneli — Anlık <span style="display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:.7rem;color:var(--gn)"><span style="width:6px;height:6px;border-radius:50%;background:var(--gn);animation:pulse 1.5s infinite"></span> Canlı</span></div>
+<div class="gz-dash" id="g-panel"></div>
+<div class="gz-stitle" style="margin-top:2rem"><i class="ti ti-rss"></i> Stratejik Haber Akışı — Açık Kaynak</div>
+<div class="panel-ticker" id="panelTicker" style="background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:10px 16px;margin-bottom:1rem;overflow:hidden;position:relative;height:36px"><div id="tickerContent" style="display:flex;gap:3rem;position:absolute;white-space:nowrap;animation:tickerScroll 60s linear infinite"></div></div>
+<div class="panel-news" id="panelNews" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-bottom:2rem"></div>
+<div class="gz-stitle" style="margin-top:1rem"><i class="ti ti-chart-line"></i> Gösterge Detay</div>
+<div id="panelCharts" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem"></div>
+</div>
+<div class="gz-sec" id="sec-turkiye"><div class="gz-stitle"><i class="ti ti-map-2"></i> Türkiye & Bölge Stratejisi</div><div class="gz-flt" id="fl-turkiye"></div><div class="gz-grid" id="g-turkiye"></div><div class="gz-det" id="d-turkiye"></div><div class="gz-thr" id="t-turkiye"></div><div class="gz-poll" id="p-turkiye"></div><div class="gz-quiz" id="q-turkiye"></div></div>
+<div class="gz-sec" id="sec-anlatim"><div class="gz-stitle"><i class="ti ti-presentation"></i> Anlatım Formatları</div><div class="gz-agrid" id="g-anlatim"></div><div class="gz-det" id="pv-anlatim"></div><div class="gz-stitle" style="margin-top:2rem"><i class="ti ti-table"></i> Konu × Format Matrisi</div><div id="matris-c"></div></div>
+<div class="gz-sec" id="sec-canli">
+<div class="gz-stitle"><i class="ti ti-broadcast"></i> Canlı Haberler — Stratejik İstihbarat Akışı</div>
+<div class="cl-w">
+
+  <div class="cl-src-pills">
+    
+    <span class="cl-sp h">HaberTürk</span>
+  </div>
+</div>
+
+<div class="pulse-bar">
+  <div class="pulse-dot"></div>
+  <span class="pulse-txt">Son dakika: <b>ABD İran'a hava saldırısı başlattı</b> — Gözcü</span>
+  <span class="pulse-tag">BREAKING</span>
+</div>
+
+<div class="cl-tabs">
+  <div class="cl-tab on" onclick="sw('akis',this)"><i class="ti ti-live-photo" aria-hidden="true"></i> Akış</div>
+  <div class="cl-tab" onclick="sw('derinle',this)"><i class="ti ti-messages" aria-hidden="true"></i> Thread</div>
+  <div class="cl-tab" onclick="sw('tartis',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i> Tartış</div>
+  <div class="cl-tab" onclick="sw('quiz',this)"><i class="ti ti-puzzle" aria-hidden="true"></i> Quiz</div>
+</div>
+
+<!-- AKIŞ -->
+<div id="secAkis">
+  <p class="cl-sl">Öne çıkan — bugünün en kritik gelişmesi</p>
+
+  <div class="cl-featured" onclick="selCard(0)">
+    <div class="feat-top">
+      <span class="feat-icon">💥</span>
+      <span class="feat-cat" style="background:#791F1F;color:#F7C1C1;">Son Dakika</span>
+      <span class="feat-src" style="background:#042C53;color:#B5D4F4;">Gözcü</span>
+    </div>
+    <div class="feat-body">
+      <div class="feat-title">ABD'den İran'a hava saldırısı — İran devlet televizyonu patlamaları doğruladı</div>
+      <div class="feat-meta">
+        <i class="ti ti-clock" aria-hidden="true"></i> Az önce
+        <i class="ti ti-map-pin" aria-hidden="true"></i> İran
+        <span style="font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;background:#FCEBEB;color:#791F1F;">Aktif Çatışma</span>
+      </div>
+      <div class="feat-ozet">28 Şubat 2026'da başlayan ABD-İsrail-İran geriliminin tırmanması olarak değerlendirilen saldırı; Hürmüz Boğazı'nın kapanması ve Körfez'deki enerji güvenliği risklerini bir kez daha gündeme taşıdı. Türkiye'nin tutumu diplomatik kanallar aracılığıyla izleniyor.</div>
+      <div class="feat-acts">
+        <button onclick="event.stopPropagation();selCard(0);sw('derinle',document.querySelectorAll('.tab')[1])">Thread olarak oku ↗</button>
+        <button onclick="event.stopPropagation();selCard(0);sw('tartis',document.querySelectorAll('.tab')[2])">Tartışmaya katıl ↗</button>
+        <button onclick="event.stopPropagation();sendPrompt('ABD-İran savaşının Türkiye\'ye etkisini Z kuşağına anlat')">YZ analizi ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="cl-sl">Günün diğer gelişmeleri</p>
+  <div class="cl-hgrid" id="hgrid"></div>
+  <div class="cl-dpanel" id="dpanel">
+    <div class="dp-header">
+      <div class="dp-ico" id="dpIco"></div>
+      <div><div class="dp-title" id="dpTitle"></div><div class="dp-src" id="dpSrc"></div></div>
+    </div>
+    <div class="dp-body" id="dpBody"></div>
+    <div class="dp-tags" id="dpTags"></div>
+    <div class="dp-acts">
+      <button onclick="sw('derinle',document.querySelectorAll('.tab')[1])">Thread oku ↗</button>
+      <button onclick="sw('tartis',document.querySelectorAll('.tab')[2])">Tartış ↗</button>
+      <button onclick="sw('quiz',document.querySelectorAll('.tab')[3])">Quiz ↗</button>
+      <button onclick="cur&&sendPrompt('Şu haberi Z kuşağına 5 adımda anlat: '+cur.baslik)">YZ analizi ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- THREAD -->
+<div id="secThread" style="display:none;">
+  <div class="cl-thread-box on" id="threadBox">
+    <p class="cl-sl" id="threadLbl">Thread</p>
+    <div id="threadContent"></div>
+    <div style="margin-top:0.75rem;" id="threadNext"></div>
+  </div>
+</div>
+
+<!-- TARTIS -->
+<div id="secTartis" style="display:none;">
+  <div class="cl-poll-box on" id="pollBox">
+    <p class="cl-sl" id="pollLbl">Tartış</p>
+    <div class="cl-pq" id="pollQ"></div>
+    <div id="pollOpts"></div>
+    <div class="cl-pm" id="pollMeta"></div>
+    <div class="cl-cbox">
+      <input type="text" id="cInput" placeholder="Kendi analizini yaz...">
+      <button onclick="addC()">Gönder</button>
+    </div>
+    <div class="cl-clist" id="cList"></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="secQuiz" style="display:none;">
+  <div class="cl-quiz-box on">
+    <p class="cl-sl" id="quizLbl">Quiz</p>
+    <div class="cl-qq" id="quizQ"></div>
+    <div id="quizOpts"></div>
+  </div>
+</div>
+
+<div style="margin-bottom:1rem;"></div>
+
+    <div class="cl-xppt" id="xppt">440 / 2.000 XP</div>
+  </div>
+</div>
+</div>
+</div>
+<div class="gz-xp"><div class="av"><i class="ti ti-eye"></i></div><div class="inf"><div class="lv">Stratejik Gözcü — Seviye 8</div><div class="bar"><div class="bf" id="xpF" style="width:45%"></div></div><div class="pts" id="xpP">1.800 / 4.000 XP</div></div></div>
+</div>
+<script src="oza-gozcu-data.js"></script>
+<script src="oza-gozcu-logic.js"></script>
+<script>
+const HABERLER = [
+  {id:0,icon:'💥',bg:'#1A0A0A',cat:'Son Dakika',catBg:'#791F1F',catCol:'#F7C1C1',kaynak:'Gözcü',kBg:'#042C53',kCol:'#B5D4F4',
+   baslik:'ABD İran\'a hava saldırısı başlattı',
+   sure:'Az önce',yer:'İran/Körfez',
+   ozet:'28 Şubat 2026\'da tırmanan ABD-İran geriliminin sahadaki yansıması. İran devlet televizyonu patlamaları doğruladı. Hürmüz Boğazı riski ve küresel enerji güvenliği alarma geçti. Türkiye diplomatik kanalları aktif tutuyor.',
+   tags:['ABD-İran','Hürmüz','Enerji Riski','Körfez','Türkiye Tutumu'],
+   thread:[
+     {t:'Ne oldu?',b:'ABD kuvvetleri İran\'a yönelik hava saldırısı başlattı — İran devlet TV\'si patlamaları doğruladı.'},
+     {t:'Arka plan?',b:'28 Şubat 2026\'dan bu yana tırmanan ABD-İsrail-İran gerilimi sahadaki en kritik eşiğe ulaştı.'},
+     {t:'Hürmüz riski?',b:'İran Hürmüz Boğazı\'nı kapatırsa küresel petrolün %20\'si kesilir — enerji piyasaları diken üstünde.'},
+     {t:'Türkiye nerede?',b:'Türkiye İran\'a saldırıların ilk gününde net tutumunu açıkladı; bölgesel aktörlerle üst düzey temaslar yürütülüyor.'},
+     {t:'Sırada ne var?',b:'İran\'ın karşı saldırı kapasitesi ve Devrim Muhafızları\'nın tepkisi belirleyici olacak.'},
+   ],
+   poll:{q:'ABD-İran çatışması Türkiye\'yi nasıl etkiler?',opts:['Arabulucu rol — Türkiye güçlenir','Enerji krizi — ekonomi sarsılır','NATO baskısı artar','Bölgesel fırsat — pozisyon yükselir'],votes:[32,28,18,22]},
+   quiz:{q:'İran Hürmüz Boğazı\'nı kaparsa küresel petrolün yaklaşık ne kadarı etkilenir?',opts:['%5','%10','%20','%35'],ans:2}},
+
+  {id:1,icon:'🏛',bg:'#0C1E3B',cat:'NATO Zirvesi',catBg:'#042C53',catCol:'#B5D4F4',kaynak:'HaberTürk',kBg:'#633806',kCol:'#FAEEDA',
+   baslik:'Ankara NATO Zirvesi — Türkiye\'nin yükselen ağırlığı',
+   sure:'3 gün önce',yer:'Ankara',
+   ozet:'7-8 Temmuz 2026\'da Ankara\'da yapılacak NATO Liderler Zirvesi, Türkiye\'nin savunma sanayii kapasitesini ve kriz yönetimini müttefiklere göstereceği diplomatik sahneye dönüştü. Savunma Sanayi Forumu ilk kez resmi program içinde.',
+   tags:['NATO Ankara Zirvesi','Savunma Sanayii','Yük Paylaşımı','NATO 3.0','TCG Anadolu'],
+   thread:[
+     {t:'Neden önemli?',b:'Türkiye\'nin NATO\'ya ev sahipliği yapması; savunma sanayii, kriz yönetimi ve lider diplomasisi kapasitesini tek sahnede sergiliyor.'},
+     {t:'NATO 3.0 nedir?',b:'Asker sayısından üretim kapasitesine, teknolojik esnekliğe ve tedarik güvenliğine dayalı yeni ittifak konsepti.'},
+     {t:'Türkiye\'nin hedefi?',b:'GDP\'nin %3.5+1.5\'ini savunmaya ayırma hedefi 2030 sonunda gerçekleştirilecek.'},
+     {t:'TCG Anadolu?',b:'Türk İHA gemisi öncülüğündeki deniz görev kuvveti 2026\'da Baltık\'a uzanan NATO tatbikatına katıldı.'},
+     {t:'Savunma Sanayii Forumu?',b:'İlk kez Zirve\'nin resmi programının parçası — Türkiye\'nin NATO içinde artan ağırlığının somut göstergesi.'},
+   ],
+   poll:{q:'NATO Ankara Zirvesi Türkiye\'ye ne kazandırır?',opts:['F-35 meselesinde ilerleme','S-400 krizini aşmak','Bölgesel liderlik tescili','Somut kazanım yok'],votes:[15,20,48,17]},
+   quiz:{q:'Ankara Zirvesi hangi tarihte gerçekleşecek?',opts:['Mayıs 2026','7-8 Temmuz 2026','Ekim 2026','Aralık 2026'],ans:1}},
+
+  {id:2,icon:'⚔️',bg:'#0A1A08',cat:'Strateji',catBg:'#085041',catCol:'#9FE1CB',kaynak:'HaberTürk',kBg:'#633806',kCol:'#FAEEDA',
+   baslik:'ABD 2026 Milli Savunma Stratejisi: Güç Yoluyla Barış',
+   sure:'5 ay önce',yer:'Washington',
+   ozet:'"Önce Amerika — Güç Yoluyla Barış — Sağduyu" üç sloganıyla özetlenen yeni strateji; küresel yük paylaşımını müttefiklere devrediyor, Çin\'i birincil tehdit olarak konumlandırıyor ve ABD\'nin Orta Doğu angajmanını yeniden boyutlandırıyor.',
+   tags:['ABD Savunma Stratejisi','Önce Amerika','Yük Paylaşımı','Çin Tehdidi','NATO Etkisi'],
+   thread:[
+     {t:'Ana mesaj?',b:'"Önce Anavatan" — ABD\'nin küresel polis gücü olmayacağı, müttefiklerin kendi güvenliklerini üstlenmesi gerektiği açıkça yazıldı.'},
+     {t:'Çin önceliği?',b:'Çin, Anavatan savunmasının ardından ikinci öncelik — "boğmak değil caydırmak" hedefi.'},
+     {t:'Türkiye\'ye etkisi?',b:'ABD\'nin Orta Doğu yükünü azaltması Türkiye\'nin stratejik boşluğu doldurma kapasitesini artırıyor.'},
+     {t:'NATO\'ya yansıması?',b:'Avrupa\'nın ve Türkiye\'nin savunma harcamalarını artırması doğrudan şart haline geliyor.'},
+     {t:'Türkiye fırsatı?',b:'Türkiye güç yoluyla caydırıcılık ve diplomasi kanalını birlikte yürüten nadir müttefik konumunu pekiştiriyor.'},
+   ],
+   poll:{q:'ABD\'nin yük paylaşımı politikası Türkiye için ne anlama gelir?',opts:['Bölgesel alan açılıyor — fırsat','NATO yükümlülükleri artıyor — külfet','Her ikisi birden','Değişen bir şey yok'],votes:[38,25,30,7]},
+   quiz:{q:'ABD 2026 Savunma Stratejisi\'nin üç ana sloganından biri hangisi?',opts:['Özgür Dünya İçin ABD','Güç Yoluyla Barış','Koşulsuz Destek','Bölgesel Denge'],ans:1}},
+
+  {id:3,icon:'⚓',bg:'#041A14',cat:'Deniz Stratejisi',catBg:'#085041',catCol:'#9FE1CB',kaynak:'HaberTürk',kBg:'#633806',kCol:'#FAEEDA',
+   baslik:'Türk Deniz Yetki Alanları Kanunu — Ege\'de tırmanma',
+   sure:'1 ay önce',yer:'Ege/Akdeniz',
+   ozet:'Türkiye\'nin hazırladığı Deniz Yetki Alanları Kanunu yalnızca hukuki düzenleme değil, stratejik bir hamle. Meis çevresindeki uçuşlar, Yunan savaş uçaklarının karşı manevrası ve Ege\'nin yeniden kızışması gündemde.',
+   tags:['Deniz Yetki Alanı','Meis','Yunanistan','Ege','Mavi Vatan Kanunu'],
+   thread:[
+     {t:'Kanun ne diyor?',b:'Türkiye\'nin üç denizde hak iddia ettiği yetki alanlarını yasallaştıran düzenleme — Ankara bürokrasisinde uzun süredir hazırlanıyor.'},
+     {t:'Ege gerginliği?',b:'Türk savaş uçakları Meis çevresinde dikkat çekici uçuşlar yaptı; Yunan uçakları aynı bölgede alçak uçuşla yanıt verdi.'},
+     {t:'Yunan medyası?',b:'"Sıcak çatışma hazırlığı", "Türk İHA tehdidi", "Hava Kuvvetleri alarmda" — başlıklar yoğunlaştı.'},
+     {t:'Asıl mesele?',b:'Türkiye\'nin savunma kapasitesindeki büyüme (Çelik Kubbe, İHA, milli muharip, deniz platformları) Atina\'nın hesaplarını doğrudan etkiliyor.'},
+     {t:'Sırada?',b:'Kanun yürürlüğe girerse Yunanistan ve Kıbrıs ile yeni bir hukuki kriz kapıda.'},
+   ],
+   poll:{q:'Türk Deniz Yetki Alanları Kanunu çıkarılmalı mı?',opts:['Evet — egemenlik hakkı','Evet ama diplomasiyle yönetilmeli','Hayır — risk çok yüksek','Zamanlaması yanlış'],votes:[30,40,15,15]},
+   quiz:{q:'Türkiye\'nin "Mavi Vatan" doktrini yaklaşık kaç km² deniz alanı kapsamaktadır?',opts:['180.000 km²','290.000 km²','462.000 km²','620.000 km²'],ans:2}},
+
+  {id:4,icon:'🕊',bg:'#1A1008',cat:'Diplomasi',catBg:'#633806',catCol:'#FAEEDA',kaynak:'HaberTürk',kBg:'#633806',kCol:'#FAEEDA',
+   baslik:'Washington\'un İran satranç oyunu — diplomasi mi, savaş mı?',
+   sure:'6 hafta önce',yer:'Washington/Tahran',
+   ozet:'Pentagon saldırı senaryoları hazırlarken Trump "diplomasi" diyor. İran karşı saldırı planlarını genişletiyor, Pakistan köprü olmaya çalışıyor, Rusya stratejik fırsat olarak izliyor. Hürmüz kapalıysa küresel ekonomi diken üstünde.',
+   tags:['İran Diplomasisi','Hürmüz','Pentagon','Trump','Pakistan Arabuluculuğu'],
+   thread:[
+     {t:'İki başlık?',b:'Trump\'ı en çok rahatsız eden iki konu: Hürmüz\'ün kapalı kalması + İran\'da dağınık karar mekanizması.'},
+     {t:'Pentagon stratejisi?',b:'"Rejimi devirmeden devlet kapasitesini zayıflatmak" — elektrik, enerji, lojistik, komuta merkezleri hedefte.'},
+     {t:'İran\'ın güçlü kalması?',b:'İran oyunda beklenenden güçlü kalırsa bölgedeki dengeler köklü biçimde değişiyor — Türkiye\'ye parantez açılıyor.'},
+     {t:'Rusya nerede?',b:'Moskova ABD-İran gerilimini stratejik fırsat olarak izliyor — Ukrayna\'dan dikkat dağıtma hedefi.'},
+     {t:'Türkiye fırsatı?',b:'Körfez ülkelerinin ABD\'ye güveni sarsılınca Türkiye ve Suudi Arabistan için geniş inisiyatif alanı doğuyor.'},
+   ],
+   poll:{q:'ABD-İran geriliminde Türkiye hangi rolü oynamalı?',opts:['Aktif arabulucu','Tarafsız izleyici','NATO ile tam koordinasyon','Ekonomik çıkarı öne al'],votes:[45,20,18,17]},
+   quiz:{q:'HaberTürk\'e göre Trump\'ı İran meselesinde en çok rahatsız eden şey nedir?',opts:['Nükleer tehdit','Hürmüz\'ün kapalı kalması ve dağınık İran karar mekanizması','Suriye sınırı','Rusya desteği'],ans:1}},
+
+  {id:5,icon:'🛡',bg:'#0A1628',cat:'Savunma San.',catBg:'#0C447C',catCol:'#B5D4F4',kaynak:'HaberTürk',kBg:'#633806',kCol:'#FAEEDA',
+   baslik:'Türkiye savunma sanayii: NATO\'nun caydırıcılık güç çarpanı',
+   sure:'3 gün önce',yer:'Ankara',
+   ozet:'Türk savunma sanayiinin NATO\'nun toplam kapasitesine katkı sağladığı artık resmi söylemde — "Bir müttefikin kapasitesine kısıtlama ittifakın caydırıcılığına kısıtlamadır." NATO Ankara Zirvesi bu çerçeveyi resmileştirecek.',
+   tags:['Savunma Sanayii','NATO Caydırıcılık','Baykar','KAAN','Güç Çarpanı'],
+   thread:[
+     {t:'Temel argüman?',b:'Türk savunma sanayii artık NATO\'nun toplam caydırıcılık gücünü artıran stratejik bir çarpan olarak tanımlanıyor.'},
+     {t:'F-35 yanıtı?',b:'F-35\'ten çıkarılma krizinin yanıtı: kendi muharip uçağı KAAN + NATO içinde yeniden pazarlık gücü.'},
+     {t:'Zirve\'de ne olacak?',b:'Savunma Sanayi Forumu ilk kez Zirve\'nin resmi programına girdi — Türkiye savunma kapasitesini müttefiklerine sergileyecek.'},
+     {t:'%3.5+1.5 hedefi?',b:'Türkiye 2030 sonunda GDP\'nin %3.5+1.5\'ini savunmaya ayırmayı taahhüt etti — NATO içindeki en yüksek hedeflerden biri.'},
+     {t:'Büyük resim?',b:'Türkiye hem caydırıcılığa sahip hem diplomasi kanallarını açık tutan nadir müttefik — bu model NATO 3.0\'ın özü.'},
+   ],
+   poll:{q:'Türkiye\'nin savunma sanayii NATO\'ya ne kadar katkı sağlıyor?',opts:['Çok kritik — olmazsa olmaz','Önemli ama sınırlı','Henüz potansiyel aşamasında','NATO\'dan bağımsız değerlendirilmeli'],votes:[42,30,15,13]},
+   quiz:{q:'Türkiye\'nin 2030 savunma harcaması hedefi GDP\'nin yüzde kaçıdır?',opts:['%2','%2.5+1','%3.5+1.5','%5'],ans:2}},
+];
+
+let cur = HABERLER[0];
+let xp = 440;
+let tStep = 0;
+let pollVoted = false;
+
+function sw(t, el) {
+  document.querySelectorAll('.cl-tab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('secAkis').style.display = t==='akis'?'':'none';
+  document.getElementById('secThread').style.display = t==='derinle'?'':'none';
+  document.getElementById('secTartis').style.display = t==='tartis'?'':'none';
+  document.getElementById('secQuiz').style.display = t==='quiz'?'':'none';
+  if(t==='derinle') buildThread();
+  if(t==='tartis') buildPoll();
+  if(t==='quiz') buildQuiz();
+}
+
+function buildGrid() {
+  const g = document.getElementById('cl-hgrid');
+  g.innerHTML = HABERLER.slice(1).map(h=>`
+    <div class="hc${cur&&cur.id===h.id?' sel':''}" onclick="selCard(${h.id})">
+      <div class="hc-top" style="background:${h.bg};">
+        <span class="hc-icon">${h.icon}</span>
+        <span class="hc-cat" style="background:${h.catBg};color:${h.catCol};">${h.cat}</span>
+        <span class="hc-src" style="background:${h.kBg};color:${h.kCol};">${h.kaynak}</span>
+      </div>
+      <div class="hc-body">
+        <div class="hc-title">${h.baslik}</div>
+        <div class="hc-meta">${h.sure} · ${h.yer}</div>
+      </div>
+    </div>`).join('');
+}
+
+window.selCard = function(id) {
+  cur = HABERLER.find(h=>h.id===id);
+  pollVoted = false;
+  tStep = 0;
+  buildGrid();
+  const dp = document.getElementById('cl-dpanel');
+  document.getElementById('dpIco').textContent = cur.icon;
+  document.getElementById('dpIco').style.background = cur.bg;
+  document.getElementById('dpTitle').textContent = cur.baslik;
+  document.getElementById('dpSrc').textContent = cur.kaynak + ' · ' + cur.sure + ' · ' + cur.yer;
+  document.getElementById('dpBody').textContent = cur.ozet;
+  document.getElementById('dpTags').innerHTML = cur.tags.map(t=>`<span class="dp-tag">${t}</span>`).join('');
+  dp.classList.add('on');
+  gainXP(40);
+};
+
+function buildThread() {
+  const lbl = document.getElementById('threadLbl');
+  lbl.textContent = cur.baslik + ' — thread';
+  renderTStep();
+}
+function renderTStep() {
+  document.getElementById('threadContent').innerHTML = cur.thread.slice(0,tStep+1).map((r,i)=>
+    `<div class="tr"><div class="tn">${i+1}</div><div class="tt"><b>${r.t}</b> — ${r.b}</div></div>`).join('');
+  const nb = document.getElementById('threadNext');
+  nb.innerHTML = '';
+  if(tStep < cur.thread.length-1) {
+    const b = document.createElement('button');
+    b.textContent = 'Sonraki ↓';
+    b.style.fontSize = '12px';
+    b.onclick = () => { tStep++; renderTStep(); gainXP(25); };
+    nb.appendChild(b);
+  } else {
+    const b = document.createElement('button');
+    b.textContent = 'Anket\'e geç ↗';
+    b.style.fontSize = '12px';
+    b.onclick = () => sw('tartis', document.querySelectorAll('.cl-tab')[2]);
+    nb.appendChild(b);
+  }
+}
+
+function buildPoll() {
+  document.getElementById('pollLbl').textContent = cur.baslik + ' — tartış';
+  document.getElementById('pollQ').textContent = cur.poll.q;
+  renderPollOpts();
+}
+function renderPollOpts(v) {
+  const total = cur.poll.votes.reduce((a,b)=>a+b,0);
+  document.getElementById('pollOpts').innerHTML = cur.poll.opts.map((o,i)=>`
+    <div class="cl-po" onclick="${v!==undefined?'':('votePoll('+i+')')}">
+      <div class="pb">
+        <div class="pf" style="width:${v!==undefined?Math.round(cur.poll.votes[i]/total*100):0}%;"></div>
+        <span class="pl">${o}</span>
+        ${v!==undefined?`<span class="pp">${Math.round(cur.poll.votes[i]/total*100)}%</span>`:''}
+      </div></div>`).join('');
+  document.getElementById('pollMeta').textContent = total.toLocaleString('tr-TR') + ' oy · ' + cur.kaynak + ' okuyucuları';
+}
+window.votePoll = function(i) {
+  if(pollVoted) return;
+  pollVoted = true;
+  cur.poll.votes[i]++;
+  renderPollOpts(i);
+  gainXP(30);
+};
+
+function addC() {
+  const inp = document.getElementById('cInput');
+  const v = inp.value.trim();
+  if(!v) return;
+  const cl = document.getElementById('cList');
+  const d = document.createElement('div');
+  d.className = 'ci';
+  d.innerHTML = `<b>Sen</b> — ${v}`;
+  cl.appendChild(d);
+  inp.value = '';
+  gainXP(20);
+}
+
+function buildQuiz() {
+  document.getElementById('quizLbl').textContent = cur.baslik + ' — quiz';
+  document.getElementById('quizQ').textContent = cur.quiz.q;
+  document.getElementById('quizOpts').innerHTML = cur.quiz.opts.map((o,i)=>
+    `<div class="cl-qo" onclick="ansQ(this,${i},${cur.quiz.ans})"><span class="qk">${String.fromCharCode(65+i)}</span>${o}</div>`).join('');
+}
+window.ansQ = function(el,i,ans) {
+  document.querySelectorAll('.cl-qo').forEach(o=>o.style.pointerEvents='none');
+  el.classList.add(i===ans?'ok':'no');
+  if(i!==ans) document.querySelectorAll('.cl-qo')[ans].classList.add('ok');
+  if(i===ans) gainXP(150);
+};
+
+function gainXP(p) {
+  xp = Math.min(xp+p, 2000);
+  document.getElementById('cl-xpfl').style.width = Math.round(xp/2000*100)+'%';
+  document.getElementById('cl-xppt').textContent = xp.toLocaleString('tr-TR')+' / 2.000 XP';
+}
+
+buildGrid();
+selCard(0);
+</script>
+</body></html>

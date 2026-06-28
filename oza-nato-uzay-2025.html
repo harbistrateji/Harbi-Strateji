@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Uzay Hakimiyeti — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--purple:#c41e3a;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--gold))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* Uzay canvas */
+#space-canvas{width:100%;height:320px;border-radius:12px;border:1px solid var(--line2);display:block;cursor:crosshair;background:#000}
+/* Uydu paneli */
+.satellite-panel{background:var(--panel2);border-radius:12px;padding:14px;margin-bottom:14px}
+.sp-title{font-size:10px;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.sat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sat-item{background:var(--panel);border:2px solid var(--line2);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:.2s}
+.sat-item:active{transform:scale(.97)}
+.sat-item.active{border-color:var(--cyan)}
+.sat-item.damaged{border-color:var(--gold);animation:damage-flash .5s ease-in-out 3}
+.sat-item.destroyed{border-color:var(--red2);opacity:.5;pointer-events:none}
+@keyframes damage-flash{0%,100%{background:transparent}50%{background:rgba(201,162,75,.2)}}
+.sat-icon{font-size:24px;margin-bottom:4px}
+.sat-name{font-size:9px;color:var(--dim);margin-bottom:4px}
+.sat-hp{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700}
+.sat-hp-bar{height:4px;background:var(--panel2);border-radius:2px;margin-top:4px;overflow:hidden}
+.sat-hp-fill{height:100%;border-radius:2px;transition:width .3s}
+/* Silah seçimi */
+.weapon-panel{background:var(--panel2);border-radius:12px;padding:14px;margin-bottom:14px}
+.wp-title{font-size:10px;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.weapon-btns{display:flex;gap:8px;flex-wrap:wrap}
+.weapon-btn{background:var(--panel);border:2px solid var(--line2);border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-size:11px;transition:.2s;flex:1;text-align:center}
+.weapon-btn:active{transform:scale(.97)}
+.weapon-btn.selected{border-color:var(--purple);background:rgba(168,85,247,.08)}
+.weapon-btn.depleted{opacity:.4;pointer-events:none}
+.wb-icon{font-size:20px;margin-bottom:4px}
+.wb-name{font-size:10px;font-weight:700;margin-bottom:2px}
+.wb-count{font-size:9px;color:var(--dim)}
+/* Event log */
+.event-log{background:var(--panel2);border-radius:10px;padding:12px;max-height:100px;overflow-y:auto;margin-bottom:12px;font-size:10px;line-height:1.8}
+.el-good{color:var(--green)}.el-bad{color:var(--red2)}.el-info{color:var(--cyan)}
+/* Timer */
+.wave-timer{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.wt-bar{flex:1;height:8px;background:var(--panel2);border-radius:4px;overflow:hidden}
+.wt-fill{height:100%;border-radius:4px;background:var(--purple);transition:width 1s linear}
+.wt-secs{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:var(--purple);min-width:30px;text-align:right}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🛸 UZAY HAKİMİYETİ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">🛸 Uzay Hakimiyeti</div>
+  <div class="card-sub">Uydu ağını koru, düşman anti-uydu silahlarından kaçın. GPS, iletişim ve keşif uydularını hayatta tut. Uzay yeni savaş alanı — hakimiyeti kaybetme!</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="uz-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="uz-sats" style="color:var(--cyan)">6/6</div><div class="stat-lbl">UYDU</div></div>
+    <div class="stat-box"><div class="stat-val" id="uz-wave" style="color:var(--purple)">1/5</div><div class="stat-lbl">DALGA</div></div>
+    <div class="stat-box"><div class="stat-val" id="uz-kills" style="color:var(--green)">0</div><div class="stat-lbl">İMHA</div></div>
+  </div>
+  <canvas id="space-canvas" onclick="fireWeapon(event)"></canvas>
+  <div class="wave-timer" style="margin-top:10px">
+    <div class="wt-bar"><div class="wt-fill" id="wt-fill" style="width:100%"></div></div>
+    <div class="wt-secs" id="wt-secs">30</div>
+  </div>
+  <div class="satellite-panel">
+    <div class="sp-title">🛰️ UYDU AĞIM</div>
+    <div class="sat-grid" id="sat-grid"></div>
+  </div>
+  <div class="weapon-panel">
+    <div class="wp-title">⚔️ SİLAH SİSTEMLERİ</div>
+    <div class="weapon-btns" id="weapon-btns"></div>
+  </div>
+  <div class="event-log" id="event-log"></div>
+  <button class="btn btn-purple" id="uz-btn" onclick="uzStart()">🛸 UZAY SAVAŞINI BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var SATELLITES=[
+  {id:'gps-1',icon:'📡',name:'GPS-1',hp:100,maxHp:100,role:'Navigasyon'},
+  {id:'gps-2',icon:'📡',name:'GPS-2',hp:100,maxHp:100,role:'Navigasyon'},
+  {id:'comm-1',icon:'📻',name:'COMM-1',hp:100,maxHp:100,role:'İletişim'},
+  {id:'comm-2',icon:'📻',name:'COMM-2',hp:100,maxHp:100,role:'İletişim'},
+  {id:'isr-1',icon:'🔭',name:'ISR-1',hp:100,maxHp:100,role:'Keşif'},
+  {id:'isr-2',icon:'🔭',name:'ISR-2',hp:100,maxHp:100,role:'Keşif'}
+];
+
+var WEAPONS=[
+  {id:'laser',icon:'⚡',name:'Lazer',count:5,damage:60,color:'#c41e3a'},
+  {id:'missile',icon:'🚀',name:'Füze',count:3,damage:100,color:'#ff3a4a'},
+  {id:'jammer',icon:'📡',name:'Jammer',count:8,damage:30,color:'#c41e3a'},
+  {id:'shield',icon:'🛡️',name:'Kalkan',count:4,damage:0,color:'#C9A24B'}
+];
+
+var uz={pts:0,wave:0,kills:0,running:false,timer:null,secs:30,
+  satellites:JSON.parse(JSON.stringify(SATELLITES)),
+  weapons:JSON.parse(JSON.stringify(WEAPONS)),
+  selectedWeapon:'laser',
+  enemies:[],animFrame:null};
+
+var canvas,ctx;
+
+function uzStart(){
+  canvas=document.getElementById('space-canvas');
+  ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth;
+  canvas.height=320;
+  uz={pts:0,wave:0,kills:0,running:true,timer:null,secs:30,
+    satellites:JSON.parse(JSON.stringify(SATELLITES)),
+    weapons:JSON.parse(JSON.stringify(WEAPONS)),
+    selectedWeapon:'laser',
+    enemies:[],animFrame:null};
+  document.getElementById('uz-btn').style.display='none';
+  renderSatellites();renderWeapons();
+  uzNextWave();
+  requestAnimationFrame(uzDraw);
+}
+
+function uzNextWave(){
+  if(uz.wave>=5){uzEnd();return;}
+  uz.enemies=[];
+  var count=2+uz.wave;
+  for(var i=0;i<count;i++){
+    uz.enemies.push({
+      x:Math.random()*canvas.width,
+      y:-30-Math.random()*100,
+      vx:(Math.random()-.5)*1.5,
+      vy:1+Math.random()*1.5+uz.wave*0.3,
+      hp:50+uz.wave*20,
+      maxHp:50+uz.wave*20,
+      type:Math.random()>.5?'asat':'debris',
+      size:12+uz.wave*2
+    });
+  }
+  addLog('🛸 Dalga '+(uz.wave+1)+': '+count+' düşman tespit edildi!','info');
+  startWaveTimer();
+}
+
+function startWaveTimer(){
+  uz.secs=30;
+  if(uz.timer)clearInterval(uz.timer);
+  var fill=document.getElementById('wt-fill');
+  fill.style.transition='none';fill.style.width='100%';
+  setTimeout(function(){
+    fill.style.transition='width 1s linear';
+    uz.timer=setInterval(function(){
+      uz.secs--;
+      fill.style.width=(uz.secs/30*100)+'%';
+      document.getElementById('wt-secs').textContent=uz.secs;
+      if(uz.secs<=0){clearInterval(uz.timer);uz.wave++;uzNextWave();}
+    },1000);
+  },50);
+}
+
+function uzDraw(){
+  if(!uz.running){return;}
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Yıldızlar
+  ctx.fillStyle='rgba(255,255,255,.3)';
+  for(var i=0;i<50;i++){
+    var sx=(i*137)%canvas.width;
+    var sy=(i*97)%canvas.height;
+    ctx.fillRect(sx,sy,1,1);
+  }
+  // Dünya
+  ctx.beginPath();
+  ctx.arc(canvas.width/2,canvas.height+80,120,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,100,200,.3)';
+  ctx.fill();
+  ctx.strokeStyle='rgba(0,200,255,.4)';
+  ctx.lineWidth=2;
+  ctx.stroke();
+  // Uydu yörüngeleri
+  var alive=uz.satellites.filter(function(s){return s.hp>0;});
+  alive.forEach(function(s,i){
+    var angle=Date.now()/3000+i*(Math.PI*2/alive.length);
+    var r=80+i*15;
+    var sx=canvas.width/2+Math.cos(angle)*r;
+    var sy=canvas.height-60+Math.sin(angle)*r*0.3;
+    s._x=sx;s._y=sy;
+    ctx.beginPath();
+    ctx.arc(sx,sy,8,0,Math.PI*2);
+    ctx.fillStyle=s.hp>60?'#c41e3a':s.hp>30?'#C9A24B':'#E01515';
+    ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.8)';
+    ctx.font='10px IBM Plex Mono';
+    ctx.textAlign='center';
+    ctx.fillText(s.icon,sx,sy+3);
+  });
+  // Düşmanlar
+  uz.enemies.forEach(function(e){
+    e.x+=e.vx;e.y+=e.vy;
+    if(e.x<0||e.x>canvas.width)e.vx*=-1;
+    // Uyduya çarptı mı?
+    alive.forEach(function(s){
+      if(s._x&&Math.hypot(e.x-s._x,e.y-s._y)<20){
+        s.hp=Math.max(0,s.hp-15);
+        addLog('⚠️ '+s.name+' hasar aldı! HP: '+s.hp,'bad');
+        renderSatellites();
+        e.y=-30;e.x=Math.random()*canvas.width;
+      }
+    });
+    ctx.beginPath();
+    ctx.arc(e.x,e.y,e.size/2,0,Math.PI*2);
+    ctx.fillStyle=e.type==='asat'?'rgba(224,21,21,.8)':'rgba(200,100,0,.8)';
+    ctx.fill();
+    ctx.strokeStyle=e.type==='asat'?'#ff3a4a':'#ff8c00';
+    ctx.lineWidth=1;
+    ctx.stroke();
+    ctx.fillStyle='#fff';
+    ctx.font='12px sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(e.type==='asat'?'🚀':'☄️',e.x,e.y+4);
+    // HP bar
+    var bw=e.size*2;
+    ctx.fillStyle='rgba(0,0,0,.5)';
+    ctx.fillRect(e.x-bw/2,e.y-e.size/2-8,bw,4);
+    ctx.fillStyle=e.hp/e.maxHp>.5?'#00ff88':'#ff3a4a';
+    ctx.fillRect(e.x-bw/2,e.y-e.size/2-8,bw*(e.hp/e.maxHp),4);
+  });
+  uz.enemies=uz.enemies.filter(function(e){return e.hp>0&&e.y<canvas.height+50;});
+  uz.animFrame=requestAnimationFrame(uzDraw);
+}
+
+function fireWeapon(evt){
+  if(!uz.running)return;
+  var rect=canvas.getBoundingClientRect();
+  var mx=(evt.clientX-rect.left)*(canvas.width/rect.width);
+  var my=(evt.clientY-rect.top)*(canvas.height/rect.height);
+  var wep=uz.weapons.find(function(w){return w.id===uz.selectedWeapon;});
+  if(!wep||wep.count<=0)return;
+  if(uz.selectedWeapon==='shield'){
+    // Kalkan: en yakın uyduyu onar
+    var alive=uz.satellites.filter(function(s){return s.hp>0&&s.hp<s.maxHp;});
+    if(alive.length>0){
+      alive[0].hp=Math.min(alive[0].maxHp,alive[0].hp+30);
+      addLog('🛡️ '+alive[0].name+' onarıldı! HP: '+alive[0].hp,'good');
+      renderSatellites();
+    }
+    wep.count--;renderWeapons();return;
+  }
+  // En yakın düşmanı vur
+  var hit=null,minD=80;
+  uz.enemies.forEach(function(e){
+    var d=Math.hypot(e.x-mx,e.y-my);
+    if(d<minD){minD=d;hit=e;}
+  });
+  if(hit){
+    hit.hp-=wep.damage;
+    wep.count--;
+    // Ateş efekti
+    ctx.beginPath();
+    ctx.arc(hit.x,hit.y,30,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,200,0,.4)';
+    ctx.fill();
+    if(hit.hp<=0){
+      uz.kills++;uz.pts+=150;
+      addLog('💥 Düşman imha edildi! +150 puan','good');
+      beepWin();
+    }else{
+      addLog('🎯 İsabet! Hasar: '+wep.damage,'info');
+    }
+    updateDisplay();
+    renderWeapons();
+  }else{
+    wep.count--;
+    addLog('❌ Iskaladın!','bad');
+    renderWeapons();
+  }
+}
+
+function selectWeapon(id){
+  uz.selectedWeapon=id;
+  renderWeapons();
+}
+
+function renderSatellites(){
+  document.getElementById('sat-grid').innerHTML=uz.satellites.map(function(s){
+    var cls='sat-item'+(s.hp<=0?' destroyed':s.hp<50?' damaged':' active');
+    var color=s.hp>60?'var(--green)':s.hp>30?'var(--gold)':'var(--red2)';
+    return '<div class="'+cls+'" onclick="selectSat(\''+s.id+'\')">'+
+      '<div class="sat-icon">'+s.icon+'</div>'+
+      '<div class="sat-name">'+s.name+'</div>'+
+      '<div class="sat-hp" style="color:'+color+'">'+(s.hp<=0?'YIKILDI':s.hp+'%')+'</div>'+
+      '<div class="sat-hp-bar"><div class="sat-hp-fill" style="width:'+s.hp+'%;background:'+color+'"></div></div>'+
+    '</div>';
+  }).join('');
+  var alive=uz.satellites.filter(function(s){return s.hp>0;}).length;
+  document.getElementById('uz-sats').textContent=alive+'/'+uz.satellites.length;
+  document.getElementById('uz-sats').style.color=alive>3?'var(--green)':alive>1?'var(--gold)':'var(--red2)';
+}
+
+function renderWeapons(){
+  document.getElementById('weapon-btns').innerHTML=uz.weapons.map(function(w){
+    return '<div class="weapon-btn'+(w.id===uz.selectedWeapon?' selected':'')+(w.count<=0?' depleted':'')+'" onclick="selectWeapon(\''+w.id+'\')">'+
+      '<div class="wb-icon">'+w.icon+'</div>'+
+      '<div class="wb-name">'+w.name+'</div>'+
+      '<div class="wb-count">'+w.count+' adet</div>'+
+    '</div>';
+  }).join('');
+}
+
+function addLog(msg,cls){
+  var log=document.getElementById('event-log');
+  var div=document.createElement('div');
+  div.className='el-'+(cls||'info');
+  div.textContent=msg;
+  log.insertBefore(div,log.firstChild);
+  if(log.children.length>8)log.removeChild(log.lastChild);
+}
+
+function updateDisplay(){
+  document.getElementById('uz-pts').textContent=uz.pts;
+  document.getElementById('uz-wave').textContent=(uz.wave+1)+'/5';
+  document.getElementById('uz-kills').textContent=uz.kills;
+  document.getElementById('hdr-pts').textContent='⭐ '+uz.pts;
+}
+
+function uzEnd(){
+  uz.running=false;
+  if(uz.timer)clearInterval(uz.timer);
+  if(uz.animFrame)cancelAnimationFrame(uz.animFrame);
+  var alive=uz.satellites.filter(function(s){return s.hp>0;}).length;
+  var grade=alive>=5?'🏆 UZAY HAKİMİYETİ KAZANILDI':alive>=3?'✅ BAŞARILI':alive>=1?'⚠️ KRİTİK KAYIP':'❌ UZAY AĞIMIZ YOK EDİLDİ';
+  addLog(grade+' — Kalan uydu: '+alive+'/'+uz.satellites.length,'good');
+  document.getElementById('uz-btn').style.display='';
+  document.getElementById('uz-btn').textContent='🔄 TEKRAR';
+  saveScore();
+  alive>=3?beepWin():beepFail();
+}
+
+function saveScore(){try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['uzay-hakimiyeti']=(s['uzay-hakimiyeti']||0)+uz.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

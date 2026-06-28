@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ateşin Evrimi — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root {--pri:#ff4500;--sec:#ffd700;--bg:#0a0f17;--text:#e8e6e3;}
+body {font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;overflow-x:hidden;}
+.hero {text-align:center;padding:80px 20px 40px;background:linear-gradient(180deg,rgba(10,15,23,0.9),var(--bg)),radial-gradient(ellipse at 50% 0%,#ff450022,transparent 70%);position:relative;}
+.hero::after {content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#ff450060,transparent);}
+.hero .badge {display:inline-block;border:1px solid var(--pri);color:var(--pri);padding:4px 16px;border-radius:20px;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;animation:pulse 2s infinite;}
+.hero h1 {font-family:'Chakra Petch',sans-serif;font-size:clamp(1.8rem,5vw,3rem);margin:0 0 12px;}
+.hero h1 span {color:var(--pri);}
+.hero p {max-width:700px;margin:0 auto;opacity:0.8;line-height:1.7;}
+.audio-btn {position:fixed;top:80px;right:20px;z-index:100;background:var(--pri);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px #ff450040;}
+.stats {display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:30px 20px;}
+.stat {text-align:center;}
+.stat-val {display:block;font-family:'Chakra Petch',sans-serif;font-size:1.8rem;color:var(--pri);font-weight:700;}
+.stat-label {font-size:0.75rem;opacity:0.6;text-transform:uppercase;letter-spacing:1px;}
+.scenes {max-width:900px;margin:0 auto;padding:0 20px 60px;}
+.scene {display:flex;gap:20px;padding:24px;margin:16px 0;border:1px solid #ffffff10;border-radius:12px;background:#ffffff05;animation:fadeUp 0.6s ease both;transition:all 0.3s;}
+.scene:hover {border-color:var(--pri);background:#ffffff08;transform:translateX(8px);}
+.scene-icon {font-size:2rem;min-width:48px;text-align:center;padding-top:4px;}
+.scene-content h3 {margin:0 0 8px;font-family:'Chakra Petch',sans-serif;font-size:1.1rem;}
+.scene-content p {margin:0 0 12px;opacity:0.8;line-height:1.7;font-size:0.95rem;}
+.tags {display:flex;flex-wrap:wrap;gap:6px;}
+.tag {background:#ff450015;border:1px solid #ff450040;color:var(--pri);padding:3px 10px;border-radius:4px;font-size:0.7rem;font-family:'IBM Plex Mono',monospace;}
+.source {text-align:center;padding:40px 20px;opacity:0.5;font-size:0.8rem;border-top:1px solid #ffffff10;}
+.timeline-bar {position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,#ff4500,#ffd700);width:0;z-index:999;transition:width 0.3s;}
+@keyframes fadeUp {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse {0%,100%{opacity:1}50%{opacity:0.5}}
+@media(max-width:600px){.scene{flex-direction:column;gap:8px;}.stats{gap:20px;}.audio-btn{top:70px;right:10px;width:36px;height:36px;font-size:1rem;}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="timeline-bar" id="tbar"></div>
+<script src="hs-nav.js?v=11"></script>
+<button class="audio-btn" id="audioBtn" title="Ses Aç/Kapat">🔊</button>
+<div class="hero">
+  <span class="badge">Silah Tarihi · Zaman Çizelgesi</span>
+  <h1><span>Ateşin Evrimi</span></h1>
+  <p>Grek Ateşinden Nükleer Silaha: Patlayıcı Teknolojinin 1400 Yıllık Serüveni</p>
+</div>
+<div class="stats"><div class="stat"><span class="stat-val">1400</span><span class="stat-label">Yıllık Tarih</span></div><div class="stat"><span class="stat-val">671</span><span class="stat-label">İlk Grek Ateşi</span></div><div class="stat"><span class="stat-val">107</span><span class="stat-label">el-Rammah Formülü</span></div><div class="stat"><span class="stat-val">355</span><span class="stat-label">Nobel Patenti</span></div></div>
+<div class="scenes">
+    <div class="scene" style="animation-delay:0.15s">
+      <div class="scene-icon">🔥</div>
+      <div class="scene-content">
+        <h3>Grek Ateşi (671)</h3>
+        <p>Suriyeli mühendis Kallinikos tarafından keşfedilen sıvı ateş. Güherçile, kükürt, nafta, sönmemiş kireç karışımı. Suda bile yanmaya devam ediyor, sifon pompasıyla düşman gemilerine püskürtülüyordu. 7 yüzyıl boyunca Bizans'ın en yıkıcı silahı.</p>
+        <div class="tags"><span class="tag">Bizans</span><span class="tag">671</span><span class="tag">Deniz Savaşı</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.3s">
+      <div class="scene-icon">⚗</div>
+      <div class="scene-content">
+        <h3>Hasan el-Rammah ve Barut (1280)</h3>
+        <p>Kitab el-Furusiyye adlı eserinde 107 farklı barut formülü veren Suriyeli kimyager. Roket, torpido ve patlayıcı ok tasarımları. İslam dünyasının barut teknolojisindeki öncülüğünün kanıtı.</p>
+        <div class="tags"><span class="tag">İslam</span><span class="tag">1280</span><span class="tag">Barut</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.44999999999999996s">
+      <div class="scene-icon">💣</div>
+      <div class="scene-content">
+        <h3>Osmanlı Baruthaneleri (15-18. yy)</h3>
+        <p>İstanbul Baruthane-i Amire, Gelibolu ve Selanik baruthaneleri. Yılda 500 ton üretim kapasitesi. Güherçile madenleri stratejik varlık olarak korunuyordu. Fatih'in İstanbul kuşatmasında kullanılan devasa topların barut ihtiyacı buradan karşılandı.</p>
+        <div class="tags"><span class="tag">Osmanlı</span><span class="tag">Üretim</span><span class="tag">Strateji</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.6s">
+      <div class="scene-icon">🧪</div>
+      <div class="scene-content">
+        <h3>Kara Berthold Efsanesi (14. yy)</h3>
+        <p>Avrupa'da barutun keşfi Alman keşiş Berthold Schwarz'a atfedilir. Gerçekte Çin'den İslam dünyası üzerinden Avrupa'ya ulaşan bilgi. Walter de Milemete'nin 1327 tarihli elyazmasında ilk top resmi.</p>
+        <div class="tags"><span class="tag">Avrupa</span><span class="tag">14. yy</span><span class="tag">Efsane</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.75s">
+      <div class="scene-icon">🏭</div>
+      <div class="scene-content">
+        <h3>Alfred Nobel ve Dinamit (1867)</h3>
+        <p>Nitrogliserini kizelgur (infüzyon toprağı) ile karıştırarak güvenli patlayıcı üretti. 355 patent, 90 fabrika. Ölümünden önce servetini Nobel Ödülleri'ne bağışladı. Savaş ve barış arasındaki ironinin simgesi.</p>
+        <div class="tags"><span class="tag">1867</span><span class="tag">Sanayi</span><span class="tag">İnovasyon</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.8999999999999999s">
+      <div class="scene-icon">☢</div>
+      <div class="scene-content">
+        <h3>Manhattan Projesi (1942-45)</h3>
+        <p>130.000 kişi, 2 milyar dolar (bugünkü değerle 28 milyar). Oppenheimer liderliğinde atom bombası. Hiroşima (Küçük Çocuk, uranyum) ve Nagazaki (Şişman Adam, plütonyum). Savaşın doğasını temelden değiştirdi.</p>
+        <div class="tags"><span class="tag">1945</span><span class="tag">Nükleer</span><span class="tag">ABD</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:1.05s">
+      <div class="scene-icon">🚀</div>
+      <div class="scene-content">
+        <h3>Çin Roketleri ve Uzay Çağı (10-20. yy)</h3>
+        <p>Çin'de 10. yüzyılda 'uçan ateş' roketleri. Osmanlı şenliklerinde havai fişek gösterileri. Tsiolkovsky, Goddard ve von Braun ile uzay çağı. V-2'den Apollo'ya, ICBM'den hipersonik füzelere.</p>
+        <div class="tags"><span class="tag">Roket</span><span class="tag">Çin</span><span class="tag">Uzay</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:1.2s">
+      <div class="scene-icon">⚔</div>
+      <div class="scene-content">
+        <h3>Napalm ve Termobarik (1942-günümüz)</h3>
+        <p>Grek ateşinin modern versiyonu: Napalm (nafta + palmitik asit). Vietnam'da 388.000 ton kullanıldı. Termobarik silahlar: hava-yakıt karışımı ile devasa basınç dalgası. Bunker yıkıcı olarak kullanılıyor.</p>
+        <div class="tags"><span class="tag">Modern</span><span class="tag">Kimyasal</span><span class="tag">Savaş</span></div>
+      </div>
+    </div>
+</div>
+<div class="source">Kaynak: Prof. Dr. Zeki Tez, Patlayıcı Silah ve Savaş Tekniğinin Kültürel Tarihi, Doruk Yayınları, 2010 | Harb-i Strateji Külliyatı</div>
+<script>
+// Scroll progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('tbar').style.width=(window.scrollY/h*100)+'%';
+});
+// Audio
+const AudioContext=window.AudioContext||window.webkitAudioContext;
+let actx,playing=false;
+function playAmbient(){
+  if(!actx) actx=new AudioContext();
+  const osc=actx.createOscillator();
+  const gain=actx.createGain();
+  osc.type='sine';osc.frequency.value=110;
+  gain.gain.value=0.03;
+  osc.connect(gain);gain.connect(actx.destination);
+  osc.start();playing=true;
+  setTimeout(()=>{osc.stop();playing=false;},8000);
+}
+document.getElementById('audioBtn').onclick=()=>{if(!playing) playAmbient();};
+</script>
+</body>
+</html>

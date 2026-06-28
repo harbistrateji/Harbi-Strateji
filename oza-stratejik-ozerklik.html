@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Stratejik Özerklik — Harb-i Strateji OZA</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 12px;height:52px;gap:10px}
+.hdr-back{font-size:11px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:6px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:13px;flex:1;text-align:center;color:var(--cyan)}
+.hdr-score{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold)}
+.screen{display:none;padding:60px 14px 30px;max-width:600px;margin:0 auto}
+.screen.active{display:block}
+/* Intro */
+.intro-card{background:var(--panel);border:1px solid var(--cyan);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px}
+.ic-icon{font-size:48px;margin-bottom:12px}
+.ic-title{font-family:'Chakra Petch',sans-serif;font-size:20px;color:var(--cyan);margin-bottom:8px}
+.ic-desc{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:16px}
+.ic-phases{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.phase-badge{background:rgba(0,224,255,.08);border:1px solid rgba(0,224,255,.2);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--cyan)}
+.btn-start{background:var(--cyan);color:#0d0d0d;border:none;border-radius:10px;padding:12px 32px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;cursor:pointer;width:100%}
+/* Phase header */
+.phase-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.phase-tag{background:rgba(0,224,255,.1);border:1px solid rgba(0,224,255,.25);border-radius:8px;padding:4px 10px;font-family:'Chakra Petch',sans-serif;font-size:11px;color:var(--cyan)}
+.timer-box{background:rgba(224,21,21,.15);border:1px solid rgba(224,21,21,.3);border-radius:8px;padding:4px 10px;font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--red)}
+/* Özerklik meter */
+.ozerklik-meter{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.om-title{font-family:'Chakra Petch',sans-serif;font-size:11px;color:var(--dim);margin-bottom:8px}
+.om-bar{height:14px;background:rgba(255,255,255,.07);border-radius:7px;overflow:hidden;margin-bottom:6px;position:relative}
+.om-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,var(--red),var(--gold),var(--cyan));transition:width .6s}
+.om-target{position:absolute;top:0;bottom:0;width:2px;background:var(--green);opacity:.8}
+.om-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--dim)}
+/* Resources */
+.resources{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.res-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.res-val{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700}
+.res-label{font-size:8px;color:var(--dim);margin-top:2px}
+/* Tech tree */
+.tech-tree{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.tt-title{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--gold);margin-bottom:12px}
+.tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tech-card{background:rgba(255,255,255,.03);border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;transition:.2s;position:relative}
+.tech-card:hover:not(.locked):not(.owned){border-color:rgba(0,224,255,.4);background:rgba(0,224,255,.05)}
+.tech-card.owned{border-color:var(--green);background:rgba(0,255,136,.06)}
+.tech-card.locked{opacity:.4;cursor:not-allowed}
+.tc-icon{font-size:20px;margin-bottom:6px}
+.tc-name{font-family:'Chakra Petch',sans-serif;font-size:11px;margin-bottom:4px}
+.tc-effect{font-size:10px;color:var(--dim);line-height:1.5}
+.tc-cost{font-size:10px;color:var(--gold);margin-top:4px}
+.tc-owned-badge{position:absolute;top:6px;right:6px;font-size:10px;color:var(--green)}
+/* Dependency panel */
+.dep-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.dp-title{font-family:'Chakra Petch',sans-serif;font-size:11px;color:var(--red);margin-bottom:10px}
+.dep-list{display:flex;flex-direction:column;gap:6px}
+.dep-row{display:flex;align-items:center;gap:8px}
+.dep-name{font-size:11px;min-width:120px}
+.dep-bar{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.dep-fill{height:100%;border-radius:4px;transition:width .8s}
+.dep-pct{font-size:10px;min-width:35px;text-align:right}
+/* Progress bar */
+.progress-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.pb-fill{height:100%;background:var(--cyan);border-radius:3px;transition:width .5s}
+/* Result */
+.result-card{background:var(--panel);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px}
+.rc-icon{font-size:52px;margin-bottom:12px}
+.rc-title{font-family:'Chakra Petch',sans-serif;font-size:22px;margin-bottom:8px}
+.rc-score{font-family:'Chakra Petch',sans-serif;font-size:36px;color:var(--gold);margin-bottom:8px}
+.rc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.rc-stat{background:rgba(255,255,255,.03);border-radius:8px;padding:10px}
+.rc-sv{font-family:'Chakra Petch',sans-serif;font-size:16px}
+.rc-sl{font-size:10px;color:var(--dim);margin-top:2px}
+.btn-next{background:var(--cyan);color:#0d0d0d;border:none;border-radius:10px;padding:12px 24px;font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px}
+.btn-retry{background:transparent;color:var(--dim);border:1px solid var(--line);border-radius:10px;padding:10px 24px;font-family:'Chakra Petch',sans-serif;font-size:12px;cursor:pointer;width:100%}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🇹🇷 STRATEJİK ÖZERKLİK</div>
+  <div class="hdr-score">⭐ <span id="total-score">0</span></div>
+</header>
+
+<!-- INTRO -->
+<div class="screen active" id="s-intro">
+  <div class="intro-card">
+    <div class="ic-icon">🇹🇷</div>
+    <div class="ic-title">STRATEJİK ÖZERKLİK</div>
+    <div class="ic-desc">Türkiye'nin savunma sanayii direktörüsün. Dışa bağımlılığı azalt, yerli teknoloji geliştir ve stratejik özerkliği %80'in üzerine çıkar. Her teknoloji kararı bütçe, zaman ve jeopolitik denge gerektirir.</div>
+    <div class="ic-phases">
+      <div class="phase-badge">Aşama 1: Altyapı</div>
+      <div class="phase-badge">Aşama 2: Teknoloji</div>
+      <div class="phase-badge">Aşama 3: Özerklik</div>
+    </div>
+    <button class="btn-start" onclick="startGame()">🚀 PROGRAMI BAŞLAT</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="s-game">
+  <div class="phase-hdr">
+    <div class="phase-tag" id="phase-tag">AŞAMA 1/3</div>
+    <div class="timer-box" id="timer">⏱ 60s</div>
+  </div>
+  <div class="progress-bar"><div class="pb-fill" id="prog-fill" style="width:0%"></div></div>
+
+  <!-- Özerklik meter -->
+  <div class="ozerklik-meter">
+    <div class="om-title">🎯 STRATEJİK ÖZERKLİK SEVİYESİ — Hedef: <span id="om-target-label">%60</span></div>
+    <div class="om-bar">
+      <div class="om-fill" id="om-fill" style="width:20%"></div>
+      <div class="om-target" id="om-target" style="left:60%"></div>
+    </div>
+    <div class="om-labels"><span>Bağımlı (%0)</span><span>Karma (%50)</span><span>Özerk (%100)</span></div>
+  </div>
+
+  <!-- Resources -->
+  <div class="resources">
+    <div class="res-card"><div class="res-val" style="color:var(--gold)" id="res-budget">₺200B</div><div class="res-label">Bütçe</div></div>
+    <div class="res-card"><div class="res-val" style="color:var(--cyan)" id="res-ozerklik">20%</div><div class="res-label">Özerklik</div></div>
+    <div class="res-card"><div class="res-val" style="color:var(--green)" id="res-tech">0</div><div class="res-label">Teknoloji</div></div>
+    <div class="res-card"><div class="res-val" style="color:var(--red)" id="res-time">60s</div><div class="res-label">Süre</div></div>
+  </div>
+
+  <!-- Tech tree -->
+  <div class="tech-tree">
+    <div class="tt-title" id="tt-title">🔬 TEKNOLOJİ AĞACI — Seç ve Geliştir</div>
+    <div class="tech-grid" id="tech-grid"></div>
+  </div>
+
+  <!-- Dependency panel -->
+  <div class="dep-panel">
+    <div class="dp-title">🔗 BAĞIMLILIK ANALİZİ</div>
+    <div class="dep-list" id="dep-list"></div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="s-result">
+  <div class="result-card">
+    <div class="rc-icon" id="rc-icon">🏆</div>
+    <div class="rc-title" id="rc-title">—</div>
+    <div class="rc-score" id="rc-score">0</div>
+    <div class="rc-stats" id="rc-stats"></div>
+    <button class="btn-next" id="btn-next" onclick="nextPhase()">▶ SONRAKI AŞAMA</button>
+    <button class="btn-retry" onclick="retryGame()">↺ YENİDEN DENE</button>
+  </div>
+</div>
+
+<script>
+var G={phase:1,puan:0,budget:200,ozerklik:20,tech:0,timer:60,interval:null,owned:[]};
+
+var PHASES=[
+  {name:'ALTYAPI AŞAMASI',target:60,time:60,
+   techs:[
+    {id:'motor',icon:'⚙️',name:'Yerli Motor',effect:'Özerklik +15%\nUçak/drone bağımsızlığı',cost:40,oz:15,locked:false},
+    {id:'elektronik',icon:'💻',name:'Yerli Elektronik',effect:'Özerklik +12%\nSiber güvenlik',cost:30,oz:12,locked:false},
+    {id:'malzeme',icon:'🔩',name:'Kompozit Malzeme',effect:'Özerklik +10%\nHafif zırh',cost:25,oz:10,locked:false},
+    {id:'yazilim',icon:'🤖',name:'Yerli YZ Yazılımı',effect:'Özerklik +8%\nOtonom sistemler',cost:20,oz:8,locked:false}
+   ],
+   deps:[{n:'Motor',pct:80,color:'#E01515'},{n:'Elektronik',pct:65,color:'#f97316'},{n:'Yazılım',pct:55,color:'#C9A24B'}]},
+  {name:'TEKNOLOJİ AŞAMASI',target:75,time:55,
+   techs:[
+    {id:'fuzze',icon:'🚀',name:'Yerli Füze Motoru',effect:'Özerklik +20%\nBalistik kapasite',cost:60,oz:20,locked:false},
+    {id:'radar',icon:'📡',name:'AESA Radar',effect:'Özerklik +15%\nHava savunma',cost:45,oz:15,locked:false},
+    {id:'uydu',icon:'🛸',name:'Yerli Uydu',effect:'Özerklik +12%\nHaberleşme',cost:50,oz:12,locked:false},
+    {id:'siber',icon:'🔐',name:'Siber Silah',effect:'Özerklik +10%\nAsimetrik güç',cost:35,oz:10,locked:false}
+   ],
+   deps:[{n:'Motor',pct:40,color:'#C9A24B'},{n:'Elektronik',pct:30,color:'#10b981'},{n:'Yazılım',pct:20,color:'#3b82f6'}]},
+  {name:'ÖZERKLİK AŞAMASI',target:85,time:50,
+   techs:[
+    {id:'kaan',icon:'✈️',name:'KAAN Seri Üretim',effect:'Özerklik +25%\n5. nesil uçak',cost:80,oz:25,locked:false},
+    {id:'hipersonik',icon:'☄️',name:'Hipersonik Füze',effect:'Özerklik +20%\nStratejik caydırıcılık',cost:70,oz:20,locked:false},
+    {id:'kuantum',icon:'⚛️',name:'Kuantum Haberleşme',effect:'Özerklik +15%\nKırılmaz şifreleme',cost:55,oz:15,locked:false},
+    {id:'uzay',icon:'🌌',name:'Uzay Kuvvetleri',effect:'Özerklik +18%\nUzay hakimiyeti',cost:65,oz:18,locked:false}
+   ],
+   deps:[{n:'Motor',pct:10,color:'#00ff88'},{n:'Elektronik',pct:8,color:'#00ff88'},{n:'Yazılım',pct:5,color:'#00ff88'}]}
+];
+
+function startGame(){
+  G.phase=1;G.score=0;G.budget=200;G.ozerklik=20;G.tech=0;G.owned=[];
+  showScreen('s-game');loadPhase();
+}
+
+function loadPhase(){
+  var ph=PHASES[G.phase-1];
+  G.timer=ph.time;
+  document.getElementById('phase-tag').textContent='AŞAMA '+G.phase+'/3: '+ph.name;
+  document.getElementById('om-target-label').textContent='%'+ph.target;
+  document.getElementById('om-target').style.left=ph.target+'%';
+  renderTech();renderDeps();updateUI();
+  clearInterval(G.interval);
+  G.interval=setInterval(function(){
+    G.timer--;
+    document.getElementById('timer').textContent='⏱ '+G.timer+'s';
+    document.getElementById('res-time').textContent=G.timer+'s';
+    if(G.timer<=0){clearInterval(G.interval);endPhase(G.ozerklik>=ph.target);}
+  },1000);
+}
+
+function renderTech(){
+  var ph=PHASES[G.phase-1];
+  var html='';
+  ph.techs.forEach(function(t){
+    var owned=G.owned.indexOf(t.id)>=0;
+    var locked=G.budget<t.cost&&!owned;
+    html+='<div class="tech-card'+(owned?' owned':locked?' locked':'')+'" onclick="buyTech(\''+t.id+'\')">';
+    html+='<div class="tc-icon">'+t.icon+'</div>';
+    html+='<div class="tc-name">'+t.name+'</div>';
+    html+='<div class="tc-effect">'+t.effect.replace('\n','<br>')+'</div>';
+    html+='<div class="tc-cost">'+(!owned?'₺'+t.cost+'B':'✅ Tamamlandı')+'</div>';
+    if(owned)html+='<div class="tc-owned-badge">✓</div>';
+    html+='</div>';
+  });
+  document.getElementById('tech-grid').innerHTML=html;
+  document.getElementById('tt-title').textContent='🔬 '+PHASES[G.phase-1].name+' — Teknoloji Seç';
+}
+
+function renderDeps(){
+  var ph=PHASES[G.phase-1];
+  var html='';
+  ph.deps.forEach(function(d){
+    html+='<div class="dep-row"><div class="dep-name">'+d.n+'</div><div class="dep-bar"><div class="dep-fill" style="width:0%;background:'+d.color+'" data-w="'+d.pct+'"></div></div><div class="dep-pct" style="color:'+d.color+'">%'+d.pct+'</div></div>';
+  });
+  document.getElementById('dep-list').innerHTML=html;
+  setTimeout(function(){document.querySelectorAll('.dep-fill').forEach(function(el){el.style.width=el.dataset.w+'%';});},200);
+}
+
+function buyTech(id){
+  var ph=PHASES[G.phase-1];
+  var t=ph.techs.find(function(x){return x.id===id;});
+  if(!t||G.owned.indexOf(id)>=0||G.budget<t.cost)return;
+  G.budget-=t.cost;
+  G.ozerklik=Math.min(100,G.ozerklik+t.oz);
+  G.tech++;
+  G.score+=t.oz*50+(60-G.timer)*3;
+  G.owned.push(id);
+  renderTech();updateUI();
+  // Flash effect
+  document.getElementById('om-fill').style.boxShadow='0 0 20px var(--cyan)';
+  setTimeout(function(){document.getElementById('om-fill').style.boxShadow='';},500);
+  if(G.ozerklik>=ph.target){clearInterval(G.interval);setTimeout(function(){endPhase(true);},500);}
+}
+
+function updateUI(){
+  document.getElementById('res-budget').textContent='₺'+G.budget+'B';
+  document.getElementById('res-ozerklik').textContent=G.ozerklik+'%';
+  document.getElementById('res-tech').textContent=G.tech;
+  document.getElementById('om-fill').style.width=G.ozerklik+'%';
+  document.getElementById('prog-fill').style.width=(G.ozerklik/100*100)+'%';
+  document.getElementById('total-score').textContent=G.score;
+  document.getElementById('res-ozerklik').style.color=G.ozerklik>75?'var(--green)':G.ozerklik>50?'var(--gold)':'var(--red)';
+}
+
+function endPhase(success){
+  document.getElementById('rc-icon').textContent=success?'✅':'❌';
+  document.getElementById('rc-title').textContent=success?'AŞAMA '+G.phase+' TAMAMLANDI!':'HEDEF AŞILAMADI';
+  document.getElementById('rc-title').style.color=success?'var(--green)':'var(--red)';
+  document.getElementById('rc-score').textContent=G.score+' PUAN';
+  var ph=PHASES[G.phase-1];
+  var statsHtml='<div class="rc-stat"><div class="rc-sv" style="color:var(--cyan)">'+G.ozerklik+'%</div><div class="rc-sl">Özerklik</div></div>';
+  statsHtml+='<div class="rc-stat"><div class="rc-sv" style="color:var(--gold)">₺'+G.budget+'B</div><div class="rc-sl">Bütçe</div></div>';
+  statsHtml+='<div class="rc-stat"><div class="rc-sv" style="color:var(--green)">'+G.tech+'</div><div class="rc-sl">Teknoloji</div></div>';
+  document.getElementById('rc-stats').innerHTML=statsHtml;
+  var btn=document.getElementById('btn-next');
+  if(G.phase>=3||!success){btn.textContent='🏁 SONUÇ';btn.onclick=function(){showFinalResult();};}
+  else{btn.textContent='▶ AŞAMA '+(G.phase+1)+"'E GEÇ";btn.onclick=function(){nextPhase();};}
+  showScreen('s-result');
+}
+
+function nextPhase(){if(G.phase>=3){showFinalResult();return;}G.phase++;showScreen('s-game');loadPhase();}
+
+function showFinalResult(){
+  var total=G.score;
+  var grade=total>2000?'S':total>1400?'A':total>800?'B':total>400?'C':'D';
+  var titles={S:'STRATEJİK ÖZERKLİK TAMAMLANDI',A:'BAĞIMSIZ SAVUNMA',B:'KARMA STRATEJİ',C:'BAĞIMLILIK DEVAM EDİYOR',D:'HEDEF KAÇIRILDI'};
+  document.getElementById('rc-icon').textContent=grade==='S'?'🇹🇷':grade==='A'?'🏆':'🎯';
+  document.getElementById('rc-title').textContent=titles[grade];
+  document.getElementById('rc-score').textContent=total+' — '+grade+' SINIF';
+  document.getElementById('rc-title').style.color=grade==='S'?'var(--cyan)':grade==='A'?'var(--gold)':'var(--tx)';
+  document.getElementById('btn-next').textContent='🔄 YENİDEN OYNA';
+  document.getElementById('btn-next').onclick=function(){retryGame();};
+  showScreen('s-result');
+  try{var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');sc['stratejik-ozerklik']=Math.max(sc['stratejik-ozerklik']||0,total);localStorage.setItem('hs_scores',JSON.stringify(sc));}catch(e){}
+}
+
+function retryGame(){startGame();}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

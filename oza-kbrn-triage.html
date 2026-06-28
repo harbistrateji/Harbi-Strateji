@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>KBRN Triage — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#ff8c00;--purple:#c41e3a;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--red2))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-orange{background:var(--orange);color:#000}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* Alarm */
+.alarm-banner{background:rgba(255,140,0,.1);border:2px solid rgba(255,140,0,.4);border-radius:12px;padding:14px;margin-bottom:14px;text-align:center;animation:alarm-pulse 1s ease-in-out infinite}
+@keyframes alarm-pulse{0%,100%{border-color:rgba(255,140,0,.4)}50%{border-color:rgba(255,140,0,.9);box-shadow:0 0 20px rgba(255,140,0,.3)}}
+.alarm-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:var(--orange);margin-bottom:4px}
+.alarm-sub{font-size:11px;color:var(--dim)}
+/* Hasta kartları */
+.patient-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.patient-card{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px;cursor:pointer;transition:.2s;position:relative}
+.patient-card:active{transform:scale(.97)}
+.patient-card.selected{border-color:var(--gold)}
+.patient-card.triage-red{border-left:4px solid var(--red2)}
+.patient-card.triage-yellow{border-left:4px solid var(--gold)}
+.patient-card.triage-green{border-left:4px solid var(--green)}
+.patient-card.triage-black{border-left:4px solid #555;opacity:.7}
+.pc-id{font-size:9px;color:var(--dim);margin-bottom:6px}
+.pc-symptoms{font-size:11px;line-height:1.6;margin-bottom:8px}
+.pc-vitals{font-size:10px;color:var(--dim);line-height:1.6;margin-bottom:8px}
+.pc-triage-btns{display:flex;gap:4px;flex-wrap:wrap}
+.triage-btn{border:none;border-radius:6px;padding:5px 8px;font-size:9px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-weight:700;transition:.2s}
+.triage-btn:active{transform:scale(.95)}
+.tb-red{background:rgba(224,21,21,.2);color:var(--red2);border:1px solid var(--red2)}
+.tb-yellow{background:rgba(201,162,75,.2);color:var(--gold);border:1px solid var(--gold)}
+.tb-green{background:rgba(0,255,136,.2);color:var(--green);border:1px solid var(--green)}
+.tb-black{background:rgba(100,100,100,.2);color:#888;border:1px solid #555}
+.pc-assigned{position:absolute;top:8px;right:8px;font-size:18px}
+/* Kaynak paneli */
+.resource-panel{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px;margin-bottom:14px}
+.rp-title{font-size:10px;color:var(--orange);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.resources-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.res-item{background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:10px}
+.res-name{font-size:10px;color:var(--dim);margin-bottom:4px}
+.res-bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-bottom:4px}
+.res-fill{height:100%;border-radius:4px;transition:width .4s}
+.res-val{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700}
+/* Timer */
+.crisis-timer{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ct-bar{flex:1;height:10px;background:var(--panel2);border-radius:5px;overflow:hidden}
+.ct-fill{height:100%;border-radius:5px;background:var(--orange);transition:width 1s linear}
+.ct-secs{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;color:var(--orange);min-width:36px;text-align:right}
+/* Sonuç */
+.result-panel{background:var(--panel2);border-radius:12px;padding:14px;margin-bottom:14px;display:none}
+.result-panel.show{display:block}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">☢️ KBRN TRİAJ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">☢️ KBRN Triage</div>
+  <div class="card-sub">Kimyasal/Biyolojik/Radyolojik/Nükleer tehdit senaryosunda sınırlı tıbbi kaynakları doğru dağıt. Triaj sistemiyle hastaları sınıflandır, panik yönet, maksimum hayat kurtar!</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="kb-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="kb-saved" style="color:var(--green)">0</div><div class="stat-lbl">KURTARILAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="kb-lost" style="color:var(--red2)">0</div><div class="stat-lbl">KAYBEDILEN</div></div>
+    <div class="stat-box"><div class="stat-val" id="kb-wave" style="color:var(--orange)">1/5</div><div class="stat-lbl">DALGA</div></div>
+  </div>
+  <div class="alarm-banner" id="alarm-banner">
+    <div class="alarm-title" id="alarm-title">☢️ KBRN ALARMI</div>
+    <div class="alarm-sub" id="alarm-sub">Kimyasal madde maruziyeti tespit edildi!</div>
+  </div>
+  <div class="crisis-timer">
+    <div class="ct-bar"><div class="ct-fill" id="ct-fill" style="width:100%"></div></div>
+    <div class="ct-secs" id="ct-secs">45</div>
+  </div>
+  <div class="resource-panel">
+    <div class="rp-title">💊 MEVCUT KAYNAKLAR</div>
+    <div class="resources-grid">
+      <div class="res-item">
+        <div class="res-name">🏥 Antidot</div>
+        <div class="res-bar"><div class="res-fill" id="res-antidot" style="width:60%;background:var(--green)"></div></div>
+        <div class="res-val" id="rv-antidot" style="color:var(--green)">6</div>
+      </div>
+      <div class="res-item">
+        <div class="res-name">🩺 Tıbbi Ekip</div>
+        <div class="res-bar"><div class="res-fill" id="res-medic" style="width:80%;background:var(--cyan)"></div></div>
+        <div class="res-val" id="rv-medic" style="color:var(--cyan)">4</div>
+      </div>
+      <div class="res-item">
+        <div class="res-name">🚑 Ambulans</div>
+        <div class="res-bar"><div class="res-fill" id="res-ambulance" style="width:50%;background:var(--orange)"></div></div>
+        <div class="res-val" id="rv-ambulance" style="color:var(--orange)">3</div>
+      </div>
+      <div class="res-item">
+        <div class="res-name">🛏️ Yatak</div>
+        <div class="res-bar"><div class="res-fill" id="res-bed" style="width:70%;background:var(--gold)"></div></div>
+        <div class="res-val" id="rv-bed" style="color:var(--gold)">7</div>
+      </div>
+    </div>
+  </div>
+  <div class="patient-grid" id="patient-grid"></div>
+  <div class="result-panel" id="result-panel">
+    <div style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px" id="result-title"></div>
+    <div style="font-size:11px;color:var(--dim);line-height:1.8" id="result-body"></div>
+  </div>
+  <button class="btn btn-orange" id="kb-btn" onclick="kbStart()">☢️ TRİAJ BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var WAVES=[
+  {type:'KİMYASAL',agent:'Sinir gazı (Sarin)',
+   patients:[
+     {id:'H-001',symptoms:'Miyozis, aşırı terleme, nefes darlığı, kasılma',vitals:'TA:80/50, Nabız:120, SpO2:88%',correct:'red',cost:{antidot:1,medic:1}},
+     {id:'H-002',symptoms:'Hafif göz yaşarması, burun akıntısı, baş ağrısı',vitals:'TA:120/80, Nabız:90, SpO2:96%',correct:'yellow',cost:{medic:1}},
+     {id:'H-003',symptoms:'Bilinç kaybı, siyanoz, apne',vitals:'TA:60/40, Nabız:40, SpO2:72%',correct:'black',cost:{}},
+     {id:'H-004',symptoms:'Panik, hafif titreme, yürüyebiliyor',vitals:'TA:130/85, Nabız:100, SpO2:98%',correct:'green',cost:{}}
+   ]},
+  {type:'BİYOLOJİK',agent:'Şarbon (Anthrax)',
+   patients:[
+     {id:'H-005',symptoms:'Yüksek ateş, nefes darlığı, göğüs ağrısı',vitals:'TA:90/60, Nabız:130, SpO2:85%',correct:'red',cost:{antidot:2,medic:1,bed:1}},
+     {id:'H-006',symptoms:'Deri lezyonu, ateş yok, genel iyi durumda',vitals:'TA:125/80, Nabız:85, SpO2:97%',correct:'yellow',cost:{antidot:1}},
+     {id:'H-007',symptoms:'Asemptomatik, maruziyet şüphesi',vitals:'TA:120/75, Nabız:80, SpO2:99%',correct:'green',cost:{}},
+     {id:'H-008',symptoms:'Septik şok, çoklu organ yetmezliği',vitals:'TA:50/30, Nabız:150, SpO2:70%',correct:'black',cost:{}}
+   ]},
+  {type:'RADYOLOJİK',agent:'Kirli Bomba (Cs-137)',
+   patients:[
+     {id:'H-009',symptoms:'Bulantı, kusma, saç dökülmesi, >4 Gy maruziyet',vitals:'TA:100/65, Nabız:110, SpO2:94%',correct:'red',cost:{medic:2,bed:1}},
+     {id:'H-010',symptoms:'Hafif bulantı, 1-2 Gy maruziyet',vitals:'TA:120/80, Nabız:95, SpO2:97%',correct:'yellow',cost:{medic:1}},
+     {id:'H-011',symptoms:'Panik, radyasyon korkusu, belirti yok',vitals:'TA:130/85, Nabız:105, SpO2:99%',correct:'green',cost:{}},
+     {id:'H-012',symptoms:'Masif yanık, >10 Gy, bilinç yok',vitals:'TA:40/20, Nabız:160, SpO2:65%',correct:'black',cost:{}}
+   ]}
+];
+
+var TRIAGE_LABELS={red:'🔴 ACİL',yellow:'🟡 ERTELENEBİLİR',green:'🟢 MİNİMUM',black:'⚫ BEKLEME'};
+var TRIAGE_COLORS={red:'var(--red2)',yellow:'var(--gold)',green:'var(--green)',black:'#666'};
+
+var kb={pts:0,saved:0,lost:0,wave:0,running:false,timer:null,secs:45,
+  resources:{antidot:6,medic:4,ambulance:3,bed:7},
+  assignments:{},patients:[]};
+
+function kbStart(){
+  kb={pts:0,saved:0,lost:0,wave:0,running:true,timer:null,secs:45,
+    resources:{antidot:6,medic:4,ambulance:3,bed:7},
+    assignments:{},patients:[]};
+  document.getElementById('kb-btn').style.display='none';
+  document.getElementById('result-panel').classList.remove('show');
+  updateDisplay();
+  kbNextWave();
+}
+
+function kbNextWave(){
+  if(kb.wave>=WAVES.length){kbEnd();return;}
+  var wave=WAVES[kb.wave];
+  kb.assignments={};
+  kb.patients=wave.patients;
+  document.getElementById('alarm-title').textContent='☢️ '+wave.type+' ALARMI — DALGA '+(kb.wave+1);
+  document.getElementById('alarm-sub').textContent='Etken madde: '+wave.agent+' | '+wave.patients.length+' hasta triaj bekliyor';
+  renderPatients();
+  updateDisplay();
+  startTimer();
+}
+
+function renderPatients(){
+  document.getElementById('patient-grid').innerHTML=kb.patients.map(function(p,i){
+    var assigned=kb.assignments[p.id];
+    return '<div class="patient-card'+(assigned?' triage-'+assigned:'')+'" id="pc-'+p.id+'">'+
+      '<div class="pc-id">👤 '+p.id+'</div>'+
+      '<div class="pc-symptoms">'+p.symptoms+'</div>'+
+      '<div class="pc-vitals">'+p.vitals+'</div>'+
+      '<div class="pc-triage-btns">'+
+        '<button class="triage-btn tb-red" onclick="assignTriage(\''+p.id+'\',\'red\')">🔴 ACİL</button>'+
+        '<button class="triage-btn tb-yellow" onclick="assignTriage(\''+p.id+'\',\'yellow\')">🟡 ERTELENEBİLİR</button>'+
+        '<button class="triage-btn tb-green" onclick="assignTriage(\''+p.id+'\',\'green\')">🟢 MİNİMUM</button>'+
+        '<button class="triage-btn tb-black" onclick="assignTriage(\''+p.id+'\',\'black\')">⚫ BEKLEME</button>'+
+      '</div>'+
+      (assigned?'<div class="pc-assigned">'+TRIAGE_LABELS[assigned].split(' ')[0]+'</div>':'')+
+    '</div>';
+  }).join('');
+}
+
+function assignTriage(patientId,level){
+  if(!kb.running)return;
+  kb.assignments[patientId]=level;
+  renderPatients();
+  // Tüm hastalar atandıysa değerlendir
+  if(Object.keys(kb.assignments).length===kb.patients.length){
+    if(kb.timer)clearInterval(kb.timer);
+    evaluateWave();
+  }
+}
+
+function evaluateWave(){
+  var wave=WAVES[kb.wave];
+  var correct=0,saved=0,lost=0,pts=0;
+  wave.patients.forEach(function(p){
+    var assigned=kb.assignments[p.id];
+    var isCorrect=assigned===p.correct;
+    if(isCorrect){
+      correct++;pts+=100;
+      if(p.correct!=='black')saved++;
+    }else{
+      if(p.correct==='red'&&assigned!=='red')lost++;
+      pts+=20;
+    }
+  });
+  kb.saved+=saved;kb.lost+=lost;kb.pts+=pts;
+  // Kaynak tüket
+  wave.patients.forEach(function(p){
+    var assigned=kb.assignments[p.id];
+    if(assigned===p.correct&&p.cost){
+      Object.keys(p.cost).forEach(function(k){
+        kb.resources[k]=Math.max(0,kb.resources[k]-(p.cost[k]||0));
+      });
+    }
+  });
+  var rp=document.getElementById('result-panel');
+  rp.classList.add('show');
+  document.getElementById('result-title').textContent='Dalga '+(kb.wave+1)+' Sonucu: '+correct+'/'+wave.patients.length+' doğru · +'+pts+' puan';
+  document.getElementById('result-title').style.color=correct===wave.patients.length?'var(--green)':correct>=2?'var(--gold)':'var(--red2)';
+  document.getElementById('result-body').textContent=
+    '✅ Kurtarılan: '+saved+' | ❌ Kaybedilen: '+lost+'\n'+
+    'Doğru triaj: '+correct+'/'+wave.patients.length;
+  updateDisplay();
+  correct===wave.patients.length?beepWin():beepFail();
+  kb.wave++;
+  setTimeout(kbNextWave,2000);
+}
+
+function startTimer(){
+  kb.secs=45;
+  if(kb.timer)clearInterval(kb.timer);
+  var fill=document.getElementById('ct-fill');
+  fill.style.transition='none';fill.style.width='100%';
+  setTimeout(function(){
+    fill.style.transition='width 1s linear';
+    kb.timer=setInterval(function(){
+      kb.secs--;
+      fill.style.width=(kb.secs/45*100)+'%';
+      fill.style.background=kb.secs>25?'var(--orange)':kb.secs>10?'var(--red2)':'var(--red)';
+      document.getElementById('ct-secs').textContent=kb.secs;
+      if(kb.secs<=0){clearInterval(kb.timer);evaluateWave();}
+    },1000);
+  },50);
+}
+
+function updateDisplay(){
+  document.getElementById('kb-pts').textContent=kb.pts;
+  document.getElementById('kb-saved').textContent=kb.saved;
+  document.getElementById('kb-lost').textContent=kb.lost;
+  document.getElementById('kb-wave').textContent=(kb.wave+1)+'/'+WAVES.length;
+  document.getElementById('hdr-pts').textContent='⭐ '+kb.pts;
+  ['antidot','medic','ambulance','bed'].forEach(function(k){
+    var max={antidot:6,medic:4,ambulance:3,bed:7}[k];
+    var v=kb.resources[k];
+    document.getElementById('res-'+k).style.width=(v/max*100)+'%';
+    document.getElementById('rv-'+k).textContent=v;
+    document.getElementById('rv-'+k).style.color=v>max*0.5?'var(--green)':v>max*0.25?'var(--gold)':'var(--red2)';
+  });
+}
+
+function kbEnd(){
+  kb.running=false;
+  document.getElementById('kb-btn').style.display='';
+  document.getElementById('kb-btn').textContent='🔄 TEKRAR';
+  var grade=kb.saved>kb.lost?'🏆 BAŞARILI TRİAJ':'⚠️ GELİŞTİRİLMELİ';
+  document.getElementById('alarm-title').textContent=grade;
+  document.getElementById('alarm-sub').textContent='Kurtarılan: '+kb.saved+' | Kaybedilen: '+kb.lost+' | Toplam: '+kb.pts+' puan';
+  saveScore();
+  kb.saved>kb.lost?beepWin():beepFail();
+}
+
+function saveScore(){try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['kbrn-triage']=(s['kbrn-triage']||0)+kb.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="hud">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Kriz Odası — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.top{position:sticky;top:0;z-index:60;background:rgba(10,15,23,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 20px}
+.top .in{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px;min-height:52px}
+.back{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim)}
+.back:hover{color:#fff}
+.title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;color:#fff}
+.hdr-score{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold)}
+
+.wrap{max-width:900px;margin:0 auto;padding:30px 20px 80px}
+
+/* ── Kriz başlık ── */
+.kriz-header{text-align:center;margin-bottom:30px}
+.kriz-header h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(28px,6vw,52px);color:#fff;line-height:1}
+.kriz-header .sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);margin-top:8px;letter-spacing:.04em}
+
+/* ── Geri sayım ── */
+.timer-ring{position:relative;width:120px;height:120px;margin:0 auto 24px}
+.timer-ring svg{transform:rotate(-90deg)}
+.timer-ring .bg{fill:none;stroke:var(--panel2);stroke-width:8}
+.timer-ring .fg{fill:none;stroke:var(--red2);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .9s linear,stroke .3s}
+.timer-ring .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:36px;color:var(--red2)}
+
+/* ── Senaryo kartı ── */
+.scenario-card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden}
+.scenario-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--cyan))}
+.sc-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--red2);margin-bottom:10px}
+.sc-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;color:#fff;margin-bottom:12px;line-height:1.2}
+.sc-body{font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--dim);line-height:1.7}
+.sc-formula{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold);margin-top:14px;padding:10px 14px;background:rgba(201,162,75,.08);border-radius:8px;border-left:3px solid var(--gold)}
+
+/* ── Kaydıraç paneli ── */
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:560px){.sliders{grid-template-columns:1fr}}
+.slider-item{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:16px}
+.sl-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.sl-val{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;color:var(--cyan);margin-bottom:8px}
+input[type=range]{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--line2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--red2);cursor:pointer;box-shadow:0 0 8px rgba(224,21,21,.5)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--red2);cursor:pointer;border:none}
+
+/* ── G değeri göstergesi ── */
+.g-display{text-align:center;margin-bottom:24px;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:20px}
+.g-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.g-value{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:48px;margin:8px 0;transition:color .3s}
+.g-bar{height:8px;border-radius:4px;background:var(--line2);overflow:hidden;margin-top:8px}
+.g-fill{height:100%;border-radius:4px;transition:width .3s,background .3s}
+
+/* ── Karar butonları ── */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+@media(max-width:480px){.choices{grid-template-columns:1fr}}
+.choice-btn{background:var(--panel);border:2px solid var(--line2);border-radius:12px;padding:16px 14px;cursor:pointer;text-align:left;transition:all .15s;font-family:'IBM Plex Sans',sans-serif;color:var(--tx)}
+.choice-btn:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 6px 24px rgba(224,21,21,.2)}
+.choice-btn .cb-title{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:600;color:#fff;margin-bottom:6px}
+.choice-btn .cb-desc{font-size:12px;color:var(--dim);line-height:1.5}
+.choice-btn .cb-cost{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);margin-top:8px}
+.choice-btn.selected{border-color:var(--cyan);background:rgba(0,224,255,.06)}
+.choice-btn.correct{border-color:#00ff88;background:rgba(0,255,136,.08)}
+.choice-btn.wrong{border-color:var(--red);background:rgba(224,21,21,.08)}
+
+/* ── Sonuç ekranı ── */
+.result-screen{display:none;text-align:center;padding:40px 20px}
+.result-screen.show{display:block}
+.result-icon{font-size:64px;margin-bottom:16px}
+.result-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:32px;margin-bottom:12px}
+.result-score{font-family:'IBM Plex Mono',monospace;font-size:48px;font-weight:700;color:var(--red2);margin:16px 0}
+.result-explain{font-size:14px;color:var(--dim);max-width:500px;margin:0 auto 24px;line-height:1.7}
+.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:14px;padding:14px 24px;border-radius:10px;border:none;cursor:pointer;transition:.15s}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red2)}
+.btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}.btn-outline:hover{background:rgba(0,224,255,.08)}
+.btn-gold{background:transparent;color:var(--gold);border:1px solid var(--gold)}.btn-gold:hover{background:rgba(201,162,75,.08)}
+
+/* ── İlerleme ── */
+.progress-bar{height:4px;background:var(--line2);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--cyan));border-radius:2px;transition:width .4s}
+
+/* ── Acil uyarı efekti ── */
+@keyframes urgent-pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,21,21,0)}50%{box-shadow:0 0 0 8px rgba(224,21,21,.3)}}
+.urgent{animation:urgent-pulse 0.8s ease-in-out infinite}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="top"><div class="in">
+  <a href="oza-hub.html" class="back">← OZA</a>
+  <span class="title">🎮 Kriz Odası</span>
+  <span class="hdr-score" id="hdr-score">⭐ 0</span>
+</div></header>
+
+<div class="wrap">
+  <div class="kriz-header">
+    <h1>KRİZ ODASI</h1>
+    <div class="sub">SADECE 10 SANİYEN VAR · G = T × S × E × L</div>
+  </div>
+
+  <!-- İlerleme çubuğu -->
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+  <!-- Geri sayım -->
+  <div class="timer-ring" id="timer-ring">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle class="bg" cx="60" cy="60" r="52"/>
+      <circle class="fg" id="timer-arc" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/>
+    </svg>
+    <div class="num" id="timer-num">30</div>
+  </div>
+
+  <!-- Senaryo kartı -->
+  <div class="scenario-card" id="scenario-card">
+    <div class="sc-label" id="sc-label">SENARYO YÜKLENİYOR…</div>
+    <div class="sc-title" id="sc-title">—</div>
+    <div class="sc-body" id="sc-body"></div>
+    <div class="sc-formula" id="sc-formula"></div>
+  </div>
+
+  <!-- Kaydıraçlar -->
+  <div class="sliders" id="sliders-panel">
+    <div class="slider-item">
+      <div class="sl-label">T — Tehdit Yoğunluğu</div>
+      <div class="sl-val" id="val-T">5</div>
+      <input type="range" min="1" max="10" value="5" id="sl-T" oninput="updateSlider('T',this.value)">
+    </div>
+    <div class="slider-item">
+      <div class="sl-label">S — Stratejik Önem</div>
+      <div class="sl-val" id="val-S">5</div>
+      <input type="range" min="1" max="10" value="5" id="sl-S" oninput="updateSlider('S',this.value)">
+    </div>
+    <div class="slider-item">
+      <div class="sl-label">E — Ekonomik Etki</div>
+      <div class="sl-val" id="val-E">5</div>
+      <input type="range" min="1" max="10" value="5" id="sl-E" oninput="updateSlider('E',this.value)">
+    </div>
+    <div class="slider-item">
+      <div class="sl-label">L — Lojistik Kapasite</div>
+      <div class="sl-val" id="val-L">5</div>
+      <input type="range" min="1" max="10" value="5" id="sl-L" oninput="updateSlider('L',this.value)">
+    </div>
+  </div>
+
+  <!-- G değeri -->
+  <div class="g-display">
+    <div class="g-label">G — Genel Kriz Skoru</div>
+    <div class="g-value" id="g-value">625</div>
+    <div class="g-bar"><div class="g-fill" id="g-fill" style="width:62.5%;background:var(--gold)"></div></div>
+  </div>
+
+  <!-- Karar seçenekleri -->
+  <div class="choices" id="choices-panel"></div>
+
+  <!-- Sonuç ekranı -->
+  <div class="result-screen" id="result-screen">
+    <div class="result-icon" id="result-icon">🎯</div>
+    <div class="result-title" id="result-title">Karar Verildi</div>
+    <div class="result-score" id="result-score">+0</div>
+    <div class="result-explain" id="result-explain"></div>
+    <div class="btn-row">
+      <button class="btn btn-red" onclick="nextScenario()">Sonraki Kriz →</button>
+      <button class="btn btn-outline" onclick="HS.showShareCard({title:'Kriz Odası',puan:sessionScore,game:'kriz-odasi',color:'#E01515'})">📤 Paylaş</button>
+      <button class="btn btn-gold" onclick="location.href='oza-hub.html'">🏠 Merkez</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="hs-engine.js">
+// ===== SOUND EFFECTS =====
+var _audioCtx;
+function _getAudio(){if(!_audioCtx)_audioCtx=new(window.AudioContext||window.webkitAudioContext)();return _audioCtx;}
+function sfxBomb(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(150,a.currentTime);o.frequency.exponentialRampToValueAtTime(30,a.currentTime+0.5);g.gain.setValueAtTime(0.4,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.6);o.start();o.stop(a.currentTime+0.6);}
+function sfxAlarm(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='square';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(800,a.currentTime);o.frequency.setValueAtTime(600,a.currentTime+0.15);o.frequency.setValueAtTime(800,a.currentTime+0.3);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.5);o.start();o.stop(a.currentTime+0.5);}
+function sfxSuccess(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(523,a.currentTime);o.frequency.setValueAtTime(659,a.currentTime+0.1);o.frequency.setValueAtTime(784,a.currentTime+0.2);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.4);o.start();o.stop(a.currentTime+0.4);}
+function sfxClick(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=600;o.type='sine';g.gain.setValueAtTime(0.1,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.05);o.start();o.stop(a.currentTime+0.05);}
+</script>
+<script>
+var SCENARIOS = [
+  {
+    id:'s1', label:'BÖLGE KRİZİ · SEVİYE 3',
+    title:'Boğaz Geçiş Krizi',
+    body:'Bir devlet dışı aktör, İstanbul Boğazı\'nda ticaret gemilerine yönelik saldırı tehdidinde bulunuyor. NATO müttefikleri bilgi talep ediyor. Karar için 30 saniyeniz var.',
+    formula:'G = T×S×E×L → Optimal: 600-800',
+    optimalMin:600, optimalMax:800,
+    choices:[
+      {title:'Acil Müdahale',desc:'Deniz kuvvetleri bölgeye sevk edilsin, geçişler geçici olarak askıya alınsın.',cost:'Yüksek maliyet · Hızlı etki',puan:90},
+      {title:'Diplomatik Kanal',desc:'NATO müttefikleriyle acil istişare başlatılsın, tehdit kaynağı izole edilsin.',cost:'Orta maliyet · Orta süre',puan:75},
+      {title:'Bekleme & İzleme',desc:'İstihbarat toplanmaya devam etsin, erken müdahaleden kaçınılsın.',cost:'Düşük maliyet · Risk var',puan:40},
+      {title:'Tam Abluka',desc:'Boğaz tüm trafiğe kapatılsın, uluslararası baskı oluşturulsun.',cost:'Çok yüksek maliyet · Eskalasyon riski',puan:55}
+    ],
+    bestChoice:0,
+    explain:'Boğaz krizlerinde anlık müdahale caydırıcılık sağlar. Diplomatik kanal paralel yürütülmeli, ancak fiziksel varlık önceliklidir.'
+  },
+  {
+    id:'s2', label:'SİBER SALDIRI · ACİL',
+    title:'Kritik Altyapı Saldırısı',
+    body:'Enerji şebekesine yönelik koordineli siber saldırı tespit edildi. 3 büyük şehirde elektrik kesintisi riski var. Saldırı kaynağı belirsiz. Yanıt için 30 saniyeniz var.',
+    formula:'G = T×S×E×L → Optimal: 700-900',
+    optimalMin:700, optimalMax:900,
+    choices:[
+      {title:'İzolasyon Protokolü',desc:'Etkilenen sistemler ağdan koparılsın, yedek sistemler devreye alınsın.',cost:'Orta maliyet · Hızlı',puan:85},
+      {title:'Karşı Siber Operasyon',desc:'Saldırı kaynağına yönelik siber karşı atak başlatılsın.',cost:'Yüksek risk · Eskalasyon',puan:50},
+      {title:'Tam Kapatma',desc:'Tüm kritik altyapı sistemleri manuel moda alınsın.',cost:'Çok yüksek maliyet · Güvenli',puan:70},
+      {title:'Pasif Savunma',desc:'Güvenlik duvarları güçlendirilsin, saldırı izlenmeye devam etsin.',cost:'Düşük maliyet · Yetersiz',puan:35}
+    ],
+    bestChoice:0,
+    explain:'Siber saldırılarda ilk yanıt izolasyon olmalıdır. Kaynağı tespit etmeden karşı atak eskalasyon riski taşır.'
+  },
+  {
+    id:'s3', label:'VEKÂLET SAVAŞI · STRATEJİK',
+    title:'Sınır Ötesi Vekil Güç Aktivasyonu',
+    body:'Komşu ülkede desteklediğiniz vekil güç, rakip devletin saldırısına uğradı. Doğrudan müdahale uluslararası hukuku ihlal edebilir. Stratejik karar gerekiyor.',
+    formula:'G = T×S×E×L → Optimal: 500-700',
+    optimalMin:500, optimalMax:700,
+    choices:[
+      {title:'Gizli Destek Artışı',desc:'Lojistik ve istihbarat desteği artırılsın, doğrudan müdahaleden kaçınılsın.',cost:'Orta maliyet · Sürdürülebilir',puan:88},
+      {title:'Açık Müdahale',desc:'Kuvvetler bölgeye sevk edilsin, vekil güç desteklensin.',cost:'Çok yüksek risk · Uluslararası tepki',puan:40},
+      {title:'Diplomatik Baskı',desc:'Uluslararası toplum nezdinde baskı kampanyası başlatılsın.',cost:'Düşük maliyet · Yavaş etki',puan:65},
+      {title:'Geri Çekilme',desc:'Vekil güçten destek çekilsin, çatışmadan uzak durulsun.',cost:'Düşük maliyet · Stratejik kayıp',puan:30}
+    ],
+    bestChoice:0,
+    explain:'Vekâlet savaşlarında gizli destek, doğrudan müdahalenin risklerini taşımadan stratejik hedeflere ulaşmanın en etkin yoludur.'
+  },
+  {
+    id:'s4', label:'EKONOMİK SAVAŞ · ACİL',
+    title:'Kritik Mineral Ambargosu',
+    body:'Lityum ve kobalt ihracatının %60\'ını sağlayan ülke ani ambargo ilan etti. Savunma sanayii üretimi 6 ay içinde duracak. Acil strateji gerekiyor.',
+    formula:'G = T×S×E×L → Optimal: 650-850',
+    optimalMin:650, optimalMax:850,
+    choices:[
+      {title:'Alternatif Tedarik Zinciri',desc:'Acil olarak alternatif tedarikçilerle anlaşma yapılsın, stok artırılsın.',cost:'Yüksek maliyet · Orta süre',puan:82},
+      {title:'Karşı Ambargo',desc:'Rakip ülkenin ihtiyaç duyduğu teknoloji ihracatı durdurulsun.',cost:'Yüksek risk · Eskalasyon',puan:55},
+      {title:'Geri Dönüşüm Programı',desc:'Yerli geri dönüşüm kapasitesi acilen artırılsın.',cost:'Orta maliyet · Uzun vadeli',puan:70},
+      {title:'Diplomatik Çözüm',desc:'Ambargonun kaldırılması için müzakere başlatılsın.',cost:'Düşük maliyet · Belirsiz sonuç',puan:60}
+    ],
+    bestChoice:0,
+    explain:'Kritik mineral krizlerinde çok kanallı yaklaşım şarttır: hem alternatif tedarik hem de uzun vadeli yerli kapasite.'
+  },
+  {
+    id:'s5', label:'BİLİŞSEL SAVAŞ · ALGI',
+    title:'Dezenformasyon Kampanyası',
+    body:'Sosyal medyada koordineli dezenformasyon kampanyası tespit edildi. Kamuoyu algısı hızla değişiyor, müttefik ilişkileri zarar görüyor. Yanıt için 30 saniyeniz var.',
+    formula:'G = T×S×E×L → Optimal: 550-750',
+    optimalMin:550, optimalMax:750,
+    choices:[
+      {title:'Gerçek Zamanlı Çürütme',desc:'Resmi kanallardan hızlı ve belgeli yanıt verilsin, doğru bilgi yayılsın.',cost:'Orta maliyet · Hızlı etki',puan:86},
+      {title:'Platform Baskısı',desc:'Sosyal medya platformlarına içerik kaldırma talebi iletilsin.',cost:'Orta maliyet · Yavaş',puan:60},
+      {title:'Sessiz Kalma',desc:'Yanıt verilmesin, kampanya kendiliğinden sönümlensin.',cost:'Düşük maliyet · Yüksek risk',puan:25},
+      {title:'Karşı Kampanya',desc:'Kendi dezenformasyon kampanyası başlatılsın.',cost:'Yüksek risk · Etik sorun',puan:30}
+    ],
+    bestChoice:0,
+    explain:'Bilişsel savaşta sessiz kalmak en büyük hatadır. Hızlı, belgeli ve şeffaf yanıt dezenformasyonun etkisini kırar.'
+  }
+];
+
+var currentIdx = 0, sessionScore = 0, roundScore = 0;
+var timer = null, timeLeft = 30, answered = false;
+var T=5,S=5,E=5,L=5;
+
+function updateSlider(key, val){
+  val = parseInt(val);
+  if(key==='T') T=val; if(key==='S') S=val;
+  if(key==='E') E=val; if(key==='L') L=val;
+  document.getElementById('val-'+key).textContent = val;
+  updateG();
+  HS.beep(300+val*30, 0.04, 0.06);
+}
+
+function updateG(){
+  var g = T*S*E*L;
+  var gEl = document.getElementById('g-value');
+  var gFill = document.getElementById('g-fill');
+  gEl.textContent = g;
+  var pct = Math.min(100, g/10000*100);
+  gFill.style.width = pct+'%';
+  var sc = SCENARIOS[currentIdx];
+  if(g >= sc.optimalMin && g <= sc.optimalMax){
+    gEl.style.color = '#00ff88';
+    gFill.style.background = '#00ff88';
+  } else if(g < sc.optimalMin){
+    gEl.style.color = 'var(--cyan)';
+    gFill.style.background = 'var(--cyan)';
+  } else {
+    gEl.style.color = 'var(--red2)';
+    gFill.style.background = 'var(--red2)';
+  }
+}
+
+function loadScenario(){
+  answered = false;
+  timeLeft = 30 + (HS.hasPerk('taktik_1') ? 3 : 0);
+  var sc = SCENARIOS[currentIdx % SCENARIOS.length];
+
+  document.getElementById('sc-label').textContent = sc.label;
+  document.getElementById('sc-title').textContent = sc.title;
+  document.getElementById('sc-body').textContent = sc.body;
+  document.getElementById('sc-formula').textContent = sc.formula;
+
+  // Seçenekler
+  var cp = document.getElementById('choices-panel');
+  cp.innerHTML = sc.choices.map(function(c,i){
+    return '<button class="choice-btn" onclick="makeChoice('+i+')" id="cb-'+i+'">' +
+      '<div class="cb-title">'+c.title+'</div>' +
+      '<div class="cb-desc">'+c.desc+'</div>' +
+      '<div class="cb-cost">'+c.cost+'</div>' +
+    '</button>';
+  }).join('');
+
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('sliders-panel').style.display = '';
+  document.getElementById('choices-panel').style.display = '';
+  document.getElementById('g-display') && (document.getElementById('g-display').style.display = '');
+
+  // İlerleme
+  var total = SCENARIOS.length;
+  document.getElementById('progress').style.width = ((currentIdx % total) / total * 100) + '%';
+
+  startTimer();
+}
+
+function startTimer(){
+  if(timer) timer.stop();
+  var arc = document.getElementById('timer-arc');
+  var numEl = document.getElementById('timer-num');
+  var ring = document.getElementById('timer-ring');
+  var total = timeLeft;
+  var circ = 326.7;
+
+  timer = HS.countdown(total, function(rem){
+    numEl.textContent = rem;
+    arc.style.strokeDashoffset = circ * (1 - rem/total);
+    if(rem <= 3){
+      arc.style.stroke = '#ff3a4a';
+      ring.classList.add('urgent');
+      HS.beepTick();
+    } else {
+      arc.style.stroke = 'var(--red2)';
+      ring.classList.remove('urgent');
+    }
+  }, function(){
+    if(!answered) timeoutChoice();
+  });
+}
+
+function makeChoice(idx){
+  if(answered) return;
+  answered = true;
+  if(timer) timer.stop();
+
+  var sc = SCENARIOS[currentIdx % SCENARIOS.length];
+  var g = T*S*E*L;
+  var gBonus = (g >= sc.optimalMin && g <= sc.optimalMax) ? 20 : 0;
+  var baseScore = sc.choices[idx].score;
+  var timeBonus = Math.floor(timeLeft * 3);
+  roundScore = baseScore + gBonus + timeBonus;
+
+  // Görsel geri bildirim
+  var btn = document.getElementById('cb-'+idx);
+  var bestBtn = document.getElementById('cb-'+sc.bestChoice);
+  if(idx === sc.bestChoice){
+    btn.classList.add('correct');
+    HS.beepWin();
+    HS.burst(btn, '#00ff88');
+    HS.flashScreen('rgba(0,255,136,0.15)', 400);
+  } else {
+    btn.classList.add('wrong');
+    if(bestBtn) bestBtn.classList.add('correct');
+    HS.beepFail();
+    HS.flashScreen('rgba(224,21,21,0.25)', 400);
+  }
+
+  sessionScore += roundScore;
+  HS.addScore('kriz-odasi', roundScore);
+  document.getElementById('hdr-score').textContent = '⭐ ' + HS.getTotalScore();
+
+  setTimeout(showResult, 800);
+}
+
+function timeoutChoice(){
+  answered = true;
+  HS.beepFail();
+  HS.flashScreen('rgba(224,21,21,0.4)', 600);
+  roundScore = 0;
+  setTimeout(showResult, 400);
+}
+
+function showResult(){
+  var sc = SCENARIOS[currentIdx % SCENARIOS.length];
+  document.getElementById('sliders-panel').style.display = 'none';
+  document.getElementById('choices-panel').style.display = 'none';
+
+  var rs = document.getElementById('result-screen');
+  document.getElementById('result-icon').textContent = roundScore >= 80 ? '🎯' : roundScore >= 50 ? '⚠️' : '❌';
+  document.getElementById('result-title').textContent = roundScore >= 80 ? 'Mükemmel Karar!' : roundScore >= 50 ? 'Kabul Edilebilir' : timeLeft <= 0 ? 'Süre Doldu!' : 'Yanlış Karar';
+  document.getElementById('result-score').textContent = '+' + roundScore;
+  document.getElementById('result-explain').textContent = sc.explain;
+  rs.classList.add('show');
+
+  if(sessionScore >= 300) HS.awardBadge('kriz_ustasi');
+}
+
+function nextScenario(){
+  currentIdx++;
+  loadScenario();
+}
+
+// Başlat
+loadScenario();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

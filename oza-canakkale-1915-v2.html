@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Çanakkale 1915 — Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;touch-action:none;}
+#c{display:block;touch-action:none;}
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;pointer-events:none;padding:8px 12px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.hb{background:rgba(5,5,0,.85);border:1px solid #4a3a00;border-radius:8px;padding:5px 10px;font-family:monospace;font-size:.7rem;color:#e8d5a0;text-align:center;min-width:65px;}
+.hv{font-size:.95rem;font-weight:900;display:block;}
+.hl{font-size:.5rem;color:#7a6a00;text-transform:uppercase;letter-spacing:1px;}
+#joyZone{position:fixed;bottom:90px;left:15px;width:120px;height:120px;z-index:20;touch-action:none;display:none;}
+#joyBase{width:120px;height:120px;background:rgba(200,180,0,.06);border:2px solid rgba(200,180,0,.2);border-radius:50%;}
+#joyKnob{width:46px;height:46px;background:rgba(200,180,0,.35);border:2px solid #c8b400;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+#shootBtn{position:fixed;bottom:100px;right:20px;width:70px;height:70px;background:rgba(200,50,0,.2);border:2px solid #c83200;border-radius:50%;z-index:20;display:none;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;touch-action:none;}
+#wpnBar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:15;pointer-events:all;}
+.ws{background:rgba(5,5,0,.9);border:1px solid #4a3a00;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:.6rem;color:#7a6a00;transition:all .15s;text-align:center;min-width:65px;}
+.ws.active{border-color:#c8b400;color:#c8b400;background:rgba(200,180,0,.1);}
+.ws-icon{font-size:1.1rem;display:block;margin-bottom:2px;}
+#kf{position:fixed;top:65px;right:10px;z-index:15;pointer-events:none;max-width:240px;}
+.kfi{background:rgba(5,5,0,.85);border-left:3px solid #c8b400;border-radius:4px;padding:4px 8px;font-size:.65rem;color:#e8d5a0;margin-bottom:3px;animation:kfIn .2s ease;}
+@keyframes kfIn{from{opacity:0;transform:translateX(15px);}to{opacity:1;}}
+/* SIPER INŞA */
+#buildBar{position:fixed;top:65px;left:10px;z-index:15;pointer-events:all;display:flex;flex-direction:column;gap:4px;}
+.bb{background:rgba(5,5,0,.85);border:1px solid #4a3a00;border-radius:6px;padding:4px 8px;font-size:.65rem;color:#7a6a00;cursor:pointer;transition:all .15s;text-align:center;}
+.bb.active{border-color:#c8b400;color:#c8b400;background:rgba(200,180,0,.1);}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;font-family:'Segoe UI',sans-serif;}
+.ov-t1{font-size:clamp(1.2rem,4vw,2.2rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;color:#c8b400;margin-bottom:4px;}
+.ov-t2{font-size:clamp(.9rem,3vw,1.4rem);font-weight:700;color:#e8d5a0;margin-bottom:12px;}
+.ov-hist{background:rgba(200,180,0,.06);border:1px solid rgba(200,180,0,.25);border-radius:10px;padding:14px 20px;max-width:500px;margin-bottom:16px;text-align:left;}
+.ov-hist h3{color:#c8b400;font-size:.85rem;margin-bottom:8px;}
+.ov-hist p{font-size:.75rem;color:#8a7a40;line-height:1.7;}
+.ov-hist .fact{color:#c41e3a;font-weight:700;}
+.ov-btn{background:linear-gradient(135deg,#c8b400,#6a5a00);color:#000;border:none;border-radius:10px;padding:12px 30px;font-size:.9rem;font-weight:900;cursor:pointer;letter-spacing:2px;text-transform:uppercase;margin:5px;}
+.ov-btn.sec{background:transparent;color:#c8b400;border:2px solid #c8b400;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div style="display:flex;gap:6px;">
+    <div class="hb"><span class="hv" id="hpV" style="color:#00ff88">100</span><span class="hl">❤️ CAN</span></div>
+    <div class="hb"><span class="hv" id="wvV" style="color:#c8b400">1</span><span class="hl">🌊 DALGA</span></div>
+  </div>
+  <div style="display:flex;gap:6px;">
+    <div class="hb"><span class="hv" id="amV">30/30</span><span class="hl">🔫 MERMİ</span></div>
+    <div class="hb"><span class="hv" id="scV" style="color:#e74c3c">0</span><span class="hl">🏆 SKOR</span></div>
+    <div class="hb"><span class="hv" id="sipV" style="color:#c8b400">3</span><span class="hl">🛡️ SİPER</span></div>
+  </div>
+</div>
+<div id="kf"></div>
+<div id="buildBar">
+  <div class="bb active" id="mode0" onclick="setMode(0)">🔫 Ateş</div>
+  <div class="bb" id="mode1" onclick="setMode(1)">🛡️ Siper</div>
+  <div class="bb" id="mode2" onclick="setMode(2)">💣 Bomba</div>
+</div>
+<div id="wpnBar">
+  <div class="ws active" id="w0" onclick="selW(0)"><span class="ws-icon">🔫</span>Tüfek</div>
+  <div class="ws" id="w1" onclick="selW(1)"><span class="ws-icon">💣</span>El Bomb.</div>
+  <div class="ws" id="w2" onclick="selW(2)"><span class="ws-icon">🔪</span>Süngü</div>
+</div>
+<div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
+<div id="shootBtn" style="display:none">🔫</div>
+<div id="ov">
+  <div class="ov-t1">🛡️ ÇANAKKALE GEÇİLMEZ!</div>
+  <div class="ov-t2">1915 · Osmanlı İmparatorluğu vs. İtilaf Devletleri</div>
+  <div class="ov-hist">
+    <h3>📜 Tarihi Bağlam</h3>
+    <p>
+      <span class="fact">8 ay 8 gün süren</span> Çanakkale Savaşları, I. Dünya Savaşı'nın en kritik cephesiydi.<br><br>
+      İtilaf Devletlerinin İstanbul'u ele geçirme planı suya düştü. <span class="fact">ANZAC</span> (Avustralya-Yeni Zelanda) kuvvetleri Gelibolu'ya çıktı.<br><br>
+      Harita: <span class="fact">Gelibolu Yarımadası</span> — kuzey-güney uzanan siper hatları, Çanakkale Boğazı (doğu), Ege Denizi (batı).
+    </p>
+  </div>
+  <div style="font-size:.72rem;color:#7a6a00;margin-bottom:14px;">
+    🖥️ WASD hareket · Fare nişan · Tık ateş · R yenile<br>
+    🛡️ Sol panel: Ateş/Siper/Bomba modu seç
+  </div>
+  <button class="ov-btn" onclick="startGame()">🛡️ SİPERE GİR</button>
+  <button class="ov-btn sec" onclick="window.location.href='oza-turk-savas-tarihi-hub.html'">← Geri</button>
+</div>
+
+<script>
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+let W,H;
+const isMobile='ontouchstart' in window;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+
+const TILE=44;
+const COLS=20,ROWS=14;
+let MAP=[];
+let SIPERLER=[]; // Oyuncu siperleri
+
+// Gelibolu Yarımadası haritası
+// Batı=Ege (İtilaf çıkarma noktası), Doğu=Boğaz (Osmanlı mevzisi)
+// Kuzey-Güney siper hatları
+const WALLS=[
+  ...[...Array(COLS)].map((_,c)=>[c,0]),
+  ...[...Array(COLS)].map((_,c)=>[c,ROWS-1]),
+  ...[...Array(ROWS)].map((_,r)=>[0,r]),
+  ...[...Array(ROWS)].map((_,r)=>[COLS-1,r]),
+  // Osmanlı ana siper hattı (orta-sağ)
+  [12,2],[12,3],[12,4],[12,5],[12,6],[12,7],[12,8],[12,9],[12,10],[12,11],
+  [13,2],[13,11],
+  // Osmanlı ikinci hat
+  [15,3],[15,4],[15,5],[15,6],[15,7],[15,8],[15,9],[15,10],
+  // Tepe mevzileri
+  [10,3],[10,4],[11,3],
+  [10,9],[10,10],[11,10],
+  // Boğaz kıyısı (doğu)
+  [18,2],[18,3],[18,4],[18,5],[18,6],[18,7],[18,8],[18,9],[18,10],[18,11],
+  // Orta engeller
+  [7,4],[7,5],[8,4],
+  [7,9],[7,10],[8,9],
+  [5,6],[5,7],[6,6],
+];
+
+function buildMap(){
+  MAP=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+  WALLS.forEach(([c,r])=>{if(r<ROWS&&c<COLS)MAP[r][c]=1;});
+  SIPERLER=[];
+}
+
+function wallAt(wx,wy){
+  const c=Math.floor(wx/TILE),r=Math.floor(wy/TILE);
+  if(r<0||r>=ROWS||c<0||c>=COLS)return true;
+  if(MAP[r][c]===1)return true;
+  // Oyuncu siperleri
+  for(const s of SIPERLER){
+    if(Math.abs(s.x-wx)<TILE*.6&&Math.abs(s.y-wy)<TILE*.6)return true;
+  }
+  return false;
+}
+
+const WPNS=[
+  {name:'Tüfek',icon:'🔫',dmg:28,spd:18,color:'#c8b400',ammo:30,maxAmmo:30,rate:180,spread:.06},
+  {name:'El Bomb.',icon:'💣',dmg:70,spd:9,color:'#e74c3c',ammo:5,maxAmmo:5,rate:700,spread:.04,explode:true,exR:65},
+  {name:'Süngü',icon:'🔪',dmg:60,spd:0,color:'#e74c3c',ammo:999,maxAmmo:999,rate:400,melee:true,mRange:60},
+];
+
+const ETYPES=[
+  {type:'piyade',hp:35,spd:62,r:12,color:'#c0392b',puan:10,icon:'🪖'},
+  {type:'okçu',hp:28,spd:50,r:11,color:'#2980b9',puan:12,icon:'🔫',shoot:true,sTimer:0,sInt:2200},
+  {type:'ağır piyade',hp:65,spd:48,r:16,color:'#8e44ad',puan:20,icon:'💪'},
+  {type:'komutan',hp:180,spd:42,r:22,color:'#e74c3c',puan:80,icon:'🎖️',boss:true},
+];
+
+const G={
+  running:false,
+  player:{x:16*TILE+22,y:7*TILE+22,hp:100,maxHp:100,angle:0,spd:150,inv:0,r:13},
+  enemies:[],bullets:[],particles:[],
+  wpns:WPNS.map(w=>({...w})),
+  selW:0,buildMode:0,puan:0,kills:0,sipCount:3,wave:1,
+  waveTotal:0,waveKills:0,waveActive:false,
+  spawnT:0,lastShot:0,camX:0,camY:0,
+  keys:{},mx:0,my:0,mdown:false,joy:{x:0,y:0},autoShoot:false,
+};
+
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+function tryMove(obj,dx,dy){
+  const r=obj.r||12;
+  const nx=obj.x+dx,ny=obj.y+dy;
+  if(!wallAt(nx,obj.y)&&!wallAt(nx+(r*Math.sign(dx)||0),obj.y))obj.x=Math.max(r,Math.min(COLS*TILE-r,nx));
+  if(!wallAt(obj.x,ny)&&!wallAt(obj.x,ny+(r*Math.sign(dy)||0)))obj.y=Math.max(r,Math.min(ROWS*TILE-r,ny));
+}
+
+function addKF(text,color='#c8b400'){
+  const kf=document.getElementById('kf');
+  const d=document.createElement('div');
+  d.className='kfi';d.style.borderColor=color;d.textContent=text;
+  kf.insertBefore(d,kf.firstChild);
+  setTimeout(()=>d.remove(),2800);
+  while(kf.children.length>5)kf.removeChild(kf.lastChild);
+}
+
+function spawnParticles(x,y,color,n=8){
+  for(let i=0;i<n;i++){
+    const a=Math.random()*Math.PI*2,s=40+Math.random()*120;
+    G.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:2+Math.random()*3,color,life:.5+Math.random()*.3});
+  }
+}
+
+function explodeAt(x,y,radius,dmg){
+  spawnParticles(x,y,'#e74c3c',18);spawnParticles(x,y,'#c8b400',10);
+  G.enemies.forEach(e=>{const d=dist(e,{x,y});if(d<radius)e.hp-=dmg*(1-d/radius);});
+  const pd=dist(G.player,{x,y});if(pd<radius*.5)G.player.hp-=dmg*.2;
+  // Siper hasar
+  SIPERLER=SIPERLER.filter(s=>Math.hypot(s.x-x,s.y-y)>radius*.6);
+}
+
+function spawnEnemy(){
+  const spawnX=(1+Math.random()*2)*TILE;
+  const spawnY=(1+Math.random()*11)*TILE;
+  const t=ETYPES[Math.min(Math.floor(Math.random()*Math.min(G.wave+1,ETYPES.length)),ETYPES.length-1)];
+  return{...{x:spawnX,y:spawnY},...t,maxHp:t.hp+(G.wave-1)*12,hp:t.hp+(G.wave-1)*12,angle:0,sTimer:0};
+}
+
+function doShoot(){
+  if(!G.running)return;
+  const now=Date.now();
+  const w=G.wpns[G.selW];
+  if(now-G.lastShot<w.rate)return;
+  if(w.melee){
+    G.lastShot=now;
+    G.enemies.forEach(e=>{if(dist(e,G.player)<w.mRange){e.hp-=w.dmg;spawnParticles(e.x,e.y,'#e74c3c',6);}});
+    return;
+  }
+  if(w.ammo<=0){addKF('🔄 Mermi bitti! R ile yenile','#c8b400');return;}
+  G.lastShot=now;w.ammo--;updateHUD();
+  const tx=G.mx+G.camX,ty=G.my+G.camY;
+  const ba=Math.atan2(ty-G.player.y,tx-G.player.x);
+  const a=ba+(Math.random()-.5)*(w.spread||0);
+  G.bullets.push({x:G.player.x,y:G.player.y,vx:Math.cos(a)*w.spd*60,vy:Math.sin(a)*w.spd*60,dmg:w.dmg,color:w.color,r:w.explode?7:3,explode:w.explode||false,exR:w.exR||0,life:1.5,enemy:false});
+}
+
+function placeSiper(){
+  if(G.sipCount<=0){addKF('Siper hakkı kalmadı!','#e74c3c');return;}
+  const tx=G.mx+G.camX,ty=G.my+G.camY;
+  if(wallAt(tx,ty))return;
+  SIPERLER.push({x:tx,y:ty,hp:100});
+  G.sipCount--;
+  addKF('🛡️ Siper kuruldu!','#c8b400');
+  updateHUD();
+}
+
+function enemyShoot(e){
+  const a=Math.atan2(G.player.y-e.y,G.player.x-e.x);
+  G.bullets.push({x:e.x,y:e.y,vx:Math.cos(a)*8*60,vy:Math.sin(a)*8*60,dmg:11,color:'#c0392b',r:3,life:1.2,enemy:true});
+}
+
+function setMode(m){
+  G.buildMode=m;
+  document.querySelectorAll('.bb').forEach((el,j)=>el.classList.toggle('active',j===m));
+}
+
+function update(dt){
+  if(!G.running)return;
+  const p=G.player;
+  let dx=0,dy=0;
+  if(G.keys['ArrowLeft']||G.keys['a']||G.keys['A'])dx-=1;
+  if(G.keys['ArrowRight']||G.keys['d']||G.keys['D'])dx+=1;
+  if(G.keys['ArrowUp']||G.keys['w']||G.keys['W'])dy-=1;
+  if(G.keys['ArrowDown']||G.keys['s']||G.keys['S'])dy+=1;
+  dx+=G.joy.x;dy+=G.joy.y;
+  const dl=Math.hypot(dx,dy);if(dl>0){dx/=dl;dy/=dl;}
+  tryMove(p,dx*p.spd*dt,dy*p.spd*dt);
+  G.camX=Math.max(0,Math.min(COLS*TILE-W,p.x-W/2));
+  G.camY=Math.max(0,Math.min(ROWS*TILE-H,p.y-H/2));
+  p.angle=Math.atan2((G.my+G.camY)-p.y,(G.mx+G.camX)-p.x);
+  if(p.inv>0)p.inv-=dt;
+  if(G.mdown||G.autoShoot){
+    if(G.buildMode===1)placeSiper();
+    else doShoot();
+  }
+  if(isMobile&&G.enemies.length>0){
+    let nr=G.enemies.reduce((a,b)=>dist(b,p)<dist(a,p)?b:a);
+    p.angle=Math.atan2(nr.y-p.y,nr.x-p.x);G.mx=nr.x-G.camX;G.my=nr.y-G.camY;
+  }
+  if(G.waveActive&&G.waveKills<G.waveTotal){
+    G.spawnT+=dt;
+    const rate=Math.max(.3,1.3-G.wave*.07);
+    if(G.spawnT>rate&&G.enemies.length<18){G.enemies.push(spawnEnemy());G.spawnT=0;}
+  }
+  G.enemies=G.enemies.filter(e=>e.hp>0);
+  G.enemies.forEach(e=>{
+    const edx=p.x-e.x,edy=p.y-e.y,ed=Math.hypot(edx,edy)||1;
+    e.angle=Math.atan2(edy,edx);
+    if(ed>18)tryMove(e,(edx/ed)*e.spd*dt,(edy/ed)*e.spd*dt);
+    if(e.shoot){e.sTimer=(e.sTimer||0)+dt*1000;if(e.sTimer>e.sInt&&ed<340){enemyShoot(e);e.sTimer=0;}}
+    if(ed<p.r+e.r&&p.inv<=0){p.hp-=e.boss?20:10;p.inv=.5;spawnParticles(p.x,p.y,'#e74c3c',5);if(p.hp<=0)gameOver();}
+  });
+  G.bullets=G.bullets.filter(b=>b.life>0);
+  G.bullets.forEach(b=>{
+    b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;
+    if(wallAt(b.x,b.y)){
+      if(b.explode)explodeAt(b.x,b.y,b.exR,b.dmg);
+      else spawnParticles(b.x,b.y,b.color,4);
+      b.life=0;return;
+    }
+    if(!b.enemy){
+      G.enemies.forEach(e=>{
+        if(b.life<=0)return;
+        if(dist(b,e)<e.r+b.r){
+          if(b.explode){explodeAt(b.x,b.y,b.exR,b.dmg);b.life=0;return;}
+          e.hp-=b.dmg;spawnParticles(e.x,e.y,e.color,5);b.life=0;
+          if(e.hp<=0){
+            G.score+=e.score*G.wave;G.kills++;G.waveKills++;
+            addKF(`${e.icon} ${e.type} düşürüldü! +${e.score*G.wave}`,e.color);
+            spawnParticles(e.x,e.y,e.color,12);
+            if(e.boss)addKF('🎖️ KOMUTAN DÜŞÜRÜLDÜ! Çanakkale geçilmez!','#c8b400');
+          }
+        }
+      });
+    } else {
+      if(dist(b,p)<p.r+b.r&&p.inv<=0){p.hp-=b.dmg;p.inv=.3;b.life=0;spawnParticles(p.x,p.y,'#e74c3c',5);if(p.hp<=0)gameOver();}
+    }
+  });
+  G.particles=G.particles.filter(pt=>pt.life>0);
+  G.particles.forEach(pt=>{pt.x+=pt.vx*dt;pt.y+=pt.vy*dt;pt.vx*=.9;pt.vy*=.9;pt.life-=dt;pt.r*=.96;});
+  if(G.waveActive&&G.waveKills>=G.waveTotal&&G.enemies.length===0){
+    G.waveActive=false;G.wave++;
+    if(G.wave>5){victory();return;}
+    G.wpns.forEach((w,i)=>w.ammo=WPNS[i].maxAmmo);
+    G.sipCount+=2;
+    addKF(`✅ DALGA TAMAMLANDI! +2 Siper hakkı · 3sn sonra devam...`,'#00ff88');
+    setTimeout(startWave,3000);
+  }
+  updateHUD();
+}
+
+function updateHUD(){
+  const p=G.player;
+  document.getElementById('hpV').textContent=Math.max(0,Math.ceil(p.hp));
+  document.getElementById('hpV').style.color=p.hp>60?'#00ff88':p.hp>30?'#f39c12':'#E01515';
+  document.getElementById('wvV').textContent=G.wave;
+  const w=G.wpns[G.selW];
+  document.getElementById('amV').textContent=w.melee?'∞':`${w.ammo}/${WPNS[G.selW].maxAmmo}`;
+  document.getElementById('scV').textContent=G.score;
+  document.getElementById('sipV').textContent=G.sipCount;
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  ctx.translate(-G.camX,-G.camY);
+
+  // Gelibolu toprak rengi
+  const grad=ctx.createLinearGradient(0,0,COLS*TILE,ROWS*TILE);
+  grad.addColorStop(0,'#1a1205');grad.addColorStop(.5,'#251a08');grad.addColorStop(1,'#1a1205');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,COLS*TILE,ROWS*TILE);
+
+  ctx.strokeStyle='rgba(80,60,20,.2)';ctx.lineWidth=1;
+  for(let c=0;c<=COLS;c++){ctx.beginPath();ctx.moveTo(c*TILE,0);ctx.lineTo(c*TILE,ROWS*TILE);ctx.stroke();}
+  for(let r=0;r<=ROWS;r++){ctx.beginPath();ctx.moveTo(0,r*TILE);ctx.lineTo(COLS*TILE,r*TILE);ctx.stroke();}
+
+  // Duvarlar (mevziler, tepeler)
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    if(MAP[r][c]===1){
+      const wx=c*TILE,wy=r*TILE;
+      const isBoğaz=c>=18;
+      const isOsmanli=c>=12&&c<=16;
+      const isKenar=r===0||r===ROWS-1||c===0||c===COLS-1;
+      ctx.fillStyle=isBoğaz?'#001a2a':isOsmanli?'#1a1205':isKenar?'#0a0a0a':'#1a1a0a';
+      ctx.fillRect(wx,wy,TILE,TILE);
+      ctx.strokeStyle=isBoğaz?'#0a3a5a':isOsmanli?'#4a3a00':'#333';
+      ctx.lineWidth=2;ctx.strokeRect(wx+1,wy+1,TILE-2,TILE-2);
+      ctx.font=`${TILE*.4}px monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(isBoğaz?'🌊':isOsmanli?'🛡️':'⛰️',wx+TILE/2,wy+TILE/2);
+    }
+  }
+
+  // Oyuncu siperleri
+  SIPERLER.forEach(s=>{
+    ctx.fillStyle='rgba(200,180,0,.15)';
+    ctx.fillRect(s.x-TILE*.5,s.y-TILE*.5,TILE,TILE);
+    ctx.strokeStyle='#c8b400';ctx.lineWidth=2;
+    ctx.strokeRect(s.x-TILE*.45,s.y-TILE*.45,TILE*.9,TILE*.9);
+    ctx.font='18px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('🛡️',s.x,s.y);
+  });
+
+  // Etiketler
+  ctx.font='11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(200,180,0,.4)';ctx.fillText('🛡️ OSMANLI MEVZİSİ',14*TILE,7*TILE);
+  ctx.fillStyle='rgba(200,0,0,.4)';ctx.fillText('🪖 İTİLAF ÇIKARMA',2*TILE,7*TILE);
+  ctx.fillStyle='rgba(0,100,200,.3)';ctx.fillText('🌊 ÇANAKKALE BOĞAZI',18*TILE,7*TILE);
+
+  G.particles.forEach(pt=>{
+    ctx.save();ctx.globalAlpha=Math.max(0,pt.life/.6);
+    ctx.beginPath();ctx.arc(pt.x,pt.y,Math.max(.5,pt.r),0,Math.PI*2);
+    ctx.fillStyle=pt.color;ctx.fill();ctx.restore();
+  });
+
+  G.bullets.forEach(b=>{
+    ctx.save();ctx.shadowBlur=10;ctx.shadowColor=b.color;
+    ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+    ctx.fillStyle=b.color;ctx.fill();ctx.restore();
+  });
+
+  G.enemies.forEach(e=>{
+    ctx.save();ctx.translate(e.x,e.y);ctx.rotate(e.angle);
+    ctx.beginPath();ctx.arc(0,0,e.r,0,Math.PI*2);
+    ctx.fillStyle=e.color+'88';ctx.fill();
+    ctx.strokeStyle=e.color;ctx.lineWidth=e.boss?3:2;ctx.stroke();
+    if(e.boss){ctx.shadowBlur=18;ctx.shadowColor=e.color;}
+    ctx.restore();
+    const bw=e.r*2.5,hp=e.hp/e.maxHp;
+    ctx.fillStyle='#0a0a0a';ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw,4);
+    ctx.fillStyle=hp>.5?'#00ff88':hp>.25?'#f39c12':'#e74c3c';
+    ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw*hp,4);
+    ctx.font=`${e.r*.9}px monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(e.icon,e.x,e.y);
+  });
+
+  const p=G.player;
+  ctx.save();ctx.translate(p.x,p.y);
+  if(p.inv>0&&Math.floor(p.inv*10)%2===0)ctx.globalAlpha=.4;
+  ctx.shadowBlur=15;ctx.shadowColor='#c8b400';
+  ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);
+  ctx.fillStyle='#1a1205';ctx.fill();
+  ctx.strokeStyle='#c8b400';ctx.lineWidth=3;ctx.stroke();
+  ctx.rotate(p.angle);
+  ctx.fillStyle='#c8b400';ctx.fillRect(p.r-2,-2.5,16,5);
+  ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.fillStyle='#c8b400';ctx.fill();
+  ctx.restore();
+  const bw=50,hp=p.hp/p.maxHp;
+  ctx.fillStyle='#0a0a0a';ctx.fillRect(p.x-bw/2,p.y-p.r-11,bw,5);
+  ctx.fillStyle=hp>.5?'#00ff88':hp>.25?'#f39c12':'#e74c3c';
+  ctx.fillRect(p.x-bw/2,p.y-p.r-11,bw*hp,5);
+
+  if(!isMobile){
+    const mx=G.mx,my=G.my;
+    ctx.strokeStyle=G.buildMode===1?'rgba(200,180,0,.7)':'rgba(200,180,0,.7)';ctx.lineWidth=1.5;
+    [[mx-14,my,mx-5,my],[mx+5,my,mx+14,my],[mx,my-14,mx,my-5],[mx,my+5,mx,my+14]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();});
+    if(G.buildMode===1){
+      ctx.strokeStyle='rgba(200,180,0,.3)';ctx.lineWidth=1;
+      ctx.strokeRect(mx-TILE*.45,my-TILE*.45,TILE*.9,TILE*.9);
+    }
+  }
+  ctx.restore();
+}
+
+let lastT=0;
+function loop(t=0){
+  if(!G.running)return;
+  const dt=Math.min((t-lastT)/1000,.05);lastT=t;
+  update(dt);draw();requestAnimationFrame(loop);
+}
+
+function startWave(){
+  G.waveActive=true;G.waveTotal=5+G.wave*3;G.waveKills=0;G.spawnT=0;
+  document.getElementById('wvV').textContent=G.wave;
+  addKF(`🌊 DALGA ${G.wave} — ${G.waveTotal} İtilaf askeri!`,'#c8b400');
+  if(G.wave===3)addKF('🎖️ UYARI: İtilaf Komutanı geliyor!','#e74c3c');
+  if(G.wave===1)addKF('🛡️ SİPER kur, mevzini güçlendir!','#c8b400');
+}
+
+function startGame(){
+  document.getElementById('ov').style.display='none';
+  buildMap();G.running=true;
+  G.player={x:16*TILE+22,y:7*TILE+22,hp:100,maxHp:100,angle:0,spd:150,inv:0,r:13};
+  G.enemies=[];G.bullets=[];G.particles=[];
+  G.wpns=WPNS.map(w=>({...w}));
+  G.score=0;G.kills=0;G.sipCount=3;G.wave=1;
+  if(isMobile){
+    document.getElementById('joyZone').style.display='block';
+    document.getElementById('shootBtn').style.display='flex';
+    document.getElementById('wpnBar').style.bottom='160px';
+  }
+  lastT=performance.now();startWave();requestAnimationFrame(loop);
+}
+
+function victory(){
+  G.running=false;
+  const ov=document.getElementById("ov");
+  ov.innerHTML=`
+    <div class="ov-t1" style="color:#00ff88">🏆 ÇANAKKALE GEÇİLMEZ!</div>
+    <div class="ov-t2">Skor: ${G.score} | Öldürülen: ${G.kills} | 5 Dalga Tamamlandı</div>
+    <div class="ov-hist"><h3>🎖️ ZAFERİN ANLAMI</h3><p>Tebrikler! 5 dalga İtilaf saldırısını püskürttünüz. Çanakkale Savaşı, Osmanlı İmparatorluğunun son büyük savunma zaferlerinden biridir. <span class="fact">253.000</span> şehit ve gazi bu toprakları savundu.</p></div>
+    <button class="ov-btn" onclick="startGame()">🔄 YENİDEN OYNA</button>
+    <button class="ov-btn sec" onclick="window.location.href=\x27oza-turk-savas-tarihi-hub.html\x27">← Savaş Tarihi</button>
+    <button class="ov-btn sec" onclick="window.location.href=\x27oza-kurtulus-atesi-v2.html\x27">Sonraki: Büyük Taarruz →</button>
+  `;
+  ov.style.display="flex";
+}
+function gameOver(){
+  G.running=false;
+  const ov=document.getElementById('ov');
+  ov.innerHTML=`
+    <div class="ov-t1" style="color:#E01515">💀 SIPER DÜŞTÜ</div>
+    <div class="ov-t2">Skor: ${G.score} | Öldürülen: ${G.kills}</div>
+    <div class="ov-hist"><h3>📜 Tarihi Hatırlatma</h3><p>Çanakkale Savaşlarında Osmanlı ordusu <span class="fact">8 ay 8 gün</span> boyunca İtilaf Devletlerini durdurdu. "Çanakkale geçilmez!" — İtilafın İstanbul planı suya düştü.</p></div>
+    <button class="ov-btn" onclick="startGame()">🔄 YENİDEN BAŞLA</button>
+    <button class="ov-btn sec" onclick="window.location.href='oza-turk-savas-tarihi-hub.html'">← Ana Sayfa</button>
+    <button class="ov-btn sec" onclick="window.location.href='oza-kurtulus-atesi-v2.html'">Sonraki: Büyük Taarruz →</button>
+  `;
+  ov.style.display='flex';
+}
+
+function selW(i){
+  G.selW=i;
+  document.querySelectorAll('.ws').forEach((el,j)=>el.classList.toggle('active',j===i));
+  updateHUD();
+}
+
+document.addEventListener('keydown',e=>{
+  G.keys[e.key]=true;
+  if(e.key==='r'||e.key==='R'){G.wpns[G.selW].ammo=WPNS[G.selW].maxAmmo;addKF('🔄 Mermi yenilendi!','#00ff88');updateHUD();}
+  if(e.key==='1')selW(0);if(e.key==='2')selW(1);if(e.key==='3')selW(2);
+  if(e.key==='e'||e.key==='E')setMode((G.buildMode+1)%3);
+  e.preventDefault();
+},{passive:false});
+document.addEventListener('keyup',e=>{G.keys[e.key]=false;});
+canvas.addEventListener('mousemove',e=>{G.mx=e.clientX;G.my=e.clientY;});
+canvas.addEventListener('mousedown',e=>{G.mdown=true;if(G.buildMode===1)placeSiper();else doShoot();});
+canvas.addEventListener('mouseup',()=>G.mdown=false);
+
+const joyZone=document.getElementById('joyZone');
+const joyKnob=document.getElementById('joyKnob');
+let joyActive=false,joyOx=0,joyOy=0;const JR=37;
+joyZone.addEventListener('touchstart',e=>{e.preventDefault();joyActive=true;const r=joyZone.getBoundingClientRect();joyOx=r.left+r.width/2;joyOy=r.top+r.height/2;},{passive:false});
+joyZone.addEventListener('touchmove',e=>{e.preventDefault();if(!joyActive)return;const t=e.touches[0];let dx=t.clientX-joyOx,dy=t.clientY-joyOy;const d=Math.hypot(dx,dy);if(d>JR){dx=dx/d*JR;dy=dy/d*JR;}joyKnob.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;G.joy.x=dx/JR;G.joy.y=dy/JR;},{passive:false});
+joyZone.addEventListener('touchend',e=>{e.preventDefault();joyActive=false;joyKnob.style.transform='translate(-50%,-50%)';G.joy.x=0;G.joy.y=0;},{passive:false});
+document.getElementById('shootBtn').addEventListener('touchstart',e=>{e.preventDefault();G.autoShoot=true;doShoot();},{passive:false});
+document.getElementById('shootBtn').addEventListener('touchend',e=>{e.preventDefault();G.autoShoot=false;},{passive:false});
+document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

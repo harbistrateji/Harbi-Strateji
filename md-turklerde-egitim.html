@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Türklerde Eğitim — Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#0a0f17;--bg2:#0f1520;--gold:#C9A24B;--cyan:#00E0FF;--red:#E01515;--text:#e8e6e3;--muted:#8a9bb0;--card:#141c2b;--border:#1e2a3a}body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.8;overflow-x:hidden}#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .1s}.back-btn{position:fixed;top:20px;left:20px;z-index:1000;color:var(--gold);text-decoration:none;font-family:'Chakra Petch',monospace;font-size:.85rem;opacity:.8;transition:.3s}.back-btn:hover{opacity:1;transform:translateX(-3px)}.container{max-width:900px;margin:0 auto;padding:0 24px;position:relative;z-index:1}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 24px}.hero-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:1rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--gold);line-height:1.2;margin-bottom:24px}.hero-sub{font-size:1.1rem;color:var(--muted);max-width:600px;line-height:1.7}.scene{padding:80px 0;opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.19,1,.22,1)}.scene.visible{opacity:1;transform:translateY(0)}.scene-tag{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.95rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}.scene h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--gold);margin-bottom:20px;line-height:1.3}.scene p{margin-bottom:16px;color:var(--muted);font-size:1rem}.scene p strong{color:var(--text)}.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:40px 0}.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:24px 0}.grid-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:.3s}.grid-card:hover{border-color:var(--gold);transform:translateY(-4px)}.grid-card .label{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.9rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}.grid-card .value{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:6px}.grid-card .desc{font-size:.85rem;color:var(--muted);line-height:1.6}.timeline{position:relative;padding-left:40px;margin:32px 0}.timeline::before{content:'';position:absolute;left:16px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan))}.timeline-item{position:relative;margin-bottom:32px;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:10px}.timeline-item::before{content:'';position:absolute;left:-32px;top:24px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}.timeline-item .date{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.95rem;letter-spacing:1px;margin-bottom:6px}.timeline-item h3{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;margin-bottom:8px}.timeline-item p{font-size:.9rem;color:var(--muted)}.formula-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:24px 0;font-family:'IBM Plex Mono',monospace;color:var(--cyan);font-size:.9rem;text-align:center;line-height:2}.ref-section{padding:60px 0;border-top:1px solid var(--border)}.ref-section h3{font-family:'Chakra Petch',monospace;color:var(--cyan);font-size:.85rem;letter-spacing:2px;margin-bottom:20px}.ref-section p{font-size:.85rem;color:var(--muted);margin-bottom:8px;padding-left:20px;text-indent:-20px}@media(max-width:600px){.hero h1{font-size:1.8rem}.grid-3{grid-template-columns:1fr}}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div id="progress" style="width:0%"></div>
+<a href="medeniyet-dinamikleri.html" class="back-btn">← Medeniyet Dinamikleri</a>
+<section class="hero">
+<span class="hero-tag">Medeniyet Dinamikleri // Eğitim & Bilim</span>
+<h1>Türklerde Eğitim: Töre'den Üniversiteye</h1>
+<p class="hero-sub">Bozkır töre eğitiminden Nizamiye Medreselerine, Enderun'dan Darülfünun'a — Türk eğitim geleneğinin 2500 yıllık serüveni.</p>
+</section>
+<div class="container">
+
+<section class="scene">
+<span class="scene-tag">Bölüm 1 — Bozkır Eğitimi</span>
+<h2>Hayat Okulu: Töre ve Pratik Eğitim</h2>
+<p>İlk Türk devletlerinde eğitim, <strong>yaşamın kendisiydi</strong>. Ayrı bir okul kurumu yoktu; eğitim aile içinde, boy toplantılarında ve günlük yaşamda verilirdi. Eğitimin temel amacı: <strong>töreye uygun, savaşçı, üretken ve ahlaklı bireyler</strong> yetiştirmekti.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Değerler</div><div class="value">Töre Eğitimi</div><div class="desc">Adalet, cesaret, sadakat, cömertlik — sözlü aktarım ile nesilden nesile</div></div>
+  <div class="grid-card"><div class="label">Askerî</div><div class="value">Savaş Eğitimi</div><div class="desc">3 yaşında koyun sırtına, 5 yaşında at sırtına, 7 yaşında ok atma</div></div>
+  <div class="grid-card"><div class="label">Meslekî</div><div class="value">Zanaat Eğitimi</div><div class="desc">Hayvancılık, deri işleme, metal işçiliği, keçe üretimi</div></div>
+</div>
+<p>Çin kaynaklarına göre Hunlar'da çocuklar <strong>"koyun üzerinde oturarak yay gerer, kuş ve fare avlarlardı"</strong>. Bu, sistematik bir beden eğitimi programının varlığını gösterir.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 2 — Uygur Dönemi</span>
+<h2>Yazılı Kültür ve Kitap Medeniyeti</h2>
+<p>Uygurlar, Türk tarihinde <strong>yazılı kültüre geçişin</strong> öncüleri oldular. Maniheist ve Budist manastırlar, ilk organize eğitim kurumları işlevini gördü. <strong>14 harfli Uygur alfabesi</strong>, Moğolca ve Mançuca'nın da temelini oluşturdu.</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">Alfabe</div><div class="value">Uygur Yazısı</div><div class="desc">Soğd kökenli, 14 harf — kitap, belge ve edebiyat üretimi</div></div>
+  <div class="grid-card"><div class="label">Matbaa</div><div class="value">Ahşap Baskı</div><div class="desc">Gutenberg'den 600 yıl önce — blok baskı tekniğiyle kitap çoğaltma</div></div>
+  <div class="grid-card"><div class="label">Tercüme</div><div class="value">Çok Dilli Eğitim</div><div class="desc">Çince, Sanskritçe, Soğdca metinlerin Türkçe'ye çevirisi</div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 3 — Karahanlı-Selçuklu</span>
+<h2>Medrese Sistemi: Dünyanın İlk Üniversiteleri</h2>
+<p><strong>Karahanlılar</strong> döneminde kurulan <strong>Semerkant Medresesi</strong> (1000 civarı), Türk-İslam eğitim geleneğinin ilk kurumsal örneğidir. Ancak asıl devrim, <strong>Nizam'ül-Mülk</strong>'ün 1067'de Bağdat'ta kurduğu <strong>Nizamiye Medresesi</strong> ile geldi.</p>
+<div class="timeline">
+  <div class="timeline-item"><div class="date">1067</div><h3>Nizamiye Medresesi — Bağdat</h3><p>Dünyanın ilk planlı üniversite sistemi. Burslu öğrenci, maaşlı hoca, kütüphane, yurt. İmam Gazali burada ders verdi.</p></div>
+  <div class="timeline-item"><div class="date">1070-1092</div><h3>Nizamiye Ağı Genişlemesi</h3><p>Nişabur, İsfahan, Basra, Herat, Merv — toplam 12+ şehirde Nizamiye medresesi.</p></div>
+  <div class="timeline-item"><div class="date">1072</div><h3>Dîvânü Lügati't-Türk</h3><p>Kaşgarlı Mahmud'un Türk dili ansiklopedisi — eğitim ve dilbilim şaheseri.</p></div>
+  <div class="timeline-item"><div class="date">1069</div><h3>Kutadgu Bilig</h3><p>Yusuf Has Hacib — devlet yönetimi, ahlak ve eğitim üzerine manzum eser.</p></div>
+</div>
+<p><strong>Fârâbî</strong> (870-950) ve <strong>İbn-i Sînâ</strong> (980-1037) gibi Türk-İslam dünyasının büyük düşünürleri, eğitim felsefesinin temellerini attılar. Fârâbî'nin <em>el-Medînetü'l-Fâzıla</em>'sı, ideal toplumda eğitimin rolünü sistematize etti.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 4 — Osmanlı Eğitimi</span>
+<h2>Sıbyan Mektebi'nden Enderun'a</h2>
+<p>Osmanlı eğitim sistemi, <strong>üç katmanlı</strong> bir yapıya sahipti:</p>
+<div class="grid-3">
+  <div class="grid-card"><div class="label">İlköğretim</div><div class="value">Sıbyan Mektebi</div><div class="desc">Mahalle mektebi — Kur'an, yazı, temel hesap. Her mahallede en az bir tane.</div></div>
+  <div class="grid-card"><div class="label">Yükseköğretim</div><div class="value">Medrese</div><div class="desc">Fatih Külliyesi 8 medrese — fıkıh, kelam, tefsir, tıp, matematik, astronomi.</div></div>
+  <div class="grid-card"><div class="label">Elit Eğitim</div><div class="value">Enderun</div><div class="desc">Saray okulu — 7-14 yıl. Devlet adamı, komutan, sanatçı yetiştirme.</div></div>
+</div>
+<p><strong>Enderun Mektebi</strong>, meritokrasinin (liyakat sisteminin) en saf örneğiydi. Kökenine bakılmaksızın en yetenekli gençler seçilir, dil, bilim, sanat ve askerî eğitim alırdı. Sokollu Mehmed Paşa, İbrahim Paşa gibi sadrazamlar Enderun mezunuydu.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene">
+<span class="scene-tag">Bölüm 5 — Modernleşme</span>
+<h2>Tanzimat'tan Tevhid-i Tedrisat'a</h2>
+<p>19. yüzyılda Osmanlı, Batılı tarz eğitim kurumları açmaya başladı. <strong>Mühendishane-i Bahrî-i Hümâyun</strong> (1773), <strong>Mekteb-i Tıbbiye</strong> (1827) ve <strong>Darülfünun</strong> (1863) bu sürecin ürünleridir.</p>
+<p>Cumhuriyet'in <strong>3 Mart 1924 Tevhid-i Tedrisat Kanunu</strong> ile tüm eğitim kurumları tek çatı altında birleştirildi. <strong>1928 Harf Devrimi</strong> ile Latin alfabesine geçildi. <strong>Köy Enstitüleri</strong> (1940-1954) ile kırsal kesime eğitim götürüldü.</p>
+<div class="formula-box">
+OSMANLI → CUMHURİYET EĞİTİM EVRİMİ<br>
+Sıbyan + Medrese + Enderun → İlkokul + Ortaokul + Lise + Üniversite<br>
+Vakıf Finansmanı → Devlet Bütçesi<br>
+Arapça/Farsça → Türkçe<br>
+Arap Harfleri → Latin Harfleri
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="ref-section">
+<h3>Kaynakça</h3>
+<p>Akyüz, Y. (2012). <em>Türk Eğitim Tarihi</em>. Pegem Akademi.</p>
+<p>Kazıcı, Z. (2004). <em>Osmanlı'da Eğitim Öğretim</em>. Bilge Yayınları.</p>
+<p>Baltacı, C. (1976). <em>XV-XVI. Asırlarda Osmanlı Medreseleri</em>. İrfan Matbaası.</p>
+<p>TDV İslam Ansiklopedisi. "Eğitim" maddesi.</p>
+</section>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progress').style.width=(s/h*100)+'%'});
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.15});
+document.querySelectorAll('.scene').forEach(s=>obs.observe(s));
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

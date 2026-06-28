@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>Çanakkale 1915 — Komutan Modu | OZA</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--bg2:#0d0d0d;--panel:#111111;--border:#1a1a1a;--red:#E01515;--#c41e3a:#c41e3a;--gold:#C9A24B;--green:#c41e3a;--txt:#f0f0f0;--txt2:#f0f0f0;--dim:#888888;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;overflow:hidden;height:100vh;}
+a{text-decoration:none;color:inherit;}
+.game-wrap{display:grid;grid-template-columns:1fr 360px;grid-template-rows:52px 1fr 140px;height:100vh;gap:0;}
+.top-bar{grid-column:1/-1;background:rgba(6,12,22,.95);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:16px;z-index:10;}
+.tb-back{color:var(--#c41e3a);font-size:.75rem;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+.tb-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;color:var(--gold);}
+.tb-stats{margin-left:auto;display:flex;gap:10px;}
+.tb-stat{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:4px 10px;text-align:center;}
+.tb-stat b{font-family:'Chakra Petch',monospace;font-size:.85rem;color:var(--gold);display:block;}
+.tb-stat small{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+.map-area{position:relative;background:linear-gradient(135deg,#111111,#0d0d0d);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:12px;}
+.time-layer{background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:16px;}
+.day-info{flex:1;}
+.day-title{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:900;color:var(--gold);}
+.day-sub{font-size:.65rem;color:var(--dim);margin-top:2px;}
+.day-progress{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:6px;}
+.day-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--red));border-radius:2px;transition:width .5s;}
+.time-detail{display:flex;gap:14px;}
+.td-item{text-align:center;}
+.td-item b{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--#c41e3a);display:block;}
+.td-item small{font-size:.5rem;color:var(--dim);}
+.front-layer{flex:1;display:grid;grid-template-columns:1fr 60px 1fr;gap:6px;align-items:center;padding:0 12px;}
+.front-col{display:flex;flex-direction:column;gap:5px;}
+.front-col h4{font-family:'Chakra Petch',monospace;font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:2px;}
+.unit-row{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:5px 8px;cursor:pointer;transition:all .2s;}
+.unit-row:hover{border-color:var(--gold);background:rgba(201,162,75,.05);}
+.unit-row.selected{border-color:var(--gold);background:rgba(201,162,75,.1);}
+.unit-icon{font-size:1.1rem;}
+.unit-info{flex:1;}
+.unit-name{font-size:.65rem;font-weight:600;}
+.unit-hp{font-size:.5rem;color:var(--dim);}
+.hp-bar{width:40px;height:3px;background:var(--border);border-radius:2px;}
+.hp-fill{height:100%;background:var(--green);border-radius:2px;transition:width .3s;}
+.sur-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.sur-bar{width:12px;height:120px;background:var(--border);border-radius:6px;position:relative;overflow:hidden;}
+.sur-fill{position:absolute;bottom:0;width:100%;background:linear-gradient(0deg,var(--red),var(--gold));border-radius:6px;transition:height .5s;}
+.sur-label{font-size:.5rem;color:var(--dim);writing-mode:vertical-rl;}
+.resource-layer{background:rgba(0,0,0,.5);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;gap:12px;align-items:center;}
+.res-item{flex:1;}
+.res-label{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.res-bar{width:100%;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.res-fill{height:100%;border-radius:3px;transition:width .4s;}
+.res-val{font-size:.55rem;color:var(--txt2);margin-top:2px;font-family:'IBM Plex Mono',monospace;}
+.right-panel{background:var(--panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border);}
+.panel-tab{flex:1;padding:10px;text-align:center;font-size:.6rem;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.panel-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,162,75,.05);}
+.panel-content{flex:1;overflow-y:auto;padding:10px;}
+.intel-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer;transition:all .2s;}
+.intel-card:hover{border-color:var(--#c41e3a);}
+.intel-card.unlocked{border-color:var(--green);background:rgba(0,255,136,.03);}
+.intel-header{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.intel-icon{font-size:1rem;}
+.intel-title{font-size:.7rem;font-weight:700;}
+.intel-desc{font-size:.6rem;color:var(--txt2);line-height:1.4;}
+.intel-meta{display:flex;justify-content:space-between;margin-top:6px;font-size:.5rem;color:var(--dim);}
+.skill-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;}
+.skill-header{display:flex;align-items:center;gap:8px;}
+.skill-icon{font-size:1.3rem;}
+.skill-name{font-size:.7rem;font-weight:700;}
+.skill-lvl{font-size:.55rem;color:var(--gold);margin-left:auto;font-family:'IBM Plex Mono',monospace;}
+.skill-desc{font-size:.6rem;color:var(--txt2);margin-top:4px;}
+.skill-btn{margin-top:6px;width:100%;padding:5px;border:1px solid var(--gold);background:rgba(201,162,75,.1);color:var(--gold);border-radius:6px;font-size:.6rem;cursor:pointer;}
+.skill-btn:hover{background:rgba(201,162,75,.2);}
+.skill-btn:disabled{opacity:.3;cursor:not-allowed;}
+.story-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
+.story-badge{font-size:.5rem;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.story-text{font-size:.65rem;color:var(--txt);line-height:1.5;}
+.story-stat{font-size:.55rem;color:var(--#c41e3a);margin-top:6px;font-family:'IBM Plex Mono',monospace;}
+.bottom-bar{grid-column:1/-1;background:rgba(6,12,22,.95);border-top:1px solid var(--border);padding:10px 16px;display:flex;flex-direction:column;gap:6px;}
+.phase-info{display:flex;align-items:center;gap:10px;}
+.phase-title{font-family:'Chakra Petch',monospace;font-size:.8rem;color:var(--red);font-weight:700;}
+.phase-desc{font-size:.6rem;color:var(--txt2);}
+.action-row{display:flex;gap:8px;overflow-x:auto;}
+.action-btn{padding:8px 16px;border:1px solid var(--gold);background:rgba(201,162,75,.1);color:var(--gold);border-radius:8px;font-size:.65rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.action-btn:hover{background:rgba(201,162,75,.25);transform:translateY(-1px);}
+.action-btn.secondary{border-color:var(--border);color:var(--txt2);background:rgba(255,255,255,.03);}
+.action-btn .cost{display:block;font-size:.5rem;color:var(--dim);margin-top:2px;}
+.xp-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,12,22,.95);border:2px solid var(--gold);border-radius:16px;padding:24px 32px;text-align:center;z-index:100;display:none;animation:popIn .3s;}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.8);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.xp-popup h3{font-family:'Chakra Petch',monospace;color:var(--gold);font-size:1.2rem;margin-bottom:8px;}
+.xp-popup p{font-size:.7rem;color:var(--txt2);margin-bottom:4px;}
+.xp-popup .xp-val{font-size:1.5rem;color:var(--green);font-family:'Chakra Petch',monospace;font-weight:900;}
+.cinematic{position:fixed;inset:0;background:#000;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
+.cinematic h1{font-family:'Chakra Petch',monospace;font-size:2.5rem;color:var(--gold);margin-bottom:16px;animation:fadeUp 1s;}
+.cinematic p{font-size:1rem;color:var(--txt2);max-width:500px;line-height:1.8;animation:fadeUp 1.5s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.intro-screen{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
+.intro-screen h1{font-family:'Chakra Petch',monospace;font-size:2rem;color:var(--red);margin-bottom:8px;}
+.intro-screen p{font-size:.8rem;color:var(--txt2);max-width:400px;margin-bottom:24px;line-height:1.6;}
+.intro-btn{padding:14px 32px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Chakra Petch',monospace;}
+.intro-btn:hover{background:#ff2020;}
+.tutorial-screen{position:fixed;inset:0;background:rgba(6,12,22,.97);z-index:55;display:none;flex-direction:column;align-items:center;justify-content:flex-start;padding:30px 20px;overflow-y:auto;}
+.tutorial-screen.active{display:flex;}
+.tutorial-screen h2{font-family:'Chakra Petch',monospace;color:var(--gold);font-size:1.3rem;margin-bottom:16px;}
+.tut-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:600px;width:100%;margin-bottom:20px;}
+.tut-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.tut-card h4{font-size:.7rem;color:var(--#c41e3a);margin-bottom:4px;}
+.tut-card p{font-size:.6rem;color:var(--txt2);line-height:1.4;}
+.tut-flow{font-size:.6rem;color:var(--dim);margin-bottom:16px;line-height:2;}
+.tut-start{padding:12px 28px;background:var(--gold);color:#000;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Chakra Petch',monospace;}
+@media(max-width:768px){.game-wrap{grid-template-columns:1fr;grid-template-rows:48px 1fr auto 160px;}.right-panel{max-height:200px;border-left:none;border-top:1px solid var(--border);}}
+</style><link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<div class="intro-screen" id="introScreen">
+<h1>CANAKKALE 1915</h1>
+<p>8 ay boyunca Itilaf Devletleri'nin en guclu donanmasina ve ordusuna karsi Bogazi savun. 10 kritik safha. Deniz ve kara muharebesi. "Canakkale gecilmez!"</p>
+<button class="intro-btn" onclick="showTutorial()">Savunmayi Başlat</button>
+</div>
+<div class="tutorial-screen" id="tutorialScreen">
+<h2>NASIL OYNANIR?</h2>
+<div class="tut-grid">
+<div class="tut-card"><h4>Harita</h4><p>Sol: Turk mevzileri. Orta: Bogaz/Siper. Sag: Düşman kuvvetleri. 3 katman: Zaman/Cephe/Kaynak.</p></div>
+<div class="tut-card"><h4>10 Safha</h4><p>Deniz bombardimani, Mayin savasi, Ariburnu, Conkbayiri, Anafartalar, Son direnis.</p></div>
+<div class="tut-card"><h4>Karar</h4><p>Her tur 1 hamle. Topcu atesi, mayin dose, sungu hucumu, takviye iste.</p></div>
+<div class="tut-card"><h4>Kesif</h4><p>İstihbarat kartlari XP ile satin al. Düşman planlarini ogren.</p></div>
+<div class="tut-card"><h4>Yetenek</h4><p>4 dal: Topcu, Sipahi, Denizci, Komutan. XP ile seviye atla.</p></div>
+<div class="tut-card"><h4>Kaynak</h4><p>Cephane, erzak, moral, asker, mayin. Dengeyi koru!</p></div>
+<div class="tut-card"><h4>Hikaye</h4><p>Gercek tarihsel olaylar, komutan sozleri, istatistikler.</p></div>
+<div class="tut-card"><h4>Zafer</h4><p>8 ay boyunca dayan. Düşman moralini kir. Bogaz gecilmezse zafer senin!</p></div>
+</div>
+<div class="tut-flow">Giris - Harita - Kesif - Karar - Sonuc - +XP - Yeni Yetenek - Yeni Safha</div>
+<button class="tut-start" onclick="startGame()">Anladim, Başla!</button>
+</div>
+<div class="game-wrap" id="gameWrap" style="display:none;">
+<div class="top-bar">
+<a href="oza-hub.html" class="tb-back">← OZA</a>
+<div class="tb-title">Canakkale 1915 — Bogaz Savunmasi</div>
+<div class="tb-stats">
+<div class="tb-stat"><b id="dayDisp">1/259</b><small>Gun</small></div>
+<div class="tb-stat"><b id="enemyDisp">100%</b><small>Düşman</small></div>
+<div class="tb-stat"><b id="xpDisp">0</b><small>XP</small></div>
+</div></div>
+<div class="map-area">
+<div class="time-layer">
+<div class="day-info">
+<div class="day-title" id="dayTitle">CANAKKALENIN 1. GUNU</div>
+<div class="day-sub" id="daySub">19 Subat 1915</div>
+<div class="day-progress"><div class="day-progress-fill" id="dayBar" style="width:0%"></div></div>
+</div>
+<div class="time-detail">
+<div class="td-item"><b id="timeDisp">06:00</b><small>Saat</small></div>
+<div class="td-item"><b id="windDisp">NE 18km/h</b><small>Ruzgar</small></div>
+<div class="td-item"><b id="moraleDisp">92%</b><small>Moral</small></div>
+</div></div>
+<div class="front-layer">
+<div class="front-col">
+<h4>Turk Kuvvetleri</h4>
+<div class="unit-row selected" onclick="selectUnit('topcu')"><span class="unit-icon">💣</span><div class="unit-info"><div class="unit-name">Topcu Bataryasi</div><div class="unit-hp">Nusret, Mesudiye, Kale Toplari</div></div><div class="hp-bar"><div class="hp-fill" id="hp_topcu" style="width:100%"></div></div></div>
+<div class="unit-row" onclick="selectUnit('piyade')"><span class="unit-icon">🔫</span><div class="unit-info"><div class="unit-name">57. Alay Piyade</div><div class="unit-hp">Mehmetcik — Siper Savunmasi</div></div><div class="hp-bar"><div class="hp-fill" id="hp_piyade" style="width:100%"></div></div></div>
+<div class="unit-row" onclick="selectUnit('mayin')"><span class="unit-icon">💥</span><div class="unit-info"><div class="unit-name">Mayin Hatti</div><div class="unit-hp">Nusret Mayin Gemisi</div></div><div class="hp-bar"><div class="hp-fill" id="hp_mayin" style="width:100%"></div></div></div>
+<div class="unit-row" onclick="selectUnit('komutan')"><span class="unit-icon">⭐</span><div class="unit-info"><div class="unit-name">Komutanlik</div><div class="unit-hp">Mustafa Kemal — 19. Tumen</div></div><div class="hp-bar"><div class="hp-fill" id="hp_komutan" style="width:100%"></div></div></div>
+</div>
+<div class="sur-col"><div class="sur-label">BOGAZ</div><div class="sur-bar"><div class="sur-fill" id="surFill" style="height:100%"></div></div><span style="font-size:.5rem;color:var(--dim)" id="surPct">100%</span></div>
+<div class="front-col">
+<h4>Itilaf Kuvvetleri</h4>
+<div class="unit-row"><span class="unit-icon">🚢</span><div class="unit-info"><div class="unit-name">Ingiliz Donanmasi</div><div class="unit-hp">Queen Elizabeth, 16 zirhli</div></div><div class="hp-bar"><div class="hp-fill" style="width:100%;background:var(--red)"></div></div></div>
+<div class="unit-row"><span class="unit-icon">🇫🇷</span><div class="unit-info"><div class="unit-name">Fransiz Filosu</div><div class="unit-hp">Bouvet, Suffren, 6 gemi</div></div><div class="hp-bar"><div class="hp-fill" style="width:100%;background:var(--red)"></div></div></div>
+<div class="unit-row"><span class="unit-icon">🪖</span><div class="unit-info"><div class="unit-name">ANZAC Kolordusu</div><div class="unit-hp">Avustralya + Yeni Zelanda</div></div><div class="hp-bar"><div class="hp-fill" style="width:100%;background:var(--red)"></div></div></div>
+<div class="unit-row"><span class="unit-icon">🏴</span><div class="unit-info"><div class="unit-name">Ingiliz Kara Kuvveti</div><div class="unit-hp">Hamilton — 75.000 asker</div></div><div class="hp-bar"><div class="hp-fill" style="width:100%;background:var(--red)"></div></div></div>
+</div></div>
+<div class="resource-layer">
+<div class="res-item"><div class="res-label">Cephane</div><div class="res-bar"><div class="res-fill" id="resAmmo" style="width:85%;background:var(--#c41e3a)"></div></div><div class="res-val" id="resAmmoVal">85%</div></div>
+<div class="res-item"><div class="res-label">Erzak</div><div class="res-bar"><div class="res-fill" id="resFood" style="width:80%;background:var(--green)"></div></div><div class="res-val" id="resFoodVal">80%</div></div>
+<div class="res-item"><div class="res-label">Asker</div><div class="res-bar"><div class="res-fill" id="resArmy" style="width:90%;background:var(--gold)"></div></div><div class="res-val" id="resArmyVal">90%</div></div>
+<div class="res-item"><div class="res-label">Mayin</div><div class="res-bar"><div class="res-fill" id="resMine" style="width:100%;background:var(--red)"></div></div><div class="res-val" id="resMineVal">100%</div></div>
+</div></div>
+<div class="right-panel">
+<div class="panel-tabs">
+<div class="panel-tab active" onclick="switchTab('intel')">Kesif</div>
+<div class="panel-tab" onclick="switchTab('skills')">Yetenek</div>
+<div class="panel-tab" onclick="switchTab('story')">Hikaye</div>
+</div>
+<div class="panel-content" id="panelContent"></div>
+</div>
+<div class="bottom-bar">
+<div class="phase-info"><span class="phase-title" id="phaseTitle"></span><span class="phase-desc" id="phaseDesc"></span></div>
+<div class="action-row" id="actionBtns"></div>
+</div></div>
+<div class="xp-popup" id="xpPopup"><h3 id="xpTitle">TUR SONU</h3><p id="xpResult"></p><div class="xp-val" id="xpGainDisp">+0 XP</div><p id="xpExtra" style="color:var(--gold);margin-top:6px;font-size:.65rem;"></p></div>
+<div class="cinematic" id="cinematic"></div>
+<script>
+const G={day:1,maxDay:259,hour:6,minute:0,bogaz:100,army:90,morale:92,food:80,ammo:85,mine:100,enemyMorale:100,enemyShips:22,enemyArmy:75000,xp:0,level:1,phase:0,skills:{topcu:0,sipahi:0,denizci:0,komutan:0},selectedUnit:'topcu',turnsPlayed:0,unitHP:{topcu:100,piyade:100,mayin:100,komutan:100}};
+const PHASES=[
+{title:"Deniz Bombardimani — 19 Subat",desc:"Itilaf donanmasi dis istihkamlari bombaliyor. Bataryalari koru!",days:[1,10],actions:[
+{label:"💣 Karsi Ates",cost:"+1 gun, -5 cephane",effect:()=>{G.ammo-=5;G.enemyMorale-=4;return"Düşman gemilerine isabet! Düşman morali -4";}},
+{label:"🔇 Sessiz Kal",cost:"+1 gun",effect:()=>{G.morale-=3;G.ammo+=2;return"Cephane koruduk ama moral dustu. -3 moral";}},
+{label:"💥 Mayin Hatti Guclendir",cost:"+1 gun",effect:()=>{G.mine=Math.min(100,G.mine+10);return"Nusret yeni mayin dosedi!";}},
+{label:"📡 Kesif Ucusu",cost:"+1 gun",effect:()=>{G.morale+=2;return"Düşman filosunun konumu tespit edildi. +2 moral";}}]},
+{title:"18 Mart Deniz Zaferi",desc:"Itilafin buyuk taarruzu! 18 zirhli Bogaza giriyor. Mayinlar kritik!",days:[11,30],actions:[
+{label:"💥 Mayin Tuzagi",cost:"+1 gun, -15 mayin",effect:()=>{G.mine-=15;G.enemyShips-=3;G.enemyMorale-=12;return"3 zirhli batti! Bouvet, Irresistible, Ocean! -12 dusman morali";}},
+{label:"💣 Yogun Topcu Atesi",cost:"+1 gun, -12 cephane",effect:()=>{G.ammo-=12;G.enemyShips-=1;G.enemyMorale-=6;return"1 gemi agir hasar! -6 dusman morali";}},
+{label:"🎯 Mecidiye Bataryasi",cost:"+1 gun, -8 cephane",effect:()=>{G.ammo-=8;G.enemyMorale-=5;return"Mecidiyeden isabetli atis! -5 dusman morali";}},
+{label:"🏴 Sahte Mevzi",cost:"+1 gun",effect:()=>{G.morale+=4;G.enemyMorale-=3;return"Düşman sahte mevzileri bombaladi! +4 moral";}}]},
+{title:"Kara Cikarmasi Hazirlik",desc:"Denizde basarisiz olan Itilaf kara harekati planliyor. Savunma hatlarini guclendir!",days:[31,55],actions:[
+{label:"⛏️ Siper Kaz",cost:"+2 gun",effect:()=>{G.day++;G.bogaz+=3;G.food-=3;return"Yeni siper hatti hazir. Savunma +3%";}},
+{label:"🔫 Takviye Iste",cost:"+1 gun",effect:()=>{G.army=Math.min(100,G.army+8);return"Istanbuldan takviye geldi. Asker +8%";}},
+{label:"💣 Kiyi Bataryasi Kur",cost:"+2 gun, -10 cephane",effect:()=>{G.day++;G.ammo-=10;G.bogaz+=5;return"Yeni kiyi bataryasi aktif. Savunma +5%";}},
+{label:"🏇 Kesif Kolu",cost:"+1 gun",effect:()=>{G.morale+=3;return"Olasi cikarma noktalari tespit edildi. +3 moral";}}]},
+{title:"Ariburnu Cikarmasi — 25 Nisan",desc:"ANZAC birlikleri Ariburnuna cikiyor! Mustafa Kemal 19. Tumeni harekete gecir!",days:[56,85],actions:[
+{label:"⚔️ Karsi Taarruz",cost:"+1 gun, -8 asker, -6 cephane",effect:()=>{G.army-=8;G.ammo-=6;G.enemyMorale-=8;G.enemyArmy-=5000;return"Karsi taarruz! ANZAC ilerleyisi durdu. -8 dusman morali";}},
+{label:"🔫 Siper Savunmasi",cost:"+1 gun, -4 cephane",effect:()=>{G.ammo-=4;G.enemyMorale-=4;G.morale+=2;return"Siperlerde direndik! -4 dusman morali";}},
+{label:"⭐ 'Olmeyi Emrediyorum!'",cost:"+1 gun, -5 asker",effect:()=>{G.army-=5;G.morale+=12;G.enemyMorale-=10;return"'Ben size olmeyi emrediyorum!' +12 moral";}},
+{label:"🏴 Gece Baskini",cost:"+1 gun, -3 asker",effect:()=>{G.army-=3;G.enemyMorale-=6;G.enemyArmy-=3000;return"Gece sungu hucumu! -6 dusman morali";}}]},
+{title:"Seddulbahir Cephesi",desc:"Ingilizler guneyde Seddulbahire cikti. İki cephede savas!",days:[86,110],actions:[
+{label:"💣 Topcu Baraji",cost:"+1 gun, -10 cephane",effect:()=>{G.ammo-=10;G.enemyMorale-=7;G.enemyArmy-=4000;return"Yogun topcu atesi! -7 dusman morali";}},
+{label:"🔫 Mevzi Savunmasi",cost:"+1 gun, -3 cephane",effect:()=>{G.ammo-=3;G.enemyMorale-=3;return"Seddulbahirde direniyoruz!";}},
+{label:"⛏️ Tünel Savaşı",cost:"+2 gun, -5 cephane",effect:()=>{G.day++;G.ammo-=5;G.enemyMorale-=5;G.enemyArmy-=2000;return"Lağım patlatıldı! Düşman siperi coktu.";}},
+{label:"📦 Lojistik Takviye",cost:"+1 gun",effect:()=>{G.food=Math.min(100,G.food+10);G.ammo=Math.min(100,G.ammo+5);return"Erzak ve cephane takviyesi geldi.";}}]},
+{title:"Conkbayiri Muharebeleri",desc:"Stratejik tepe icin kanli muharebeler. Conkbayiri duserse Bogaz tehlikede!",days:[111,140],actions:[
+{label:"⚔️ Sungu Hucumu",cost:"+1 gun, -6 asker",effect:()=>{G.army-=6;G.enemyMorale-=9;G.enemyArmy-=6000;return"Conkbayirinda sungu hucumu! Tepe geri alindi!";}},
+{label:"🔫 Savunma Hatti",cost:"+1 gun, -4 cephane",effect:()=>{G.ammo-=4;G.enemyMorale-=4;return"Tepeyi tutuyoruz!";}},
+{label:"⭐ Kemal Cephede",cost:"+1 gun, -2 asker",effect:()=>{G.army-=2;G.morale+=10;G.enemyMorale-=6;return"Kemal Bey bizzat cephede! Saatine srapnel isabet etti ama sag! +10 moral";}},
+{label:"🏇 Yan Kusatma",cost:"+1 gun, -4 asker",effect:()=>{G.army-=4;G.enemyMorale-=7;G.enemyArmy-=4000;return"Yandan kusatma! Düşman cembere alindi.";}}]},
+{title:"Anafartalar Taarruzu",desc:"Itilafin son buyuk taarruzu. Mustafa Kemal Anafartalar Grup Komutani!",days:[141,180],actions:[
+{label:"⚔️ Karsi Taarruz",cost:"+1 gun, -7 asker, -8 cephane",effect:()=>{G.army-=7;G.ammo-=8;G.enemyMorale-=11;G.enemyArmy-=8000;return"Anafartalar karsi taarruzu! Düşman geri puskurtuldu!";}},
+{label:"💣 Topcu Destegi",cost:"+1 gun, -10 cephane",effect:()=>{G.ammo-=10;G.enemyMorale-=6;G.enemyArmy-=3000;return"Topcu baraji! -6 dusman morali";}},
+{label:"🏴 Gece Taarruzu",cost:"+1 gun, -5 asker",effect:()=>{G.army-=5;G.enemyMorale-=8;G.enemyArmy-=5000;return"Gece baskini basarili!";}},
+{label:"📡 İstihbarat Topla",cost:"+1 gun",effect:()=>{G.morale+=4;return"Düşman tahliye planlari tespit edildi! +4 moral";}}]},
+{title:"Siper Savaşı — Yipratma",desc:"Cepheler dondu. Siper savaşı, hastalık, soğuk. Dayanma gücü kritik!",days:[181,220],actions:[
+{label:"🔫 Keskin Nisanci",cost:"+1 gun, -2 cephane",effect:()=>{G.ammo-=2;G.enemyMorale-=3;return"Keskin nisancilar etkili! -3 dusman morali";}},
+{label:"📦 Saglik Hizmeti",cost:"+1 gun",effect:()=>{G.morale+=5;G.army=Math.min(100,G.army+3);return"Hastane cadirlari kuruldu. +5 moral";}},
+{label:"⛏️ Siper Gelistir",cost:"+2 gun",effect:()=>{G.day++;G.bogaz+=2;return"Siperlere beton takviye. Savunma +2%";}},
+{label:"🏴 Propaganda",cost:"+1 gun",effect:()=>{G.enemyMorale-=4;G.morale+=2;return"Düşmana propaganda brosuru! -4 dusman morali";}}]},
+{title:"Kis Sartlari",desc:"Kasim-Aralik. Siddetli firtina, sel, dondurucu soguk.",days:[221,245],actions:[
+{label:"📦 Kislik Malzeme",cost:"+1 gun",effect:()=>{G.morale+=4;G.food-=5;return"Kislik giysi dagitildi. +4 moral";}},
+{label:"🔥 Siper Isitma",cost:"+1 gun, -3 erzak",effect:()=>{G.food-=3;G.morale+=3;return"Siperler isitildi. Donma kayiplari azaldi.";}},
+{label:"💣 Firtina Baskini",cost:"+1 gun, -4 asker",effect:()=>{G.army-=4;G.enemyMorale-=6;return"Firtinada baskin! Düşman hazirliksiz yakalandi.";}},
+{label:"📡 Tahliye Istihbarati",cost:"+1 gun",effect:()=>{G.morale+=6;return"Düşman tahliye hazirligi yapiyor! +6 moral";}}]},
+{title:"Düşman Tahliyesi — Ocak 1916",desc:"Itilaf kuvvetleri gizlice cekiliyor. Canakkale gecilmedi!",days:[246,259],actions:[
+{label:"💣 Tahliyeyi Engelle",cost:"+1 gun, -5 cephane",effect:()=>{G.ammo-=5;G.enemyMorale-=8;G.enemyArmy-=5000;return"Tahliye gemilerine ates! -8 dusman morali";}},
+{label:"🏴 Takip Et",cost:"+1 gun, -3 asker",effect:()=>{G.army-=3;G.enemyMorale-=5;return"Cekilen dusmani takip! Agir kayip verdirdik.";}},
+{label:"⚔️ ZAFER",cost:"FINAL",effect:()=>{showCinematic();return null;}}]}
+];
+const INTEL=[
+{icon:"🔎",title:"Nusretin Gizli Mayinlari",desc:"Nusret mayin gemisi gece gizlice 26 mayin dosedi. Düşman bunlardan habersiz.",accuracy:92,cost:100,unlocked:false},
+{icon:"⚠️",title:"Queen Elizabeth Rotasi",desc:"Amiral gemisi Queen Elizabethin rotasi tespit edildi. Mayin hattindan gececek.",accuracy:78,cost:200,unlocked:false},
+{icon:"🚢",title:"Bouvet Zayif Noktasi",desc:"Fransiz zirhlisi Bouvetnin alt karinasi zayif. Tek mayin yeterli.",accuracy:85,cost:150,unlocked:false},
+{icon:"💀",title:"ANZAC Cikarma Noktasi",desc:"Düşman Kabatepe yerine Ariburnuna cikacak. Hazirlik yapilabilir.",accuracy:70,cost:300,unlocked:false},
+{icon:"🌙",title:"Hamiltonun Tereddudi",desc:"General Hamilton kararsiz. Hizli hareket edersek avantaj bizde.",accuracy:65,cost:250,unlocked:false},
+{icon:"🔥",title:"Conkbayiri Kritik",desc:"Conkbayirini tutan Bogazi tutar. Düşman bunu henuz anlamadi.",accuracy:88,cost:180,unlocked:false},
+{icon:"📡",title:"Anafartalar Plani",desc:"Itilaf Anafartalardan kusatma planliyor. Kemali oraya gonder.",accuracy:75,cost:350,unlocked:false},
+{icon:"🏴",title:"Tahliye Sinyalleri",desc:"Düşman gece gizli tahliye yapiyor. Sahte ates duzenegi kullaniyorlar.",accuracy:80,cost:200,unlocked:false}
+];
+const SKILLS=[
+{id:"topcu",icon:"💣",name:"Topcu Ustasi",desc:"Topcu hasari +20%/seviye. Cephane tasarrufu.",lvl:0,maxLvl:3,xpCost:200},
+{id:"sipahi",icon:"⚔️",name:"Sipahi",desc:"Sungu hucumu +25% etkili. Asker kaybi azalir.",lvl:0,maxLvl:3,xpCost:180},
+{id:"denizci",icon:"⚓",name:"Denizci",desc:"Mayin etkinligi +30%. Deniz savunmasi guclenir.",lvl:0,maxLvl:3,xpCost:220},
+{id:"komutan",icon:"⭐",name:"Komutan",desc:"Moral bonusu +15%. Ekstra hamle sansi.",lvl:0,maxLvl:3,xpCost:250}
+];
+const STORIES=[
+{badge:"Tarihsel Gerçek",text:"18 Mart 1915: Nusretin dosedigi 26 mayin, 3 zirhliyi batirdi, 3unu agir hasara ugratti. Deniz taarruzu tamamen coktu.",stat:"6 zirhli devre disi, 700+ denizci kayip"},
+{badge:"Komutan Sozu",text:"'Ben size taarruz emri vermiyorum. Ben size olmeyi emrediyorum! Biz olunceye kadar gececek zaman zarfinda yerimize baska kuvvetler gelebilir.' — Mustafa Kemal",stat:"57. Alay, 25 Nisan 1915"},
+{badge:"Kritik Bilgi",text:"Canakkalede toplam 253.000 Turk askeri savasti. 57.000i sehit dustu. Itilaf: 503.000 asker, 252.000 kayip.",stat:"Turk: %22 kayip, Itilaf: %50 kayip"},
+{badge:"Strateji Dersi",text:"Itilafin hatasi: Deniz ve kara harekatini koordine edememesi. 25 Nisan cikarmasi 5 hafta gec kaldi.",stat:"5 hafta = 100.000 kayip farki"},
+{badge:"Eger... Senaryosu",text:"Eger Mustafa Kemal 19. Tumeni kendi inisiyatifiyle harekete gecirmeseydi, ANZAC Conkbayirini alir ve Bogaz duserdi.",stat:"1 subayin karari = 1 imparatorlugun kaderi"},
+{badge:"Silah Bilgisi",text:"Nusret Mayin Gemisi: 40 mayin kapasiteli, 8 dugum hiz. Gece operasyonlariyla toplam 26 mayin dosedi.",stat:"1 gemi, 26 mayin, 3 batik zirhli"},
+{badge:"Psikolojik Savas",text:"Mehmetcik siperlerde dusmana sigara ve yiyecek firlatiyordu. ANZAC askerleri Turklere 'Johnny Turk' diyerek saygi gosterdi.",stat:"Düşmanin bile saygi duydugu asker"},
+{badge:"Lojistik Gercek",text:"Canakkalede en buyuk dusman hastalikti. Dizanteri, tifus ve donma, savas kayiplarinin 2 kati can aldi.",stat:"Hastalik kayiplari: Savas kayiplarinin 2xi"}
+];
+function showTutorial(){document.getElementById('introScreen').style.display='none';document.getElementById('tutorialScreen').classList.add('active');}
+function startGame(){document.getElementById('introScreen').style.display='none';document.getElementById('tutorialScreen').classList.remove('active');document.getElementById('tutorialScreen').style.display='none';document.getElementById('gameWrap').style.display='grid';renderPhase();switchTab('intel');}
+function selectUnit(u){G.selectedUnit=u;document.querySelectorAll('.unit-row').forEach(r=>r.classList.remove('selected'));event.currentTarget.classList.add('selected');}
+function renderPhase(){const p=PHASES[G.phase];document.getElementById('phaseTitle').textContent=p.title;document.getElementById('phaseDesc').textContent=p.desc;const c=document.getElementById('actionBtns');c.innerHTML='';p.actions.forEach((a,i)=>{const btn=document.createElement('button');btn.className='action-btn'+(i>0?' secondary':'');btn.innerHTML=a.label+'<span class="cost">'+a.cost+'</span>';btn.onclick=()=>executeAction(a);c.appendChild(btn);});updateUI();}
+function executeAction(action){const result=action.effect();if(!result)return;G.day=Math.min(G.day+1,G.maxDay);G.hour=5+Math.floor(Math.random()*16);G.minute=Math.floor(Math.random()*60);G.turnsPlayed++;G.bogaz=Math.max(0,Math.min(100,G.bogaz));G.morale=Math.max(0,Math.min(100,G.morale));G.food=Math.max(0,Math.min(100,G.food));G.ammo=Math.max(0,Math.min(100,G.ammo));G.mine=Math.max(0,Math.min(100,G.mine));G.army=Math.max(0,Math.min(100,G.army));G.enemyMorale=Math.max(0,Math.min(100,G.enemyMorale));const xpGain=70+Math.floor(Math.random()*50);G.xp+=xpGain;const nextLvl=G.level*280;let newSkill='';if(G.xp>=nextLvl){G.level++;newSkill='Seviye '+G.level+' - Yeni yetenek acildi!';}showXP(xpGain,result,newSkill);const p=PHASES[G.phase];if(G.day>p.days[1]&&G.phase<PHASES.length-1){G.phase++;renderPhase();}if(G.enemyMorale<=0){setTimeout(()=>showCinematic(),800);}updateUI();}
+function updateUI(){document.getElementById('dayDisp').textContent=G.day+'/'+G.maxDay;document.getElementById('enemyDisp').textContent=G.enemyMorale+'%';document.getElementById('xpDisp').textContent=G.xp;document.getElementById('dayTitle').textContent="CANAKKALENIN "+G.day+". GUNU";const sd=new Date(1915,1,19);sd.setDate(sd.getDate()+G.day-1);const m=['Ocak','Subat','Mart','Nisan','Mayis','Haziran','Temmuz','Agustos','Eylul','Ekim','Kasim','Aralik'];document.getElementById('daySub').textContent=sd.getDate()+' '+m[sd.getMonth()]+' 1915 — '+PHASES[G.phase].title;document.getElementById('dayBar').style.width=(G.day/G.maxDay*100)+'%';document.getElementById('timeDisp').textContent=String(G.hour).padStart(2,'0')+':'+String(G.minute).padStart(2,'0');const w=['N','NE','E','SE','S','SW','W','NW'];document.getElementById('windDisp').textContent=w[Math.floor(Math.random()*8)]+' '+Math.floor(8+Math.random()*20)+'km/h';document.getElementById('moraleDisp').textContent=G.morale+'%';document.getElementById('surFill').style.height=G.bogaz+'%';document.getElementById('surPct').textContent=G.bogaz+'%';document.getElementById('resAmmo').style.width=G.ammo+'%';document.getElementById('resAmmoVal').textContent=G.ammo+'%';document.getElementById('resFood').style.width=G.food+'%';document.getElementById('resFoodVal').textContent=G.food+'%';document.getElementById('resArmy').style.width=G.army+'%';document.getElementById('resArmyVal').textContent=G.army+'%';document.getElementById('resMine').style.width=G.mine+'%';document.getElementById('resMineVal').textContent=G.mine+'%';['topcu','piyade','mayin','komutan'].forEach(u=>{const el=document.getElementById('hp_'+u);if(el)el.style.width=G.unitHP[u]+'%';});}
+function showXP(gain,result,extra){const p=document.getElementById('xpPopup');document.getElementById('xpResult').textContent=result;document.getElementById('xpGainDisp').textContent='+'+gain+' XP';document.getElementById('xpExtra').textContent=extra;p.style.display='block';setTimeout(()=>{p.style.display='none';},2200);}
+function switchTab(tab){document.querySelectorAll('.panel-tab').forEach(t=>t.classList.remove('active'));event.currentTarget.classList.add('active');const c=document.getElementById('panelContent');if(tab==='intel'){c.innerHTML=INTEL.map((intel,i)=>'<div class="intel-card '+(intel.unlocked?'unlocked':'')+'" onclick="buyIntel('+i+')"><div class="intel-header"><span class="intel-icon">'+intel.icon+'</span><span class="intel-title">'+intel.title+'</span></div><div class="intel-desc">'+(intel.unlocked?intel.desc:'???')+'</div><div class="intel-meta"><span>Dogruluk: '+(intel.unlocked?intel.accuracy+'%':'?')+'</span><span>'+(intel.unlocked?'ACILDI':intel.cost+' XP')+'</span></div></div>').join('');}else if(tab==='skills'){c.innerHTML=SKILLS.map((s,i)=>'<div class="skill-card"><div class="skill-header"><span class="skill-icon">'+s.icon+'</span><span class="skill-name">'+s.name+'</span><span class="skill-lvl">Lv.'+s.lvl+'/'+s.maxLvl+'</span></div><div class="skill-desc">'+s.desc+'</div><button class="skill-btn" onclick="upgradeSkill('+i+')" '+(G.xp<s.xpCost||s.lvl>=s.maxLvl?'disabled':'')+'>'+( s.lvl>=s.maxLvl?'MAX':s.xpCost+' XP ile Gelistir')+'</button></div>').join('');}else{c.innerHTML=STORIES.map(s=>'<div class="story-card"><div class="story-badge">'+s.badge+'</div><div class="story-text">'+s.text+'</div>'+(s.stat?'<div class="story-stat">'+s.stat+'</div>':'')+'</div>').join('');}}
+function buyIntel(i){if(INTEL[i].unlocked||G.xp<INTEL[i].cost)return;G.xp-=INTEL[i].cost;INTEL[i].unlocked=true;G.morale=Math.min(100,G.morale+3);switchTab('intel');updateUI();}
+function upgradeSkill(i){const s=SKILLS[i];if(G.xp<s.xpCost||s.lvl>=s.maxLvl)return;G.xp-=s.xpCost;s.lvl++;G.skills[s.id]=s.lvl;switchTab('skills');updateUI();}
+function showCinematic(){const c=document.getElementById('cinematic');c.style.display='flex';c.innerHTML='<h1>CANAKKALE GECILMEZ!</h1><p>259 gun. 253.000 Mehmetcik. 57.000 sehit.<br><br>Itilaf\'in en guclu donanmasi ve ordusu geri puskurtuldu.<br><br>"Dur yolcu! Bilmeden gelip bastigin bu toprak, bir devrin battigi yerdir."<br><br>Düşman morali: '+G.enemyMorale+'%<br>Toplam tur: '+G.turnsPlayed+'<br>Toplam XP: '+G.xp+'<br>Seviye: '+G.level+'</p>';}
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body></html>

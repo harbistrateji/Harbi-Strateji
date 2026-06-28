@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>SİBER SAVUNMA: BLOK — OZA Arcade</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c14;--panel:#0f1722;--accent:#00ff88;--text:#eaf0f7;--dim:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace}
+.game-wrap{display:grid;grid-template-columns:1fr 360px;height:100vh}
+@media(max-width:900px){.game-wrap{grid-template-columns:1fr;grid-template-rows:65vh 35vh}}
+.canvas-panel{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.06)}
+.game-board{display:grid;grid-template-columns:repeat(10,1fr);gap:1px;width:min(300px,80vw);aspect-ratio:1/2;background:rgba(255,255,255,.02);border:2px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden}
+.cell{background:var(--bg);transition:background .1s}
+.cell.filled{border-radius:2px}
+.hud-bar{display:flex;gap:20px;margin-bottom:16px}
+.hud-item{text-align:center}
+.hud-label{font-size:9px;color:var(--dim);text-transform:uppercase}
+.hud-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700;color:var(--accent)}
+.info-panel{background:var(--panel);padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.info-title{font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:800;color:var(--accent);text-transform:uppercase}
+.info-subtitle{font-size:11px;color:var(--dim);margin-top:4px}
+.info-section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px}
+.info-section h3{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.info-section p,.info-section li{font-size:12px;line-height:1.7;color:var(--dim)}
+.info-section ul{list-style:none;padding:0}
+.info-section li::before{content:'▸ ';color:var(--accent)}
+.back-btn{position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-size:12px;border:1px solid rgba(0,224,255,.2)}
+.overlay{position:absolute;inset:0;background:rgba(8,12,20,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50}
+.overlay.hidden{display:none}
+.start-btn{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:14px 40px;border-radius:10px;cursor:pointer;margin-top:16px}
+.next-piece{display:grid;grid-template-columns:repeat(4,20px);gap:1px;margin:12px auto}
+.np-cell{width:20px;height:20px;background:var(--bg);border-radius:2px}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" class="back-btn">← OZA Hub</a>
+<div class="game-wrap">
+  <div class="canvas-panel">
+    <div class="hud-bar">
+      <div class="hud-item"><div class="hud-label">SEVİYE</div><div class="hud-val" id="level">1</div></div>
+      <div class="hud-item"><div class="hud-label">SKOR</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">SATIRLAR</div><div class="hud-val" id="lines">0</div></div>
+    </div>
+    <div class="game-board" id="board"></div>
+    <div class="overlay" id="overlay">
+      <div style="font-family:Chakra Petch;font-size:24px;font-weight:800;color:var(--accent)">🛡️ SİBER SAVUNMA: BLOK</div>
+      <div style="font-size:11px;color:var(--dim);margin-top:8px;text-align:center;max-width:280px">Malware, DDoS, Phishing blokları düşüyor. Doğru savunma katmanını yerleştir, firewall'u kur!</div>
+      <button class="start-btn" onclick="startGame()">BAŞLAT</button>
+    </div>
+  </div>
+  <div class="info-panel">
+    <div>
+      <div class="info-title">🛡️ SİBER SAVUNMA: BLOK</div>
+      <div class="info-subtitle">Siber Saldırı Blokları Düşüyor</div>
+    </div>
+    <div class="info-section">
+      <h3>Siber Savunma Katmanları</h3>
+      <ul>
+        <li><strong style="color:#00ff88">Firewall:</strong> Ağ trafiğini filtreler</li>
+        <li><strong style="color:#00e0ff">IDS/IPS:</strong> Sızma tespit ve önleme</li>
+        <li><strong style="color:#a855f7">Encryption:</strong> Veri şifreleme katmanı</li>
+        <li><strong style="color:#f4a261">Honeypot:</strong> Saldırganı tuzağa çek</li>
+        <li><strong style="color:#ef4444">Patch:</strong> Zafiyet yamala</li>
+        <li><strong style="color:#ec4899">Zero Trust:</strong> Sıfır güven mimarisi</li>
+        <li><strong style="color:#c9a84c">SOC:</strong> Güvenlik operasyon merkezi</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Kontroller</h3>
+      <ul>
+        <li>← → : Yatay hareket</li>
+        <li>↑ : Döndür</li>
+        <li>↓ : Hızlı düşür</li>
+        <li>SPACE : Anında yerleştir</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Saldırı Tipleri</h3>
+      <p>DDoS (kırmızı), Malware (mor), Phishing (turuncu), Ransomware (pembe), APT (mavi) — her biri farklı blok şekli. Tam satır = saldırı engellendi!</p>
+    </div>
+  </div>
+</div>
+<script>
+const COLS=10,ROWS=20;
+const board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+const boardEl=document.getElementById('board');
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+let score=0,lines=0,level=1,running=false,dropInterval,currentPiece,currentPos;
+
+// Create board cells
+for(let i=0;i<ROWS*COLS;i++){const d=document.createElement('div');d.className='cell';boardEl.appendChild(d)}
+
+const PIECES=[
+  [[1,1,1,1]],
+  [[1,1],[1,1]],
+  [[0,1,0],[1,1,1]],
+  [[1,0,0],[1,1,1]],
+  [[0,0,1],[1,1,1]],
+  [[1,1,0],[0,1,1]],
+  [[0,1,1],[1,1,0]]
+];
+const PIECE_COLORS=['#00ff88','#00e0ff','#a855f7','#f4a261','#ef4444','#ec4899','#c9a84c'];
+const ATTACK_NAMES=['Firewall','IDS','Encryption','Honeypot','Patch','Zero Trust','SOC'];
+
+function playTone(f,d,t='square',v=.12){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+
+function newPiece(){
+  const idx=Math.floor(Math.random()*PIECES.length);
+  currentPiece={shape:PIECES[idx].map(r=>[...r]),color:PIECE_COLORS[idx],idx};
+  currentPos={x:Math.floor(COLS/2)-1,y:0};
+  if(!canPlace(currentPiece.shape,currentPos.x,currentPos.y))gameOver();
+}
+
+function canPlace(shape,px,py){
+  for(let r=0;r<shape.length;r++)for(let c=0;c<shape[r].length;c++){
+    if(!shape[r][c])continue;
+    const nx=px+c,ny=py+r;
+    if(nx<0||nx>=COLS||ny>=ROWS)return false;
+    if(ny>=0&&board[ny][nx])return false;
+  }
+  return true;
+}
+
+function placePiece(){
+  const s=currentPiece.shape;
+  for(let r=0;r<s.length;r++)for(let c=0;c<s[r].length;c++){
+    if(!s[r][c])continue;
+    const ny=currentPos.y+r;if(ny<0)continue;
+    board[ny][currentPos.x+c]=currentPiece.color;
+  }
+  playTone(200,.05,'sine',.1);
+  clearLines();newPiece();
+}
+
+function clearLines(){
+  let cleared=0;
+  for(let r=ROWS-1;r>=0;r--){
+    if(board[r].every(c=>c)){board.splice(r,1);board.unshift(Array(COLS).fill(0));cleared++;r++;}
+  }
+  if(cleared){
+    lines+=cleared;score+=cleared*cleared*100*level;
+    level=Math.floor(lines/10)+1;
+    [600,800,1000,1200].slice(0,cleared).forEach((f,i)=>setTimeout(()=>playTone(f,.1,'sine',.15),i*60));
+    document.getElementById('score').textContent=score;
+    document.getElementById('lines').textContent=lines;
+    document.getElementById('level').textContent=level;
+    clearInterval(dropInterval);dropInterval=setInterval(drop,Math.max(100,800-level*60));
+  }
+}
+
+function rotate(){
+  const s=currentPiece.shape;
+  const rotated=s[0].map((_,i)=>s.map(r=>r[i]).reverse());
+  if(canPlace(rotated,currentPos.x,currentPos.y)){currentPiece.shape=rotated;playTone(300,.03,'sine',.08)}
+}
+
+function drop(){
+  if(canPlace(currentPiece.shape,currentPos.x,currentPos.y+1))currentPos.y++;
+  else placePiece();
+  render();
+}
+
+function hardDrop(){while(canPlace(currentPiece.shape,currentPos.x,currentPos.y+1))currentPos.y++;placePiece();render()}
+
+function render(){
+  const cells=boardEl.children;
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const cell=cells[r*COLS+c];
+    cell.style.background=board[r][c]||'var(--bg)';
+    cell.classList.toggle('filled',!!board[r][c]);
+  }
+  // Draw current piece
+  if(currentPiece){
+    const s=currentPiece.shape;
+    for(let r=0;r<s.length;r++)for(let c=0;c<s[r].length;c++){
+      if(!s[r][c])continue;
+      const ny=currentPos.y+r,nx=currentPos.x+c;
+      if(ny>=0&&ny<ROWS&&nx>=0&&nx<COLS)cells[ny*COLS+nx].style.background=currentPiece.color;
+    }
+  }
+}
+
+function startGame(){
+  audioCtx.resume();
+  document.getElementById('overlay').classList.add('hidden');
+  for(let r=0;r<ROWS;r++)board[r].fill(0);
+  score=0;lines=0;level=1;running=true;
+  document.getElementById('score').textContent='0';
+  document.getElementById('lines').textContent='0';
+  document.getElementById('level').textContent='1';
+  newPiece();render();
+  dropInterval=setInterval(drop,800);
+}
+
+function gameOver(){
+  running=false;clearInterval(dropInterval);
+  playTone(150,.4,'sawtooth',.2);
+  const ov=document.getElementById('overlay');ov.classList.remove('hidden');
+  ov.querySelector('div').textContent='SAVUNMA KIRILDI!';
+  ov.querySelector('div:nth-child(2)').textContent=`Skor: ${score} | Satır: ${lines} | Seviye: ${level}`;
+}
+
+document.addEventListener('keydown',e=>{
+  if(!running)return;
+  if(e.key==='ArrowLeft'&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render()}
+  if(e.key==='ArrowRight'&&canPlace(currentPiece.shape,currentPos.x+1,currentPos.y)){currentPos.x++;render()}
+  if(e.key==='ArrowUp'){rotate();render()}
+  if(e.key==='ArrowDown'){drop()}
+  if(e.key===' '){e.preventDefault();hardDrop()}
+});
+
+// Mobile touch controls
+(function(){
+  let startX=0,startY=0,startTime=0;
+  const board=document.getElementById('board');
+  board.addEventListener('touchstart',function(e){
+    startX=e.touches[0].clientX;startY=e.touches[0].clientY;startTime=Date.now();
+  },{passive:true});
+  board.addEventListener('touchend',function(e){
+    if(!running)return;
+    const dx=e.changedTouches[0].clientX-startX;
+    const dy=e.changedTouches[0].clientY-startY;
+    const dt=Date.now()-startTime;
+    if(dt<200&&Math.abs(dx)<20&&Math.abs(dy)<20){rotate();render();return;}
+    if(Math.abs(dx)>Math.abs(dy)){
+      if(dx>30&&canPlace(currentPiece.shape,currentPos.x+1,currentPos.y)){currentPos.x++;render();}
+      else if(dx<-30&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render();}
+    }else{
+      if(dy>50){hardDrop();}
+      else if(dy>20){drop();}
+    }
+  },{passive:true});
+  // Add on-screen buttons for mobile
+  const mc=document.createElement('div');
+  mc.id='mobileCtrl';
+  mc.style.cssText='display:none;gap:8px;justify-content:center;margin-top:8px;';
+  mc.innerHTML='<button onclick="if(running&&canPlace(currentPiece.shape,currentPos.x-1,currentPos.y)){currentPos.x--;render()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">◀</button>'+
+    '<button onclick="if(running){rotate();render()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">↻</button>'+
+    '<button onclick="if(running){drop()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">▼</button>'+
+    '<button onclick="if(running&&canPlace(currentPiece.shape,currentPos.x+1,currentPos.y)){currentPos.x++;render()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:18px;cursor:pointer">▶</button>'+
+    '<button onclick="if(running){hardDrop()}" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,224,255,.1);color:#fff;font-size:14px;cursor:pointer">⏬</button>';
+  document.querySelector('.canvas-panel').appendChild(mc);
+  if(window.innerWidth<900)mc.style.display='flex';
+  window.addEventListener('resize',()=>{mc.style.display=window.innerWidth<900?'flex':'none';});
+})();
+</script>
+</body>
+</html>

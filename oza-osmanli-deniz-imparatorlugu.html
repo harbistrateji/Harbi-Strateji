@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Osmanlı Deniz İmparatorluğu — Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700;900&family=IBM+Plex+Sans:wght@400;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#141414;--panel2:#1a1a1a;--border:#2a2a2a;--red:#c41e3a;--gold:#d4a843;--white:#f0f0f0;--dim:#888;--green:#4caf50;--blue:#5a9fd4;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--white);font-family:'IBM Plex Sans',sans-serif;touch-action:none}
+#mapArea{position:absolute;inset:0;overflow:hidden}
+#mapCanvas{display:block;touch-action:none}
+/* HUD */
+#hud{position:fixed;top:0;left:0;right:0;z-index:20;padding:8px 12px;background:linear-gradient(180deg,rgba(13,13,13,.97),transparent);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;pointer-events:none}
+.hb{background:rgba(20,20,20,.95);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-family:'Chakra Petch',monospace;font-size:.7rem;text-align:center;min-width:65px}
+.hv{font-size:.95rem;font-weight:900;display:block}
+.hl{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+/* PROGRESS BAR */
+#progressBar{position:fixed;top:52px;left:0;right:240px;height:24px;background:var(--panel);border-bottom:1px solid var(--border);z-index:19;display:flex;align-items:center;padding:0 12px;gap:8px}
+#progressBar .label{font-size:.6rem;color:var(--dim);text-transform:uppercase;white-space:nowrap}
+#progressBar .bar{flex:1;height:8px;background:var(--panel2);border-radius:4px;overflow:hidden}
+#progressBar .fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:4px;transition:width .5s}
+#progressBar .pct{font-size:.7rem;font-weight:700;color:var(--gold);min-width:35px;text-align:right}
+/* SIDE PANEL */
+#sidePanel{position:fixed;right:0;top:52px;bottom:0;width:260px;background:rgba(13,13,13,.97);border-left:1px solid var(--border);z-index:20;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.sp-section{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px}
+.sp-title{font-family:'Chakra Petch',sans-serif;font-size:.75rem;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px}
+.sp-btn{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:.72rem;color:var(--white);transition:all .2s;display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.sp-btn:hover{border-color:var(--red);background:rgba(196,30,58,.1);transform:translateX(2px)}
+.sp-btn .cost{color:var(--gold);font-size:.65rem}
+.sp-info{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.7rem;color:var(--dim);line-height:1.6}
+.sp-info .fact{color:var(--red);font-weight:700}
+/* QUEST */
+#questBox{position:fixed;bottom:90px;left:12px;width:220px;background:rgba(13,13,13,.95);border:1px solid var(--border);border-radius:10px;padding:12px;z-index:20}
+#questBox .qt{font-size:.6rem;color:var(--dim);text-transform:uppercase;margin-bottom:4px}
+#questBox .qn{font-size:.8rem;font-weight:700;color:var(--gold);margin-bottom:4px}
+#questBox .qd{font-size:.65rem;color:var(--dim)}
+#questBox .qr{font-size:.65rem;color:var(--green);margin-top:4px}
+/* LOG */
+#log{position:fixed;bottom:0;left:0;right:260px;background:rgba(13,13,13,.95);border-top:1px solid var(--border);padding:6px 12px;z-index:20;max-height:80px;overflow-y:auto}
+.log-entry{font-size:.65rem;color:var(--dim);padding:2px 0}
+.log-entry.good{color:var(--green)}
+.log-entry.warn{color:var(--gold)}
+.log-entry.bad{color:var(--red)}
+/* OVERLAY */
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.ov-t1{font-family:'Chakra Petch';font-size:clamp(1.2rem,4vw,2.2rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;color:var(--red);margin-bottom:4px}
+.ov-t2{font-size:clamp(.9rem,3vw,1.4rem);font-weight:700;color:var(--white);margin-bottom:12px}
+.ov-hist{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 20px;max-width:500px;margin-bottom:16px;text-align:left}
+.ov-hist h3{color:var(--red);font-size:.85rem;margin-bottom:8px}
+.ov-hist p{font-size:.75rem;color:var(--dim);line-height:1.7}
+.ov-hist .fact{color:var(--gold);font-weight:700}
+.ov-btn{background:var(--red);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:.9rem;font-weight:900;cursor:pointer;letter-spacing:2px;text-transform:uppercase;margin:5px;font-family:'Chakra Petch'}
+.ov-btn:hover{transform:scale(1.05)}
+.ov-btn.sec{background:transparent;color:var(--red);border:2px solid var(--red)}
+/* BATTLE OVERLAY */
+#battleOv{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+#battleOv .bt{font-family:'Chakra Petch';font-size:1.4rem;font-weight:900;color:var(--red);margin-bottom:10px}
+#battleOv .bsub{font-size:.85rem;color:var(--dim);margin-bottom:16px}
+#battleOv .bvs{display:flex;gap:30px;align-items:center;margin-bottom:20px}
+#battleOv .bside{text-align:center}
+#battleOv .bside .num{font-size:2rem;font-weight:900}
+#battleOv .bside .lbl{font-size:.6rem;color:var(--dim);text-transform:uppercase}
+#battleOv .vs{font-size:1.5rem;color:var(--gold)}
+#battleOv .bresult{font-size:1.8rem;font-weight:900;margin-bottom:8px}
+#battleOv .breward{font-size:.85rem;color:var(--gold);margin-bottom:16px}
+/* ACHIEVEMENT POPUP */
+#achievePopup{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--panel);border:2px solid var(--gold);border-radius:12px;padding:12px 24px;z-index:70;text-align:center;transition:transform .5s cubic-bezier(.19,1,.22,1);pointer-events:none}
+#achievePopup.show{transform:translateX(-50%) translateY(0)}
+#achievePopup .at{font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px}
+#achievePopup .an{font-size:1rem;font-weight:900;color:var(--white);margin-top:4px}
+/* HISTORY CARD */
+#histCard{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--panel);border:2px solid var(--red);border-radius:14px;padding:20px;z-index:65;max-width:350px;text-align:left;transition:transform .4s cubic-bezier(.19,1,.22,1)}
+#histCard.show{transform:translate(-50%,-50%) scale(1)}
+#histCard .ht{font-size:.6rem;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+#histCard .hh{font-size:1rem;font-weight:900;color:var(--gold);margin-bottom:8px}
+#histCard .hp{font-size:.75rem;color:var(--dim);line-height:1.7}
+#histCard .hclose{position:absolute;top:8px;right:12px;cursor:pointer;color:var(--dim);font-size:1.2rem}
+/* EVENT OVERLAY */
+#eventOv{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:55;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+#eventOv .et{font-size:.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+#eventOv .en{font-family:'Chakra Petch';font-size:1.3rem;font-weight:900;color:var(--white);margin-bottom:12px}
+#eventOv .ed{font-size:.8rem;color:var(--dim);margin-bottom:20px;max-width:400px;line-height:1.6}
+#eventOv .eopts{display:flex;flex-direction:column;gap:8px;width:100%;max-width:350px}
+#eventOv .eopt{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;text-align:left;transition:all .2s}
+#eventOv .eopt:hover{border-color:var(--red);transform:translateX(4px)}
+#eventOv .eopt .ot{font-size:.8rem;font-weight:700;color:var(--white)}
+#eventOv .eopt .os{font-size:.65rem;color:var(--dim);margin-top:4px}
+/* TOOLTIP */
+#tooltip{position:fixed;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;z-index:30;display:none;min-width:180px;max-width:220px;pointer-events:none}
+#tooltip .tt-name{font-weight:900;font-size:.85rem;color:var(--white);margin-bottom:4px}
+#tooltip .tt-type{font-size:.6rem;color:var(--red);text-transform:uppercase;margin-bottom:6px}
+#tooltip .tt-row{display:flex;justify-content:space-between;font-size:.7rem;color:var(--dim);padding:2px 0}
+#tooltip .tt-row .val{color:var(--gold);font-weight:700}
+#tooltip .tt-bonus{font-size:.65rem;color:var(--green);margin-top:6px;font-style:italic}
+/* XP POPUP */
+.xp-pop{position:fixed;z-index:80;font-family:'Chakra Petch';font-weight:900;font-size:1.2rem;color:var(--gold);pointer-events:none;animation:xpFloat 1.5s ease-out forwards}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px)}}
+/* MOBILE */
+@media(max-width:700px){
+  #sidePanel{width:100%;top:auto;bottom:80px;height:180px;right:0;left:0;border-left:none;border-top:1px solid var(--border);flex-direction:row;flex-wrap:wrap;overflow-x:auto}
+  #log{right:0}
+  #progressBar{right:0}
+  #questBox{bottom:270px;width:160px}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← OZA</a>
+<div id="mapArea"><canvas id="mapCanvas"></canvas></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div style="display:flex;gap:6px;pointer-events:auto">
+    <div class="hb"><span class="hv" id="yilV" style="color:var(--gold)">1453</span><span class="hl">YIL</span></div>
+    <div class="hb"><span class="hv" id="altinV" style="color:var(--gold)">500</span><span class="hl">ALTIN</span></div>
+  </div>
+  <div style="font-family:'Chakra Petch';font-weight:900;font-size:.9rem;color:var(--red);letter-spacing:2px">OSMANLI DENİZ İMPARATORLUĞU</div>
+  <div style="display:flex;gap:6px;pointer-events:auto">
+    <div class="hb"><span class="hv" id="gemV" style="color:var(--white)">3</span><span class="hl">GEMİ</span></div>
+    <div class="hb"><span class="hv" id="limanV" style="color:var(--green)">3</span><span class="hl">LİMAN</span></div>
+    <div class="hb"><span class="hv" id="zaferV" style="color:var(--red)">0</span><span class="hl">ZAFER</span></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div id="progressBar">
+  <span class="label">Akdeniz Hakimiyeti</span>
+  <div class="bar"><div class="fill" id="progFill" style="width:25%"></div></div>
+  <span class="pct" id="progPct">25%</span>
+</div>
+
+<!-- QUEST -->
+<div id="questBox">
+  <div class="qt">GÜNCEL GÖREV</div>
+  <div class="qn" id="questName">Rodos'u Fethet</div>
+  <div class="qd" id="questDesc">Şövalyelerin kalesini ele geçir</div>
+  <div class="qr" id="questReward">+200 Altın · +1 Zafer</div>
+</div>
+
+<!-- SIDE PANEL -->
+<div id="sidePanel">
+  <div class="sp-section">
+    <div class="sp-title">KOMUTAN</div>
+    <div id="komutanInfo" class="sp-info">
+      <span class="fact" id="komutanName">Barbaros Hayreddin</span><br>
+      <span id="komutanBonus">Saldırı +10%</span>
+    </div>
+  </div>
+  <div class="sp-section">
+    <div class="sp-title">TERSANE</div>
+    <div class="sp-btn" onclick="buildShip('kadirga')">Kadırga İnşa <span class="cost">80 💰</span></div>
+    <div class="sp-btn" onclick="buildShip('galeass')">Galeass İnşa <span class="cost">150 💰</span></div>
+    <div class="sp-btn" onclick="buildShip('kapak')">Kapak Gemisi <span class="cost">220 💰</span></div>
+    <div class="sp-btn" onclick="buildTersane()">Tersane Kur <span class="cost">200 💰</span></div>
+  </div>
+  <div class="sp-section">
+    <div class="sp-title">SEFERLer</div>
+    <div class="sp-btn" onclick="attackTarget()">Hedefe Saldır <span class="cost">Seç</span></div>
+    <div class="sp-btn" onclick="nextTurn()">Tur Geç <span class="cost">+1 Yıl</span></div>
+  </div>
+  <div class="sp-section">
+    <div class="sp-title">BAŞARIMLAR</div>
+    <div id="achieveList" class="sp-info" style="font-size:.6rem"></div>
+  </div>
+  <div class="sp-section">
+    <div class="sp-title">LİMAN BİLGİSİ</div>
+    <div id="infoBox" class="sp-info">Bir limana tıklayın</div>
+  </div>
+</div>
+
+<!-- LOG -->
+<div id="log"></div>
+
+<!-- TOOLTIP -->
+<div id="tooltip">
+  <div class="tt-name"></div>
+  <div class="tt-type"></div>
+  <div class="tt-row"><span>Savunma:</span><span class="val tt-def"></span></div>
+  <div class="tt-row"><span>Gelir:</span><span class="val tt-inc"></span></div>
+  <div class="tt-bonus"></div>
+</div>
+
+<!-- BATTLE OVERLAY -->
+<div id="battleOv">
+  <div class="bt" id="battleTitle"></div>
+  <div class="bsub" id="battleSub"></div>
+  <div class="bvs">
+    <div class="bside"><div class="num" id="bOsm" style="color:var(--red)"></div><div class="lbl">Osmanlı</div></div>
+    <div class="vs">VS</div>
+    <div class="bside"><div class="num" id="bEnm" style="color:var(--dim)"></div><div class="lbl" id="bEnmLbl"></div></div>
+  </div>
+  <div class="bresult" id="battleResult"></div>
+  <div class="breward" id="battleReward"></div>
+</div>
+
+<!-- ACHIEVEMENT POPUP -->
+<div id="achievePopup"><div class="at">BAŞARIM AÇILDI</div><div class="an" id="achieveName"></div></div>
+
+<!-- HISTORY CARD -->
+<div id="histCard">
+  <span class="hclose" onclick="document.getElementById('histCard').classList.remove('show')">✕</span>
+  <div class="ht">TARİH NOTU</div>
+  <div class="hh" id="histTitle"></div>
+  <div class="hp" id="histText"></div>
+</div>
+
+<!-- EVENT OVERLAY -->
+<div id="eventOv">
+  <div class="et">OLAY</div>
+  <div class="en" id="eventName"></div>
+  <div class="ed" id="eventDesc"></div>
+  <div class="eopts" id="eventOpts"></div>
+</div>
+
+<!-- INTRO OVERLAY -->
+<div id="ov">
+  <div class="ov-t1">Osmanlı Deniz İmparatorluğu</div>
+  <div class="ov-t2">Akdeniz'i Fethет — 1453-1571</div>
+  <div class="ov-hist">
+    <h3>Tarihsel Bağlam</h3>
+    <p>İstanbul'un fethinden sonra Osmanlı, Akdeniz'de hakimiyet kurmak için büyük bir deniz gücü inşa etti. <span class="fact">Barbaros Hayreddin Paşa</span> komutasındaki donanma, Preveze'den Cezayir'e kadar tüm Akdeniz'i kontrol altına aldı.</p>
+  </div>
+  <button class="ov-btn" onclick="startGame()">DENİZE AÇ</button>
+</div>
+
+<script>
+const canvas=document.getElementById('mapCanvas');
+const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+
+const PORTS=[
+  {id:'istanbul',name:'İstanbul',x:.55,y:.25,owner:'osmanli',defense:3,income:50,bonus:'Başkent: +30 Altın/tur',type:'Osmanlı Başkenti',icon:'🕌'},
+  {id:'izmir',name:'İzmir',x:.50,y:.35,owner:'osmanli',defense:2,income:30,bonus:'Ticaret: +20 Altın/tur',type:'Osmanlı Limanı',icon:'⚓'},
+  {id:'preveze',name:'Preveze',x:.40,y:.40,owner:'osmanli',defense:2,income:25,bonus:'Stratejik konum',type:'Osmanlı Üssü',icon:'⚓'},
+  {id:'tunus',name:'Tunus',x:.30,y:.55,owner:'neutral',defense:3,income:35,bonus:'Korsanlar: +1 Gemi/3 tur',type:'Berber Korsanları',icon:'🏴'},
+  {id:'cezayir',name:'Cezayir',x:.18,y:.50,owner:'neutral',defense:4,income:40,bonus:'Batı Akdeniz kontrolü',type:'Berber Üssü',icon:'🏴'},
+  {id:'tripoli',name:'Trablus',x:.35,y:.62,owner:'neutral',defense:2,income:20,bonus:'Ticaret yolu',type:'Kuzey Afrika',icon:'🏝'},
+  {id:'venedik',name:'Venedik',x:.42,y:.22,owner:'enemy',defense:5,income:60,bonus:'Deniz ticareti merkezi',type:'Venedik Cumhuriyeti',icon:'🏛'},
+  {id:'napoli',name:'Napoli',x:.36,y:.38,owner:'enemy',defense:3,income:30,bonus:'İspanya müttefiki',type:'İspanya Krallığı',icon:'🏛'},
+  {id:'barselona',name:'Barselona',x:.15,y:.35,owner:'enemy',defense:4,income:45,bonus:'İspanya donanma üssü',type:'İspanya Krallığı',icon:'🏛'},
+  {id:'malta',name:'Malta',x:.38,y:.50,owner:'enemy',defense:6,income:20,bonus:'Şövalye kalesi: Çok güçlü',type:'Malta Şövalyeleri',icon:'✝'},
+  {id:'rodos',name:'Rodos',x:.54,y:.40,owner:'enemy',defense:5,income:25,bonus:'Doğu Akdeniz kilidi',type:'Şövalye Kalesi',icon:'🏰'},
+  {id:'kibris',name:'Kıbrıs',x:.58,y:.40,owner:'enemy',defense:3,income:35,bonus:'Venedik kolonisi',type:'Venedik Kolonisi',icon:'🏝'},
+];
+
+const SEA_ROUTES=[
+  ['istanbul','izmir'],['izmir','preveze'],['preveze','tunus'],['tunus','cezayir'],
+  ['tunus','tripoli'],['preveze','venedik'],['venedik','napoli'],['napoli','barselona'],
+  ['napoli','malta'],['preveze','malta'],['izmir','rodos'],['rodos','kibris'],
+  ['istanbul','rodos'],['cezayir','barselona'],['tripoli','malta'],['kibris','tripoli'],
+];
+
+const KOMUTANLAR=[
+  {id:'barbaros',name:'Barbaros Hayreddin',bonus:'Saldırı +15%',attack:1.15,unlock:0,icon:'🧔'},
+  {id:'turgut',name:'Turgut Reis',bonus:'Savunma +20%',attack:1.0,defense:1.2,unlock:3,icon:'🧔'},
+  {id:'piri',name:'Piri Reis',bonus:'Gelir +25%',attack:1.0,income:1.25,unlock:5,icon:'🧔'},
+  {id:'kilic',name:'Kılıç Ali Paşa',bonus:'Gemi HP +30%',attack:1.1,shipHp:1.3,unlock:8,icon:'🧔'},
+];
+
+const ACHIEVEMENTS=[
+  {id:'ilk_gemi',name:'İlk Gemi',desc:'İlk gemiyi inşa et',icon:'🚢',done:false},
+  {id:'ilk_liman',name:'İlk Fetih',desc:'İlk limanı fethet',icon:'🏴',done:false},
+  {id:'akdeniz',name:'Akdeniz Hakimi',desc:'9+ liman kontrol et',icon:'🌊',done:false},
+  {id:'on_zafer',name:'10 Zafer',desc:'10 savaş kazan',icon:'⚔',done:false},
+  {id:'malta_fatihi',name:'Malta Fatihi',desc:'Malta\'yı fethet',icon:'✝',done:false},
+  {id:'barbaros_mirasi',name:'Barbaros\'un Mirası',desc:'Tüm Akdeniz\'i fethet',icon:'👑',done:false},
+];
+
+const EVENTS=[
+  {name:'Venedik Filosu Görüldü',desc:'Venedik donanması Ege\'ye doğru ilerliyor. Ne yapmalı?',opts:[
+    {text:'Saldır — Riski göze al',sub:'Başarı: +200 Altın, Başarısız: -1 Gemi',fn:()=>{if(Math.random()<.5){G.altin+=200;addLog('Venedik filosu yenildi! +200','good');showXP('+200 ALTIN',W/2,H/2)}else{if(G.gemiler.length>0)G.gemiler.pop();addLog('Saldırı başarısız! 1 gemi kaybedildi','bad')}}},
+    {text:'Bekle — Güvenli oyna',sub:'Hiçbir şey olmaz',fn:()=>{addLog('Venedik filosu uzaklaştı.','warn')}},
+    {text:'Takviye Çağır — 100 Altın',sub:'Savunma güçlenir',fn:()=>{if(G.altin>=100){G.altin-=100;G.gemiler.push({id:Date.now(),type:'kadirga',port:'istanbul',hp:100});addLog('Takviye geldi! +1 Kadırga','good')}else addLog('Yetersiz altın!','bad')}}
+  ]},
+  {name:'Fırtına Yaklaşıyor',desc:'Akdeniz\'de şiddetli fırtına bekleniyor. Donanma limanda mı kalsın?',opts:[
+    {text:'Limanda kal — Güvenli',sub:'1 tur kaybedersin',fn:()=>{addLog('Donanma limanda bekledi. Güvenli.','warn')}},
+    {text:'Fırtınaya rağmen ilerle',sub:'%30 gemi kaybı riski',fn:()=>{if(Math.random()<.3&&G.gemiler.length>0){G.gemiler.pop();addLog('Fırtınada 1 gemi battı!','bad')}else{G.altin+=50;addLog('Fırtınayı atlattık! +50 Altın bonus','good');showXP('+50',W/2,H/2)}}}
+  ]},
+  {name:'Korsanlar İttifak Teklifi',desc:'Kuzey Afrika korsanları ittifak öneriyor.',opts:[
+    {text:'Kabul et — +2 Gemi',sub:'Korsanlar katılır',fn:()=>{G.gemiler.push({id:Date.now(),type:'kadirga',port:'tunus',hp:80},{id:Date.now()+1,type:'kadirga',port:'cezayir',hp:80});addLog('Korsanlar katıldı! +2 Kadırga','good');showXP('+2 GEMİ',W/2,H/2)}},
+    {text:'Reddet — Bağımsız kal',sub:'Onur korunur',fn:()=>{G.altin+=100;addLog('Korsanları reddettik. Saygınlık +100 Altın','warn')}}
+  ]},
+  {name:'Ticaret Kervanı',desc:'Mısır\'dan zengin bir ticaret kervanı geçiyor.',opts:[
+    {text:'Vergi al — +150 Altın',sub:'Güvenli gelir',fn:()=>{G.altin+=150;addLog('Ticaret vergisi: +150 Altın','good');showXP('+150',W/2,H/2)}},
+    {text:'Yağmala — +300 Altın',sub:'Ama itibar kaybı',fn:()=>{G.altin+=300;addLog('Kervan yağmalandı! +300 ama itibar düştü','warn')}},
+    {text:'Koruma ver — Gelecek gelir',sub:'+50 Altın/tur (3 tur)',fn:()=>{G.bonusIncome=50;G.bonusTurns=3;addLog('Kervan korunuyor. 3 tur +50 Altın','good')}}
+  ]},
+  {name:'Düşman Casusu Yakalandı',desc:'Tersanede bir Venedik casusu yakalandı!',opts:[
+    {text:'Sorgula — İstihbarat',sub:'Düşman savunması görünür',fn:()=>{PORTS.filter(p=>p.owner==='enemy').forEach(p=>{p.revealed=true});addLog('İstihbarat alındı! Düşman savunmaları görünür','good')}},
+    {text:'Serbest bırak — Diplomasi',sub:'Venedik ile gerilim azalır',fn:()=>{addLog('Casus serbest. Venedik saldırı ihtimali azaldı.','warn');G.peaceTurns=3}}
+  ]},
+  {name:'Tersane Yangını',desc:'İstanbul tersanesinde yangın çıktı!',opts:[
+    {text:'Söndür — 100 Altın',sub:'Hasar önlenir',fn:()=>{if(G.altin>=100){G.altin-=100;addLog('Yangın söndürüldü. -100 Altın','warn')}else addLog('Altın yok! Tersane hasar gördü','bad')}},
+    {text:'Kaderine bırak',sub:'1 gemi kaybı riski',fn:()=>{if(Math.random()<.5&&G.gemiler.length>0){G.gemiler.pop();addLog('Yangında 1 gemi yandı!','bad')}else addLog('Yangın kendiliğinden söndü. Şanslıyız!','good')}}
+  ]},
+];
+
+const HISTORY_CARDS=[
+  {title:'1538 Preveze Deniz Muharebesi',text:'Barbaros Hayreddin Paşa komutasındaki Osmanlı donanması, Andrea Doria liderliğindeki Haçlı donanmasını ağır yenilgiye uğrattı. Akdeniz 33 yıl boyunca "Türk Gölü" oldu.',trigger:'preveze'},
+  {title:'1522 Rodos Kuşatması',text:'Kanuni Sultan Süleyman, 6 aylık kuşatma sonunda Rodos\'u Şövalyelerden aldı. Şövalyeler Malta\'ya sürüldü.',trigger:'rodos'},
+  {title:'1571 İnebahtı Savaşı',text:'Osmanlı donanması Haçlı ittifakına yenildi. Ancak 6 ay içinde donanma yeniden inşa edildi. "Biz size kol kestik, siz bize sakal kestiniz" — Sokullu.',trigger:'year_1571'},
+  {title:'1453 İstanbul\'un Fethi',text:'Fatih Sultan Mehmed, 53 günlük kuşatma sonunda Konstantinopolis\'i fethetti. Donanma Haliç\'e karadan taşındı.',trigger:'start'},
+  {title:'1516 Cezayir\'in Osmanlı\'ya Katılması',text:'Barbaros kardeşler Cezayir\'i İspanya\'dan kurtardı ve Osmanlı\'ya bağladı. Batı Akdeniz\'de Osmanlı varlığı başladı.',trigger:'cezayir'},
+  {title:'1570 Kıbrıs Seferi',text:'Osmanlı, Venedik\'ten Kıbrıs\'ı aldı. Doğu Akdeniz tamamen Osmanlı kontrolüne geçti.',trigger:'kibris'},
+];
+
+const G={
+  running:false,yil:1453,altin:500,gemiler:[],tersaneler:['istanbul'],
+  puan:0,turn:0,selectedPort:null,particles:[],
+  komutan:0,xp:0,
+  bonusIncome:0,bonusTurns:0,peaceTurns:0,
+  quests:[
+    {target:'rodos',name:'Rodos\'u Fethet',desc:'Şövalyelerin kalesini ele geçir',reward:'+200 Altın · +1 Zafer',done:false},
+    {target:'malta',name:'Malta\'yı Kuşat',desc:'Şövalyelerin son kalesi',reward:'+300 Altın · +2 Zafer',done:false},
+    {target:'venedik',name:'Venedik\'i Dize Getir',desc:'Ticaret imparatorluğunu yık',reward:'+500 Altın · +3 Zafer',done:false},
+    {target:'cezayir',name:'Cezayir\'i Al',desc:'Batı Akdeniz\'e aç',reward:'+150 Altın',done:false},
+    {target:'kibris',name:'Kıbrıs Seferi',desc:'Doğu Akdeniz kilidi',reward:'+250 Altın · +2 Zafer',done:false},
+  ],
+  currentQuest:0,
+  achievementsDone:[],
+  gemilerBuilt:0,
+};
+
+function initGemiler(){
+  G.gemiler=[
+    {id:1,type:'kadirga',port:'istanbul',hp:100},
+    {id:2,type:'kadirga',port:'izmir',hp:100},
+    {id:3,type:'kadirga',port:'preveze',hp:100},
+  ];
+}
+
+function addLog(text,type=''){
+  const log=document.getElementById('log');
+  const d=document.createElement('div');
+  d.className='log-entry'+(type?' '+type:'');
+  d.textContent='['+G.yil+'] '+text;
+  log.insertBefore(d,log.firstChild);
+  while(log.children.length>10)log.removeChild(log.lastChild);
+}
+
+function showXP(text,x,y){
+  const el=document.createElement('div');
+  el.className='xp-pop';
+  el.textContent=text;
+  el.style.left=x+'px';el.style.top=y+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1500);
+}
+
+function checkAchievement(id){
+  const a=ACHIEVEMENTS.find(a=>a.id===id);
+  if(!a||a.done)return;
+  a.done=true;
+  G.achievementsDone.push(id);
+  document.getElementById('achieveName').textContent=a.icon+' '+a.name;
+  document.getElementById('achievePopup').classList.add('show');
+  setTimeout(()=>document.getElementById('achievePopup').classList.remove('show'),3000);
+  updateAchievements();
+}
+
+function updateAchievements(){
+  const el=document.getElementById('achieveList');
+  el.innerHTML=ACHIEVEMENTS.map(a=>
+    '<div style="padding:2px 0;color:'+(a.done?'var(--gold)':'var(--dim)')+'">'+a.icon+' '+a.name+(a.done?' ✓':'')+'</div>'
+  ).join('');
+}
+
+function showHistoryCard(trigger){
+  const card=HISTORY_CARDS.find(h=>h.trigger===trigger);
+  if(!card)return;
+  document.getElementById('histTitle').textContent=card.title;
+  document.getElementById('histText').textContent=card.text;
+  document.getElementById('histCard').classList.add('show');
+  setTimeout(()=>document.getElementById('histCard').classList.remove('show'),6000);
+}
+
+function updateProgress(){
+  const osmanli=PORTS.filter(p=>p.owner==='osmanli').length;
+  const pct=Math.round(osmanli/PORTS.length*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+}
+
+function updateQuest(){
+  const q=G.quests[G.currentQuest];
+  if(!q)return;
+  document.getElementById('questName').textContent=q.name;
+  document.getElementById('questDesc').textContent=q.desc;
+  document.getElementById('questReward').textContent=q.reward;
+}
+
+function updateHUD(){
+  document.getElementById('yilV').textContent=G.yil;
+  document.getElementById('altinV').textContent=G.altin;
+  document.getElementById('gemV').textContent=G.gemiler.length;
+  document.getElementById('limanV').textContent=PORTS.filter(p=>p.owner==='osmanli').length;
+  document.getElementById('zaferV').textContent=G.score;
+  updateProgress();
+  // Komutan
+  const k=KOMUTANLAR[G.komutan];
+  document.getElementById('komutanName').textContent=k.icon+' '+k.name;
+  document.getElementById('komutanBonus').textContent=k.bonus;
+}
+
+function buildShip(type){
+  const costs={kadirga:80,galeass:150,kapak:220};
+  const cost=costs[type]||80;
+  if(G.altin<cost){addLog('Yetersiz altın!','bad');return;}
+  G.altin-=cost;
+  const osmanliPorts=PORTS.filter(p=>p.owner==='osmanli');
+  const port=osmanliPorts[Math.floor(Math.random()*osmanliPorts.length)];
+  const hps={kadirga:100,galeass:140,kapak:180};
+  G.gemiler.push({id:Date.now(),type,port:port.id,hp:hps[type]||100});
+  G.gemilerBuilt++;
+  addLog(type.toUpperCase()+' inşa edildi — '+port.name,'good');
+  showXP('+1 GEMİ',W/2,H/3);
+  if(G.gemilerBuilt===1)checkAchievement('ilk_gemi');
+  updateHUD();draw();
+}
+
+function buildTersane(){
+  if(G.altin<200){addLog('Yetersiz altın!','bad');return;}
+  const osmanliPorts=PORTS.filter(p=>p.owner==='osmanli'&&!G.tersaneler.includes(p.id));
+  if(osmanliPorts.length===0){addLog('Tüm limanlarda tersane var!','warn');return;}
+  G.altin-=200;
+  const port=osmanliPorts[Math.floor(Math.random()*osmanliPorts.length)];
+  G.tersaneler.push(port.id);
+  addLog('TERSANE kuruldu — '+port.name,'good');
+  showXP('TERSANE!',W/2,H/3);
+  updateHUD();draw();
+}
+
+function attackTarget(){
+  if(!G.selectedPort){addLog('Önce bir düşman limanına tıklayın!','bad');return;}
+  const target=G.selectedPort;
+  if(target.owner==='osmanli'){addLog('Bu liman zaten bizim!','warn');return;}
+  const myShips=G.gemiler.length;
+  if(myShips<2){addLog('Saldırmak için en az 2 gemi gerekli!','bad');return;}
+  // BATTLE SCREEN
+  const enemyPower=target.defense;
+  const myPower=myShips;
+  const k=KOMUTANLAR[G.komutan];
+  const attackMod=k.attack||1;
+  showBattle(target,myPower,enemyPower,attackMod);
+}
+
+function showBattle(target,myPower,enemyPower,attackMod){
+  const bo=document.getElementById('battleOv');
+  bo.style.display='flex';
+  document.getElementById('battleTitle').textContent='SEFERİ: '+target.name.toUpperCase();
+  document.getElementById('battleSub').textContent=target.type;
+  document.getElementById('bOsm').textContent=myPower+' Gemi';
+  document.getElementById('bEnm').textContent=enemyPower+' Savunma';
+  document.getElementById('bEnmLbl').textContent=target.type;
+  document.getElementById('battleResult').textContent='Savaş Başladı...';
+  document.getElementById('battleResult').style.color='var(--dim)';
+  document.getElementById('battleReward').textContent='';
+  // 2.5 saniye animasyon
+  setTimeout(()=>{
+    const chance=0.35+(myPower*0.08*attackMod)-(enemyPower*0.05);
+    const success=Math.random()<Math.max(.2,Math.min(.9,chance));
+    if(success){
+      target.owner='osmanli';target.color='var(--red)';
+      G.score++;G.altin+=target.income*2;
+      document.getElementById('battleResult').textContent='ZAFER!';
+      document.getElementById('battleResult').style.color='var(--gold)';
+      document.getElementById('battleReward').textContent='+'+target.income*2+' Altın · +1 Zafer';
+      addLog('ZAFER! '+target.name+' fethedildi!','good');
+      spawnParticles(target.x*W,target.y*H,'#c41e3a');
+      showXP('+'+target.income*2+' ALTIN',W/2,H/2);
+      // Başarım kontrolleri
+      if(G.score===1)checkAchievement('ilk_liman');
+      if(target.id==='malta')checkAchievement('malta_fatihi');
+      if(G.score>=10)checkAchievement('on_zafer');
+      if(PORTS.filter(p=>p.owner==='osmanli').length>=9)checkAchievement('akdeniz');
+      if(PORTS.filter(p=>p.owner==='osmanli').length>=12)checkAchievement('barbaros_mirasi');
+      // Görev kontrolü
+      const q=G.quests[G.currentQuest];
+      if(q&&target.id===q.target){q.done=true;G.currentQuest++;updateQuest();}
+      // Tarih kartı
+      showHistoryCard(target.id);
+      // Komutan açma
+      const nextK=KOMUTANLAR[G.komutan+1];
+      if(nextK&&G.score>=nextK.unlock){G.komutan++;addLog('YENİ KOMUTAN: '+nextK.name,'good');}
+    } else {
+      if(G.gemiler.length>0)G.gemiler.pop();
+      document.getElementById('battleResult').textContent='YENİLGİ';
+      document.getElementById('battleResult').style.color='var(--red)';
+      document.getElementById('battleReward').textContent='-1 Gemi kaybedildi';
+      addLog('Yenilgi! '+target.name+' savunuldu. -1 Gemi','bad');
+    }
+    updateHUD();draw();
+    setTimeout(()=>{bo.style.display='none';},2500);
+  },2500);
+}
+
+function showEvent(){
+  const evt=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+  const eo=document.getElementById('eventOv');
+  eo.style.display='flex';
+  document.getElementById('eventName').textContent=evt.name;
+  document.getElementById('eventDesc').textContent=evt.desc;
+  const optsEl=document.getElementById('eventOpts');
+  optsEl.innerHTML='';
+  evt.opts.forEach(opt=>{
+    const d=document.createElement('div');
+    d.className='eopt';
+    d.innerHTML='<div class="ot">'+opt.text+'</div><div class="os">'+opt.sub+'</div>';
+    d.onclick=()=>{opt.fn();eo.style.display='none';updateHUD();draw();};
+    optsEl.appendChild(d);
+  });
+}
+
+function nextTurn(){
+  G.turn++;G.yil++;
+  // Tersane geliri
+  G.altin+=G.tersaneler.length*25;
+  // Liman geliri
+  const osmanliLimanlar=PORTS.filter(p=>p.owner==='osmanli');
+  let income=0;
+  osmanliLimanlar.forEach(p=>{income+=p.income;});
+  const k=KOMUTANLAR[G.komutan];
+  if(k.income)income=Math.round(income*k.income);
+  G.altin+=income;
+  // Bonus income
+  if(G.bonusTurns>0){G.altin+=G.bonusIncome;G.bonusTurns--;}
+  // Düşman saldırısı
+  if(G.turn%4===0&&G.peaceTurns<=0&&Math.random()<.35){
+    if(G.gemiler.length>0&&Math.random()<.25){
+      G.gemiler.pop();
+      addLog('Düşman saldırdı! 1 gemi kaybedildi','bad');
+    } else {
+      addLog('Düşman saldırdı — savunuldu!','warn');
+    }
+  }
+  if(G.peaceTurns>0)G.peaceTurns--;
+  // Olay sistemi (her 3-4 turda)
+  if(G.turn%3===0&&G.turn>1)showEvent();
+  // Tarih olayları
+  if(G.yil===1571)showHistoryCard('year_1571');
+  addLog('Yıl '+G.yil+' — Gelir: +'+income+' Altın','');
+  showXP('+'+income,W-150,80);
+  updateHUD();draw();
+}
+
+function spawnParticles(x,y,color){
+  for(let i=0;i<20;i++){
+    const a=Math.random()*Math.PI*2,s=40+Math.random()*100;
+    G.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:3+Math.random()*5,color,life:1});
+  }
+}
+
+// DRAW
+let waveOffset=0;
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  // Deniz arka planı
+  const grad=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*.7);
+  grad.addColorStop(0,'#141414');grad.addColorStop(1,'#0d0d0d');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+  // Dalga animasyonu
+  waveOffset+=0.02;
+  for(let i=0;i<6;i++){
+    ctx.strokeStyle='rgba(196,30,58,'+(0.03+i*0.008)+')';ctx.lineWidth=1;
+    ctx.beginPath();
+    for(let x=0;x<W;x+=3){
+      const y=H*(.3+i*.1)+Math.sin((x/W*6+waveOffset+i*.7)*Math.PI)*H*.015;
+      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+  // Deniz yolları
+  SEA_ROUTES.forEach(([a,b])=>{
+    const pa=PORTS.find(p=>p.id===a),pb=PORTS.find(p=>p.id===b);
+    if(!pa||!pb)return;
+    ctx.strokeStyle='rgba(196,30,58,.1)';ctx.lineWidth=1;ctx.setLineDash([4,8]);
+    ctx.beginPath();ctx.moveTo(pa.x*W,pa.y*H);ctx.lineTo(pb.x*W,pb.y*H);ctx.stroke();
+    ctx.setLineDash([]);
+  });
+  // Limanlar
+  PORTS.forEach(port=>{
+    const px=port.x*W,py=port.y*H;
+    const isO=port.owner==='osmanli';
+    const isE=port.owner==='enemy';
+    const pulse=.8+.2*Math.sin(Date.now()*.003+px);
+    // Halo
+    ctx.beginPath();ctx.arc(px,py,24*pulse,0,Math.PI*2);
+    ctx.fillStyle=isO?'rgba(196,30,58,.12)':isE?'rgba(136,136,136,.08)':'rgba(212,168,67,.08)';
+    ctx.fill();
+    // Fethedilmiş sancak efekti
+    if(isO){
+      ctx.beginPath();ctx.arc(px,py,16,0,Math.PI*2);
+      ctx.fillStyle='#1a0a0a';ctx.fill();
+      ctx.strokeStyle='#c41e3a';ctx.lineWidth=2.5;ctx.stroke();
+    } else {
+      ctx.beginPath();ctx.arc(px,py,14,0,Math.PI*2);
+      ctx.fillStyle=isE?'#0a0a0a':'#1a1a0a';ctx.fill();
+      ctx.strokeStyle=isE?'#555':'#d4a843';ctx.lineWidth=2;ctx.stroke();
+    }
+    // İkon
+    ctx.font='14px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(port.icon,px,py);
+    // İsim
+    ctx.font='bold 10px "Chakra Petch"';
+    ctx.fillStyle=isO?'#c41e3a':isE?'#888':'#d4a843';
+    ctx.fillText(port.name,px,py+24);
+    // Gemi sayısı
+    const portGemiler=G.gemiler.filter(g=>g.port===port.id).length;
+    if(portGemiler>0){
+      ctx.font='bold 9px monospace';ctx.fillStyle='#f0f0f0';
+      ctx.fillText(portGemiler+' gemi',px+20,py-14);
+    }
+    // Tersane
+    if(G.tersaneler.includes(port.id)){
+      ctx.font='8px monospace';ctx.fillStyle='#d4a843';
+      ctx.fillText('TERSANE',px-20,py-14);
+    }
+    // Selected highlight
+    if(G.selectedPort&&G.selectedPort.id===port.id){
+      ctx.beginPath();ctx.arc(px,py,28,0,Math.PI*2);
+      ctx.strokeStyle='#d4a843';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+    }
+  });
+  // Gemi animasyonları (basit hareket)
+  const t=Date.now()*.001;
+  G.gemiler.forEach((gemi,i)=>{
+    const port=PORTS.find(p=>p.id===gemi.port);
+    if(!port)return;
+    const ox=Math.sin(t+i*2)*8;
+    const oy=Math.cos(t+i*1.5)*5;
+    const gx=port.x*W+ox+15;
+    const gy=port.y*H+oy;
+    ctx.font='10px sans-serif';ctx.fillText('⛵',gx,gy);
+  });
+  // Partiküller
+  G.particles=G.particles.filter(pt=>pt.life>0);
+  G.particles.forEach(pt=>{
+    pt.x+=pt.vx*.04;pt.y+=pt.vy*.04;pt.life-=.015;
+    ctx.save();ctx.globalAlpha=Math.max(0,pt.life);
+    ctx.beginPath();ctx.arc(pt.x,pt.y,Math.max(.5,pt.r*pt.life),0,Math.PI*2);
+    ctx.fillStyle=pt.color;ctx.fill();ctx.restore();
+  });
+}
+
+function startGame(){
+  document.getElementById('ov').style.display='none';
+  G.running=true;initGemiler();
+  addLog('Barbaros Hayreddin Paşa komutayı devraldı!','good');
+  addLog('Tersane kur, gemi inşa et, Akdeniz\'i fethet!','');
+  showHistoryCard('start');
+  updateHUD();updateQuest();updateAchievements();draw();
+  setInterval(()=>{if(G.running)draw();},60);
+}
+
+// Liman tıklama + tooltip
+canvas.addEventListener('click',e=>{
+  let clicked=false;
+  PORTS.forEach(port=>{
+    const px=port.x*W,py=port.y*H;
+    if(Math.hypot(e.clientX-px,e.clientY-py)<22){
+      G.selectedPort=port;clicked=true;
+      document.getElementById('infoBox').innerHTML=
+        '<span class="fact">'+port.icon+' '+port.name+'</span><br>'+
+        '<span style="color:var(--dim)">'+port.type+'</span><br>'+
+        'Savunma: <b>'+port.defense+'</b><br>'+
+        'Gelir: <b>'+port.income+' Altın/tur</b><br>'+
+        '<span style="color:var(--green)">'+port.bonus+'</span>';
+    }
+  });
+  if(!clicked)G.selectedPort=null;
+  draw();
+});
+
+// Tooltip on hover
+canvas.addEventListener('mousemove',e=>{
+  const tt=document.getElementById('tooltip');
+  let found=false;
+  PORTS.forEach(port=>{
+    const px=port.x*W,py=port.y*H;
+    if(Math.hypot(e.clientX-px,e.clientY-py)<20){
+      found=true;
+      tt.style.display='block';
+      tt.style.left=(e.clientX+15)+'px';
+      tt.style.top=(e.clientY-10)+'px';
+      tt.querySelector('.tt-name').textContent=port.icon+' '+port.name;
+      tt.querySelector('.tt-type').textContent=port.type;
+      tt.querySelector('.tt-def').textContent=port.defense+'/6';
+      tt.querySelector('.tt-inc').textContent=port.income+' Altın/tur';
+      tt.querySelector('.tt-bonus').textContent=port.bonus;
+    }
+  });
+  if(!found)tt.style.display='none';
+});
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

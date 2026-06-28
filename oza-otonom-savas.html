@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Otonom Savaş: YZ Komutanı — OZA · Harb-i Strateji</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#ff6b35;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:54px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none;padding:5px 12px;border:1px solid var(--line);border-radius:6px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;flex:1;text-align:center;color:var(--orange)}
+.hdr-pts{font-size:12px;color:var(--gold);font-weight:600}
+.main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:70px 16px 80px}
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
+.sv{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.sl{font-size:9px;color:var(--dim);text-transform:uppercase;margin-top:2px}
+.stage-wrap{text-align:center;margin-bottom:16px}
+.stage-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:20px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;border:1px solid}
+/* Battlefield canvas */
+.battlefield{background:var(--panel);border:2px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden;position:relative}
+#bf-canvas{display:block;width:100%;height:220px}
+.bf-legend{display:flex;gap:12px;padding:8px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.bf-leg-item{font-size:10px;color:var(--dim);display:flex;align-items:center;gap:4px}
+.bf-dot{width:8px;height:8px;border-radius:50%}
+/* Mission card */
+.mission-card{background:rgba(255,107,53,.06);border:2px solid rgba(255,107,53,.3);border-radius:14px;padding:16px;margin-bottom:14px}
+.mc-tag{font-size:10px;color:var(--orange);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.mc-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px}
+.mc-text{font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:10px}
+/* Ethics meter */
+.ethics-bar{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
+.eb-head{display:flex;justify-content:space-between;margin-bottom:6px;font-size:11px}
+.eb-label{color:var(--dim);text-transform:uppercase}
+.eb-val{font-family:'Chakra Petch',sans-serif;font-weight:700}
+.eb-track{height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+.eb-fill{height:100%;border-radius:5px;transition:width .4s}
+/* Decision grid */
+.dec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+@media(max-width:420px){.dec-grid{grid-template-columns:1fr}}
+.dec-btn{padding:13px 10px;border:2px solid var(--line);border-radius:12px;background:var(--panel);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer;transition:.15s;text-align:left;line-height:1.4}
+.dec-btn:active{transform:scale(.97)}
+.dec-btn.good{border-color:var(--green);background:rgba(0,255,136,.08)}
+.dec-btn.bad{border-color:var(--red);background:rgba(224,21,21,.08)}
+.dec-btn:disabled{opacity:.5}
+.feedback{text-align:center;font-size:13px;min-height:20px;margin-bottom:10px;font-weight:600}
+.overlay{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;text-align:center;margin-bottom:14px}
+.ov-score{font-family:'Chakra Petch',sans-serif;font-size:52px;font-weight:700;color:var(--cyan);margin-bottom:8px}
+.btn-main{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:var(--red);color:#fff;margin-bottom:8px}
+.btn-sec{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:13px;cursor:pointer;background:transparent;color:var(--dim);margin-bottom:8px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🤖 OTONOM SAVAŞ: YZ KOMUTANI</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="main">
+  <div class="stats-bar">
+    <div class="sbox"><div class="sv" id="s-pts" style="color:var(--cyan)">0</div><div class="sl">PUAN</div></div>
+    <div class="sbox"><div class="sv" id="s-stage" style="color:var(--orange)">1/3</div><div class="sl">AŞAMA</div></div>
+    <div class="sbox"><div class="sv" id="s-mission" style="color:var(--gold)">1/6</div><div class="sl">GÖREV</div></div>
+    <div class="sbox"><div class="sv" id="s-time" style="color:var(--red)">—</div><div class="sl">SÜRE</div></div>
+    <div class="sbox"><div class="sv" id="s-ethics" style="color:var(--green)">100</div><div class="sl">ETİK</div></div>
+  </div>
+  <div class="stage-wrap" id="stage-wrap"></div>
+  <div class="battlefield">
+    <canvas id="bf-canvas"></canvas>
+    <div class="bf-legend">
+      <div class="bf-leg-item"><div class="bf-dot" style="background:var(--cyan)"></div>Drone Sürüsü</div>
+      <div class="bf-leg-item"><div class="bf-dot" style="background:var(--red)"></div>Düşman</div>
+      <div class="bf-leg-item"><div class="bf-dot" style="background:var(--gold)"></div>Hedef</div>
+      <div class="bf-leg-item"><div class="bf-dot" style="background:var(--green)"></div>Sivil Bölge</div>
+    </div>
+  </div>
+  <div class="ethics-bar">
+    <div class="eb-head"><span class="eb-label">⚖️ Anlamlı İnsan Kontrolü (IHL Uyumu)</span><span class="eb-val" id="ethics-val" style="color:var(--green)">100%</span></div>
+    <div class="eb-track"><div class="eb-fill" id="ethics-fill" style="width:100%;background:var(--green)"></div></div>
+  </div>
+  <div id="game-area"></div>
+</div>
+<script>
+// Battlefield canvas animation
+var bfCanvas=document.getElementById('bf-canvas');
+var bfCtx=bfCanvas.getContext('2d');
+var bfW,bfH;
+var drones=[],enemies=[],targets=[],civilians=[];
+var bfAnimId=null;
+
+function initBattlefield(stageIdx){
+  bfW=bfCanvas.offsetWidth;bfH=220;
+  bfCanvas.width=bfW;bfCanvas.height=bfH;
+  var count=[5,8,12][stageIdx];
+  drones=Array.from({length:count},function(){ return{x:Math.random()*bfW*.3+20,y:Math.random()*bfH,vx:(.5+Math.random())*.8,vy:(Math.random()-.5)*.5,size:4};});
+  enemies=Array.from({length:3+stageIdx*2},function(){return{x:bfW*.6+Math.random()*bfW*.35,y:Math.random()*bfH,vx:-(Math.random()*.4+.2),vy:(Math.random()-.5)*.3};});
+  targets=Array.from({length:2+stageIdx},function(){return{x:bfW*.7+Math.random()*bfW*.25,y:Math.random()*bfH,r:10};});
+  civilians=Array.from({length:2},function(){return{x:bfW*.5+Math.random()*bfW*.2,y:Math.random()*bfH,r:14};});
+  if(bfAnimId)cancelAnimationFrame(bfAnimId);
+  animateBF();
+}
+
+function animateBF(){
+  bfCtx.clearRect(0,0,bfW,bfH);
+  // Grid
+  bfCtx.strokeStyle='rgba(0,224,255,.05)';bfCtx.lineWidth=1;
+  for(var x=0;x<bfW;x+=40){bfCtx.beginPath();bfCtx.moveTo(x,0);bfCtx.lineTo(x,bfH);bfCtx.stroke();}
+  for(var y=0;y<bfH;y+=40){bfCtx.beginPath();bfCtx.moveTo(0,y);bfCtx.lineTo(bfW,y);bfCtx.stroke();}
+  // Civilians
+  civilians.forEach(function(c){
+    bfCtx.beginPath();bfCtx.arc(c.x,c.y,c.r,0,Math.PI*2);
+    bfCtx.fillStyle='rgba(0,255,136,.1)';bfCtx.fill();
+    bfCtx.strokeStyle='rgba(0,255,136,.4)';bfCtx.lineWidth=1;bfCtx.stroke();
+    bfCtx.fillStyle='rgba(0,255,136,.8)';bfCtx.font='10px monospace';bfCtx.textAlign='center';
+    bfCtx.fillText('SİV',c.x,c.y+4);
+  });
+  // Targets
+  targets.forEach(function(t){
+    bfCtx.beginPath();bfCtx.arc(t.x,t.y,t.r,0,Math.PI*2);
+    bfCtx.fillStyle='rgba(201,162,75,.15)';bfCtx.fill();
+    bfCtx.strokeStyle='rgba(201,162,75,.6)';bfCtx.lineWidth=2;bfCtx.stroke();
+    bfCtx.fillStyle='rgba(201,162,75,.9)';bfCtx.font='10px monospace';bfCtx.textAlign='center';
+    bfCtx.fillText('HDF',t.x,t.y+4);
+  });
+  // Enemies
+  enemies.forEach(function(e){
+    e.x+=e.vx;e.y+=e.vy;
+    if(e.x<bfW*.4||e.x>bfW)e.vx*=-1;
+    if(e.y<0||e.y>bfH)e.vy*=-1;
+    bfCtx.beginPath();bfCtx.arc(e.x,e.y,6,0,Math.PI*2);
+    bfCtx.fillStyle='rgba(224,21,21,.8)';bfCtx.fill();
+  });
+  // Drones
+  drones.forEach(function(d){
+    d.x+=d.vx;d.y+=d.vy;
+    if(d.x<0||d.x>bfW*.8)d.vx*=-1;
+    if(d.y<0||d.y>bfH)d.vy*=-1;
+    bfCtx.beginPath();bfCtx.arc(d.x,d.y,d.size,0,Math.PI*2);
+    bfCtx.fillStyle='rgba(0,224,255,.9)';bfCtx.fill();
+    // Trail
+    bfCtx.beginPath();bfCtx.moveTo(d.x,d.y);bfCtx.lineTo(d.x-d.vx*8,d.y-d.vy*8);
+    bfCtx.strokeStyle='rgba(0,224,255,.3)';bfCtx.lineWidth=1;bfCtx.stroke();
+  });
+  bfAnimId=requestAnimationFrame(animateBF);
+}
+
+// Game data
+var STAGES=[
+  {label:'AŞAMA 1 — YARIAUTONOM',cls:'s1',color:'var(--green)',
+   sublabel:'Düşük etik risk · 18sn · 6 görev',timeLimit:18,missions:6,
+   missions_data:[
+     {tag:'SWARM TAKTİĞİ',title:'Drone Sürüsü Koordinasyonu',
+      text:'5 drone ile düşman radar sistemini etkisiz kılmanız gerekiyor. Sivil bölge 200m uzakta.',
+      decisions:[
+        {label:'🎯 Hassas hedefleme — sivil riski sıfır',good:true,pts:100,ethics:0,delta:'Mükemmel IHL uyumu'},
+        {label:'⚡ Hızlı saldırı — %5 sivil riski',good:false,pts:40,ethics:-15,delta:'IHL ihlali riski'},
+        {label:'🔄 Keşif önce, sonra vur',good:true,pts:90,ethics:+5,delta:'Orantılılık ilkesi'},
+        {label:'🚫 Görevi iptal et',good:false,pts:20,ethics:+10,delta:'Görev başarısız'}
+      ]},
+     {tag:'ETİK KARAR',title:'Anlamlı İnsan Kontrolü',
+      text:'YZ sistemi otomatik ateş açmayı öneriyor. Hedef doğrulanmış askeri araç.',
+      decisions:[
+        {label:'✅ İnsan onayı ile ateş',good:true,pts:110,ethics:+5,delta:'IHL uyumlu'},
+        {label:'🤖 YZ otonomisine bırak',good:false,pts:30,ethics:-20,delta:'Kontrol kaybı'},
+        {label:'🔍 Ek doğrulama iste',good:true,pts:95,ethics:+8,delta:'Dikkatli yaklaşım'},
+        {label:'⏸️ Beklet',good:false,pts:50,ethics:0,delta:'Fırsat kaçabilir'}
+      ]}
+   ]},
+  {label:'AŞAMA 2 — KUANTUM RADAR',cls:'s2',color:'var(--gold)',
+   sublabel:'Orta risk · 14sn · 8 görev',timeLimit:14,missions:8,
+   missions_data:[
+     {tag:'STEALTH vs KUANTUM',title:'Radar Görünmezlik Paradoksu',
+      text:'Stealth drone\'larınız kuantum radar tarafından tespit edildi. Elektronik harp mı, geri çekilme mi?',
+      decisions:[
+        {label:'📡 EW sistemi devreye al',good:true,pts:140,ethics:0,delta:'Spektrum hakimiyeti'},
+        {label:'🛸 Stealth güzergah değiştir',good:true,pts:120,ethics:+5,delta:'Risk azaltma'},
+        {label:'💥 Radar istasyonunu vur',good:false,pts:60,ethics:-25,delta:'Orantısız güç'},
+        {label:'🔄 Misyon iptal',good:false,pts:30,ethics:+5,delta:'Görev başarısız'}
+      ]},
+     {tag:'SWARM ETİĞİ',title:'Sürü Zekası Kararı',
+      text:'12 drone sürüsü hedefi çevreledi. YZ hedefin sivil mi askeri mi olduğundan %78 emin.',
+      decisions:[
+        {label:'⏸️ %78 yetersiz — dur',good:true,pts:130,ethics:+10,delta:'Orantılılık ilkesi'},
+        {label:'🎯 %78 yeterli — vur',good:false,pts:50,ethics:-30,delta:'Sivil kayıp riski'},
+        {label:'🔍 İnsansız keşif gönder',good:true,pts:120,ethics:+8,delta:'Doğrulama'},
+        {label:'📡 İstihbarat iste',good:true,pts:110,ethics:+5,delta:'Karar desteği'}
+      ]}
+   ]},
+  {label:'AŞAMA 3 — TAM OTONOM',cls:'s3',color:'var(--red2)',
+   sublabel:'Yüksek risk · 10sn · 10 görev',timeLimit:10,missions:10,
+   missions_data:[
+     {tag:'KRİTİK KARAR',title:'Nükleer Tesis Yakını Operasyon',
+      text:'Hedef nükleer tesisin 500m yakınında. YZ tam otonom ateş öneriyor. Etik eşiği kritik.',
+      decisions:[
+        {label:'🚫 Mutlak yasak — iptal',good:true,pts:200,ethics:+15,delta:'Uluslararası hukuk'},
+        {label:'🤖 YZ kararına güven',good:false,pts:20,ethics:-50,delta:'Felaket riski'},
+        {label:'🏛️ Üst komutaya ilet',good:true,pts:180,ethics:+10,delta:'Komuta zinciri'},
+        {label:'⏸️ 30sn bekle',good:false,pts:80,ethics:-10,delta:'Kritik gecikme'}
+      ]},
+     {tag:'YZ vs İNSAN',title:'Algoritma Çatışması',
+      text:'YZ sistemi ve insan komutanı farklı kararlar veriyor. Sivil kayıp olasılığı %12 vs %3.',
+      decisions:[
+        {label:'👤 İnsan kararı — %3 risk',good:true,pts:220,ethics:+15,delta:'İnsan kontrolü'},
+        {label:'🤖 YZ kararı — %12 risk',good:false,pts:40,ethics:-40,delta:'Etik ihlal'},
+        {label:'🔄 Karma yaklaşım',good:true,pts:190,ethics:+8,delta:'Hibrit kontrol'},
+        {label:'📋 Protokol uygula',good:true,pts:170,ethics:+10,delta:'Standart prosedür'}
+      ]}
+   ]}
+];
+
+var stage=0,mission=0,pts=0,ethics=100,timer=null,answered=false;
+
+function startStage(){
+  var s=STAGES[stage];
+  mission=0;ethics=100;answered=false;
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  document.getElementById('s-ethics').textContent=ethics;
+  initBattlefield(stage);
+  renderStageBadge();nextMission();
+}
+
+function renderStageBadge(){
+  var s=STAGES[stage];
+  document.getElementById('stage-wrap').innerHTML=
+    '<div class="stage-pill" style="border-color:'+s.color+';color:'+s.color+'">'+s.label+'</div>'+
+    '<div style="font-size:11px;color:var(--dim);margin-top:6px">'+s.sublabel+'</div>';
+}
+
+function updateEthics(){
+  var color=ethics>70?'var(--green)':ethics>40?'var(--gold)':'var(--red)';
+  document.getElementById('ethics-val').textContent=ethics+'%';
+  document.getElementById('ethics-val').style.color=color;
+  document.getElementById('ethics-fill').style.width=ethics+'%';
+  document.getElementById('ethics-fill').style.background=color;
+  document.getElementById('s-ethics').textContent=ethics;
+  document.getElementById('s-ethics').style.color=color;
+}
+
+function nextMission(){
+  var s=STAGES[stage];
+  if(mission>=s.missions){endStage();return;}
+  answered=false;
+  var md=s.missions_data[mission%s.missions_data.length];
+  var tl=s.timeLimit;
+  document.getElementById('s-mission').textContent=(mission+1)+'/'+s.missions;
+  document.getElementById('s-time').textContent=tl+'s';
+  clearInterval(timer);
+  timer=setInterval(function(){
+    tl--;document.getElementById('s-time').textContent=tl+'s';
+    if(tl<=0){clearInterval(timer);if(!answered)timeOut();}
+  },1000);
+  var html='<div class="mission-card">';
+  html+='<div class="mc-tag">🎯 '+md.tag+'</div>';
+  html+='<div class="mc-title">'+md.title+'</div>';
+  html+='<div class="mc-text">'+md.text+'</div></div>';
+  html+='<div class="dec-grid">';
+  md.decisions.forEach(function(d,i){
+    html+='<button class="dec-btn" onclick="decide('+i+',this)">'+d.label+'</button>';
+  });
+  html+='</div><div class="feedback" id="feedback"></div>';
+  document.getElementById('game-area').innerHTML=html;
+}
+
+function decide(idx,btn){
+  if(answered)return;
+  answered=true;clearInterval(timer);
+  var s=STAGES[stage];
+  var md=s.missions_data[mission%s.missions_data.length];
+  var d=md.decisions[idx];
+  ethics=Math.max(0,Math.min(100,ethics+d.ethics));
+  pts+=d.pts;
+  btn.classList.add(d.good?'good':'bad');
+  document.getElementById('feedback').innerHTML='<span style="color:'+(d.good?'var(--green)':'var(--red)')+'">'+
+    (d.good?'✅ '+d.delta+' | +'+d.pts+' puan':'❌ '+d.delta)+
+    (d.ethics!==0?' | Etik: '+(d.ethics>0?'+':'')+d.ethics:'')+'</span>';
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+  updateEthics();
+  if(ethics<=0){clearInterval(timer);setTimeout(function(){endStage(true);},800);return;}
+  mission++;setTimeout(nextMission,1300);
+}
+
+function timeOut(){
+  answered=true;ethics=Math.max(0,ethics-10);
+  document.getElementById('feedback').innerHTML='<span style="color:var(--red)">⏱️ Süre doldu! Etik -10</span>';
+  updateEthics();mission++;setTimeout(nextMission,1200);
+}
+
+function endStage(crisis){
+  clearInterval(timer);
+  if(bfAnimId)cancelAnimationFrame(bfAnimId);
+  try{var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');sc['otonom-savas']=Math.max(sc['otonom-savas']||0,pts);localStorage.setItem('hs_scores',JSON.stringify(sc));}catch(e){}
+  var html='<div class="overlay">';
+  html+='<div style="font-size:48px">'+(crisis?'⚖️💥':stage<2?'🤖':'🏆')+'</div>';
+  html+='<div class="ov-score">'+pts+'</div>';
+  html+='<div style="font-size:13px;color:var(--dim);margin-bottom:8px">'+(crisis?'Etik sınır aşıldı — IHL ihlali!':stage<2?'Aşama '+(stage+1)+' tamamlandı!':'Tüm görevler tamamlandı!')+'</div>';
+  html+='<div style="font-size:12px;color:'+(ethics>60?'var(--green)':ethics>30?'var(--gold)':'var(--red)')+'">IHL Uyum Skoru: '+ethics+'%</div>';
+  html+='</div>';
+  document.getElementById('game-area').innerHTML=html;
+  if(!crisis&&stage<2){
+    var b=document.createElement('button');b.className='btn-main';b.textContent='▶ AŞAMA '+(stage+2);
+    b.onclick=function(){stage++;startStage();};document.getElementById('game-area').appendChild(b);
+  } else {
+    var b=document.createElement('button');b.className='btn-main';b.textContent='🔄 BAŞTAN OYNA';
+    b.onclick=function(){stage=0;pts=0;ethics=100;startStage();};document.getElementById('game-area').appendChild(b);
+    var b2=document.createElement('button');b2.className='btn-sec';b2.textContent='← OZA Oyun Merkezine Dön';
+    b2.onclick=function(){location.href='oza-hub.html';};document.getElementById('game-area').appendChild(b2);
+  }
+}
+
+startStage();
+</script>
+
+<script>
+// HS Sound Effects Engine
+(function(){
+  var ctx;
+  function getCtx(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+  window.hsSound={
+    click:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.1;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);o.stop(c.currentTime+0.1);},
+    success:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=523;g.gain.value=0.15;o.start();o.frequency.exponentialRampToValueAtTime(1047,c.currentTime+0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    error:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=200;g.gain.value=0.12;o.start();o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.2);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3);},
+    explosion:function(){var c=getCtx(),b=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);var s=c.createBufferSource(),g=c.createGain();s.buffer=b;s.connect(g);g.connect(c.destination);g.gain.value=0.2;s.start();},
+    alarm:function(){var c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=440;g.gain.value=0.08;o.start();var t=c.currentTime;for(var i=0;i<6;i++){o.frequency.setValueAtTime(440,t+i*0.1);o.frequency.setValueAtTime(880,t+i*0.1+0.05);}g.gain.exponentialRampToValueAtTime(0.001,t+0.6);o.stop(t+0.6);},
+    victory:function(){var c=getCtx();[523,659,784,1047].forEach(function(f,i){var o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;g.gain.value=0.12;o.start(c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);o.stop(c.currentTime+i*0.15+0.3);});}
+  };
+  // Auto-attach to common game events
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.classList.contains('ch-opt')||t.classList.contains('option')||t.classList.contains('choice'))hsSound.click();
+  });
+})();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

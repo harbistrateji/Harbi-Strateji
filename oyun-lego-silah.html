@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silah İnşa Fabrikası — Harb-i Strateji</title>
+<style>
+:root{
+  --bg:#050d18;--panel:#0d1b2a;--panel2:#111827;--border:#1e3a5f;
+  --red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;
+  --purple:#9b59b6;--orange:#e67e22;--txt:#e8eaf0;--dim:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#0d0d0d,#1a0a0a);border-bottom:2px solid var(--gold);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.logo{font-size:1rem;font-weight:900;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.logo span{color:var(--red);}
+.hdr-right{display:flex;gap:10px;align-items:center;}
+.score-display{background:rgba(0,0,0,.4);border:1px solid var(--gold);border-radius:8px;padding:6px 14px;text-align:center;}
+.score-display .sv{font-size:1.2rem;font-weight:900;color:var(--gold);}
+.score-display .sl{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+
+/* INTRO */
+#introScreen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.intro-title{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;color:var(--gold);margin-bottom:8px;}
+.intro-title span{color:var(--red);}
+.intro-sub{font-size:1rem;color:var(--cyan);letter-spacing:2px;margin-bottom:24px;}
+.intro-desc{max-width:600px;font-size:.9rem;color:var(--dim);line-height:1.7;margin-bottom:32px;}
+.weapon-select{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;max-width:700px;margin-bottom:28px;}
+.ws-card{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;text-align:center;}
+.ws-card:hover,.ws-card.selected{border-color:var(--gold);background:rgba(201,162,75,.08);}
+.ws-icon{font-size:2rem;margin-bottom:6px;}
+.ws-name{font-size:.8rem;font-weight:700;color:var(--gold);}
+.ws-diff{font-size:.65rem;color:var(--dim);margin-top:3px;}
+.btn-start{background:linear-gradient(135deg,var(--red),#a00);color:#fff;border:none;border-radius:8px;padding:14px 32px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:all .2s;}
+.btn-start:hover{filter:brightness(1.2);transform:translateY(-2px);}
+
+/* MAIN LAYOUT */
+.game-layout{display:grid;grid-template-columns:220px 1fr 240px;gap:12px;padding:12px;max-width:1400px;margin:0 auto;min-height:calc(100vh - 60px);}
+
+/* PARTS PANEL */
+.parts-panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;overflow-y:auto;max-height:calc(100vh - 80px);}
+.panel-title{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:10px;}
+.part-category{margin-bottom:14px;}
+.part-cat-title{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.part-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:8px;margin-bottom:6px;cursor:grab;transition:all .2s;position:relative;overflow:hidden;}
+.part-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--part-color,var(--cyan));}
+.part-item:hover{border-color:var(--part-color,var(--cyan));background:rgba(0,224,255,.05);}
+.part-item.dragging{opacity:.5;cursor:grabbing;}
+.part-item.used{opacity:.4;cursor:not-allowed;}
+.part-icon{font-size:1.2rem;margin-bottom:3px;}
+.part-name{font-size:.72rem;font-weight:600;color:var(--txt);}
+.part-metals{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;}
+.part-metal-tag{font-size:.55rem;padding:1px 5px;border-radius:3px;border:1px solid;font-weight:700;}
+.part-count{position:absolute;top:4px;right:6px;font-size:.65rem;color:var(--cyan);font-weight:700;}
+
+/* BUILD AREA */
+.build-area{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.build-canvas-wrap{flex:1;background:rgba(0,0,0,.3);border:2px dashed var(--border);border-radius:10px;position:relative;min-height:400px;overflow:hidden;transition:border-color .2s;}
+.build-canvas-wrap.drag-over{border-color:var(--cyan);background:rgba(0,224,255,.05);}
+.build-canvas-wrap.complete{border-color:var(--green);background:rgba(0,255,136,.03);}
+#buildCanvas{width:100%;height:100%;min-height:400px;}
+.build-slots{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.slot-row{display:flex;gap:10px;justify-content:center;}
+.build-slot{width:90px;height:80px;border:2px dashed rgba(255,255,255,.15);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .2s;position:relative;cursor:pointer;}
+.build-slot.required{border-color:rgba(201,162,75,.4);}
+.build-slot.filled{border-color:var(--green);background:rgba(0,255,136,.08);}
+.build-slot.drag-target{border-color:var(--cyan);background:rgba(0,224,255,.1);}
+.build-slot .slot-icon{font-size:1.6rem;}
+.build-slot .slot-name{font-size:.6rem;color:var(--dim);text-align:center;margin-top:3px;}
+.build-slot .slot-check{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--green);border-radius:50%;font-size:.7rem;display:flex;align-items:center;justify-content:center;display:none;}
+.build-slot.filled .slot-check{display:flex;}
+.slot-label{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--gold);white-space:nowrap;}
+
+/* PROGRESS */
+.build-progress{background:rgba(0,0,0,.3);border-radius:8px;padding:12px;}
+.bp-title{font-size:.75rem;font-weight:700;color:var(--gold);margin-bottom:8px;}
+.bp-bar-bg{height:12px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden;margin-bottom:6px;}
+.bp-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--gold),var(--green));transition:width .5s ease;}
+.bp-stats{display:flex;gap:12px;flex-wrap:wrap;}
+.bp-stat{font-size:.7rem;color:var(--dim);}
+.bp-stat strong{color:var(--cyan);}
+
+/* METAL REQUIREMENTS */
+.metal-req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;}
+.metal-req-card{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:6px;padding:6px;text-align:center;transition:all .2s;}
+.metal-req-card.satisfied{border-color:var(--green);background:rgba(0,255,136,.08);}
+.metal-req-card.missing{border-color:var(--red);background:rgba(224,21,21,.08);}
+.mrc-sym{font-size:1rem;font-weight:900;}
+.mrc-name{font-size:.55rem;color:var(--dim);margin-top:1px;}
+.mrc-status{font-size:.6rem;margin-top:3px;}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:10px;}
+.info-panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;}
+
+/* WEAPON PREVIEW */
+.weapon-preview{text-align:center;padding:16px;background:rgba(0,0,0,.3);border-radius:8px;margin-bottom:10px;}
+.wp-icon{font-size:3rem;margin-bottom:6px;}
+.wp-name{font-size:.9rem;font-weight:700;color:var(--gold);}
+.wp-country{font-size:.72rem;color:var(--dim);margin-top:3px;}
+.wp-power{font-size:1.4rem;font-weight:900;color:var(--cyan);margin-top:6px;}
+.wp-power-lbl{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+
+/* TIMER */
+.timer-wrap{background:rgba(0,0,0,.3);border-radius:8px;padding:10px;text-align:center;}
+.timer-val{font-size:2rem;font-weight:900;color:var(--cyan);font-family:monospace;}
+.timer-val.urgent{color:var(--red);animation:pulse .5s infinite alternate;}
+@keyframes pulse{from{opacity:1;}to{opacity:.5;}}
+
+/* ACHIEVEMENTS */
+.achievement-list{max-height:150px;overflow-y:auto;}
+.ach-item{display:flex;align-items:center;gap:8px;padding:5px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.72rem;}
+.ach-icon{font-size:1rem;}
+.ach-text{flex:1;color:var(--dim);}
+.ach-pts{color:var(--gold);font-weight:700;}
+
+/* COMPLETE OVERLAY */
+#completeOverlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
+#completeOverlay.show{display:flex;}
+.co-icon{font-size:5rem;margin-bottom:16px;animation:spin 1s ease;}
+@keyframes spin{from{transform:rotate(-20deg) scale(.5);}to{transform:rotate(0) scale(1);}}
+.co-title{font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:8px;}
+.co-score{font-size:3.5rem;font-weight:900;color:var(--cyan);margin:12px 0;}
+.co-stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;}
+.co-stat{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 20px;text-align:center;}
+.co-stat .v{font-size:1.3rem;font-weight:700;color:var(--cyan);}
+.co-stat .l{font-size:.65rem;color:var(--dim);}
+.co-btns{display:flex;gap:12px;}
+.btn-primary{background:linear-gradient(135deg,var(--red),#a00);color:#fff;border:none;border-radius:8px;padding:12px 24px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:1px;}
+.btn-primary:hover{filter:brightness(1.2);}
+.btn-secondary{background:transparent;color:var(--cyan);border:1px solid var(--cyan);border-radius:8px;padding:12px 24px;font-size:.9rem;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{background:rgba(0,224,255,.1);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--panel);border:1px solid var(--cyan);border-radius:8px;padding:10px 16px;z-index:2000;font-size:.82rem;animation:toastIn .3s ease;max-width:280px;}
+@keyframes toastIn{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* PHASE INDICATOR */
+.phase-indicator{display:flex;gap:6px;margin-bottom:10px;}
+.phase-dot{flex:1;height:6px;border-radius:3px;background:var(--border);transition:all .3s;}
+.phase-dot.active{background:var(--gold);}
+.phase-dot.done{background:var(--green);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .game-layout{grid-template-columns:1fr;grid-template-rows:auto;}
+  .parts-panel{max-height:200px;overflow-x:auto;overflow-y:hidden;display:flex;gap:8px;}
+  .part-category{min-width:150px;}
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+
+<!-- INTRO SCREEN -->
+<div id="introScreen">
+  <div class="intro-title">🏭 SİLAH İNŞA <span>FABRİKASI</span></div>
+  <div class="intro-sub">⚗️ Lego Tarzı Nadir Metal Simülatörü</div>
+  <div class="intro-desc">
+    Gerçek nadir metal verilerine dayalı silah sistemi inşa oyunu!<br>
+    Parçaları sürükle-bırak, doğru mineralleri birleştir, silah sistemini tamamla.<br>
+    <strong>Her parça gerçek bir nadir metal gerektirir — Çin ambargosu her an gelebilir!</strong>
+  </div>
+  <div style="font-size:.85rem;color:var(--gold);margin-bottom:16px;">Hangi silahı inşa etmek istiyorsun?</div>
+  <div class="weapon-select" id="weaponSelect"></div>
+  <button class="btn-start" onclick="startGame()">🔧 İNŞAATA BAŞLA</button>
+</div>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none;">
+  <div class="logo">🏭 SİLAH İNŞA FABRİKASI <span>| HARB-İ STRATEJİ</span></div>
+  <div class="hdr-right">
+    <div class="score-display"><div class="sv" id="hdrScore">0</div><div class="sl">Puan</div></div>
+    <div class="score-display"><div class="sv" id="hdrPhase">1/3</div><div class="sl">Faz</div></div>
+    <button style="background:rgba(224,21,21,.2);border:1px solid var(--red);border-radius:6px;padding:6px 12px;color:var(--red);cursor:pointer;font-size:.75rem;" onclick="goToIntro()">✕ Çıkış</button>
+  </div>
+</div>
+
+<!-- GAME LAYOUT -->
+<div class="game-layout" id="gameLayout" style="display:none;">
+
+  <!-- LEFT: PARTS -->
+  <div class="parts-panel">
+    <div class="panel-title">🔩 Parça Deposu</div>
+    <div id="partsContainer"></div>
+  </div>
+
+  <!-- CENTER: BUILD AREA -->
+  <div class="build-area">
+    <div class="phase-indicator" id="phaseIndicator"></div>
+    
+    <div class="build-canvas-wrap" id="buildArea"
+      ondragover="event.preventDefault();event.currentTarget.classList.add('drag-over')"
+      ondragleave="event.currentTarget.classList.remove('drag-over')"
+      ondrop="handleDrop(event)">
+      <div class="build-slots" id="buildSlots"></div>
+      <canvas id="buildCanvas"></canvas>
+    </div>
+    
+    <div class="build-progress">
+      <div class="bp-title">🔧 İnşaat İlerlemesi</div>
+      <div class="bp-bar-bg"><div class="bp-bar-fill" id="progressBar" style="width:0%"></div></div>
+      <div class="bp-stats">
+        <div class="bp-stat">Tamamlanan: <strong id="completedParts">0</strong></div>
+        <div class="bp-stat">Toplam: <strong id="totalParts">0</strong></div>
+        <div class="bp-stat">Süre: <strong id="timeUsed">0s</strong></div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="panel-title">⚗️ Nadir Metal Gereksinimleri</div>
+      <div class="metal-req-grid" id="metalReqGrid"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: INFO -->
+  <div class="right-panel">
+    <div class="info-panel">
+      <div class="weapon-preview" id="weaponPreview"></div>
+      <div class="timer-wrap">
+        <div class="timer-val" id="timerVal">--</div>
+        <div style="font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;">Kalan Süre</div>
+      </div>
+    </div>
+    
+    <div class="info-panel">
+      <div class="panel-title">🏆 Başarılar</div>
+      <div class="achievement-list" id="achievementList">
+        <div style="color:var(--dim);font-size:.75rem;text-align:center;padding:10px;">Parça ekledikçe başarı kazanırsın!</div>
+      </div>
+    </div>
+    
+    <div class="info-panel">
+      <div class="panel-title">📊 İstatistikler</div>
+      <div id="statsPanel"></div>
+    </div>
+    
+    <div class="info-panel">
+      <div class="panel-title">⚠️ Kriz Uyarıları</div>
+      <div id="crisisPanel">
+        <div style="color:var(--dim);font-size:.75rem;text-align:center;padding:10px;">Kriz yok</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETE OVERLAY -->
+<div id="completeOverlay">
+  <div class="co-icon" id="coIcon">🏆</div>
+  <div class="co-title" id="coTitle">SİLAH TAMAMLANDI!</div>
+  <div class="co-score" id="coScore">0</div>
+  <div class="co-stats" id="coStats"></div>
+  <div class="co-btns">
+    <button class="btn-primary" onclick="nextWeapon()">⏭️ Sonraki Silah</button>
+    <button class="btn-secondary" onclick="shareResult()">📤 Paylaş</button>
+    <button class="btn-secondary" onclick="goToIntro()">🏠 Ana Menü</button>
+  </div>
+</div>
+
+<script>
+// ===================== METAL DATA =====================
+const METALS = {
+  Nd:{name:'Neodimyum',color:'#e74c3c',china:85},
+  Dy:{name:'Disprozyum',color:'#c0392b',china:99},
+  Tb:{name:'Terbiyum',color:'#e67e22',china:90},
+  Sm:{name:'Samaryum',color:'#f39c12',china:80},
+  Y:{name:'İtriyum',color:'#C9A24B',china:75},
+  Co:{name:'Kobalt',color:'#2980b9',china:20},
+  Li:{name:'Lityum',color:'#27ae60',china:30},
+  W:{name:'Tungsten',color:'#7f8c8d',china:85},
+  Ti:{name:'Titanyum',color:'#1abc9c',china:35},
+  Ga:{name:'Galyum',color:'#e91e63',china:98},
+  Ge:{name:'Germanyum',color:'#8e44ad',china:67},
+  Re:{name:'Renyum',color:'#85929e',china:5},
+  Ta:{name:'Tantal',color:'#27ae60',china:10},
+  Be:{name:'Berilyum',color:'#c41e3a',china:5},
+  Hf:{name:'Hafniyum',color:'#16a085',china:40},
+};
+
+// ===================== WEAPON BLUEPRINTS =====================
+const WEAPONS = [
+  {
+    id:'f35',name:'F-35 Lightning II',icon:'✈️',country:'ABD 🇺🇸',power:95,
+    difficulty:'Uzman',color:'#3498db',
+    desc:'5. nesil stealth savaş uçağı — 920 kg nadir toprak elementi',
+    phases:[
+      {
+        name:'Gövde & Yapı',
+        slots:[
+          {id:'fuselage',name:'Gövde',icon:'🔲',req:{Ti:40,Be:5},desc:'Titanyum-berilyum kompozit gövde'},
+          {id:'wings',name:'Kanatlar',icon:'🔷',req:{Ti:25,Co:10},desc:'Titanyum alaşım kanatlar'},
+          {id:'stealth',name:'Stealth Kaplama',icon:'⬛',req:{Nd:8,Co:5},desc:'Radar absorban malzeme'},
+        ]
+      },
+      {
+        name:'Güdüm & Elektronik',
+        slots:[
+          {id:'radar',name:'AESA Radar',icon:'📡',req:{Ga:12,Ge:8,Nd:5},desc:'Aktif faz dizili radar'},
+          {id:'guidance',name:'Güdüm Sistemi',icon:'🎯',req:{Nd:15,Dy:8,Sm:10},desc:'Nd-Dy-Sm mıknatıslı güdüm'},
+          {id:'sensors',name:'Sensör Paketi',icon:'👁️',req:{Ge:6,In:4,Y:5},desc:'Gece görüş ve termal'},
+        ]
+      },
+      {
+        name:'Silah & Motor',
+        slots:[
+          {id:'engine',name:'F135 Motor',icon:'⚙️',req:{Re:15,Co:20,Ni:10},desc:'Renyum-kobalt türbin kanatçıkları'},
+          {id:'missiles',name:'AIM-120 Füze',icon:'🚀',req:{Nd:10,Sm:8,Dy:5},desc:'Nadir metal mıknatıslı güdüm'},
+          {id:'cannon',name:'20mm Top',icon:'💥',req:{W:15,Cr:8},desc:'Tungsten çekirdekli mühimmat'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'patriot',name:'Patriot PAC-3',icon:'🛡️',country:'ABD 🇺🇸',power:80,
+    difficulty:'İleri',color:'#e74c3c',
+    desc:'Gelişmiş hava ve füze savunma sistemi',
+    phases:[
+      {
+        name:'Radar Sistemi',
+        slots:[
+          {id:'phased_radar',name:'Faz Dizili Radar',icon:'📡',req:{Ga:15,Ge:10,Y:8},desc:'AESA radar — Ga/Ge kritik'},
+          {id:'signal_proc',name:'Sinyal İşlemci',icon:'💻',req:{Nd:8,Ga:5},desc:'Nadir metal işlemci'},
+        ]
+      },
+      {
+        name:'Füze Sistemi',
+        slots:[
+          {id:'pac3_missile',name:'PAC-3 Füze',icon:'🚀',req:{Nd:20,Dy:12,Sm:8},desc:'Güdüm mıknatısları'},
+          {id:'warhead',name:'Hit-to-Kill Başlık',icon:'💥',req:{W:10,Ti:8},desc:'Tungsten penetratör'},
+          {id:'propulsion',name:'İtici Motor',icon:'🔥',req:{Co:15,Re:8},desc:'Süper alaşım motor'},
+        ]
+      },
+      {
+        name:'Komuta & Kontrol',
+        slots:[
+          {id:'command',name:'Komuta Merkezi',icon:'🖥️',req:{Nd:5,Li:10,Ga:8},desc:'Elektronik sistemler'},
+          {id:'power',name:'Güç Sistemi',icon:'⚡',req:{Li:20,Co:10},desc:'Lityum batarya paketi'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'bayraktar',name:'Bayraktar TB3',icon:'🛸',country:'Türkiye 🇹🇷',power:70,
+    difficulty:'Orta',color:'#C9A24B',
+    desc:'Türkiye\'nin deniz kuvvetleri için geliştirilen İHA',
+    phases:[
+      {
+        name:'Gövde & Kanatlar',
+        slots:[
+          {id:'iha_body',name:'Kompozit Gövde',icon:'🔲',req:{Ti:12,Co:8},desc:'Karbon fiber-titanyum'},
+          {id:'fold_wings',name:'Katlanır Kanatlar',icon:'🔷',req:{Ti:8,Nd:5},desc:'Titanyum menteşe sistemi'},
+        ]
+      },
+      {
+        name:'Elektronik & Güdüm',
+        slots:[
+          {id:'iha_radar',name:'Görev Bilgisayarı',icon:'💻',req:{Nd:8,Ga:6,Li:10},desc:'Yerli elektronik'},
+          {id:'iha_camera',name:'EO/IR Kamera',icon:'📷',req:{Ge:8,In:4,Y:5},desc:'Gece görüş sistemi'},
+          {id:'iha_link',name:'Veri Bağlantısı',icon:'📡',req:{Nd:5,Ga:4},desc:'Şifreli veri hattı'},
+        ]
+      },
+      {
+        name:'Silah & Tahrik',
+        slots:[
+          {id:'iha_engine',name:'Turboprop Motor',icon:'⚙️',req:{Nd:6,Co:10,Re:5},desc:'Nadir metal rulmanlar'},
+          {id:'iha_bomb',name:'MAM-L Akıllı Mikro Mühimmat',icon:'💣',req:{Nd:8,Sm:5,W:6},desc:'Güdümlü mühimmat'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'kaan',name:'KAAN 5. Nesil',icon:'🦅',country:'Türkiye 🇹🇷',power:90,
+    difficulty:'Uzman',color:'#C9A24B',
+    desc:'Türkiye\'nin ilk yerli 5. nesil savaş uçağı',
+    phases:[
+      {
+        name:'Stealth Gövde',
+        slots:[
+          {id:'kaan_body',name:'Stealth Gövde',icon:'🔲',req:{Ti:35,Be:8,Co:12},desc:'Titanyum-berilyum stealth'},
+          {id:'kaan_wings',name:'Delta Kanatlar',icon:'🔷',req:{Ti:20,Ta:8},desc:'Tantal alaşım kanatlar'},
+          {id:'kaan_coat',name:'Radar Absorban',icon:'⬛',req:{Nd:10,Co:8},desc:'Stealth kaplama'},
+        ]
+      },
+      {
+        name:'Aviyonik',
+        slots:[
+          {id:'kaan_radar',name:'MURAD AESA',icon:'📡',req:{Ga:15,Ge:10,Nd:8},desc:'Yerli AESA radar'},
+          {id:'kaan_ew',name:'Elektronik Harp',icon:'⚡',req:{Ga:8,Ge:6,Nd:5},desc:'EH sistemi'},
+          {id:'kaan_nav',name:'Navigasyon',icon:'🧭',req:{Nd:8,Y:6,Sm:5},desc:'INS/GPS/TACAN'},
+        ]
+      },
+      {
+        name:'Motor & Silah',
+        slots:[
+          {id:'kaan_engine',name:'F110 Motor',icon:'⚙️',req:{Re:12,Co:18,Ni:8},desc:'GE F110 türbin'},
+          {id:'kaan_missile',name:'HİSAR Füzesi',icon:'🚀',req:{Nd:12,Dy:8,Sm:6},desc:'Yerli hava-hava'},
+          {id:'kaan_gun',name:'20mm Top',icon:'💥',req:{W:12,Cr:6},desc:'Tungsten mühimmat'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'s400',name:'S-400 Triumf',icon:'🎯',country:'Rusya 🇷🇺',power:85,
+    difficulty:'İleri',color:'#e67e22',
+    desc:'Uzun menzilli hava ve füze savunma sistemi',
+    phases:[
+      {
+        name:'Radar & Algılama',
+        slots:[
+          {id:'s400_radar',name:'91N6E Radar',icon:'📡',req:{Ga:12,Ge:8,Nd:8},desc:'Faz dizili arama radarı'},
+          {id:'s400_fire',name:'Ateş Kontrol',icon:'🎯',req:{Nd:6,Y:5,Ga:5},desc:'Ateş kontrol sistemi'},
+        ]
+      },
+      {
+        name:'Füze Sistemi',
+        slots:[
+          {id:'s400_40n6',name:'40N6 Füze',icon:'🚀',req:{Nd:18,Dy:10,Ti:15},desc:'400 km menzil'},
+          {id:'s400_48n6',name:'48N6 Füze',icon:'🚀',req:{Nd:12,Sm:8,Co:10},desc:'250 km menzil'},
+          {id:'s400_motor',name:'Roket Motoru',icon:'🔥',req:{Co:15,Re:8,Ti:10},desc:'Süper alaşım motor'},
+        ]
+      },
+      {
+        name:'Komuta & Taşıt',
+        slots:[
+          {id:'s400_cmd',name:'Komuta Aracı',icon:'🚛',req:{Li:15,Nd:5,Co:8},desc:'Mobil komuta merkezi'},
+          {id:'s400_power',name:'Güç Ünitesi',icon:'⚡',req:{Co:10,Li:12},desc:'Jeneratör sistemi'},
+        ]
+      }
+    ]
+  },
+  {
+    id:'tomahawk',name:'Tomahawk Block V',icon:'🚀',country:'ABD 🇺🇸',power:75,
+    difficulty:'Başlangıç',color:'#3498db',
+    desc:'Uzun menzilli seyir füzesi — 1600 km menzil',
+    phases:[
+      {
+        name:'Güdüm Sistemi',
+        slots:[
+          {id:'tom_guidance',name:'Güdüm Bilgisayarı',icon:'💻',req:{Nd:12,Sm:8,Dy:6},desc:'Nd-Sm mıknatıslı güdüm'},
+          {id:'tom_gps',name:'GPS/INS',icon:'🛰️',req:{Y:8,Nd:5,Ga:4},desc:'Hassas navigasyon'},
+        ]
+      },
+      {
+        name:'Yapı & Motor',
+        slots:[
+          {id:'tom_body',name:'Füze Gövdesi',icon:'🔲',req:{Ti:15,Co:8},desc:'Titanyum alaşım gövde'},
+          {id:'tom_engine',name:'Turbofan Motor',icon:'⚙️',req:{Co:12,Re:6,Ni:8},desc:'Williams F107 motor'},
+          {id:'tom_warhead',name:'Savaş Başlığı',icon:'💥',req:{W:10,Nd:5},desc:'Yüksek patlayıcı'},
+        ]
+      }
+    ]
+  },
+];
+
+// ===================== GAME STATE =====================
+let G = {
+  selectedWeapon: null,
+  currentPhase: 0,
+  filledSlots: {},
+  puan: 0,
+  startTime: null,
+  timerInterval: null,
+  achievements: [],
+  crises: [],
+  draggedPart: null,
+};
+
+// ===================== INTRO =====================
+function buildWeaponSelect(){
+  const container = document.getElementById('weaponSelect');
+  container.innerHTML = WEAPONS.map((w,i)=>`
+    <div class="ws-card ${i===0?'selected':''}" data-id="${w.id}" onclick="selectWeapon('${w.id}',this)">
+      <div class="ws-icon">${w.icon}</div>
+      <div class="ws-name">${w.name}</div>
+      <div style="font-size:.65rem;color:${w.color};margin-top:2px;">${w.country}</div>
+      <div class="ws-diff" style="color:${w.difficulty==='Uzman'?'var(--red)':w.difficulty==='İleri'?'var(--orange)':w.difficulty==='Orta'?'var(--gold)':'var(--green)'}">
+        ${w.difficulty}
+      </div>
+    </div>
+  `).join('');
+  G.selectedWeapon = WEAPONS[0];
+}
+
+function selectWeapon(id, el){
+  document.querySelectorAll('.ws-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  G.selectedWeapon = WEAPONS.find(w=>w.id===id);
+}
+
+// ===================== OYUNA BAŞLA =====================
+function startGame(){
+  if(!G.selectedWeapon) return;
+  
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('gameLayout').style.display = 'grid';
+  
+  G.currentPhase = 0;
+  G.filledSlots = {};
+  G.score = 0;
+  G.achievements = [];
+  G.crises = [];
+  G.startTime = Date.now();
+  
+  renderPhase();
+  startTimer();
+  
+  // Random crisis after 30s
+  setTimeout(()=>{
+    if(Math.random()<.6) triggerCrisis();
+  }, 30000);
+}
+
+function renderPhase(){
+  const w = G.selectedWeapon;
+  const phase = w.phases[G.currentPhase];
+  
+  // Phase indicator
+  const pi = document.getElementById('phaseIndicator');
+  pi.innerHTML = w.phases.map((_,i)=>`
+    <div class="phase-dot ${i<G.currentPhase?'done':i===G.currentPhase?'active':''}"></div>
+  `).join('');
+  
+  // Parts panel
+  renderParts(phase);
+  
+  // Build slots
+  renderBuildSlots(phase);
+  
+  // Weapon preview
+  renderWeaponPreview();
+  
+  // Metal requirements
+  renderMetalReqs(phase);
+  
+  // Stats
+  renderStats();
+  
+  // Header
+  document.getElementById('hdrPhase').textContent = `${G.currentPhase+1}/${w.phases.length}`;
+  document.getElementById('hdrScore').textContent = G.score.toLocaleString();
+}
+
+function renderParts(phase){
+  const container = document.getElementById('partsContainer');
+  container.innerHTML = `
+    <div class="part-category">
+      <div class="part-cat-title">📦 ${phase.name} Parçaları</div>
+      ${phase.slots.map(slot=>{
+        const isFilled = G.filledSlots[slot.id];
+        const metalTags = Object.entries(slot.req).map(([m,v])=>{
+          const md = METALS[m];
+          return `<span class="part-metal-tag" style="color:${md?md.color:'#aaa'};border-color:${md?md.color+'44':'rgba(255,255,255,.1)'};">${m}:${v}</span>`;
+        }).join('');
+        return `<div class="part-item ${isFilled?'used':''}" 
+          style="--part-color:${phase.slots.find(s=>s.id===slot.id)?'var(--cyan)':'var(--border)'}"
+          draggable="${!isFilled}"
+          data-slot="${slot.id}"
+          ondragstart="startDrag(event,'${slot.id}')"
+          onclick="quickPlace('${slot.id}')">
+          <div class="part-count">${isFilled?'✓':''}</div>
+          <div class="part-icon">${slot.icon}</div>
+          <div class="part-name">${slot.name}</div>
+          <div class="part-metals">${metalTags}</div>
+          <div style="font-size:.6rem;color:var(--dim);margin-top:3px;">${slot.desc}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderBuildSlots(phase){
+  const slotsContainer = document.getElementById('buildSlots');
+  const rows = [];
+  const slotsPerRow = Math.ceil(phase.slots.length / 2);
+  
+  for(let i=0;i<phase.slots.length;i+=slotsPerRow){
+    rows.push(phase.slots.slice(i,i+slotsPerRow));
+  }
+  
+  slotsContainer.innerHTML = rows.map(row=>`
+    <div class="slot-row">
+      ${row.map(slot=>{
+        const isFilled = G.filledSlots[slot.id];
+        return `<div class="build-slot ${isFilled?'filled':'required'}" 
+          data-slot="${slot.id}"
+          ondragover="event.preventDefault();this.classList.add('drag-target')"
+          ondragleave="this.classList.remove('drag-target')"
+          ondrop="dropOnSlot(event,'${slot.id}')">
+          <span class="slot-label">${slot.name}</span>
+          <div class="slot-icon">${isFilled?slot.icon:'❓'}</div>
+          <div class="slot-name">${isFilled?'✅ Takıldı':Object.entries(slot.req).map(([m,v])=>`${m}:${v}`).join(' ')}</div>
+          <div class="slot-check">✓</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+
+function renderWeaponPreview(){
+  const w = G.selectedWeapon;
+  const totalSlots = w.phases.reduce((a,p)=>a+p.slots.length,0);
+  const filled = Object.keys(G.filledSlots).length;
+  const pct = Math.round(filled/totalSlots*100);
+  
+  document.getElementById('weaponPreview').innerHTML = `
+    <div class="wp-icon">${w.icon}</div>
+    <div class="wp-name">${w.name}</div>
+    <div class="wp-country">${w.country}</div>
+    <div class="wp-power">${pct}%</div>
+    <div class="wp-power-lbl">Tamamlanma</div>
+    <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;margin-top:8px;overflow:hidden;">
+      <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:3px;transition:width .5s;"></div>
+    </div>
+    <div style="font-size:.7rem;color:var(--dim);margin-top:6px;">Güç: <strong style="color:var(--cyan)">${w.power}</strong></div>
+  `;
+}
+
+function renderMetalReqs(phase){
+  const grid = document.getElementById('metalReqGrid');
+  const allReqs = {};
+  phase.slots.forEach(slot=>{
+    Object.entries(slot.req).forEach(([m,v])=>{
+      allReqs[m] = (allReqs[m]||0)+v;
+    });
+  });
+  
+  grid.innerHTML = Object.entries(allReqs).map(([m,v])=>{
+    const md = METALS[m];
+    const isSatisfied = phase.slots.filter(s=>G.filledSlots[s.id]).some(s=>s.req[m]);
+    return `<div class="metal-req-card ${isSatisfied?'satisfied':'missing'}">
+      <div class="mrc-sym" style="color:${md?md.color:'#aaa'}">${m}</div>
+      <div class="mrc-name">${md?md.name.substring(0,8):m}</div>
+      <div class="mrc-status" style="color:${isSatisfied?'var(--green)':'var(--red)'}">
+        ${isSatisfied?'✅':'⚠️'} ${v} birim
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStats(){
+  const w = G.selectedWeapon;
+  const totalSlots = w.phases.reduce((a,p)=>a+p.slots.length,0);
+  const filled = Object.keys(G.filledSlots).length;
+  
+  document.getElementById('completedParts').textContent = filled;
+  document.getElementById('totalParts').textContent = totalSlots;
+  
+  const elapsed = Math.round((Date.now()-G.startTime)/1000);
+  document.getElementById('timeUsed').textContent = elapsed+'s';
+  
+  const pct = Math.round(filled/totalSlots*100);
+  document.getElementById('progressBar').style.width = pct+'%';
+  
+  document.getElementById('statsPanel').innerHTML = `
+    <div style="font-size:.72rem;color:var(--dim);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;">
+      <span>Faz</span><span style="color:var(--gold)">${G.currentPhase+1}/${w.phases.length}</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--dim);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;">
+      <span>Parça</span><span style="color:var(--cyan)">${filled}/${totalSlots}</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--dim);padding:4px 0;display:flex;justify-content:space-between;">
+      <span>Puan</span><span style="color:var(--green)">${G.score.toLocaleString()}</span>
+    </div>
+  `;
+}
+
+// ===================== DRAG & DROP =====================
+function startDrag(event, slotId){
+  if(G.filledSlots[slotId]) {event.preventDefault();return;}
+  G.draggedPart = slotId;
+  event.dataTransfer.setData('text/plain', slotId);
+  event.target.classList.add('dragging');
+}
+
+function handleDrop(event){
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const slotId = event.dataTransfer.getData('text/plain') || G.draggedPart;
+  if(slotId) placePart(slotId);
+}
+
+function dropOnSlot(event, targetSlotId){
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-target');
+  const slotId = event.dataTransfer.getData('text/plain') || G.draggedPart;
+  if(slotId === targetSlotId) placePart(slotId);
+  else showToast('⚠️ Yanlış yuva! Bu parça buraya ait değil.','orange');
+}
+
+function quickPlace(slotId){
+  if(G.filledSlots[slotId]) return;
+  placePart(slotId);
+}
+
+function placePart(slotId){
+  if(G.filledSlots[slotId]) return;
+  
+  const w = G.selectedWeapon;
+  const phase = w.phases[G.currentPhase];
+  const slot = phase.slots.find(s=>s.id===slotId);
+  if(!slot) return;
+  
+  // Check for crisis
+  const embargoed = G.crises.find(c=>c.active && Object.keys(slot.req).some(m=>c.metal===m));
+  if(embargoed){
+    showToast(`⛔ ${embargoed.metal} ambargosu! Bu parça takılamıyor.`,'red');
+    return;
+  }
+  
+  G.filledSlots[slotId] = true;
+  
+  // Score
+  const metalBonus = Object.values(slot.req).reduce((a,v)=>a+v,0);
+  const points = 50 + metalBonus;
+  G.score += points;
+  
+  // Achievement
+  addAchievement(`✅ ${slot.name} takıldı`, points);
+  showToast(`🔧 ${slot.name} yerleştirildi! +${points} puan`,'green');
+  
+  // Check phase complete
+  const phaseComplete = phase.slots.every(s=>G.filledSlots[s.id]);
+  if(phaseComplete){
+    G.score += 200;
+    addAchievement(`🏆 ${phase.name} FAZ TAMAMLANDI!`, 200);
+    showToast(`🎉 ${phase.name} tamamlandı! +200 bonus`,'gold');
+    
+    setTimeout(()=>{
+      if(G.currentPhase < w.phases.length-1){
+        G.currentPhase++;
+        renderPhase();
+        showToast(`⏭️ Faz ${G.currentPhase+1}: ${w.phases[G.currentPhase].name}`,'cyan');
+      } else {
+        // COMPLETE!
+        completeWeapon();
+      }
+    }, 1000);
+  } else {
+    renderPhase();
+  }
+  
+  document.getElementById('hdrScore').textContent = G.score.toLocaleString();
+}
+
+function completeWeapon(){
+  clearInterval(G.timerInterval);
+  const w = G.selectedWeapon;
+  const elapsed = Math.round((Date.now()-G.startTime)/1000);
+  const timeBonus = Math.max(0, 500-elapsed);
+  G.score += timeBonus + w.power*10;
+  
+  // Save score
+  const scores = JSON.parse(localStorage.getItem('lego_scores')||'[]');
+  scores.push({weapon:w.name,puan:G.score,time:elapsed,date:new Date().toLocaleDateString('tr')});
+  scores.sort((a,b)=>b.score-a.score);
+  localStorage.setItem('lego_scores',JSON.stringify(scores.slice(0,10)));
+  
+  const overlay = document.getElementById('completeOverlay');
+  document.getElementById('coIcon').textContent = w.icon;
+  document.getElementById('coTitle').textContent = w.name.toUpperCase()+' TAMAMLANDI!';
+  document.getElementById('coScore').textContent = G.score.toLocaleString();
+  document.getElementById('coStats').innerHTML = `
+    <div class="co-stat"><div class="v">${elapsed}s</div><div class="l">Süre</div></div>
+    <div class="co-stat"><div class="v">${Object.keys(G.filledSlots).length}</div><div class="l">Parça</div></div>
+    <div class="co-stat"><div class="v">${G.achievements.length}</div><div class="l">Başarı</div></div>
+    <div class="co-stat"><div class="v">${timeBonus}</div><div class="l">Hız Bonusu</div></div>
+  `;
+  overlay.classList.add('show');
+}
+
+// ===================== TIMER =====================
+function startTimer(){
+  const w = G.selectedWeapon;
+  const totalSlots = w.phases.reduce((a,p)=>a+p.slots.length,0);
+  let remaining = totalSlots * 30; // 30s per slot
+  
+  const tv = document.getElementById('timerVal');
+  tv.textContent = remaining;
+  
+  G.timerInterval = setInterval(()=>{
+    remaining--;
+    const mins = Math.floor(remaining/60);
+    const secs = remaining%60;
+    tv.textContent = mins>0?`${mins}:${secs.toString().padStart(2,'0')}`:remaining;
+    
+    if(remaining<=30) tv.classList.add('urgent');
+    if(remaining<=0){
+      clearInterval(G.timerInterval);
+      showToast('⏰ Süre doldu!','red');
+      completeWeapon();
+    }
+    
+    // Update time used
+    const elapsed = Math.round((Date.now()-G.startTime)/1000);
+    document.getElementById('timeUsed').textContent = elapsed+'s';
+  },1000);
+}
+
+// ===================== CRISIS =====================
+function triggerCrisis(){
+  const crisisMetals = ['Ga','Ge','Nd','Dy','Co'];
+  const metal = crisisMetals[Math.floor(Math.random()*crisisMetals.length)];
+  const md = METALS[metal];
+  
+  const crisis = {metal, active:true, id:Date.now()};
+  G.crises.push(crisis);
+  
+  const panel = document.getElementById('crisisPanel');
+  panel.innerHTML = `
+    <div style="background:rgba(224,21,21,.1);border:1px solid var(--red);border-radius:6px;padding:8px;margin-bottom:6px;">
+      <div style="font-size:.75rem;font-weight:700;color:var(--red);">🚨 ÇİN AMBARGOSU!</div>
+      <div style="font-size:.7rem;color:var(--dim);margin-top:3px;">${metal} (${md?md.name:metal}) ihracatı durduruldu!</div>
+      <button onclick="resolveCrisis(${crisis.id})" style="margin-top:6px;background:rgba(0,255,136,.2);border:1px solid var(--green);border-radius:4px;padding:3px 10px;color:var(--green);cursor:pointer;font-size:.65rem;">Alternatif Tedarik Kur</button>
+    </div>
+  `;
+  
+  showToast(`🚨 Çin ${metal} ambargosu! Bazı parçalar kullanılamıyor.`,'red');
+  G.score = Math.max(0, G.score-100);
+  addAchievement(`⚠️ ${metal} ambargosu başladı`, -100);
+}
+
+function resolveCrisis(id){
+  const crisis = G.crises.find(c=>c.id===id);
+  if(crisis){
+    crisis.active = false;
+    G.score += 150;
+    addAchievement('✅ Ambargo çözüldü! Alternatif tedarik kuruldu', 150);
+    document.getElementById('crisisPanel').innerHTML = '<div style="color:var(--green);font-size:.75rem;text-align:center;padding:8px;">✅ Kriz çözüldü</div>';
+    showToast('✅ Alternatif tedarik kuruldu! +150 puan','green');
+  }
+}
+
+// ===================== ACHIEVEMENTS =====================
+function addAchievement(text, pts){
+  G.achievements.push({text,pts,time:new Date().toLocaleTimeString('tr')});
+  
+  const list = document.getElementById('achievementList');
+  list.innerHTML = G.achievements.slice(-6).reverse().map(a=>`
+    <div class="ach-item">
+      <div class="ach-text">${a.text}</div>
+      <div class="ach-pts" style="color:${a.pts>0?'var(--green)':'var(--red)'}">${a.pts>0?'+':''}${a.pts}</div>
+    </div>
+  `).join('');
+}
+
+// ===================== UI HELPERS =====================
+function showToast(msg, type='cyan'){
+  const colors={cyan:'var(--cyan)',green:'var(--green)',red:'var(--red)',gold:'var(--gold)',orange:'var(--orange)'};
+  const t=document.createElement('div');
+  t.className='toast';
+  t.style.borderColor=colors[type]||colors.cyan;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+function nextWeapon(){
+  document.getElementById('completeOverlay').classList.remove('show');
+  const w = G.selectedWeapon;
+  const idx = WEAPONS.findIndex(x=>x.id===w.id);
+  const next = WEAPONS[(idx+1)%WEAPONS.length];
+  G.selectedWeapon = next;
+  startGame();
+}
+
+function shareResult(){
+  const w = G.selectedWeapon;
+  const txt = `🏭 Silah İnşa Fabrikası'nda ${w.name} inşa ettim! Skor: ${G.score.toLocaleString()} puan. #HarbIStrateji #NadirMetaller`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('📋 Paylaşım metni kopyalandı!','gold'));
+}
+
+function goToIntro(){
+  clearInterval(G.timerInterval);
+  document.getElementById('completeOverlay').classList.remove('show');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('gameLayout').style.display = 'none';
+  document.getElementById('introScreen').style.display = 'flex';
+}
+
+// ===================== INIT =====================
+buildWeaponSelect();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

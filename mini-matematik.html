@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Hız Matematik — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:420px;margin:0 auto;padding:16px 16px 80px}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;flex:1}
+.sval{font-size:20px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.stage-badge{text-align:center;margin-bottom:10px}
+.stage-pill{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid}
+.s1{border-color:var(--green);color:var(--green)}
+.s2{border-color:var(--gold);color:var(--gold)}
+.s3{border-color:var(--red);color:var(--red)}
+.timer-bar{height:6px;background:var(--line);border-radius:3px;margin-bottom:14px;overflow:hidden}
+.timer-fill{height:100%;transition:width .5s linear}
+.question-box{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px}
+.q-context{font-size:11px;color:var(--dim);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase}
+.q-text{font-size:32px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.q-unit{font-size:12px;color:var(--dim)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.choice{padding:16px 8px;border:2px solid var(--line);border-radius:12px;background:var(--panel);color:var(--tx);font-size:20px;font-weight:700;cursor:pointer;transition:.12s;text-align:center}
+.choice:active{transform:scale(.96)}
+.choice.correct{border-color:var(--green);background:rgba(0,255,136,.12);color:var(--green)}
+.choice.wrong{border-color:var(--red);background:rgba(224,21,21,.12);color:var(--red)}
+.feedback{text-align:center;font-size:14px;min-height:20px;margin-bottom:10px}
+.streak{text-align:center;font-size:13px;color:var(--gold);margin-bottom:8px}
+.overlay-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+.big{font-size:48px;font-weight:700;color:var(--cyan)}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:var(--cyan);color:#000;margin-bottom:8px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🔢 HIZ MATEMATİK</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="stats">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--cyan)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-time" style="color:var(--red)">—</div><div class="slbl">SÜRE</div></div>
+  <div class="sbox"><div class="sval" id="s-correct" style="color:var(--green)">0</div><div class="slbl">DOĞRU</div></div>
+  <div class="sbox"><div class="sval" id="s-streak" style="color:var(--gold)">0</div><div class="slbl">SERİ</div></div>
+</div>
+<div class="stage-badge" id="stage-badge"></div>
+<div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%;background:var(--cyan)"></div></div>
+<div class="streak" id="streak-msg"></div>
+<div id="game-area"></div>
+</div>
+<script>
+var STAGES=[
+  {label:'AŞAMA 1 — TEMEL',sublabel:'Toplama & Çıkarma · 60sn · Kolay sayılar',cls:'s1',
+   timeLimit:60,ops:['+','-'],maxNum:20,
+   contexts:['Bütçe hesapla:','Kuvvet topla:','Kayıp hesapla:','Stok say:']},
+  {label:'AŞAMA 2 — İLERİ',sublabel:'Çarpma & Bölme · 45sn · Orta sayılar',cls:'s2',
+   timeLimit:45,ops:['×','÷'],maxNum:12,
+   contexts:['Çarpan kuvvet:','Bölge kapasitesi:','Üretim hızı:','Lojistik hesap:']},
+  {label:'AŞAMA 3 — UZMAN',sublabel:'Karma işlemler · 30sn · Büyük sayılar + Yüzde',cls:'s3',
+   timeLimit:30,ops:['+','-','×','%'],maxNum:50,
+   contexts:['GDP büyümesi:','Savunma bütçesi:','Kuvvet çarpanı:','Kayıp oranı:']}
+];
+
+var stage=0,pts=0,correct=0,streak=0,maxStreak=0,timeLeft=0,timer=null,answered=false;
+var curAnswer=0;
+
+function startStage(){
+  var s=STAGES[stage];
+  timeLeft=s.timeLimit;correct=0;streak=0;answered=false;
+  clearInterval(timer);
+  document.getElementById('stage-badge').innerHTML=
+    '<div class="stage-pill '+s.cls+'">'+s.label+'</div>'+
+    '<div style="font-size:11px;color:var(--dim);margin-top:4px">'+s.sublabel+'</div>';
+  document.getElementById('s-time').textContent=timeLeft+'s';
+  document.getElementById('timer-fill').style.background=stage===0?'var(--green)':stage===1?'var(--gold)':'var(--red)';
+  document.getElementById('timer-fill').style.transition='none';
+  document.getElementById('timer-fill').style.width='100%';
+  setTimeout(function(){
+    document.getElementById('timer-fill').style.transition='width '+s.timeLimit+'s linear';
+    document.getElementById('timer-fill').style.width='0%';
+  },50);
+  timer=setInterval(function(){
+    timeLeft--;
+    document.getElementById('s-time').textContent=timeLeft+'s';
+    if(timeLeft<=0){clearInterval(timer);endStage();}
+  },1000);
+  nextQuestion();
+}
+
+function nextQuestion(){
+  answered=false;
+  var s=STAGES[stage];
+  var op=s.ops[Math.floor(Math.random()*s.ops.length)];
+  var ctx=s.contexts[Math.floor(Math.random()*s.contexts.length)];
+  var a,b,ans,qText;
+  if(op==='+'){a=rand(1,s.maxNum);b=rand(1,s.maxNum);ans=a+b;qText=a+' + '+b;}
+  else if(op==='-'){a=rand(5,s.maxNum);b=rand(1,a);ans=a-b;qText=a+' − '+b;}
+  else if(op==='×'){a=rand(2,s.maxNum);b=rand(2,12);ans=a*b;qText=a+' × '+b;}
+  else if(op==='÷'){b=rand(2,12);ans=rand(2,s.maxNum);a=ans*b;qText=a+' ÷ '+b;}
+  else{// percentage
+    a=rand(10,200)*10;b=[5,10,15,20,25][Math.floor(Math.random()*5)];
+    ans=Math.round(a*b/100);qText=a+' × %'+b;}
+  curAnswer=ans;
+  var wrong=generateWrong(ans,3);
+  var choices=[ans].concat(wrong).sort(function(){return Math.random()-.5;});
+  var html='<div class="question-box">';
+  html+='<div class="q-context">'+ctx+'</div>';
+  html+='<div class="q-text">'+qText+' = ?</div>';
+  if(op==='%')html+='<div class="q-unit">Milyar $</div>';
+  html+='</div>';
+  html+='<div class="choices">';
+  choices.forEach(function(ch){
+    html+='<button class="choice" onclick="answer('+ch+',this)">'+ch+'</button>';
+  });
+  html+='</div><div class="feedback" id="feedback"></div>';
+  document.getElementById('game-area').innerHTML=html;
+}
+
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+function generateWrong(ans,n){
+  var wrong=[];
+  var attempts=0;
+  while(wrong.length<n&&attempts<50){
+    attempts++;
+    var delta=rand(1,Math.max(3,Math.round(Math.abs(ans)*0.3)));
+    var w=Math.random()<.5?ans+delta:Math.max(0,ans-delta);
+    if(w!==ans&&!wrong.includes(w))wrong.push(w);
+  }
+  return wrong;
+}
+
+function answer(val,btn){
+  if(answered)return;
+  answered=true;
+  if(val===curAnswer){
+    btn.classList.add('correct');
+    correct++;streak++;if(streak>maxStreak)maxStreak=streak;
+    var bonus=10+(streak>2?streak*5:0);
+    pts+=bonus;
+    timeLeft=Math.min(timeLeft+3,STAGES[stage].timeLimit); // +3sn bonus
+    document.getElementById('feedback').innerHTML='<span style="color:var(--green)">✅ +'+bonus+(streak>2?' 🔥×'+streak:'')+'</span>';
+    document.getElementById('streak-msg').textContent=streak>1?'🔥 '+streak+' seri!':'';
+  } else {
+    btn.classList.add('wrong');
+    streak=0;
+    document.getElementById('feedback').innerHTML='<span style="color:var(--red)">❌ Doğru: '+curAnswer+'</span>';
+    document.getElementById('streak-msg').textContent='';
+    // show correct
+    document.querySelectorAll('.choice').forEach(function(b){
+      if(parseInt(b.textContent)===curAnswer)b.classList.add('correct');
+    });
+  }
+  updateStats();
+  setTimeout(nextQuestion,900);
+}
+
+function endStage(){
+  var bonus=(stage+1)*50+correct*5;
+  pts+=bonus;
+  updateStats();
+  try{
+    var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    sc['mobil-matematik']=Math.max(sc['mobil-matematik']||0,pts);
+    localStorage.setItem('hs_scores',JSON.stringify(sc));
+  }catch(e){}
+  var html='<div class="overlay-card">';
+  html+='<div style="font-size:36px">'+(stage<2?'🎯':'🏆')+'</div>';
+  html+='<div class="big">'+pts+'</div>';
+  html+='<div style="font-size:13px;color:var(--dim)">'+correct+' doğru · En uzun seri: '+maxStreak+'</div>';
+  html+='</div>';
+  document.getElementById('game-area').innerHTML=html;
+  if(stage<2){
+    var btn=document.createElement('button');
+    btn.className='btn';btn.textContent='▶ AŞAMA '+(stage+2)+' — '+(stage===0?'Çarpma/Bölme':'Karma Uzman');
+    btn.onclick=function(){stage++;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  } else {
+    var btn=document.createElement('button');
+    btn.className='btn';btn.textContent='🔄 BAŞTAN OYNA';
+    btn.onclick=function(){stage=0;pts=0;correct=0;streak=0;maxStreak=0;startStage();};
+    document.getElementById('game-area').appendChild(btn);
+  }
+}
+
+function updateStats(){
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('s-correct').textContent=correct;
+  document.getElementById('s-streak').textContent=streak;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+}
+
+startStage();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

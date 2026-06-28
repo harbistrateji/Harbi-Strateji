@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadir Metal Madenci — Minecraft Tarzı</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--txt:#e8eaf0;--dim:#6b7280;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',monospace,sans-serif;overflow:hidden;height:100vh;}
+canvas{display:block;}
+#ui{position:fixed;top:0;left:0;right:0;pointer-events:none;z-index:10;}
+.hud{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;background:linear-gradient(180deg,rgba(0,0,0,.7),transparent);}
+.hud-left,.hud-right{display:flex;flex-direction:column;gap:4px;}
+.hud-center{text-align:center;}
+.stat-row{display:flex;align-items:center;gap:6px;font-size:.75rem;}
+.stat-icon{font-size:1rem;}
+.stat-val{font-weight:700;color:var(--cyan);}
+.stat-lbl{color:var(--dim);font-size:.65rem;}
+.hp-bar{width:120px;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;}
+.hp-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:4px;transition:width .3s;}
+.game-title{font-size:.85rem;font-weight:900;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
+.depth-lbl{font-size:.65rem;color:var(--dim);}
+/* INVENTORY BAR */
+#invBar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px;background:rgba(0,0,0,.7);border:1px solid var(--border);border-radius:10px;padding:6px;pointer-events:auto;}
+.inv-slot{width:52px;height:52px;border:2px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;position:relative;background:rgba(0,0,0,.4);}
+.inv-slot.active{border-color:var(--gold);background:rgba(201,162,75,.15);}
+.inv-slot:hover{border-color:var(--cyan);}
+.inv-icon{font-size:1.4rem;}
+.inv-count{position:absolute;bottom:2px;right:4px;font-size:.6rem;font-weight:700;color:var(--gold);}
+.inv-key{position:absolute;top:2px;left:4px;font-size:.55rem;color:var(--dim);}
+/* CRAFTING PANEL */
+#craftPanel{position:fixed;right:10px;top:50%;transform:translateY(-50%);background:rgba(13,27,42,.95);border:1px solid var(--border);border-radius:10px;padding:12px;width:200px;pointer-events:auto;}
+.craft-title{font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;}
+.craft-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:6px;padding:7px;margin-bottom:5px;cursor:pointer;transition:all .15s;}
+.craft-item:hover{border-color:var(--cyan);background:rgba(0,224,255,.05);}
+.craft-item.can-craft{border-color:var(--green);}
+.craft-item.cant-craft{opacity:.4;}
+.ci-name{font-size:.72rem;font-weight:700;}
+.ci-req{font-size:.6rem;color:var(--dim);margin-top:2px;}
+/* MESSAGES */
+#msgBox{position:fixed;top:70px;left:50%;transform:translateX(-50%);pointer-events:none;}
+.msg{background:rgba(0,0,0,.8);border:1px solid var(--cyan);border-radius:6px;padding:6px 14px;font-size:.78rem;margin-bottom:4px;animation:msgIn .3s ease,msgOut .3s ease 2.5s forwards;}
+@keyframes msgIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes msgOut{to{opacity:0;transform:translateY(-10px);}}
+/* INTRO */
+#intro{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.intro-title{font-size:2.5rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;}
+.intro-title span{color:var(--red);}
+.intro-desc{max-width:500px;font-size:.85rem;color:var(--dim);line-height:1.7;margin-bottom:24px;}
+.btn-play{background:linear-gradient(135deg,var(--red),#a00);color:#fff;border:none;border-radius:8px;padding:14px 36px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:2px;text-transform:uppercase;}
+.btn-play:hover{filter:brightness(1.2);}
+.controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;max-width:400px;}
+.ctrl{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:.72rem;}
+.ctrl strong{color:var(--cyan);}
+/* DEPTH METER */
+#depthMeter{position:fixed;left:10px;top:50%;transform:translateY(-50%);width:20px;height:200px;background:rgba(0,0,0,.5);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+#depthFill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,var(--red),var(--gold),var(--green));transition:height .3s;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+<canvas id="c"></canvas>
+
+<!-- UI -->
+<div id="ui">
+  <div class="hud">
+    <div class="hud-left">
+      <div class="stat-row"><span class="stat-icon">❤️</span><div class="hp-bar"><div class="hp-fill" id="hpFill" style="width:100%"></div></div></div>
+      <div class="stat-row"><span class="stat-icon">⛏️</span><span class="stat-val" id="scoreVal">0</span><span class="stat-lbl">puan</span></div>
+      <div class="stat-row"><span class="stat-icon">🪨</span><span class="stat-val" id="blocksMined">0</span><span class="stat-lbl">blok</span></div>
+    </div>
+    <div class="hud-center">
+      <div class="game-title">⛏️ NADİR METAL MADENCİ</div>
+      <div class="depth-lbl">Derinlik: <span id="depthVal" style="color:var(--gold)">0</span>m</div>
+    </div>
+    <div class="hud-right">
+      <div class="stat-row"><span class="stat-icon">🌡️</span><span class="stat-val" id="tempVal">20°C</span></div>
+      <div class="stat-row"><span class="stat-icon">💡</span><span class="stat-val" id="lightVal">100%</span></div>
+      <div class="stat-row"><span class="stat-icon">🏆</span><span class="stat-val" id="levelVal">1</span><span class="stat-lbl">seviye</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="msgBox"></div>
+
+<!-- INVENTORY -->
+<div id="invBar">
+  <div class="inv-slot active" id="slot0" onclick="selectSlot(0)"><span class="inv-key">1</span><span class="inv-icon">⛏️</span><span class="inv-count" id="cnt0"></span></div>
+  <div class="inv-slot" id="slot1" onclick="selectSlot(1)"><span class="inv-key">2</span><span class="inv-icon">🪨</span><span class="inv-count" id="cnt1">0</span></div>
+  <div class="inv-slot" id="slot2" onclick="selectSlot(2)"><span class="inv-key">3</span><span class="inv-icon">🔴</span><span class="inv-count" id="cnt2">0</span></div>
+  <div class="inv-slot" id="slot3" onclick="selectSlot(3)"><span class="inv-key">4</span><span class="inv-icon">🔵</span><span class="inv-count" id="cnt3">0</span></div>
+  <div class="inv-slot" id="slot4" onclick="selectSlot(4)"><span class="inv-key">5</span><span class="inv-icon">🟡</span><span class="inv-count" id="cnt4">0</span></div>
+  <div class="inv-slot" id="slot5" onclick="selectSlot(5)"><span class="inv-key">6</span><span class="inv-icon">🟢</span><span class="inv-count" id="cnt5">0</span></div>
+  <div class="inv-slot" id="slot6" onclick="selectSlot(6)"><span class="inv-key">7</span><span class="inv-icon">⚪</span><span class="inv-count" id="cnt6">0</span></div>
+  <div class="inv-slot" id="slot7" onclick="selectSlot(7)"><span class="inv-key">8</span><span class="inv-icon">🔮</span><span class="inv-count" id="cnt7">0</span></div>
+</div>
+
+<!-- CRAFTING -->
+<div id="craftPanel">
+  <div class="craft-title">🔨 Üretim Tezgahı</div>
+  <div id="craftList"></div>
+</div>
+
+<!-- DEPTH METER -->
+<div id="depthMeter"><div id="depthFill" style="height:0%"></div></div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-title">⛏️ NADİR METAL <span>MADENCİ</span></div>
+  <div style="font-size:.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:16px;">Minecraft Tarzı Nadir Metal Simülatörü</div>
+  <div class="intro-desc">
+    Yeraltına in, nadir metalleri kazan ve silah sistemleri üret!<br>
+    <strong>Neodimyum, Galyum, Germanyum, Kobalt</strong> ve daha fazlası seni bekliyor.<br>
+    Derine indikçe daha değerli metaller bulursun — ama tehlike de artar!
+  </div>
+  <div class="controls-grid">
+    <div class="ctrl"><strong>WASD / Ok Tuşları</strong><br>Hareket</div>
+    <div class="ctrl"><strong>Sol Tık / Boşluk</strong><br>Blok kaz</div>
+    <div class="ctrl"><strong>1-8</strong><br>Envanter seç</div>
+    <div class="ctrl"><strong>E</strong><br>Üretim tezgahı</div>
+  </div>
+  <button class="btn-play" onclick="startGame()">⛏️ KAZIMAYA BAŞLA</button>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// ===== CONFIG =====
+const TILE = 32;
+const COLS = Math.ceil(window.innerWidth/TILE)+2;
+const ROWS = 60; // world height
+const VISIBLE_ROWS = Math.ceil(window.innerHeight/TILE)+2;
+
+// ===== BLOCK TYPES =====
+const BLOCKS = {
+  0: {name:'Hava',color:'transparent',solid:false},
+  1: {name:'Toprak',color:'#5c4033',solid:true,drop:null,hardness:1},
+  2: {name:'Taş',color:'#607d8b',solid:true,drop:null,hardness:2},
+  3: {name:'Derin Taş',color:'#37474f',solid:true,drop:null,hardness:3},
+  4: {name:'Neodimyum (Nd)',color:'#e74c3c',solid:true,drop:'Nd',hardness:3,rarity:0.04,minDepth:10,points:50,emoji:'🔴'},
+  5: {name:'Kobalt (Co)',color:'#2980b9',solid:true,drop:'Co',hardness:2,rarity:0.06,minDepth:8,points:30,emoji:'🔵'},
+  6: {name:'Galyum (Ga)',color:'#f39c12',solid:true,drop:'Ga',hardness:4,rarity:0.025,minDepth:15,points:80,emoji:'🟡'},
+  7: {name:'Germanyum (Ge)',color:'#27ae60',solid:true,drop:'Ge',hardness:3,rarity:0.03,minDepth:12,points:60,emoji:'🟢'},
+  8: {name:'Titanyum (Ti)',color:'#95a5a6',solid:true,drop:'Ti',hardness:4,rarity:0.05,minDepth:5,points:40,emoji:'⚪'},
+  9: {name:'Disprozyum (Dy)',color:'#9b59b6',solid:true,drop:'Dy',hardness:5,rarity:0.015,minDepth:20,points:120,emoji:'🔮'},
+  10:{name:'Tungsten (W)',color:'#7f8c8d',solid:true,drop:'W',hardness:5,rarity:0.02,minDepth:18,points:100,emoji:'⬛'},
+  11:{name:'Lityum (Li)',color:'#1abc9c',solid:true,drop:'Li',hardness:2,rarity:0.07,minDepth:6,points:25,emoji:'🩵'},
+  12:{name:'Lav',color:'#e74c3c',solid:true,drop:null,hardness:99,minDepth:35,damage:true,emoji:'🌋'},
+  13:{name:'Maden Gazı',color:'#a8d8ea',solid:false,drop:null,damage:true,emoji:'💨'},
+};
+
+// ===== CRAFTING RECIPES =====
+const RECIPES = [
+  {name:'F-35 Radar Modülü',icon:'📡',result:'radar',req:{Nd:5,Ga:3,Ge:2},points:500,desc:'AESA radar bileşeni'},
+  {name:'Füze Güdüm Mıknatısı',icon:'🎯',result:'magnet',req:{Nd:8,Dy:4},points:800,desc:'Nd-Dy güdüm mıknatısı'},
+  {name:'Titanyum Zırh Plakası',icon:'🛡️',result:'armor',req:{Ti:10,Co:5},points:600,desc:'Hafif titanyum zırh'},
+  {name:'Batarya Paketi',icon:'🔋',result:'battery',req:{Li:8,Co:6},points:400,desc:'Li-Co batarya'},
+  {name:'Tungsten Penetratör',icon:'💥',result:'penetrator',req:{W:8,Ti:4},points:700,desc:'Zırh delici mühimmat'},
+  {name:'Stealth Kaplama',icon:'⬛',result:'stealth',req:{Nd:6,Co:4,Ge:3},points:900,desc:'Radar absorban kaplama'},
+  {name:'Lazer Silah Kristali',icon:'💎',result:'crystal',req:{Nd:10,Dy:6,Ga:5},points:1500,desc:'Yüksek enerjili lazer'},
+];
+
+// ===== WORLD =====
+let world = [];
+let player = {x:Math.floor(COLS/2)*TILE, y:2*TILE, vx:0, vy:0, hp:100, maxHp:100};
+let camera = {y:0};
+let inventory = {Nd:0,Co:0,Ga:0,Ge:0,Ti:0,Dy:0,W:0,Li:0};
+let score = 0, blocksMined = 0, level = 1, selectedSlot = 0;
+let gameRunning = false;
+let mineTarget = null, mineProgress = 0;
+let particles = [];
+let craftedItems = {};
+
+function generateWorld(){
+  world = [];
+  for(let r=0;r<ROWS;r++){
+    world[r] = [];
+    for(let c=0;c<COLS;c++){
+      if(r===0) {world[r][c]=0; continue;}
+      if(r<3) {world[r][c]=1; continue;} // surface
+      if(r<8) {world[r][c]=Math.random()<.1?1:2; continue;} // shallow
+      
+      // Deep layers
+      let block = r<20?2:3;
+      
+      // Ore generation
+      for(let bid=4;bid<=11;bid++){
+        const b = BLOCKS[bid];
+        if(b.minDepth && r>=b.minDepth && Math.random()<b.rarity){
+          block = bid; break;
+        }
+      }
+      // Lava deep
+      if(r>=35 && Math.random()<.05) block=12;
+      
+      world[r][c] = block;
+    }
+  }
+  // Spawn area clear
+  world[1][Math.floor(COLS/2)] = 0;
+  world[2][Math.floor(COLS/2)] = 0;
+}
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  generateWorld();
+  gameRunning = true;
+  renderCraftList();
+  loop();
+}
+
+// ===== PHYSICS =====
+const GRAVITY = 0.4, JUMP = -9, SPEED = 3;
+let keys = {};
+document.addEventListener('keydown',e=>{
+  keys[e.key]=true;
+  if(e.key>='1'&&e.key<='8') selectSlot(parseInt(e.key)-1);
+  if(e.key===' ') {e.preventDefault(); if(isOnGround()) player.vy=JUMP;}
+});
+document.addEventListener('keyup',e=>keys[e.key]=false);
+
+function isOnGround(){
+  const col = Math.floor((player.x+12)/TILE);
+  const row = Math.floor((player.y+TILE)/TILE);
+  return row<ROWS && world[row] && world[row][col] && BLOCKS[world[row][col]].solid;
+}
+
+function updatePlayer(){
+  if(keys['ArrowLeft']||keys['a']||keys['A']) player.vx=-SPEED;
+  else if(keys['ArrowRight']||keys['d']||keys['D']) player.vx=SPEED;
+  else player.vx*=0.8;
+  
+  if((keys['ArrowUp']||keys['w']||keys['W']||keys[' '])&&isOnGround()) player.vy=JUMP;
+  
+  player.vy+=GRAVITY;
+  player.vy=Math.min(player.vy,12);
+  
+  // Horizontal
+  player.x+=player.vx;
+  player.x=Math.max(0,Math.min(player.x,(COLS-1)*TILE));
+  const col=Math.floor((player.x+12)/TILE);
+  const rowTop=Math.floor(player.y/TILE);
+  const rowBot=Math.floor((player.y+TILE-2)/TILE);
+  if(world[rowTop]&&world[rowTop][col]&&BLOCKS[world[rowTop][col]].solid) player.x-=player.vx;
+  if(world[rowBot]&&world[rowBot][col]&&BLOCKS[world[rowBot][col]].solid) player.x-=player.vx;
+  
+  // Vertical
+  player.y+=player.vy;
+  const colL=Math.floor(player.x/TILE);
+  const colR=Math.floor((player.x+TILE-2)/TILE);
+  const rowB=Math.floor((player.y+TILE)/TILE);
+  const rowT=Math.floor(player.y/TILE);
+  if(player.vy>0){
+    if(rowB<ROWS&&((world[rowB]&&world[rowB][colL]&&BLOCKS[world[rowB][colL]].solid)||(world[rowB]&&world[rowB][colR]&&BLOCKS[world[rowB][colR]].solid))){
+      player.y=rowB*TILE-TILE; player.vy=0;
+    }
+  } else {
+    if(rowT>=0&&((world[rowT]&&world[rowT][colL]&&BLOCKS[world[rowT][colL]].solid)||(world[rowT]&&world[rowT][colR]&&BLOCKS[world[rowT][colR]].solid))){
+      player.y=rowT*TILE+TILE; player.vy=0;
+    }
+  }
+  player.y=Math.max(0,player.y);
+  
+  // Camera
+  camera.y+=(player.y-window.innerHeight/2-camera.y)*0.1;
+  camera.y=Math.max(0,camera.y);
+  
+  // Depth
+  const depth=Math.max(0,Math.floor(player.y/TILE)-2);
+  document.getElementById('depthVal').textContent=depth;
+  document.getElementById('tempVal').textContent=(20+depth*2)+'°C';
+  document.getElementById('lightVal').textContent=Math.max(10,100-depth*3)+'%';
+  document.getElementById('depthFill').style.height=Math.min(100,depth/ROWS*100*2)+'%';
+  
+  // Damage from lava/gas
+  const pRow=Math.floor((player.y+16)/TILE), pCol=Math.floor((player.x+16)/TILE);
+  if(world[pRow]&&world[pRow][pCol]&&BLOCKS[world[pRow][pCol]].damage){
+    player.hp-=0.5;
+    document.getElementById('hpFill').style.width=Math.max(0,player.hp/player.maxHp*100)+'%';
+    if(player.hp<=0) showMsg('💀 Öldün! Sayfa yenile.','red');
+  }
+}
+
+// ===== MINING =====
+canvas.addEventListener('click',e=>{
+  if(!gameRunning) return;
+  const wx=Math.floor((e.clientX)/TILE);
+  const wy=Math.floor((e.clientY+camera.y)/TILE);
+  mineBlock(wx,wy);
+});
+canvas.addEventListener('mousemove',e=>{
+  if(!gameRunning) return;
+  if(e.buttons===1){
+    const wx=Math.floor(e.clientX/TILE);
+    const wy=Math.floor((e.clientY+camera.y)/TILE);
+    mineBlock(wx,wy);
+  }
+});
+
+function mineBlock(col,row){
+  if(row<0||row>=ROWS||col<0||col>=COLS) return;
+  const bid=world[row][col];
+  if(!bid||bid===0) return;
+  const b=BLOCKS[bid];
+  if(!b.solid||b.hardness===99) return;
+  
+  // Distance check
+  const px=Math.floor((player.x+16)/TILE), py=Math.floor((player.y+16)/TILE);
+  if(Math.abs(col-px)>3||Math.abs(row-py)>3) return;
+  
+  world[row][col]=0;
+  blocksMined++;
+  
+  if(b.drop){
+    inventory[b.drop]=(inventory[b.drop]||0)+1;
+    score+=b.points||10;
+    spawnParticles(col*TILE+16,row*TILE-camera.y+16,b.color,b.emoji||'✨');
+    showMsg(`${b.emoji||'✨'} ${b.name} kazıldı! +${b.points} puan`,'gold');
+    updateInventoryUI();
+    checkLevel();
+  } else {
+    score+=2;
+  }
+  
+  document.getElementById('scoreVal').textContent=score.toLocaleString();
+  document.getElementById('blocksMined').textContent=blocksMined;
+  renderCraftList();
+}
+
+// ===== PARTICLES =====
+function spawnParticles(x,y,color,emoji){
+  for(let i=0;i<6;i++){
+    particles.push({x,y,vx:(Math.random()-.5)*4,vy:(Math.random()-1)*5,life:40,color,emoji});
+  }
+}
+
+function updateParticles(){
+  particles=particles.filter(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.life--;
+    return p.life>0;
+  });
+}
+
+// ===== RENDER =====
+function render(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  
+  // Sky gradient
+  const sky=ctx.createLinearGradient(0,0,0,canvas.height);
+  sky.addColorStop(0,'#0d0d0d');
+  sky.addColorStop(1,'#1a0a0a');
+  ctx.fillStyle=sky;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  
+  const startRow=Math.max(0,Math.floor(camera.y/TILE));
+  const endRow=Math.min(ROWS,startRow+VISIBLE_ROWS);
+  
+  for(let r=startRow;r<endRow;r++){
+    for(let c=0;c<COLS;c++){
+      const bid=world[r][c];
+      if(!bid||bid===0) continue;
+      const b=BLOCKS[bid];
+      const sx=c*TILE, sy=r*TILE-camera.y;
+      
+      // Block
+      ctx.fillStyle=b.color;
+      ctx.fillRect(sx,sy,TILE,TILE);
+      
+      // Texture overlay
+      ctx.fillStyle='rgba(0,0,0,.2)';
+      ctx.fillRect(sx,sy,TILE,2);
+      ctx.fillRect(sx,sy,2,TILE);
+      ctx.fillStyle='rgba(255,255,255,.05)';
+      ctx.fillRect(sx+TILE-2,sy,2,TILE);
+      ctx.fillRect(sx,sy+TILE-2,TILE,2);
+      
+      // Ore glow
+      if(bid>=4&&bid<=11){
+        ctx.shadowColor=b.color;
+        ctx.shadowBlur=8;
+        ctx.font='16px serif';
+        ctx.textAlign='center';
+        ctx.fillStyle='rgba(255,255,255,.8)';
+        ctx.fillText(b.emoji||'✨',sx+TILE/2,sy+TILE/2+6);
+        ctx.shadowBlur=0;
+      }
+    }
+  }
+  
+  // Player
+  const px=player.x, py=player.y-camera.y;
+  ctx.fillStyle='#3498db';
+  ctx.fillRect(px+4,py,TILE-8,TILE);
+  ctx.fillStyle='#2980b9';
+  ctx.fillRect(px+4,py,TILE-8,12); // head
+  ctx.fillStyle='#f39c12';
+  ctx.fillRect(px+10,py+4,12,8); // face
+  // Pickaxe
+  ctx.fillStyle='#95a5a6';
+  ctx.fillRect(px+TILE-4,py+8,8,4);
+  
+  // Particles
+  particles.forEach(p=>{
+    ctx.globalAlpha=p.life/40;
+    ctx.font='14px serif';
+    ctx.textAlign='center';
+    ctx.fillText(p.emoji||'✨',p.x,p.y);
+    ctx.globalAlpha=1;
+  });
+  
+  // Mining indicator
+  const mx=Math.floor((canvas.width/2)/TILE), my=Math.floor((canvas.height/2+camera.y)/TILE);
+  ctx.strokeStyle='rgba(255,255,255,.3)';
+  ctx.lineWidth=2;
+  ctx.setLineDash([4,4]);
+  ctx.strokeRect(mx*TILE,my*TILE-camera.y,TILE,TILE);
+  ctx.setLineDash([]);
+}
+
+// ===== CRAFTING =====
+function renderCraftList(){
+  const list=document.getElementById('craftList');
+  list.innerHTML=RECIPES.map((r,i)=>{
+    const canCraft=Object.entries(r.req).every(([m,v])=>(inventory[m]||0)>=v);
+    const reqStr=Object.entries(r.req).map(([m,v])=>`${m}:${inventory[m]||0}/${v}`).join(' ');
+    return `<div class="craft-item ${canCraft?'can-craft':'cant-craft'}" onclick="craftItem(${i})">
+      <div class="ci-name">${r.icon} ${r.name}</div>
+      <div class="ci-req">${reqStr}</div>
+      <div style="font-size:.6rem;color:var(--gold);margin-top:2px;">+${r.points} puan</div>
+    </div>`;
+  }).join('');
+}
+
+function craftItem(idx){
+  const r=RECIPES[idx];
+  const canCraft=Object.entries(r.req).every(([m,v])=>(inventory[m]||0)>=v);
+  if(!canCraft){showMsg('⚠️ Yeterli malzeme yok!','red');return;}
+  Object.entries(r.req).forEach(([m,v])=>inventory[m]-=v);
+  craftedItems[r.result]=(craftedItems[r.result]||0)+1;
+  score+=r.points;
+  document.getElementById('scoreVal').textContent=score.toLocaleString();
+  showMsg(`🎉 ${r.name} üretildi! +${r.points} puan`,'green');
+  updateInventoryUI();
+  renderCraftList();
+  checkLevel();
+}
+
+function updateInventoryUI(){
+  const metals=['Nd','Co','Ga','Ge','Ti','Dy','W','Li'];
+  const emojis=['🔴','🔵','🟡','🟢','⚪','🔮','⬛','🩵'];
+  metals.forEach((m,i)=>{
+    document.getElementById('cnt'+(i+1)).textContent=inventory[m]||0;
+  });
+}
+
+function checkLevel(){
+  const newLevel=Math.floor(score/1000)+1;
+  if(newLevel>level){
+    level=newLevel;
+    document.getElementById('levelVal').textContent=level;
+    showMsg(`🏆 SEVİYE ${level}! Daha derin kazabilirsin!`,'gold');
+    player.maxHp+=20; player.hp=player.maxHp;
+    document.getElementById('hpFill').style.width='100%';
+  }
+}
+
+function selectSlot(i){
+  document.querySelectorAll('.inv-slot').forEach(s=>s.classList.remove('active'));
+  document.getElementById('slot'+i).classList.add('active');
+  selectedSlot=i;
+}
+
+function showMsg(text,type='cyan'){
+  const colors={cyan:'var(--cyan)',green:'var(--green)',red:'var(--red)',gold:'var(--gold)'};
+  const m=document.createElement('div');
+  m.className='msg';
+  m.style.borderColor=colors[type]||colors.cyan;
+  m.textContent=text;
+  document.getElementById('msgBox').appendChild(m);
+  setTimeout(()=>m.remove(),2800);
+}
+
+// ===== LOOP =====
+function loop(){
+  if(!gameRunning) return;
+  updatePlayer();
+  updateParticles();
+  render();
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

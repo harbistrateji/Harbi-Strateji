@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harb-i Strateji — Video İnfografik Verileri (85 Sahne)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; padding: 2rem; }
+  h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 2rem; }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .filter-btn { font-size: 0.7rem; padding: 4px 12px; border-radius: 6px; background: #1e293b; color: #94a3b8; border: 1px solid #334155; cursor: pointer; transition: all 0.2s; }
+  .filter-btn:hover { background: #334155; color: #e2e8f0; }
+  .filter-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+  .scene-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+  .scene-card { background: #1e293b; border-radius: 12px; padding: 1.5rem; border: 1px solid #334155; transition: transform 0.2s; }
+  .scene-card:hover { transform: translateY(-2px); }
+  .scene-card.hidden { display: none; }
+  .scene-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; background: #3b82f6; color: white; font-weight: 600; }
+  .badge.formul { background: #8b5cf6; }
+  .badge.kanun { background: #ef4444; }
+  .badge.tarih { background: #f97316; }
+  .badge.silah { background: #64748b; }
+  .badge.ulke { background: #06b6d4; }
+  .badge.finans { background: #10b981; }
+  .badge.kriz { background: #dc2626; }
+  .badge.jeopolitik { background: #6366f1; }
+  .badge.doktrin { background: #ec4899; }
+  .badge.guncel { background: #14b8a6; }
+  .badge.kavram { background: #a855f7; }
+  .badge.hikaye { background: #f59e0b; }
+  .badge.alinti { background: #78716c; }
+  .scene-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .scene-subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.75rem; font-family: monospace; }
+  .scene-data { font-size: 0.75rem; color: #cbd5e1; line-height: 1.6; }
+  .data-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #334155; }
+  .source { font-size: 0.65rem; color: #64748b; margin-top: 0.75rem; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: #1e293b; border-radius: 8px; padding: 1rem; text-align: center; border: 1px solid #334155; }
+  .stat-value { font-size: 1.5rem; font-weight: 700; color: #3b82f6; }
+  .stat-label { font-size: 0.7rem; color: #94a3b8; margin-top: 0.25rem; }
+  .export-info { margin-top: 2rem; padding: 1.5rem; background: #1e293b; border-radius: 12px; border: 1px solid #334155; }
+  .export-info h2 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .export-info p { font-size: 0.8rem; color: #94a3b8; line-height: 1.6; }
+  code { background: #334155; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
+  pre { background: #0f172a; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-top: 0.5rem; font-size: 0.7rem; line-height: 1.5; }
+  .search-box { width: 100%; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-size: 0.85rem; margin-bottom: 1rem; }
+  .search-box:focus { outline: none; border-color: #3b82f6; }
+  @media (max-width: 768px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+  <img src="logo-icon-64.png" alt="Harb-i Strateji" style="width:48px;height:48px;border-radius:50%;object-fit:cover" />
+  <div>
+    <h1 style="margin-bottom:0.25rem">Harb-i Strateji Külliyatı — Video İnfografik Verileri</h1>
+    <p class="subtitle" style="margin-bottom:0">85 sahne · 13 kategori · Sosyal medya formatları · After Effects / Remotion / FFmpeg uyumlu</p>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-card"><div class="stat-value">85</div><div class="stat-label">Toplam Sahne</div></div>
+  <div class="stat-card"><div class="stat-value">13</div><div class="stat-label">Kategori</div></div>
+  <div class="stat-card"><div class="stat-value">~12 dk</div><div class="stat-label">Toplam Süre</div></div>
+  <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Format (16:9, 9:16, 1:1)</div></div>
+</div>
+
+<input type="text" class="search-box" placeholder="Sahne ara... (başlık, kategori, içerik)" id="searchBox" />
+
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-cat="all">Tümü (85)</button>
+  <button class="filter-btn" data-cat="Formül">Formül (5)</button>
+  <button class="filter-btn" data-cat="Kanun">Kanun (8)</button>
+  <button class="filter-btn" data-cat="Tarih">Tarih (12)</button>
+  <button class="filter-btn" data-cat="Silah">Silah (11)</button>
+  <button class="filter-btn" data-cat="Ülke">Ülke (6)</button>
+  <button class="filter-btn" data-cat="Finans">Finans (7)</button>
+  <button class="filter-btn" data-cat="Kriz">Kriz (4)</button>
+  <button class="filter-btn" data-cat="Jeopolitik">Jeopolitik (5)</button>
+  <button class="filter-btn" data-cat="Doktrin">Doktrin (6)</button>
+  <button class="filter-btn" data-cat="Güncel">Güncel (5)</button>
+  <button class="filter-btn" data-cat="Kavram">Kavram (5)</button>
+  <button class="filter-btn" data-cat="Hikaye">Hikaye (7)</button>
+  <button class="filter-btn" data-cat="Alıntı">Alıntı (4)</button>
+</div>
+
+<div class="scene-grid" id="sceneGrid">
+  <!-- Scenes will be populated by JavaScript -->
+</div>
+
+<div class="export-info">
+  <h2>Dışa Aktarım & Kullanım Kılavuzu</h2>
+  <p>Bu sayfadaki tüm veriler, harici video düzenleme araçlarında kullanılmak üzere yapılandırılmıştır:</p>
+  <p style="margin-top:0.75rem"><strong>1. WebM Video:</strong> Ana uygulamadan (<code>/video-infografik</code>) her sahneyi 9:16, 16:9 veya 1:1 formatında WebM olarak indirebilirsiniz.</p>
+  <p style="margin-top:0.5rem"><strong>2. JSON Veri:</strong> <code>video-infografik-data.json</code> dosyasını After Effects (Bodymovin/Lottie), Remotion, FFmpeg veya Canva/Figma'da kullanabilirsiniz.</p>
+  <p style="margin-top:0.5rem"><strong>3. Canva/Figma:</strong> Her sahnenin veri yapısını kopyalayıp şablon tasarımlarınıza aktarabilirsiniz.</p>
+  <p style="margin-top:0.5rem"><strong>4. Sosyal Medya:</strong> YouTube (16:9), Instagram Reels/TikTok (9:16), Instagram Post (1:1) formatları desteklenir.</p>
+  <p style="margin-top:0.75rem">Örnek JSON yapısı:</p>
+  <pre>{
+  "id": "guc_formulu",
+  "title": "Gücün Algoritması",
+  "category": "Formül",
+  "duration": 10,
+  "content": {
+    "type": "formula",
+    "formula": "G = T × S × E × L",
+    "variables": [
+      { "symbol": "T", "name": "Teknoloji", "value": 7 },
+      { "symbol": "S", "name": "Sistem Entegrasyonu", "value": 6 }
+    ],
+    "result": "G = 1.680"
+  }
+}</pre>
+</div>
+
+<script>
+// Scene data embedded for standalone use
+const scenes = [
+  { id: "guc_formulu", title: "Gücün Algoritması", subtitle: "G = T × S × E × L", category: "Formül", duration: 10, type: "formula" },
+  { id: "sistemler_savasi", title: "Sistemler Savaşı", subtitle: "SW = (Sk×Sh×Sd) − (Sf+Se)", category: "Formül", duration: 10, type: "formula" },
+  { id: "stratejik_ozerklik", title: "Stratejik Özerklik İndeksi", subtitle: "SÖİ = (DEE+FEE+EES+TEK+KUR)/5", category: "Formül", duration: 10, type: "formula" },
+  { id: "turkiye_grand_strateji", title: "Türkiye Grand Strateji 2040", subtitle: "TG = (C×O×B×S×D) ÷ K", category: "Formül", duration: 10, type: "formula" },
+  { id: "finansman_zinciri", title: "Savunma Finansman Zinciri", subtitle: "E → I → T → M → F", category: "Formül", duration: 10, type: "formula" },
+  { id: "kanun1_duzen", title: "1. Kanun: Düzen Pahalıdır", subtitle: "K_yıkma / K_inşa = 1:10.000", category: "Kanun", duration: 8, type: "comparison" },
+  { id: "kanun1_bagdat", title: "1. Kanun: Bağdat Örneği", subtitle: "500 Yıl İnşa — 13 Gün Yıkım", category: "Kanun", duration: 8, type: "comparison" },
+  { id: "kanun2_ic_cokus", title: "2. Kanun: İçeriden Çöküş", subtitle: "P(iç çöküş) >> P(dış çöküş)", category: "Kanun", duration: 8, type: "counter" },
+  { id: "kanun3_hiz", title: "3. Kanun: Hız Kütleyi Yener", subtitle: "OODA-X < Rakip OODA = Zafer", category: "Kanun", duration: 8, type: "comparison" },
+  { id: "kanun4_asimetri", title: "4. Kanun: Asimetri Doğanın Yasası", subtitle: "F_asimetrik / F_simetrik = Avantaj", category: "Kanun", duration: 8, type: "comparison" },
+  { id: "kanun5_otonomi", title: "5. Kanun: Teknolojik Otonomi", subtitle: "Başkasının çipi = Bağımlılık", category: "Kanun", duration: 8, type: "radar_pulse" },
+  { id: "kanun6_akis", title: "6. Kanun: Akış Kontrolü", subtitle: "Güç = Kontrol(veri + enerji + mal)", category: "Kanun", duration: 8, type: "radar_pulse" },
+  { id: "kanun7_bilissel", title: "7. Kanun: Bilişsel Üstünlük", subtitle: "Zihin kontrolü > Toprak kontrolü", category: "Kanun", duration: 8, type: "comparison" },
+  { id: "kades", title: "Kadeş Muharebesi", subtitle: "MÖ 1274 · Suriye", category: "Tarih", duration: 8, type: "counter" },
+  { id: "cannae", title: "Cannae Muharebesi", subtitle: "MÖ 216 · İtalya", category: "Tarih", duration: 8, type: "counter" },
+  { id: "malazgirt", title: "Malazgirt Muharebesi", subtitle: "1071 · Anadolu", category: "Tarih", duration: 8, type: "counter" },
+  { id: "istanbul_fethi", title: "İstanbul'un Fethi", subtitle: "1453 · Konstantinopolis", category: "Tarih", duration: 8, type: "counter" },
+  { id: "canakkale", title: "Çanakkale Savaşı", subtitle: "1915 · Gelibolu", category: "Tarih", duration: 8, type: "counter" },
+  { id: "alti_gun", title: "Altı Gün Savaşı", subtitle: "1967 · Orta Doğu", category: "Tarih", duration: 8, type: "counter" },
+  { id: "karabag_2020", title: "İkinci Karabağ Savaşı", subtitle: "2020 · Kafkasya", category: "Tarih", duration: 8, type: "counter" },
+  { id: "ukrayna_2022", title: "Rusya-Ukrayna Savaşı", subtitle: "2022-devam · Ukrayna", category: "Tarih", duration: 8, type: "counter" },
+  { id: "tb2", title: "Bayraktar TB2", subtitle: "Savaş Kanıtlı MALE İHA", category: "Silah", duration: 8, type: "radar_pulse" },
+  { id: "akinci", title: "Bayraktar Akıncı", subtitle: "Stratejik HALE İHA", category: "Silah", duration: 8, type: "radar_pulse" },
+  { id: "kizilelma", title: "Bayraktar Kızılelma", subtitle: "İnsansız Savaş Uçağı (İSU)", category: "Silah", duration: 8, type: "radar_pulse" },
+  { id: "kaan", title: "KAAN (TF-X)", subtitle: "5. Nesil Milli Savaş Uçağı", category: "Silah", duration: 8, type: "radar_pulse" },
+  { id: "f35_vs_kaan", title: "F-35 vs KAAN", subtitle: "5. Nesil Karşılaştırma", category: "Silah", duration: 8, type: "comparison" },
+  { id: "s400", title: "S-400 Triumf", subtitle: "Uzun Menzilli Hava Savunma", category: "Silah", duration: 8, type: "radar_pulse" },
+  { id: "shahed_patriot", title: "Shahed-136 vs Patriot", subtitle: "Maliyet Asimetrisi Zirvesi", category: "Silah", duration: 8, type: "comparison" },
+  { id: "fpv_tank", title: "FPV Drone vs T-72 Tank", subtitle: "Ukrayna Cephesi 2023", category: "Silah", duration: 8, type: "comparison" },
+  { id: "tb2_pantsir", title: "TB2 MAM-L vs Pantsir-S1", subtitle: "Libya/Karabağ 2020", category: "Silah", duration: 8, type: "comparison" },
+  { id: "hpm", title: "HPM Mikrodalga Silahı", subtitle: "Sürü Drone Katili", category: "Silah", duration: 8, type: "counter" },
+  { id: "maven", title: "Maven Projesi — YZ Hedefleme", subtitle: "Pentagon $480M Yapay Zeka Alımı", category: "Silah", duration: 8, type: "counter" },
+  { id: "abd_profil", title: "ABD Güç Profili", subtitle: "G = 3.705 · SÖİ = 88", category: "Ülke", duration: 8, type: "radar_pulse" },
+  { id: "cin_profil", title: "Çin Güç Profili", subtitle: "G = 3.672 · SÖİ = 75", category: "Ülke", duration: 8, type: "radar_pulse" },
+  { id: "rusya_profil", title: "Rusya Güç Profili", subtitle: "G = 2.079 · SÖİ = 62", category: "Ülke", duration: 8, type: "radar_pulse" },
+  { id: "turkiye_profil", title: "Türkiye Güç Profili", subtitle: "G = 1.536 · SÖİ = 50", category: "Ülke", duration: 8, type: "radar_pulse" },
+  { id: "israil_profil", title: "İsrail Güç Profili", subtitle: "G = 1.874 · SÖİ = 65", category: "Ülke", duration: 8, type: "radar_pulse" },
+  { id: "kuresel_guc_sira", title: "Küresel Güç Sıralaması", subtitle: "G Formülü ile 6 Ülke", category: "Ülke", duration: 10, type: "bar_race" },
+  { id: "savunma_harcama", title: "Küresel Savunma Harcamaları", subtitle: "2025 SIPRI Verileri", category: "Finans", duration: 10, type: "bar_race" },
+  { id: "turkiye_savunma_buyume", title: "Türkiye Savunma Sanayii", subtitle: "2018 → 2025 Büyüme", category: "Finans", duration: 8, type: "counter" },
+  { id: "abd_paradoks", title: "ABD Savunma Paradoksu", subtitle: "FY2027: $1.5T Talep vs $36T Borç", category: "Finans", duration: 8, type: "comparison" },
+  { id: "rusya_maliyet", title: "Rusya Savaş Maliyeti", subtitle: "Ukrayna Savaşı Günlük Harcama", category: "Finans", duration: 8, type: "counter" },
+  { id: "hurmuz_krizi", title: "Hürmüz Boğazı Krizi", subtitle: "Dünya petrolünün %21'i", category: "Kriz", duration: 8, type: "counter" },
+  { id: "tayvan_abluka", title: "Tayvan Boğazı Ablukası", subtitle: "Küresel çip üretiminin %92'si", category: "Kriz", duration: 8, type: "counter" },
+  { id: "siber_altyapi", title: "Kritik Altyapı Siber Saldırısı", subtitle: "Elektrik Şebekesi Çökerse", category: "Kriz", duration: 8, type: "timeline_flash" },
+  { id: "deepfake_saldiri", title: "Deepfake Bilişsel Saldırı", subtitle: "Lider Deepfake'i Yayılırsa", category: "Kriz", duration: 8, type: "timeline_flash" },
+  { id: "yedi_havza", title: "Türkiye'nin 7 Havzası", subtitle: "Stratejik Derinlik Haritası", category: "Jeopolitik", duration: 8, type: "radar_pulse" },
+  { id: "orta_koridor", title: "Orta Koridor", subtitle: "Türkiye-Kafkasya-Orta Asya", category: "Jeopolitik", duration: 8, type: "timeline_flash" },
+  { id: "hazar_enerji", title: "Hazar Yeşil Enerji Koridoru", subtitle: "Azerbaycan-Kazakistan-Özbekistan", category: "Jeopolitik", duration: 8, type: "counter" },
+  { id: "dijital_ipek", title: "Dijital İpek Yolu", subtitle: "Çin'in Siber Egemenlik Projesi", category: "Jeopolitik", duration: 8, type: "counter" },
+  { id: "cin_rusya_nukleer", title: "Çin-Rusya Nükleer İttifak", subtitle: "Zenginleştirilmiş Uranyum Rekoru", category: "Jeopolitik", duration: 8, type: "comparison" },
+  { id: "jadc2", title: "JADC2 — Ortak Tüm Alanlar", subtitle: "Komuta Kontrol Devrimi", category: "Doktrin", duration: 8, type: "radar_pulse" },
+  { id: "cca", title: "İşbirlikçi Savaş Uçakları (CCA)", subtitle: "Siber Destekli Hava Üstünlüğü", category: "Doktrin", duration: 8, type: "counter" },
+  { id: "moduler_ew", title: "Modüler Elektronik Harp", subtitle: "Farklı Bölge = Farklı EW", category: "Doktrin", duration: 8, type: "radar_pulse" },
+  { id: "bilissel_doktrin", title: "Bilişsel Savaş Doktrini", subtitle: "Zihin Cephesi — 5. Alan", category: "Doktrin", duration: 8, type: "timeline_flash" },
+  { id: "zombi_devlet", title: "Bilişsel Zombi Devlet", subtitle: "SÖİ < 40 = Karar Felci", category: "Doktrin", duration: 8, type: "comparison" },
+  { id: "meta_enerji", title: "Meta Enerji Kavramı", subtitle: "Enerjinin Dijital İkizi", category: "Doktrin", duration: 8, type: "counter" },
+  { id: "deepseek_sok", title: "DeepSeek Şoku", subtitle: "27 Ocak 2025", category: "Güncel", duration: 8, type: "counter" },
+  { id: "darpa_ag", title: "DARPA Dirençli Ağ Yatırımı", subtitle: "Pasifik'te Muhabere Güvenliği", category: "Güncel", duration: 8, type: "counter" },
+  { id: "leidos_sensor", title: "Leidos $631M Sensör İhalesi", subtitle: "Küresel Gözetleme Gücü", category: "Güncel", duration: 8, type: "counter" },
+  { id: "nato_dijital", title: "NATO Dijital Dönüşüm", subtitle: "Veri + Siber + 5G Askeri", category: "Güncel", duration: 8, type: "radar_pulse" },
+  { id: "sah_deniz", title: "Şah Deniz — $364M Gelir", subtitle: "Azerbaycan Enerji Gücü", category: "Güncel", duration: 8, type: "counter" },
+  { id: "savas_evrimi", title: "Savaşın Evrimi", subtitle: "MÖ 3500 → 2040", category: "Tarih", duration: 12, type: "timeline_flash" },
+  { id: "baskin_bilesen", title: "G Formülünde Baskın Bileşen", subtitle: "Her Çağda Farklı Ağırlık", category: "Tarih", duration: 10, type: "timeline_flash" },
+  { id: "ooda_hizlanma", title: "OODA Döngüsü Hızlanması", subtitle: "Karar Hızının Tarihi", category: "Tarih", duration: 10, type: "timeline_flash" },
+  { id: "turk_savunma_evrimi", title: "Türk Savunma Sanayii Evrimi", subtitle: "1974 → 2026", category: "Tarih", duration: 10, type: "timeline_flash" },
+  { id: "carpimsal_model", title: "Çarpımsal Model", subtitle: "Neden Toplama Değil Çarpma?", category: "Kavram", duration: 8, type: "comparison" },
+  { id: "zayif_halka", title: "En Zayıf Halka Prensibi", subtitle: "Savunma Finansman Zinciri", category: "Kavram", duration: 8, type: "comparison" },
+  { id: "dijital_egemenlik", title: "Dijital Egemenlik", subtitle: "Veri + Siber + Bağımsızlık", category: "Kavram", duration: 8, type: "radar_pulse" },
+  { id: "slopaganda", title: "Slopaganda", subtitle: "YZ Üretimi Propaganda", category: "Kavram", duration: 8, type: "counter" },
+  { id: "maliyet_asimetri_tarihi", title: "Maliyet Asimetrisi Tarihi", subtitle: "IED'den Siber Saldırıya", category: "Kavram", duration: 10, type: "timeline_flash" },
+  { id: "roma_cokusu", title: "Roma'nın Çöküşü", subtitle: "800 Yıl İnşa — 1 Gece Çöküş", category: "Hikaye", duration: 8, type: "timeline_flash" },
+  { id: "sovyet_cokusu", title: "Sovyetler Birliği Çöküşü", subtitle: "NATO Değil, Ekonomi Yıktı", category: "Hikaye", duration: 8, type: "counter" },
+  { id: "stuxnet", title: "Stuxnet — İlk Siber Silah", subtitle: "1.000 Santrifüj Yok Edildi", category: "Hikaye", duration: 8, type: "timeline_flash" },
+  { id: "starlink_ukrayna", title: "Starlink Ukrayna Etkisi", subtitle: "Uydu İnterneti = Savaş Gücü", category: "Hikaye", duration: 8, type: "counter" },
+  { id: "iron_dome", title: "Iron Dome Paradoksu", subtitle: "$50K Füze vs $50 Roket", category: "Hikaye", duration: 8, type: "comparison" },
+  { id: "nagorno_44gun", title: "44 Günde Karabağ", subtitle: "Drone Savaşının İlk Zaferi", category: "Hikaye", duration: 8, type: "timeline_flash" },
+  { id: "cin_deniz_gucu", title: "Çin Deniz Gücü Yükselişi", subtitle: "2015: 255 → 2025: 370 Gemi", category: "Hikaye", duration: 8, type: "counter" },
+  { id: "alinti_koyuncu1", title: "Güç Formülü Özeti", subtitle: "Selahaddin Koyuncu", category: "Alıntı", duration: 8, type: "quote" },
+  { id: "alinti_koyuncu2", title: "Asimetri Yasası", subtitle: "Selahaddin Koyuncu", category: "Alıntı", duration: 8, type: "quote" },
+  { id: "alinti_unlu", title: "Finansman Zinciri", subtitle: "Türkünaz Ünlü", category: "Alıntı", duration: 8, type: "quote" },
+  { id: "alinti_cografya", title: "Coğrafya Kader Değil", subtitle: "TG2040 Felsefesi", category: "Alıntı", duration: 8, type: "quote" },
+];
+
+const badgeClass = {
+  "Formül": "formul", "Kanun": "kanun", "Tarih": "tarih", "Silah": "silah",
+  "Ülke": "ulke", "Finans": "finans", "Kriz": "kriz", "Jeopolitik": "jeopolitik",
+  "Doktrin": "doktrin", "Güncel": "guncel", "Kavram": "kavram", "Hikaye": "hikaye", "Alıntı": "alinti"
+};
+
+function renderScenes(filter, search) {
+  const grid = document.getElementById('sceneGrid');
+  grid.innerHTML = '';
+  const filtered = scenes.filter(s => {
+    const catMatch = filter === 'all' || s.category === filter;
+    const searchMatch = !search || s.title.toLowerCase().includes(search) || s.subtitle.toLowerCase().includes(search) || s.category.toLowerCase().includes(search);
+    return catMatch && searchMatch;
+  });
+  filtered.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.innerHTML = `
+      <div class="scene-header">
+        <span class="badge ${badgeClass[s.category] || ''}">${s.category}</span>
+        <span style="color:#64748b;font-size:0.7rem">${s.duration} saniye</span>
+        <span style="color:#64748b;font-size:0.65rem;margin-left:auto">${s.type}</span>
+      </div>
+      <div class="scene-title">${s.title}</div>
+      <div class="scene-subtitle">${s.subtitle}</div>
+      <div class="source">ID: ${s.id} · Harb-i Strateji Külliyatı</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// Filter buttons
+document.getElementById('filterBar').addEventListener('click', e => {
+  if (e.target.classList.contains('filter-btn')) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    renderScenes(e.target.dataset.cat, document.getElementById('searchBox').value.toLowerCase());
+  }
+});
+
+// Search
+document.getElementById('searchBox').addEventListener('input', e => {
+  const activeBtn = document.querySelector('.filter-btn.active');
+  renderScenes(activeBtn.dataset.cat, e.target.value.toLowerCase());
+});
+
+// Initial render
+renderScenes('all', '');
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Hibrit Savaş — Tüm Boyutlarıyla İnteraktif Analiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--card:#111827;--border:rgba(201,162,75,.15);--gold:#c9a24b;--cyan:#00e0ff;--red:#e01515;--green:#10b981;--purple:#a78bfa;--text:#eaf0f7;--dim:#6b7b8f;--font-head:'Chakra Petch',sans-serif;--font-body:'IBM Plex Sans',sans-serif;--font-mono:'IBM Plex Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;pointer-events:none;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(201,162,75,.08) 0%,transparent 70%)}
+.hero h1{font-family:var(--font-head);font-size:clamp(32px,6vw,56px);font-weight:700;color:var(--gold);margin-bottom:16px;letter-spacing:-1px}
+.hero .sub{color:var(--dim);font-size:16px;max-width:600px;line-height:1.7;margin-bottom:32px}
+.hero .start-btn{padding:14px 40px;border:2px solid var(--gold);border-radius:4px;background:none;color:var(--gold);font-family:var(--font-head);font-size:15px;font-weight:600;cursor:pointer;transition:.3s;letter-spacing:1px}
+.hero .start-btn:hover{background:var(--gold);color:var(--bg)}
+/* Nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{padding:8px 16px;border:1px solid var(--border);border-radius:4px;background:none;color:var(--dim);font-family:var(--font-mono);font-size:13px;cursor:pointer;white-space:nowrap;transition:.2s}
+.nav-btn.active,.nav-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,162,75,.08)}
+/* Sections */
+.section{padding:60px 20px;max-width:1100px;margin:0 auto;display:none}
+.section.active{display:block;animation:fadeUp .5s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.section-head{font-family:var(--font-head);font-size:28px;color:var(--gold);margin-bottom:8px}
+.section-sub{color:var(--dim);font-size:13px;margin-bottom:32px;font-family:var(--font-mono)}
+/* Cards Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:.3s;cursor:pointer}
+.info-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,162,75,.1)}
+.info-card .icon{font-size:28px;margin-bottom:12px}
+.info-card h3{font-family:var(--font-head);font-size:16px;color:var(--text);margin-bottom:8px}
+.info-card p{color:var(--dim);font-size:13px;line-height:1.6}
+.info-card .tag{display:inline-block;margin-top:10px;padding:3px 8px;border-radius:4px;font-size:13px;font-family:var(--font-mono);background:rgba(0,224,255,.1);color:var(--cyan)}
+/* Timeline */
+.timeline{position:relative;padding-left:30px;border-left:2px solid var(--border)}
+.timeline-item{margin-bottom:32px;position:relative}
+.timeline-item::before{content:'';position:absolute;left:-35px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.timeline-item h4{font-family:var(--font-head);font-size:14px;color:var(--gold);margin-bottom:4px}
+.timeline-item .date{font-family:var(--font-mono);font-size:13px;color:var(--cyan);margin-bottom:6px}
+.timeline-item p{color:var(--dim);font-size:13px;line-height:1.6}
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:32px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center}
+.stat-box .val{font-family:var(--font-head);font-size:24px;color:var(--cyan);margin-bottom:4px}
+.stat-box .lbl{font-size:13px;color:var(--dim);font-family:var(--font-mono)}
+/* Music */
+.music-btn{position:fixed;bottom:20px;right:20px;z-index:200;width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:.3s}
+.music-btn:hover{border-color:var(--gold);box-shadow:0 0 12px rgba(201,162,75,.3)}
+/* Back */
+@media(max-width:768px){.grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div class="music-btn" id="musicBtn" onclick="toggleMusic()">🔇</div>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <h1>HİBRİT SAVAŞ</h1>
+  <p class="sub">Tüm Boyutlarıyla İnteraktif Analiz — Konvansiyonel, siber, bilişsel, ekonomik ve uzay boyutlarında 21. yüzyılın savaş paradigması.</p>
+  <button class="start-btn" onclick="startExplore()">KEŞFETMEYİ BAŞLAT ▸</button>
+</div>
+
+<!-- NAV -->
+<div class="nav" id="mainNav" style="display:none">
+  <button class="nav-btn active" onclick="showSection('genel')">GENEL BAKIŞ</button>
+  <button class="nav-btn" onclick="showSection('siber')">SİBER BOYUT</button>
+  <button class="nav-btn" onclick="showSection('bilissel')">BİLİŞSEL SAVAŞ</button>
+  <button class="nav-btn" onclick="showSection('ekonomik')">EKONOMİK SAVAŞ</button>
+  <button class="nav-btn" onclick="showSection('enerji')">ENERJİ & KAYNAK</button>
+  <button class="nav-btn" onclick="showSection('uzay')">UZAY & EMS</button>
+  <button class="nav-btn" onclick="showSection('vekalet')">VEKÂLET SAVAŞI</button>
+  <button class="nav-btn" onclick="showSection('turkiye')">TÜRKİYE</button>
+  <button class="nav-btn" onclick="showSection('gelecek')">GELECEK</button>
+</div>
+
+<!-- SECTIONS -->
+<div class="section active" id="sec-genel">
+  <h2 class="section-head">Hibrit Savaş: Genel Çerçeve</h2>
+  <p class="section-sub">SAVAŞIN YENİ DOĞASI — ÇOKLU BOYUT, TEK HEDEFİ</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">7</div><div class="lbl">SAVAŞ BOYUTU</div></div>
+    <div class="stat-box"><div class="val">85%</div><div class="lbl">GRİ BÖLGE</div></div>
+    <div class="stat-box"><div class="val">24/7</div><div class="lbl">KESİNTİSİZ</div></div>
+    <div class="stat-box"><div class="val">∞</div><div class="lbl">SAVAŞ ALANI</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">⚔️</div><h3>Konvansiyonel Boyut</h3><p>Düzenli kuvvetler, zırhlı birlikler, hava kuvvetleri. Artık tek başına belirleyici değil ama caydırıcılığın temeli.</p><span class="tag">KLASİK</span></div>
+    <div class="info-card"><div class="icon">💻</div><h3>Siber Boyut</h3><p>Kritik altyapı saldırıları, veri hırsızlığı, dezenformasyon botları. Savaş ilanı gerektirmeyen sürekli çatışma.</p><span class="tag">7/24 AKTİF</span></div>
+    <div class="info-card"><div class="icon">🧠</div><h3>Bilişsel Boyut</h3><p>Algı yönetimi, propaganda, deepfake, sosyal medya manipülasyonu. Hedef: toplumun iradesi.</p><span class="tag">EN TEHLİKELİ</span></div>
+    <div class="info-card"><div class="icon">💰</div><h3>Ekonomik Boyut</h3><p>Yaptırımlar, ticaret savaşları, SWIFT silahlaştırması, tedarik zinciri kesintileri.</p><span class="tag">YAPTIRM</span></div>
+    <div class="info-card"><div class="icon">⚡</div><h3>Enerji Boyutu</h3><p>Boru hattı sabotajları, LNG politikası, petrol ambargoları, nadir metal kontrolü.</p><span class="tag">STRATEJİK</span></div>
+    <div class="info-card"><div class="icon">🛰️</div><h3>Uzay & EMS Boyutu</h3><p>Uydu savaşları, GPS bozma, elektronik harp, frekans hakimiyeti.</p><span class="tag">YENİ CEPHE</span></div>
+    <div class="info-card"><div class="icon">🎭</div><h3>Vekâlet Boyutu</h3><p>Devlet dışı aktörler, PMC'ler, terör örgütleri, proxy güçler. Doğrudan çatışma riski olmadan etki.</p><span class="tag">GRİ BÖLGE</span></div>
+    <div class="info-card"><div class="icon">🔬</div><h3>Teknolojik Boyut</h3><p>YZ silahlanması, otonom sistemler, hipersonik füzeler, kuantum üstünlüğü yarışı.</p><span class="tag">GELECEK</span></div>
+  </div>
+</div>
+
+<div class="section" id="sec-siber">
+  <h2 class="section-head">Siber Savaş Boyutu</h2>
+  <p class="section-sub">DİJİTAL CEPHEDE 7/24 ÇATIŞMA</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">2.200+</div><div class="lbl">GÜNLÜK SALDIRI (TR)</div></div>
+    <div class="stat-box"><div class="val">$8T</div><div class="lbl">KÜRESEL HASAR/YIL</div></div>
+    <div class="stat-box"><div class="val">APT</div><div class="lbl">DEVLET AKTÖRÜ</div></div>
+    <div class="stat-box"><div class="val">0-DAY</div><div class="lbl">SİLAH TİPİ</div></div>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item"><div class="date">2007</div><h4>Estonya Siber Saldırısı</h4><p>Rusya kaynaklı DDoS saldırıları Estonya'nın bankacılık, medya ve devlet altyapısını felç etti. NATO'nun siber savunma doktrininin doğuşu.</p></div>
+    <div class="timeline-item"><div class="date">2010</div><h4>Stuxnet — İlk Siber Silah</h4><p>ABD-İsrail ortak operasyonu. İran'ın nükleer santrifüjlerini fiziksel olarak tahrip eden ilk siber silah. Siber-fiziksel savaş başladı.</p></div>
+    <div class="timeline-item"><div class="date">2014</div><h4>Rusya-Ukrayna Siber Cephesi</h4><p>Kırım ilhakı öncesi Ukrayna'nın enerji şebekesi, seçim sistemleri ve iletişim altyapısına sistematik saldırılar.</p></div>
+    <div class="timeline-item"><div class="date">2017</div><h4>NotPetya — $10 Milyar Hasar</h4><p>Ukrayna'yı hedef alan ama küresel yayılan fidye yazılımı. Maersk, FedEx, Merck gibi devlere milyarlarca dolar zarar.</p></div>
+    <div class="timeline-item"><div class="date">2020</div><h4>SolarWinds — Tedarik Zinciri Saldırısı</h4><p>Rus SVR'nin ABD hükümet ağlarına 9 ay boyunca erişim sağladığı sofistike operasyon. 18.000 kurum etkilendi.</p></div>
+    <div class="timeline-item"><div class="date">2022</div><h4>Ukrayna Savaşı Siber Boyutu</h4><p>Viasat uydu saldırısı, wiper malware'ler, IT Army of Ukraine karşı saldırıları. İlk tam ölçekli siber savaş.</p></div>
+    <div class="timeline-item"><div class="date">2024</div><h4>YZ Destekli Siber Saldırılar</h4><p>Yapay zeka ile otomatik zafiyet keşfi, deepfake sosyal mühendislik, polimorfik malware. Savunma-saldırı dengesi bozuluyor.</p></div>
+    <div class="timeline-item"><div class="date">2026</div><h4>Kuantum Tehdidi</h4><p>Kuantum bilgisayarların mevcut şifrelemeyi kırma potansiyeli. "Şimdi topla, sonra çöz" stratejisi. Post-kuantum kriptografiye geçiş.</p></div>
+  </div>
+</div>
+
+<div class="section" id="sec-bilissel">
+  <h2 class="section-head">Bilişsel Savaş</h2>
+  <p class="section-sub">HEDEF: TOPLUMUN İRADESİ VE ALGI DÜNYASI</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">4.9B</div><div class="lbl">SOSYAL MEDYA KULLANICISI</div></div>
+    <div class="stat-box"><div class="val">500M+</div><div class="lbl">BOT HESAP</div></div>
+    <div class="stat-box"><div class="val">%70</div><div class="lbl">DEEPFAKE ARTIŞ/YIL</div></div>
+    <div class="stat-box"><div class="val">6sn</div><div class="lbl">DİKKAT SÜRESİ</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">📱</div><h3>Sosyal Medya Silahlaştırması</h3><p>Troll çiftlikleri, koordineli sahte davranış, hashtag manipülasyonu. Rusya'nın IRA'sı 2016 ABD seçimlerinde 126M Amerikalıya ulaştı.</p><span class="tag">DEZENFORMASYON</span></div>
+    <div class="info-card"><div class="icon">🎭</div><h3>Deepfake & Sentetik Medya</h3><p>YZ ile üretilen sahte video/ses. Siyasi liderlerin sahte açıklamaları, askeri moral bozma operasyonları.</p><span class="tag">YZ TEHDİDİ</span></div>
+    <div class="info-card"><div class="icon">📰</div><h3>Narratif Savaşı</h3><p>Tarih yeniden yazımı, kültürel kodların manipülasyonu, kimlik politikalarının silahlaştırılması.</p><span class="tag">UZUN VADELI</span></div>
+    <div class="info-card"><div class="icon">🎯</div><h3>Mikro-Hedefleme</h3><p>Bireysel psikolojik profilleme, kişiselleştirilmiş propaganda, radikalleştirme algoritmaları.</p><span class="tag">BİREYSEL</span></div>
+    <div class="info-card"><div class="icon">🏛️</div><h3>Kurumsal Güven Erozyonu</h3><p>Medya, yargı, ordu, bilim kurumlarına güvenin sistematik olarak aşındırılması. Toplumsal kutuplaşma.</p><span class="tag">YIKICI</span></div>
+    <div class="info-card"><div class="icon">🛡️</div><h3>Bilişsel Kalkan</h3><p>Medya okuryazarlığı, fact-checking, dijital hijyen, toplumsal dayanıklılık. Finlandiya modeli.</p><span class="tag">SAVUNMA</span></div>
+    <div class="info-card"><div class="icon">🔊</div><h3>Stratejik İletişim</h3><p>NATO StratCom, Türkiye İletişim Başkanlığı. Proaktif narratif üretimi ve karşı-dezenformasyon.</p><span class="tag">KARŞI ÖNLEM</span></div>
+    <div class="info-card"><div class="icon">⚖️</div><h3>Hukuki Çerçeve</h3><p>Dezenformasyon yasaları, platform düzenlemeleri, DSA (AB), sosyal medya kanunları (TR). Özgürlük-güvenlik dengesi.</p><span class="tag">DÜZENLEME</span></div>
+  </div>
+</div>
+
+<div class="section" id="sec-ekonomik">
+  <h2 class="section-head">Ekonomik Savaş</h2>
+  <p class="section-sub">YAPTIRIMLARIN SİLAHLAŞTIRILMASI VE TEDARİK ZİNCİRİ SAVAŞLARI</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">$30T</div><div class="lbl">YAPTIRIM ALTINDA</div></div>
+    <div class="stat-box"><div class="val">12.000+</div><div class="lbl">YAPTIRIM LİSTESİ</div></div>
+    <div class="stat-box"><div class="val">SWIFT</div><div class="lbl">FİNANSAL SİLAH</div></div>
+    <div class="stat-box"><div class="val">%40</div><div class="lbl">TİCARET KISITLAMASI</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">🏦</div><h3>SWIFT Silahlaştırması</h3><p>2022'de Rusya'nın SWIFT'ten çıkarılması. Alternatif: Çin CIPS, Rusya SPFS. De-dolarizasyon hareketi hızlandı.</p><span class="tag">FİNANS</span></div>
+    <div class="info-card"><div class="icon">🔗</div><h3>Tedarik Zinciri Savaşı</h3><p>Çip ambargosu (TSMC/ASML), nadir metal kontrolü, ilaç hammaddesi bağımlılığı. Nearshoring/friendshoring.</p><span class="tag">TEKNOLOJİ</span></div>
+    <div class="info-card"><div class="icon">🌾</div><h3>Gıda Silahlaştırması</h3><p>Tahıl koridoru krizi, gübre ihracat yasağı, tarım arazisi satın alımları. Gıda güvenliği = ulusal güvenlik.</p><span class="tag">GIDA</span></div>
+    <div class="info-card"><div class="icon">💎</div><h3>Nadir Metal Kontrolü</h3><p>Çin'in %60 nadir toprak üretimi. Galyum/Germanyum ihracat kısıtlamaları. Savunma sanayii bağımlılığı.</p><span class="tag">KAYNAK</span></div>
+    <div class="info-card"><div class="icon">📊</div><h3>Borç Tuzağı Diplomasisi</h3><p>Çin'in Kuşak-Yol projesi ile stratejik liman/altyapı kontrolü. Sri Lanka Hambantota, Pakistan Gwadar.</p><span class="tag">BORÇ</span></div>
+    <div class="info-card"><div class="icon">🪙</div><h3>Kripto & CBDC Savaşı</h3><p>Dijital yuan, dijital ruble. Yaptırım atlatma aracı olarak kripto. Finansal egemenlik mücadelesi.</p><span class="tag">DİJİTAL</span></div>
+    <div class="info-card"><div class="icon">🏭</div><h3>Sanayi Casusluğu</h3><p>Fikri mülkiyet hırsızlığı, teknoloji transferi zorunluluğu, akademik casusluk. Yıllık $600B zarar.</p><span class="tag">CASUSLUK</span></div>
+    <div class="info-card"><div class="icon">🇹🇷</div><h3>Türkiye'nin Konumu</h3><p>Yaptırım baskısı altında savunma sanayii geliştirme. S-400 krizi, F-35 çıkarılması. Yerli alternatif stratejisi.</p><span class="tag">TÜRKİYE</span></div>
+  </div>
+</div>
+
+<div class="section" id="sec-enerji">
+  <h2 class="section-head">Enerji & Kaynak Savaşları</h2>
+  <p class="section-sub">ENERJİ GÜVENLİĞİ = ULUSAL GÜVENLİK</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">$3.3T</div><div class="lbl">KÜRESEL ENERJİ PİYASASI</div></div>
+    <div class="stat-box"><div class="val">%21</div><div class="lbl">HÜRMÜZ GEÇİŞİ</div></div>
+    <div class="stat-box"><div class="val">Nord Stream</div><div class="lbl">SABOTAJ ÖRNEĞİ</div></div>
+    <div class="stat-box"><div class="val">2050</div><div class="lbl">NET SIFIR HEDEFİ</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">🛢️</div><h3>Petrol Silahlaştırması</h3><p>OPEC+ kararları, ABD kaya gazı devrimi, Rusya enerji bağımlılığı. Fiyat manipülasyonu jeopolitik araç.</p><span class="tag">PETROL</span></div>
+    <div class="info-card"><div class="icon">💨</div><h3>Doğalgaz Diplomasisi</h3><p>Nord Stream sabotajı, TürkAkım, TANAP-TAP, Doğu Akdeniz gazı. Boru hatları = jeopolitik güç.</p><span class="tag">GAZ</span></div>
+    <div class="info-card"><div class="icon">⚛️</div><h3>Nükleer Enerji Yarışı</h3><p>SMR teknolojisi, Akkuyu NGS, Rosatom'un küresel yayılımı. Enerji bağımsızlığı vs bağımlılık.</p><span class="tag">NÜKLEER</span></div>
+    <div class="info-card"><div class="icon">🌊</div><h3>Su Savaşları</h3><p>Fırat-Dicle, Nil, İndus su paylaşımı. İklim değişikliği ile kıtlaşan kaynaklar. Türkiye'nin su diplomasisi.</p><span class="tag">SU</span></div>
+    <div class="info-card"><div class="icon">☀️</div><h3>Yeşil Enerji Jeopolitiği</h3><p>Lityum üçgeni, kobalt kontrolü, güneş paneli tedarik zinciri. Enerji dönüşümünün yeni bağımlılıkları.</p><span class="tag">YEŞİL</span></div>
+    <div class="info-card"><div class="icon">🚢</div><h3>Deniz Yolu Kontrolü</h3><p>Hürmüz, Malakka, Süveyş, Bab-ül Mendep. Boğaz kontrolü = küresel ticaret kontrolü. Husi tehdidi.</p><span class="tag">DENİZ</span></div>
+    <div class="info-card"><div class="icon">🔋</div><h3>Batarya & Depolama</h3><p>EV batarya tedarik zinciri, katı hal bataryalar, hidrojen ekonomisi. Enerji depolama = stratejik güç.</p><span class="tag">TEKNOLOJİ</span></div>
+    <div class="info-card"><div class="icon">🇹🇷</div><h3>Türkiye Enerji Stratejisi</h3><p>Enerji hub'ı vizyonu, Karadeniz gazı, nükleer santral, yenilenebilir hedefleri. Bağımlılıktan üretime geçiş.</p><span class="tag">TÜRKİYE</span></div>
+  </div>
+</div>
+
+<div class="section" id="sec-uzay">
+  <h2 class="section-head">Uzay & Elektromanyetik Spektrum</h2>
+  <p class="section-sub">YENİ YÜKSEK CEPHE — UZAY HAKİMİYETİ</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">10.000+</div><div class="lbl">AKTİF UYDU</div></div>
+    <div class="stat-box"><div class="val">$469B</div><div class="lbl">UZAY EKONOMİSİ</div></div>
+    <div class="stat-box"><div class="val">ASAT</div><div class="lbl">UYDU ÖLDÜRÜCÜ</div></div>
+    <div class="stat-box"><div class="val">EW</div><div class="lbl">ELEKTRONİK HARP</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">🛰️</div><h3>Uydu Savaşları</h3><p>ASAT silahları, yörünge silahları, Starlink'in askeri kullanımı. Uzay artık barışçıl değil.</p><span class="tag">UZAY</span></div>
+    <div class="info-card"><div class="icon">📡</div><h3>Elektronik Harp</h3><p>GPS jamming/spoofing, radar bozma, iletişim kesme. Türkiye KORAL, REDET, HAVA SOJ sistemleri.</p><span class="tag">EW</span></div>
+    <div class="info-card"><div class="icon">🔭</div><h3>Uzay İstihbaratı</h3><p>Gözetleme uyduları, SIGINT, SAR radar. Ticari uydu görüntülerinin demokratikleşmesi.</p><span class="tag">ISR</span></div>
+    <div class="info-card"><div class="icon">🌐</div><h3>Mega Takımyıldızları</h3><p>Starlink (12.000+), OneWeb, Kuiper. İnternet erişimi = stratejik avantaj. Ukrayna'da kanıtlandı.</p><span class="tag">LEO</span></div>
+    <div class="info-card"><div class="icon">🎯</div><h3>PNT Savaşı</h3><p>GPS bağımlılığı, alternatif navigasyon (GLONASS, BeiDou, Galileo). Spoofing ile gemi/uçak yönlendirme.</p><span class="tag">NAVİGASYON</span></div>
+    <div class="info-card"><div class="icon">⚡</div><h3>Yönlendirilmiş Enerji</h3><p>Lazer silahları (ARMOL, ALKA), mikrodalga silahları, EMP. Maliyet asimetrisi: $1 vs $1M füze.</p><span class="tag">DEW</span></div>
+    <div class="info-card"><div class="icon">🚀</div><h3>Hipersonik Tehdit</h3><p>Mach 5+ hızda manevra yapabilen füzeler. Savunma imkansızlığı. Rusya Avangard, Çin DF-ZF, TR Şimşek.</p><span class="tag">HİPERSONİK</span></div>
+    <div class="info-card"><div class="icon">🇹🇷</div><h3>Türkiye Uzay Programı</h3><p>TUA, Göktürk uyduları, TÜRKSAT 6A, Ay misyonu. Milli uzay kapasitesi inşası.</p><span class="tag">TÜRKİYE</span></div>
+  </div>
+</div>
+
+<div class="section" id="sec-vekalet">
+  <h2 class="section-head">Vekâlet Savaşları</h2>
+  <p class="section-sub">DOĞRUDAN ÇATIŞMA OLMADAN ETKİ — GRİ BÖLGE OPERASYONLARı</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">56</div><div class="lbl">AKTİF ÇATIŞMA</div></div>
+    <div class="stat-box"><div class="val">PMC</div><div class="lbl">ÖZEL ASKERİ ŞİRKET</div></div>
+    <div class="stat-box"><div class="val">%80</div><div class="lbl">SİVİL KAYIP</div></div>
+    <div class="stat-box"><div class="val">$</div><div class="lbl">DÜŞÜK MALİYET</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">🎭</div><h3>Wagner/Afrika Kolordusu</h3><p>Rusya'nın Afrika'daki vekil gücü. Mali, Libya, Sudan, Orta Afrika'da aktif. Maden karşılığı güvenlik.</p><span class="tag">RUSYA</span></div>
+    <div class="info-card"><div class="icon">🇮🇷</div><h3>İran Eksen Güçleri</h3><p>Hizbullah, Husiler, Haşdi Şabi, Suriye NDF. "Direniş Ekseni" stratejisi. Drone/füze transferi.</p><span class="tag">İRAN</span></div>
+    <div class="info-card"><div class="icon">🏴</div><h3>Terör Örgütleri</h3><p>DEAŞ, PKK/YPG, El-Kaide kolları. Devlet sponsorluğu, ideolojik motivasyon, asimetrik tehdit.</p><span class="tag">TERÖR</span></div>
+    <div class="info-card"><div class="icon">🤖</div><h3>Drone Vekâleti</h3><p>İran'ın Husi/Hizbullah'a drone transferi. Türk SİHA'larının Ukrayna, Libya, Azerbaycan'da etkisi.</p><span class="tag">DRONE</span></div>
+    <div class="info-card"><div class="icon">🏛️</div><h3>Siyasi Müdahale</h3><p>Seçim müdahalesi, darbe desteği, muhalefet finansmanı. Yumuşak güç ile rejim değişikliği.</p><span class="tag">SİYASİ</span></div>
+    <div class="info-card"><div class="icon">📦</div><h3>Silah Transferi</h3><p>Resmi/gayri resmi silah akışları. Kara pazar, yaptırım atlatma, son kullanıcı sertifikası ihlalleri.</p><span class="tag">SİLAH</span></div>
+    <div class="info-card"><div class="icon">🗺️</div><h3>Bölgesel Dinamikler</h3><p>Suriye (çok aktörlü), Yemen (Suudi-İran), Libya (Türkiye-Rusya-BAE), Sahel (Fransa-Rusya).</p><span class="tag">BÖLGE</span></div>
+    <div class="info-card"><div class="icon">🇹🇷</div><h3>Türkiye'nin Rolü</h3><p>Suriye'de TSK operasyonları, Libya'da askeri danışmanlık, Somali'de üs. Aktif dış politikanın askeri boyutu.</p><span class="tag">TÜRKİYE</span></div>
+  </div>
+</div>
+
+<div class="section" id="sec-turkiye">
+  <h2 class="section-head">Türkiye'nin Hibrit Savaş Kapasitesi</h2>
+  <p class="section-sub">SAVUNMA SANAYİİ DEVRİMİ VE STRATEJİK ÖZERKLİK</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">%80</div><div class="lbl">YERLİLİK ORANI</div></div>
+    <div class="stat-box"><div class="val">$10B+</div><div class="lbl">SAVUNMA İHRACATI</div></div>
+    <div class="stat-box"><div class="val">KAAN</div><div class="lbl">5. NESİL</div></div>
+    <div class="stat-box"><div class="val">TB3</div><div class="lbl">DRONE GEMİSİ</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">✈️</div><h3>Hava Gücü</h3><p>KAAN 5. nesil, ANKA-3 insansız, Kızılelma, Bayraktar TB3/Akıncı. Hava hakimiyeti kapasitesi.</p><span class="tag">HAVA</span></div>
+    <div class="info-card"><div class="icon">🚁</div><h3>Drone Diplomasisi</h3><p>Ukrayna, Polonya, BAE, Malezya ihracatı. SİHA'lar Türkiye'nin yumuşak güç aracı oldu.</p><span class="tag">SİHA</span></div>
+    <div class="info-card"><div class="icon">🚀</div><h3>Füze Gücü</h3><p>TAYFUN (2000+ km), GEZGİN seyir füzesi, BORA, HİSAR ailesi. Stratejik caydırıcılık inşası.</p><span class="tag">FÜZE</span></div>
+    <div class="info-card"><div class="icon">🛡️</div><h3>Siber Savunma</h3><p>Siber Güvenlik Merkezi, BTK, USOM. Ulusal siber tatbikatlar. Yerli güvenlik yazılımları.</p><span class="tag">SİBER</span></div>
+    <div class="info-card"><div class="icon">📡</div><h3>Elektronik Harp</h3><p>KORAL, REDET, HAVA SOJ, SANCAK. NATO'nun en gelişmiş EW kapasitelerinden biri.</p><span class="tag">EW</span></div>
+    <div class="info-card"><div class="icon">🌊</div><h3>Deniz Gücü</h3><p>MİLGEM, TF-2000, TCG Anadolu, denizaltı programı. Mavi Vatan doktrini.</p><span class="tag">DENİZ</span></div>
+    <div class="info-card"><div class="icon">🛰️</div><h3>Uzay Kapasitesi</h3><p>Göktürk keşif uyduları, TÜRKSAT 6A, İMECE. Bağımsız uzay erişimi hedefi.</p><span class="tag">UZAY</span></div>
+    <div class="info-card"><div class="icon">🧠</div><h3>Bilişsel Savunma</h3><p>İletişim Başkanlığı, TRT World, AA. Stratejik iletişim ve karşı-dezenformasyon kapasitesi.</p><span class="tag">İLETİŞİM</span></div>
+  </div>
+</div>
+
+<div class="section" id="sec-gelecek">
+  <h2 class="section-head">Geleceğin Hibrit Savaşı (2030+)</h2>
+  <p class="section-sub">OTONOM SİSTEMLER, YZ VE İNSAN-MAKİNE ENTEGRASYONU</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">YZ</div><div class="lbl">KARAR HIZI</div></div>
+    <div class="stat-box"><div class="val">SWARM</div><div class="lbl">DRONE SÜRÜSÜ</div></div>
+    <div class="stat-box"><div class="val">BCI</div><div class="lbl">BEYİN-BİLGİSAYAR</div></div>
+    <div class="stat-box"><div class="val">∞</div><div class="lbl">SAVAŞ ALANI</div></div>
+  </div>
+  <div class="grid">
+    <div class="info-card"><div class="icon">🤖</div><h3>Otonom Savaş Sistemleri</h3><p>İnsan döngüsünden çıkan silahlar. Etik tartışma: "Kill decision" YZ'ye bırakılmalı mı?</p><span class="tag">OTONOM</span></div>
+    <div class="info-card"><div class="icon">🐝</div><h3>Drone Sürüsü (Swarm)</h3><p>Binlerce küçük drone'un koordineli saldırısı. Savunma sistemlerini doyurma. Maliyet asimetrisi.</p><span class="tag">SWARM</span></div>
+    <div class="info-card"><div class="icon">🧬</div><h3>Biyolojik Tehditler</h3><p>Sentetik biyoloji, genetik silahlar, pandemi mühendisliği. COVID sonrası biyogüvenlik farkındalığı.</p><span class="tag">BİYO</span></div>
+    <div class="info-card"><div class="icon">🌐</div><h3>Metaverse Savaşı</h3><p>Sanal dünyalarda propaganda, dijital ikiz simülasyonlar, VR eğitim, AR savaş alanı.</p><span class="tag">SANAL</span></div>
+    <div class="info-card"><div class="icon">⚡</div><h3>Yönlendirilmiş Enerji</h3><p>Lazer, mikrodalga, parçacık ışını silahları. Sonsuz mühimmat, ışık hızında etki.</p><span class="tag">DEW</span></div>
+    <div class="info-card"><div class="icon">🔮</div><h3>Kuantum Savaşı</h3><p>Kırılamaz şifreleme, kuantum radar, kuantum sensörler. Bilgi üstünlüğünün yeni boyutu.</p><span class="tag">KUANTUM</span></div>
+    <div class="info-card"><div class="icon">🧠</div><h3>Nöroteknoloji</h3><p>Beyin-bilgisayar arayüzleri, bilişsel geliştirme, nöro-silahlar. Süper asker programları.</p><span class="tag">NÖRO</span></div>
+    <div class="info-card"><div class="icon">🌍</div><h3>İklim Savaşları</h3><p>Su kıtlığı çatışmaları, iklim göçü, gıda güvensizliği. 2050'ye kadar 1.2 milyar iklim mültecisi.</p><span class="tag">İKLİM</span></div>
+  </div>
+</div>
+
+<script>
+let audioCtx=null,isPlaying=false,musicInterval=null;
+
+function startExplore(){
+  document.getElementById('hero').style.display='none';
+  document.getElementById('mainNav').style.display='flex';
+}
+
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function toggleMusic(){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  isPlaying=!isPlaying;
+  document.getElementById('musicBtn').textContent=isPlaying?'🔊':'🔇';
+  if(isPlaying) startMusic(); else stopMusic();
+}
+
+function startMusic(){
+  const notes=[220,261,329,392,440,392,329,261];
+  let idx=0;
+  function playNote(){
+    if(!isPlaying) return;
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.frequency.value=notes[idx%notes.length];
+    osc.type='sine';
+    gain.gain.setValueAtTime(0.08,audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.8);
+    osc.start();osc.stop(audioCtx.currentTime+0.8);
+    idx++;
+  }
+  playNote();
+  musicInterval=setInterval(playNote,900);
+}
+
+function stopMusic(){
+  if(musicInterval){clearInterval(musicInterval);musicInterval=null;}
+}
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

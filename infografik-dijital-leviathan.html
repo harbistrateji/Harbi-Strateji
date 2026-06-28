@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijital Leviathan'lar: Devletler vs Mega-Teknoloji Şirketleri - İnfografik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --dark-bg: #0F1B3C;
+            --electric-blue: #00D9FF;
+            --gold: #FFB800;
+            --red: #FF4444;
+            --green: #44FF44;
+            --purple: #9D4EDD;
+            --white: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0a0f1f 100%);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: rgba(15, 27, 60, 0.95);
+            border-bottom: 3px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--electric-blue), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            color: var(--electric-blue);
+            font-size: 0.9rem;
+        }
+        
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Tech Giants Grid */
+        .tech-giants-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tech-giants-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .giants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .giant-card {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .giant-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .giant-card:hover::before {
+            left: 100%;
+        }
+        
+        .giant-card:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+        
+        .giant-logo {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .giant-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .giant-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+        
+        .stat {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 3px solid var(--electric-blue);
+            padding: 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .stat:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateX(3px);
+        }
+        
+        .stat-label {
+            color: #999;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        
+        .stat-value {
+            color: var(--electric-blue);
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 0.3rem;
+        }
+        
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .comparison-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .comparison-column {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .comparison-column.platforms {
+            border-color: var(--electric-blue);
+        }
+        
+        .comparison-column.nations {
+            border-color: var(--green);
+        }
+        
+        .comparison-column h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid currentColor;
+        }
+        
+        .comparison-column.platforms h3 {
+            color: var(--electric-blue);
+        }
+        
+        .comparison-column.nations h3 {
+            color: var(--green);
+        }
+        
+        .comparison-items {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .comparison-item {
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 3px solid var(--electric-blue);
+            padding: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-column.nations .comparison-item {
+            border-left-color: var(--green);
+            background: rgba(68, 255, 68, 0.05);
+        }
+        
+        .comparison-item:hover {
+            background: rgba(0, 217, 255, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .comparison-column.nations .comparison-item:hover {
+            background: rgba(68, 255, 68, 0.15);
+        }
+        
+        .comparison-item-label {
+            color: #999;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+        
+        .comparison-item-value {
+            color: var(--electric-blue);
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .comparison-column.nations .comparison-item-value {
+            color: var(--green);
+        }
+        
+        /* Power Dynamics */
+        .power-dynamics-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .power-dynamics-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+        }
+        
+        .power-dimensions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .power-dimension {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .power-dimension:hover {
+            border-color: var(--gold);
+            background: rgba(0, 217, 255, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .power-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .power-dimension h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .power-dimension p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Key Insights */
+        .insights-section {
+            background: rgba(26, 42, 74, 0.8);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .insights-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--electric-blue);
+            padding-bottom: 1rem;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .insight-card {
+            background: rgba(15, 27, 60, 0.8);
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .insight-card:hover {
+            border-color: var(--electric-blue);
+            background: rgba(255, 184, 0, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .insight-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .insight-card h3 {
+            color: var(--electric-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .insight-card p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 27, 60, 0.98);
+            border: 3px solid var(--electric-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
+            animation: popupIn 0.3s ease-out;
+        }
+        
+        @keyframes popupIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .popup.active {
+            display: block;
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .popup-overlay.active {
+            display: block;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--electric-blue);
+            background: transparent;
+            color: var(--electric-blue);
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-close:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+        }
+        
+        .popup h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .popup p {
+            color: #ccc;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+        
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--electric-blue);
+            background: rgba(15, 27, 60, 0.9);
+            color: var(--electric-blue);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+        }
+        
+        footer {
+            background: rgba(15, 27, 60, 0.95);
+            border-top: 2px solid var(--electric-blue);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.3rem; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .giants-grid { grid-template-columns: 1fr; }
+            .popup { max-width: 90%; }
+        }
+    
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+    <header>
+        <h1>🤖 Dijital Leviathan'lar: Devletler vs Mega-Teknoloji Şirketleri</h1>
+        <p>Platform Gücü vs Devlet Gücü | Tıklayarak detayları keşfedin</p>
+    </header>
+
+    <main>
+        <!-- Tech Giants Section -->
+        <div class="tech-giants-section">
+            <h2>🌐 Dünyayı Kontrol Eden 7 Dijital Leviathan</h2>
+            
+            <div class="giants-grid">
+                <!-- Google -->
+                <div class="giant-card" onclick="showPopup('google')">
+                    <div class="giant-logo">🔍</div>
+                    <div class="giant-name">Google</div>
+                    <div class="giant-stats">
+                        <div class="stat" onclick="showPopup('google-market')">
+                            <div class="stat-label">Market Cap</div>
+                            <div class="stat-value">$2.11T</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('google-users')">
+                            <div class="stat-label">Kullanıcı</div>
+                            <div class="stat-value">5.0B+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('google-data')">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">33</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('google-power')">
+                            <div class="stat-label">Güç Alanı</div>
+                            <div class="stat-value">Arama</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Amazon -->
+                <div class="giant-card" onclick="showPopup('amazon')">
+                    <div class="giant-logo">📦</div>
+                    <div class="giant-name">Amazon</div>
+                    <div class="giant-stats">
+                        <div class="stat" onclick="showPopup('amazon-market')">
+                            <div class="stat-label">Market Cap</div>
+                            <div class="stat-value">$1.86T</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('amazon-users')">
+                            <div class="stat-label">Müşteri</div>
+                            <div class="stat-value">310M+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('amazon-data')">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">110+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('amazon-power')">
+                            <div class="stat-label">Güç Alanı</div>
+                            <div class="stat-value">AWS</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Apple -->
+                <div class="giant-card" onclick="showPopup('apple')">
+                    <div class="giant-logo">🍎</div>
+                    <div class="giant-name">Apple</div>
+                    <div class="giant-stats">
+                        <div class="stat" onclick="showPopup('apple-market')">
+                            <div class="stat-label">Market Cap</div>
+                            <div class="stat-value">$3.07T</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('apple-users')">
+                            <div class="stat-label">Kullanıcı</div>
+                            <div class="stat-value">1.4B+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('apple-data')">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">60+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('apple-power')">
+                            <div class="stat-label">Güç Alanı</div>
+                            <div class="stat-value">Ekosistem</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Microsoft -->
+                <div class="giant-card" onclick="showPopup('microsoft')">
+                    <div class="giant-logo">💻</div>
+                    <div class="giant-name">Microsoft</div>
+                    <div class="giant-stats">
+                        <div class="stat" onclick="showPopup('microsoft-market')">
+                            <div class="stat-label">Market Cap</div>
+                            <div class="stat-value">$3.07T</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('microsoft-users')">
+                            <div class="stat-label">Kullanıcı</div>
+                            <div class="stat-value">1.4B+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('microsoft-data')">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">24+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('microsoft-power')">
+                            <div class="stat-label">Güç Alanı</div>
+                            <div class="stat-value">Azure</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Meta -->
+                <div class="giant-card" onclick="showPopup('meta')">
+                    <div class="giant-logo">👥</div>
+                    <div class="giant-name">Meta</div>
+                    <div class="giant-stats">
+                        <div class="stat" onclick="showPopup('meta-market')">
+                            <div class="stat-label">Market Cap</div>
+                            <div class="stat-value">$1.24T</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('meta-users')">
+                            <div class="stat-label">Kullanıcı</div>
+                            <div class="stat-value">3.19B+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('meta-data')">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">15</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('meta-power')">
+                            <div class="stat-label">Güç Alanı</div>
+                            <div class="stat-value">Sosyal</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tencent -->
+                <div class="giant-card" onclick="showPopup('tencent')">
+                    <div class="giant-logo">🎮</div>
+                    <div class="giant-name">Tencent</div>
+                    <div class="giant-stats">
+                        <div class="stat" onclick="showPopup('tencent-market')">
+                            <div class="stat-label">Market Cap</div>
+                            <div class="stat-value">$0.86T</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('tencent-users')">
+                            <div class="stat-label">Kullanıcı</div>
+                            <div class="stat-value">3.8B+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('tencent-data')">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">27</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('tencent-power')">
+                            <div class="stat-label">Güç Alanı</div>
+                            <div class="stat-value">WeChat</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alibaba -->
+                <div class="giant-card" onclick="showPopup('alibaba')">
+                    <div class="giant-logo">🛍️</div>
+                    <div class="giant-name">Alibaba</div>
+                    <div class="giant-stats">
+                        <div class="stat" onclick="showPopup('alibaba-market')">
+                            <div class="stat-label">Market Cap</div>
+                            <div class="stat-value">$0.126T</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('alibaba-users')">
+                            <div class="stat-label">Kullanıcı</div>
+                            <div class="stat-value">1.1B+</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('alibaba-data')">
+                            <div class="stat-label">Veri Merkezi</div>
+                            <div class="stat-value">28</div>
+                        </div>
+                        <div class="stat" onclick="showPopup('alibaba-power')">
+                            <div class="stat-label">Güç Alanı</div>
+                            <div class="stat-value">E-ticaret</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h2>⚖️ Platform Gücü vs Devlet Gücü</h2>
+            
+            <div class="comparison-grid">
+                <!-- Platforms -->
+                <div class="comparison-column platforms">
+                    <h3>🌐 Dijital Platformlar</h3>
+                    <div class="comparison-items">
+                        <div class="comparison-item" onclick="showPopup('platform-reach')">
+                            <div class="comparison-item-label">Erişim</div>
+                            <div class="comparison-item-value">Milyarlar (Global)</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('platform-data')">
+                            <div class="comparison-item-label">Veri</div>
+                            <div class="comparison-item-value">Petabyte Ölçeğinde</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('platform-speed')">
+                            <div class="comparison-item-label">Hız</div>
+                            <div class="comparison-item-value">Milisaniye Cevap</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('platform-control')">
+                            <div class="comparison-item-label">Kontrol</div>
+                            <div class="comparison-item-value">Algoritma Kontrolü</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('platform-influence')">
+                            <div class="comparison-item-label">Etki</div>
+                            <div class="comparison-item-value">Algı Yönetimi</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Nations -->
+                <div class="comparison-column nations">
+                    <h3>🏛️ Ulus-Devletler</h3>
+                    <div class="comparison-items">
+                        <div class="comparison-item" onclick="showPopup('nation-reach')">
+                            <div class="comparison-item-label">Erişim</div>
+                            <div class="comparison-item-value">Sınırlı (Toprak)</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('nation-data')">
+                            <div class="comparison-item-label">Veri</div>
+                            <div class="comparison-item-value">Sınırlı Kapasitesi</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('nation-speed')">
+                            <div class="comparison-item-label">Hız</div>
+                            <div class="comparison-item-value">Saatler/Günler</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('nation-control')">
+                            <div class="comparison-item-label">Kontrol</div>
+                            <div class="comparison-item-value">Yasal/Askerî</div>
+                        </div>
+                        <div class="comparison-item" onclick="showPopup('nation-influence')">
+                            <div class="comparison-item-label">Etki</div>
+                            <div class="comparison-item-value">Diplomasi/Propaganda</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Power Dynamics -->
+        <div class="power-dynamics-section">
+            <h2>⚡ Dijital Leviathan'ların Güç Boyutları</h2>
+            
+            <div class="power-dimensions">
+                <div class="power-dimension" onclick="showPopup('network-effect')">
+                    <div class="power-icon">🌐</div>
+                    <h3>Ağ Etkisi</h3>
+                    <p>Milyarlar bağlı. Hepsi veri sağlıyor.</p>
+                </div>
+                
+                <div class="power-dimension" onclick="showPopup('data-moat')">
+                    <div class="power-icon">📊</div>
+                    <h3>Veri Hendek</h3>
+                    <p>Hiçbir devlet bu kadar veri toplamaz.</p>
+                </div>
+                
+                <div class="power-dimension" onclick="showPopup('algorithmic-power')">
+                    <div class="power-icon">🤖</div>
+                    <h3>Algoritma Gücü</h3>
+                    <p>Karar verme otomasyonu. Ölçek.</p>
+                </div>
+                
+                <div class="power-dimension" onclick="showPopup('platform-control')">
+                    <div class="power-icon">🎮</div>
+                    <h3>Platform Kontrolü</h3>
+                    <p>Kuralları koyar. Erişimi keser.</p>
+                </div>
+                
+                <div class="power-dimension" onclick="showPopup('cognitive-power')">
+                    <div class="power-icon">🧠</div>
+                    <h3>Bilişsel Güç</h3>
+                    <p>Algı yönetimi. Anlatı kontrolü.</p>
+                </div>
+                
+                <div class="power-dimension" onclick="showPopup('economic-power')">
+                    <div class="power-icon">💰</div>
+                    <h3>Ekonomik Güç</h3>
+                    <p>Pazar kapitalizasyonu devletleri geçti.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="insights-section">
+            <h2>💡 Kritik İçgörüler</h2>
+            
+            <div class="insights-grid">
+                <div class="insight-card" onclick="showPopup('insight1')">
+                    <div class="insight-number">1</div>
+                    <h3>Platform Egemenlik</h3>
+                    <p>Algoritma bazen kanundan daha hızlı çalışır. Platform kuralları devlet kurallarından daha güçlü olabilir.</p>
+                </div>
+                
+                <div class="insight-card" onclick="showPopup('insight2')">
+                    <div class="insight-number">2</div>
+                    <h3>Veri Egemenliği</h3>
+                    <p>Veri artık petrol kadar değerli. Veriyi kontrol eden, gücü kontrol eder. Veri egemenliği yeni güvenlik meselesi.</p>
+                </div>
+                
+                <div class="insight-card" onclick="showPopup('insight3')">
+                    <div class="insight-number">3</div>
+                    <h3>Bulut Jeopolitiği</h3>
+                    <p>AWS, Azure, Google Cloud tüm dünya veri trafiğinin %66'sini taşır. Bulut altyapısı yeni jeopolitik arena.</p>
+                </div>
+                
+                <div class="insight-card" onclick="showPopup('insight4')">
+                    <div class="insight-number">4</div>
+                    <h3>Devlet vs Platform</h3>
+                    <p>Devletler artık platformlarla pazarlık yapıyor. Bazı durumlarda devlet, platform tarafından kontrol ediliyor.</p>
+                </div>
+                
+                <div class="insight-card" onclick="showPopup('insight5')">
+                    <div class="insight-number">5</div>
+                    <h3>Yeni Savaş Alanı</h3>
+                    <p>21. yüzyılın savaşı toprakta değil, algoritmalarda. Bilişsel savaş, platform savaşıdır.</p>
+                </div>
+                
+                <div class="insight-card" onclick="showPopup('insight6')">
+                    <div class="insight-number">6</div>
+                    <h3>Geleceğin Güç</h3>
+                    <p>Geleceğin en güçlü aktörleri devletler değil, platform ağları olabilir. Yeni Leviathan'lar ortaya çıkıyor.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Popup -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="popup" id="popup">
+        <button class="popup-close" onclick="closePopup()">×</button>
+        <h3 id="popupTitle">Başlık</h3>
+        <p id="popupContent">İçerik</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="control-btn" id="soundToggle" title="Ses Aç/Kapat">🔊</button>
+        <button class="control-btn" id="scrollToTop" title="Başa Dön">⬆️</button>
+    </div>
+
+    <footer>
+        <p><strong>© 2026 Selahaddin Koyuncu | Harb-i Strateji</strong></p>
+        <p>Dijital Leviathan'lar: Devletler vs Mega-Teknoloji Şirketleri - İnteraktif İnfografik</p>
+    </footer>
+
+    <script>
+        const popupData = {
+            google: { title: '🔍 Google', content: 'Arama motoru imparatorluğu. 5 milyardan fazla insanın bilgi arayışını kontrol eder. YouTube, Gmail, Maps, Drive... Hayatın her alanında. Veri toplama kapasitesi: Ülke ölçeğinde.' },
+            amazon: { title: '📦 Amazon', content: 'E-ticaret ve bulut altyapısı. AWS, dünyanın en büyük bulut sağlayıcısı. 110+ veri merkezi. Dünya veri trafiğinin %33\'ü AWS\'den geçer. Lojistik ağı: Ordu gibi.' },
+            apple: { title: '🍎 Apple', content: '1.4 milyar cihaz. Kapalı ekosistem. Tüm veriler Apple\'ın kontrolünde. Gizlilik söylemi ama veri toplama yine de masif. Finansal güç: Bazı ülkelerin GDP\'sinden fazla.' },
+            microsoft: { title: '💻 Microsoft', content: 'İşletme yazılımı ve bulut. Azure, kurumsal dünyayı kontrol eder. Office 365, Teams, GitHub... Tüm iş dünyası Microsoft\'a bağımlı. Yapay zekâ: OpenAI ortaklığı.' },
+            meta: { title: '👥 Meta', content: '3.19 milyar kullanıcı. Facebook, Instagram, WhatsApp, Threads. Sosyal hayatı kontrol eder. Algı yönetimi kapasitesi: Ülke ölçeğinde propaganda yapabilir.' },
+            tencent: { title: '🎮 Tencent', content: 'Çin\'in dijital Leviathan\'ı. WeChat: Tüm Çin\'in hayatı WeChat\'te. 3.8 milyar kullanıcı. Devlet ile entegre. Bilişsel kontrol: Çin hükümetinin uzantısı.' },
+            alibaba: { title: '🛍️ Alibaba', content: 'Çin\'in e-ticaret imparatorluğu. 1.1 milyar kullanıcı. Alipay: Tüm finansal akışlar Alibaba\'dan geçer. Devlet kontrolü: Çin hükümetinin göz ve kulağı.' },
+            'google-market': { title: 'Google Market Cap', content: '$2.11 Trilyon. Bazı ülkelerin toplam GDP\'sinden fazla. Değer: Veri ve algoritma.' },
+            'google-users': { title: 'Google Kullanıcıları', content: '5 milyardan fazla. Dünya nüfusunun %63\'ü. Hepsi veri sağlıyor. Hepsi izleniyor.' },
+            'google-data': { title: 'Google Veri Merkezleri', content: '33 veri merkezi dünya çapında. Petabyte ölçeğinde veri depolama. Gerçek zamanlı işleme kapasitesi: Ülke ölçeğinde.' },
+            'google-power': { title: 'Google\'ın Güç Alanı', content: 'Arama: Dünya\'nın bilgi akışını kontrol eder. Arama sonuçları = Gerçeklik. Arama sonuçlarını değiştir = Algıyı değiştir.' },
+            'amazon-market': { title: 'Amazon Market Cap', content: '$1.86 Trilyon. Dünyanın en büyük e-ticaret şirketi. AWS: Bulut altyapısı imparatorluğu.' },
+            'amazon-users': { title: 'Amazon Müşterileri', content: '310 milyon+ aktif müşteri. Tüm satın alma davranışı Amazon\'da. Tüketim alışkanlıkları = Veri.' },
+            'amazon-data': { title: 'Amazon Veri Merkezleri', content: '110+ veri merkezi. AWS: Dünya veri trafiğinin %33\'ü. Bulut jeopolitiğinin merkezi.' },
+            'amazon-power': { title: 'Amazon\'ın Güç Alanı', content: 'AWS: Tüm bulut altyapısı. Tüm şirketler AWS\'ye bağımlı. AWS kesintisi = Küresel kesinti.' },
+            'platform-reach': { title: 'Platform Erişimi', content: 'Milyarlar bağlı. Hiçbir devlet bu kadar insana ulaşamaz. Platform erişimi = Küresel güç.' },
+            'platform-data': { title: 'Platform Verisi', content: 'Petabyte ölçeğinde. Hiçbir devlet bu kadar veri toplamaz. Veri = Güç. Platform veri = Küresel güç.' },
+            'platform-speed': { title: 'Platform Hızı', content: 'Milisaniye cevap. Karar verme otomasyonu. Algoritma saniye cinsinden karar verir. Devlet günler alır.' },
+            'platform-control': { title: 'Platform Kontrolü', content: 'Algoritma kuralları belirler. Erişimi keser. Kullanıcıyı siler. Devlet müdahale edemez.' },
+            'platform-influence': { title: 'Platform Etkisi', content: 'Algı yönetimi. Anlatı kontrolü. Haber akışı. Sosyal medya = Devlet propagandası araçlarından daha güçlü.' },
+            'nation-reach': { title: 'Devlet Erişimi', content: 'Sınırlı. Toprak sınırları. Sınır dışında güç yok. Devlet erişimi = Coğrafi sınırlı.' },
+            'nation-data': { title: 'Devlet Verisi', content: 'Sınırlı kapasitesi. Hiçbir devlet platform ölçeğinde veri toplamaz. Devlet veri = Sınırlı.' },
+            'nation-speed': { title: 'Devlet Hızı', content: 'Saatler/Günler. Bürokrasi. Karar alma süreci uzun. Algoritma daha hızlı karar verir.' },
+            'nation-control': { title: 'Devlet Kontrolü', content: 'Yasal/Askerî. Devlet kanunla kontrol eder. Platform algoritma ile kontrol eder. Algoritma daha etkili.' },
+            'nation-influence': { title: 'Devlet Etkisi', content: 'Diplomasi/Propaganda. Devlet haber aracılığı ile etki eder. Platform sosyal medya ile etki eder. Platform daha etkili.' },
+            'network-effect': { title: 'Ağ Etkisi', content: 'Milyarlar bağlı. Her bağlantı ağı güçlendirir. Ağ ne kadar büyürse, değer katlanarak artar. Platform ağı = Sınırsız güç.' },
+            'data-moat': { title: 'Veri Hendek', content: 'Hiçbir devlet bu kadar veri toplamaz. Veri = Rekabet avantajı. Veri hendek = Kopya edilemez. Platform veri = Devlet gücünden fazla.' },
+            'algorithmic-power': { title: 'Algoritma Gücü', content: 'Karar verme otomasyonu. Ölçek. Milyarlar için saniye cinsinden karar. Devlet bunu yapamaz.' },
+            'platform-control': { title: 'Platform Kontrolü', content: 'Kuralları koyar. Erişimi keser. Kullanıcıyı siler. Devlet müdahale edemez. Platform = Yeni egemen.' },
+            'cognitive-power': { title: 'Bilişsel Güç', content: 'Algı yönetimi. Anlatı kontrolü. Haber akışı. Platform = Zihinleri kontrol eder.' },
+            'economic-power': { title: 'Ekonomik Güç', content: 'Pazar kapitalizasyonu devletleri geçti. Google, Amazon, Apple, Microsoft: Hepsi $1T+ değerinde. Devletlerin GDP\'sinden fazla.' },
+            'insight1': { title: 'Platform Egemenlik', content: 'Algoritma bazen kanundan daha hızlı çalışır. Platform kuralları devlet kurallarından daha güçlü olabilir. Örnek: Twitter\'ın Trump\'ı susturması. Devlet yapamadığını platform yaptı.' },
+            'insight2': { title: 'Veri Egemenliği', content: 'Veri artık petrol kadar değerli. Veriyi kontrol eden, gücü kontrol eder. Veri egemenliği yeni güvenlik meselesi. GDPR, veri lokalizasyonu: Devletler karşı koyuyor ama başaramıyor.' },
+            'insight3': { title: 'Bulut Jeopolitiği', content: 'AWS, Azure, Google Cloud tüm dünya veri trafiğinin %66\'sini taşır. Bulut altyapısı yeni jeopolitik arena. Bulut kesintisi = Küresel kriz.' },
+            'insight4': { title: 'Devlet vs Platform', content: 'Devletler artık platformlarla pazarlık yapıyor. Bazı durumlarda devlet, platform tarafından kontrol ediliyor. Örnek: Apple, Çin\'e teslim oldu. Devlet Apple\'ı kontrol edemedi.' },
+            'insight5': { title: 'Yeni Savaş Alanı', content: '21. yüzyılın savaşı toprakta değil, algoritmalarda. Bilişsel savaş, platform savaşıdır. Sosyal medya = Yeni savaş alanı.' },
+            'insight6': { title: 'Geleceğin Güç', content: 'Geleceğin en güçlü aktörleri devletler değil, platform ağları olabilir. Yeni Leviathan\'lar ortaya çıkıyor. Devlet gücü azalıyor, platform gücü artıyor.' }
+        };
+        
+        function showPopup(key) {
+            const data = popupData[key];
+            if (data) {
+                document.getElementById('popupTitle').textContent = data.title;
+                document.getElementById('popupContent').textContent = data.content;
+                document.getElementById('popup').classList.add('active');
+                document.getElementById('popupOverlay').classList.add('active');
+                playSound(523, 0.1);
+            }
+        }
+        
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+            document.getElementById('popupOverlay').classList.remove('active');
+            playSound(440, 0.1);
+        }
+        
+        // Sound Effects
+        let soundEnabled = true;
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(frequency, duration = 0.1) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        
+        // Sound Toggle
+        document.getElementById('soundToggle').addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            this.textContent = soundEnabled ? '🔊' : '🔇';
+            playSound(523, 0.2);
+        });
+        
+        // Scroll to Top
+        document.getElementById('scrollToTop').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            playSound(659, 0.15);
+        });
+        
+        // Page load sound
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                playSound(523, 0.1);
+                playSound(659, 0.1);
+                playSound(784, 0.1);
+            }, 500);
+        });
+    </script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

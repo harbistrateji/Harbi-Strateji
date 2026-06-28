@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dünya Tarihinde Başlıca Dönemler ve Çağlar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Chakra Petch', 'IBM Plex Sans', sans-serif;
+            background: linear-gradient(135deg, #0a0f17 0%, #1a1f2e 100%);
+            color: #EAF0F7;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, rgba(201,162,75,0.1) 0%, rgba(0,224,255,0.1) 100%);
+            border-bottom: 2px solid #C9A24B;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            color: #C9A24B;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(201,162,75,0.3);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            color: #00E0FF;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        /* Timeline */
+        .timeline {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 40px;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        /* Timeline line */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #C9A24B 20%, #C9A24B 80%, transparent);
+            z-index: 1;
+        }
+        
+        .era {
+            flex: 0 0 auto;
+            width: 220px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era:hover {
+            transform: translateY(-10px);
+        }
+        
+        .era-dot {
+            width: 20px;
+            height: 20px;
+            background: #C9A24B;
+            border: 3px solid #0a0f17;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(201,162,75,0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .era:hover .era-dot {
+            width: 30px;
+            height: 30px;
+            box-shadow: 0 0 40px rgba(201,162,75,0.8);
+        }
+        
+        .era-box {
+            background: linear-gradient(135deg, rgba(201,162,75,0.1) 0%, rgba(0,224,255,0.05) 100%);
+            border: 2px solid #C9A24B;
+            border-radius: 8px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .era:hover .era-box {
+            background: linear-gradient(135deg, rgba(201,162,75,0.2) 0%, rgba(0,224,255,0.1) 100%);
+            border-color: #00E0FF;
+            box-shadow: 0 0 20px rgba(0,224,255,0.3);
+        }
+        
+        .era-name {
+            font-size: 1.3em;
+            font-weight: 900;
+            color: #C9A24B;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .era-years {
+            font-size: 0.9em;
+            color: #00E0FF;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .era-desc {
+            font-size: 0.85em;
+            color: #90A1B5;
+            line-height: 1.4;
+        }
+        
+        /* Content Area */
+        .content {
+            flex: 1;
+            display: flex;
+            padding: 40px;
+            gap: 40px;
+            overflow-y: auto;
+        }
+        
+        .content-left {
+            flex: 1;
+            background: rgba(17, 24, 39, 0.8);
+            border: 2px solid #C9A24B;
+            border-radius: 12px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .content-left h2 {
+            font-size: 1.8em;
+            color: #C9A24B;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .content-left p {
+            font-size: 1em;
+            line-height: 1.8;
+            color: #EAF0F7;
+            margin-bottom: 15px;
+        }
+        
+        .content-right {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, rgba(0,224,255,0.1) 0%, rgba(201,162,75,0.05) 100%);
+            border: 2px solid #00E0FF;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.2em;
+            font-weight: 900;
+            color: #00E0FF;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.95em;
+            color: #90A1B5;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(10, 15, 23, 0.9);
+            border-top: 2px solid #C9A24B;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #90A1B5;
+        }
+        
+        .footer-left {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-source {
+            color: #C9A24B;
+            font-weight: 600;
+        }
+        
+        /* Print styles */
+        @media print {
+            body { background: white; }
+            .container { height: auto; }
+            .timeline { flex-direction: row; }
+        }
+    </style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+    <div class="container">
+        <div class="header">
+            <h1>DÜNYA TARİHİNDE BAŞLICA DÖNEMLER VE ÇAĞLAR</h1>
+            <p>Antik Çağ'dan Günümüze Medeniyetlerin Evrimi</p>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <div class="era" onclick="selectEra(0)">
+                <div class="era-dot"></div>
+                <div class="era-box">
+                    <div class="era-name">ANTİK ÇAĞ</div>
+                    <div class="era-years">M.Ö. 3000 - 476</div>
+                    <div class="era-desc">Mısır, Yunan, Roma</div>
+                </div>
+            </div>
+            
+            <div class="era" onclick="selectEra(1)">
+                <div class="era-dot"></div>
+                <div class="era-box">
+                    <div class="era-name">ORTA ÇAĞ</div>
+                    <div class="era-years">476 - 1453</div>
+                    <div class="era-desc">Feodalizm, İslam Altın Çağı</div>
+                </div>
+            </div>
+            
+            <div class="era" onclick="selectEra(2)">
+                <div class="era-dot"></div>
+                <div class="era-box">
+                    <div class="era-name">RÖNESANS</div>
+                    <div class="era-years">14. - 17. YY</div>
+                    <div class="era-desc">Bilim, Sanat, Keşifler</div>
+                </div>
+            </div>
+            
+            <div class="era" onclick="selectEra(3)">
+                <div class="era-dot"></div>
+                <div class="era-box">
+                    <div class="era-name">AYDINLANMA</div>
+                    <div class="era-years">17. - 18. YY</div>
+                    <div class="era-desc">Akıl, Bilim, Özgürlük</div>
+                </div>
+            </div>
+            
+            <div class="era" onclick="selectEra(4)">
+                <div class="era-dot"></div>
+                <div class="era-box">
+                    <div class="era-name">SANAYİ DEVRİMİ</div>
+                    <div class="era-years">18. - 19. YY</div>
+                    <div class="era-desc">Makine, Fabrika, Kentleşme</div>
+                </div>
+            </div>
+            
+            <div class="era" onclick="selectEra(5)">
+                <div class="era-dot"></div>
+                <div class="era-box">
+                    <div class="era-name">MODERN ÇAĞ</div>
+                    <div class="era-years">20. - 21. YY</div>
+                    <div class="era-desc">Teknoloji, Küreselleşme</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content" id="content">
+            <div class="content-left">
+                <h2 id="content-title">ANTİK ÇAĞ</h2>
+                <p id="content-text">
+                    Antik Çağ, yazılı tarihin başlangıcından Roma İmparatorluğu'nun çöküşüne kadar uzanan dönemdir. Bu dönemde Mısır, Yunan ve Roma medeniyetleri insanlığın temellerini attı. Demokrasi, felsefe, matematik, mimarlık ve hukuk sistemleri bu çağda geliştirildi. Antik Çağ'ın sonunda Hristiyanlık ortaya çıktı ve Orta Çağ'ın başlangıcını hazırladı.
+                </p>
+            </div>
+            
+            <div class="content-right">
+                <div class="stat-box">
+                    <div class="stat-number">3000</div>
+                    <div class="stat-label">Yazılı Tarih Başlangıcı (M.Ö.)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Büyük Medeniyet</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">476</div>
+                    <div class="stat-label">Sonu (Roma Çöküşü)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">1500+</div>
+                    <div class="stat-label">Yıl Süresi</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-left">
+                <span>HARB-İ STRATEJİ | TEZ İNFOGRAFİKLERİ</span>
+                <span class="footer-source">KAYNAK: Harb-i Strateji Külliyatı, 2025 | Dünya Tarihi Tablosu (Sayfa 2)</span>
+            </div>
+            <div>© 2026 Tüm Hakları Saklıdır</div>
+        </div>
+    </div>
+    
+    <script>
+        const eras = [
+            {
+                title: "ANTİK ÇAĞ",
+                text: "Antik Çağ, yazılı tarihin başlangıcından Roma İmparatorluğu'nun çöküşüne kadar uzanan dönemdir. Bu dönemde Mısır, Yunan ve Roma medeniyetleri insanlığın temellerini attı. Demokrasi, felsefe, matematik, mimarlık ve hukuk sistemleri bu çağda geliştirildi. Antik Çağ'ın sonunda Hristiyanlık ortaya çıktı ve Orta Çağ'ın başlangıcını hazırladı."
+            },
+            {
+                title: "ORTA ÇAĞ",
+                text: "Orta Çağ, Avrupa'da feodalizmin hakim olduğu, İslam dünyasında ise Altın Çağ'ın yaşandığı dönemdir. Bu dönemde Bizans İmparatorluğu, Osmanlı İmparatorluğu ve Avrupa krallıkları şekillendi. Kültür, bilim ve sanat İslam medeniyetinde gelişirken, Avrupa karanlık çağlar yaşadı. Orta Çağ'ın sonu Rönesans ile başladı."
+            },
+            {
+                title: "RÖNESANS",
+                text: "Rönesans, İtalya'da başlayan ve Avrupa'ya yayılan bir kültür ve sanat hareketi olup, antik Yunan-Roma mirasını yeniden keşfetme çabasıdır. Bu dönemde Leonardo da Vinci, Michelangelo, Machiavelli gibi büyük düşünürler ortaya çıktı. Bilim, sanat ve felsefe yeniden canlandı. Coğrafi keşifler başladı ve yeni dünya keşfedildi."
+            },
+            {
+                title: "AYDINLANMA",
+                text: "Aydinlanma, 17. ve 18. yüzyılda Avrupa'da başlayan, akıl ve bilimi merkeze alan bir entelektüel hareket olup, modern düşüncenin temelini attı. Descartes, Newton, Voltaire, Rousseau gibi düşünürler insanın akıl yoluyla evreni anlayabileceğini savundular. Bu dönem Fransız Devrimi'ne ve modern demokrasiye giden yolu açtı."
+            },
+            {
+                title: "SANAYİ DEVRİMİ",
+                text: "Sanayi Devrimi, 18. yüzyılda İngiltere'de başlayan ve dünyayı dönüştüren bir teknolojik ve ekonomik dönüşümdür. Buhar makinesi, tekstil makineleri ve demir üretimi insanlığı tarım ekonomisinden endüstriyel ekonomiye geçirdi. Kentleşme, işçi sınıfı ve modern sosyal sorunlar bu dönemde ortaya çıktı."
+            },
+            {
+                title: "MODERN ÇAĞ",
+                text: "Modern Çağ, 20. yüzyıldan günümüze kadar uzanan dönemdir. İki Dünya Savaşı, Soğuk Savaş, Bilgisayar Devrimi, İnternet ve Yapay Zeka bu dönemin ana olaylarıdır. Küreselleşme, uluslararası ilişkilerin karmaşıklaşması ve teknolojinin hızlı gelişimi modern çağın karakteristiğidir. Günümüzde dijital dönüşüm ve yapay zeka yeni bir çağın başlangıcını işaret etmektedir."
+            }
+        ];
+        
+        function selectEra(index) {
+            document.getElementById('content-title').textContent = eras[index].title;
+            document.getElementById('content-text').textContent = eras[index].text;
+        }
+    </script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

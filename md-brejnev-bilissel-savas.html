@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Brejnev Doktrininden Bilişsel Savaşa | Medeniyet Dinamikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c14;--panel:#0f1520;--line:rgba(244,63,94,.15);--rose:#f43f5e;--rose-dim:rgba(244,63,94,.6);--cyan:#00E0FF;--gold:#C9A24B;--purple:#a78bfa;--sky:#38bdf8;--text:#EAF0F7;--dim:#8b9cb5;--serif:'Playfair Display',serif;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;--head:'Chakra Petch',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+::selection{background:var(--rose);color:#fff}
+
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:1000;background:rgba(255,255,255,.03)}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--rose),var(--purple));transition:width .15s}
+
+.hdr{position:fixed;top:3px;left:0;right:0;z-index:999;padding:10px 24px;display:flex;align-items:center;gap:14px;background:rgba(8,12,20,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hdr-back{font-size:11px;color:var(--dim);text-decoration:none;padding:4px 12px;border:1px solid var(--line);border-radius:5px;transition:.2s}
+.hdr-back:hover{color:var(--rose);border-color:var(--rose)}
+.hdr-title{font-family:var(--head);font-size:13px;font-weight:700;color:var(--rose)}
+.hdr-sub{font-size:13px;color:var(--dim);margin-left:auto;font-family:var(--mono)}
+.sound-btn{background:none;border:1px solid var(--line);color:var(--dim);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;transition:.2s}
+.sound-btn:hover{color:var(--rose);border-color:var(--rose)}
+
+#glitch-canvas{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 70%,rgba(244,63,94,.06) 0%,transparent 60%)}
+.hero-era{font-family:var(--mono);font-size:11px;color:var(--rose);letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero h1{font-family:var(--serif);font-size:clamp(26px,5.5vw,52px);font-weight:900;line-height:1.15;margin-bottom:20px;opacity:0;animation:fadeUp .8s .5s forwards}
+.hero h1 span{color:var(--rose)}
+.hero-desc{font-size:14px;color:var(--dim);max-width:620px;line-height:1.9;opacity:0;animation:fadeUp .8s .7s forwards}
+.hero-scroll{position:absolute;bottom:40px;font-size:11px;color:var(--dim);animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.timeline-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+.tn-item{width:12px;height:12px;border-radius:50%;border:2px solid var(--dim);cursor:pointer;transition:.3s;position:relative}
+.tn-item.active{background:var(--rose);border-color:var(--rose);transform:scale(1.3)}
+.tn-item:hover{border-color:var(--rose)}
+.tn-item::after{content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--dim);white-space:nowrap;opacity:0;transition:.2s;pointer-events:none}
+.tn-item:hover::after{opacity:1}
+@media(max-width:768px){.timeline-nav{display:none}}
+
+.era{min-height:100vh;padding:100px 24px;position:relative;display:flex;align-items:center;justify-content:center}
+.era-inner{max-width:1000px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media(max-width:768px){.era-inner{grid-template-columns:1fr;gap:24px}}
+.era-content{opacity:0;transform:translateX(-30px);transition:all .8s cubic-bezier(.19,1,.22,1)}
+.era-content.visible{opacity:1;transform:translateX(0)}
+.era-visual{opacity:0;transform:translateX(30px);transition:all .8s cubic-bezier(.19,1,.22,1) .2s}
+.era-visual.visible{opacity:1;transform:translateX(0)}
+
+.era-tag{display:inline-block;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;font-family:var(--mono)}
+.era-period{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:8px}
+.era-title{font-family:var(--serif);font-size:clamp(20px,3.5vw,30px);font-weight:900;line-height:1.25;margin-bottom:14px}
+.era-desc{font-size:13px;color:var(--dim);line-height:1.9;margin-bottom:16px}
+.era-quote{border-left:3px solid var(--rose);padding:12px 16px;background:rgba(244,63,94,.04);border-radius:0 8px 8px 0;font-size:12px;color:var(--text);line-height:1.8;margin-bottom:16px;font-style:italic}
+.era-facts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.era-fact{padding:6px 12px;border:1px solid var(--line);border-radius:6px;font-size:13px;color:var(--dim);font-family:var(--mono);transition:.2s;cursor:default}
+.era-fact:hover{border-color:var(--rose);color:var(--rose);background:rgba(244,63,94,.05)}
+
+.v-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px;position:relative;overflow:hidden}
+.v-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rose),var(--purple))}
+.v-card-icon{font-size:42px;margin-bottom:12px;display:block}
+.v-card-title{font-family:var(--head);font-size:14px;font-weight:700;margin-bottom:8px;color:var(--rose)}
+.v-card-list{list-style:none;font-size:12px;color:var(--dim);line-height:2}
+.v-card-list li::before{content:'▸ ';color:var(--rose)}
+
+/* Evolution diagram */
+.evo-diagram{display:flex;flex-direction:column;gap:12px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.evo-step{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;border:1px solid transparent;transition:.3s;cursor:default}
+.evo-step:hover{border-color:var(--rose);background:rgba(244,63,94,.04)}
+.evo-num{font-family:var(--head);font-size:20px;font-weight:700;color:var(--rose);min-width:30px}
+.evo-label{font-size:12px;font-weight:600}
+.evo-sub{font-size:13px;color:var(--dim)}
+.evo-arrow{text-align:center;color:var(--rose);font-size:16px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.connector{text-align:center;padding:40px 24px;position:relative}
+.connector::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--line),transparent);transform:translateX(-50%)}
+.connector-dot{width:14px;height:14px;border-radius:50%;background:var(--rose);margin:0 auto;position:relative;z-index:1;animation:pdot 2s infinite}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(244,63,94,.4)}50%{box-shadow:0 0 0 12px rgba(244,63,94,0)}}
+
+.analysis{padding:80px 24px;max-width:900px;margin:0 auto}
+.analysis-title{font-family:var(--serif);font-size:clamp(22px,4vw,32px);font-weight:900;text-align:center;margin-bottom:40px}
+.analysis-title span{color:var(--rose)}
+.layer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px}
+@media(max-width:768px){.layer-grid{grid-template-columns:repeat(2,1fr)}}
+.layer-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;text-align:center;transition:.3s;cursor:default}
+.layer-card:hover{border-color:var(--rose);transform:translateY(-4px);box-shadow:0 8px 32px rgba(244,63,94,.1)}
+.layer-num{font-family:var(--head);font-size:11px;color:var(--dim);margin-bottom:6px}
+.layer-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--rose)}
+.layer-desc{font-size:11px;color:var(--dim);line-height:1.6}
+
+.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--line);font-size:11px;color:var(--dim)}
+.footer a{color:var(--rose);text-decoration:none}
+
+/* ── LIGHT MODE OVERRIDE ─────────────────── */
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background: #f8f9fa !important;
+  color: #1a2332 !important;
+}
+[data-theme="light"] .scene-heading,
+html[data-theme="light"] .scene-heading {
+  background: linear-gradient(135deg, #1a2332 60%, #8B6914) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+[data-theme="light"] .scene-text,
+html[data-theme="light"] .scene-text {
+  color: #374151 !important;
+}
+[data-theme="light"] .scene-text strong,
+html[data-theme="light"] .scene-text strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-text em,
+html[data-theme="light"] .scene-text em {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-quote,
+html[data-theme="light"] .scene-quote {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .scene-number,
+html[data-theme="light"] .scene-number {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene-list li,
+html[data-theme="light"] .scene-list li {
+  color: #374151 !important;
+}
+[data-theme="light"] .nav,
+html[data-theme="light"] .nav {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom-color: #e5e7eb !important;
+}
+[data-theme="light"] .nav-title,
+html[data-theme="light"] .nav-title {
+  color: #92400e !important;
+}
+[data-theme="light"] .nav-back,
+[data-theme="light"] .nav-author,
+html[data-theme="light"] .nav-back,
+html[data-theme="light"] .nav-author {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .scene {
+  background: transparent !important;
+}
+[data-theme="light"] .metaphor-item,
+html[data-theme="light"] .metaphor-item {
+  background: rgba(0,0,0,.03) !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+[data-theme="light"] .metaphor-left,
+html[data-theme="light"] .metaphor-left {
+  color: #92400e !important;
+}
+[data-theme="light"] .metaphor-right,
+html[data-theme="light"] .metaphor-right {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .layer,
+html[data-theme="light"] .layer {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .layer h4,
+html[data-theme="light"] .layer h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .layer p,
+html[data-theme="light"] .layer p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .pillar,
+html[data-theme="light"] .pillar {
+  background: rgba(0,0,0,.02) !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .pillar h4,
+html[data-theme="light"] .pillar h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .pillar p,
+html[data-theme="light"] .pillar p {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .grid-card,
+html[data-theme="light"] .grid-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .grid-card .value,
+html[data-theme="light"] .grid-card .value {
+  color: #92400e !important;
+}
+[data-theme="light"] .grid-card .label,
+html[data-theme="light"] .grid-card .label {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .grid-card .desc,
+html[data-theme="light"] .grid-card .desc {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .sport-card,
+html[data-theme="light"] .sport-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .sport-card h3,
+html[data-theme="light"] .sport-card h3 {
+  color: #92400e !important;
+}
+[data-theme="light"] .sport-card p,
+html[data-theme="light"] .sport-card p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .hero-title,
+html[data-theme="light"] .hero-title {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-subtitle,
+html[data-theme="light"] .hero-subtitle {
+  color: #6b7280 !important;
+}
+[data-theme="light"] .hero-tag,
+html[data-theme="light"] .hero-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .hero-author,
+html[data-theme="light"] .hero-author {
+  color: #92400e !important;
+}
+[data-theme="light"] .ref-section,
+html[data-theme="light"] .ref-section {
+  border-top-color: #e5e7eb !important;
+}
+[data-theme="light"] .ref-section h3,
+html[data-theme="light"] .ref-section h3 {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .ref-section p,
+html[data-theme="light"] .ref-section p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene h2,
+html[data-theme="light"] .scene h2 {
+  color: #92400e !important;
+}
+[data-theme="light"] .scene p,
+html[data-theme="light"] .scene p {
+  color: #4b5563 !important;
+}
+[data-theme="light"] .scene p strong,
+html[data-theme="light"] .scene p strong {
+  color: #111827 !important;
+}
+[data-theme="light"] .scene-tag,
+html[data-theme="light"] .scene-tag {
+  color: #0e7490 !important;
+}
+[data-theme="light"] .divider,
+html[data-theme="light"] .divider {
+  background: linear-gradient(90deg,transparent,#e5e7eb,transparent) !important;
+}
+[data-theme="light"] .back-btn,
+html[data-theme="light"] .back-btn {
+  color: #92400e !important;
+}
+[data-theme="light"] .container,
+html[data-theme="light"] .container {
+  color: #1a2332 !important;
+}
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4,
+html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3, html[data-theme="light"] h4 {
+  color: #1f2937 !important;
+}
+[data-theme="light"] .hero-scene::before {
+  background: radial-gradient(ellipse at center, rgba(146,64,14,.04) 0%, transparent 60%) !important;
+}
+/* Particles/canvas background - hide in light mode */
+[data-theme="light"] .scene-bg,
+html[data-theme="light"] .scene-bg {
+  opacity: 0.03 !important;
+}
+[data-theme="light"] canvas,
+html[data-theme="light"] canvas {
+  opacity: 0.05 !important;
+}
+
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="progress"><div class="progress-fill" id="pf"></div></div>
+<canvas id="glitch-canvas"></canvas>
+
+<header class="hdr">
+  <a href="medeniyet-dinamikleri.html" class="hdr-back">← Medeniyet Dinamikleri</a>
+  <div class="hdr-title">BREJNEV'DEN BİLİŞSEL SAVAŞA</div>
+  <div class="hdr-sub">Kültür, Dil ve Güç Mücadelesi</div>
+  <button class="sound-btn" id="soundBtn" onclick="toggleSound()">Ses: Kapalı</button>
+</header>
+
+<nav class="timeline-nav" id="tnav"></nav>
+
+<section class="hero">
+  <div class="hero-era">Medeniyet Dinamikleri · Analiz Serisi</div>
+  <h1>Brejnev Doktrininden<br><span>Bilişsel Savaşa</span></h1>
+  <p class="hero-desc">Kültür, dil ve güç mücadelesinin 60 yıllık evrimi. Sert güçten yumuşak güce, oradan bilişsel alana — egemenlik artık toprak üzerinde değil, anlamın üretildiği zihinsel alan üzerindedir.</p>
+  <div class="hero-scroll">↓ Keşfetmek için kaydır</div>
+</section>
+
+<!-- ERA 1: SOĞUK SAVAŞ -->
+<section class="era" data-era="soguk-savas" data-label="Soğuk Savaş">
+<div class="era-inner">
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(56,189,248,.12);color:var(--sky);border:1px solid rgba(56,189,248,.3)">I. Tarihsel Zemin</div>
+    <div class="era-period">1945–1991 · Blok Rekabeti</div>
+    <div class="era-title">Soğuk Savaş:<br>Doktrinler Çağı</div>
+    <div class="era-desc">20. yüzyılın ikinci yarısı, klasik savaşların yerini dolaylı güç mücadelelerine bıraktığı bir dönemdir. ABD öncülüğündeki Batı sistemi ile Sovyetler Birliği öncülüğündeki Doğu bloku arasında askerî çatışma doğrudan değil; vekil savaşlar, ideolojik etki ve kültürel nüfuz üzerinden yürümüştür.</div>
+    <div class="era-quote">Askerî güç tek başına yeterli değildir. Rekabet artık vekil savaşlar, ideolojik etki ve kültürel nüfuz üzerinden yürür.</div>
+    <div class="era-facts">
+      <span class="era-fact">Vekil Savaşlar</span>
+      <span class="era-fact">İdeolojik Etki</span>
+      <span class="era-fact">Kültürel Nüfuz</span>
+      <span class="era-fact">Blok Rekabeti</span>
+    </div>
+  </div>
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">🧊</span>
+      <div class="v-card-title">İki Kutuplu Dünya</div>
+      <ul class="v-card-list">
+        <li>ABD: NATO, Marshall Planı, Hollywood</li>
+        <li>SSCB: Varşova Paktı, Komintern, Pravda</li>
+        <li>Vekil savaşlar: Kore, Vietnam, Afganistan</li>
+        <li>Nükleer caydırıcılık (MAD)</li>
+        <li>Uzay yarışı = prestij savaşı</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="connector"><div class="connector-dot"></div></div>
+
+<!-- ERA 2: BREJNEV DOKTRİNİ -->
+<section class="era" data-era="brejnev" data-label="Brejnev 1968">
+<div class="era-inner">
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">🔒</span>
+      <div class="v-card-title">Brejnev Doktrini</div>
+      <ul class="v-card-list">
+        <li>1968 Prag Baharı bastırıldı</li>
+        <li>"Sistemden çıkış yasak" ilkesi</li>
+        <li>Doğrudan askerî müdahale</li>
+        <li>İdeolojik uyum zorunluluğu</li>
+        <li>Blok bütünlüğünün korunması</li>
+        <li>Egemenlik sınırlaması</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(244,63,94,.12);color:var(--rose);border:1px solid rgba(244,63,94,.3)">II. Brejnev Doktrini</div>
+    <div class="era-period">1968 Sonrası · Klasik Kontrol</div>
+    <div class="era-title">Brejnev Doktrini:<br>Sert Güçle Blok Kontrolü</div>
+    <div class="era-desc">Brejnev Doktrini, Sovyetler Birliği'nin sosyalist blok içindeki ülkelerin "sistemden çıkmasına izin verilmeyeceği" yaklaşımını ifade eder. 1968 Çekoslovakya müdahalesi (Prag Baharı) ile doktrin fiili görünür hale geldi. Doğrudan askerî müdahale, sistem içi ideolojik uyum zorunluluğu ve blok bütünlüğünün korunması temel mantığıdır.</div>
+    <div class="era-quote">Temel mantık: Doğrudan askerî müdahale ile sistem içi uyum sağlanır. Egemenlik, blok çıkarlarına tabidir.</div>
+    <div class="era-facts">
+      <span class="era-fact">1968 Prag</span>
+      <span class="era-fact">Askerî Müdahale</span>
+      <span class="era-fact">İdeolojik Uyum</span>
+      <span class="era-fact">Blok Bütünlüğü</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="connector"><div class="connector-dot"></div></div>
+
+<!-- ERA 3: KÜLTÜREL GÜCE GEÇİŞ -->
+<section class="era" data-era="kulturel-guc" data-label="Kültürel Güç">
+<div class="era-inner">
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.3)">III. Stratejik Dönüşüm</div>
+    <div class="era-period">1960'lar Sonu · Araç Değişimi</div>
+    <div class="era-title">Klasik Güçten<br>Kültürel Güce Geçiş</div>
+    <div class="era-desc">1960'ların sonundan itibaren stratejik dönüşüm başlar. Askerî güç tek başına yeterli olmadığı anlaşılır. Bunun yerine medya, eğitim, kültür, sanat ve yayıncılık gibi alanlar ön plana çıkar. Uluslararası rekabet artık "toprak kontrolü" değil "zihin ve algı kontrolü" haline gelir.</div>
+    <div class="era-quote">Uluslararası rekabet: Sadece "toprak kontrolü" değil, "zihin ve algı kontrolü" haline gelir.</div>
+    <div class="era-facts">
+      <span class="era-fact">Medya</span>
+      <span class="era-fact">Eğitim</span>
+      <span class="era-fact">Kültür</span>
+      <span class="era-fact">Sanat</span>
+      <span class="era-fact">Yayıncılık</span>
+    </div>
+  </div>
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">📡</span>
+      <div class="v-card-title">Soft Power Araçları</div>
+      <ul class="v-card-list">
+        <li>Eğitim politikaları</li>
+        <li>Akademik yönlendirme</li>
+        <li>Yayıncılık ve çeviri ağları</li>
+        <li>Sinema ve edebiyat</li>
+        <li>İdeolojik söylem üretimi</li>
+        <li>Kültür endüstrisi</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="connector"><div class="connector-dot"></div></div>
+
+<!-- ERA 4: KÜLTÜR SAVAŞI -->
+<section class="era" data-era="kultur-savasi" data-label="Kültür Savaşı">
+<div class="era-inner">
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">🧬</span>
+      <div class="v-card-title">Dönüşüm Sıralaması</div>
+      <ul class="v-card-list">
+        <li>1. Önce dilde değişim başlar</li>
+        <li>2. Sonra kültürde dönüşüm</li>
+        <li>3. Sonra eğitimde yeniden yapılanma</li>
+        <li>4. En son devlet reflekslerinde değişim</li>
+        <li>→ Bu sıralama stratejik bir haritadır</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(201,162,75,.12);color:var(--gold);border:1px solid rgba(201,162,75,.3)">IV–V. Kültür Savaşı</div>
+    <div class="era-period">Cultural Warfare · Kavramsal Çekirdek</div>
+    <div class="era-title">Kültür Savaşı:<br>Toplumsal Dönüşüm Haritası</div>
+    <div class="era-desc">Bu yaklaşım literatürde "cultural warfare / kültür savaşı" olarak tanımlanır. Ana varsayım: Bir toplumun dönüşümü önce dilinde, sonra kültüründe, sonra eğitiminde, en son devlet reflekslerinde gerçekleşir. Dil düşünce üretim biçimini belirler; kültürel hafıza tarih anlatısını şekillendirir; eğitim sistemi yeni neslin referans dünyasını oluşturur.</div>
+    <div class="era-quote">Ana varsayım: Bir toplumun dönüşümü önce dilinde, sonra kültüründe, sonra eğitiminde, en son devlet reflekslerinde gerçekleşir.</div>
+    <div class="era-facts">
+      <span class="era-fact">Dil Reformları</span>
+      <span class="era-fact">Kültürel Hafıza</span>
+      <span class="era-fact">Eğitim Sistemi</span>
+      <span class="era-fact">Kuşak Kopuşu</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="connector"><div class="connector-dot"></div></div>
+
+<!-- ERA 5: BİLİŞSEL SAVAŞ -->
+<section class="era" data-era="bilissel" data-label="Bilişsel Savaş">
+<div class="era-inner">
+  <div class="era-content">
+    <div class="era-tag" style="background:rgba(0,224,255,.12);color:var(--cyan);border:1px solid rgba(0,224,255,.3)">IX. Modern Dönüşüm</div>
+    <div class="era-period">21. Yüzyıl · Cognitive Domain</div>
+    <div class="era-title">Bilişsel Savaş Çağı:<br>Algı, Dikkat ve Anlam</div>
+    <div class="era-desc">21. yüzyılda tablo daha da değişir. Yeni katman: Bilişsel alan (cognitive domain). Artık rekabet bilgi, algı, dikkat ve anlam üretimi üzerinden yürür. Sosyal medya algoritmaları, deepfake teknolojileri, mikro-hedefleme ve davranışsal manipülasyon yeni silahlar haline gelir.</div>
+    <div class="era-quote">Modern dünyada egemenlik artık yalnızca toprak üzerinde değil, anlamın üretildiği zihinsel alan üzerindedir.</div>
+    <div class="era-facts">
+      <span class="era-fact">Bilgi Savaşı</span>
+      <span class="era-fact">Algı Yönetimi</span>
+      <span class="era-fact">Dikkat Ekonomisi</span>
+      <span class="era-fact">Anlam Üretimi</span>
+      <span class="era-fact">Deepfake</span>
+    </div>
+  </div>
+  <div class="era-visual">
+    <div class="v-card">
+      <span class="v-card-icon">🧠</span>
+      <div class="v-card-title">Bilişsel Alan Silahları</div>
+      <ul class="v-card-list">
+        <li>Sosyal medya algoritmaları</li>
+        <li>Deepfake ve sentetik medya</li>
+        <li>Mikro-hedefleme (micro-targeting)</li>
+        <li>Davranışsal manipülasyon</li>
+        <li>Dikkat ekonomisi sömürüsü</li>
+        <li>Anlam üretimi tekeli</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- EVOLUTION DIAGRAM -->
+<section class="analysis">
+  <h2 class="analysis-title">Güç Mücadelesinin <span>Evrimi</span></h2>
+  <div class="evo-diagram">
+    <div class="evo-step"><div class="evo-num">1</div><div><div class="evo-label">Klasik Dönem</div><div class="evo-sub">Askerî güç ve toprak kontrolü</div></div></div>
+    <div class="evo-arrow">↓</div>
+    <div class="evo-step"><div class="evo-num">2</div><div><div class="evo-label">Modern Dönem</div><div class="evo-sub">İdeoloji ve blok rekabeti (Brejnev)</div></div></div>
+    <div class="evo-arrow">↓</div>
+    <div class="evo-step"><div class="evo-num">3</div><div><div class="evo-label">Geç Modern Dönem</div><div class="evo-sub">Kültür, medya ve yumuşak güç</div></div></div>
+    <div class="evo-arrow">↓</div>
+    <div class="evo-step"><div class="evo-num">4</div><div><div class="evo-label">Günümüz</div><div class="evo-sub">Algı, dikkat ve bilişsel savaş</div></div></div>
+  </div>
+</section>
+
+<!-- LAYERS -->
+<section class="analysis" style="padding-top:0">
+  <h2 class="analysis-title" style="margin-bottom:30px">Kritik <span>Üç Alan</span></h2>
+  <div class="layer-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="layer-card">
+      <div class="layer-num">ALAN 1</div>
+      <div class="layer-title">Dil</div>
+      <div class="layer-desc">Düşünce üretim biçimini belirler. Nesiller arası kopuşu etkiler.</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num">ALAN 2</div>
+      <div class="layer-title">Kültürel Hafıza</div>
+      <div class="layer-desc">Tarih anlatısını şekillendirir. Kolektif kimliği kurar.</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num">ALAN 3</div>
+      <div class="layer-title">Eğitim Sistemi</div>
+      <div class="layer-desc">Yeni neslin referans dünyasını oluşturur.</div>
+    </div>
+  </div>
+  <div class="era-quote" style="max-width:700px;margin:0 auto;text-align:center;font-size:14px;border-color:var(--rose)">
+    Brejnev Doktrini ve benzeri tarihsel çerçeveler, devletlerin güç üretme biçimlerinin "sert güçten yumuşak güce ve oradan bilişsel alana evrildiği" dönüşüm sürecinin erken örnekleridir.
+  </div>
+</section>
+
+<footer class="footer">
+  <a href="medeniyet-dinamikleri.html">← Medeniyet Dinamikleri</a> · Harb-i Strateji · Selahaddin Koyuncu Arşivi
+</footer>
+
+<script>
+// Glitch canvas
+const c=document.getElementById('glitch-canvas'),cx=c.getContext('2d');
+let W2,H2;
+function resize2(){W2=c.width=window.innerWidth;H2=c.height=window.innerHeight}
+window.addEventListener('resize',resize2);resize2();
+function drawGlitch(){
+  cx.clearRect(0,0,W2,H2);
+  for(let i=0;i<3;i++){
+    cx.fillStyle=`rgba(244,63,94,${Math.random()*.02})`;
+    cx.fillRect(Math.random()*W2,Math.random()*H2,Math.random()*200+50,1);
+  }
+  for(let i=0;i<20;i++){
+    cx.beginPath();cx.arc(Math.random()*W2,Math.random()*H2,Math.random()*1.2,.0,Math.PI*2);
+    cx.fillStyle=`rgba(167,139,250,${Math.random()*.15})`;cx.fill();
+  }
+  requestAnimationFrame(drawGlitch);
+}
+drawGlitch();
+
+// Progress
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('pf').style.width=(window.scrollY/h*100)+'%';
+});
+
+// Intersection Observer
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.era-content,.era-visual').forEach(el=>el.classList.add('visible'));
+      if(soundEnabled)playReveal();
+    }
+  });
+},{threshold:.2});
+document.querySelectorAll('.era').forEach(s=>obs.observe(s));
+
+// Timeline nav
+const eras=document.querySelectorAll('.era');
+const tnav=document.getElementById('tnav');
+eras.forEach((era,i)=>{
+  const dot=document.createElement('div');
+  dot.className='tn-item';
+  dot.dataset.label=era.dataset.label||'';
+  dot.onclick=()=>era.scrollIntoView({behavior:'smooth'});
+  tnav.appendChild(dot);
+});
+const dots=tnav.querySelectorAll('.tn-item');
+const navObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx=[...eras].indexOf(e.target);
+      dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+    }
+  });
+},{threshold:.4});
+eras.forEach(s=>navObs.observe(s));
+
+// Sound
+let soundEnabled=false,audioCtx=null;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function toggleSound(){soundEnabled=!soundEnabled;document.getElementById('soundBtn').textContent='Ses: '+(soundEnabled?'Açık':'Kapalı');if(soundEnabled)initAudio()}
+function playReveal(){
+  if(!audioCtx)return;
+  const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.type='sawtooth';osc.frequency.setValueAtTime(200,audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(80,audioCtx.currentTime+.25);
+  gain.gain.setValueAtTime(.04,audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.3);
+  osc.start();osc.stop(audioCtx.currentTime+.3);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'){e.preventDefault();window.scrollBy({top:window.innerHeight*.8,behavior:'smooth'})}
+  if(e.key==='ArrowUp'){e.preventDefault();window.scrollBy({top:-window.innerHeight*.8,behavior:'smooth'})}
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

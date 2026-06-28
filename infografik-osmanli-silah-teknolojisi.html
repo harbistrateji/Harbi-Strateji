@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Osmanlı Silah Teknolojisi — Harb-i Strateji</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root {--pri:#c41e3a;--sec:#ffd700;--bg:#0a0f17;--text:#e8e6e3;}
+body {font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;overflow-x:hidden;}
+.hero {text-align:center;padding:80px 20px 40px;background:linear-gradient(180deg,rgba(10,15,23,0.9),var(--bg)),radial-gradient(ellipse at 50% 0%,#c41e3a22,transparent 70%);position:relative;}
+.hero::after {content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#c41e3a60,transparent);}
+.hero .badge {display:inline-block;border:1px solid var(--pri);color:var(--pri);padding:4px 16px;border-radius:20px;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;animation:pulse 2s infinite;}
+.hero h1 {font-family:'Chakra Petch',sans-serif;font-size:clamp(1.8rem,5vw,3rem);margin:0 0 12px;}
+.hero h1 span {color:var(--pri);}
+.hero p {max-width:700px;margin:0 auto;opacity:0.8;line-height:1.7;}
+.audio-btn {position:fixed;top:80px;right:20px;z-index:100;background:var(--pri);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px #c41e3a40;}
+.stats {display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:30px 20px;}
+.stat {text-align:center;}
+.stat-val {display:block;font-family:'Chakra Petch',sans-serif;font-size:1.8rem;color:var(--pri);font-weight:700;}
+.stat-label {font-size:0.75rem;opacity:0.6;text-transform:uppercase;letter-spacing:1px;}
+.scenes {max-width:900px;margin:0 auto;padding:0 20px 60px;}
+.scene {display:flex;gap:20px;padding:24px;margin:16px 0;border:1px solid #ffffff10;border-radius:12px;background:#ffffff05;animation:fadeUp 0.6s ease both;transition:all 0.3s;}
+.scene:hover {border-color:var(--pri);background:#ffffff08;transform:translateX(8px);}
+.scene-icon {font-size:2rem;min-width:48px;text-align:center;padding-top:4px;}
+.scene-content h3 {margin:0 0 8px;font-family:'Chakra Petch',sans-serif;font-size:1.1rem;}
+.scene-content p {margin:0 0 12px;opacity:0.8;line-height:1.7;font-size:0.95rem;}
+.tags {display:flex;flex-wrap:wrap;gap:6px;}
+.tag {background:#c41e3a15;border:1px solid #c41e3a40;color:var(--pri);padding:3px 10px;border-radius:4px;font-size:0.7rem;font-family:'IBM Plex Mono',monospace;}
+.source {text-align:center;padding:40px 20px;opacity:0.5;font-size:0.8rem;border-top:1px solid #ffffff10;}
+.timeline-bar {position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,#c41e3a,#ffd700);width:0;z-index:999;transition:width 0.3s;}
+@keyframes fadeUp {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse {0%,100%{opacity:1}50%{opacity:0.5}}
+@media(max-width:600px){.scene{flex-direction:column;gap:8px;}.stats{gap:20px;}.audio-btn{top:70px;right:10px;width:36px;height:36px;font-size:1rem;}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
+<div class="timeline-bar" id="tbar"></div>
+<script src="hs-nav.js?v=11"></script>
+<button class="audio-btn" id="audioBtn" title="Ses Aç/Kapat">🔊</button>
+<div class="hero">
+  <span class="badge">Osmanlı · Askeri Tarih</span>
+  <h1><span>Osmanlı Silah Teknolojisi</span></h1>
+  <p>Yay-Oktan Şahi Topuna: Osmanlı İmparatorluğu'nun Askeri Teknoloji Devrimi</p>
+</div>
+<div class="stats"><div class="stat"><span class="stat-val">600</span><span class="stat-label">Yıllık İmparatorluk</span></div><div class="stat"><span class="stat-val">680kg</span><span class="stat-label">Şahi Mermi</span></div><div class="stat"><span class="stat-val">300+</span><span class="stat-label">Top Çeşidi</span></div><div class="stat"><span class="stat-val">10K</span><span class="stat-label">Yıllık Tüfek</span></div></div>
+<div class="scenes">
+    <div class="scene" style="animation-delay:0.15s">
+      <div class="scene-icon">🏹</div>
+      <div class="scene-content">
+        <h3>Yay ve Ok Teknolojisi</h3>
+        <p>Türk yayı (kompozit yay): boynuz, sinir ve ahşap katmanları. 800 metreye kadar menzil. Ok uçları: zırh delici (temren), yangın çıkarıcı, ıslık çalan (psikolojik savaş). Okçu eğitimi 7 yaşında başlıyordu.</p>
+        <div class="tags"><span class="tag">Yay-Ok</span><span class="tag">Bozkır</span><span class="tag">Atlı Okçu</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.3s">
+      <div class="scene-icon">⚔</div>
+      <div class="scene-content">
+        <h3>Kesici Silahlar: Kılıç ve Pala</h3>
+        <p>Şam çeliği (wootz): karbon nanotüp yapısı sayesinde olağanüstü keskinlik. Yatağan, pala, gaddare, şimşir. Her birinin farklı savaş durumuna göre kullanımı vardı. Kılıç yapımı sanat ve bilimin birleşimiydi.</p>
+        <div class="tags"><span class="tag">Kılıç</span><span class="tag">Şam Çeliği</span><span class="tag">Metalürji</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.44999999999999996s">
+      <div class="scene-icon">🛡</div>
+      <div class="scene-content">
+        <h3>Savunma Silahları: Zırh ve Kalkan</h3>
+        <p>Zırh türleri: zincir zırh (örme), plaka zırh, deri zırh. Osmanlı miğferleri: çelik gövde + burun koruyucu + ense zırhı. Kalkan: söğüt dalı örgü (hafif) veya çelik (ağır süvari).</p>
+        <div class="tags"><span class="tag">Zırh</span><span class="tag">Savunma</span><span class="tag">Metalürji</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.6s">
+      <div class="scene-icon">🔫</div>
+      <div class="scene-content">
+        <h3>Ateşli Silahlar: Tüfek ve Tabanca</h3>
+        <p>Yeniçerilerin tüfeği: fitilli (16. yy), çakmaklı (17. yy), kapsüllü (19. yy). Osmanlı tabancaları: gümüş kakma, fildişi kabza. Tüfekçi Ocağı: yılda 10.000+ silah üretimi.</p>
+        <div class="tags"><span class="tag">Tüfek</span><span class="tag">Yeniçeri</span><span class="tag">Üretim</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.75s">
+      <div class="scene-icon">💥</div>
+      <div class="scene-content">
+        <h3>Osmanlı Topçuluğu: Şahi Topları</h3>
+        <p>Fatih'in 1453 kuşatmasında kullandığı dev toplar: 8 metre uzunluk, 680 kg mermi, 1.5 km menzil. Macar mühendis Urban'ın tasarımı. Dökümhane: Tophane-i Amire. 17. yüzyılda 300+ top çeşidi.</p>
+        <div class="tags"><span class="tag">1453</span><span class="tag">Fatih</span><span class="tag">Top</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:0.8999999999999999s">
+      <div class="scene-icon">⛵</div>
+      <div class="scene-content">
+        <h3>Deniz Silahları: Kadırga Topçuluğu</h3>
+        <p>Osmanlı kadırgalarında baş top (lombar), borda topları. Preveze (1538): 122 kadırga, 44 kalyon. Barbaros Hayreddin'in taktik üstünlüğü. Deniz mayınlarının erken kullanımı.</p>
+        <div class="tags"><span class="tag">Deniz</span><span class="tag">Preveze</span><span class="tag">Kadırga</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:1.05s">
+      <div class="scene-icon">🏰</div>
+      <div class="scene-content">
+        <h3>Kuşatma Teknolojisi</h3>
+        <p>Lağım (tünel) kazma, mancınık, koçbaşı, kuşatma kulesi. Osmanlı lağımcıları Avrupa'nın en iyileriydi. Viyana kuşatmasında 40+ lağım kazıldı. Toprak tahkimat ve tabya sistemi.</p>
+        <div class="tags"><span class="tag">Kuşatma</span><span class="tag">Lağım</span><span class="tag">Tabya</span></div>
+      </div>
+    </div>
+    <div class="scene" style="animation-delay:1.2s">
+      <div class="scene-icon">🎯</div>
+      <div class="scene-content">
+        <h3>Modernleşme: Nizam-ı Cedid</h3>
+        <p>III. Selim'in askeri reformları (1793). Avrupa tarzı eğitim, yeni silahlar, topçu okulları. Mühendishane-i Berri-i Hümayun. Osmanlı'nın teknolojik açığı kapatma çabası.</p>
+        <div class="tags"><span class="tag">Reform</span><span class="tag">18. yy</span><span class="tag">Modernleşme</span></div>
+      </div>
+    </div>
+</div>
+<div class="source">Kaynak: Prof. Dr. Zeki Tez, Patlayıcı Silah ve Savaş Tekniğinin Kültürel Tarihi, 2010 | Harb-i Strateji Külliyatı</div>
+<script>
+// Scroll progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('tbar').style.width=(window.scrollY/h*100)+'%';
+});
+// Audio
+const AudioContext=window.AudioContext||window.webkitAudioContext;
+let actx,playing=false;
+function playAmbient(){
+  if(!actx) actx=new AudioContext();
+  const osc=actx.createOscillator();
+  const gain=actx.createGain();
+  osc.type='sine';osc.frequency.value=220;
+  gain.gain.value=0.03;
+  osc.connect(gain);gain.connect(actx.destination);
+  osc.start();playing=true;
+  setTimeout(()=>{osc.stop();playing=false;},8000);
+}
+document.getElementById('audioBtn').onclick=()=>{if(!playing) playAmbient();};
+</script>
+</body>
+</html>

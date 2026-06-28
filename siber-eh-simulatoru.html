@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Siber & Elektronik Harp <em>Simülatörü</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+/* === GAME AREA STYLING === */
+.sim-content h1{
+  font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--bone);text-transform:uppercase;letter-spacing:0.05em;
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.score-board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;margin-bottom:28px;
+}
+.score-card{background:var(--deep);padding:16px 14px;text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.4rem;display:block;margin-bottom:4px;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+  transition:opacity 0.3s,transform 0.3s;
+}
+.panel.hidden{display:none;}
+.panel h2,.panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:14px;}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.option-btn{
+  font-family:var(--font-mono);font-size:0.8rem;
+  padding:12px 20px;border:1px solid var(--line);
+  border-radius:6px;background:var(--deep);
+  color:var(--bone);cursor:pointer;transition:all 0.25s;
+  text-align:left;flex:1;min-width:200px;
+}
+.option-btn:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.decision-panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.decision-panel .header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.decision-panel h2,.decision-panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:10px;}
+.decision-panel p{color:var(--bone-dim);line-height:1.7;margin-bottom:16px;}
+
+/* siber-eh specific */
+.attack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0;}
+.atk-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+  cursor:pointer;transition:all 0.25s;
+}
+.atk-card:hover{border-color:var(--signal);transform:translateY(-2px);}
+.atk-icon{font-size:1.5rem;margin-bottom:8px;}
+.atk-name{font-family:var(--font-mono);font-size:0.8rem;color:var(--bone);margin-bottom:4px;}
+.atk-sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);}
+.def-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:8px 0;}
+.def-fill{height:100%;border-radius:4px;transition:width 0.5s;background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.outcome-box{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:20px;margin-top:16px;
+}
+.ph{
+  display:inline-block;padding:6px 14px;
+  font-family:var(--font-mono);font-size:0.72rem;
+  border:1px solid var(--line);border-radius:4px;
+  margin:4px;color:var(--bone-dim);
+}
+.ph.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+.next2{
+  font-family:var(--font-mono);font-size:0.82rem;
+  padding:12px 24px;border:1px solid var(--signal);
+  border-radius:4px;background:var(--signal);
+  color:var(--void);cursor:pointer;font-weight:600;
+  transition:all 0.25s;display:block;margin:20px auto;
+}
+.next2:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);}
+
+
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Siber & Elektronik Harp <em>Simülatörü</em></h1>
+  <p class="lead">Siber saldırı ve elektronik harp operasyonları simülasyonu — Ağ savunması ve EW taktikleri.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">5</span><span class="lbl">Katman</span></div><div class="hero-stat"><span class="num">EW</span><span class="lbl">Sistem</span></div><div class="hero-stat"><span class="num">APT</span><span class="lbl">Tehdit</span></div><div class="hero-stat"><span class="num">3</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+<div class="sim-page-wrap">
+  
+<h2 class="sr-only">Siber ve Elektronik Harp Simülatörü — bir nükleer tesis hedefini konvansiyonel bomba, siber solucan veya EH frekansıyla devre dışı bırakmayı simüle et.</h2>
+<style>
+.sim2 { padding: 0.5rem 0 1rem; font-size:14px; }
+.phase-bar { display:flex; gap:6px; margin-bottom:1.25rem; align-items:center; }
+.ph { flex:1; height:4px; border-radius:2px; background:var(--border); transition: background .4s; }
+.ph.done { background:var(--border-accent); }
+.ph.active { background:var(--text-accent); }
+.attack-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:1rem; }
+.atk-card { border: 1px solid var(--border); border-radius:10px; padding:14px; cursor:pointer; transition:all .15s; background:var(--surface-2); text-align:center; }
+.atk-card:hover { border-color:var(--border-strong); }
+.atk-card.sel { border: 1.5px solid var(--border-accent); background:var(--bg-accent); }
+.atk-icon { font-size:28px; margin-bottom:8px; }
+.atk-name { font-size:13px; font-weight:500; color:var(--text-primary); }
+.atk-sub { font-size:11px; color:var(--text-secondary); margin-top:4px; line-height:1.4; }
+.target-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:1rem; }
+.tgt-card { border: 1px solid var(--border); border-radius:10px; padding:12px; cursor:pointer; transition:all .15s; background:var(--surface-2); }
+.tgt-card:hover { border-color:var(--border-strong); }
+.tgt-card.sel { border: 1.5px solid var(--border-accent); background:var(--bg-accent); }
+.tgt-name { font-size:13px; font-weight:500; color:var(--text-primary); }
+.tgt-def { font-size:11px; color:var(--text-secondary); margin-top:3px; }
+.def-bar { height:5px; border-radius:2px; background:var(--border); margin-top:6px; }
+.def-fill { height:5px; border-radius:2px; background:#E24B4A; }
+.timeline { margin:1rem 0; }
+.tl-step { display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; opacity:0; transform:translateX(-8px); transition: opacity .4s, transform .4s; }
+.tl-step.in { opacity:1; transform:translateX(0); }
+.tl-dot { width:28px; height:28px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:500; }
+.tl-body { flex:1; }
+.tl-title { font-size:13px; font-weight:500; color:var(--text-primary); }
+.tl-desc { font-size:12px; color:var(--text-secondary); line-height:1.5; margin-top:3px; }
+.outcome-box { border-radius:10px; padding:1.25rem; margin-top:1rem; border:0.5px solid; }
+.score-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:0.5px solid var(--border); font-size:13px; }
+.score-row:last-child { border-bottom:none; }
+button.next2 { margin-top:10px; padding:8px 20px; font-size:13px; border-radius:var(--radius); border:0.5px solid var(--border-accent); background:var(--bg-accent); color:var(--text-accent); cursor:pointer; }
+button.next2:hover { background:var(--text-accent); color:var(--surface-2); }
+button.reset2 { padding:8px 20px; font-size:13px; border-radius:var(--radius); border:0.5px solid var(--border); background:var(--surface-1); color:var(--text-secondary); cursor:pointer; margin-left:8px; }
+.section2 { display:none; }
+.section2.on { display:block; }
+
+/* === GAME AREA STYLING === */
+.sim-content h1{
+  font-family:var(--font-display);font-size:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--bone);text-transform:uppercase;letter-spacing:0.05em;
+  margin-bottom:20px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.score-board{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;margin-bottom:28px;
+}
+.score-card{background:var(--deep);padding:16px 14px;text-align:center;}
+.score-card .value{font-family:var(--font-display);font-size:1.4rem;display:block;margin-bottom:4px;}
+.score-card .label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+  transition:opacity 0.3s,transform 0.3s;
+}
+.panel.hidden{display:none;}
+.panel h2,.panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:14px;}
+.options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.option-btn{
+  font-family:var(--font-mono);font-size:0.8rem;
+  padding:12px 20px;border:1px solid var(--line);
+  border-radius:6px;background:var(--deep);
+  color:var(--bone);cursor:pointer;transition:all 0.25s;
+  text-align:left;flex:1;min-width:200px;
+}
+.option-btn:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);box-shadow:0 4px 12px rgba(57,255,138,0.15);}
+.decision-panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px;margin-bottom:24px;
+}
+.decision-panel .header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.decision-panel h2,.decision-panel h3{font-family:var(--font-display);font-size:1.1rem;color:var(--bone);margin-bottom:10px;}
+.decision-panel p{color:var(--bone-dim);line-height:1.7;margin-bottom:16px;}
+
+/* siber-eh specific */
+.attack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0;}
+.atk-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+  cursor:pointer;transition:all 0.25s;
+}
+.atk-card:hover{border-color:var(--signal);transform:translateY(-2px);}
+.atk-icon{font-size:1.5rem;margin-bottom:8px;}
+.atk-name{font-family:var(--font-mono);font-size:0.8rem;color:var(--bone);margin-bottom:4px;}
+.atk-sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);}
+.def-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:8px 0;}
+.def-fill{height:100%;border-radius:4px;transition:width 0.5s;background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.outcome-box{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:20px;margin-top:16px;
+}
+.ph{
+  display:inline-block;padding:6px 14px;
+  font-family:var(--font-mono);font-size:0.72rem;
+  border:1px solid var(--line);border-radius:4px;
+  margin:4px;color:var(--bone-dim);
+}
+.ph.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+.next2{
+  font-family:var(--font-mono);font-size:0.82rem;
+  padding:12px 24px;border:1px solid var(--signal);
+  border-radius:4px;background:var(--signal);
+  color:var(--void);cursor:pointer;font-weight:600;
+  transition:all 0.25s;display:block;margin:20px auto;
+}
+.next2:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);}
+
+</style>
+
+<div class="sim2">
+  <div style="margin-bottom:14px">
+    <div style="font-size:16px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Siber / EH Operasyon Simülatörü</div>
+    <div style="font-size:13px;color:var(--text-secondary)">Bir hedef ve saldırı türü seç — operasyonu simüle et, sonuçları karşılaştır.</div>
+  </div>
+
+  <div class="phase-bar">
+    <div class="ph active" id="p1"></div>
+    <div class="ph" id="p2"></div>
+    <div class="ph" id="p3"></div>
+    <div class="ph" id="p4"></div>
+  </div>
+
+  <div class="section2 on" id="ss1">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Saldırı vektörünü seç:</div>
+    <div class="attack-grid">
+      <div class="atk-card" id="a1" onclick="setAtk('bomb')">
+        <div class="atk-icon"><i class="ti ti-bomb" aria-hidden="true" style="font-size:28px;color:#E24B4A"></i></div>
+        <div class="atk-name">Konvansiyonel Hava Saldırısı</div>
+        <div class="atk-sub">Güdümlü bomba veya füze ile fiziksel imha</div>
+      </div>
+      <div class="atk-card" id="a2" onclick="setAtk('cyber')">
+        <div class="atk-icon"><i class="ti ti-bug" aria-hidden="true" style="font-size:28px;color:#3B8BD4"></i></div>
+        <div class="atk-name">Siber Solucan</div>
+        <div class="atk-sub">Stuxnet benzeri kötü amaçlı yazılım; sessiz iç sabotaj</div>
+      </div>
+      <div class="atk-card" id="a3" onclick="setAtk('eh')">
+        <div class="atk-icon"><i class="ti ti-radio" aria-hidden="true" style="font-size:28px;color:#EF9F27"></i></div>
+        <div class="atk-name">Elektronik Harp</div>
+        <div class="atk-sub">HPM / yönlendirilmiş enerji ile elektronik kör etme</div>
+      </div>
+    </div>
+    <button class="next2" onclick="goto2(2)">Devam →</button>
+  </div>
+
+  <div class="section2" id="ss2">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Hedef seç:</div>
+    <div class="target-grid">
+      <div class="tgt-card" id="t1" onclick="setTgt('nuclear')">
+        <div class="tgt-name"><i class="ti ti-radioactive" aria-hidden="true"></i> Nükleer Zenginleştirme Tesisi</div>
+        <div class="tgt-def">Derinlemesine savunma + hava sahası</div>
+        <div class="def-bar"><div class="def-fill" style="width:95%"></div></div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px">Savunma gücü: %95</div>
+      </div>
+      <div class="tgt-card" id="t2" onclick="setTgt('radar')">
+        <div class="tgt-name"><i class="ti ti-antenna" aria-hidden="true"></i> Erken Uyarı Radar Üssü</div>
+        <div class="tgt-def">Orta koruma + EH sistemi</div>
+        <div class="def-bar"><div class="def-fill" style="width:65%"></div></div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px">Savunma gücü: %65</div>
+      </div>
+      <div class="tgt-card" id="t3" onclick="setTgt('grid')">
+        <div class="tgt-name"><i class="ti ti-plug" aria-hidden="true"></i> Elektrik Şebekesi Kontrol Merkezi</div>
+        <div class="tgt-def">Fiziksel koruma zayıf; ağa bağlı</div>
+        <div class="def-bar"><div class="def-fill" style="width:40%"></div></div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px">Savunma gücü: %40</div>
+      </div>
+      <div class="tgt-card" id="t4" onclick="setTgt('command')">
+        <div class="tgt-name"><i class="ti ti-building-fortress" aria-hidden="true"></i> Komuta-Kontrol Merkezi</div>
+        <div class="tgt-def">Hardened, yeraltında; izole ağ</div>
+        <div class="def-bar"><div class="def-fill" style="width:85%"></div></div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px">Savunma gücü: %85</div>
+      </div>
+    </div>
+    <button class="next2" onclick="goto2(3)">Operasyonu Başlat →</button>
+  </div>
+
+  <div class="section2" id="ss3">
+    <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:12px" id="op-title">Operasyon yürütülüyor...</div>
+    <div class="timeline" id="tl"></div>
+    <button class="next2" id="result-btn" onclick="goto2(4)" style="display:none">Sonuçları Gör →</button>
+  </div>
+
+  <div class="section2" id="ss4">
+    <div id="outcome"></div>
+    <div style="margin-top:12px">
+      <button class="next2" onclick="sendPrompt('Siber savaş ile elektronik harp arasındaki temel farklar nelerdir?')">Daha fazla öğren ↗</button>
+      <button class="reset2" onclick="resetSim2()">Yeniden başla</button>
+    </div>
+  </div>
+</div>
+
+
+</div>
+</main>
+
+<script>
+
+const s2 = { atk: null, tgt: null };
+
+const attacks = {
+  bomb:  { label:'Konvansiyonel Hava Saldırısı', color:'#E24B4A' },
+  cyber: { label:'Siber Solucan', color:'#3B8BD4' },
+  eh:    { label:'Elektronik Harp (HPM)', color:'#EF9F27' },
+};
+
+const targets = {
+  nuclear: { label:'Nükleer Zenginleştirme Tesisi', defense:95 },
+  radar:   { label:'Erken Uyarı Radar Üssü', defense:65 },
+  grid:    { label:'Elektrik Şebekesi Kontrol Merkezi', defense:40 },
+  command: { label:'Komuta-Kontrol Merkezi', defense:85 },
+};
+
+const scenarios = {
+  bomb_nuclear:  { success:10, detect:99, collateral:'Çok yüksek — radyolojik yayılma riski', duration:'Anlık', stealth:'Yok', steps:[
+    {icon:'ti-plane',col:'#E24B4A',t:'Uçuş rotası planlaması',d:'Hava sahası ihlali gerekiyor; S-400 sistemleri tespit edebilir.'},
+    {icon:'ti-alert-triangle',col:'#EF9F27',t:'Hava savunması engeli',d:'Tesise yaklaşma sırasında %70 olasılıkla etkisiz hale getiriliyor.'},
+    {icon:'ti-x',col:'#E24B4A',t:'Operasyon başarısız',d:'Füze indirimi veya hava sahası kapanması. Radyolojik tehlike riski mevcut. Uluslararası kriz tetiklendi.'},
+  ]},
+  bomb_radar:    { success:55, detect:90, collateral:'Orta', duration:'Anlık', stealth:'Yok', steps:[
+    {icon:'ti-plane',col:'#E24B4A',t:'Hava saldırısı başlatıldı',d:'Güdümlü mühimmat üsse yönlendiriliyor.'},
+    {icon:'ti-antenna',col:'#EF9F27',t:'Radar sistemleri tespit etti',d:'Erken uyarı devreye girdi. Karşı tedbirler aktive edildi.'},
+    {icon:'ti-check',col:'#639922',t:'Kısmi başarı',d:'Tesisin %55\'i tahrip edildi. Yedek sistemler devreye girebilir. Bölge kamuoyu farkında.'},
+  ]},
+  bomb_grid:     { success:75, detect:85, collateral:'Yüksek — sivil etki', duration:'Anlık', stealth:'Yok', steps:[
+    {icon:'ti-plane',col:'#E24B4A',t:'Fiziksel saldırı',d:'Kritik altyapıya doğrudan isabet.'},
+    {icon:'ti-alert-triangle',col:'#EF9F27',t:'Sivil kayıplar',d:'Şebeke çöküşü hastaneleri, su sistemlerini etkiliyor. Uluslararası baskı artıyor.'},
+    {icon:'ti-check',col:'#639922',t:'Sistem çöktürüldü — yüksek bedel',d:'Hedef başarıyla etkisiz hale getirildi. Ancak siyasi maliyet yüksek.'},
+  ]},
+  bomb_command:  { success:20, detect:99, collateral:'Orta', duration:'Anlık', stealth:'Yok', steps:[
+    {icon:'ti-plane',col:'#E24B4A',t:'Derinlemesine yeraltı hedefi',d:'Bunker yapısı 30+ metre derinlikte. Standart mühimmat yetersiz.'},
+    {icon:'ti-x',col:'#E24B4A',t:'Operasyon büyük ölçüde başarısız',d:'Sadece yüzey hasarı. Komuta kapasitesi %80 korundu. Siyasi kriz başladı.'},
+  ]},
+  cyber_nuclear: { success:70, detect:15, collateral:'Yok', duration:'6-18 ay', stealth:'Maksimum', steps:[
+    {icon:'ti-usb',col:'#3B8BD4',t:'Hava boşluğunu aşma',d:'USB veya tedarik zinciri saldırısıyla izole ağa solucan yerleştirildi.'},
+    {icon:'ti-eye-off',col:'#1D9E75',t:'Gizli yayılma',d:'Zararlı yazılım santrifüj PLC\'lerine sızdı. 6 ay boyunca hiçbir anomali tespit edilmedi.'},
+    {icon:'ti-settings',col:'#EF9F27',t:'Santrifüj hız manipülasyonu',d:'Stuxnet\'te olduğu gibi santrifüjler aşırı hızda döndürülerek kendi kendini tahrip ediyor.'},
+    {icon:'ti-check',col:'#639922',t:'Yüksek başarı — sıfır atış',d:'Tesisin %70\'i fark etmeden tahrip edildi. Diplomatik inkâr mümkün. 1000+ santrifüj imha.'},
+  ]},
+  cyber_radar:   { success:60, detect:25, collateral:'Yok', duration:'2-6 ay', stealth:'Yüksek', steps:[
+    {icon:'ti-bug',col:'#3B8BD4',t:'Tedarik zinciri saldırısı',d:'Radar yazılım güncellemesine arka kapı eklendi.'},
+    {icon:'ti-database',col:'#EF9F27',t:'Veri bütünlüğü saldırısı',d:'Radar sahte hedefler görmeye başladı; gerçek uçuş yolları maskelendi.'},
+    {icon:'ti-check',col:'#639922',t:'Başarılı — sessiz operasyon',d:'Radar sistemi çalışıyor görünüyor ama yanlış veri üretiyor. Tespit son derece güç.'},
+  ]},
+  cyber_grid:    { success:88, detect:10, collateral:'Yüksek — sivil', duration:'1-3 ay', stealth:'Yüksek', steps:[
+    {icon:'ti-bug',col:'#3B8BD4',t:'SCADA/OT sistemlere sızma',d:'Endüstriyel kontrol sistemleri hedeflendi. Birden fazla giriş noktası bulundu.'},
+    {icon:'ti-bolt',col:'#EF9F27',t:'Tetikleme',d:'Enerji santrali ani yük dalgalanmalarıyla fiziksel olarak zarar gördü.'},
+    {icon:'ti-check',col:'#639922',t:'Tam başarı',d:'Şebeke çöktürüldü. Fiziksel delil yok. Attribution (sorumluluk tespiti) 6+ ay sürer.'},
+  ]},
+  cyber_command: { success:35, detect:30, collateral:'Yok', duration:'1+ yıl', stealth:'Yüksek', steps:[
+    {icon:'ti-network',col:'#3B8BD4',t:'İzole ağ engeli',d:'Air-gap korumalı sistemlere ulaşmak için karmaşık saldırı zinciri gerekiyor.'},
+    {icon:'ti-alert-triangle',col:'#EF9F27',t:'İç tehdit ihtiyacı',d:'Fiziksel erişim veya içeriden sızma olmadan başarı şansı düşük.'},
+    {icon:'ti-x',col:'#E24B4A',t:'Sınırlı başarı',d:'Bazı istihbarat elde edildi, ancak temel komuta kapasitesi bozulmadı.'},
+  ]},
+  eh_nuclear:    { success:45, detect:70, collateral:'Düşük', duration:'Saldırı süresince', stealth:'Orta', steps:[
+    {icon:'ti-broadcast',col:'#EF9F27',t:'HPM yayını başlatıldı',d:'Yüksek güçlü mikrodalga sistemi hedef yönünde aktive edildi.'},
+    {icon:'ti-shield',col:'#E24B4A',t:'Faraday koruması aktif',d:'Kritik sistemler EMP/HPM korumalı. Yüzey ekipmanlarında kısmi etki.'},
+    {icon:'ti-check',col:'#639922',t:'Kısmi başarı',d:'İletişim sistemleri %45 sekteye uğradı. Santrifüjler bağımsız çalışmaya devam etti.'},
+  ]},
+  eh_radar:      { success:90, detect:55, collateral:'Yok', duration:'Operasyon boyunca', stealth:'Orta', steps:[
+    {icon:'ti-broadcast',col:'#EF9F27',t:'Radar frekansı jamming',d:'Radar çalışma frekansları saptandı. Yoğun parazit yayını başlatıldı.'},
+    {icon:'ti-eye-off',col:'#1D9E75',t:'Radar kör edildi',d:'Ekran karla doldu. Operatörler gerçek ve sahte hedefleri ayırt edemez hale geldi.'},
+    {icon:'ti-check',col:'#639922',t:'Yüksek başarı',d:'Radar %90 etkisiz. Hava sahası "kör" hale geldi. Sistem kapatılmadı; inkar edilebilir.'},
+  ]},
+  eh_grid:       { success:55, detect:60, collateral:'Orta', duration:'Geçici', stealth:'Orta', steps:[
+    {icon:'ti-zap',col:'#EF9F27',t:'EMP benzeri yayın',d:'IEMI (kasıtlı elektromanyetik parazit) enerji altyapısına yönlendiriliyor.'},
+    {icon:'ti-alert-triangle',col:'#EF9F27',t:'Geçici etki',d:'Şebeke kontrol ekipmanları kısa süreli devre dışı kaldı. Yedekler devreye girdi.'},
+    {icon:'ti-check',col:'#639922',t:'Geçici başarı',d:'Birkaç saatlik kesilme. Kalıcı hasar yok. Çok sınırlı stratejik etki.'},
+  ]},
+  eh_command:    { success:65, detect:65, collateral:'Yok', duration:'Operasyon boyunca', stealth:'Orta', steps:[
+    {icon:'ti-broadcast',col:'#EF9F27',t:'C6ISR iletişim kargaşası',d:'Komuta frekansları yoğun parazitle örtüldü. İletişim zinciri koptu.'},
+    {icon:'ti-users-group',col:'#EF9F27',t:'Komuta karmaşası',d:'Birimler birbirinden kopuk çalışmaya başladı. OODA döngüsü bozuldu.'},
+    {icon:'ti-check',col:'#639922',t:'Etkin operasyon',d:'Fiziksel kayıp yok ama eş güdümlü hareket engellendi. Taktik avantaj elde edildi.'},
+  ]},
+};
+
+function setAtk(a) {
+  s2.atk = a;
+  ['a1','a2','a3'].forEach(id => document.getElementById(id).classList.remove('sel'));
+  document.getElementById({bomb:'a1',cyber:'a2',eh:'a3'}[a]).classList.add('sel');
+}
+
+function setTgt(t) {
+  s2.tgt = t;
+  ['t1','t2','t3','t4'].forEach(id => document.getElementById(id).classList.remove('sel'));
+  document.getElementById({nuclear:'t1',radar:'t2',grid:'t3',command:'t4'}[t]).classList.add('sel');
+}
+
+function goto2(n) {
+  for(let i=1;i<=4;i++) {
+    document.getElementById('ss'+i).classList.toggle('on', i===n);
+    document.getElementById('p'+i).className = 'ph' + (i<n?' done':(i===n?' active':''));
+  }
+  if(n===3) runTimeline();
+  if(n===4) showOutcome();
+}
+
+function runTimeline() {
+  const key = (s2.atk||'cyber')+'_'+(s2.tgt||'grid');
+  const sc = scenarios[key] || scenarios['cyber_grid'];
+  const atk = attacks[s2.atk||'cyber'];
+  const tgt = targets[s2.tgt||'grid'];
+
+  document.getElementById('op-title').innerHTML = `<i class="ti ti-player-play" aria-hidden="true"></i> ${atk.label} → ${tgt.label}`;
+  const tl = document.getElementById('tl');
+  tl.innerHTML = '';
+
+  sc.steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'tl-step';
+    div.innerHTML = `
+      <div class="tl-dot" style="background:${step.col}22;color:${step.col}"><i class="ti ${step.icon}" aria-hidden="true" style="font-size:14px"></i></div>
+      <div class="tl-body">
+        <div class="tl-title">${step.t}</div>
+        <div class="tl-desc">${step.d}</div>
+      </div>
+    `;
+    tl.appendChild(div);
+    setTimeout(() => { div.classList.add('in'); }, i * 700 + 200);
+  });
+
+  setTimeout(() => {
+    document.getElementById('result-btn').style.display = 'inline-block';
+  }, sc.steps.length * 700 + 400);
+}
+
+function showOutcome() {
+  const key = (s2.atk||'cyber')+'_'+(s2.tgt||'grid');
+  const sc = scenarios[key] || scenarios['cyber_grid'];
+  const atk = attacks[s2.atk||'cyber'];
+  const tgt = targets[s2.tgt||'grid'];
+
+  const bg = sc.success >= 70 ? 'var(--bg-success)' : sc.success >= 40 ? 'var(--bg-warning)' : 'var(--bg-danger)';
+  const bc = sc.success >= 70 ? 'var(--border-success)' : sc.success >= 40 ? 'var(--border-warning)' : 'var(--border-danger)';
+  const tc = sc.success >= 70 ? 'var(--text-success)' : sc.success >= 40 ? 'var(--text-warning)' : 'var(--text-danger)';
+  const rl = sc.success >= 70 ? 'Başarılı' : sc.success >= 40 ? 'Kısmi Başarı' : 'Başarısız';
+
+  document.getElementById('outcome').innerHTML = `
+    <div class="outcome-box" style="background:${bg};border-color:${bc}">
+      <div style="font-size:18px;font-weight:500;color:${tc};margin-bottom:12px">${rl} — Başarı skoru: %${sc.success}</div>
+      <div class="score-row"><span class="stat-label">Saldırı türü</span><span style="color:${atk.color};font-weight:500">${atk.label}</span></div>
+      <div class="score-row"><span class="stat-label">Hedef</span><span style="font-weight:500;color:var(--text-primary)">${tgt.label}</span></div>
+      <div class="score-row"><span class="stat-label">Tespit riski</span><span style="font-weight:500;color:${sc.detect>70?'#E24B4A':sc.detect>40?'#EF9F27':'#1D9E75'}">%${sc.detect}</span></div>
+      <div class="score-row"><span class="stat-label">Sivil hasar</span><span style="font-weight:500;color:var(--text-primary)">${sc.collateral}</span></div>
+      <div class="score-row"><span class="stat-label">Süre</span><span style="font-weight:500;color:var(--text-primary)">${sc.duration}</span></div>
+      <div class="score-row"><span class="stat-label">Gizlilik</span><span style="font-weight:500;color:var(--text-primary)">${sc.stealth}</span></div>
+    </div>
+  `;
+}
+
+function resetSim2() {
+  s2.atk=null; s2.tgt=null;
+  ['a1','a2','a3'].forEach(id => document.getElementById(id).classList.remove('sel'));
+  ['t1','t2','t3','t4'].forEach(id => document.getElementById(id).classList.remove('sel'));
+  document.getElementById('result-btn').style.display='none';
+  document.getElementById('tl').innerHTML='';
+  goto2(1);
+}
+
+</script>
+</body>
+</html>

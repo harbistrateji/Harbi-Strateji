@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Hibrit Harita — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#ff8c00;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased;overflow:hidden}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:900px;margin:0 auto;padding:8px 16px 8px;height:calc(100vh - 52px);overflow-y:auto}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:14px;margin-bottom:8px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold),var(--cyan))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-red{background:var(--red);color:#fff}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+/* Cephe panelleri */
+.fronts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.front-panel{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:12px;text-align:center;transition:.2s}
+.front-panel.active{border-color:var(--red2);box-shadow:0 0 12px rgba(224,21,21,.3)}
+.front-icon{font-size:28px;margin-bottom:4px}
+.front-name{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;margin-bottom:6px}
+.front-bar-wrap{height:8px;background:var(--panel);border-radius:4px;overflow:hidden;margin-bottom:4px}
+.front-bar{height:100%;border-radius:4px;transition:width .5s}
+.front-val{font-size:10px;color:var(--dim)}
+/* Kaynak havuzu */
+.resources{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.res-chip{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:6px}
+.res-val{font-family:'Chakra Petch',sans-serif;font-weight:700}
+/* Kart havuzu */
+.action-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.action-card{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.action-card:active{transform:scale(.97)}
+.action-card.selected{border-color:var(--gold);background:rgba(201,162,75,.08)}
+.action-card.disabled{opacity:.4;pointer-events:none}
+.ac-icon{font-size:24px;margin-bottom:6px}
+.ac-name{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.ac-desc{font-size:10px;color:var(--dim);line-height:1.5;margin-bottom:6px}
+.ac-cost{font-size:10px;color:var(--gold)}
+.ac-front{font-size:10px;color:var(--red2);margin-top:4px}
+/* Event log */
+.event-log{background:var(--panel2);border-radius:10px;padding:8px;max-height:80px;overflow-y:auto;margin-bottom:8px}
+.event-entry{font-size:10px;line-height:1.8;border-bottom:1px solid var(--line);padding-bottom:2px;margin-bottom:2px}
+.event-entry:last-child{border-bottom:none}
+.event-entry.good{color:var(--green)}
+.event-entry.bad{color:var(--red2)}
+.event-entry.warn{color:var(--gold)}
+/* Timer */
+.ooda-timer{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ooda-phase{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--cyan)}
+.ooda-bar-wrap{flex:1;height:8px;background:var(--panel2);border-radius:4px;overflow:hidden}
+.ooda-bar{height:100%;border-radius:4px;background:var(--cyan);transition:width .5s linear}
+.ooda-secs{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:var(--red2);min-width:28px;text-align:right}
+/* Stat row */
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+.crisis-banner{background:rgba(224,21,21,.1);border:1px solid rgba(224,21,21,.3);border-radius:10px;padding:12px;margin-bottom:12px;font-size:12px;line-height:1.7;display:none}
+.crisis-banner.show{display:block}
+.crisis-banner-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--red2);margin-bottom:4px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🗺️ HİBRİT HARİTA</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">🗺️ Hibrit Harita</div>
+  <div class="card-sub">Üç cephede eş zamanlı savaş: Konvansiyonel, Siber ve Enformasyon. OODA döngüsüyle karar ver. Sınırlı kaynakla tüm cepheleri ayakta tut!</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="hh-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="hh-turn" style="color:var(--cyan)">1/12</div><div class="stat-lbl">TUR</div></div>
+    <div class="stat-box"><div class="stat-val" id="hh-status" style="color:var(--green)">AKTIF</div><div class="stat-lbl">DURUM</div></div>
+  </div>
+  <div class="ooda-timer">
+    <div class="ooda-phase" id="ooda-phase">GÖZLEM</div>
+    <div class="ooda-bar-wrap"><div class="ooda-bar" id="ooda-bar" style="width:100%"></div></div>
+    <div class="ooda-secs" id="ooda-secs">15</div>
+  </div>
+  <div class="fronts" id="fronts">
+    <div class="front-panel" id="fp-0">
+      <div class="front-icon">⚔️</div>
+      <div class="front-name">KONVANSİYONEL</div>
+      <div class="front-bar-wrap"><div class="front-bar" id="fb-0" style="width:70%;background:var(--red2)"></div></div>
+      <div class="front-val" id="fv-0">Tehdit: 70%</div>
+    </div>
+    <div class="front-panel" id="fp-1">
+      <div class="front-icon">💻</div>
+      <div class="front-name">SİBER</div>
+      <div class="front-bar-wrap"><div class="front-bar" id="fb-1" style="width:50%;background:var(--cyan)"></div></div>
+      <div class="front-val" id="fv-1">Tehdit: 50%</div>
+    </div>
+    <div class="front-panel" id="fp-2">
+      <div class="front-icon">📡</div>
+      <div class="front-name">ENFORMASYON</div>
+      <div class="front-bar-wrap"><div class="front-bar" id="fb-2" style="width:40%;background:var(--gold)"></div></div>
+      <div class="front-val" id="fv-2">Tehdit: 40%</div>
+    </div>
+  </div>
+  <div class="resources" id="resources">
+    <div class="res-chip">🪖 <span class="res-val" id="res-mil">5</span> Askerî</div>
+    <div class="res-chip">💻 <span class="res-val" id="res-cyber">5</span> Siber</div>
+    <div class="res-chip">📢 <span class="res-val" id="res-info">5</span> Medya</div>
+    <div class="res-chip">💰 <span class="res-val" id="res-budget">10</span> Bütçe</div>
+  </div>
+  <div class="crisis-banner" id="crisis-banner">
+    <div class="crisis-banner-title">⚠️ KRİZ ALARMI</div>
+    <div id="crisis-text"></div>
+  </div>
+  <div class="action-cards" id="action-cards"></div>
+  <div class="event-log" id="event-log"><div class="event-entry">Hibrit savaş başlıyor. OODA döngüsünü aktive et...</div></div>
+  <button class="btn btn-red" id="hh-btn" onclick="hhStart()">🗺️ SAVAŞI BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var ACTIONS=[
+  {id:'reinforce',icon:'🪖',name:'Takviye Gönder',desc:'Konvansiyonel cepheyi güçlendir',cost:{mil:2},front:0,effect:{front:0,delta:-20},pts:80},
+  {id:'cyber-def',icon:'🛡️',name:'Siber Savunma',desc:'Siber saldırıları engelle',cost:{cyber:2},front:1,effect:{front:1,delta:-25},pts:90},
+  {id:'counter-info',icon:'📢',name:'Karşı Propaganda',desc:'Enformasyon cephesini koru',cost:{info:2},front:2,effect:{front:2,delta:-20},pts:85},
+  {id:'intel',icon:'🔍',name:'İstihbarat',desc:'Tüm cephe tehditlerini %10 azalt',cost:{budget:3},front:-1,effect:{all:true,delta:-10},pts:120},
+  {id:'diplomacy',icon:'🤝',name:'Diplomasi',desc:'Enformasyon tehdidini büyük ölçüde azalt',cost:{info:1,budget:2},front:2,effect:{front:2,delta:-30},pts:100},
+  {id:'drone-strike',icon:'🛸',name:'Drone Saldırısı',desc:'Konvansiyonel tehdidi hızla düşür',cost:{mil:1,budget:2},front:0,effect:{front:0,delta:-30},pts:110},
+  {id:'cyber-attack',icon:'⚡',name:'Siber Saldırı',desc:'Düşman siber kapasitesini zayıflat',cost:{cyber:1,budget:2},front:1,effect:{front:1,delta:-30},pts:110},
+  {id:'media-blitz',icon:'📺',name:'Medya Seferberliği',desc:'Kamuoyu desteğini artır',cost:{info:3},front:2,effect:{front:2,delta:-15},pts:70}
+];
+
+var CRISES=[
+  {text:'Sınırda büyük çaplı saldırı! Konvansiyonel tehdit +30.',effect:{front:0,delta:30}},
+  {text:'Kritik altyapıya siber saldırı! Siber tehdit +35.',effect:{front:1,delta:35}},
+  {text:'Dezenformasyon kampanyası başladı! Enformasyon tehdidi +25.',effect:{front:2,delta:25}},
+  {text:'Çoklu cephe saldırısı! Tüm tehditler +15.',effect:{all:true,delta:15}},
+  {text:'Müttefik geri çekildi! Konvansiyonel tehdit +20.',effect:{front:0,delta:20}},
+  {text:'Siber casusluk tespit edildi! Siber tehdit +20.',effect:{front:1,delta:20}}
+];
+
+var hh={pts:0,turn:0,fronts:[70,50,40],resources:{mil:5,cyber:5,info:5,budget:10},running:false,timer:null,secs:15,phase:0,selected:null};
+var PHASES=['GÖZLEM','YÖNELİM','KARAR','EYLEM'];
+
+function hhStart(){
+  hh={pts:0,turn:0,fronts:[70,50,40],resources:{mil:5,cyber:5,info:5,budget:10},running:true,timer:null,secs:15,phase:0,selected:null};
+  document.getElementById('hh-btn').style.display='none';
+  document.getElementById('event-log').innerHTML='<div class="event-entry">Hibrit savaş başlıyor...</div>';
+  hhNextTurn();
+}
+
+function hhNextTurn(){
+  if(hh.turn>=12){hhEnd();return;}
+  hh.turn++;
+  hh.selected=null;
+  // Tehdit artışı
+  hh.fronts=hh.fronts.map(function(v){return Math.min(100,v+Math.floor(Math.random()*8)+3);});
+  // Kriz kontrolü
+  if(hh.turn%3===0){
+    var crisis=CRISES[Math.floor(Math.random()*CRISES.length)];
+    applyEffect(crisis.effect);
+    showCrisis(crisis.text);
+    addLog('⚠️ KRİZ: '+crisis.text,'bad');
+  }else{
+    document.getElementById('crisis-banner').classList.remove('show');
+  }
+  // Kaynak yenileme
+  if(hh.turn%4===0){
+    hh.resources.mil=Math.min(10,hh.resources.mil+2);
+    hh.resources.cyber=Math.min(10,hh.resources.cyber+2);
+    hh.resources.info=Math.min(10,hh.resources.info+2);
+    hh.resources.budget=Math.min(15,hh.resources.budget+3);
+    addLog('📦 Kaynaklar yenilendi.','good');
+  }
+  // Kaybetme kontrolü
+  if(hh.fronts.some(function(v){return v>=100;})){
+    hhGameOver();return;
+  }
+  updateDisplay();
+  renderActions();
+  startOODA();
+}
+
+function applyEffect(effect){
+  if(effect.all){
+    hh.fronts=hh.fronts.map(function(v){return Math.max(0,Math.min(100,v+effect.delta));});
+  }else if(effect.front>=0){
+    hh.fronts[effect.front]=Math.max(0,Math.min(100,hh.fronts[effect.front]+effect.delta));
+  }
+}
+
+function showCrisis(text){
+  var cb=document.getElementById('crisis-banner');
+  document.getElementById('crisis-text').textContent=text;
+  cb.classList.add('show');
+}
+
+function startOODA(){
+  hh.phase=0;
+  hh.secs=15;
+  if(hh.timer)clearInterval(hh.timer);
+  updateOODA();
+  hh.timer=setInterval(function(){
+    hh.secs--;
+    updateOODA();
+    if(hh.secs<=0){
+      clearInterval(hh.timer);
+      // Otomatik en iyi kart seç
+      if(!hh.selected){
+        var maxFront=hh.fronts.indexOf(Math.max.apply(null,hh.fronts));
+        var bestCard=ACTIONS.find(function(a){return (a.front===maxFront||a.effect&&a.effect.all)&&canAfford(a);});
+        if(bestCard)hhPlay(bestCard.id);
+        else hhNextTurn();
+      }
+    }
+  },1000);
+}
+
+function updateOODA(){
+  var phases=PHASES;
+  var phaseIdx=Math.floor((15-hh.secs)/4);
+  phaseIdx=Math.min(3,phaseIdx);
+  document.getElementById('ooda-phase').textContent=phases[phaseIdx];
+  document.getElementById('ooda-secs').textContent=hh.secs;
+  var pct=(hh.secs/15)*100;
+  var bar=document.getElementById('ooda-bar');
+  bar.style.width=pct+'%';
+  bar.style.background=hh.secs>10?'var(--cyan)':hh.secs>5?'var(--gold)':'var(--red2)';
+}
+
+function canAfford(action){
+  return Object.keys(action.cost).every(function(k){return hh.resources[k]>=action.cost[k];});
+}
+
+function renderActions(){
+  var html=ACTIONS.map(function(a){
+    var affordable=canAfford(a);
+    var costStr=Object.entries(a.cost).map(function(e){return e[1]+' '+e[0];}).join(', ');
+    return '<div class="action-card'+(affordable?'':' disabled')+'" id="ac-'+a.id+'" onclick="hhPlay(\''+a.id+'\')">'+
+      '<div class="ac-icon">'+a.icon+'</div>'+
+      '<div class="ac-name">'+a.name+'</div>'+
+      '<div class="ac-desc">'+a.desc+'</div>'+
+      '<div class="ac-cost">Maliyet: '+costStr+'</div>'+
+      '<div class="ac-front">+'+a.pts+' puan</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('action-cards').innerHTML=html;
+}
+
+function hhPlay(actionId){
+  if(!hh.running)return;
+  var action=ACTIONS.find(function(a){return a.id===actionId;});
+  if(!action||!canAfford(action))return;
+  if(hh.timer)clearInterval(hh.timer);
+  // Kaynakları harca
+  Object.keys(action.cost).forEach(function(k){hh.resources[k]-=action.cost[k];});
+  // Efekti uygula
+  applyEffect(action.effect);
+  hh.pts+=action.pts;
+  hh.selected=actionId;
+  addLog('✅ '+action.name+' uygulandı. +'+action.pts+' puan','good');
+  updateDisplay();
+  document.getElementById('hh-pts').textContent=hh.pts;
+  document.getElementById('hdr-pts').textContent='⭐ '+hh.pts;
+  beepWin();
+  setTimeout(hhNextTurn,800);
+}
+
+function updateDisplay(){
+  document.getElementById('hh-turn').textContent=hh.turn+'/12';
+  document.getElementById('hh-pts').textContent=hh.pts;
+  document.getElementById('hdr-pts').textContent='⭐ '+hh.pts;
+  ['mil','cyber','info','budget'].forEach(function(k){
+    document.getElementById('res-'+k).textContent=hh.resources[k];
+  });
+  hh.fronts.forEach(function(v,i){
+    var bar=document.getElementById('fb-'+i);
+    bar.style.width=v+'%';
+    var color=v>75?'var(--red2)':v>50?'var(--gold)':'var(--green)';
+    bar.style.background=color;
+    document.getElementById('fv-'+i).textContent='Tehdit: '+v+'%';
+    var panel=document.getElementById('fp-'+i);
+    panel.className='front-panel'+(v>75?' active':'');
+  });
+  var maxThreat=Math.max.apply(null,hh.fronts);
+  var status=maxThreat>80?'KRİTİK':maxThreat>60?'TEHLİKE':'KONTROL';
+  var statusEl=document.getElementById('hh-status');
+  statusEl.textContent=status;
+  statusEl.style.color=maxThreat>80?'var(--red2)':maxThreat>60?'var(--gold)':'var(--green)';
+}
+
+function addLog(msg,cls){
+  var log=document.getElementById('event-log');
+  var div=document.createElement('div');
+  div.className='event-entry'+(cls?' '+cls:'');
+  div.textContent=msg;
+  log.insertBefore(div,log.firstChild);
+  if(log.children.length>8)log.removeChild(log.lastChild);
+}
+
+function hhGameOver(){
+  hh.running=false;
+  if(hh.timer)clearInterval(hh.timer);
+  document.getElementById('hh-status').textContent='ÇÖKTÜ';
+  document.getElementById('hh-status').style.color='var(--red2)';
+  document.getElementById('hh-btn').style.display='';
+  document.getElementById('hh-btn').textContent='🔄 TEKRAR';
+  addLog('💀 Cephe çöktü! Toplam: '+hh.pts+' puan','bad');
+  saveScore();beepFail();
+}
+
+function hhEnd(){
+  hh.running=false;
+  if(hh.timer)clearInterval(hh.timer);
+  document.getElementById('hh-status').textContent='ZAFER';
+  document.getElementById('hh-status').style.color='var(--gold)';
+  document.getElementById('hh-btn').style.display='';
+  document.getElementById('hh-btn').textContent='🔄 TEKRAR';
+  addLog('🏆 12 tur tamamlandı! Toplam: '+hh.pts+' puan','good');
+  saveScore();beepWin();
+}
+
+function saveScore(){
+  try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['hibrit-harita']=(s['hibrit-harita']||0)+hh.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}
+}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

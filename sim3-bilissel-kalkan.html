@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Bilişsel <em>Kalkan</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Bilişsel <em>Kalkan</em></h1>
+  <p class="lead">Dezenformasyon saldırılarına karşı toplumsal dayanıklılık simülasyonu — Bilişsel bağışıklık sistemini test edin.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">5</span><span class="lbl">Katman</span></div><div class="hero-stat"><span class="num">100M</span><span class="lbl">Nüfus</span></div><div class="hero-stat"><span class="num">72s</span><span class="lbl">Yayılma</span></div><div class="hero-stat"><span class="num">3</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+        
+        
+        <!-- SKOR -->
+        <div class="score-bar" id="score-bar">
+            <div class="score-item"><div class="score-value" style="color:#C9A24B;" id="round-num">1/7</div><div class="score-label">ROUND</div></div>
+            <div class="score-item"><div class="score-value" style="color:#00C48C;" id="correct-score">0</div><div class="score-label">DOĞRU</div></div>
+            <div class="score-item"><div class="score-value" style="color:#ff3a4a;" id="wrong-score">0</div><div class="score-label">YANLIŞ</div></div>
+            <div class="score-item"><div class="score-value" style="color:#00E0FF;" id="credibility">100%</div><div class="score-label">İNANILIRLIK</div></div>
+        </div>
+        
+        <!-- OYUN ALANI -->
+        <div id="game-area">
+            <div class="panel" id="tweet-panel">
+                <div class="panel-title">📱 TRUMP'IN AÇIKLAMASI</div>
+                <div class="tweet-card" id="tweet-card">
+                    <div class="tweet-header">
+                        <div class="tweet-avatar">🇺🇸</div>
+                        <div><div class="tweet-name">Donald J. Trump</div><div class="tweet-handle">@realDonaldTrump</div></div>
+                    </div>
+                    <div class="tweet-body" id="tweet-body">Yükleniyor...</div>
+                    <div class="tweet-date" id="tweet-date"></div>
+                    <div class="tweet-metrics">💬 12.4K &nbsp; 🔄 45.2K &nbsp; ❤️ 234K</div>
+                </div>
+            </div>
+            
+            <div class="panel" id="question-panel">
+                <div class="panel-title">🔍 GERÇEKLİK DEDEKTİFİ: Bu söylem doğru mu?</div>
+                <p id="question-text" style="font-size:0.9em; color:#aabbcc; margin-bottom:15px;"></p>
+                <div class="fact-check" id="fact-buttons"></div>
+            </div>
+            
+            <div class="panel hidden" id="explanation-panel">
+                <div class="panel-title" id="exp-title">📋 ANALİZ</div>
+                <div id="exp-body"></div>
+                <button class="btn btn-primary" onclick="nextRound()" style="margin-top:15px;">➡️ SONRAKİ</button>
+            </div>
+        </div>
+        
+        <!-- SONUÇ -->
+        <div id="final-panel" class="panel hidden">
+            <div class="panel-title">📊 BİLİŞSEL SAVAŞ SONUÇ RAPORU</div>
+            <div id="final-body"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        const challenges = [
+            {
+                tweet: "İran savaşı birkaç gün içinde bitecek. Onlar anlaşma istiyor, biz de istiyoruz. Çok yakında!",
+                date: "28 Şubat 2026",
+                question: "Trump bu açıklamayı yaptığında savaş kaç gündür sürüyordu?",
+                options: [
+                    { text: "3 gün", correct: false },
+                    { text: "7 gün", correct: true },
+                    { text: "1 gün", correct: false },
+                    { text: "Henüz başlamamıştı", correct: false }
+                ],
+                explanation: "Savaş 21 Şubat'ta başladı. Trump'ın bu açıklaması 7. günde yapıldı. Ancak savaş 105+ gün sürdü.",
+                data: "Gerçek: Savaş 21 Şubat - 11 Haziran 2026 (105+ gün) devam etti.",
+                category: "Zaman Çarpıtması"
+            },
+            {
+                tweet: "İran'ın hava savunması tamamen yok edildi. Artık hiçbir kapasiteleri kalmadı!",
+                date: "15 Mart 2026",
+                question: "İran'ın füze kapasitesi gerçekten 'tamamen yok' edildi mi?",
+                options: [
+                    { text: "Evet, tamamen yok edildi", correct: false },
+                    { text: "Hayır, dağınık/mobil sistemler aktif", correct: true },
+                    { text: "Sadece %50 yok edildi", correct: false },
+                    { text: "Veri yok, bilinmiyor", correct: false }
+                ],
+                explanation: "İran'ın mobil fırlatıcıları, yeraltı tünelleri ve dağınık dron üretim tesisleri nedeniyle 'tamamen yok etme' fiziksel olarak imkansızdır. Koyuncu'nun 'sol kaydırma' (left of launch) problemi.",
+                data: "Gerçek: İran, savaş boyunca 3000+ dron ve 500+ füze fırlattı. Kapasite 'yok' olmadı.",
+                category: "Abartılı Zafer İlanı"
+            },
+            {
+                tweet: "Demir Kubbe %99 başarılı! Düşman füzeleri hiçbir hasar veremedi!",
+                date: "8 Mart 2026",
+                question: "Hava savunma sistemlerinin gerçek önleme oranı nedir?",
+                options: [
+                    { text: "%99 (Trump'ın iddiası)", correct: false },
+                    { text: "%85-90 (resmi rakam)", correct: false },
+                    { text: "%70-80 (bağımsız tahmin)", correct: true },
+                    { text: "%50 altı", correct: false }
+                ],
+                explanation: "Koyuncu'nun Wilkening Modeli: Doygunluk saldırılarında önleme oranı düşer. %90 bile olsa, 100 füzeden 10'u sızar. Ayrıca enkaz hasarı (%10-15 sivil hasar) hesaba katılmaz.",
+                data: "Formül: P_leak = 1 - (0.9)^N, N=1 ise %10 sızıntı. Doygunlukta çok daha yüksek.",
+                category: "İstatistik Manipülasyonu"
+            },
+            {
+                tweet: "Anlaşma masasına oturuyoruz. İran teslim olacak. En büyük zafer!",
+                date: "22 Mart 2026",
+                question: "Bu tarihte gerçekten müzakere masası kuruldu mu?",
+                options: [
+                    { text: "Evet, resmi müzakereler başladı", correct: false },
+                    { text: "Hayır, İran reddetti", correct: false },
+                    { text: "Sadece dolaylı temas (Umman kanalı)", correct: true },
+                    { text: "BM arabuluculuğu vardı", correct: false }
+                ],
+                explanation: "Trump'ın 'anlaşma masası' söylemi, gerçekte sadece Umman üzerinden dolaylı temas anlamına geliyordu. Resmi müzakere hiçbir zaman başlamadı. Bu, bilişsel savaşın 'performatif gerçeklik' boyutudur.",
+                data: "Gerçek: CNN kaynağına göre anlaşma 37 kez 'yakın' ilan edildi, hiçbiri gerçekleşmedi.",
+                category: "Performatif Gerçeklik"
+            },
+            {
+                tweet: "Bu savaş bize hiçbir şeye mal olmuyor. İran ekonomisi çöktü, bizimki güçlü!",
+                date: "5 Nisan 2026",
+                question: "ABD'nin günlük savaş maliyeti ne kadardır?",
+                options: [
+                    { text: "Günlük $50 milyon", correct: false },
+                    { text: "Günlük $300-500 milyon", correct: true },
+                    { text: "Günlük $1 milyar", correct: false },
+                    { text: "Maliyet yok (müttefikler ödüyor)", correct: false }
+                ],
+                explanation: "Koyuncu'nun maliyet asimetrisi: ABD günde $300-500M harcarken, İran'ın dron maliyeti günde $5-10M. 30.000$'lık Şahid dronunu düşürmek için 2M$'lık Patriot kullanılıyor. Asimetri 60:1.",
+                data: "Maliyet Asimetrisi: Patriot ($2M) vs Şahid ($30K) = 66:1 oran. 105 gün × $400M = $42 Milyar+",
+                category: "Maliyet Gizleme"
+            },
+            {
+                tweet: "İran halkı bizim yanımızda! Rejim günlerini sayıyor!",
+                date: "18 Nisan 2026",
+                question: "Savaş döneminde İran halkının rejime desteği ne yönde değişti?",
+                options: [
+                    { text: "Destek düştü (Trump haklı)", correct: false },
+                    { text: "Destek arttı (rally-around-the-flag)", correct: true },
+                    { text: "Değişmedi", correct: false },
+                    { text: "Veri yok", correct: false }
+                ],
+                explanation: "Savaş dönemlerinde 'bayrak etrafında toplanma' (rally-around-the-flag) etkisi evrenseldir. Dış saldırı altındaki halklar rejimlerine daha fazla destek verir. Bu, bilişsel savaşın temel paradoksudur.",
+                data: "Tarihsel örnek: 2003 Irak savaşında Saddam'a destek %30→%65'e çıktı. İran'da benzer etki.",
+                category: "Bilişsel Paradoks"
+            },
+            {
+                tweet: "Savaş BİTTİ! Büyük zafer! Amerika yine kazandı!",
+                date: "9 Haziran 2026",
+                question: "Bu tarihte savaş gerçekten bitti mi?",
+                options: [
+                    { text: "Evet, ateşkes imzalandı", correct: false },
+                    { text: "Hayır, çatışmalar sürüyor", correct: true },
+                    { text: "Kısmen - sadece hava operasyonları durdu", correct: false },
+                    { text: "BM kararıyla durdu", correct: false }
+                ],
+                explanation: "CBS News'e göre Trump 37 kez 'bitti/bitecek' dedi. 9 Haziran itibariyle hâlâ resmi bir anlaşma yok. Bu, 'söylemsel abartı'nın (performatif gerçeklik) en net örneğidir. Söylem gerçekliği değiştirmez.",
+                data: "105 gün | 37 'yarın biter' vaadi | 0 resmi anlaşma. Söylem ≠ Gerçeklik.",
+                category: "Söylem-Gerçeklik Uçurumu"
+            }
+        ];
+        
+        let gameState = { round: 0, correct: 0, wrong: 0, credibility: 100 };
+        
+        function init() {
+            loadRound();
+        }
+        
+        function loadRound() {
+            if (gameState.round >= challenges.length) {
+                showFinal();
+                return;
+            }
+            
+            const c = challenges[gameState.round];
+            document.getElementById('round-num').textContent = `${gameState.round + 1}/${challenges.length}`;
+            document.getElementById('tweet-body').textContent = `"${c.tweet}"`;
+            document.getElementById('tweet-date').textContent = c.date;
+            document.getElementById('question-text').textContent = c.question;
+            document.getElementById('explanation-panel').classList.add('hidden');
+            document.getElementById('question-panel').classList.remove('hidden');
+            
+            const btnArea = document.getElementById('fact-buttons');
+            btnArea.innerHTML = '';
+            c.options.forEach((opt, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'fact-btn';
+                btn.innerHTML = `<div class="icon">${opt.correct ? '' : ''}${['A','B','C','D'][i]}</div><div class="label">${opt.text}</div>`;
+                btn.onclick = () => checkAnswer(i, opt.correct);
+                btnArea.appendChild(btn);
+            });
+        }
+        
+        function checkAnswer(index, isCorrect) {
+            const c = challenges[gameState.round];
+            const buttons = document.querySelectorAll('.fact-btn');
+            
+            buttons.forEach((btn, i) => {
+                btn.style.pointerEvents = 'none';
+                if (c.options[i].correct) btn.classList.add('true-claim');
+                else if (i === index && !isCorrect) btn.classList.add('false-claim');
+            });
+            
+            if (isCorrect) {
+                gameState.correct++;
+                document.getElementById('correct-score').textContent = gameState.correct;
+            } else {
+                gameState.wrong++;
+                gameState.credibility = Math.max(0, gameState.credibility - 15);
+                document.getElementById('wrong-score').textContent = gameState.wrong;
+                document.getElementById('credibility').textContent = gameState.credibility + '%';
+            }
+            
+            // Açıklama göster
+            setTimeout(() => {
+                document.getElementById('question-panel').classList.add('hidden');
+                document.getElementById('explanation-panel').classList.remove('hidden');
+                document.getElementById('exp-title').textContent = `${isCorrect ? '✅' : '❌'} ${c.category}`;
+                document.getElementById('exp-body').innerHTML = `
+                    <p style="margin-bottom:10px;">${c.explanation}</p>
+                    <div class="data-card">
+                        <h4>📊 Sahadaki Veri</h4>
+                        <p>${c.data}</p>
+                    </div>
+                    <div class="formula-box">
+                        <strong>Koyuncu Kanunu:</strong> "${c.category}" — Bilişsel savaşta söylem, gerçekliği tarif etmez; kendi gerçekliğini inşa etmeye çalışır. Ancak fiziksel sınırlar (maliyet, zaman, kapasite) söylemi çürütür.
+                    </div>
+                `;
+            }, 1000);
+        }
+        
+        function nextRound() {
+            gameState.round++;
+            loadRound();
+        }
+        
+        function showFinal() {
+            document.getElementById('game-area').classList.add('hidden');
+            document.getElementById('score-bar').classList.add('hidden');
+            document.getElementById('final-panel').classList.remove('hidden');
+            
+            let grade = gameState.correct >= 6 ? 'A' : gameState.correct >= 4 ? 'B' : gameState.correct >= 2 ? 'C' : 'D';
+            let title = gameState.correct >= 5 ? '🛡️ BİLİŞSEL KALKANINIZ GÜÇLÜ!' : gameState.correct >= 3 ? '⚠️ DİKKATLİ OLUN' : '🚨 BİLİŞSEL SAVUNMANIZ ZAYIF';
+            
+            document.getElementById('final-body').innerHTML = `
+                <h2 style="text-align:center; color:${gameState.correct >= 5 ? '#00C48C' : '#ff3a4a'}; margin-bottom:20px;">${title}</h2>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:20px;">
+                    <div style="background:#16202d; padding:15px; border-radius:8px; text-align:center;">
+                        <div style="font-size:2em; color:#00C48C;">${gameState.correct}/7</div>
+                        <div style="font-size:0.8em; color:#8899aa;">Doğru</div>
+                    </div>
+                    <div style="background:#16202d; padding:15px; border-radius:8px; text-align:center;">
+                        <div style="font-size:2em; color:#C9A24B;">${grade}</div>
+                        <div style="font-size:0.8em; color:#8899aa;">Not</div>
+                    </div>
+                    <div style="background:#16202d; padding:15px; border-radius:8px; text-align:center;">
+                        <div style="font-size:2em; color:#ff9a3c;">${gameState.credibility}%</div>
+                        <div style="font-size:0.8em; color:#8899aa;">İnanılırlık</div>
+                    </div>
+                </div>
+                
+                <div class="data-card">
+                    <h4>🎯 TRUMP PARADOKSU ÖZETİ</h4>
+                    <p>105 gün boyunca 37 kez "yarın biter" diyen bir lider, bilişsel savaşın en temel kuralını ihlal etti: <strong>Söylem, sahadaki fizikle uyumsuz olduğunda inanılırlık çöker.</strong></p>
+                </div>
+                
+                <div class="formula-box">
+                    <strong>5 Katmanlı Egemenlik Modeli (Koyuncu):</strong><br><br>
+                    1. Coğrafya → İran fiziksel olarak direniyor ✓<br>
+                    2. Altyapı → Koalisyon lojistik zorlanıyor ✓<br>
+                    3. Veri → İstihbarat fazlalığı krizi ✓<br>
+                    4. Algoritma → OODA-X geçişi zorunlu ✓<br>
+                    5. Biliş → Trump söylemi çöktü ✓<br><br>
+                    <strong>Sonuç: 5 katmanın 5'inde de sorun var = Savaş bitmez.</strong>
+                </div>
+                
+                <h3 style="color:#C9A24B; margin:20px 0 10px;">📅 KRONOLOJİ: 37 VAAT</h3>
+                <div class="timeline">
+                    <div class="timeline-item failed"><div class="timeline-date">28 Şubat</div><div class="timeline-text">"Birkaç gün içinde biter"</div></div>
+                    <div class="timeline-item failed"><div class="timeline-date">5 Mart</div><div class="timeline-text">"Bu hafta anlaşma olacak"</div></div>
+                    <div class="timeline-item failed"><div class="timeline-date">12 Mart</div><div class="timeline-text">"Çok yakınız, neredeyse bitti"</div></div>
+                    <div class="timeline-item failed"><div class="timeline-date">22 Mart</div><div class="timeline-text">"Masaya oturuyoruz"</div></div>
+                    <div class="timeline-item failed"><div class="timeline-date">5 Nisan</div><div class="timeline-text">"Günler meselesi"</div></div>
+                    <div class="timeline-item failed"><div class="timeline-date">20 Nisan</div><div class="timeline-text">"Nisan'da biter"</div></div>
+                    <div class="timeline-item failed"><div class="timeline-date">15 Mayıs</div><div class="timeline-text">"Haziran'dan önce kesin"</div></div>
+                    <div class="timeline-item failed"><div class="timeline-date">9 Haziran</div><div class="timeline-text">"BİTTİ!" (bitmedi)</div></div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="location.reload()" style="margin-top:20px;">🔄 YENİDEN OYNA</button>
+                <button class="btn btn-secondary" onclick="window.location='index.html'">← ANA MENÜ</button>
+            `;
+        }
+        
+        // Başlat
+        init();
+    
+(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();
+</script>
+</body>
+</html>

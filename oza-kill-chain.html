@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Kill-Chain Yarışı — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;overflow-x:hidden}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:54px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none;padding:5px 12px;border:1px solid var(--line);border-radius:6px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;flex:1;text-align:center;color:var(--red)}
+.hdr-pts{font-size:12px;color:var(--gold);font-weight:600}
+.main{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:70px 16px 80px}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
+.sv{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700}
+.sl{font-size:9px;color:var(--dim);text-transform:uppercase;margin-top:2px}
+.stage-badge{text-align:center;margin-bottom:14px}
+.stage-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:20px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;border:1px solid}
+/* Game area */
+.game-canvas-wrap{position:relative;margin-bottom:14px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+canvas#game{display:block;width:100%;background:#060d14}
+.chain-steps{display:flex;gap:6px;margin-bottom:14px;justify-content:center;flex-wrap:wrap}
+.step{padding:8px 14px;border-radius:8px;border:2px solid var(--line);font-size:11px;font-weight:700;font-family:'Chakra Petch',sans-serif;color:var(--dim);transition:.2s;cursor:default}
+.step.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,224,255,.08);animation:pulse .6s infinite alternate}
+.step.done{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06)}
+.step.fail{border-color:var(--red);color:var(--red);background:rgba(224,21,21,.08)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,224,255,.3)}100%{box-shadow:0 0 0 8px rgba(0,224,255,0)}}
+.action-area{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.action-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);margin-bottom:8px}
+.action-desc{font-size:12px;color:var(--dim);margin-bottom:12px;line-height:1.7}
+.action-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:400px){.action-btns{grid-template-columns:1fr}}
+.action-btn{padding:12px 8px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--tx);font-size:11px;font-weight:600;cursor:pointer;transition:.15s;text-align:left;font-family:'IBM Plex Mono',monospace}
+.action-btn:active{transform:scale(.97)}
+.action-btn.correct{border-color:var(--green)!important;background:rgba(0,255,136,.1)!important}
+.action-btn.wrong{border-color:var(--red)!important;background:rgba(224,21,21,.1)!important}
+.action-btn:disabled{opacity:.5;cursor:not-allowed}
+.feedback{text-align:center;font-size:13px;min-height:22px;margin-bottom:10px;font-weight:600}
+.timer-bar{height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.timer-fill{height:100%;background:var(--cyan);border-radius:3px;transition:width .1s linear}
+.overlay{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;text-align:center}
+.ov-score{font-family:'Chakra Petch',sans-serif;font-size:48px;font-weight:700;color:var(--cyan);margin-bottom:8px}
+.btn-main{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:var(--red);color:#fff;margin-bottom:8px}
+.btn-sec{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:13px;cursor:pointer;background:transparent;color:var(--dim);margin-bottom:8px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">⚡ KILL-CHAIN YARIŞI</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="main">
+  <div class="stats-bar">
+    <div class="sbox"><div class="sv" id="s-pts" style="color:var(--cyan)">0</div><div class="sl">PUAN</div></div>
+    <div class="sbox"><div class="sv" id="s-stage" style="color:var(--gold)">1/3</div><div class="sl">AŞAMA</div></div>
+    <div class="sbox"><div class="sv" id="s-chain" style="color:var(--green)">0</div><div class="sl">ZİNCİR</div></div>
+    <div class="sbox"><div class="sv" id="s-time" style="color:var(--red)">—</div><div class="sl">SÜRE</div></div>
+  </div>
+  <div class="stage-badge" id="stage-badge"></div>
+  <div class="game-canvas-wrap"><canvas id="game" height="200"></canvas></div>
+  <div class="chain-steps" id="chain-steps"></div>
+  <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+  <div class="action-area" id="action-area"></div>
+  <div class="feedback" id="feedback"></div>
+</div>
+
+<script>
+var STAGES = [
+  {
+    label:'AŞAMA 1 — KLASİK KILL-CHAIN',color:'var(--green)',
+    timeLimit:15,rounds:6,
+    steps:['KEŞFET','TANIMLA','İZLE','HEDEFLE','VURMA KARAR','VURMA DEĞERLENDİR'],
+    scenarios:[
+      {title:'Zırhlı Araç Tespiti',desc:'Keşif dronu zırhlı araç konvoyunu tespit etti. Kill-chain\'in doğru sırasını uygula.',
+       q:'Keşiften sonra hangi adım gelir?',
+       options:['A) Hemen vur','B) Tanımla ve doğrula','C) Geri çekil','D) Komutana sor'],
+       correct:1,pts:100,note:'Doğru! Tanımlama olmadan vurma hatalı hedef riski yaratır.'},
+      {title:'Komuta Merkezi Hedefi',desc:'Radar sistemi düşman komuta merkezini tespit etti. 8 dakikalık hedefleme penceresi var.',
+       q:'Zaman baskısı altında en kritik adım hangisi?',
+       options:['A) Hemen ateş','B) Sivil kayıp değerlendirmesi','C) Yakıt kontrolü','D) Hava durumu'],
+       correct:1,pts:120,note:'Doğru! IHL gereği sivil kayıp değerlendirmesi zorunlu.'}
+    ]
+  },
+  {
+    label:'AŞAMA 2 — DRONE KILL-CHAIN (SANİYELER)',color:'var(--gold)',
+    timeLimit:10,rounds:8,
+    steps:['SENSOR','FÜZYON','YZ ANALİZ','ONAY','VURMA','DEĞERLENDİR'],
+    scenarios:[
+      {title:'FPV Drone Saldırısı',desc:'FPV drone hedefi kilitliyor. Geleneksel kill-chain saniyelerden dakikalara uzuyor. YZ destekli sistem devrede.',
+       q:'YZ hedef önerdi. İnsan operatörün rolü ne olmalı?',
+       options:['A) YZ\'ye tam yetki ver','B) İnsan onayı zorunlu','C) Rastgele seç','D) İptal et'],
+       correct:1,pts:150,note:'Doğru! İnsan kontrolü IHL ve etik açıdan zorunlu.'},
+      {title:'Swarm Koordinasyonu',desc:'20 drone\'luk sürü koordineli saldırı yapıyor. Her drone saniyeler içinde karar veriyor.',
+       q:'Swarm\'da hangi iletişim mimarisi en dayanıklı?',
+       options:['A) Merkezi komuta','B) Dağıtık ağ (mesh)','C) Tek drone komutanı','D) Radyo sessizliği'],
+       correct:1,pts:160,note:'Doğru! Mesh ağı tek nokta arızasına karşı dayanıklı.'}
+    ]
+  },
+  {
+    label:'AŞAMA 3 — OTONOMİ SINIRI (ms)',color:'var(--red)',
+    timeLimit:7,rounds:10,
+    steps:['DETECT','CLASSIFY','DECIDE','ENGAGE','ASSESS','REPORT'],
+    scenarios:[
+      {title:'Otonom Karar Anı',desc:'Sistem 300ms içinde karar vermek zorunda. İnsan döngüde kalamıyor. Etik sınır nerede?',
+       q:'Otonom silah sistemi için en kritik kısıtlama hangisi?',
+       options:['A) Hız sınırı','B) Anlamlı insan kontrolü','C) Batarya ömrü','D) Gürültü seviyesi'],
+       correct:1,pts:200,note:'Doğru! "Meaningful human control" uluslararası hukukun temel ilkesi.'},
+      {title:'Fiber-Optik Drone',desc:'Jammer-proof fiber-optik kablolu drone. Elektronik harp etkisiz. Operatör 5km uzakta.',
+       q:'Fiber-optik drone\'un temel avantajı nedir?',
+       options:['A) Daha hızlı','B) Jamming\'e karşı bağışık','C) Daha ucuz','D) Daha sessiz'],
+       correct:1,pts:180,note:'Doğru! Elektromanyetik bozucu etkisiz kalıyor.'}
+    ]
+  }
+];
+
+var stage=0, round=0, pts=0, chainCount=0, timer=null, timeLeft=0, answered=false;
+
+function startStage() {
+  round=0; answered=false;
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  renderStageBadge(); renderChainSteps(); nextRound();
+}
+
+function renderStageBadge() {
+  var s=STAGES[stage];
+  document.getElementById('stage-badge').innerHTML=
+    '<div class="stage-pill" style="border-color:'+s.color+';color:'+s.color+'">'+s.label+'</div>';
+}
+
+function renderChainSteps(activeIdx) {
+  var s=STAGES[stage];
+  var html='';
+  s.steps.forEach(function(step,i){
+    var cls='step';
+    if(i===activeIdx)cls+=' active';
+    else if(activeIdx!==undefined&&i<activeIdx)cls+=' done';
+    html+='<div class="'+cls+'">'+step+'</div>';
+  });
+  document.getElementById('chain-steps').innerHTML=html;
+}
+
+// Canvas animation
+var gCanvas=document.getElementById('game');
+var gCtx=gCanvas.getContext('2d');
+var gW,gH;
+function resizeGame(){gW=gCanvas.offsetWidth;gH=200;gCanvas.width=gW;gCanvas.height=gH;}
+resizeGame();window.addEventListener('resize',resizeGame);
+
+var drone={x:30,y:gH/2,vx:2,vy:0,trail:[]};
+var target={x:gW-60,y:gH/2,hit:false,hitTimer:0};
+var missile={active:false,x:0,y:0,vx:0,vy:0};
+var gFrame=0;
+
+function drawGame(){
+  gCtx.clearRect(0,0,gW,gH);
+  // BG
+  gCtx.fillStyle='#060d14';gCtx.fillRect(0,0,gW,gH);
+  // Grid
+  gCtx.strokeStyle='rgba(0,224,255,0.04)';gCtx.lineWidth=1;
+  for(var x=0;x<gW;x+=30){gCtx.beginPath();gCtx.moveTo(x,0);gCtx.lineTo(x,gH);gCtx.stroke();}
+  for(var y=0;y<gH;y+=30){gCtx.beginPath();gCtx.moveTo(0,y);gCtx.lineTo(gW,y);gCtx.stroke();}
+
+  // Drone trail
+  drone.trail.push({x:drone.x,y:drone.y});
+  if(drone.trail.length>20)drone.trail.shift();
+  drone.trail.forEach(function(p,i){
+    var a=i/drone.trail.length*0.4;
+    gCtx.beginPath();gCtx.arc(p.x,p.y,2,0,Math.PI*2);
+    gCtx.fillStyle='rgba(0,224,255,'+a+')';gCtx.fill();
+  });
+
+  // Drone
+  drone.y=gH/2+Math.sin(gFrame*0.05)*30;
+  gCtx.beginPath();gCtx.arc(drone.x,drone.y,7,0,Math.PI*2);
+  gCtx.fillStyle='#c41e3a';gCtx.fill();
+  gCtx.beginPath();gCtx.arc(drone.x,drone.y,12,0,Math.PI*2);
+  gCtx.strokeStyle='rgba(0,224,255,0.3)';gCtx.lineWidth=1;gCtx.stroke();
+
+  // Target
+  if(!target.hit){
+    gCtx.beginPath();gCtx.arc(target.x,target.y,10,0,Math.PI*2);
+    gCtx.fillStyle='#C9A24B';gCtx.fill();
+    // Crosshair
+    gCtx.strokeStyle='rgba(201,162,75,0.5)';gCtx.lineWidth=1;
+    gCtx.beginPath();gCtx.moveTo(target.x-20,target.y);gCtx.lineTo(target.x+20,target.y);gCtx.stroke();
+    gCtx.beginPath();gCtx.moveTo(target.x,target.y-20);gCtx.lineTo(target.x,target.y+20);gCtx.stroke();
+    gCtx.beginPath();gCtx.arc(target.x,target.y,18,0,Math.PI*2);
+    gCtx.strokeStyle='rgba(201,162,75,0.2)';gCtx.stroke();
+  } else {
+    target.hitTimer++;
+    var r=target.hitTimer*2;
+    gCtx.beginPath();gCtx.arc(target.x,target.y,r,0,Math.PI*2);
+    gCtx.strokeStyle='rgba(224,21,21,'+(1-target.hitTimer/30)+')';gCtx.lineWidth=2;gCtx.stroke();
+    if(target.hitTimer>30){target.hit=false;target.hitTimer=0;target.x=gW*0.5+Math.random()*gW*0.3;target.y=30+Math.random()*(gH-60);}
+  }
+
+  // Missile
+  if(missile.active){
+    missile.x+=missile.vx;missile.y+=missile.vy;
+    gCtx.beginPath();gCtx.arc(missile.x,missile.y,4,0,Math.PI*2);
+    gCtx.fillStyle='#E01515';gCtx.fill();
+    var dx=target.x-missile.x,dy=target.y-missile.y;
+    if(Math.sqrt(dx*dx+dy*dy)<15){missile.active=false;target.hit=true;}
+    if(missile.x>gW||missile.y<0||missile.y>gH)missile.active=false;
+  }
+
+  // Kill-chain line
+  if(!missile.active&&!target.hit){
+    gCtx.beginPath();gCtx.moveTo(drone.x,drone.y);gCtx.lineTo(target.x,target.y);
+    gCtx.strokeStyle='rgba(224,21,21,0.1)';gCtx.lineWidth=1;gCtx.setLineDash([4,4]);gCtx.stroke();gCtx.setLineDash([]);
+  }
+
+  // Timer text
+  gCtx.fillStyle='rgba(0,224,255,0.5)';gCtx.font='10px IBM Plex Mono';
+  gCtx.fillText('KILL-CHAIN AKTIF',10,16);
+
+  gFrame++;
+  requestAnimationFrame(drawGame);
+}
+drawGame();
+
+// Fire missile on click/tap
+gCanvas.addEventListener('click',function(){
+  if(!missile.active&&!target.hit){
+    missile.active=true;missile.x=drone.x;missile.y=drone.y;
+    var dx=target.x-drone.x,dy=target.y-drone.y,d=Math.sqrt(dx*dx+dy*dy);
+    missile.vx=dx/d*8;missile.vy=dy/d*8;
+  }
+});
+
+function nextRound(){
+  var s=STAGES[stage];
+  if(round>=s.rounds){endStage();return;}
+  answered=false;
+  var sc=s.scenarios[round%s.scenarios.length];
+  timeLeft=s.timeLimit;
+  document.getElementById('s-time').textContent=timeLeft+'s';
+  document.getElementById('timer-fill').style.width='100%';
+  clearInterval(timer);
+  timer=setInterval(function(){
+    timeLeft--;
+    document.getElementById('s-time').textContent=timeLeft+'s';
+    document.getElementById('timer-fill').style.width=(timeLeft/s.timeLimit*100)+'%';
+    if(timeLeft<=3)document.getElementById('timer-fill').style.background='var(--red)';
+    else document.getElementById('timer-fill').style.background='var(--cyan)';
+    if(timeLeft<=0){clearInterval(timer);if(!answered)timeOut();}
+  },1000);
+
+  var chainStep=Math.floor(round/s.rounds*s.steps.length);
+  renderChainSteps(chainStep);
+
+  var html='<div class="action-title">🎯 '+sc.title+'</div>';
+  html+='<div class="action-desc">'+sc.desc+'<br><br><strong>'+sc.q+'</strong></div>';
+  html+='<div class="action-btns">';
+  sc.options.forEach(function(opt,i){
+    html+='<button class="action-btn" onclick="answer('+i+',this)">'+opt+'</button>';
+  });
+  html+='</div>';
+  document.getElementById('action-area').innerHTML=html;
+  document.getElementById('feedback').innerHTML='';
+}
+
+function answer(idx,btn){
+  if(answered)return;
+  answered=true;clearInterval(timer);
+  var s=STAGES[stage];
+  var sc=s.scenarios[round%s.scenarios.length];
+  var correct=idx===sc.correct;
+  btn.classList.add(correct?'correct':'wrong');
+  document.querySelectorAll('.action-btn').forEach(function(b){b.disabled=true;});
+  if(correct){
+    pts+=sc.pts;chainCount++;
+    document.getElementById('feedback').innerHTML='<span style="color:var(--green)">✅ '+sc.note+' | +'+sc.pts+'</span>';
+    // Fire missile on correct answer
+    if(!missile.active){
+      missile.active=true;missile.x=drone.x;missile.y=drone.y;
+      var dx=target.x-drone.x,dy=target.y-drone.y,d=Math.sqrt(dx*dx+dy*dy);
+      missile.vx=dx/d*8;missile.vy=dy/d*8;
+    }
+  } else {
+    document.getElementById('feedback').innerHTML='<span style="color:var(--red)">❌ Yanlış! Zaman kaybedildi.</span>';
+  }
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+  document.getElementById('s-chain').textContent=chainCount;
+  round++;setTimeout(nextRound,1400);
+}
+
+function timeOut(){
+  answered=true;
+  document.getElementById('feedback').innerHTML='<span style="color:var(--red)">⏱️ Süre doldu! Kill-chain koptu.</span>';
+  round++;setTimeout(nextRound,1200);
+}
+
+function endStage(){
+  clearInterval(timer);
+  try{var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');sc['kill-chain']=Math.max(sc['kill-chain']||0,pts);localStorage.setItem('hs_scores',JSON.stringify(sc));}catch(e){}
+  var html='<div class="overlay">';
+  html+='<div style="font-size:48px">'+(stage<2?'⚡':'🏆')+'</div>';
+  html+='<div class="ov-score">'+pts+'</div>';
+  html+='<div style="font-size:13px;color:var(--dim);margin-bottom:12px">'+(stage<2?'Aşama '+(stage+1)+' tamamlandı!':'Kill-Chain Ustası!')+'</div>';
+  html+='<div style="font-size:12px;color:var(--dim);margin-bottom:16px">Toplam Zincir: <span style="color:var(--green)">'+chainCount+'</span></div>';
+  document.getElementById('action-area').innerHTML=html;
+  if(stage<2){
+    var b=document.createElement('button');b.className='btn-main';b.textContent='▶ AŞAMA '+(stage+2)+' — '+STAGES[stage+1].label;
+    b.onclick=function(){stage++;startStage();};document.getElementById('action-area').appendChild(b);
+  } else {
+    var b=document.createElement('button');b.className='btn-main';b.textContent='🔄 BAŞTAN OYNA';
+    b.onclick=function(){stage=0;pts=0;chainCount=0;startStage();};document.getElementById('action-area').appendChild(b);
+    var b2=document.createElement('button');b2.className='btn-sec';b2.textContent='← OZA Oyun Merkezine Dön';
+    b2.onclick=function(){location.href='oza-hub.html';};document.getElementById('action-area').appendChild(b2);
+  }
+  document.getElementById('feedback').innerHTML='';
+}
+
+startStage();
+
+// ===== SOUND EFFECTS =====
+var _audioCtx;
+function _getAudio(){if(!_audioCtx)_audioCtx=new(window.AudioContext||window.webkitAudioContext)();return _audioCtx;}
+function sfxBomb(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(150,a.currentTime);o.frequency.exponentialRampToValueAtTime(30,a.currentTime+0.5);g.gain.setValueAtTime(0.4,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.6);o.start();o.stop(a.currentTime+0.6);}
+function sfxAlarm(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='square';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(800,a.currentTime);o.frequency.setValueAtTime(600,a.currentTime+0.15);o.frequency.setValueAtTime(800,a.currentTime+0.3);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.5);o.start();o.stop(a.currentTime+0.5);}
+function sfxSuccess(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(523,a.currentTime);o.frequency.setValueAtTime(659,a.currentTime+0.1);o.frequency.setValueAtTime(784,a.currentTime+0.2);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.4);o.start();o.stop(a.currentTime+0.4);}
+function sfxClick(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=600;o.type='sine';g.gain.setValueAtTime(0.1,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.05);o.start();o.stop(a.currentTime+0.05);}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

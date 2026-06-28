@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadir Metaller İnfografik — Harb-i Strateji</title>
+<style>
+:root{
+  --bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;
+  --red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;
+  --purple:#9b59b6;--orange:#e67e22;--txt:#e8eaf0;--dim:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',sans-serif;overflow-x:hidden;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+.hero h1{position:relative;z-index:1;font-size:clamp(2rem,5vw,4rem);font-weight:900;text-transform:uppercase;letter-spacing:4px;line-height:1.1;margin-bottom:16px;}
+.hero h1 .line1{color:var(--gold);}
+.hero h1 .line2{color:var(--red);}
+.hero .subtitle{position:relative;z-index:1;font-size:1.1rem;color:var(--cyan);letter-spacing:3px;margin-bottom:32px;}
+.hero .stats-row{position:relative;z-index:1;display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;}
+.hero-stat{background:rgba(0,0,0,.5);border:1px solid var(--border);border-radius:10px;padding:16px 24px;text-align:center;min-width:120px;}
+.hero-stat .val{font-size:2rem;font-weight:900;color:var(--gold);}
+.hero-stat .lbl{font-size:.9rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+.scroll-hint{position:relative;z-index:1;color:var(--dim);font-size:.8rem;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+/* SECTIONS */
+.section{padding:80px 20px;max-width:1200px;margin:0 auto;}
+.section-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:900;text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;}
+.section-title span{color:var(--gold);}
+.section-sub{font-size:.9rem;color:var(--dim);margin-bottom:40px;max-width:700px;}
+
+/* PERIODIC TABLE */
+.periodic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-bottom:30px;}
+.element-card{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.element-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--el-color,var(--cyan));}
+.element-card:hover{transform:translateY(-4px);border-color:var(--el-color,var(--cyan));box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.element-card.active{border-color:var(--el-color,var(--cyan));background:rgba(0,224,255,.05);}
+.el-num{font-size:.85rem;color:var(--dim);text-align:left;}
+.el-sym{font-size:1.8rem;font-weight:900;color:var(--el-color,var(--cyan));}
+.el-name{font-size:.85rem;color:var(--txt);margin-top:2px;}
+.el-category{font-size:.55rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+.el-criticality{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;}
+
+/* DETAIL PANEL */
+.detail-panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:20px;display:none;}
+.detail-panel.show{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.detail-header{display:flex;align-items:center;gap:20px;margin-bottom:20px;}
+.detail-sym{font-size:3rem;font-weight:900;}
+.detail-info h3{font-size:1.2rem;font-weight:700;margin-bottom:4px;}
+.detail-info p{font-size:.8rem;color:var(--dim);}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+.detail-item{background:rgba(0,0,0,.3);border-radius:8px;padding:12px;}
+.detail-item .di-label{font-size:.85rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.detail-item .di-val{font-size:.9rem;font-weight:600;color:var(--txt);}
+.weapons-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.weapon-tag{background:rgba(201,162,75,.15);border:1px solid var(--gold);border-radius:4px;padding:3px 8px;font-size:.85rem;color:var(--gold);}
+
+/* CHINA DOMINANCE CHART */
+.dominance-chart{display:flex;flex-direction:column;gap:12px;}
+.dom-row{display:flex;align-items:center;gap:12px;}
+.dom-label{width:120px;font-size:.8rem;color:var(--txt);text-align:right;}
+.dom-bar-bg{flex:1;height:28px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;position:relative;}
+.dom-bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:.95rem;font-weight:700;color:#000;transition:width 1.5s ease;}
+.dom-pct{width:50px;font-size:.85rem;font-weight:700;color:var(--red);}
+.dom-flag{font-size:1rem;}
+
+/* FLOW DIAGRAM */
+.flow-container{position:relative;overflow-x:auto;}
+.flow-svg{min-width:800px;width:100%;}
+
+/* TURKEY MAP */
+.turkey-section{background:linear-gradient(135deg,rgba(201,162,75,.05),rgba(224,21,21,.05));border:1px solid var(--border);border-radius:12px;padding:30px;}
+.turkey-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px;}
+.turkey-stat{background:rgba(0,0,0,.3);border-radius:8px;padding:16px;text-align:center;border-left:3px solid var(--gold);}
+.turkey-stat .ts-val{font-size:1.8rem;font-weight:900;color:var(--gold);}
+.turkey-stat .ts-lbl{font-size:.9rem;color:var(--dim);margin-top:4px;}
+.turkey-stat .ts-sub{font-size:.85rem;color:var(--cyan);margin-top:2px;}
+
+/* ANIMATED COUNTER */
+.counter{display:inline-block;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:30px;}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--red));}
+.tl-item{position:relative;margin-bottom:24px;opacity:0;transform:translateX(-20px);transition:all .5s;}
+.tl-item.visible{opacity:1;transform:translateX(0);}
+.tl-dot{position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:var(--bg);}
+.tl-year{font-size:.95rem;color:var(--gold);font-weight:700;margin-bottom:4px;}
+.tl-title{font-size:.9rem;font-weight:600;margin-bottom:4px;}
+.tl-desc{font-size:.8rem;color:var(--dim);}
+
+/* MARKET CHART */
+.market-bars{display:flex;align-items:flex-end;gap:8px;height:200px;padding:0 10px;}
+.market-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.market-bar{width:100%;border-radius:4px 4px 0 0;transition:height 1s ease;position:relative;cursor:pointer;}
+.market-bar:hover::after{content:attr(data-val);position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-size:.9rem;white-space:nowrap;}
+.market-bar-lbl{font-size:.85rem;color:var(--dim);text-align:center;transform:rotate(-30deg);transform-origin:top center;margin-top:4px;}
+
+/* CANVAS */
+canvas{border-radius:8px;}
+
+/* FOOTER */
+.footer{background:var(--panel);border-top:1px solid var(--border);padding:30px 20px;text-align:center;}
+.footer p{font-size:.8rem;color:var(--dim);}
+.footer strong{color:var(--gold);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .periodic-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));}
+  .dom-label{width:80px;font-size:.9rem;}
+  .hero-stat .val{font-size:1.5rem;}
+}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <canvas id="heroCanvas" class="hero-bg"></canvas>
+  <h1>
+    <div class="line1">NADİR METALLER</div>
+    <div class="line2">& SAVUNMA SANAYİİ</div>
+  </h1>
+  <div class="subtitle">⚗️ Küresel Güç Dengesi İnfografiği | Harb-i Strateji</div>
+  <div class="stats-row">
+    <div class="hero-stat"><div class="val counter" data-target="17">0</div><div class="lbl">Nadir Toprak Elementi</div></div>
+    <div class="hero-stat"><div class="val counter" data-target="70">0</div><div class="lbl">% Çin Üretim Payı</div></div>
+    <div class="hero-stat"><div class="val counter" data-target="920">0</div><div class="lbl">kg NTE / F-35 Uçağı</div></div>
+    <div class="hero-stat"><div class="val counter" data-target="73">0</div><div class="lbl">% Türkiye Bor Rezervi</div></div>
+    <div class="hero-stat"><div class="val counter" data-target="100">0</div><div class="lbl">+ Silah Sistemi</div></div>
+  </div>
+  <div class="scroll-hint">▼ Aşağı kaydır</div>
+</div>
+
+<!-- SECTION 1: PERİYODİK TABLO -->
+<div class="section">
+  <div class="section-title">⚗️ <span>Kritik</span> Mineral Tablosu</div>
+  <div class="section-sub">Savunma sanayiinde kullanılan 21 kritik mineral. Bir elemente tıklayarak detayları görün. Kırmızı: Çin hakimiyeti | Sarı: Stratejik risk | Yeşil: Türkiye avantajı</div>
+  <div class="periodic-grid" id="periodicGrid"></div>
+  <div class="detail-panel" id="detailPanel"></div>
+</div>
+
+<!-- SECTION 2: ÇİN HAKİMİYETİ -->
+<div style="background:linear-gradient(135deg,rgba(224,21,21,.05),rgba(0,0,0,0));padding:60px 0;">
+<div class="section">
+  <div class="section-title">🐉 <span>Çin</span> Hakimiyeti</div>
+  <div class="section-sub">Çin'in kritik minerallerdeki küresel üretim payı. 2023'te galyum ve germanyum ihracat yasağı ilan edildi — bu metallerin %98'i Çin'den geliyor.</div>
+  <div class="dominance-chart" id="dominanceChart"></div>
+</div>
+</div>
+
+<!-- SECTION 3: TÜRKİYE -->
+<div class="section">
+  <div class="section-title">🇹🇷 <span>Türkiye</span>'nin Stratejik Konumu</div>
+  <div class="section-sub">Türkiye, bor rezervlerinin %73'üne sahip. MDNL (Maden Tetkik ve Arama) titanyum ve tungsten üretimi yapıyor. ASELSAN nadir metal entegrasyonu.</div>
+  <div class="turkey-section">
+    <canvas id="turkeyChart" width="800" height="300"></canvas>
+    <div class="turkey-stats">
+      <div class="turkey-stat"><div class="ts-val">%73</div><div class="ts-lbl">Küresel Bor Rezervi</div><div class="ts-sub">Türkiye'nin payı</div></div>
+      <div class="turkey-stat"><div class="ts-val">3.3M</div><div class="ts-lbl">Ton Bor Rezervi</div><div class="ts-sub">Dünya 1.'si</div></div>
+      <div class="turkey-stat"><div class="ts-val">ASELSAN</div><div class="ts-lbl">NTE Entegrasyonu</div><div class="ts-sub">Yerli savunma</div></div>
+      <div class="turkey-stat"><div class="ts-val">KAAN</div><div class="ts-lbl">5. Nesil Uçak</div><div class="ts-sub">920 kg NTE</div></div>
+      <div class="turkey-stat"><div class="ts-val">TB3</div><div class="ts-lbl">Bayraktar İHA</div><div class="ts-sub">Nd mıknatısları</div></div>
+      <div class="turkey-stat"><div class="ts-val">%0</div><div class="ts-lbl">Çin Bağımlılığı</div><div class="ts-sub">Hedef 2030</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: KÜRESEL PAZAR -->
+<div style="background:linear-gradient(135deg,rgba(0,224,255,.03),rgba(0,0,0,0));padding:60px 0;">
+<div class="section">
+  <div class="section-title">💰 Küresel <span>Silah Pazarı</span> & Nadir Metaller</div>
+  <div class="section-sub">2024 küresel savunma harcamaları 2.2 trilyon dolar. Nadir toprak elementi pazarı 2030'a kadar 20 milyar dolara ulaşacak.</div>
+  <canvas id="marketChart" width="1000" height="350"></canvas>
+</div>
+</div>
+
+<!-- SECTION 5: TEDARİK ZİNCİRİ -->
+<div class="section">
+  <div class="section-title">🔗 Tedarik <span>Zinciri</span> Akış Diyagramı</div>
+  <div class="section-sub">Nadir metalin madenden silah sistemine yolculuğu. Her aşamada kırılganlık noktaları ve Çin'in müdahale kapasitesi.</div>
+  <div class="flow-container">
+    <canvas id="flowCanvas" width="1000" height="300"></canvas>
+  </div>
+</div>
+
+<!-- SECTION 6: TARİHSEL KRİZLER -->
+<div style="background:linear-gradient(135deg,rgba(224,21,21,.05),rgba(0,0,0,0));padding:60px 0;">
+<div class="section">
+  <div class="section-title">📅 Tarihsel <span>Krizler</span> Zaman Çizelgesi</div>
+  <div class="section-sub">Nadir metal krizlerinin küresel savunma sanayiine etkileri — 2010'dan günümüze.</div>
+  <div class="timeline" id="timeline"></div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p><strong>Kaynak:</strong> Harb-i Strateji Külliyatı (2025) — Savunma Sanayiinin Ekonomik Sürdürülebilirliği | Pitron, G. (2023) — Nadir Metaller Savaşı | Mishra (2022) — Defence Applications of Rare Earth Elements</p>
+  <p style="margin-top:8px;"><strong>Harb-i Strateji</strong> | Stratejik Analiz Platformu | harbistrateji.com</p>
+</div>
+
+<script>
+// ===================== DATA =====================
+const ELEMENTS = [
+  {num:60,sym:'Nd',name:'Neodimyum',color:'#E01515',category:'Nadir Toprak',china:85,uses:'Kalıcı mıknatıslar',weapons:['F-35','Tomahawk','Predator','KAAN','Bayraktar'],risk:'KRİTİK',turkey:'Bağımlı'},
+  {num:66,sym:'Dy',name:'Disprozyum',color:'#e74c3c',category:'Nadir Toprak',china:99,uses:'Yüksek ısı mıknatısları',weapons:['F-35','Patriot','AESA Radar'],risk:'KRİTİK',turkey:'Bağımlı'},
+  {num:65,sym:'Tb',name:'Terbiyum',color:'#e67e22',category:'Nadir Toprak',china:90,uses:'Lazer sistemleri, sonar',weapons:['Lazer Silah','Sonar','Tomahawk'],risk:'KRİTİK',turkey:'Bağımlı'},
+  {num:62,sym:'Sm',name:'Samaryum',color:'#f39c12',category:'Nadir Toprak',china:80,uses:'Füze güdümü',weapons:['Tomahawk','Patriot','Sonar'],risk:'YÜKSEK',turkey:'Bağımlı'},
+  {num:39,sym:'Y',name:'İtriyum',color:'#C9A24B',category:'Nadir Toprak',china:75,uses:'Radar, lazer hedefleme',weapons:['Lazer Avenger','Sonar','Radar'],risk:'YÜKSEK',turkey:'Bağımlı'},
+  {num:59,sym:'Pr',name:'Praseodimyum',color:'#9b59b6',category:'Nadir Toprak',china:85,uses:'Güdüm sistemleri',weapons:['Tomahawk','Patriot','F-35'],risk:'YÜKSEK',turkey:'Bağımlı'},
+  {num:27,sym:'Co',name:'Kobalt',color:'#3498db',category:'Geçiş Metali',china:20,uses:'Süper alaşımlar, piller',weapons:['F-35','Raylı Silah','İHA'],risk:'ORTA',turkey:'Kısmi'},
+  {num:3,sym:'Li',name:'Lityum',color:'#2ecc71',category:'Alkali Metal',china:30,uses:'Bataryalar, elektronik',weapons:['Elektrikli araçlar','İHA pilleri'],risk:'ORTA',turkey:'Bor avantajı'},
+  {num:74,sym:'W',name:'Tungsten',color:'#95a5a6',category:'Geçiş Metali',china:85,uses:'Zırh delici mühimmat',weapons:['APFSDS','Penetratörler'],risk:'YÜKSEK',turkey:'MDNL üretimi'},
+  {num:22,sym:'Ti',name:'Titanyum',color:'#1abc9c',category:'Geçiş Metali',china:35,uses:'Uçak gövdesi, zırh',weapons:['F-35','KAAN','Denizaltı'],risk:'ORTA',turkey:'MDNL üretimi'},
+  {num:31,sym:'Ga',name:'Galyum',color:'#e91e63',category:'Post-Geçiş',china:98,uses:'Yarı iletkenler, radar',weapons:['AESA Radar','Elektronik harp'],risk:'KRİTİK',turkey:'Bağımlı'},
+  {num:32,sym:'Ge',name:'Germanyum',color:'#8e44ad',category:'Metaloid',china:67,uses:'Gece görüş, fiber optik',weapons:['Gece görüş','Fiber optik','Termal'],risk:'YÜKSEK',turkey:'Bağımlı'},
+  {num:73,sym:'Ta',name:'Tantal',color:'#8bc34a',category:'Geçiş Metali',china:10,uses:'Elektronik, uzay',weapons:['Elektronik sistemler','Uydu'],risk:'ORTA',turkey:'Kısmi'},
+  {num:4,sym:'Be',name:'Berilyum',color:'#c41e3a',category:'Alkali Toprak',china:5,uses:'Nükleer, havacılık',weapons:['Nükleer silahlar','Uzay araçları'],risk:'ORTA',turkey:'Bağımlı'},
+  {num:72,sym:'Hf',name:'Hafniyum',color:'#16a085',category:'Geçiş Metali',china:40,uses:'Nükleer reaktörler',weapons:['Nükleer denizaltı'],risk:'ORTA',turkey:'Bağımlı'},
+  {num:49,sym:'In',name:'İndiyum',color:'#2980b9',category:'Post-Geçiş',china:58,uses:'LCD, güneş paneli',weapons:['Ekranlar','Sensörler'],risk:'ORTA',turkey:'Bağımlı'},
+  {num:23,sym:'V',name:'Vanadyum',color:'#27ae60',category:'Geçiş Metali',china:65,uses:'Çelik alaşımları',weapons:['Zırh çeliği','Silah namlusu'],risk:'YÜKSEK',turkey:'Kısmi'},
+  {num:41,sym:'Nb',name:'Niyobyum',color:'#d35400',category:'Geçiş Metali',china:5,uses:'Çelik güçlendirme',weapons:['Zırh','Roket gövdesi'],risk:'DÜŞÜK',turkey:'Kısmi'},
+  {num:5,sym:'B',name:'Bor',color:'#f1c40f',category:'Metaloid',china:5,uses:'Nükleer zırh, seramik',weapons:['B4C zırh','Nükleer kalkan'],risk:'DÜŞÜK',turkey:'DÜNYA 1.'},
+  {num:55,sym:'Cs',name:'Sezyum',color:'#e74c3c',category:'Alkali Metal',china:70,uses:'Atomik saatler, GPS',weapons:['GPS sistemleri','Navigasyon'],risk:'YÜKSEK',turkey:'Bağımlı'},
+  {num:37,sym:'Rb',name:'Rubidyum',color:'#9b59b6',category:'Alkali Metal',china:60,uses:'Frekans standartları',weapons:['Elektronik harp','İletişim'],risk:'ORTA',turkey:'Bağımlı'},
+];
+
+const CHINA_DATA = [
+  {metal:'Galyum (Ga)',pct:98,color:'#e91e63'},
+  {metal:'Disprozyum (Dy)',pct:99,color:'#e74c3c'},
+  {metal:'Germanyum (Ge)',pct:67,color:'#8e44ad'},
+  {metal:'Neodimyum (Nd)',pct:85,color:'#E01515'},
+  {metal:'Terbiyum (Tb)',pct:90,color:'#e67e22'},
+  {metal:'Tungsten (W)',pct:85,color:'#95a5a6'},
+  {metal:'Vanadyum (V)',pct:65,color:'#27ae60'},
+  {metal:'Sezyum (Cs)',pct:70,color:'#e74c3c'},
+  {metal:'Praseodimyum (Pr)',pct:85,color:'#9b59b6'},
+  {metal:'Samaryum (Sm)',pct:80,color:'#f39c12'},
+];
+
+const TIMELINE_EVENTS = [
+  {year:'2010',title:'Çin Nadir Toprak Ambargosu — Japonya',desc:'Çin, Japonya\'ya nadir toprak ihracatını kesti. Küresel tedarik zinciri krizi başladı. Fiyatlar %2000 arttı.',color:'#e74c3c'},
+  {year:'2015',title:'ABD Molycorp İflası',desc:'ABD\'nin tek nadir toprak madeni kapandı. Çin\'e bağımlılık %90\'a ulaştı. Stratejik açık belirginleşti.',color:'#e67e22'},
+  {year:'2019',title:'ABD-Çin Ticaret Savaşı',desc:'Çin, nadir toprak ihracatını kısıtlamakla tehdit etti. ABD acil stok programı başlattı.',color:'#f39c12'},
+  {year:'2022',title:'Ukrayna Savaşı — Titanyum Krizi',desc:'Rusya titanyum ihracatını durdurdu. F-35 üretimi aksamaya başladı. Boeing alternatif arayışına girdi.',color:'#E01515'},
+  {year:'2023',title:'Çin Galyum/Germanyum Yasağı',desc:'Çin, galyum ve germanyum ihracatını yasakladı. Yarı iletken ve radar üretimi tehlike altına girdi.',color:'#e74c3c'},
+  {year:'2024',title:'Ukrayna Mineral Anlaşması',desc:'ABD-Ukrayna kritik mineral ortaklığı. Ukrayna\'nın 5 trilyon dolarlık mineral rezervleri müzakereye açıldı.',color:'#2ecc71'},
+  {year:'2025',title:'Türkiye Bor Stratejisi',desc:'Türkiye bor rezervlerini savunma sanayiine entegre etti. ASELSAN yerli NTE kullanımını artırdı.',color:'#C9A24B'},
+];
+
+const MARKET_DATA = [
+  {label:'ABD',val:916,color:'#3498db'},
+  {label:'Çin',val:293,color:'#e74c3c'},
+  {label:'Rusya',val:109,color:'#e67e22'},
+  {label:'S.Arabistan',val:75,color:'#f39c12'},
+  {label:'Almanya',val:66,color:'#2ecc71'},
+  {label:'UK',val:64,color:'#9b59b6'},
+  {label:'Japonya',val:48,color:'#1abc9c'},
+  {label:'Türkiye',val:41,color:'#C9A24B'},
+  {label:'Fransa',val:56,color:'#3498db'},
+  {label:'Hindistan',val:83,color:'#e67e22'},
+];
+
+// ===================== PERIODIC TABLE =====================
+function buildPeriodicTable(){
+  const grid=document.getElementById('periodicGrid');
+  ELEMENTS.forEach(el=>{
+    const riskColors={'KRİTİK':'#e74c3c','YÜKSEK':'#e67e22','ORTA':'#f39c12','DÜŞÜK':'#2ecc71','DÜNYA 1.':'#C9A24B'};
+    const div=document.createElement('div');
+    div.className='element-card';
+    div.style.setProperty('--el-color',el.color);
+    div.innerHTML=`
+      <div class="el-criticality" style="background:${riskColors[el.risk]||'#6b7280'}"></div>
+      <div class="el-num">${el.num}</div>
+      <div class="el-sym" style="color:${el.color}">${el.sym}</div>
+      <div class="el-name">${el.name}</div>
+      <div class="el-category">${el.category}</div>
+    `;
+    div.onclick=()=>showElementDetail(el,div);
+    grid.appendChild(div);
+  });
+}
+
+function showElementDetail(el,card){
+  document.querySelectorAll('.element-card').forEach(c=>c.classList.remove('active'));
+  card.classList.add('active');
+  
+  const panel=document.getElementById('detailPanel');
+  panel.className='detail-panel show';
+  panel.style.borderColor=el.color;
+  panel.innerHTML=`
+    <div class="detail-header">
+      <div class="detail-sym" style="color:${el.color}">${el.sym}</div>
+      <div class="detail-info">
+        <h3>${el.name} <span style="font-size:.8rem;color:var(--dim);">(${el.category})</span></h3>
+        <p>Atom Numarası: ${el.num} | Çin Payı: <strong style="color:${el.china>70?'var(--red)':'var(--gold)'}">%${el.china}</strong></p>
+        <p>Risk Seviyesi: <strong style="color:${el.risk==='KRİTİK'?'var(--red)':el.risk==='YÜKSEK'?'var(--orange)':'var(--green)'}">${el.risk}</strong> | Türkiye: ${el.turkey}</p>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="di-label">Savunma Kullanımı</div>
+        <div class="di-val">${el.uses}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-label">Silah Sistemleri</div>
+        <div class="weapons-list">${el.weapons.map(w=>`<span class="weapon-tag">${w}</span>`).join('')}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-label">Çin Üretim Hakimiyeti</div>
+        <div style="margin-top:8px;">
+          <div style="height:20px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;">
+            <div style="height:100%;width:${el.china}%;background:${el.china>70?'var(--red)':'var(--gold)'};border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:.95rem;font-weight:700;color:#000;">%${el.china}</div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="di-label">Türkiye Durumu</div>
+        <div class="di-val" style="color:${el.turkey.includes('DÜNYA')||el.turkey.includes('MDNL')?'var(--green)':'var(--dim)'}">${el.turkey}</div>
+      </div>
+    </div>
+  `;
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ===================== DOMINANCE CHART =====================
+function buildDominanceChart(){
+  const chart=document.getElementById('dominanceChart');
+  chart.innerHTML=CHINA_DATA.map(d=>`
+    <div class="dom-row">
+      <div class="dom-flag">🐉</div>
+      <div class="dom-label">${d.metal}</div>
+      <div class="dom-bar-bg">
+        <div class="dom-bar-fill" style="width:0%;background:${d.color}" data-width="${d.pct}">%${d.pct}</div>
+      </div>
+      <div class="dom-pct">%${d.pct}</div>
+    </div>
+  `).join('');
+  
+  // Animate bars on scroll
+  setTimeout(()=>{
+    document.querySelectorAll('.dom-bar-fill').forEach(bar=>{
+      bar.style.width=bar.dataset.width+'%';
+    });
+  },300);
+}
+
+// ===================== TURKEY CHART =====================
+function drawTurkeyChart(){
+  const canvas=document.getElementById('turkeyChart');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  
+  ctx.clearRect(0,0,W,H);
+  
+  // Background
+  ctx.fillStyle='rgba(0,0,0,.3)';
+  ctx.roundRect(0,0,W,H,12);
+  ctx.fill();
+  
+  // Title
+  ctx.fillStyle='#C9A24B';
+  ctx.font='bold 16px Segoe UI';
+  ctx.textAlign='center';
+  ctx.fillText('Türkiye Savunma Sanayii — Nadir Metal Entegrasyonu (2020-2025)',W/2,30);
+  
+  // Data
+  const years=['2020','2021','2022','2023','2024','2025'];
+  const domestic=[35,42,51,63,72,81]; // Yerli üretim %
+  const exports=[1.7,2.1,2.8,3.5,4.2,5.5]; // Milyar USD
+  
+  const padL=60,padR=40,padT=50,padB=60;
+  const chartW=W-padL-padR;
+  const chartH=H-padT-padB;
+  
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,.05)';
+  ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const y=padT+chartH*(1-i/5);
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.3)';
+    ctx.font='11px Segoe UI';
+    ctx.textAlign='right';
+    ctx.fillText((i*20)+'%',padL-5,y+4);
+  }
+  
+  // Bars (domestic)
+  const barW=chartW/years.length*.4;
+  years.forEach((y,i)=>{
+    const x=padL+chartW*(i+.5)/years.length-barW/2;
+    const barH=chartH*domestic[i]/100;
+    const yPos=padT+chartH-barH;
+    
+    const grad=ctx.createLinearGradient(0,yPos,0,padT+chartH);
+    grad.addColorStop(0,'#C9A24B');
+    grad.addColorStop(1,'rgba(201,162,75,.2)');
+    ctx.fillStyle=grad;
+    ctx.roundRect(x,yPos,barW,barH,4);
+    ctx.fill();
+    
+    ctx.fillStyle='#C9A24B';
+    ctx.font='bold 11px Segoe UI';
+    ctx.textAlign='center';
+    ctx.fillText('%'+domestic[i],x+barW/2,yPos-5);
+    
+    ctx.fillStyle='rgba(255,255,255,.5)';
+    ctx.font='11px Segoe UI';
+    ctx.fillText(y,x+barW/2,padT+chartH+20);
+  });
+  
+  // Line (exports)
+  ctx.beginPath();
+  ctx.strokeStyle='#c41e3a';
+  ctx.lineWidth=2.5;
+  ctx.setLineDash([]);
+  years.forEach((y,i)=>{
+    const x=padL+chartW*(i+.5)/years.length;
+    const yPos=padT+chartH*(1-exports[i]/6);
+    if(i===0)ctx.moveTo(x,yPos);
+    else ctx.lineTo(x,yPos);
+  });
+  ctx.stroke();
+  
+  // Dots
+  years.forEach((y,i)=>{
+    const x=padL+chartW*(i+.5)/years.length;
+    const yPos=padT+chartH*(1-exports[i]/6);
+    ctx.beginPath();
+    ctx.arc(x,yPos,5,0,Math.PI*2);
+    ctx.fillStyle='#c41e3a';
+    ctx.fill();
+    ctx.fillStyle='#c41e3a';
+    ctx.font='10px Segoe UI';
+    ctx.textAlign='center';
+    ctx.fillText('$'+exports[i]+'B',x,yPos-10);
+  });
+  
+  // Legend
+  ctx.fillStyle='#C9A24B';
+  ctx.fillRect(padL,H-30,20,12);
+  ctx.fillStyle='rgba(255,255,255,.7)';
+  ctx.font='11px Segoe UI';
+  ctx.textAlign='left';
+  ctx.fillText('Yerli Üretim Oranı (%)',padL+25,H-21);
+  
+  ctx.strokeStyle='#c41e3a';
+  ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(padL+200,H-24);ctx.lineTo(padL+220,H-24);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.7)';
+  ctx.fillText('İhracat (Milyar USD)',padL+225,H-21);
+}
+
+// ===================== MARKET CHART =====================
+function drawMarketChart(){
+  const canvas=document.getElementById('marketChart');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(0,0,0,.2)';
+  ctx.roundRect(0,0,W,H,12);
+  ctx.fill();
+  
+  ctx.fillStyle='#C9A24B';
+  ctx.font='bold 14px Segoe UI';
+  ctx.textAlign='center';
+  ctx.fillText('2024 Küresel Savunma Harcamaları (Milyar USD) — Nadir Metal Tüketimi',W/2,25);
+  
+  const padL=50,padR=30,padT=45,padB=60;
+  const chartW=W-padL-padR;
+  const chartH=H-padT-padB;
+  const maxVal=Math.max(...MARKET_DATA.map(d=>d.val));
+  const barW=chartW/MARKET_DATA.length*.6;
+  
+  // Grid
+  for(let i=0;i<=5;i++){
+    const y=padT+chartH*(1-i/5);
+    ctx.strokeStyle='rgba(255,255,255,.05)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.3)';
+    ctx.font='10px Segoe UI';
+    ctx.textAlign='right';
+    ctx.fillText(Math.round(maxVal*i/5),padL-5,y+4);
+  }
+  
+  MARKET_DATA.forEach((d,i)=>{
+    const x=padL+chartW*(i+.5)/MARKET_DATA.length-barW/2;
+    const barH=chartH*d.val/maxVal;
+    const yPos=padT+chartH-barH;
+    
+    const grad=ctx.createLinearGradient(0,yPos,0,padT+chartH);
+    grad.addColorStop(0,d.color);
+    grad.addColorStop(1,d.color+'33');
+    ctx.fillStyle=grad;
+    ctx.roundRect(x,yPos,barW,barH,4);
+    ctx.fill();
+    
+    ctx.fillStyle=d.color;
+    ctx.font='bold 10px Segoe UI';
+    ctx.textAlign='center';
+    ctx.fillText('$'+d.val,x+barW/2,yPos-5);
+    
+    ctx.fillStyle='rgba(255,255,255,.6)';
+    ctx.font='10px Segoe UI';
+    ctx.save();
+    ctx.translate(x+barW/2,padT+chartH+10);
+    ctx.rotate(-Math.PI/6);
+    ctx.fillText(d.label,0,0);
+    ctx.restore();
+  });
+}
+
+// ===================== FLOW CANVAS =====================
+function drawFlowDiagram(){
+  const canvas=document.getElementById('flowCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(0,0,0,.3)';
+  ctx.roundRect(0,0,W,H,12);
+  ctx.fill();
+  
+  const nodes=[
+    {x:80,y:150,label:'Maden\n(Çin %70)',color:'#e74c3c',icon:'⛏️'},
+    {x:230,y:150,label:'İşleme\n(Çin %85)',color:'#e67e22',icon:'🏭'},
+    {x:380,y:150,label:'Alaşım\n(Çin %60)',color:'#f39c12',icon:'⚗️'},
+    {x:530,y:150,label:'Bileşen\n(Küresel)',color:'#C9A24B',icon:'🔧'},
+    {x:680,y:150,label:'Silah\nSistemi',color:'#00ff88',icon:'🚀'},
+    {x:830,y:150,label:'Savunma\nPazarı',color:'#c41e3a',icon:'🌍'},
+  ];
+  
+  // Draw arrows
+  nodes.forEach((n,i)=>{
+    if(i<nodes.length-1){
+      const next=nodes[i+1];
+      ctx.beginPath();
+      ctx.moveTo(n.x+50,n.y);
+      ctx.lineTo(next.x-50,next.y);
+      ctx.strokeStyle='rgba(255,255,255,.3)';
+      ctx.lineWidth=2;
+      ctx.setLineDash([4,4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Arrow head
+      ctx.beginPath();
+      ctx.moveTo(next.x-50,next.y);
+      ctx.lineTo(next.x-60,next.y-6);
+      ctx.lineTo(next.x-60,next.y+6);
+      ctx.closePath();
+      ctx.fillStyle='rgba(255,255,255,.3)';
+      ctx.fill();
+    }
+  });
+  
+  // Draw nodes
+  nodes.forEach(n=>{
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,45,0,Math.PI*2);
+    ctx.fillStyle=n.color+'22';
+    ctx.fill();
+    ctx.strokeStyle=n.color;
+    ctx.lineWidth=2;
+    ctx.stroke();
+    
+    ctx.font='20px serif';
+    ctx.textAlign='center';
+    ctx.fillText(n.icon,n.x,n.y-5);
+    
+    const lines=n.label.split('\n');
+    ctx.fillStyle='rgba(255,255,255,.8)';
+    ctx.font='bold 10px Segoe UI';
+    lines.forEach((l,i)=>ctx.fillText(l,n.x,n.y+12+i*13));
+  });
+  
+  // Vulnerability markers
+  const vulns=[
+    {x:155,y:80,text:'Ambargo\nRiski',color:'#e74c3c'},
+    {x:305,y:80,text:'Fiyat\nManipülasyonu',color:'#e67e22'},
+    {x:455,y:80,text:'Tedarik\nKesintisi',color:'#f39c12'},
+  ];
+  vulns.forEach(v=>{
+    ctx.fillStyle=v.color+'33';
+    ctx.roundRect(v.x-35,v.y-15,70,35,6);
+    ctx.fill();
+    ctx.strokeStyle=v.color;
+    ctx.lineWidth=1;
+    ctx.stroke();
+    
+    const lines=v.text.split('\n');
+    ctx.fillStyle=v.color;
+    ctx.font='bold 9px Segoe UI';
+    ctx.textAlign='center';
+    lines.forEach((l,i)=>ctx.fillText(l,v.x,v.y+i*12));
+    
+    // Arrow down
+    ctx.beginPath();
+    ctx.moveTo(v.x,v.y+20);
+    ctx.lineTo(v.x,v.y+50);
+    ctx.strokeStyle=v.color;
+    ctx.lineWidth=1;
+    ctx.setLineDash([3,3]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+  
+  // Title
+  ctx.fillStyle='rgba(255,255,255,.5)';
+  ctx.font='11px Segoe UI';
+  ctx.textAlign='left';
+  ctx.fillText('Nadir Metalin Madenden Silaha Yolculuğu — Kırılganlık Noktaları',20,20);
+}
+
+// ===================== TIMELINE =====================
+function buildTimeline(){
+  const tl=document.getElementById('timeline');
+  tl.innerHTML=TIMELINE_EVENTS.map(e=>`
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:${e.color};background:${e.color}33"></div>
+      <div class="tl-year" style="color:${e.color}">${e.year}</div>
+      <div class="tl-title">${e.title}</div>
+      <div class="tl-desc">${e.desc}</div>
+    </div>
+  `).join('');
+  
+  // Animate on scroll
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:.2});
+  document.querySelectorAll('.tl-item').forEach(el=>observer.observe(el));
+}
+
+// ===================== HERO CANVAS =====================
+function initHeroCanvas(){
+  const canvas=document.getElementById('heroCanvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  
+  const particles=[];
+  const symbols=['Nd','Dy','Tb','Sm','Y','Co','Li','W','Ti','Ga','Ge','Ta','B','⚗️','⚛️','🔬'];
+  
+  for(let i=0;i<40;i++){
+    particles.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      sym:symbols[Math.floor(Math.random()*symbols.length)],
+      size:Math.random()*16+10,
+      vx:(Math.random()-.5)*.4,
+      vy:(Math.random()-.5)*.4,
+      opacity:Math.random()*.3+.1,
+      color:['#C9A24B','#c41e3a','#E01515','#9b59b6'][Math.floor(Math.random()*4)]
+    });
+  }
+  
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    
+    // Gradient background
+    const grad=ctx.createRadialGradient(canvas.width/2,canvas.height/2,0,canvas.width/2,canvas.height/2,canvas.width*.7);
+    grad.addColorStop(0,'rgba(13,27,42,.8)');
+    grad.addColorStop(1,'rgba(5,13,24,1)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<-50)p.x=canvas.width+50;
+      if(p.x>canvas.width+50)p.x=-50;
+      if(p.y<-50)p.y=canvas.height+50;
+      if(p.y>canvas.height+50)p.y=-50;
+      
+      ctx.fillStyle=p.color;
+      ctx.globalAlpha=p.opacity;
+      ctx.font=`bold ${p.size}px Segoe UI`;
+      ctx.textAlign='center';
+      ctx.fillText(p.sym,p.x,p.y);
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// ===================== COUNTER ANIMATION =====================
+function animateCounters(){
+  document.querySelectorAll('.counter').forEach(el=>{
+    const target=parseInt(el.dataset.target);
+    let current=0;
+    const step=target/60;
+    const interval=setInterval(()=>{
+      current=Math.min(current+step,target);
+      el.textContent=Math.round(current)+(el.dataset.suffix||'');
+      if(current>=target)clearInterval(interval);
+    },16);
+  });
+}
+
+// ===================== INIT =====================
+window.addEventListener('load',()=>{
+  initHeroCanvas();
+  buildPeriodicTable();
+  buildDominanceChart();
+  buildTimeline();
+  drawTurkeyChart();
+  drawMarketChart();
+  drawFlowDiagram();
+  
+  setTimeout(animateCounters,500);
+});
+
+window.addEventListener('resize',()=>{
+  const canvas=document.getElementById('heroCanvas');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+});
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

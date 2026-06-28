@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kuşatma Ustası — OZA</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+:root{--pri:#e63946;--bg:#0a0f17;--text:#e8e6e3;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;}
+.game-wrap{max-width:600px;margin:0 auto;padding:20px;}
+h1{font-family:'Chakra Petch',sans-serif;text-align:center;color:var(--pri);}
+.subtitle{text-align:center;opacity:0.7;margin-bottom:20px;}
+.hud{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;padding:10px 0;}
+canvas{display:block;width:100%;border-radius:12px;border:2px solid #1f2937;background:#111827;}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px;}
+.ctrl-btn{padding:12px;background:#1f2937;border:2px solid #374151;border-radius:10px;color:#fff;font-family:'Chakra Petch',sans-serif;font-weight:700;cursor:pointer;text-align:center;transition:all 0.2s;}
+.ctrl-btn:hover{border-color:var(--pri);background:#374151;}
+.ctrl-btn:active{transform:scale(0.95);}
+.info{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:16px;margin-top:15px;font-size:0.85rem;line-height:1.6;}
+.info h3{color:var(--pri);font-family:'Chakra Petch',sans-serif;margin:0 0 8px;}
+.result-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:100;}
+.result-box{text-align:center;padding:40px;}
+.result-box h2{color:var(--pri);font-family:'Chakra Petch',sans-serif;font-size:2rem;}
+.btn{display:inline-block;padding:12px 30px;background:var(--pri);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:8px;font-family:'Chakra Petch',sans-serif;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<script src="hs-nav.js?v=11"></script>
+<div class="game-wrap">
+<h1>🏰 Kuşatma Ustası</h1>
+<p class="subtitle">Tarihi kuşatma silahlarıyla kaleleri yık! Açı ve güç ayarla.</p>
+<div class="hud"><span id="levelTxt">Kale 1/6</span><span id="ammoTxt">Mermi: 5</span><span id="scoreTxt">Puan: 0</span></div>
+<canvas id="gameCanvas" width="600" height="300"></canvas>
+<div class="controls">
+  <div class="ctrl-btn" onclick="adjustAngle(-5)">◀ Açı -5°</div>
+  <div class="ctrl-btn" onclick="fire()" style="background:var(--pri);">🔥 ATEŞ!</div>
+  <div class="ctrl-btn" onclick="adjustAngle(5)">Açı +5° ▶</div>
+  <div class="ctrl-btn" onclick="adjustPower(-10)">Güç ▼</div>
+  <div class="ctrl-btn" id="infoBtn" onclick="showInfo()">ℹ Bilgi</div>
+  <div class="ctrl-btn" onclick="adjustPower(10)">Güç ▲</div>
+</div>
+<div class="info" id="infoPanel" style="display:none;"></div>
+</div>
+<div class="result-overlay" id="resultOverlay">
+<div class="result-box">
+  <h2 id="finalTitle"></h2>
+  <p id="finalText"></p>
+  <button class="btn" onclick="location.reload()">Tekrar Oyna</button>
+  <a href="oza-hub.html" class="btn" style="background:#374151;">← OZA</a>
+</div>
+</div>
+<script>
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+const castles=[
+  {name:"Konstantinopolis Surları (1453)",hp:100,width:60,height:80,info:"Fatih Sultan Mehmed, Macar mühendis Urban'ın döktüğü 8 metrelik Şahi toplarıyla 53 gün boyunca surları dövdü. 680 kg'lık mermi 1.5 km menzile sahipti."},
+  {name:"Akka Kalesi (1291)",hp:80,width:50,height:70,info:"Memlükler 43 günlük kuşatma sonunda Haçlıların son kalesi Akka'yı aldı. Mancınık ve lağım tekniği kullanıldı."},
+  {name:"Rodos Kalesi (1522)",hp:120,width:70,height:90,info:"Kanuni Sultan Süleyman 100.000 askerle 5 ay kuşattı. Şövalyelerin modern tahkimatı topçuluğa dayanıklıydı."},
+  {name:"Viyana Surları (1529)",hp:90,width:55,height:75,info:"Kanuni'nin ilk Viyana kuşatması. Lojistik sorunlar ve kış nedeniyle geri çekildi. 40+ lağım kazıldı."},
+  {name:"Belgrad Kalesi (1521)",hp:70,width:45,height:65,info:"Kanuni'nin ilk büyük fethi. Tuna ve Sava nehirlerinin birleştiği stratejik nokta. Topçu ateşi + lağım kombinasyonu."},
+  {name:"Bağdat Kalesi (1638)",hp:110,width:65,height:85,info:"IV. Murad bizzat komuta etti. 39 günlük kuşatma. Osmanlı topçuluğunun son büyük başarılarından."}
+];
+let level=0,angle=45,power=60,ammo=10,score=0,projectiles=[],wallHP=100;
+
+function drawScene(){
+  ctx.clearRect(0,0,600,300);
+  // Ground
+  ctx.fillStyle='#1a472a';ctx.fillRect(0,260,600,40);
+  // Trebuchet/cannon
+  ctx.fillStyle='#8b4513';ctx.fillRect(30,220,40,40);
+  ctx.fillStyle='#654321';ctx.fillRect(40,200,20,20);
+  // Angle indicator
+  ctx.strokeStyle='#ff6b35';ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(50,220);
+  ctx.lineTo(50+Math.cos(-angle*Math.PI/180)*40,220+Math.sin(-angle*Math.PI/180)*40);
+  ctx.stroke();
+  // Castle
+  const c=castles[level];
+  const wallX=500-c.width/2;
+  const wallH=c.height*(wallHP/c.hp);
+  ctx.fillStyle='#6b7280';ctx.fillRect(wallX,260-wallH,c.width,wallH);
+  // Battlements
+  for(let i=0;i<3;i++) ctx.fillRect(wallX+i*20,260-wallH-15,15,15);
+  // HP bar
+  ctx.fillStyle='#374151';ctx.fillRect(wallX,260-wallH-30,c.width,8);
+  ctx.fillStyle=wallHP>50?'#10b981':'#ef4444';ctx.fillRect(wallX,260-wallH-30,c.width*(wallHP/c.hp),8);
+  // Projectiles
+  ctx.fillStyle='#ff6b35';
+  projectiles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fill();});
+  // HUD on canvas
+  ctx.fillStyle='#e8e6e3';ctx.font='12px IBM Plex Mono';
+  ctx.fillText(`Açı: ${angle}° | Güç: ${power}%`,10,15);
+  ctx.fillText(c.name,350,15);
+}
+
+function adjustAngle(d){angle=Math.max(10,Math.min(80,angle+d));drawScene();}
+function adjustPower(d){power=Math.max(20,Math.min(100,power+d));drawScene();}
+
+function fire(){
+  if(ammo<=0) return;
+  ammo--;document.getElementById('ammoTxt').textContent=`Mermi: ${ammo}`;
+  const vx=power*0.12*Math.cos(-angle*Math.PI/180);
+  const vy=power*0.12*Math.sin(-angle*Math.PI/180);
+  let px=60,py=220;
+  const anim=setInterval(()=>{
+    px+=vx;py+=vy;py+=0.3;// gravity
+    projectiles=[{x:px,y:py}];
+    drawScene();
+    const c=castles[level];
+    const wallX=500-c.width/2;
+    if(px>=wallX&&px<=wallX+c.width&&py>=260-c.height*(wallHP/c.hp)){
+      clearInterval(anim);
+      wallHP=Math.max(0,wallHP-30-Math.floor(power/4));
+      projectiles=[];
+      drawScene();
+      if(wallHP<=0) nextLevel();
+      else if(ammo<=0&&wallHP>0) gameOver();
+    }
+    if(py>280||px>620){clearInterval(anim);projectiles=[];drawScene();if(ammo<=0&&wallHP>0) gameOver();}
+  },30);
+}
+
+function nextLevel(){
+  score+=wallHP<=0?100+ammo*20:50;
+  document.getElementById('scoreTxt').textContent=`Puan: ${score}`;
+  level++;
+  if(level>=castles.length){endGame(true);return;}
+  ammo=10;wallHP=castles[level].hp;
+  document.getElementById('levelTxt').textContent=`Kale ${level+1}/${castles.length}`;
+  document.getElementById('ammoTxt').textContent=`Mermi: ${ammo}`;
+  drawScene();
+}
+
+function gameOver(){endGame(false);}
+function endGame(won){
+  const o=document.getElementById('resultOverlay');o.style.display='flex';
+  document.getElementById('finalTitle').textContent=won?'Fetih Tamamlandı!':'Kuşatma Başarısız';
+  document.getElementById('finalText').textContent=`${score} puan · ${level}/${castles.length} kale fethedildi`;
+}
+
+function showInfo(){
+  const p=document.getElementById('infoPanel');
+  if(p.style.display==='none'){
+    p.style.display='block';
+    p.innerHTML=`<h3>${castles[level].name}</h3><p>${castles[level].info}</p>`;
+  } else p.style.display='none';
+}
+
+wallHP=castles[0].hp;
+drawScene();
+</script>
+</body>
+</html>

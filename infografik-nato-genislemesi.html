@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>NATO Genişlemesi — İnteraktif İnfografik | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Sans',sans-serif;background:#0a0e1a;color:#e2e8f0;overflow-x:hidden;}
+:root{--nato-blue:#004990;--nato-light:#1a73e8;--gold:#c9a24b;--red:#c41e3a;--bg:#0a0e1a;--card:#111827;}
+
+.sound-toggle{position:fixed;top:12px;right:12px;z-index:9999;background:rgba(10,14,26,0.95);border:1px solid rgba(26,115,232,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;cursor:pointer;font-size:14px;backdrop-filter:blur(8px);border:none;}
+.sound-toggle.active{color:var(--nato-light);}
+
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(26,115,232,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:0.5;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+
+/* HERO */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 60%,#0a1a3a 0%,#0a0e1a 70%);}
+.hero-compass{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:400px;opacity:0.03;border:2px solid var(--nato-light);border-radius:50%;animation:rotate 60s linear infinite;}
+@keyframes rotate{from{transform:translate(-50%,-50%) rotate(0);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+.hero-content{position:relative;z-index:10;text-align:center;}
+.hero-badge{display:inline-block;padding:4px 12px;border:1px solid var(--nato-light);border-radius:4px;font-size:0.7rem;color:var(--nato-light);letter-spacing:0.2em;margin-bottom:1rem;opacity:0;animation:fadeUp 1s 0.5s forwards;}
+.hero-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,7vw,4.5rem);font-weight:700;color:#fff;margin:0.5rem 0;opacity:0;animation:fadeUp 1s 0.8s forwards;}
+.hero-title span{color:var(--nato-light);}
+.hero-desc{font-size:clamp(0.9rem,2vw,1.1rem);color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto;opacity:0;animation:fadeUp 1s 1.2s forwards;}
+.hero-numbers{display:flex;gap:3rem;justify-content:center;margin-top:2rem;flex-wrap:wrap;opacity:0;animation:fadeUp 1s 1.6s forwards;}
+.hero-num{text-align:center;}
+.hero-num-val{font-family:'IBM Plex Mono',monospace;font-size:3rem;font-weight:700;color:var(--nato-light);}
+.hero-num-lbl{font-size:0.7rem;color:rgba(255,255,255,0.4);text-transform:uppercase;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.3);font-size:0.75rem;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+/* SECTIONS */
+.section{padding:6rem 1.5rem;max-width:1200px;margin:0 auto;position:relative;z-index:10;}
+.section-title{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#fff;margin-bottom:0.5rem;opacity:0;transform:translateY(40px);transition:all 0.8s;}
+.section-title.visible{opacity:1;transform:translateY(0);}
+.section-subtitle{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:2rem;opacity:0;transform:translateY(20px);transition:all 0.8s 0.2s;}
+.section-subtitle.visible{opacity:1;transform:translateY(0);}
+
+/* WAVE GRID */
+.wave-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;margin-top:2rem;}
+.wave-card{background:var(--card);border:1px solid rgba(26,115,232,0.1);border-radius:10px;padding:1.2rem;opacity:0;transform:translateY(25px);transition:all 0.6s;position:relative;overflow:hidden;}
+.wave-card.visible{opacity:1;transform:translateY(0);}
+.wave-card:hover{border-color:var(--nato-light);box-shadow:0 8px 30px rgba(26,115,232,0.1);}
+.wave-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--nato-light);transform:scaleX(0);transition:transform 0.5s;}
+.wave-card.visible::before{transform:scaleX(1);}
+.wave-year{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--nato-light);margin-bottom:0.5rem;}
+.wave-title{font-family:'Chakra Petch',sans-serif;font-size:1rem;font-weight:600;color:#fff;margin-bottom:0.5rem;}
+.wave-countries{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.6;}
+.wave-count{position:absolute;top:1rem;right:1rem;font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:700;color:rgba(26,115,232,0.2);}
+
+/* MEMBER COUNT COUNTER */
+.member-counter{text-align:center;margin:3rem 0;padding:2rem;background:rgba(26,115,232,0.05);border:1px solid rgba(26,115,232,0.1);border-radius:12px;}
+.member-counter-val{font-family:'IBM Plex Mono',monospace;font-size:5rem;font-weight:700;color:var(--nato-light);text-shadow:0 0 30px rgba(26,115,232,0.3);}
+.member-counter-lbl{font-size:0.9rem;color:rgba(255,255,255,0.5);}
+
+/* COMPARISON */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem;}
+.compare-side{background:var(--card);border-radius:12px;padding:1.5rem;opacity:0;transform:translateX(-20px);transition:all 0.8s;}
+.compare-side.visible{opacity:1;transform:translateX(0);}
+.compare-side:last-child{transform:translateX(20px);}
+.compare-side:last-child.visible{transform:translateX(0);}
+.compare-title{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:1rem;text-align:center;}
+.compare-stat{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.8rem;}
+.compare-stat span:last-child{font-family:'IBM Plex Mono',monospace;font-weight:600;}
+
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--nato-light),transparent);opacity:0.2;}
+
+@media(max-width:768px){
+  .compare-grid{grid-template-columns:1fr;}
+  .hero-numbers{gap:1.5rem;}
+  .wave-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="particles" id="particles"></div>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔇</button>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-compass"></div>
+  <div class="hero-content">
+    <div class="hero-badge">NORTH ATLANTIC TREATY ORGANIZATION</div>
+    <h1 class="hero-title"><span>NATO</span> GENİŞLEMESİ</h1>
+    <p class="hero-desc">1949'da 12 üyeyle kurulan ittifak, 2024'te 32 üyeye ulaştı. Soğuk Savaş'tan günümüze genişlemenin stratejik analizi.</p>
+    <div class="hero-numbers">
+      <div class="hero-num"><div class="hero-num-val" data-count="32">0</div><div class="hero-num-lbl">Üye Ülke</div></div>
+      <div class="hero-num"><div class="hero-num-val" data-count="75">0</div><div class="hero-num-lbl">Yıllık Tarih</div></div>
+      <div class="hero-num"><div class="hero-num-val" data-count="3">0</div><div class="hero-num-lbl">Milyon Asker</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ Keşfetmek için kaydırın</div>
+</section>
+
+<!-- GENİŞLEME DALGALARI -->
+<section class="section">
+  <h2 class="section-title" data-anim>Genişleme Dalgaları</h2>
+  <p class="section-subtitle" data-anim>NATO'nun 9 genişleme dalgası ve katılan ülkeler</p>
+  
+  <div class="wave-grid">
+    <div class="wave-card" data-anim>
+      <div class="wave-count">12</div>
+      <div class="wave-year">1949 — Kurucu Üyeler</div>
+      <div class="wave-title">Atlantik Paktı</div>
+      <div class="wave-countries">ABD, İngiltere, Fransa, Kanada, İtalya, Belçika, Hollanda, Lüksemburg, Norveç, Danimarka, İzlanda, Portekiz</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+2</div>
+      <div class="wave-year">1952 — İlk Genişleme</div>
+      <div class="wave-title">Güney Kanat</div>
+      <div class="wave-countries">Türkiye, Yunanistan — Kore Savaşı sonrası Sovyet tehdidine karşı güney kanadın güçlendirilmesi</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+1</div>
+      <div class="wave-year">1955</div>
+      <div class="wave-title">Batı Almanya</div>
+      <div class="wave-countries">Federal Almanya Cumhuriyeti — Varşova Paktı'nın kurulmasına yol açtı</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+1</div>
+      <div class="wave-year">1982</div>
+      <div class="wave-title">İspanya</div>
+      <div class="wave-countries">İspanya — Franco sonrası demokratikleşme ile NATO'ya katılım</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+3</div>
+      <div class="wave-year">1999 — Soğuk Savaş Sonrası</div>
+      <div class="wave-title">Doğu Açılımı</div>
+      <div class="wave-countries">Polonya, Çekya, Macaristan — Eski Varşova Paktı üyeleri</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+7</div>
+      <div class="wave-year">2004 — Büyük Genişleme</div>
+      <div class="wave-title">Baltık + Balkanlar</div>
+      <div class="wave-countries">Estonya, Letonya, Litvanya, Slovenya, Slovakya, Bulgaristan, Romanya</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+2</div>
+      <div class="wave-year">2009</div>
+      <div class="wave-title">Balkan Genişlemesi</div>
+      <div class="wave-countries">Arnavutluk, Hırvatistan</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+2</div>
+      <div class="wave-year">2017-2020</div>
+      <div class="wave-title">Son Balkan Üyeleri</div>
+      <div class="wave-countries">Karadağ (2017), Kuzey Makedonya (2020)</div>
+    </div>
+    <div class="wave-card" data-anim>
+      <div class="wave-count">+2</div>
+      <div class="wave-year">2023-2024 — Ukrayna Etkisi</div>
+      <div class="wave-title">İskandinav Genişlemesi</div>
+      <div class="wave-countries">Finlandiya (2023), İsveç (2024) — Rusya'nın Ukrayna işgali sonrası tarihi karar</div>
+    </div>
+  </div>
+  
+  <div class="member-counter" data-anim>
+    <div class="member-counter-val" data-count="32">0</div>
+    <div class="member-counter-lbl">Toplam Üye Ülke (2024)</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- KARŞILAŞTIRMA -->
+<section class="section">
+  <h2 class="section-title" data-anim>NATO vs Rusya — Askerî Güç</h2>
+  <p class="section-subtitle" data-anim>2025 yılı karşılaştırmalı askerî güç analizi</p>
+  
+  <div class="compare-grid">
+    <div class="compare-side" data-anim style="border:1px solid rgba(26,115,232,0.2);">
+      <div class="compare-title" style="color:var(--nato-light);">🛡️ NATO (32 Üye)</div>
+      <div class="compare-stat"><span>Aktif Personel</span><span style="color:var(--nato-light);">3.5 Milyon</span></div>
+      <div class="compare-stat"><span>Savunma Bütçesi</span><span style="color:var(--nato-light);">$1.2 Trilyon</span></div>
+      <div class="compare-stat"><span>Savaş Uçağı</span><span style="color:var(--nato-light);">5.600+</span></div>
+      <div class="compare-stat"><span>Savaş Gemisi</span><span style="color:var(--nato-light);">2.000+</span></div>
+      <div class="compare-stat"><span>Tank</span><span style="color:var(--nato-light);">14.000+</span></div>
+      <div class="compare-stat"><span>Nükleer Başlık</span><span style="color:var(--nato-light);">~5.500</span></div>
+    </div>
+    <div class="compare-side" data-anim style="border:1px solid rgba(196,30,58,0.2);">
+      <div class="compare-title" style="color:var(--red);">🇷🇺 Rusya</div>
+      <div class="compare-stat"><span>Aktif Personel</span><span style="color:var(--red);">1.3 Milyon</span></div>
+      <div class="compare-stat"><span>Savunma Bütçesi</span><span style="color:var(--red);">$109 Milyar</span></div>
+      <div class="compare-stat"><span>Savaş Uçağı</span><span style="color:var(--red);">1.500+</span></div>
+      <div class="compare-stat"><span>Savaş Gemisi</span><span style="color:var(--red);">600+</span></div>
+      <div class="compare-stat"><span>Tank</span><span style="color:var(--red);">12.000+</span></div>
+      <div class="compare-stat"><span>Nükleer Başlık</span><span style="color:var(--red);">~6.200</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:4rem 1rem;border-top:1px solid rgba(255,255,255,0.05);position:relative;z-index:10;">
+  <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace;">HARB-İ STRATEJİ · NATO GENİŞLEME ANALİZİ · 2026</p>
+</div>
+
+<script>
+// PARTICLES
+(function(){const c=document.getElementById('particles');for(let i=0;i<20;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(8+Math.random()*12)+'s');p.style.animationDelay=Math.random()*12+'s';c.appendChild(p);}})();
+
+// SCROLL OBSERVER
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.querySelectorAll('[data-count]').forEach(c=>animateCounter(c,parseInt(c.dataset.count)));}});},{threshold:0.15});
+document.querySelectorAll('[data-anim]').forEach(el=>obs.observe(el));
+
+// Hero counters
+setTimeout(()=>{document.querySelectorAll('.hero-num-val[data-count]').forEach(el=>animateCounter(el,parseInt(el.dataset.count)));},2000);
+
+function animateCounter(el,target){
+  if(el.dataset.animated)return;el.dataset.animated='1';
+  let current=0;const step=Math.max(1,target/40);
+  const iv=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(iv);}el.textContent=Math.round(current);},40);
+}
+
+// SOUND
+let audioCtx=null,isPlaying=false;
+function toggleSound(){
+  const btn=document.getElementById('soundToggle');
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(!isPlaying){
+    const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
+    osc.type='sine';osc.frequency.value=110;gain.gain.value=0.03;
+    const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=200;
+    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start();
+    window._nodes={osc};
+    btn.textContent='🔊';btn.classList.add('active');isPlaying=true;
+  }else{
+    window._nodes.osc.stop();
+    btn.textContent='🔇';btn.classList.remove('active');isPlaying=false;
+  }
+}
+</script>
+</body>
+</html>

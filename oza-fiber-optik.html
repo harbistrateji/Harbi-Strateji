@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="hs-skip" content="true">
+<title>Fiber-Optik Örümcek — Harb-i Strateji OZA</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#f97316;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:54px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none;padding:5px 12px;border:1px solid var(--line);border-radius:6px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;flex:1;text-align:center;color:var(--orange)}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.main{max-width:720px;margin:0 auto;padding:70px 16px 80px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
+.sv{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700}
+.sl{font-size:9px;color:var(--dim);text-transform:uppercase;margin-top:2px}
+/* Canvas */
+.canvas-wrap{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;background:#060d14}
+canvas{display:block;width:100%;touch-action:none}
+.canvas-hud{position:absolute;top:8px;left:8px;font-size:10px;color:var(--orange);font-family:'Chakra Petch',sans-serif}
+.canvas-hud2{position:absolute;top:8px;right:8px;font-size:10px;color:var(--dim);font-family:'Chakra Petch',sans-serif;text-align:right}
+/* Controls */
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ctrl-btn{padding:14px 8px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--tx);font-size:20px;cursor:pointer;transition:.15s;text-align:center;font-family:'Chakra Petch',sans-serif;user-select:none}
+.ctrl-btn:active,.ctrl-btn.pressed{border-color:var(--orange);background:rgba(249,115,22,.15);transform:scale(.95)}
+.ctrl-center{font-size:12px;padding:10px 8px;color:var(--dim)}
+/* Mission panel */
+.mission-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.mp-label{font-size:10px;color:var(--orange);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.mp-title{font-family:'Chakra Petch',sans-serif;font-size:14px;margin-bottom:6px}
+.mp-desc{font-size:11px;color:var(--dim);line-height:1.7}
+/* Cable meter */
+.cable-meter{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cable-label{font-size:10px;color:var(--dim);white-space:nowrap;min-width:80px}
+.cable-bar{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.cable-fill{height:100%;border-radius:4px;transition:width .3s}
+/* Feedback */
+.feedback{min-height:36px;padding:10px 14px;border-radius:10px;font-size:12px;line-height:1.6;margin-bottom:12px;border:1px solid transparent}
+.feedback.success{background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.2);color:var(--green)}
+.feedback.fail{background:rgba(224,21,21,.08);border-color:rgba(224,21,21,.2);color:var(--red)}
+.feedback.warn{background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.2);color:var(--orange)}
+/* Timer */
+.timer-bar{height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.timer-fill{height:100%;background:var(--orange);border-radius:3px;transition:width .1s linear}
+/* Overlay */
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,15,23,.95);z-index:200;align-items:center;justify-content:center;padding:20px}
+.overlay.show{display:flex}
+.ov-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;max-width:480px;width:100%;text-align:center}
+.ov-title{font-family:'Chakra Petch',sans-serif;font-size:24px;font-weight:700;margin-bottom:8px}
+.ov-sub{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:20px}
+.ov-score{font-family:'Chakra Petch',sans-serif;font-size:48px;font-weight:700;color:var(--orange);margin-bottom:6px}
+.btn-main{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:var(--orange);color:#fff;margin-bottom:8px}
+.btn-sec{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-family:'Chakra Petch',sans-serif;font-size:13px;cursor:pointer;background:transparent;color:var(--dim);margin-bottom:8px;text-decoration:none;display:block}
+.phase-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:20px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;border:1px solid;margin-bottom:12px}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🕸️ FİBER-OPTİK ÖRÜMCEK</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+
+<div class="main">
+  <div class="stats">
+    <div class="sbox"><div class="sv" id="s-pts" style="color:var(--orange)">0</div><div class="sl">PUAN</div></div>
+    <div class="sbox"><div class="sv" id="s-stage" style="color:var(--gold)">1/3</div><div class="sl">AŞAMA</div></div>
+    <div class="sbox"><div class="sv" id="s-cable" style="color:var(--cyan)">100%</div><div class="sl">KABLO</div></div>
+    <div class="sbox"><div class="sv" id="s-detect" style="color:var(--green)">0%</div><div class="sl">TESPİT</div></div>
+  </div>
+
+  <div style="text-align:center;margin-bottom:12px" id="phase-badge"></div>
+
+  <!-- Cable meters -->
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px">
+    <div class="cable-meter">
+      <div class="cable-label">🔌 Kablo</div>
+      <div class="cable-bar"><div class="cable-fill" id="cb-kablo" style="width:100%;background:var(--cyan)"></div></div>
+      <div style="font-size:10px;color:var(--cyan)" id="cv-kablo">100m</div>
+    </div>
+    <div class="cable-meter">
+      <div class="cable-label">👁️ Tespit Riski</div>
+      <div class="cable-bar"><div class="cable-fill" id="cb-tespit" style="width:0%;background:var(--red)"></div></div>
+      <div style="font-size:10px;color:var(--red)" id="cv-tespit">0%</div>
+    </div>
+    <div class="cable-meter">
+      <div class="cable-label">🎯 Hedef Mesafe</div>
+      <div class="cable-bar"><div class="cable-fill" id="cb-mesafe" style="width:100%;background:var(--gold)"></div></div>
+      <div style="font-size:10px;color:var(--gold)" id="cv-mesafe">—</div>
+    </div>
+  </div>
+
+  <!-- Game canvas -->
+  <div class="canvas-wrap">
+    <canvas id="game" height="260"></canvas>
+    <div class="canvas-hud" id="canvas-hud">🕸️ FİBER-OPTİK DRONE</div>
+    <div class="canvas-hud2" id="canvas-hud2">SINYAL: GİZLİ</div>
+  </div>
+
+  <!-- D-pad controls -->
+  <div class="controls">
+    <div></div>
+    <button class="ctrl-btn" id="btn-up" onpointerdown="startMove('up')" onpointerup="stopMove()" onpointerleave="stopMove()">▲</button>
+    <div></div>
+    <button class="ctrl-btn" id="btn-left" onpointerdown="startMove('left')" onpointerup="stopMove()" onpointerleave="stopMove()">◀</button>
+    <div class="ctrl-center" id="ctrl-info">HAREKET</div>
+    <button class="ctrl-btn" id="btn-right" onpointerdown="startMove('right')" onpointerup="stopMove()" onpointerleave="stopMove()">▶</button>
+    <div></div>
+    <button class="ctrl-btn" id="btn-down" onpointerdown="startMove('down')" onpointerup="stopMove()" onpointerleave="stopMove()">▼</button>
+    <button class="ctrl-btn" id="btn-action" onclick="doAction()" style="border-color:var(--orange);color:var(--orange)">⚡ VUR</button>
+  </div>
+
+  <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+  <div class="mission-panel" id="mission-panel"></div>
+  <div class="feedback" id="feedback"></div>
+</div>
+
+<!-- Start overlay -->
+<div class="overlay show" id="ov-start">
+  <div class="ov-box">
+    <div style="font-size:36px;margin-bottom:12px">🕸️</div>
+    <div class="ov-title" style="color:var(--orange)">FİBER-OPTİK ÖRÜMCEK</div>
+    <div class="ov-sub">Elektronik harp her şeyi kör etti. Radyo sinyali yok, GPS yok — sadece fiziksel kablo. Jammer'lardan etkilenmeyen fiber-optik drone'unu yönlendir, hedefi vur, kablo kopmasın.<br><br>
+    <strong>Kurallar:</strong><br>
+    🔌 Kablo mesafesi sınırlı (100m)<br>
+    👁️ Hareket tespit riskini artırır<br>
+    🎯 Hedefe yaklaş ve vur<br>
+    ⚠️ Kablo koparsa görev başarısız</div>
+    <button class="btn-main" onclick="startGame()">🕸️ GÖREVE BAŞLA</button>
+    <a href="oza-hub.html" class="btn-sec">← OZA Hub</a>
+  </div>
+</div>
+
+<!-- End overlay -->
+<div class="overlay" id="ov-end">
+  <div class="ov-box">
+    <div class="ov-score" id="end-score">0</div>
+    <div style="font-size:14px;color:var(--gold);margin-bottom:12px" id="end-rank">—</div>
+    <div class="ov-sub" id="end-desc"></div>
+    <button class="btn-main" onclick="yenidenBaslatGame()">🔄 Tekrar Oyna</button>
+    <a href="oza-hub.html" class="btn-sec">← OZA Hub</a>
+  </div>
+</div>
+
+<script>
+var canvas=document.getElementById('game');
+var ctx=canvas.getContext('2d');
+var W,H;
+function resize(){W=canvas.offsetWidth;H=260;canvas.width=W;canvas.height=H;}
+resize();window.addEventListener('resize',resize);
+
+var STAGES=[
+  {label:'AŞAMA 1 — ORMAN SIZMASI',color:'var(--orange)',timeLimit:45,cableMax:100,targets:1,jammers:0,
+   desc:'Ormanlık arazide düşman mevzisine sızın. Kablo mesafenizi dikkatli kullanın.'},
+  {label:'AŞAMA 2 — ŞEHİR HARABELERI',color:'var(--gold)',timeLimit:40,cableMax:80,targets:2,jammers:2,
+   desc:'Şehir harabelerinde fiber ağ döşeyin. Jammer\'lar aktif ama kablonuza etki etmez.'},
+  {label:'AŞAMA 3 — DÜŞMAN ÜSSÜ',color:'var(--red)',timeLimit:35,cableMax:60,targets:3,jammers:4,
+   desc:'Düşman üssüne sızın. Kablo kısa, hedefler çok. Öncelik sıralaması kritik.'}
+];
+
+var stage=0,pts=0,missionCount=0;
+var drone={x:50,y:130,vx:0,vy:0};
+var targets=[],jammers=[],cablePoints=[];
+var cableUsed=0,cableMax=100,detectRisk=0;
+var moving=null,moveInterval=null;
+var gameRunning=false,timer=null,timeLeft=0;
+var frame=0;
+
+function startGame(){
+  document.getElementById('ov-start').classList.remove('show');
+  stage=0;pts=0;missionCount=0;
+  loadStage();
+}
+
+function loadStage(){
+  var s=STAGES[stage];
+  cableMax=s.cableMax;
+  cableUsed=0;detectRisk=0;
+  drone={x:40,y:H/2,vx:0,vy:0};
+  cablePoints=[{x:drone.x,y:drone.y}];
+  targets=[];jammers=[];
+  // Spawn targets
+  for(var i=0;i<s.targets;i++){
+    targets.push({x:W-60-i*40,y:60+i*60,r:14,hit:false,pulse:Math.random()*Math.PI*2});
+  }
+  // Spawn jammers
+  for(var j=0;j<s.jammers;j++){
+    jammers.push({x:100+j*80,y:40+j*50,r:30,active:true});
+  }
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  document.getElementById('phase-badge').innerHTML=
+    '<div class="phase-pill" style="border-color:'+s.color+';color:'+s.color+'">'+s.label+'</div>';
+  document.getElementById('mission-panel').innerHTML=
+    '<div class="mp-label">🎯 GÖREV '+(stage+1)+'</div>'+
+    '<div class="mp-title">'+s.label+'</div>'+
+    '<div class="mp-desc">'+s.desc+' Kablo: '+cableMax+'m | Hedef: '+s.targets+' | Jammer: '+s.jammers+'</div>';
+  timeLeft=s.timeLimit;
+  document.getElementById('timer-fill').style.width='100%';
+  clearInterval(timer);
+  timer=setInterval(function(){
+    timeLeft--;
+    document.getElementById('timer-fill').style.width=(timeLeft/s.timeLimit*100)+'%';
+    if(timeLeft<=0){clearInterval(timer);failMission('Süre doldu!');}
+  },1000);
+  gameRunning=true;
+  updateHUD();
+  requestAnimationFrame(gameLoop);
+}
+
+function startMove(dir){
+  moving=dir;
+  clearInterval(moveInterval);
+  moveInterval=setInterval(function(){
+    if(!gameRunning)return;
+    var speed=2.5;
+    var prevX=drone.x,prevY=drone.y;
+    if(dir==='up')drone.y-=speed;
+    if(dir==='down')drone.y+=speed;
+    if(dir==='left')drone.x-=speed;
+    if(dir==='right')drone.x+=speed;
+    // Clamp
+    drone.x=Math.max(10,Math.min(W-10,drone.x));
+    drone.y=Math.max(10,Math.min(H-10,drone.y));
+    // Cable usage
+    var dx=drone.x-prevX,dy=drone.y-prevY;
+    var dist=Math.sqrt(dx*dx+dy*dy);
+    cableUsed+=dist;
+    cablePoints.push({x:drone.x,y:drone.y});
+    if(cablePoints.length>200)cablePoints.shift();
+    // Detect risk increases with movement
+    detectRisk=Math.min(100,detectRisk+0.3);
+    // Check cable limit
+    if(cableUsed>=cableMax){
+      stopMove();
+      failMission('Kablo koptu! Mesafe aşıldı.');
+      return;
+    }
+    updateHUD();
+    checkTargets();
+  },50);
+}
+
+function stopMove(){moving=null;clearInterval(moveInterval);}
+
+function doAction(){
+  if(!gameRunning)return;
+  // Check if near any target
+  var hit=false;
+  targets.forEach(function(t){
+    if(t.hit)return;
+    var dx=drone.x-t.x,dy=drone.y-t.y;
+    if(Math.sqrt(dx*dx+dy*dy)<t.r+15){
+      t.hit=true;hit=true;
+      pts+=200*(stage+1);missionCount++;
+      document.getElementById('s-pts').textContent=pts;
+      document.getElementById('hdr-pts').textContent='⭐ '+pts;
+      var fb=document.getElementById('feedback');
+      fb.className='feedback success';
+      fb.textContent='💥 HEDEF VURULDu! +'+200*(stage+1)+' puan | Sinyal sıfır, tespit yok!';
+    }
+  });
+  if(!hit){
+    detectRisk=Math.min(100,detectRisk+5);
+    var fb=document.getElementById('feedback');
+    fb.className='feedback warn';
+    fb.textContent='⚠️ Hedef menzil dışı. Yaklaş!';
+  }
+  // Check all targets hit
+  var allHit=targets.every(function(t){return t.hit;});
+  if(allHit){
+    clearInterval(timer);
+    var fb=document.getElementById('feedback');
+    fb.className='feedback success';
+    fb.textContent='✅ Tüm hedefler vuruldu! Göreve devam...';
+    setTimeout(function(){nextStage();},1500);
+  }
+  updateHUD();
+}
+
+function checkTargets(){
+  targets.forEach(function(t){
+    if(t.hit)return;
+    var dx=drone.x-t.x,dy=drone.y-t.y;
+    var dist=Math.sqrt(dx*dx+dy*dy);
+    var pct=Math.max(0,100-dist/W*200);
+    document.getElementById('cb-mesafe').style.width=pct+'%';
+    document.getElementById('cv-mesafe').textContent=Math.round(dist)+'m';
+  });
+}
+
+function updateHUD(){
+  var cableLeft=Math.max(0,cableMax-cableUsed);
+  var cablePct=cableLeft/cableMax*100;
+  document.getElementById('s-cable').textContent=Math.round(cableLeft)+'m';
+  document.getElementById('s-detect').textContent=Math.round(detectRisk)+'%';
+  document.getElementById('cb-kablo').style.width=cablePct+'%';
+  document.getElementById('cv-kablo').textContent=Math.round(cableLeft)+'m';
+  document.getElementById('cb-tespit').style.width=detectRisk+'%';
+  document.getElementById('cv-tespit').textContent=Math.round(detectRisk)+'%';
+  document.getElementById('canvas-hud2').textContent=detectRisk>50?'⚠️ TESPİT RİSKİ':'✅ GİZLİ';
+  // If detected
+  if(detectRisk>=100){failMission('Tespit edildiniz!');}
+}
+
+function failMission(msg){
+  gameRunning=false;clearInterval(timer);stopMove();
+  var fb=document.getElementById('feedback');
+  fb.className='feedback fail';
+  fb.textContent='❌ '+msg+' Görev başarısız.';
+  setTimeout(function(){endGame();},1500);
+}
+
+function nextStage(){
+  stage++;
+  if(stage>=STAGES.length){endGame();}
+  else{loadStage();}
+}
+
+function endGame(){
+  gameRunning=false;clearInterval(timer);
+  var rank=pts>=2000?'🎖️ Gölge Operatör':pts>=1000?'⭐ Fiber Uzmanı':pts>=400?'🔰 Sızma Ajanı':'📋 Stajyer';
+  document.getElementById('end-score').textContent=pts;
+  document.getElementById('end-rank').textContent=rank;
+  document.getElementById('end-desc').textContent='Hedef: '+missionCount+' | Kablo kullanımı: '+Math.round(cableUsed)+'m | Tespit riski: '+Math.round(detectRisk)+'%';
+  document.getElementById('ov-end').classList.add('show');
+  try{var best=parseInt(localStorage.getItem('hs_fiber_optik')||'0');if(pts>best)localStorage.setItem('hs_fiber_optik',pts);}catch(e){}
+}
+
+function yenidenBaslatGame(){document.getElementById('ov-end').classList.remove('show');startGame();}
+
+function gameLoop(){
+  if(!gameRunning&&frame>0)return;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#060d14';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(0,224,255,0.03)';ctx.lineWidth=1;
+  for(var x=0;x<W;x+=30){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(var y=0;y<H;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Jammers
+  jammers.forEach(function(j){
+    var grad=ctx.createRadialGradient(j.x,j.y,0,j.x,j.y,j.r);
+    grad.addColorStop(0,'rgba(224,21,21,0.2)');grad.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(j.x,j.y,j.r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+    ctx.beginPath();ctx.arc(j.x,j.y,j.r,0,Math.PI*2);ctx.strokeStyle='rgba(224,21,21,0.4)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='rgba(224,21,21,0.6)';ctx.font='10px Chakra Petch';ctx.textAlign='center';
+    ctx.fillText('JAM',j.x,j.y+4);
+  });
+  // Cable
+  if(cablePoints.length>1){
+    ctx.beginPath();ctx.moveTo(cablePoints[0].x,cablePoints[0].y);
+    cablePoints.forEach(function(p){ctx.lineTo(p.x,p.y);});
+    ctx.strokeStyle='rgba(249,115,22,0.6)';ctx.lineWidth=2;ctx.stroke();
+  }
+  // Targets
+  targets.forEach(function(t){
+    if(t.hit){
+      ctx.beginPath();ctx.arc(t.x,t.y,t.r*2,0,Math.PI*2);
+      ctx.strokeStyle='rgba(224,21,21,'+(0.5-frame%30/60)+')';ctx.lineWidth=2;ctx.stroke();
+      return;
+    }
+    t.pulse+=0.06;
+    var pr=t.r+Math.sin(t.pulse)*3;
+    ctx.beginPath();ctx.arc(t.x,t.y,pr,0,Math.PI*2);
+    ctx.strokeStyle='rgba(201,162,75,0.4)';ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,162,75,0.15)';ctx.fill();
+    ctx.strokeStyle='#C9A24B';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#C9A24B';ctx.font='12px Chakra Petch';ctx.textAlign='center';
+    ctx.fillText('⊕',t.x,t.y+4);
+  });
+  // Drone
+  ctx.beginPath();ctx.arc(drone.x,drone.y,8,0,Math.PI*2);
+  ctx.fillStyle='rgba(249,115,22,0.3)';ctx.fill();
+  ctx.strokeStyle='#f97316';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#f97316';ctx.font='12px Chakra Petch';ctx.textAlign='center';
+  ctx.fillText('◈',drone.x,drone.y+4);
+  frame++;
+  requestAnimationFrame(gameLoop);
+}
+
+// ===== SOUND EFFECTS =====
+var _audioCtx;
+function _getAudio(){if(!_audioCtx)_audioCtx=new(window.AudioContext||window.webkitAudioContext)();return _audioCtx;}
+function sfxBomb(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(150,a.currentTime);o.frequency.exponentialRampToValueAtTime(30,a.currentTime+0.5);g.gain.setValueAtTime(0.4,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.6);o.start();o.stop(a.currentTime+0.6);}
+function sfxAlarm(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.type='square';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(800,a.currentTime);o.frequency.setValueAtTime(600,a.currentTime+0.15);o.frequency.setValueAtTime(800,a.currentTime+0.3);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.5);o.start();o.stop(a.currentTime+0.5);}
+function sfxSuccess(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(523,a.currentTime);o.frequency.setValueAtTime(659,a.currentTime+0.1);o.frequency.setValueAtTime(784,a.currentTime+0.2);g.gain.setValueAtTime(0.2,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.4);o.start();o.stop(a.currentTime+0.4);}
+function sfxClick(){var a=_getAudio();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=600;o.type='sine';g.gain.setValueAtTime(0.1,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.05);o.start();o.stop(a.currentTime+0.05);}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Harb-i Strateji | Pentagon vs <em>Çin</em></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--signal);color:var(--void);}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
+p{color:var(--bone-dim);}
+
+/* Ambient Background */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(57,255,138,0.06), transparent),
+    radial-gradient(ellipse 55% 35% at 95% 90%, rgba(255,77,46,0.05), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+/* Navigation */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(8,13,23,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:0.85rem;
+  letter-spacing:0.05em;color:var(--bone);
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-back{
+  font-family:var(--font-mono);font-size:0.72rem;
+  color:var(--steel);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  transition:color 0.2s;
+}
+.nav-back:hover{color:var(--signal);}
+
+/* Hero */
+.sim-hero{
+  min-height:40vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 32px 60px;
+  max-width:1180px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--signal);display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
+.sim-hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);
+  color:var(--bone);margin-bottom:14px;
+}
+.sim-hero h1 em{font-style:normal;color:var(--signal);}
+.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  max-width:700px;
+}
+.hero-stat{background:var(--deep);padding:16px 14px;}
+.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
+.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* Main Content */
+.sim-content{
+  max-width:1180px;margin:0 auto;
+  padding:40px 32px 100px;
+  position:relative;z-index:1;
+}
+@media(max-width:720px){.sim-content{padding:24px 18px 80px;} .sim-hero{padding:100px 18px 40px;}}
+
+/* Panels */
+.sim-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.sim-panel-header{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--signal);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
+.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
+
+/* Controls */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:var(--deep);border:1px solid var(--line);
+  border-radius:6px;padding:16px;text-align:center;
+}
+.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
+.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
+.stat-card.threat .num{color:var(--threat);}
+.stat-card.warning .num{color:var(--gold);}
+
+/* Buttons */
+.btn{
+  font-family:var(--font-mono);font-size:0.82rem;
+  letter-spacing:0.05em;padding:14px 24px;
+  border-radius:4px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  color:var(--bone);transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
+.btn-ghost{background:transparent;color:var(--bone);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
+.radar-screen{
+  width:100%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);
+  border-radius:50%;border:2px solid var(--signal);
+  position:relative;overflow:hidden;
+}
+.radar-sweep{
+  position:absolute;width:50%;height:50%;top:0;left:50%;
+  transform-origin:bottom left;
+  background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);
+  animation:sweep 3s linear infinite;border-radius:0 100% 0 0;
+}
+@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
+@keyframes blink{to{opacity:0.3;}}
+.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
+
+/* Formula Box */
+.formula-box{
+  background:var(--deep);border-left:3px solid var(--gold);
+  padding:14px 18px;border-radius:0 6px 6px 0;
+  font-family:var(--font-mono);font-size:0.85rem;
+  margin:16px 0;color:var(--gold);
+}
+
+/* Log */
+.log-area{
+  background:var(--void);border:1px solid var(--line);
+  border-radius:6px;padding:12px;
+  max-height:200px;overflow-y:auto;
+  font-family:var(--font-mono);font-size:0.78rem;
+}
+.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
+.log-entry.hit{color:var(--signal);}
+.log-entry.miss{color:var(--threat);}
+.log-entry.info{color:var(--gold);}
+
+/* Progress */
+.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
+.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
+.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
+
+/* Phase Dots */
+.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
+.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
+.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
+
+/* Slider */
+.slider-group{margin:14px 0;}
+.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
+
+/* Result Overlay */
+.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
+.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
+.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
+
+/* Scenario Buttons */
+.scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.scenario-btn{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:8px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--deep);
+  color:var(--bone-dim);cursor:pointer;transition:all 0.2s;
+}
+.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
+.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Filter Chips */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+  margin-bottom:24px;
+}
+.filter-chip{
+  font-family:var(--font-mono);font-size:0.72rem;
+  padding:7px 14px;border:1px solid var(--line);
+  border-radius:20px;color:var(--bone-dim);
+  background:var(--deep);cursor:pointer;transition:all 0.2s;
+}
+.filter-chip:hover{border-color:var(--steel);}
+.filter-chip.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
+
+/* Responsive */
+@media(max-width:720px){
+  .corp-nav{padding:12px 18px;}
+  .nav-links{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .sim-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div class="bg-gradient"></div>
+
+<nav class="corp-nav">
+  <a href="index.html" class="nav-logo">HARB-İ <span>STRATEJİ</span></a>
+  <div class="nav-links">
+    <a href="simulasyonlar.html">Simülasyonlar</a>
+    <a href="infografik.html">İnfografikler</a>
+    <a href="oza-hub.html">OZA</a>
+    <a href="hs-tv.html">HSTV</a>
+  </div>
+  
+</nav>
+<div style="max-width:1320px;margin:0 auto;padding:80px 24px 0;"><a href="simulasyonlar.html" style="color:#39FF8A;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;">← Simülasyonlar</a></div>
+
+<header class="sim-hero">
+  <div class="eyebrow">Stratejik Simülasyon</div>
+  <h1>Pentagon vs <em>Çin</em></h1>
+  <p class="lead">ABD-Çin askeri rekabet simülasyonu — Pasifik'te güç dengesi ve çatışma senaryolarını analiz edin.</p>
+<div class="hero-stats"><div class="hero-stat"><span class="num">2</span><span class="lbl">Süper Güç</span></div><div class="hero-stat"><span class="num">7</span><span class="lbl">Cephe</span></div><div class="hero-stat"><span class="num">2030</span><span class="lbl">Hedef</span></div><div class="hero-stat"><span class="num">5</span><span class="lbl">Senaryo</span></div></div>
+</header>
+
+<main class="sim-content">
+
+
+<h1>PENTAGON 1260H LİSTESİ: TEKNOLOJİ SOĞUK SAVAŞI KARAR MERKEZİ</h1>
+
+
+<div class="phase-indicator">
+<div class="phase-dot active" id="pd1"></div>
+<div class="phase-dot" id="pd2"></div>
+<div class="phase-dot" id="pd3"></div>
+<div class="phase-dot" id="pd4"></div>
+</div>
+
+<!-- BÖLÜM 1: 5 Katmanlı Egemenlik Modeli -->
+<div class="sim-panel" id="section1">
+<h2>5 Katmanlı Egemenlik Modeli: Teknoloji Savaşının Anatomisi</h2>
+<p style="color:#aaa;margin-bottom:15px">Her katmana tıklayarak detayları görün. Pentagon'un 1260H listesi bu katmanların hepsini hedef alıyor.</p>
+<div class="layer-model">
+<div class="layer layer-1" onclick="showLayer(1)">
+<strong>Katman 1: Fiziksel Egemenlik</strong> — Çip Fabrikaları, Nadir Toprak Elementleri, Altyapı
+</div>
+<div class="layer layer-2" onclick="showLayer(2)">
+<strong>Katman 2: Dijital Egemenlik</strong> — Yapay Zeka, Bulut Bilişim, Veri Merkezleri
+</div>
+<div class="layer layer-3" onclick="showLayer(3)">
+<strong>Katman 3: Finansal Egemenlik</strong> — Borsa, Yatırım Akışları, SWIFT Alternatifi
+</div>
+<div class="layer layer-4" onclick="showLayer(4)">
+<strong>Katman 4: Bilişsel Egemenlik</strong> — Sosyal Medya, Eğitim, Kültürel Etki
+</div>
+<div class="layer layer-5" onclick="showLayer(5)">
+<strong>Katman 5: Uzay-Siber Egemenlik</strong> — Uydu Ağları, Kuantum İletişim, Siber Silahlar
+</div>
+</div>
+<div class="result-box" id="layerDetail"></div>
+</div>
+
+<!-- BÖLÜM 2: Şirket Seçimi Simülasyonu -->
+<div class="sim-panel" id="section2">
+<h2>Simülasyon: Siz Pentagon Karar Vericisisiniz</h2>
+<div class="scenario-box">
+<p><strong>Görev:</strong> Çin'in askeri-sivil füzyon stratejisi kapsamında hangi şirketleri listeye alacaksınız? Her seçim diplomatik, ekonomik ve askeri sonuçlar doğuracak.</p>
+</div>
+
+<h3>Şirketleri Seçin (En az 3, en fazla 8)</h3>
+<div class="company-grid" id="companyGrid">
+<div class="company-card" onclick="toggleCompany(this,'alibaba')" data-id="alibaba">
+<div class="name">Alibaba</div><div class="sector">E-Ticaret / Bulut</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'baidu')" data-id="baidu">
+<div class="name">Baidu</div><div class="sector">Yapay Zeka / Arama</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'byd')" data-id="byd">
+<div class="name">BYD</div><div class="sector">Elektrikli Araç</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'tencent')" data-id="tencent">
+<div class="name">Tencent</div><div class="sector">Sosyal Medya / Oyun</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'huawei')" data-id="huawei">
+<div class="name">Huawei</div><div class="sector">Telekomünikasyon / 5G</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'smic')" data-id="smic">
+<div class="name">SMIC</div><div class="sector">Yarı İletken Üretim</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'catl')" data-id="catl">
+<div class="name">CATL</div><div class="sector">Batarya Teknolojisi</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'dji')" data-id="dji">
+<div class="name">DJI</div><div class="sector">Dron Teknolojisi</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'bytedance')" data-id="bytedance">
+<div class="name">ByteDance</div><div class="sector">Sosyal Medya (TikTok)</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'xiaomi')" data-id="xiaomi">
+<div class="name">Xiaomi</div><div class="sector">Tüketici Elektroniği</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'cosco')" data-id="cosco">
+<div class="name">COSCO</div><div class="sector">Denizcilik / Lojistik</div>
+</div>
+<div class="company-card" onclick="toggleCompany(this,'norinco')" data-id="norinco">
+<div class="name">NORINCO</div><div class="sector">Savunma Sanayi</div>
+</div>
+</div>
+<p style="color:#aaa;margin:10px 0">Seçilen: <span id="selectedCount">0</span>/12</p>
+<button class="btn btn-red" onclick="analyzeSelection()">Listeyi Yayınla ve Sonuçları Gör</button>
+</div>
+
+<!-- BÖLÜM 3: Sonuçlar -->
+<div class="sim-panel hidden" id="section3">
+<h2>Kararınızın Sonuçları</h2>
+<div class="score-board">
+<div class="score-card"><div class="value" id="dipScore">0</div><div class="label">Diplomatik Kriz Seviyesi</div></div>
+<div class="score-card"><div class="value" id="ecoScore">0</div><div class="label">Ekonomik Etki ($B)</div></div>
+<div class="score-card"><div class="value" id="secScore">0</div><div class="label">Güvenlik Kazanımı</div></div>
+<div class="score-card"><div class="value" id="retScore">0</div><div class="label">Misilleme Riski</div></div>
+</div>
+
+<h3>Etki Analizi</h3>
+<div id="impactAnalysis"></div>
+
+<div class="koyuncu-box">
+<h3>Koyuncu Kanunları Çerçevesi</h3>
+<p><strong>5 Katmanlı Egemenlik Modeli Uygulaması:</strong></p>
+<div class="formula">Teknolojik Egemenlik = Σ(Katman_i × Kontrol_Derecesi_i) / Bağımlılık_Katsayısı</div>
+<p>ABD'nin 1260H listesi, Çin'in 5 katmanın tamamında egemenlik kurmasını engellemeye yönelik bir "çevreleme stratejisi"dir. Ancak her yaptırım, Çin'in kendi kendine yeterliliğini hızlandıran bir "ters etki" yaratır.</p>
+<div class="formula">Ters Etki Kanunu: Yaptırım_Şiddeti ∝ Hedef_Ülke_Öz_Yeterlilik_Hızı</div>
+<p><strong>Maliyet Asimetrisi:</strong> ABD'nin listeye aldığı her şirket, ABD tüketicisine de maliyet yükler. BYD'nin yasaklanması ABD'de elektrikli araç fiyatlarını %15-20 artırabilir.</p>
+</div>
+</div>
+
+<!-- BÖLÜM 4: Türkiye Perspektifi -->
+<div class="sim-panel" id="section4">
+<h2>Türkiye İçin Fırsat Penceresi</h2>
+<div class="scenario-box">
+<p>ABD-Çin teknoloji savaşı, "üçüncü yol" arayan ülkeler için fırsat yaratıyor. Türkiye bu boşlukta nasıl konumlanmalı?</p>
+</div>
+<div class="options">
+<button class="btn btn-red" onclick="showTurkeyScenario('bridge')">Köprü Ülke Stratejisi</button>
+<button class="btn btn-orange" onclick="showTurkeyScenario('tech')">Yerli Teknoloji Atılımı</button>
+<button class="btn btn-gold" onclick="showTurkeyScenario('turkic')">Türk Devletleri Bloku</button>
+<button class="btn btn-blue" onclick="showTurkeyScenario('neutral')">Stratejik Tarafsızlık</button>
+</div>
+<div class="result-box" id="turkeyResult"></div>
+</div>
+</div>
+</main>
+
+<script>
+
+// Generate floating particles
+(function(){
+var container=document.getElementById('particles');
+if(!container)return;
+for(var i=0;i<30;i++){
+var p=document.createElement('div');
+p.className='particle';
+p.style.left=Math.random()*100+'%';
+p.style.setProperty('--dur',(5+Math.random()*10)+'s');
+p.style.animationDelay=Math.random()*10+'s';
+p.style.width=(1+Math.random()*3)+'px';
+p.style.height=p.style.width;
+container.appendChild(p);
+}
+})();
+
+
+let selectedCompanies = [];
+const companyData = {
+    alibaba: {dip:7, eco:45, sec:3, ret:8, desc:'Dünyanın en büyük e-ticaret platformu. Bulut hizmetleri Çin ordusuna veri altyapısı sağlıyor.'},
+    baidu: {dip:6, eco:20, sec:7, ret:6, desc:'Çin\'in yapay zeka lideri. Otonom araç ve askeri AI projeleri mevcut.'},
+    byd: {dip:8, eco:60, sec:2, ret:9, desc:'Dünyanın en büyük EV üreticisi. Batarya teknolojisi askeri araçlarda kullanılıyor.'},
+    tencent: {dip:7, eco:35, sec:4, ret:7, desc:'WeChat ve oyun devi. Yüz tanıma ve gözetim teknolojileri geliştiriyor.'},
+    huawei: {dip:5, eco:30, sec:9, ret:5, desc:'Zaten kısıtlama altında. 5G altyapısı istihbarat riski taşıyor.'},
+    smic: {dip:4, eco:15, sec:10, ret:4, desc:'Çin\'in en büyük çip üreticisi. Askerî çip üretimi yapıyor.'},
+    catl: {dip:7, eco:50, sec:3, ret:8, desc:'Dünya batarya pazarının %37\'si. Elektrikli araç ve enerji depolama.'},
+    dji: {dip:5, eco:10, sec:9, ret:5, desc:'Dünya dron pazarının %70\'i. Ukrayna\'da her iki tarafça kullanılıyor.'},
+    bytedance: {dip:9, eco:25, sec:5, ret:9, desc:'TikTok\'un sahibi. 1.5 milyar kullanıcı verisi ve algoritma etkisi.'},
+    xiaomi: {dip:6, eco:20, sec:3, ret:6, desc:'Tüketici elektroniği devi. IoT cihazları veri toplama potansiyeli.'},
+    cosco: {dip:6, eco:40, sec:6, ret:7, desc:'Dünya deniz ticaretinin %12\'si. Liman altyapıları stratejik konumlarda.'},
+    norinco: {dip:2, eco:5, sec:10, ret:2, desc:'Doğrudan askeri şirket. Zaten yaptırım altında.'}
+};
+
+function showLayer(num) {
+    const layers = {
+        1: '<h3 style="color:#e30a17">Katman 1: Fiziksel Egemenlik</h3><p><strong>Hedef:</strong> Çip fabrikaları (SMIC), nadir toprak elementleri, 5G altyapısı (Huawei)</p><p><strong>ABD Stratejisi:</strong> CHIPS Act ile yerli üretim, Hollanda\'ya ASML ihracat yasağı baskısı</p><p><strong>Çin Karşı Hamlesi:</strong> Galyum/Germanyum ihracat kısıtlaması, yerli litografi makinesi geliştirme</p><p><strong>Türkiye Etkisi:</strong> Nadir toprak elementleri için alternatif tedarik zinciri fırsatı</p>',
+        2: '<h3 style="color:#d4620a">Katman 2: Dijital Egemenlik</h3><p><strong>Hedef:</strong> Baidu AI, Alibaba Cloud, Tencent veri merkezleri</p><p><strong>ABD Stratejisi:</strong> AI çip ihracat yasağı (H100/A100), bulut hizmeti kısıtlamaları</p><p><strong>Çin Karşı Hamlesi:</strong> DeepSeek, Qwen gibi yerli LLM modelleri, Huawei Ascend çipleri</p><p><strong>Türkiye Etkisi:</strong> Yerli AI modeli geliştirme motivasyonu, veri egemenliği tartışması</p>',
+        3: '<h3 style="color:#c8a415">Katman 3: Finansal Egemenlik</h3><p><strong>Hedef:</strong> Çin şirketlerinin ABD borsalarından çıkarılması, yatırım kısıtlamaları</p><p><strong>ABD Stratejisi:</strong> 1260H listesi ile sözleşme yasağı, emeklilik fonlarından çıkarma</p><p><strong>Çin Karşı Hamlesi:</strong> CIPS (SWIFT alternatifi), dijital yuan, Hong Kong borsası güçlendirme</p><p><strong>Türkiye Etkisi:</strong> Alternatif ödeme sistemleri, Şanghay İşbirliği Örgütü finansal entegrasyonu</p>',
+        4: '<h3 style="color:#888">Katman 4: Bilişsel Egemenlik</h3><p><strong>Hedef:</strong> TikTok (ByteDance), Tencent oyunları, eğitim platformları</p><p><strong>ABD Stratejisi:</strong> TikTok satış/yasaklama, Konfüçyüs Enstitüleri kapatma</p><p><strong>Çin Karşı Hamlesi:</strong> Küresel medya yatırımları, Belt & Road eğitim programları</p><p><strong>Türkiye Etkisi:</strong> Dijital platform bağımsızlığı, yerli sosyal medya tartışması</p>',
+        5: '<h3 style="color:#555">Katman 5: Uzay-Siber Egemenlik</h3><p><strong>Hedef:</strong> BeiDou navigasyon, Tiangong uzay istasyonu, kuantum uydu ağı</p><p><strong>ABD Stratejisi:</strong> Uzay teknolojisi ihracat yasağı, siber operasyonlar</p><p><strong>Çin Karşı Hamlesi:</strong> Bağımsız uzay istasyonu, kuantum iletişim ağı, siber ordu</p><p><strong>Türkiye Etkisi:</strong> Türksat uyduları, ROKETSAN uzay programı, siber güvenlik kapasitesi</p>'
+    };
+    document.getElementById('layerDetail').innerHTML = layers[num];
+    document.getElementById('layerDetail').classList.add('show');
+}
+
+function toggleCompany(el, id) {
+    if(el.classList.contains('selected')) {
+        el.classList.remove('selected');
+        selectedCompanies = selectedCompanies.filter(c => c !== id);
+    } else {
+        if(selectedCompanies.length >= 8) { alert('En fazla 8 şirket seçebilirsiniz!'); return; }
+        el.classList.add('selected');
+        selectedCompanies.push(id);
+    }
+    document.getElementById('selectedCount').textContent = selectedCompanies.length;
+}
+
+function analyzeSelection() {
+    if(selectedCompanies.length < 3) { alert('En az 3 şirket seçmelisiniz!'); return; }
+    
+    let totalDip=0, totalEco=0, totalSec=0, totalRet=0;
+    let analysis = '';
+    
+    selectedCompanies.forEach(c => {
+        const d = companyData[c];
+        totalDip += d.dip;
+        totalEco += d.eco;
+        totalSec += d.sec;
+        totalRet += d.ret;
+        analysis += `<div class="impact-meter"><div class="impact-label"><span>${c.toUpperCase()}</span><span>Güvenlik: ${d.sec}/10 | Ekonomik Risk: $${d.eco}B</span></div><div class="meter"><div class="meter-fill" style="width:${d.sec*10}%;background:linear-gradient(90deg,#e30a17,#d4620a)">${d.sec}/10</div></div></div>`;
+    });
+    
+    const avgDip = Math.round(totalDip / selectedCompanies.length);
+    const avgRet = Math.round(totalRet / selectedCompanies.length);
+    
+    document.getElementById('dipScore').textContent = avgDip + '/10';
+    document.getElementById('ecoScore').textContent = '$' + totalEco + 'B';
+    document.getElementById('secScore').textContent = Math.round(totalSec/selectedCompanies.length) + '/10';
+    document.getElementById('retScore').textContent = avgRet + '/10';
+    document.getElementById('impactAnalysis').innerHTML = analysis;
+    
+    document.getElementById('section3').classList.remove('hidden');
+    document.getElementById('section3').scrollIntoView({behavior:'smooth'});
+    
+    document.getElementById('pd2').classList.add('done');
+    document.getElementById('pd3').classList.add('active');
+}
+
+function showTurkeyScenario(type) {
+    const scenarios = {
+        bridge: '<h3 style="color:#c8a415">Köprü Ülke Stratejisi</h3><p>Türkiye, ABD ve Çin arasında "teknoloji köprüsü" rolü üstlenir. Her iki tarafla da ticaret yapar, ancak kritik teknolojilerde taraf tutmaz.</p><p><strong>Avantajlar:</strong> Her iki pazara erişim, yatırım çekme, arabuluculuk rolü</p><p><strong>Riskler:</strong> Her iki taraftan da baskı, "güvenilmez ortak" algısı</p><p><strong>Koyuncu Analizi:</strong> Köprü stratejisi ancak güçlü bir yerli teknoloji tabanı varsa sürdürülebilir. Aksi halde "bağımlı köprü" olunur.</p><div class="formula">Köprü Gücü = Yerli_Teknoloji_Kapasitesi × Diplomatik_Manevra_Alanı</div>',
+        tech: '<h3 style="color:#e30a17">Yerli Teknoloji Atılımı</h3><p>ABD-Çin savaşını fırsat olarak kullanıp, her iki tarafın da kısıtladığı alanlarda yerli üretim kapasitesi geliştirmek.</p><p><strong>Öncelikli Alanlar:</strong> Savunma AI, dron teknolojisi, batarya üretimi, uydu sistemleri</p><p><strong>Mevcut Altyapı:</strong> BAYKAR, ASELSAN, HAVELSAN, ROKETSAN, TAI/TUSAŞ</p><p><strong>Koyuncu Analizi:</strong> Türkiye\'nin savunma sanayisindeki OODA hızı, Avrupa\'dan 3x daha yüksek. Bu avantaj sivil teknolojiye de taşınabilir.</p><div class="formula">Teknoloji Bağımsızlığı = (Yerli_Üretim / Toplam_Tüketim) × İhracat_Kapasitesi</div>',
+        turkic: '<h3 style="color:#d4620a">Türk Devletleri Teknoloji Bloku</h3><p>Türk Devletleri Teşkilatı çerçevesinde ortak teknoloji ekosistemi kurulması. Kazakistan\'ın nadir toprak elementleri, Azerbaycan\'ın enerjisi, Türkiye\'nin savunma teknolojisi.</p><p><strong>Potansiyel:</strong> 300M+ nüfus pazarı, enerji kaynakları, stratejik konum</p><p><strong>Zorluklar:</strong> Altyapı farkları, Rusya/Çin baskısı, finansman</p><p><strong>Koyuncu Analizi:</strong> Blok oluşumu, 5 Katmanlı Egemenlik Modelinin her katmanında sinerjik güç yaratır.</p><div class="formula">Blok_Gücü = Σ(Üye_Kapasitesi_i) × Entegrasyon_Katsayısı × Coğrafi_Avantaj</div>',
+        neutral: '<h3 style="color:#1a5276">Stratejik Tarafsızlık</h3><p>İsviçre modeli: Hiçbir tarafa angaje olmadan, her iki tarafla da sınırlı ticaret sürdürmek.</p><p><strong>Avantajlar:</strong> Minimum risk, istikrar, güvenli liman algısı</p><p><strong>Dezavantajlar:</strong> Teknoloji transferi alamama, büyüme fırsatlarını kaçırma, NATO yükümlülükleri ile çelişki</p><p><strong>Koyuncu Analizi:</strong> Tarafsızlık, güçlü bir ekonomi ve savunma kapasitesi gerektirir. Aksi halde "pasif bağımlılık" olur.</p><div class="formula">Tarafsızlık_Maliyeti = Kaçırılan_Fırsatlar + Baskı_Direnci_Maliyeti</div>'
+    };
+    document.getElementById('turkeyResult').innerHTML = scenarios[type];
+    document.getElementById('turkeyResult').classList.add('show');
+    document.getElementById('pd4').classList.add('active');
+}
+
+</script>
+</body>
+</html>

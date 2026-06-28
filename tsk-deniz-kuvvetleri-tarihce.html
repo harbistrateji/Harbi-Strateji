@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TSK Deniz Kuvvetleri Tarihçesi — Çaka Beyliği'nden Mavi Vatan'a</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#050d1a;color:#e0e8f0;overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 80%,rgba(0,100,200,0.15) 0%,transparent 60%);pointer-events:none}
+.waves{position:absolute;bottom:0;left:0;right:0;height:200px;overflow:hidden}
+.wave{position:absolute;bottom:0;left:-50%;width:200%;height:100px;background:rgba(0,100,200,0.05);border-radius:50% 50% 0 0;animation:wave 8s infinite linear}
+.wave:nth-child(2){height:80px;animation-duration:6s;opacity:0.7;bottom:10px}
+.wave:nth-child(3){height:60px;animation-duration:10s;opacity:0.5;bottom:20px}
+@keyframes wave{0%{transform:translateX(0)}100%{transform:translateX(50%)}}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#1E88E5;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;text-shadow:0 0 30px rgba(30,136,229,0.3)}
+.hero .subtitle{font-size:1.1rem;color:#8ab4d8;max-width:650px;line-height:1.6}
+.hero .year-badge{display:inline-block;margin-top:20px;padding:8px 24px;border:2px solid #1E88E5;border-radius:30px;font-size:1.4rem;font-weight:700;color:#1E88E5}
+.start-btn{margin-top:30px;padding:14px 40px;background:linear-gradient(135deg,#1E88E5,#0D47A1);border:none;border-radius:8px;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase;letter-spacing:1px}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(30,136,229,0.4)}
+.content{display:none;max-width:1000px;margin:0 auto;padding:40px 20px}
+.era-section{margin-bottom:60px;opacity:0;transform:translateY(30px);transition:all .8s ease}
+.era-section.visible{opacity:1;transform:translateY(0)}
+.era-title{display:flex;align-items:center;gap:15px;margin-bottom:25px;padding-bottom:10px;border-bottom:2px solid rgba(30,136,229,0.3)}
+.era-title h2{font-size:1.6rem;color:#42A5F5}
+.era-title .period{color:#6a9ec0;font-size:0.9rem}
+.ship-card{background:rgba(30,136,229,0.05);border:1px solid rgba(30,136,229,0.2);border-radius:12px;padding:20px;margin-bottom:15px;transition:all .3s;position:relative;overflow:hidden}
+.ship-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#1E88E5}
+.ship-card:hover{background:rgba(30,136,229,0.1);border-color:#1E88E5;transform:translateX(5px)}
+.ship-card h3{color:#64B5F6;font-size:1.1rem;margin-bottom:8px}
+.ship-card .date{color:#1E88E5;font-weight:700;font-size:0.85rem;margin-bottom:5px}
+.ship-card p{color:#a8c8e0;font-size:0.9rem;line-height:1.5}
+.highlight-box{background:linear-gradient(135deg,rgba(30,136,229,0.1),rgba(13,71,161,0.1));border:1px solid rgba(30,136,229,0.3);border-radius:12px;padding:25px;margin:30px 0;text-align:center}
+.highlight-box .quote{font-style:italic;font-size:1.1rem;color:#90CAF9;line-height:1.6}
+.highlight-box .author{margin-top:10px;color:#64B5F6;font-weight:700}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin:30px 0}
+.stat-card{text-align:center;padding:15px;background:rgba(30,136,229,0.05);border:1px solid rgba(30,136,229,0.15);border-radius:10px}
+.stat-card .num{font-size:1.8rem;font-weight:900;color:#1E88E5}
+.stat-card .label{font-size:0.75rem;color:#6a9ec0;margin-top:4px}
+.music-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:rgba(30,136,229,0.2);border:2px solid #1E88E5;color:#1E88E5;font-size:1.5rem;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.music-btn:hover{background:rgba(30,136,229,0.4)}
+@media(max-width:768px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<div class="hero" id="hero">
+<div class="waves"><div class="wave"></div><div class="wave"></div><div class="wave"></div></div>
+<h1>⚓ Deniz Kuvvetleri Tarihçesi</h1>
+<p class="subtitle">Çaka Bey'in 50 gemisiyle başlayan, Barbaros'la zirveye ulaşan, Nusret'le destanlaşan ve Mavi Vatan'la yeniden yükselen bir denizcilik destanı.</p>
+<div class="year-badge">1081 — 2026</div>
+<button class="start-btn" onclick="startContent()">Denize Açıl</button>
+</div>
+
+<div class="content" id="content">
+<div class="stats-row">
+<div class="stat-card"><div class="num">945</div><div class="label">Yıllık Tarih</div></div>
+<div class="stat-card"><div class="num">150+</div><div class="label">Savaş Gemisi</div></div>
+<div class="stat-card"><div class="num">462K km²</div><div class="label">Mavi Vatan</div></div>
+<div class="stat-card"><div class="num">TCG İstanbul</div><div class="label">Yerli Fırkateyn</div></div>
+</div>
+
+<div class="era-section" data-era="1">
+<div class="era-title"><h2>Çaka Beyliği & İlk Donanma</h2><span class="period">1081 — 1308</span></div>
+<div class="ship-card"><div class="date">1081</div><h3>İlk Türk Donanması — Çaka Bey</h3><p>İzmir'de modern bir tersane yaptıran Çaka Bey, 17 çektiri ve 33 yelkenli olmak üzere 50 parçalık ilk Türk donanmasını inşa etti. Ege'nin sıcak sularına yelken açan bu filo, Bizans Donanması'nı Koyun Adaları'nda ağır yenilgiye uğrattı.</p></div>
+<div class="ship-card"><div class="date">1090</div><h3>Koyun Adaları Deniz Muharebesi</h3><p>Çaka Bey, seri taktik manevralarla Bizans Donanması'na en zayıf yerlerinden ard arda darbeler indirdi. Hakimiyet alanını Çanakkale'ye kadar genişletti.</p></div>
+<div class="ship-card"><div class="date">1221</div><h3>Alanya Tersanesi</h3><p>Sultan I. Alaeddin Keykubat, "İki Denizin Sultanı" unvanıyla Alanya ve Sinop tersanelerinde filolar kurdu. Türklerin ilk organize tersanesi Alanya'da inşa edildi.</p></div>
+</div>
+
+<div class="era-section" data-era="2">
+<div class="era-title"><h2>Uç Beylikleri & Osmanlı Doğuşu</h2><span class="period">1308 — 1453</span></div>
+<div class="ship-card"><div class="date">1323-1327</div><h3>Karamürsel — İlk Osmanlı Tersanesi</h3><p>Kara Mürsel Bey komutasında 24 gemiyle Osmanlı denizlerle tanıştı. 1327'de Karamürsel'de ilk Osmanlı tersanesi kuruldu, ilk "Derya Beyi" unvanı verildi.</p></div>
+<div class="ship-card"><div class="date">1334-1348</div><h3>Umur Bey — Ege Hakimiyeti</h3><p>Aydınoğulları Beyliği'nin denizci komutanı Umur Bey, Rodos'tan Çanakkale'ye, Mora'dan Rumeli'ye denizlerde kesin kontrol sağladı.</p></div>
+<div class="ship-card"><div class="date">1401</div><h3>Gelibolu Deniz Üssü</h3><p>Yıldırım Bayezid döneminde Gelibolu Deniz Üssü tamamlandı. "Kaptan-ı Derya" terimi Osmanlı deniz kuvvetlerinde yerini aldı.</p></div>
+</div>
+
+<div class="era-section" data-era="3">
+<div class="era-title"><h2>Altın Çağ — Akdeniz Bir Türk Gölü</h2><span class="period">1453 — 1571</span></div>
+<div class="ship-card"><div class="date">1453</div><h3>İstanbul'un Fethi — Deniz Boyutu</h3><p>Fatih Sultan Mehmet, donanmayı ateşli silahlarla teçhiz ederek stratejik boyut kazandırdı. Haliç'e gemilerin karadan çekilmesi askeri deha örneği oldu.</p></div>
+<div class="ship-card"><div class="date">28 Eylül 1538</div><h3>Preveze Deniz Zaferi</h3><p>Barbaros Hayreddin Paşa, 122 gemilik Osmanlı donanmasıyla 600 gemilik Haçlı donanmasını bozguna uğrattı. Akdeniz 33 yıl boyunca "Türk Gölü" oldu.</p></div>
+<div class="ship-card"><div class="date">1551-1560</div><h3>Turgut Reis & Kuzey Afrika</h3><p>Trablusgarp, Cerbe Deniz Zaferi. Osmanlı deniz hakimiyeti Kuzey Afrika kıyılarına yayıldı.</p></div>
+</div>
+
+<div class="highlight-box">
+<div class="quote">"Denizlere hâkim olan milletler, dünyaya hâkim olmuşlardır."</div>
+<div class="author">— Barbaros Hayreddin Paşa</div>
+</div>
+
+<div class="era-section" data-era="4">
+<div class="era-title"><h2>Çanakkale — Deniz Destanı</h2><span class="period">1915</span></div>
+<div class="ship-card"><div class="date">8 Mart 1915</div><h3>Nusret Mayın Gemisi</h3><p>Büyük gizlilik içinde Karanlık Liman'a intikal eden Nusret, 26 mayını sahile paralel döktü. Bu 11. hat, "Yenilmez Armada"nın sonunu getirdi.</p></div>
+<div class="ship-card"><div class="date">18 Mart 1915</div><h3>Çanakkale Deniz Zaferi</h3><p>İngiliz Irresistible, Ocean ve Fransız Bouvet zırhlıları battı. 3 zırhlı ağır hasar aldı. Müttefik donanma büyük prestij kaybına uğradı.</p></div>
+<div class="ship-card"><div class="date">1915</div><h3>Marmara Denizaltı Savunması</h3><p>Sultanhisar, Muavenet-i Milliye gibi küçük gemiler devasa düşman zırhlılarını batırdı. Toplam 13 düşman denizaltısı imha edildi.</p></div>
+</div>
+
+<div class="era-section" data-era="5">
+<div class="era-title"><h2>Millî Mücadele & Cumhuriyet</h2><span class="period">1919 — 1949</span></div>
+<div class="ship-card"><div class="date">10 Temmuz 1920</div><h3>Umur-ı Bahriye Müdürlüğü</h3><p>Ankara Hükümeti'ne bağlı deniz teşkilatı kuruldu. Karadeniz'de kaçak lojistik nakliyat ağı tesis edildi — 300.000 ton malzeme taşındı.</p></div>
+<div class="ship-card"><div class="date">1921</div><h3>Alemdar Römorkörü Destanı</h3><p>İşgal kuvvetlerinden kaçırılan Alemdar, Ereğli'de baştankara edildi, sonra Trabzon'a intikal ederek cepheyi destekledi.</p></div>
+<div class="ship-card"><div class="date">1 Temmuz 1949</div><h3>Deniz Kuvvetleri Komutanlığı</h3><p>Bağımsız bir kuvvet olarak teşkilatlandırıldı. Modern donanma inşası başladı.</p></div>
+</div>
+
+<div class="era-section" data-era="6">
+<div class="era-title"><h2>Mavi Vatan & Yerli Donanma</h2><span class="period">2006 — Günümüz</span></div>
+<div class="ship-card"><div class="date">2006</div><h3>Mavi Vatan Doktrini</h3><p>462.000 km² deniz yetki alanı. Doğu Akdeniz, Ege ve Karadeniz'de hak ve çıkarların korunması stratejisi.</p></div>
+<div class="ship-card"><div class="date">2023</div><h3>TCG İstanbul (F-515)</h3><p>Türkiye'nin ilk yerli tasarım ve üretim fırkateyni. ADVENT savaş yönetim sistemi, ATMACA güdümlü mermisi ile donatıldı.</p></div>
+<div class="ship-card"><div class="date">2024+</div><h3>MİLDEN — Yerli Denizaltı</h3><p>Türkiye'nin ilk yerli denizaltı projesi. Reis sınıfı denizaltılar (Type 214TN) ve TCG Anadolu çok maksatlı amfibi hücum gemisi envantere katıldı.</p></div>
+</div>
+
+<div class="era-section" data-era="7">
+<div class="era-title"><h2>Donanma Komutanlığı Tarihçesi</h2><span class="period">1920 — Günümüz</span></div>
+<div class="ship-card"><div class="date">1920</div><h3>Umur-ı Bahriye Müdürlüğü</h3><p>Önyüzbaşı Şevket Bey'in Genelkurmay çatısı altındaki bir masa ve iki sandalyeden oluşan karargâhı ile Türk Donanması'nın yeniden yapılanma süreci başladı.</p></div>
+<div class="ship-card"><div class="date">1930</div><h3>Donanma Komutanlığı Binası</h3><p>Gulte Hafnung isimli Alman firmasınca 1929'da yapımına başlanan bina (Villa Kalyon), Haziran 1930'da hizmete açıldı. Tüm gelişmelerin karar ve idare merkezi olarak Türk Donanması'nın gelişiminde önemli bir yere sahip oldu.</p></div>
+<div class="ship-card"><div class="date">1935</div><h3>İlk Karargâh Kuruluşu</h3><p>Donanma Komutanlığı karargâh kuruluşu ilk defa ciddi bir düzenlemeyle yürürlüğe konuldu. Kurmay Başkanı'na bağlı 6 Şube oluşturuldu. Az personelle çok işler başarıldı.</p></div>
+<div class="ship-card"><div class="date">1944</div><h3>Modernizasyon Dönemi</h3><p>Karargâh ikinci kadro/kuruluş değişikliği geçirdi. 7. Şube (Başçarkçılık) ihdas edildi: Makine, Elektronik, Telsiz bölümleri modern Donanma ihtiyaçlarına yönelik olarak kuruldu.</p></div>
+<div class="ship-card"><div class="date">1953</div><h3>Genişleme ve Geliştirme</h3><p>Karargâh kuruluşu bir kez daha ıslah ve genişletildi. Yeni komuta kademeleri oluşturulup bağlı birliklerle daha sıkı ilişki ve faaliyetlere zemin hazırlandı. Gölcük Donanma Tesisleri'nde de genişleme başladı.</p></div>
+<div class="ship-card"><div class="date">1964</div><h3>Yeni Karargâh Binası</h3><p>11 Mayıs 1964'te kadrosu genişleyen Donanma Komutanlığı Karargâhı yeni binasına taşındı.</p></div>
+<div class="ship-card"><div class="date">1999</div><h3>Marmara Depremi Sonrası</h3><p>17 Ağustos 1999 depreminde bina yıkıldı. Karargâh önce çadırda, ardından Preveze Harp Oyunu Merkezi'nde konuşlandı. 17 Temmuz 2000'de şimdiki binasına taşındı.</p></div>
+<div class="ship-card"><div class="date">Günümüz</div><h3>Modern Donanma Komutanlığı</h3><p>17.600'den fazla personel, 7 Ast Komutanlık. Hukuk Hizmetleri Başkanlığı, Genel Sekreterlik, Başçarkçılık, Personel, Harekât, Lojistik, MEBS ve İstihbarat Başkanlıkları ile Karargâh Destek Kıtaları Komutanlığı'ndan oluşan yapı. 1000 yıllık köklü geçmişiyle Türkiye Cumhuriyeti'ni en mükemmel şekilde temsile devam etmektedir.</p></div>
+<div class="stats-row">
+<div class="stat-card"><div class="num">49</div><div class="label">Toplam Komutan</div></div>
+<div class="stat-card"><div class="num">17.600+</div><div class="label">Personel</div></div>
+<div class="stat-card"><div class="num">7</div><div class="label">Ast Komutanlık</div></div>
+<div class="stat-card"><div class="num">1000+</div><div class="label">Yıllık Gelenek</div></div>
+</div>
+</div>
+
+<div class="highlight-box">
+<div class="quote">"Düşman ablukasına rağmen, Bahriyemizin mensupları Karadeniz'de birkaç gemi ile harikalar göstererek, deniz nakliyatını sağlamak suretiyle teşekküre değer hizmetler yapmışlardır."</div>
+<div class="author">— Mustafa Kemal Atatürk</div>
+</div>
+</div>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">♪</button>
+
+<script>
+let audioCtx,musicPlaying=false,musicInterval;
+
+function startContent(){
+document.getElementById('hero').style.display='none';
+document.getElementById('content').style.display='block';
+setTimeout(()=>{
+document.querySelectorAll('.era-section').forEach((el,i)=>{
+setTimeout(()=>el.classList.add('visible'),i*500);
+});
+},200);
+}
+
+function toggleMusic(){
+if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+if(musicPlaying){clearInterval(musicInterval);musicPlaying=false;document.getElementById('musicBtn').style.opacity='0.5';}
+else{playSeaMusic();musicPlaying=true;document.getElementById('musicBtn').style.opacity='1';}
+}
+
+function playSeaMusic(){
+const notes=[130.81,146.83,164.81,174.61,196,220,246.94,261.63];
+let step=0;
+function playNote(){
+if(!musicPlaying)return;
+const osc=audioCtx.createOscillator();
+const gain=audioCtx.createGain();
+const lfo=audioCtx.createOscillator();
+const lfoGain=audioCtx.createGain();
+lfo.frequency.value=0.5;lfoGain.gain.value=3;
+lfo.connect(lfoGain);lfoGain.connect(osc.frequency);
+osc.connect(gain);gain.connect(audioCtx.destination);
+osc.type='sine';
+osc.frequency.value=notes[step%notes.length]*(Math.random()>0.5?1:2);
+gain.gain.setValueAtTime(0.06,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+1.2);
+osc.start();lfo.start();osc.stop(audioCtx.currentTime+1.2);lfo.stop(audioCtx.currentTime+1.2);
+step++;
+}
+musicInterval=setInterval(playNote,800);
+playNote();
+}
+
+// Scroll animation
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.15});
+document.querySelectorAll('.era-section').forEach(el=>obs.observe(el));
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

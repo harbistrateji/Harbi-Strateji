@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harb-i Strateji — Hibrit Mizanpaj</title>
+<style>
+:root {
+  --bg: #07090F;
+  --p1: #0D1120;
+  --p2: #121828;
+  --c: #00D2FF;
+  --r: #E01515;
+  --t: #E8EDF5;
+  --t2: #7A8BA0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--t);
+  font-family: 'IBM Plex Sans', monospace;
+  overflow: hidden;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  gap: 20px;
+  padding: 20px;
+}
+
+.main-panel {
+  background: var(--p1);
+  border: 2px solid var(--c);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.popup-box {
+  background: var(--p2);
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 12px;
+  line-height: 1.6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.popup-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s;
+}
+
+.popup-box:hover::before {
+  left: 100%;
+}
+
+.popup-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+}
+
+.popup-warning {
+  border-color: var(--r);
+}
+
+.popup-warning:hover {
+  box-shadow: 0 0 20px rgba(224, 21, 21, 0.3);
+}
+
+.popup-data {
+  border-color: var(--c);
+}
+
+.popup-data:hover {
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+}
+
+.popup-title {
+  color: var(--c);
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.popup-content {
+  color: var(--t2);
+  max-height: 200px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.popup-box.expanded .popup-content {
+  max-height: 500px;
+}
+
+.stat-bar {
+  background: linear-gradient(90deg, var(--c), var(--r));
+  height: 4px;
+  border-radius: 2px;
+  margin: 5px 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.stat-value {
+  color: var(--c);
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+h1 {
+  color: var(--c);
+  font-size: 24px;
+  margin-bottom: 20px;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
+  50% { text-shadow: 0 0 20px rgba(0, 210, 255, 0.6); }
+}
+
+.content-section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  color: var(--c);
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.section-content {
+  color: var(--t2);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--r);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.popup-box.expanded .close-btn {
+  display: flex;
+}
+
+.popup-box.expanded {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  z-index: 1000;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  z-index: 999;
+}
+
+.popup-overlay.active {
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+<div class="popup-overlay" id="overlay"></div>
+
+<div class="container">
+  <div class="main-panel">
+    <h1>📊 Harb-i Strateji Merkezi</h1>
+    
+    <div class="content-section">
+      <div class="section-title">🎯 Sistem Durumu</div>
+      <div class="section-content">
+        <p>Harb-i Strateji Dijital Laboratuvarı aktif ve çalışıyor.</p>
+        <p>Tüm modüller entegre edilmiştir.</p>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="section-title">📈 Metrikleri</div>
+      <div class="section-content">
+        <p>Aktif Kullanıcılar: 1.247</p>
+        <p>Toplam Simülasyon: 26</p>
+        <p>İnfografik: 41</p>
+        <p>Sözlük Terimi: 109</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panel">
+    <div class="popup-box popup-warning" onclick="togglePopup(this)">
+      <button class="close-btn" onclick="closePopup(event)">✕</button>
+      <div class="popup-title">⚠️ Sistem Uyarısı</div>
+      <div class="popup-content">
+        <p>Metin solu sütunda akar; pop-up'lar sağda bilişsel derinlik katar.</p>
+        <p>Metinde: OODA-X ve Bilişsel Asimetri</p>
+        <div class="stat-bar"></div>
+        <p class="stat-value">KM/Ep Oranı: 5.75x</p>
+        <p style="margin-top: 10px; font-size: 11px;">Tıkla: Detaylı görünüm için</p>
+      </div>
+    </div>
+
+    <div class="popup-box popup-data" onclick="togglePopup(this)">
+      <button class="close-btn" onclick="closePopup(event)">✕</button>
+      <div class="popup-title">📊 Deep Data</div>
+      <div class="popup-content">
+        <p>Sistem Veri Akışı: 8.600.000 LOC</p>
+        <p>Entegre Modüller: 14 element</p>
+        <div class="stat-bar"></div>
+        <p class="stat-value">Performans: %98.7</p>
+        <p style="margin-top: 10px; font-size: 11px;">Tıkla: Detaylı görünüm için</p>
+      </div>
+    </div>
+
+    <div class="popup-box" onclick="togglePopup(this)" style="border-color: var(--c);">
+      <button class="close-btn" onclick="closePopup(event)">✕</button>
+      <div class="popup-title">🎮 Oyun Modları</div>
+      <div class="popup-content">
+        <p>Bölüm IX: Ves - Nihai Savaş</p>
+        <p>Cross-Rep: Svi3 Sxi</p>
+        <p>Durum: AKTIF</p>
+        <div class="stat-bar"></div>
+        <p class="stat-value">Oyuncu Sayısı: 2.847</p>
+        <p style="margin-top: 10px; font-size: 11px;">Tıkla: Detaylı görünüm için</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePopup(element) {
+  const overlay = document.getElementById('overlay');
+  const allPopups = document.querySelectorAll('.popup-box');
+  
+  // Diğer açık pop-up'ları kapat
+  allPopups.forEach(popup => {
+    if (popup !== element && popup.classList.contains('expanded')) {
+      popup.classList.remove('expanded');
+    }
+  });
+  
+  // Tıklanan pop-up'ı aç/kapat
+  element.classList.toggle('expanded');
+  
+  if (element.classList.contains('expanded')) {
+    overlay.classList.add('active');
+  } else {
+    overlay.classList.remove('active');
+  }
+}
+
+function closePopup(event) {
+  event.stopPropagation();
+  const popup = event.target.closest('.popup-box');
+  popup.classList.remove('expanded');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+// Overlay'e tıklanırsa pop-up'ları kapat
+document.getElementById('overlay').addEventListener('click', function() {
+  document.querySelectorAll('.popup-box.expanded').forEach(popup => {
+    popup.classList.remove('expanded');
+  });
+  this.classList.remove('active');
+});
+
+// ESC tuşu ile kapat
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    document.querySelectorAll('.popup-box.expanded').forEach(popup => {
+      popup.classList.remove('expanded');
+    });
+    document.getElementById('overlay').classList.remove('active');
+  }
+});
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

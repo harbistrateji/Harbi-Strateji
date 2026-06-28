@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Heartland: 2026 Elementler Savaşı — Harb-i Strateji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0f1a;--card:#111827;--accent:#8b5cf6;--cyan:#06b6d4;--red:#ef4444;--amber:#f59e0b;--green:#10b981;--text:#e2e8f0;--muted:#64748b}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.hero{padding:4rem 2rem;text-align:center;background:linear-gradient(135deg,#0a051a 0%,#0a0f1a 50%,#051a0a 100%);position:relative}
+.hero h1{font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:800;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+.hero .sub{font-size:1rem;color:var(--muted);max-width:700px;margin:0 auto}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-size:.9rem;font-weight:700;padding:.3rem .8rem;border-radius:20px;margin-bottom:1rem;letter-spacing:1px}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+.section-title{font-size:1.4rem;font-weight:700;margin:2.5rem 0 1rem;padding-left:1rem;border-left:4px solid var(--accent)}
+.scenario-box{background:var(--card);border:1px solid rgba(139,92,246,.2);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative}
+.scenario-box::before{content:'⚠️';position:absolute;top:-12px;left:20px;font-size:1.5rem;background:var(--bg);padding:0 .5rem}
+.scenario-box h3{color:var(--accent);margin-bottom:1rem;font-size:1.1rem}
+.scenario-box p{font-size:.85rem;color:var(--muted);line-height:1.7}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.option{background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:1.2rem;cursor:pointer;transition:all .3s;text-align:center}
+.option:hover{background:rgba(139,92,246,.1);border-color:var(--accent);transform:scale(1.02)}
+.option .icon{font-size:2rem;margin-bottom:.5rem}
+.option h4{font-size:.9rem;color:#fff;margin-bottom:.3rem}
+.option p{font-size:.72rem;color:var(--muted)}
+.theory-card{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(6,182,212,.08));border:1px solid rgba(139,92,246,.15);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.theory-card h4{color:var(--accent);margin-bottom:.5rem;font-size:.95rem}
+.theory-card p{font-size:.82rem;color:var(--muted);line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;margin:1.5rem 0}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:1.5rem;transition:all .3s}
+.card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.card h3{font-size:1rem;margin-bottom:.5rem}
+.card p{font-size:.82rem;color:var(--muted);line-height:1.6}
+.card-icon{font-size:1.8rem;margin-bottom:.8rem}
+.element-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.8rem}
+.element-table th{background:rgba(139,92,246,.1);color:var(--accent);padding:.6rem;text-align:left;border-bottom:1px solid rgba(139,92,246,.2)}
+.element-table td{padding:.5rem .6rem;border-bottom:1px solid rgba(255,255,255,.03);color:var(--muted)}
+.element-table tr:hover td{background:rgba(139,92,246,.03)}
+.source{font-size:.9rem;color:var(--muted);margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.05)}
+@media(max-width:768px){.container{padding:1rem}.grid{grid-template-columns:1fr}.options{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="hero">
+  <span class="badge">SİMÜLASYON · STRATEJİK SENARYO</span>
+  <h1>Heartland: 2026 Elementler Savaşı</h1>
+  <p class="sub">Siber güvenlikten sorumlu bir devlet başkanı olarak kritik kararlar verin. Tezin teorik sonuçlarını yaşayarak öğrenin.</p>
+</div>
+<div class="container">
+  <div class="scenario-box">
+    <h3>Senaryo: Elektrik Şebekesine Siber Saldırı</h3>
+    <p>Düşman devlet, ülkenizin elektrik şebekesine kapsamlı bir siber saldırı düzenledi (2015 Ukrayna vakası benzeri). 3 büyük şehirde elektrik kesildi. Hastaneler jeneratöre geçti. Elinizde blockchain tabanlı veri yedekleme ve kuantum şifreli iletişim sistemleri var. Hangi kaynağı nereye tahsis edeceksiniz?</p>
+  </div>
+
+  <h2 class="section-title">Karar Noktası</h2>
+  <div class="options">
+    <div class="option">
+      <div class="icon">🛡️</div>
+      <h4>Savunmayı Güçlendir</h4>
+      <p>Tüm kaynakları siber savunmaya yönlendir. Kuantum şifreleme ile kritik altyapıyı izole et.</p>
+    </div>
+    <div class="option">
+      <div class="icon">⚔️</div>
+      <h4>Karşı Saldırı</h4>
+      <p>Düşmanın C2 altyapısına siber karşı saldırı başlat. OODA döngüsünü kır.</p>
+    </div>
+    <div class="option">
+      <div class="icon">🤝</div>
+      <h4>Diplomasi</h4>
+      <p>Uluslararası toplumu harekete geçir. NATO Madde 5 benzeri siber savunma mekanizmasını aktive et.</p>
+    </div>
+    <div class="option">
+      <div class="icon">🔄</div>
+      <h4>Hibrit Yanıt</h4>
+      <p>Blockchain yedekleme ile sistemleri koru + sınırlı karşı saldırı + diplomatik baskı.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">Teorik Çerçeve: Harb-i Strateji Kanunları</h2>
+  <div class="grid">
+    <div class="theory-card">
+      <h4>Terör Dengesi (MAD) Siber Versiyonu</h4>
+      <p>Nükleer caydırıcılıktaki "karşılıklı yıkım garantisi" siber alanda da geçerli mi? Bir ülkenin tüm altyapısını çökertme kapasitesi, saldırıyı caydırır mı?</p>
+    </div>
+    <div class="theory-card">
+      <h4>OODA Döngüsünün Kırılması</h4>
+      <p>Siber saldırıda hedefin "Gözlem" aşaması felç edilir. Elektrik olmadan sensörler çalışmaz, iletişim kesilir. Boyd'un teorisi dijital çağda yeni anlam kazanıyor.</p>
+    </div>
+    <div class="theory-card">
+      <h4>Blockchain: Dağıtık Dayanıklılık</h4>
+      <p>Merkezi sistemler tek noktadan çöker. Blockchain tabanlı veri yedekleme, "tek hata noktası" sorununu ortadan kaldırır. Askeri lojistikte devrim.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">Kritik Elementler & Stratejik Değer</h2>
+  <table class="element-table">
+    <thead><tr><th>Element</th><th>Kullanım Alanı</th><th>Lider Üretici</th><th>Stratejik Risk</th></tr></thead>
+    <tbody>
+      <tr><td>Lityum</td><td>Batarya, EV, enerji depolama</td><td>Avustralya, Şili</td><td>Yüksek — Çin rafine ediyor</td></tr>
+      <tr><td>Kobalt</td><td>Batarya katodu, süper alaşımlar</td><td>Kongo DR (%70)</td><td>Kritik — tek kaynak riski</td></tr>
+      <tr><td>Galyum</td><td>Yarı iletken, 5G, radar</td><td>Çin (%98)</td><td>Acil — ambargo riski</td></tr>
+      <tr><td>Germanyum</td><td>Fiber optik, kızılötesi optik</td><td>Çin (%60)</td><td>Yüksek — savunma kritik</td></tr>
+      <tr><td>Nadir Toprak</td><td>Mıknatıs, motor, füze</td><td>Çin (%70)</td><td>Kritik — alternatif yok</td></tr>
+      <tr><td>Titanyum</td><td>Havacılık, denizaltı, implant</td><td>Çin, Rusya, Ukrayna</td><td>Yüksek — savaş etkisi</td></tr>
+    </tbody>
+  </table>
+
+  <div class="source">
+    <strong>Kaynaklar:</strong> Harb-i Strateji Külliyatı — Koyuncu & Ünlü Tezi, IEA Critical Minerals Report (2024), USGS Mineral Commodity Summaries (2025), 2015 Ukraine Power Grid Attack (SANS ICS)
+  </div>
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

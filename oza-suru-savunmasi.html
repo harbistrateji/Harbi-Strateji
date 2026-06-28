@@ -1,0 +1,64 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="hs-skip" content="true"><title>Sürü Savunması — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Chakra Petch',sans-serif;background:#0a0f17;color:#e8eaed;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+h1{font-size:2rem;margin-bottom:1rem;text-align:center}
+.sub{color:#94a3b8;margin-bottom:2rem;text-align:center}
+.game-area{width:100%;max-width:600px;aspect-ratio:1;background:#0d1b2a;border:1px solid rgba(255,255,255,.1);border-radius:8px;position:relative;overflow:hidden}
+.drone{position:absolute;width:12px;height:12px;background:#00E0FF;border-radius:50%;transition:all .3s}
+.enemy{position:absolute;width:16px;height:16px;background:#bb1919;border-radius:50%}
+.hud{display:flex;gap:2rem;margin-top:1.5rem;font-size:.85rem}
+.hud span{color:#c9a84c}
+.btn{margin-top:1.5rem;padding:.8rem 2rem;background:#bb1919;color:#fff;border:none;border-radius:4px;font-size:1rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:#e02020}
+a.back{position:fixed;top:1rem;left:1rem;color:#94a3b8;font-size:.85rem}
+</style><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<a class="back" href="oza-hub.html">← OZA</a>
+<h1>Sürü Savunması</h1>
+<p class="sub">Otonom drone sürüsünü koordine ederek düşman hedeflerini etkisiz hale getirin</p>
+<div class="game-area" id="arena"></div>
+<div class="hud"><span>Sürü:</span> 8 Drone | <span>Hedef:</span> <span id="targets">5</span> | <span>Skor:</span> <span id="score">0</span></div>
+<button class="btn" onclick="startGame()">BAŞLAT</button>
+<script>
+const arena=document.getElementById('arena');
+let drones=[],enemies=[],score=0,gameActive=false;
+function startGame(){
+  arena.innerHTML='';drones=[];enemies=[];score=0;gameActive=true;
+  document.getElementById('score').textContent='0';
+  document.getElementById('targets').textContent='5';
+  for(let i=0;i<8;i++){
+    const d=document.createElement('div');d.className='drone';
+    d.style.left=Math.random()*90+'%';d.style.top=Math.random()*90+'%';
+    arena.appendChild(d);drones.push(d);
+  }
+  for(let i=0;i<5;i++) spawnEnemy();
+  arena.onclick=e=>{
+    if(!gameActive)return;
+    const rect=arena.getBoundingClientRect();
+    const x=(e.clientX-rect.left)/rect.width*100;
+    const y=(e.clientY-rect.top)/rect.height*100;
+    drones.forEach(d=>{d.style.left=x+Math.random()*10-5+'%';d.style.top=y+Math.random()*10-5+'%';});
+    checkHits(x,y);
+  };
+}
+function spawnEnemy(){
+  const e=document.createElement('div');e.className='enemy';
+  e.style.left=Math.random()*90+'%';e.style.top=Math.random()*90+'%';
+  arena.appendChild(e);enemies.push(e);
+}
+function checkHits(x,y){
+  enemies.forEach((e,i)=>{
+    const ex=parseFloat(e.style.left);const ey=parseFloat(e.style.top);
+    if(Math.abs(ex-x)<8&&Math.abs(ey-y)<8){
+      e.style.background='#00FF88';score++;
+      document.getElementById('score').textContent=score;
+      setTimeout(()=>{e.remove();enemies.splice(i,1);
+        document.getElementById('targets').textContent=enemies.length;
+        if(enemies.length===0){alert('Tebrikler! Tüm hedefler etkisiz hale getirildi. Skor: '+score);gameActive=false;}
+      },300);
+    }
+  });
+}
+</script></body></html>

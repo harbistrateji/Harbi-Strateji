@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BM Reform Simülatörü — Harb-i Strateji İnfografik</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f17;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--blue:#3a7bd5;--purple:#8b5cf6;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:5px}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;color:var(--blue)}
+.hero{text-align:center;padding:36px 20px 20px;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-block;padding:4px 14px;border:1px solid var(--blue);border-radius:20px;font-size:13px;color:var(--blue);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(20px,4.5vw,34px);font-weight:700;line-height:1.2;margin-bottom:10px}
+.hero h1 span{color:var(--cyan)}
+.hero p{font-size:13px;color:var(--dim);line-height:1.8;max-width:620px;margin:0 auto}
+/* Model selector */
+.model-selector{max-width:900px;margin:24px auto;padding:0 16px}
+.model-title{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--gold);margin-bottom:10px;text-align:center}
+.model-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.model-btn{padding:10px 20px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--dim);font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+.model-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.model-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,224,255,.08)}
+/* World map */
+.map-section{max-width:900px;margin:0 auto;padding:0 16px 20px}
+.map-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative}
+canvas#worldmap{display:block;width:100%;background:#060d14}
+.map-legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:10px;border-top:1px solid var(--line);font-size:13px}
+.leg-item{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:50%}
+/* Barometers */
+.baro-section{max-width:900px;margin:0 auto;padding:0 16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.baro-section{grid-template-columns:1fr}}
+.baro-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.baro-label{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;margin-bottom:8px}
+.baro-bar-wrap{height:16px;background:rgba(255,255,255,.07);border-radius:8px;overflow:hidden;margin-bottom:6px}
+.baro-bar{height:100%;border-radius:8px;transition:width 1s ease}
+.baro-val{font-size:13px;color:var(--dim);text-align:right}
+/* Veto zone */
+.veto-section{max-width:900px;margin:0 auto;padding:0 16px 20px}
+.veto-title{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--gold);margin-bottom:12px;text-align:center}
+.resolution-card{background:var(--panel);border:2px dashed var(--line);border-radius:12px;padding:16px;margin-bottom:14px;cursor:grab;text-align:center;transition:.2s}
+.resolution-card:hover{border-color:var(--cyan);background:rgba(0,224,255,.04)}
+.res-title{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;margin-bottom:6px}
+.res-desc{font-size:13px;color:var(--dim)}
+.p5-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+@media(max-width:500px){.p5-grid{grid-template-columns:repeat(3,1fr)}}
+.p5-btn{padding:10px 6px;border:2px solid var(--line);border-radius:10px;background:var(--panel);cursor:pointer;text-align:center;transition:.2s;font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700}
+.p5-btn:hover{transform:scale(1.05)}
+.p5-btn.vetoed{border-color:var(--red);background:rgba(224,21,21,.15);animation:shake .3s}
+.p5-btn.approved{border-color:var(--green);background:rgba(0,255,136,.08)}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.veto-result{background:rgba(224,21,21,.1);border:1px solid rgba(224,21,21,.3);border-radius:10px;padding:14px;text-align:center;display:none}
+.veto-result.show{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.veto-text{font-family:'Chakra Petch',sans-serif;font-size:28px;font-weight:700;color:var(--red);margin-bottom:6px}
+.veto-note{font-size:13px;color:var(--dim);line-height:1.7}
+/* Model info */
+.model-info{max-width:900px;margin:0 auto;padding:0 16px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.mi-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;transition:.2s}
+.mi-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.mi-icon{font-size:28px;margin-bottom:8px}
+.mi-title{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;margin-bottom:6px}
+.mi-text{font-size:13px;color:var(--dim);line-height:1.7}
+.mi-verdict{font-size:13px;margin-top:8px;padding:4px 10px;border-radius:8px;display:inline-block;font-weight:700}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a><div class="particles" id="particles"></div><div class="scan-line"></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🌐 BM REFORM SİMÜLATÖRÜ</div>
+  <div style="font-size:13px;color:var(--dim);margin-left:auto">Dünya 5'ten Büyüktür</div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">İnteraktif İnfografik</div>
+  <h1>"Dünya <span>5'ten Büyüktür</span>"<br>BM Güvenlik Konseyi Reform Simülatörü</h1>
+  <p>1945'te kurulan BM Güvenlik Konseyi yapısı, 21. yüzyılın güç dengesini yansıtmıyor. Farklı reform modellerini simüle et, veto mekanizmasını test et ve küresel adalet barometresini izle.</p>
+</div>
+
+<div class="model-selector">
+  <div class="model-title">🔧 KONSEY MODELİ SEÇ</div>
+  <div class="model-btns">
+    <button class="model-btn active" onclick="setModel('mevcut')">🏛️ Mevcut Yapı (P5)</button>
+    <button class="model-btn" onclick="setModel('g4')">🌍 G4 Modeli (+4 Daimi)</button>
+    <button class="model-btn" onclick="setModel('ezulwini')">🌏 Ezulwini Mutabakatı</button>
+    <button class="model-btn" onclick="setModel('rotasyon')">🔄 Bölgesel Rotasyon</button>
+  </div>
+</div>
+
+<div class="map-section">
+  <div class="map-wrap">
+    <canvas id="worldmap" height="340"></canvas>
+    <div class="map-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#E01515"></div><span>P5 Daimi Üye</span></div>
+      <div class="leg-item"><div class="leg-dot" style="background:#C9A24B"></div><span>G4 Aday</span></div>
+      <div class="leg-item"><div class="leg-dot" style="background:#c41e3a"></div><span>Geçici Üye</span></div>
+      <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div><span>Ezulwini Bölgesi</span></div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(150,170,200,.3)"></div><span>Temsil Yok</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="baro-section">
+  <div class="baro-card">
+    <div class="baro-label" style="color:var(--green)">⚖️ KÜRESEL ADALET</div>
+    <div class="baro-bar-wrap"><div class="baro-bar" id="baro-adalet" style="width:20%;background:var(--green)"></div></div>
+    <div class="baro-val" id="baro-adalet-val">20%</div>
+  </div>
+  <div class="baro-card">
+    <div class="baro-label" style="color:var(--cyan)">⚡ OPERASYONEL HIZ</div>
+    <div class="baro-bar-wrap"><div class="baro-bar" id="baro-hiz" style="width:75%;background:var(--cyan)"></div></div>
+    <div class="baro-val" id="baro-hiz-val">75%</div>
+  </div>
+  <div class="baro-card">
+    <div class="baro-label" style="color:var(--gold)">🌍 BÖLGESEL TEMSİL</div>
+    <div class="baro-bar-wrap"><div class="baro-bar" id="baro-temsil" style="width:15%;background:var(--gold)"></div></div>
+    <div class="baro-val" id="baro-temsil-val">15%</div>
+  </div>
+  <div class="baro-card">
+    <div class="baro-label" style="color:var(--red)">🔒 VETO BLOKLAMA RİSKİ</div>
+    <div class="baro-bar-wrap"><div class="baro-bar" id="baro-veto" style="width:90%;background:var(--red)"></div></div>
+    <div class="baro-val" id="baro-veto-val">90%</div>
+  </div>
+</div>
+
+<div class="veto-section">
+  <div class="veto-title">🗳️ VETO SİMÜLASYONU — Karar Taslağını P5 Üyelerine Gönder</div>
+  <div id="resolution-area">
+    <div class="resolution-card" id="res-card">
+      <div class="res-title" id="res-title">📋 Gazze Ateşkes Kararı</div>
+      <div class="res-desc" id="res-desc">Derhal ateşkes, insani yardım koridorları ve yeniden yapılanma fonu. Hangi P5 üyesi veto kullanır?</div>
+    </div>
+  </div>
+  <div class="p5-grid">
+    <button class="p5-btn" id="p5-usa" onclick="p5Vote('usa',this)" style="border-color:rgba(58,123,213,.4)">🇺🇸<br>ABD</button>
+    <button class="p5-btn" id="p5-uk" onclick="p5Vote('uk',this)" style="border-color:rgba(0,224,255,.3)">🇬🇧<br>İNGİLTERE</button>
+    <button class="p5-btn" id="p5-france" onclick="p5Vote('france',this)" style="border-color:rgba(0,224,255,.3)">🇫🇷<br>FRANSA</button>
+    <button class="p5-btn" id="p5-russia" onclick="p5Vote('russia',this)" style="border-color:rgba(224,21,21,.4)">🇷🇺<br>RUSYA</button>
+    <button class="p5-btn" id="p5-china" onclick="p5Vote('china',this)" style="border-color:rgba(224,21,21,.4)">🇨🇳<br>ÇİN</button>
+  </div>
+  <div class="veto-result" id="veto-result">
+    <div class="veto-text" id="veto-text">VETO!</div>
+    <div class="veto-note" id="veto-note"></div>
+  </div>
+  <div style="text-align:center;margin-top:10px">
+    <button onclick="nextResolution()" style="padding:8px 20px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--dim);cursor:pointer;font-family:'Chakra Petch',sans-serif;font-size:13px">→ Sonraki Karar Taslağı</button>
+  </div>
+</div>
+
+<div class="model-info">
+  <div class="mi-card">
+    <div class="mi-icon">🏛️</div>
+    <div class="mi-title">MEVCUT YAPI (P5)</div>
+    <div class="mi-text">5 daimi + 10 geçici üye. Soğuk Savaş dönemi güç dengesi. Afrika, Latin Amerika, Güney Asya'nın 4,5 milyar nüfusu daimi temsil yok. 1945'ten bu yana 300+ veto kullanıldı.</div>
+    <div class="mi-verdict" style="background:rgba(224,21,21,.15);color:var(--red)">⚠️ Meşruiyet Krizi</div>
+  </div>
+  <div class="mi-card">
+    <div class="mi-icon">🌍</div>
+    <div class="mi-title">G4 MODELİ</div>
+    <div class="mi-text">Almanya, Japonya, Hindistan, Brezilya'nın daimi üyelik talebi. Ekonomik güç ile siyasi temsil arasındaki uçurumu kapatmayı hedefliyor. Ancak P5'in onayı gerekiyor — çıkmaz.</div>
+    <div class="mi-verdict" style="background:rgba(201,162,75,.15);color:var(--gold)">🔄 Müzakere Aşaması</div>
+  </div>
+  <div class="mi-card">
+    <div class="mi-icon">🌏</div>
+    <div class="mi-title">EZULWİNİ MUTABAKATASI</div>
+    <div class="mi-text">Afrika Birliği'nin 2005 pozisyonu: Afrika'ya 2 daimi + 5 geçici koltuk. "Tarihsel adaletsizliğin telafisi" argümanı. 54 Afrika devletinin ortak sesi. Veto hakkı talep ediliyor.</div>
+    <div class="mi-verdict" style="background:rgba(0,255,136,.15);color:var(--green)">✊ Güçlü Koalisyon</div>
+  </div>
+  <div class="mi-card">
+    <div class="mi-icon">🔄</div>
+    <div class="mi-title">BÖLGESEL ROTASYON</div>
+    <div class="mi-text">Daimi üyelik yerine bölgesel blokların rotasyonla temsili. AB, AU, ASEAN, Latin Amerika blokları. Veto kaldırılıyor, nitelikli çoğunluk sistemi. En radikal reform önerisi.</div>
+    <div class="mi-verdict" style="background:rgba(139,92,246,.15);color:var(--purple)">🚀 Yapısal Dönüşüm</div>
+  </div>
+</div>
+
+<script>
+// World map canvas
+var canvas = document.getElementById('worldmap');
+var ctx = canvas.getContext('2d');
+var W, H;
+function resize() { W = canvas.offsetWidth; H = 340; canvas.width = W; canvas.height = H; drawMap(); }
+resize(); window.addEventListener('resize', function() { setTimeout(resize, 100); });
+
+var currentModel = 'mevcut';
+
+// Simplified country blobs (approximate positions as circles for visual effect)
+var countries = [
+  {name:'ABD',x:.15,y:.38,r:.04,type:'p5',flag:'🇺🇸'},
+  {name:'İngiltere',x:.47,y:.3,r:.015,type:'p5',flag:'🇬🇧'},
+  {name:'Fransa',x:.48,y:.33,r:.015,type:'p5',flag:'🇫🇷'},
+  {name:'Rusya',x:.62,y:.28,r:.07,type:'p5',flag:'🇷🇺'},
+  {name:'Çin',x:.72,y:.38,r:.04,type:'p5',flag:'🇨🇳'},
+  {name:'Almanya',x:.49,y:.31,r:.015,type:'g4',flag:'🇩🇪'},
+  {name:'Japonya',x:.79,y:.36,r:.02,type:'g4',flag:'🇯🇵'},
+  {name:'Hindistan',x:.66,y:.43,r:.03,type:'g4',flag:'🇮🇳'},
+  {name:'Brezilya',x:.26,y:.58,r:.04,type:'g4',flag:'🇧🇷'},
+  {name:'Afrika',x:.5,y:.58,r:.06,type:'ezulwini',flag:'🌍'},
+  {name:'Türkiye',x:.55,y:.36,r:.02,type:'temp',flag:'🇹🇷'},
+  {name:'Meksika',x:.18,y:.45,r:.025,type:'temp',flag:'🇲🇽'},
+  {name:'Avustralya',x:.77,y:.62,r:.03,type:'temp',flag:'🇦🇺'},
+  {name:'Kanada',x:.17,y:.28,r:.03,type:'temp',flag:'🇨🇦'},
+  {name:'G.Kore',x:.78,y:.38,r:.015,type:'temp',flag:'🇰🇷'}
+];
+
+var modelColors = {
+  mevcut: { p5:'#E01515', g4:'rgba(150,170,200,.2)', ezulwini:'rgba(150,170,200,.2)', temp:'rgba(0,224,255,.3)' },
+  g4: { p5:'#E01515', g4:'#C9A24B', ezulwini:'rgba(150,170,200,.2)', temp:'rgba(0,224,255,.3)' },
+  ezulwini: { p5:'#E01515', g4:'rgba(150,170,200,.3)', ezulwini:'#8b5cf6', temp:'rgba(0,224,255,.3)' },
+  rotasyon: { p5:'rgba(224,21,21,.4)', g4:'#c41e3a', ezulwini:'#8b5cf6', temp:'#c41e3a' }
+};
+
+var animFrame = 0;
+function drawMap() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#060d14'; ctx.fillRect(0, 0, W, H);
+  // Grid
+  ctx.strokeStyle = 'rgba(0,224,255,0.04)'; ctx.lineWidth = 1;
+  for (var x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (var y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  // Latitude/longitude lines
+  ctx.strokeStyle = 'rgba(0,224,255,0.06)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, H*0.5); ctx.lineTo(W, H*0.5); ctx.stroke(); // equator
+  ctx.beginPath(); ctx.moveTo(W*0.5, 0); ctx.lineTo(W*0.5, H); ctx.stroke(); // prime meridian
+
+  var colors = modelColors[currentModel];
+  countries.forEach(function(c) {
+    var cx = c.x * W, cy = c.y * H, r = c.r * Math.min(W, H);
+    var color = colors[c.type] || 'rgba(150,170,200,.2)';
+    // Glow
+    var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 2);
+    grad.addColorStop(0, color.replace(')', ',0.3)').replace('rgb(', 'rgba('));
+    grad.addColorStop(1, 'transparent');
+    ctx.beginPath(); ctx.arc(cx, cy, r * 2, 0, Math.PI * 2);
+    ctx.fillStyle = grad; ctx.fill();
+    // Main dot
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    // Label
+    ctx.fillStyle = 'rgba(234,240,247,0.8)';
+    ctx.font = 'bold 10px IBM Plex Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(c.flag, cx, cy - r - 4);
+    // Pulse for active P5
+    if (c.type === 'p5' && currentModel === 'mevcut') {
+      var pulse = (Math.sin(animFrame * 0.05 + c.x * 10) + 1) * 0.5;
+      ctx.beginPath(); ctx.arc(cx, cy, r + 4 + pulse * 4, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(224,21,21,' + (0.2 + pulse * 0.2) + ')';
+      ctx.lineWidth = 1; ctx.stroke();
+    }
+  });
+  // Connection lines for current model
+  if (currentModel !== 'mevcut') {
+    var p5s = countries.filter(function(c) { return c.type === 'p5'; });
+    var actives = countries.filter(function(c) { return colors[c.type] !== 'rgba(150,170,200,.2)' && colors[c.type] !== 'rgba(150,170,200,.3)'; });
+    actives.forEach(function(a) {
+      p5s.forEach(function(p) {
+        ctx.beginPath();
+        ctx.moveTo(a.x * W, a.y * H);
+        ctx.lineTo(p.x * W, p.y * H);
+        ctx.strokeStyle = 'rgba(0,224,255,0.06)'; ctx.lineWidth = 1;
+        ctx.setLineDash([3, 6]); ctx.stroke(); ctx.setLineDash([]);
+      });
+    });
+  }
+  // Title
+  ctx.fillStyle = 'rgba(0,224,255,0.5)'; ctx.font = '10px IBM Plex Mono'; ctx.textAlign = 'left';
+  ctx.fillText('BM GÜVENLİK KONSEYİ — ' + currentModel.toUpperCase(), 10, 16);
+  animFrame++;
+  requestAnimationFrame(drawMap);
+}
+
+// Model switching
+var modelData = {
+  mevcut: { adalet:20, hiz:75, temsil:15, veto:90 },
+  g4: { adalet:55, hiz:55, temsil:45, veto:70 },
+  ezulwini: { adalet:75, hiz:40, temsil:80, veto:50 },
+  rotasyon: { adalet:90, hiz:30, temsil:95, veto:20 }
+};
+
+function setModel(model) {
+  currentModel = model;
+  document.querySelectorAll('.model-btn').forEach(function(b) { b.classList.remove('active'); });
+  event.target.classList.add('active');
+  var d = modelData[model];
+  animateBaro('baro-adalet', d.adalet);
+  animateBaro('baro-hiz', d.hiz);
+  animateBaro('baro-temsil', d.temsil);
+  animateBaro('baro-veto', d.veto);
+  resetVeto();
+}
+
+function animateBaro(id, target) {
+  var bar = document.getElementById(id);
+  var val = document.getElementById(id + '-val');
+  bar.style.width = target + '%';
+  val.textContent = target + '%';
+}
+
+// Veto simulation
+var resolutions = [
+  { title:'📋 Gazze Ateşkes Kararı', desc:'Derhal ateşkes, insani yardım koridorları ve yeniden yapılanma fonu.', vetoes: { usa:'ABD, İsrail\'in güvenlik kaygılarını öne sürerek veto kullandı. "Tek taraflı ateşkes Hamas\'ı güçlendirir" gerekçesi.', russia:'Rusya, Batı\'nın çifte standardını eleştirerek çekimser kaldı.', china:'Çin, kararı destekledi ancak ABD vetosu engelledi.' }},
+  { title:'🇺🇦 Ukrayna Toprak Bütünlüğü', desc:'Rusya\'nın işgal ettiği toprakların iadesi ve savaş tazminatı.', vetoes: { russia:'Rusya veto kullandı. "Ukrayna\'nın Rusya\'ya yönelik saldırıları görmezden geliyor" gerekçesi.', china:'Çin çekimser kaldı, Rusya\'yı desteklemedi ama karşı da çıkmadı.' }},
+  { title:'☢️ Kuzey Kore Nükleer Yaptırım', desc:'KDHC\'nin nükleer programına ek yaptırımlar ve denetim mekanizması.', vetoes: { china:'Çin veto kullandı. "Diyalog yerine baskı istikrarsızlaştırır" gerekçesi.', russia:'Rusya da veto kullandı. ABD\'nin bölgesel askeri varlığına tepki.' }},
+  { title:'🌍 İklim Acil Durum Fonu', desc:'Gelişmekte olan ülkelere 500 milyar dolarlık iklim fonu ve teknoloji transferi.', vetoes: { usa:'ABD, ekonomik yük paylaşımını yetersiz bularak veto kullandı.' }}
+];
+var resIdx = 0;
+
+function nextResolution() {
+  resIdx = (resIdx + 1) % resolutions.length;
+  var r = resolutions[resIdx];
+  document.getElementById('res-title').textContent = r.title;
+  document.getElementById('res-desc').textContent = r.desc;
+  resetVeto();
+}
+
+function resetVeto() {
+  document.querySelectorAll('.p5-btn').forEach(function(b) { b.classList.remove('vetoed', 'approved'); });
+  document.getElementById('veto-result').classList.remove('show');
+}
+
+function p5Vote(country, btn) {
+  var r = resolutions[resIdx];
+  if (r.vetoes && r.vetoes[country]) {
+    btn.classList.add('vetoed');
+    document.getElementById('veto-text').textContent = '🚫 VETO!';
+    document.getElementById('veto-note').textContent = r.vetoes[country];
+    document.getElementById('veto-result').style.background = 'rgba(224,21,21,.1)';
+    document.getElementById('veto-result').style.borderColor = 'rgba(224,21,21,.3)';
+    document.getElementById('veto-text').style.color = 'var(--red)';
+  } else {
+    btn.classList.add('approved');
+    document.getElementById('veto-text').textContent = '✅ ONAY';
+    document.getElementById('veto-note').textContent = country.toUpperCase() + ' bu kararı destekledi.';
+    document.getElementById('veto-result').style.background = 'rgba(0,255,136,.08)';
+    document.getElementById('veto-result').style.borderColor = 'rgba(0,255,136,.3)';
+    document.getElementById('veto-text').style.color = 'var(--green)';
+  }
+  document.getElementById('veto-result').classList.add('show');
+}
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

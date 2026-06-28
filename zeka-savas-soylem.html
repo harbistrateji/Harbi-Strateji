@@ -1,0 +1,810 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><link rel="stylesheet" href="hs-global.css"><script src="hs-nav.js?v=11" defer></script><link rel="stylesheet" href="hs-global-fix.css">
+</head><body>
+
+<h2 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0">Zek&#226;, Sava&#351; ve S&#246;ylem: 2024&#8211;2026 Yapay Zek&#226;n&#305;n Askeri D&#246;n&#252;&#351;&#252;m&#252; &#8212; interaktif bilgi haritas&#305;</h2>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body,html{font-family:'Noto Sans',var(--font-sans,sans-serif)}
+#root{background:var(--surface-0,#0a0a12);color:var(--text-primary,#e8e8ff);min-height:100vh;padding:0 2rem 3rem;max-width:1300px;margin:0 auto}
+
+/* ===== HERO ===== */
+.hero{background:var(--surface-1,#0f0f1e);padding:1.8rem 1.4rem 1.4rem;text-align:center;border-bottom:0.5px solid var(--border,rgba(42,120,214,.25));position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(42,120,214,.1),transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;background:var(--bg-accent,rgba(42,120,214,.18));border:0.5px solid var(--border-accent,rgba(42,120,214,.45));color:var(--text-accent,#7ab8ff);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:3px 14px;border-radius:20px;margin-bottom:.8rem}
+.hero h1{font-size:clamp(1.25rem,3.5vw,1.9rem);font-weight:500;color:var(--text-primary);margin-bottom:.35rem;line-height:1.2}
+.hero-sub{color:var(--text-muted);font-size:13px;margin:0 auto .9rem;max-width:520px;line-height:1.6}
+.stat-row{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:.8rem}
+.stat{text-align:center}
+.stat .n{font-size:1.6rem;font-weight:500;color:var(--text-accent,#2a78d6)}
+.stat .l{font-size:10px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+
+/* ===== NAV ===== */
+.nav{display:flex;background:var(--surface-1,#0f0f1e);border-bottom:0.5px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nb{flex:1;min-width:80px;padding:.6rem .35rem;font-size:11.5px;background:none;border:none;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:.18s;white-space:nowrap;font-family:'Noto Sans',sans-serif}
+.nb.on{color:var(--text-accent,#2a78d6);border-bottom-color:var(--text-accent,#2a78d6);background:rgba(42,120,214,.07)}
+.nb:hover:not(.on){color:var(--text-primary);background:var(--surface-2,rgba(255,255,255,.04))}
+
+/* ===== SECTIONS ===== */
+.sec{display:none;padding:1.25rem;max-width:720px;margin:0 auto}
+.sec.on{display:block}
+
+/* ===== CARDS ===== */
+.card{background:var(--surface-1,#12121f);border:0.5px solid var(--border);border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:.9rem}
+.card-label{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.3px;margin-bottom:.85rem}
+
+/* ===== TIMELINE ===== */
+.tl{position:relative;padding-left:1.3rem}
+.tl::before{content:'';position:absolute;left:.4rem;top:0;bottom:0;width:0.5px;background:rgba(42,120,214,.3)}
+.tli{position:relative;margin-bottom:1.3rem;cursor:pointer}
+.tli::before{content:'';position:absolute;left:-.88rem;top:.3rem;width:7px;height:7px;border-radius:50%;background:var(--text-accent,#2a78d6);border:2px solid var(--surface-0,#0a0a12);transition:.2s}
+.tli.expanded::before{background:var(--text-warning,#eda100)}
+.tly{font-size:10px;color:var(--text-accent,#2a78d6);font-weight:600;letter-spacing:1px;margin-bottom:.12rem}
+.tlt{font-size:.86rem;font-weight:500;color:var(--text-primary);margin-bottom:.18rem;display:flex;align-items:center;gap:.4rem}
+.tlt .arr{font-size:10px;color:var(--text-muted);transition:.2s}
+.tli.expanded .tlt .arr{transform:rotate(90deg)}
+.tld-short{font-size:.76rem;color:var(--text-muted);line-height:1.5}
+.tld-detail{font-size:.76rem;color:var(--text-secondary);line-height:1.6;margin-top:.4rem;padding:.65rem .8rem;background:var(--surface-2,rgba(255,255,255,.04));border-radius:8px;border-left:2px solid var(--text-accent,#2a78d6);display:none}
+.tli.expanded .tld-detail{display:block}
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-top:.3rem;font-weight:500}
+.tag.op{background:var(--bg-danger,rgba(227,73,72,.15));color:var(--text-danger,#f87171);border:0.5px solid var(--border-danger,rgba(227,73,72,.3))}
+.tag.fin{background:var(--bg-success,rgba(27,175,122,.15));color:var(--text-success,#4ade80);border:0.5px solid var(--border-success,rgba(27,175,122,.3))}
+.tag.norm{background:var(--bg-pro,rgba(74,58,167,.15));color:var(--text-pro,#a78bfa);border:0.5px solid var(--border-pro,rgba(74,58,167,.3))}
+.tag.tech{background:var(--bg-warning,rgba(237,161,0,.15));color:var(--text-warning,#fbbf24);border:0.5px solid var(--border-warning,rgba(237,161,0,.3))}
+
+/* ===== MAP / SIMULATION ===== */
+.map-wrap{position:relative;background:#060610;border-radius:10px;overflow:hidden;border:0.5px solid var(--border)}
+.map-canvas{width:100%;height:310px;display:block}
+.map-overlay{position:absolute;top:.6rem;left:.6rem;font-size:10px;color:rgba(27,175,122,.9);background:rgba(0,0,0,.6);padding:3px 8px;border-radius:5px;letter-spacing:.5px}
+.sim-ctrl{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;flex-wrap:wrap}
+.sbtn{background:rgba(42,120,214,.14);border:0.5px solid rgba(42,120,214,.4);color:var(--text-accent,#7ab8ff);padding:.38rem .85rem;border-radius:var(--radius,8px);font-size:.77rem;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.15s}
+.sbtn:hover{background:rgba(42,120,214,.26)}
+.sbtn.stop{background:rgba(227,73,72,.14);border-color:rgba(227,73,72,.4);color:var(--text-danger,#f87171)}
+.sim-stats{font-size:.77rem;color:var(--text-muted);display:flex;gap:1rem;flex-wrap:wrap}
+.sim-n{font-weight:500;color:var(--text-danger,#e34948)}
+.legend-row{display:flex;gap:1.2rem;padding:.55rem .75rem;background:var(--surface-2,rgba(255,255,255,.04));border-top:0.5px solid var(--border);flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:.35rem;font-size:11px;color:var(--text-muted)}
+.leg-dot{width:8px;height:8px;border-radius:50%}
+.intel-feed{font-size:.73rem;color:var(--text-secondary);min-height:72px;line-height:1.85;font-family:'Noto Sans',monospace}
+.intel-line{display:flex;gap:.5rem}
+.intel-ts{color:var(--text-accent,#2a78d6);flex-shrink:0;font-weight:500}
+.intel-line.warn .intel-ts{color:var(--text-danger,#e34948)}
+.intel-line.ok .intel-ts{color:var(--text-success,#4ade80)}
+
+/* ===== BAR CHART ===== */
+.brow{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+.blbl{font-size:.75rem;color:var(--text-muted);width:80px;flex-shrink:0}
+.btrk{flex:1;height:9px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+.bfil{height:100%;border-radius:5px;transition:width 1.3s cubic-bezier(.4,0,.2,1)}
+.bval{font-size:.74rem;font-weight:500;width:60px;text-align:right}
+
+/* ===== INFO BOXES ===== */
+.info-box{padding:.8rem;border-radius:8px;font-size:.77rem;line-height:1.6;margin-bottom:.7rem}
+.info-box.warn{background:rgba(237,161,0,.07);border:0.5px solid rgba(237,161,0,.25);color:var(--text-warning,#fbbf24)}
+.info-box.danger{background:rgba(227,73,72,.07);border:0.5px solid rgba(227,73,72,.25);color:var(--text-danger,#fca5a5)}
+.info-box.accent{background:rgba(42,120,214,.07);border:0.5px solid rgba(42,120,214,.25);color:var(--text-accent,#7ab8ff)}
+
+/* ===== FLOW CHAIN ===== */
+.flow{display:flex;align-items:stretch;overflow-x:auto;margin-bottom:.8rem;border-radius:8px;border:0.5px solid var(--border);overflow:hidden}
+.fb{flex:1;min-width:88px;padding:.65rem .5rem;text-align:center;border-right:0.5px solid var(--border);position:relative}
+.fb:last-child{border-right:none}
+.fb .icon{font-size:1.1rem;margin-bottom:.22rem}
+.fb .lbl{font-size:.7rem;color:var(--text-secondary);line-height:1.3}
+.fb .dur{font-size:.68rem;color:var(--text-danger,#e34948);margin-top:.1rem}
+.fb.hi{background:rgba(42,120,214,.1)}
+.fb.danger-hi{background:rgba(227,73,72,.08)}
+
+/* ===== ROLE CHIPS ===== */
+.chips{display:flex;flex-wrap:wrap;gap:.3rem;margin:.5rem 0}
+.chip{display:inline-flex;align-items:center;gap:.3rem;background:var(--surface-2,rgba(255,255,255,.04));border:0.5px solid var(--border-strong);border-radius:var(--radius,8px);padding:.3rem .65rem;font-size:.74rem}
+.chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ===== DOCTRINE GRID ===== */
+.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.8rem}
+.doc-card{background:var(--surface-2,rgba(255,255,255,.04));border:0.5px solid var(--border);border-radius:8px;padding:.8rem}
+.doc-flag{font-size:1rem;margin-bottom:.25rem}
+.doc-concept{font-size:.78rem;font-weight:500;color:var(--text-primary);margin-bottom:.18rem}
+.doc-detail{font-size:.72rem;color:var(--text-muted);line-height:1.45}
+
+/* ===== DEEP ANALYSIS ===== */
+.deep-blk{border-left:2px solid var(--text-accent,#2a78d6);padding:.6rem .85rem;margin-bottom:.65rem;border-radius:0 7px 7px 0;background:rgba(42,120,214,.05)}
+.deep-blk.warn{border-color:var(--text-warning,#eda100);background:rgba(237,161,0,.05)}
+.deep-blk.danger{border-color:var(--text-danger,#e34948);background:rgba(227,73,72,.05)}
+.deep-blk.success{border-color:var(--text-success,#1baf7a);background:rgba(27,175,122,.05)}
+.deep-name{font-size:.77rem;font-weight:500;color:var(--text-accent,#7ab8ff);margin-bottom:.18rem}
+.deep-blk.warn .deep-name{color:var(--text-warning,#fbbf24)}
+.deep-blk.danger .deep-name{color:var(--text-danger,#fca5a5)}
+.deep-blk.success .deep-name{color:var(--text-success,#4ade80)}
+.deep-text{font-size:.74rem;color:var(--text-muted);line-height:1.55}
+
+/* ===== NETWORK GRAPH AREA ===== */
+.nw-wrap{background:#060610;border-radius:10px;border:0.5px solid var(--border);overflow:hidden;margin-bottom:.8rem}
+.nw-canvas{width:100%;height:280px;display:block}
+
+/* ===== QUIZ ===== */
+.q-q{font-size:.9rem;font-weight:500;color:var(--text-primary);margin-bottom:.8rem;line-height:1.55}
+.q-opts{display:grid;gap:.42rem}
+.q-opt{background:var(--surface-2,rgba(255,255,255,.04));border:0.5px solid var(--border-strong);border-radius:var(--radius,8px);padding:.6rem .85rem;font-size:.81rem;color:var(--text-primary);cursor:pointer;text-align:left;transition:.14s;line-height:1.4;font-family:'Noto Sans',sans-serif}
+.q-opt:hover:not(:disabled){background:rgba(42,120,214,.14);border-color:rgba(42,120,214,.45)}
+.q-opt.ok{background:rgba(27,175,122,.18);border-color:var(--text-success,#1baf7a);color:var(--text-success,#4ade80)}
+.q-opt.no{background:rgba(227,73,72,.18);border-color:var(--text-danger,#e34948);color:var(--text-danger,#f87171)}
+.q-opt:disabled{cursor:default}
+.q-fb{margin-top:.65rem;font-size:.77rem;padding:.7rem;border-radius:8px;line-height:1.55;display:none}
+.q-fb.show{display:block}
+.q-fb.ok{background:rgba(27,175,122,.12);border:0.5px solid rgba(27,175,122,.3);color:#86efac}
+.q-fb.no{background:rgba(227,73,72,.1);border:0.5px solid rgba(227,73,72,.3);color:#fca5a5}
+.btn{background:rgba(42,120,214,.16);border:0.5px solid rgba(42,120,214,.5);color:var(--text-accent,#7ab8ff);padding:.42rem 1.05rem;border-radius:var(--radius,8px);font-size:.81rem;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.15s}
+.btn:hover{background:rgba(42,120,214,.3)}
+.btn.off{opacity:.35;pointer-events:none}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.8rem}
+.mc{background:var(--surface-2,rgba(255,255,255,.04));border:0.5px solid var(--border);border-radius:8px;padding:.75rem;text-align:center}
+.mc .big{font-size:1.45rem;font-weight:500;line-height:1}
+.mc .sm{font-size:10px;color:var(--text-muted);margin-top:.2rem}
+.mc.bl .big{color:var(--text-accent,#2a78d6)}
+.mc.gr .big{color:var(--text-success,#1baf7a)}
+.mc.am .big{color:var(--text-warning,#eda100)}
+.mc.rd .big{color:var(--text-danger,#e34948)}
+
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--text-danger,#e34948);display:inline-block;animation:pulse 1.4s infinite;vertical-align:middle}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+@keyframes fadeU{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Progress bar */
+.prog-wrap{height:4px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:1.1rem}
+.prog-fill{height:100%;background:var(--text-accent,#2a78d6);transition:width .4s}
+</style>
+
+<div id="root">
+<div class="hero">
+  <div class="hero-badge">2024&#8211;2026 &middot; Yapay Zek&#226; &amp; Sava&#351;</div>
+  <h1>Zek&#226;, Sava&#351; ve S&#246;ylem</h1>
+  <p class="hero-sub">Yapay Zek&#226;n&#305;n Askeri D&#246;n&#252;&#351;&#252;m&#252; &#8212; X, Y, Z ve Alfa Ku&#351;aklar&#305; i&#231;in Derin &#304;nteraktif Atlas</p>
+  <div class="stat-row">
+    <div class="stat"><div class="n">45&#215;</div><div class="l">Hedef h&#305;z&#305;</div></div>
+    <div class="stat"><div class="n">$54.6B</div><div class="l">DAWG b&#252;t&#231;esi</div></div>
+    <div class="stat"><div class="n">2000+</div><div class="l">Hedef / 4 g&#252;n</div></div>
+    <div class="stat"><div class="n">35</div><div class="l">Askeri tesis</div></div>
+    <div class="stat"><div class="n">1M+</div><div class="l">Claude / g&#252;n</div></div>
+    <div class="stat"><div class="n">243&#215;</div><div class="l">B&#252;t&#231;e art&#305;&#351;&#305;</div></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nb on" onclick="tab('zaman',this)">&#9201; Kronoloji</button>
+  <button class="nb" onclick="tab('sim',this)">&#127757; Sim&#252;lasyon</button>
+  <button class="nb" onclick="tab('iran',this)">&#127919; &#304;ran Op.</button>
+  <button class="nb" onclick="tab('claude',this)">&#129302; Claude&#8217;un Rol&#252;</button>
+  <button class="nb" onclick="tab('doktrin',this)">&#127758; Doktrin</button>
+  <button class="nb" onclick="tab('ag',this)">&#128257; Finans A&#287;&#305;</button>
+  <button class="nb" onclick="tab('derin',this)">&#128270; Derin Analiz</button>
+  <button class="nb" onclick="tab('quiz',this)">&#129504; Quiz</button>
+</nav>
+
+<!-- ===== KRONOLOJI ===== -->
+<div id="tab-zaman" class="sec on">
+  <div class="card">
+    <div class="card-label">Kritik d&#246;n&#252;m noktalar&#305; &#8212; geni&#351;letmek i&#231;in t&#305;kla</div>
+    <div class="tl" id="tl-root"></div>
+  </div>
+</div>
+
+<!-- ===== SIMULASYON ===== -->
+<div id="tab-sim" class="sec">
+  <div class="card">
+    <div class="card-label">Canl&#305; Kill Chain Sim&#252;lasyonu &#8212; AI Destekli Harek&#226;t</div>
+    <div class="sim-ctrl">
+      <button class="sbtn" id="simBtn" onclick="toggleSim()">&#9654; Ba&#351;lat</button>
+      <button class="sbtn" onclick="resetSim()">&#8635; S&#305;f&#305;rla</button>
+      <div class="sim-stats">
+        Hedef: <span class="sim-n" id="sc">0</span>&nbsp;
+        S&#252;re: <span class="sim-n" id="st">0</span>s&nbsp;
+        H&#305;z: <span class="sim-n" id="sr">0</span>/dk
+      </div>
+    </div>
+    <div class="map-wrap">
+      <canvas class="map-canvas" id="mc" role="img" aria-label="Askeri harek&#226;t sim&#252;lasyon haritas&#305;"></canvas>
+      <div class="map-overlay">&#9679; CANLI</div>
+    </div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#e34948"></div>Vurulan hedef</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#eda100"></div>Aktif analiz</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#2a78d6"></div>Claude d&#252;&#287;&#252;m&#252;</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#1baf7a"></div>NATO / Palantir</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#7878a0"></div>Potansiyel hedef</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Canl&#305; &#304;stihbarat Ak&#305;&#351;&#305;</div>
+    <div class="intel-feed" id="ifeed"><span style="color:var(--text-muted)">Sim&#252;lasyon ba&#351;latmak i&#231;in yukar&#305;daki butona bas&#305;n&#305;z...</span></div>
+  </div>
+</div>
+
+<!-- ===== IRAN ===== -->
+<div id="tab-iran" class="sec">
+  <div class="card">
+    <div class="card-label">H&#305;z K&#305;yasmas&#305;: I&#351;id vs &#304;ran</div>
+    <div style="margin-bottom:1rem">
+      <div class="brow"><div class="blbl">I&#351;id (2014&#8209;15)</div><div class="btrk"><div class="bfil" id="b1" style="width:0%;background:#5F5E5A"></div></div><div class="bval" id="v1" style="color:var(--text-muted)">~0</div></div>
+      <div class="brow"><div class="blbl">&#304;ran (2026)</div><div class="btrk"><div class="bfil" id="b2" style="width:0%;background:#e34948"></div></div><div class="bval" id="v2" style="color:#e34948">~0</div></div>
+      <div style="font-size:.7rem;color:var(--text-muted);margin-top:.35rem">G&#252;nl&#252;k ortalama hedef say&#305;s&#305; (yakla&#351;&#305;k, kamuya a&#231;&#305;k kaynaklara g&#246;re)</div>
+    </div>
+    <div class="g2">
+      <div class="mc rd"><div class="big">4</div><div class="sm">G&#252;n (&#304;ran)</div></div>
+      <div class="mc bl"><div class="big">~180</div><div class="sm">G&#252;n (I&#351;id)</div></div>
+      <div class="mc am"><div class="big">45&#215;</div><div class="sm">H&#305;zlanma</div></div>
+      <div class="mc gr"><div class="big">2000+</div><div class="sm">Hedef (&#304;ran)</div></div>
+    </div>
+    <div class="info-box warn">
+      <strong>&#199;er&#231;eveleme uyard&#305;:</strong> Bu 45&#215; rakam&#305;n kayna&#287;&#305; &#351;effaf de&#287;il. Ne kadar&#305; Claude etkisi, ne kadar&#305; &#246;nceden haz&#305;rlanm&#305;&#351; hedef listeleri, ne kadar&#305; operasyonlar&#305;n farkl&#305; do&#287;as&#305;? Pentagon ve Palantir a&#231;&#305;klamalar&#305; do&#287;as&#305; gere&#287;i tan&#305;t&#305;mc&#305;d&#305;r. Ba&#287;&#305;ms&#305;z do&#287;rulama yap&#305;lamamaktad&#305;r.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Kill Chain &#304;&#231;inde Zaman &#350;eridi</div>
+    <div class="flow">
+      <div class="fb"><div class="icon">&#128243;</div><div class="lbl">Sens&#246;r verisi</div><div class="dur">Ham</div></div>
+      <div class="fb hi"><div class="icon">&#129302;</div><div class="lbl">Claude analiz</div><div class="dur">&lt;100ms</div></div>
+      <div class="fb"><div class="icon">&#128203;</div><div class="lbl">&#214;neri listesi</div><div class="dur">Anl&#305;k</div></div>
+      <div class="fb danger-hi"><div class="icon">&#128377;</div><div class="lbl">&#304;nsan t&#305;klar</div><div class="dur">1&#8211;3 sn</div></div>
+      <div class="fb"><div class="icon">&#128308;</div><div class="lbl">Sald&#305;r&#305;</div><div class="dur">Ger&#231;ekle&#351;ir</div></div>
+    </div>
+    <div class="info-box danger">
+      <strong>Hukuki soru i&#351;areti:</strong> Jessica Dorsey (Utrecht &#220;niversitesi) &#8212; Saniyede 37 milyon hesaplama yapan sistemin karar&#305;n&#305; 1&#8211;3 saniyede onaylayan insan operat&#246;r ger&#231;ek anlamda denetim mi yap&#305;yor? Uluslararas&#305; &#304;nsancıl Hukuk&#8217;ta ay&#305;rt etme ve orant&#305;l&#305;l&#305;k ilkeleri bu h&#305;zda i&#351;letilebilir mi?
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">&#304;stihbarat Fazlal&#305;&#287;&#305; Tezi</div>
+    <div class="deep-blk">
+      <div class="deep-name">Tarihsel ders</div>
+      <div class="deep-text">Barbarossa Harek&#226;t&#305; ve Normandiya felaketleri veri eksikli&#287;inden de&#287;il, a&#351;&#305;r&#305; veri i&#231;inden sinyal ay&#305;klayamamaktan kaynakland&#305;. Jack Shanahan&#8217;&#305;n Project Maven&#8217;&#305; kurarken dile getirdi&#287;i sorun buydu. Claude&#8217;un ger&#231;ek rol&#252;: yeni istihbarat &#252;retmek de&#287;il, mevcut okyanusdan kal&#305;p &#231;&#305;karmak.</div>
+    </div>
+    <div class="deep-blk warn">
+      <div class="deep-name">Generative AI vs Core AI &#8212; kritik ayr&#305;m</div>
+      <div class="deep-text">Transformer mimarisi tabanl&#305; &#252;retken yapay zek&#226; ile &#8220;ate&#351;le ve unut&#8221; f&#252;zelerindeki bilgisayarl&#305; kontrol sistemleri kategorik olarak farkl&#305;d&#305;r. Bu ayr&#305;m&#305; g&#246;rmezden gelmek &#8220;askeri AI devrimi&#8221;ni otuz y&#305;l &#246;ncesine yerle&#351;tirir.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CLAUDE ROLU ===== -->
+<div id="tab-claude" class="sec">
+  <div class="card">
+    <div class="card-label">Claude&#8217;un Kill Chain&#8217;deki Konumu</div>
+    <div class="brow" style="margin-bottom:.5rem"><div class="blbl">Hedef olu&#351;turma</div><div class="btrk"><div class="bfil" style="width:20%;background:#1baf7a"></div></div><div class="bval" style="color:#1baf7a">S&#305;n&#305;rl&#305;</div></div>
+    <div class="brow" style="margin-bottom:.5rem"><div class="blbl">&#214;nceliklendirme</div><div class="btrk"><div class="bfil" style="width:65%;background:#1baf7a"></div></div><div class="bval" style="color:#1baf7a">G&#252;&#231;l&#252;</div></div>
+    <div class="brow" style="margin-bottom:.5rem"><div class="blbl">Sens&#246;r f&#252;zyonu</div><div class="btrk"><div class="bfil" style="width:80%;background:#2a78d6"></div></div><div class="bval" style="color:#2a78d6">Kritik</div></div>
+    <div class="brow"><div class="blbl">Kill chain h&#305;z&#305;</div><div class="btrk"><div class="bfil" style="width:93%;background:#e34948"></div></div><div class="bval" style="color:#e34948">As&#305;l etki</div></div>
+    <div style="font-size:.71rem;color:var(--text-muted);margin-top:.6rem;line-height:1.5">
+      <span style="color:#1baf7a;font-weight:500">Generative AI (Claude):</span> aray&#252;z + analiz + &#246;neri &nbsp;|&nbsp;
+      <span style="color:#2a78d6;font-weight:500">Core AI / CV:</span> g&#246;r&#252;nt&#252; i&#351;leme &nbsp;|&nbsp;
+      <span style="color:#e34948;font-weight:500">Kill chain:</span> en kritik etki
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Anthropic&#8217;in K&#305;rm&#305;z&#305; &#199;izgileri</div>
+    <div class="chips">
+      <div class="chip"><div class="chip-dot" style="background:#e34948"></div>Kitlesel g&#246;zetim yasak</div>
+      <div class="chip"><div class="chip-dot" style="background:#e34948"></div>Tam otonom lethal karar yasak</div>
+      <div class="chip"><div class="chip-dot" style="background:#1baf7a"></div>&#304;stihbarat analizi: serbest</div>
+      <div class="chip"><div class="chip-dot" style="background:#1baf7a"></div>Do&#287;al dil sorgu aray&#252;z&#252;: serbest</div>
+      <div class="chip"><div class="chip-dot" style="background:#eda100"></div>Hedef &#246;neri: insan onay&#305; &#351;artiyle</div>
+    </div>
+    <div class="info-box accent" style="margin-top:.7rem">
+      <strong>Ekonomik paradoks:</strong> Pentagon ile ihtilaf yaland&#305; s&#252;rerken Claude g&#252;nde 1M+ yeni kullan&#305;c&#305; kazand&#305;. Etik duruM piyasada dezavantaj de&#287;il farkl&#305;la&#351;t&#305;r&#305;c&#305; oldu &#8212; Alex Karp&#8217;&#305;n &#8220;ulusal misyon ya da t&#252;ketici &#252;r&#252;n&#252;&#8221; ikili&#287;i yanl&#305;&#351; soruymu&#351;.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Sol T&#305;klama Paradoksu</div>
+    <div style="font-size:.78rem;color:var(--text-muted);line-height:1.6;margin-bottom:.7rem">
+      Cameron Stanley (Pentagon dijital direkt&#246;r&#252;) insan rol&#252;n&#252; tek bir t&#305;klamaya indirger. Bu formul&#226;syon hem teknik ba&#351;ar&#305;y&#305; vurgular hem de insan denetiminin ne kadar darald&#305;&#287;&#305;n&#305; itiraf eder.
+    </div>
+    <div style="display:flex;align-items:center;gap:0;border:0.5px solid var(--border);border-radius:8px;overflow:hidden">
+      <div style="flex:1;padding:.6rem .5rem;text-align:center;border-right:0.5px solid var(--border)">
+        <div style="font-size:1rem;margin-bottom:.2rem">&#129302;</div>
+        <div style="font-size:.68rem;color:var(--text-muted)">AI analiz<br>37M hes/sn</div>
+      </div>
+      <div style="color:var(--text-warning,#eda100);font-size:.85rem;padding:0 4px">&#8594;</div>
+      <div style="flex:1;padding:.6rem .5rem;text-align:center;border-right:0.5px solid var(--border)">
+        <div style="font-size:1rem;margin-bottom:.2rem">&#128203;</div>
+        <div style="font-size:.68rem;color:var(--text-muted)">&#214;neri<br>listesi</div>
+      </div>
+      <div style="color:var(--text-warning,#eda100);font-size:.85rem;padding:0 4px">&#8594;</div>
+      <div style="flex:1;padding:.6rem .5rem;text-align:center;border-right:0.5px solid var(--border);background:rgba(237,161,0,.07)">
+        <div style="font-size:1rem;margin-bottom:.2rem">&#128377;</div>
+        <div style="font-size:.68rem;color:var(--text-warning,#eda100);font-weight:500">&#304;nsan t&#305;klar<br>1&#8211;3 saniye</div>
+      </div>
+      <div style="color:var(--text-warning,#eda100);font-size:.85rem;padding:0 4px">&#8594;</div>
+      <div style="flex:1;padding:.6rem .5rem;text-align:center;background:rgba(227,73,72,.07)">
+        <div style="font-size:1rem;margin-bottom:.2rem">&#128308;</div>
+        <div style="font-size:.68rem;color:var(--text-danger,#f87171)">Sald&#305;r&#305;<br>ger&#231;ekle&#351;ir</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOKTRIN ===== -->
+<div id="tab-doktrin" class="sec">
+  <div class="card">
+    <div class="card-label">ABD &#8596; &#199;in: Kavramsal Yak&#305;nsama</div>
+    <div class="doc-grid">
+      <div class="doc-card">
+        <div class="doc-flag">&#127482;&#127480;</div>
+        <div class="doc-concept">JADC2 &#8212; ABD Doktrini</div>
+        <div class="doc-detail">Durumsal fark&#305;ndal&#305;k &bull; Komuta-kontrol &bull; Hassas vuru&#351; &bull; Lojistik &bull; G&#252;venlik savunmas&#305;. &#8220;&#304;nsan-d&#246;ng&#252;de&#8221; resmi s&#246;ylemde korunuyor ama pratikte&#8230;</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-flag">&#127464;&#127475;</div>
+        <div class="doc-concept">PLA &#8212; Ak&#305;ll&#305; Sava&#351;</div>
+        <div class="doc-detail">Ak&#305;ll&#305; durumsal fark&#305;ndal&#305;k &bull; Ak&#305;ll&#305; komuta &bull; Ak&#305;ll&#305; vuru&#351; &bull; Ak&#305;ll&#305; lojistik &bull; Ak&#305;ll&#305; savunma. Pang Jiakang: insan &#8220;d&#246;ng&#252;-d&#305;&#351;&#305;nda&#8221; olacak.</div>
+      </div>
+    </div>
+    <div class="info-box accent">
+      <strong>Dilsel e&#351;le&#351;me:</strong> &#8220;Deneyimden ak&#305;ll&#305; yetkilendirmeye&#8221; (PLA Daily, Wei Hong) = &#8220;Sol t&#305;klama&#8221; (Cameron Stanley, Pentagon). &#304;ki rakibin doktrini s&#246;zlemsel d&#252;zeyde neredeyse birebir &#246;rt&#252;&#351;&#252;yor. Fark i&#231;erikte de&#287;il &#351;effafl&#305;kta: ABD kamuoyu &#246;n&#252;nde tart&#305;&#351;&#305;rken &#199;in kapal&#305; kap&#305;lar ard&#305;nda.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">DeepSeek Paradoksu</div>
+    <div class="g2">
+      <div style="background:rgba(42,120,214,.07);border:0.5px solid rgba(42,120,214,.22);border-radius:8px;padding:.75rem;text-align:center">
+        <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:.25rem">ABD&#8217;nin hedefi</div>
+        <div style="font-size:.81rem;color:var(--text-accent,#7ab8ff);font-weight:500">&#199;ip k&#305;s&#305;tlar&#305;yla<br>&#199;in&#8217;i frenleme</div>
+      </div>
+      <div style="background:rgba(237,161,0,.07);border:0.5px solid rgba(237,161,0,.22);border-radius:8px;padding:.75rem;text-align:center">
+        <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:.25rem">Ger&#231;ek sonu&#231;</div>
+        <div style="font-size:.81rem;color:var(--text-warning,#fbbf24);font-weight:500">&#199;in daha verimli<br>yaz&#305;l&#305;m geli&#351;tirdi</div>
+      </div>
+    </div>
+    <div class="deep-blk warn">
+      <div class="deep-name">Karen Hao&#8217;nun tezi</div>
+      <div class="deep-text">&#199;ip k&#305;s&#305;tlamalar&#305; paradoksal bi&#231;imde &#199;in&#8217;i yaz&#305;l&#305;m verimlili&#287;i odakl&#305; inovasyona itti. DeepSeek Ocak 2025&#8217;te Amerikan modellerinin ~%90 performans&#305;n&#305; &#231;ok daha d&#252;&#351;&#252;k maliyetle elde etti. Sonu&#231;: K&#305;s&#305;tlama, &#199;in&#8217;i Palmer Luckey&#8217;nin ideali olan &#8220;ucuz, bol, y&#305;pranmaya diren&#231;li&#8221; modele daha da yakla&#351;t&#305;rd&#305;.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">G&#252;venlik &#304;kilemi Sarmal&#305;</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:1.2rem;padding:.9rem;flex-wrap:wrap">
+      <div style="text-align:center;flex:1;min-width:100px">
+        <div style="font-size:1.3rem;margin-bottom:.3rem">&#127482;&#127480;</div>
+        <div style="font-size:.77rem;font-weight:500;color:var(--text-primary)">ABD militarize</div>
+        <div style="font-size:.7rem;color:var(--text-muted);margin-top:.1rem">&#199;in tehdidini gere&#231;ke g&#246;sterir</div>
+      </div>
+      <div style="font-size:1.6rem;color:var(--text-danger,#e34948)">&#8635;</div>
+      <div style="text-align:center;flex:1;min-width:100px">
+        <div style="font-size:1.3rem;margin-bottom:.3rem">&#127464;&#127475;</div>
+        <div style="font-size:.77rem;font-weight:500;color:var(--text-primary)">&#199;in h&#305;zlan&#305;r</div>
+        <div style="font-size:.7rem;color:var(--text-muted);margin-top:.1rem">ABD&#8217;yi do&#287;rular</div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.74rem;color:var(--text-danger,#e34948);padding:.45rem;border-top:0.5px solid var(--border);margin-top:.3rem">
+      <span class="pulse"></span> Kar&#351;&#305;l&#305;kl&#305; h&#305;zland&#305;ran g&#252;venlik ikilemi &#8212; RAND sim&#252;lasyonlar&#305;nda istenmeyen t&#305;rmanma dinamikleri tespit edildi
+    </div>
+  </div>
+</div>
+
+<!-- ===== FINANS AGI ===== -->
+<div id="tab-ag" class="sec">
+  <div class="card">
+    <div class="card-label">Thiel Ekosistemi &#8212; Kim Kimle Ba&#287;l&#305;?</div>
+    <div class="nw-wrap">
+      <canvas class="nw-canvas" id="nc" role="img" aria-label="Savunma teknolojisi finans a&#287;&#305; g&#246;rseli"></canvas>
+    </div>
+    <div style="font-size:.73rem;color:var(--text-muted);line-height:1.55">
+      DAWG b&#252;t&#231;esinin b&#252;y&#252;k k&#305;sm&#305; k&#252;&#231;&#252;k bir kisisel&#8209;kurumsal matrisin t&#252;revlerine akma riski ta&#351;&#305;yor. Palantir, Anduril, Founders Fund &#8212; hepsi ayn&#305; &#252;&#231; telefon g&#246;r&#252;&#351;mesinden do&#287;du.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">B&#252;t&#231;e Kar&#351;&#305;la&#351;t&#305;rmas&#305;</div>
+    <div class="brow"><div class="blbl">DAWG 2027</div><div class="btrk"><div class="bfil" style="width:100%;background:#e34948"></div></div><div class="bval" style="color:#e34948">$54.6B</div></div>
+    <div class="brow"><div class="blbl">Deniz Piy.</div><div class="btrk"><div class="bfil" style="width:96%;background:#5F5E5A"></div></div><div class="bval" style="color:var(--text-muted)">$52.8B</div></div>
+    <div class="brow"><div class="blbl">DAWG 2025</div><div class="btrk"><div class="bfil" style="width:.4%;background:#2a78d6"></div></div><div class="bval" style="color:#2a78d6">$225M</div></div>
+    <div style="font-size:.7rem;color:var(--text-muted);margin-top:.5rem">Enflasyona g&#246;re d&#252;zeltildi&#287;inde Reagan&#8217;&#305;n SDI&#8217;sinin zirve harcamas&#305;n&#305;n yakla&#351;&#305;k 5 kat&#305;</div>
+    <div class="info-box warn" style="margin-top:.7rem">
+      <strong>Kristofer Harrison&#8217;&#305;n ele&#351;tirisi:</strong> DAWG fonlar&#305; y&#252;ksek derecede uzmanla&#351;m&#305;&#351; ama sava&#351;ta denenmemi&#351; platformlara akma riski ta&#351;&#305;yor. Ukrayna&#8217;da kan&#305;tlanm&#305;&#351; ucuz insans&#305;z hava ara&#231;lar&#305; ise ihmal ediliyor.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">T&#252;rkiye &#8212; Orta G&#252;&#231; &#304;kilemi</div>
+    <div class="deep-blk success">
+      <div class="deep-name">Bayraktar Ekosistemi</div>
+      <div class="deep-text">TB2 ve Ak&#305;nc&#305;, Ukrayna&#8217;da operasyonel kan&#305;t kazanm&#305;&#351; insans&#305;z hava ara&#231;lar&#305; olarak Anduril&#8217;in doldurmaya &#231;al&#305;&#351;t&#305;&#287;&#305; pazara zaten yerle&#351;mi&#351;tir.</div>
+    </div>
+    <div class="deep-blk warn">
+      <div class="deep-name">Kritik karar noktas&#305;</div>
+      <div class="deep-text">Sava&#351;ta kan&#305;tlanm&#305;&#351; ucuz ve bol model mi, yoksa pahal&#305; ve karma&#351;&#305;k ama denenmemi&#351; platform mu? Palmer Luckey&#8217;nin &#8220;kendi yapay zek&#226; silahlar&#305;n&#305;z&#305; geli&#351;tirin&#8221; &#231;a&#287;r&#305;s&#305; ayn&#305; zamanda Anduril&#8217;in pazar giri&#351; stratejisidir.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DERIN ANALIZ ===== -->
+<div id="tab-derin" class="sec">
+  <div class="card">
+    <div class="card-label">S&#246;ylem ile Ger&#231;eklik Aras&#305;ndaki U&#231;urum</div>
+    <div class="deep-blk danger">
+      <div class="deep-name">&#8220;Claude suikast zinciri kurdu&#8221; &#8212; bilgi k&#246;keni analizi</div>
+      <div class="deep-text">OFweek analisti bu iddian&#305;n &#246;nce Reddit&#8217;e, oradan &#199;ince sans&#226;syonel medyaya, son olarak &#8220;WSJ haberine dayanan&#8221; ba&#351;l&#305;klarla geri d&#246;nd&#252;&#287;&#252;n&#252; belgeledi. WSJ&#8217;nin ger&#231;ek dili &#231;ok daha &#246;l&#231;&#252;l&#252;d&#252;r: Claude &#8220;davran&#305;&#351; kal&#305;plar&#305;n&#305; analiz etmeye yard&#305;m etti ve tavsiyelerde bulundu.&#8221; &#8212; bu &#8220;suikast zinciri&#8221; de&#287;il, do&#287;al dil aray&#252;z&#252;d&#252;r.</div>
+    </div>
+    <div class="deep-blk">
+      <div class="deep-name">Pang Jiakang&#8217;&#305;n Radikal Tezi (Milli Savunma &#220;niversitesi)</div>
+      <div class="deep-text">Olgun ak&#305;ll&#305; sava&#351;ta insan &#8220;d&#246;ng&#252;-d&#305;&#351;&#305;nda&#8221; olacak: tek komutan&#305;n karar&#305;, ordunun kolektif sava&#351; senaryolar&#305; veri setinden &#252;retilen optimal &#231;&#246;z&#252;me kar&#351;&#305; sistematik olarak yetersiz kalacak. Bu ABD&#8217;nin resmi s&#246;yleminin hi&#231; kabul etmedi&#287;i ama operasyonel pratikte uygulamaya ba&#351;lad&#305;&#287;&#305; bir ilkedir.</div>
+    </div>
+    <div class="deep-blk warn">
+      <div class="deep-name">&#199;er&#231;evelemenin performatif boyutu</div>
+      <div class="deep-text">&#8220;Yapay zek&#226; sava&#351;&#305;&#8221;, &#8220;sol t&#305;klama&#8221;, &#8220;insan d&#246;ng&#252;de&#8221;, &#8220;kar&#351;&#305;l&#305;kl&#305; g&#252;venceli imha&#8221; &#8212; bu ifadeler tan&#305;mlad&#305;klar&#305; olgusal ger&#231;eklik kadar kendi ger&#231;ekliklerini kuran performatif s&#246;ylemlerdir. MAD &#231;er&#231;evesinin askeri AI&#8217;a uygulanmas&#305; analitik bir ad&#305;mdan &#231;ok bir s&#246;ylem se&#231;imidir: n&#252;kleer MAD&#8217;in varsayd&#305;&#287;&#305; simetri yapay zek&#226; silahlar&#305;nda yoktur.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">&#220;&#231; A&#231;&#305;k Soru</div>
+    <div class="deep-blk">
+      <div class="deep-name">1. Resmi s&#246;ylem vs operasyonel pratik</div>
+      <div class="deep-text">Pang&#8217;&#305;n &#8220;insan-d&#246;ng&#252;-d&#305;&#351;&#305;&#8221; tezi hi&#231;bir Bat&#305;l&#305; kurumca onaylanmad&#305;. Ama &#8220;sol t&#305;klama&#8221; formul&#226;syonu bu teze fiilen yakla&#351;&#305;yor. Bu &#231;eli&#351;ki nas&#305;l kapanacak? Demokratik hesap verebilirli&#287;in gelece&#287;i burada yat&#305;yor.</div>
+    </div>
+    <div class="deep-blk warn">
+      <div class="deep-name">2. Ahlaki farkl&#305;la&#351;t&#305;rma s&#252;rd&#252;r&#252;lebilir mi?</div>
+      <div class="deep-text">Di&#287;er AI &#351;irketleri Anthropic gibi s&#305;n&#305;r &#231;izerse Pentagon&#8217;un se&#231;ene&#287;i daral&#305;r. Hi&#231;biri &#231;izmezse Anthropic marjinalle&#351;ir. Bu denge, yapay zek&#226; end&#252;strisinin normatif karakterini &#246;n&#252;m&#252;zdeki y&#305;llarda belirleyecek.</div>
+    </div>
+    <div class="deep-blk danger">
+      <div class="deep-name">3. Hesap verebilirlik bo&#351;lu&#287;u</div>
+      <div class="deep-text">Sivil AI hatalar&#305; h&#305;zla d&#252;zeltilen bir ortamda askeri AI &#231;ok katmanl&#305; &#351;effafl&#305;k eksikli&#287;inden yararlan&#305;yor. Bu bo&#351;lu&#287;u kimin, nas&#305;l kapataca&#287;&#305; hen&#252;z belirsiz. Akl&#305;ll&#305; sava&#351; &#231;a&#287;&#305;n&#305;n en acil ihtiyac&#305; yeni silahlar de&#287;il, bu silahlar&#305; tart&#305;&#351;abilecek yeni kavramsal ara&#231;lard&#305;r.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Final: Yapay Zek&#226;n&#305;n Ger&#231;ek Etkisi</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <div style="background:rgba(27,175,122,.07);border:0.5px solid rgba(27,175,122,.25);border-radius:8px;padding:.75rem">
+        <div style="font-size:.73rem;font-weight:500;color:var(--text-success,#4ade80);margin-bottom:.3rem">Sava&#351;&#305;n ne&#8217;yi de&#287;i&#351;tiriyor?</div>
+        <div style="font-size:.7rem;color:var(--text-muted);line-height:1.5">H&#305;z &bull; &#214;l&#231;ek &bull; Denetlenebilirlik</div>
+      </div>
+      <div style="background:rgba(227,73,72,.07);border:0.5px solid rgba(227,73,72,.25);border-radius:8px;padding:.75rem">
+        <div style="font-size:.73rem;font-weight:500;color:var(--text-danger,#f87171);margin-bottom:.3rem">En kritik sonu&#231;</div>
+        <div style="font-size:.7rem;color:var(--text-muted);line-height:1.5">Askeri g&#252;c&#252;n hesap verebilirli&#287;inin azalmas&#305;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="tab-quiz" class="sec">
+  <div id="qa"><div class="card"><div id="qw"></div></div></div>
+  <div id="qr" style="display:none"><div class="card"><div id="rw" style="text-align:center;padding:1.5rem .5rem"></div></div></div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+var $ = function(id){return document.getElementById(id)};
+
+function tab(id,el){
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on')});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on')});
+  $('tab-'+id).classList.add('on');
+  el.classList.add('on');
+  if(id==='iran') setTimeout(animBars,200);
+  if(id==='sim') initMap();
+  if(id==='ag') initNetwork();
+}
+
+// ===== TIMELINE DATA =====
+var tlData=[
+  {y:'2017',t:'Project Maven Ba&#351;lad&#305;',s:'Sinyal ay&#305;klamak i&#231;in',tag:'tech',tagLabel:'Teknoloji',
+   detail:'Korgeneral Jack Shanahan kurdu. ABD ordusunun sorun veri eksikli&#287;i de&#287;il, veri bollu&#287;uydu. Drone g&#246;r&#252;nt&#252;lerinden sinyal &#231;&#305;karmak imk&#226;ns&#305;zla&#351;m&#305;&#351;t&#305;. Maven bu sorunu &#231;&#246;zmeye &#231;al&#305;&#351;t&#305;. Shanahan&#8217;&#305;n kurdu&#287;u sistemin mant&#305;&#287;&#305; bug&#252;n de ayakta.'},
+  {y:'2018',t:'Google &#199;ekildi &#8212; Silikon Vadisi&#8217;nin &#304;kilemi',s:'&#199;al&#305;&#351;an protestolar&#305; ile',tag:'norm',tagLabel:'Etik Kriz',
+   detail:'Google &#231;al&#305;&#351;anlar&#305;n&#305;n &#8220;Yapay zek&#226;y&#305; silah i&#231;in kullanmay&#305;z&#8221; protestosu &#351;irketi Maven&#8217;dan &#231;ekmeye zorlad&#305;. Palantir devrald&#305;. Bu olay teknoloji &#351;irketlerinin savunma s&#246;zle&#351;meleri konusundaki derin ayr&#305;&#351;mas&#305;n&#305;n ba&#351;lang&#305;c&#305;d&#305;r. Google&#8217;&#305;n &#231;ekilmesi ayn&#305; zamanda Anduril ve benzeri savunma-odakl&#305; startuplar&#305;n do&#287;u&#351;unu h&#305;zlad&#305;rm&#305;&#351;t&#305;r.'},
+  {y:'2019',t:'Palantir Devral&#305;p Daha Derin Entegre Etti',s:'AIP + Maven birle&#351;mesi',tag:'tech',tagLabel:'Ekosistem',
+   detail:'Palantir Yapay Zek&#226; Platformu (AIP) Maven&#8217;a entegre edildi. Ayn&#305; d&#246;nemde Peter Thiel&#8217;in sermaye a&#287;&#305; savunma teknolojisi giri&#351;imlerini &#351;ekillendirmeye ba&#351;lad&#305;. Palmer Luckey&#8217;nin Facebook&#8217;tan kovuldu&#287;u g&#252;n yapt&#305;&#287;&#305; &#252;&#231; telefon g&#246;r&#252;&#351;mesi &#8212; hepsi Thiel ekosisteminden &#8212; Anduril&#8217;in do&#287;um an&#305;yd&#305;.'},
+  {y:'Ocak 2025',t:'DeepSeek Paradoksu',s:'K&#305;s&#305;tlama ters tepti',tag:'tech',tagLabel:'Paradoks',
+   detail:'&#199;inli DeepSeek, Amerikan modellerinin ~%90 performans&#305;n&#305; &#231;ok daha d&#252;&#351;&#252;k maliyetle elde etti. ABD&#8217;nin &#231;ip ihracat k&#305;s&#305;tlamalar&#305; &#199;in&#8217;i yaz&#305;l&#305;m verimlili&#287;ine yoneltti. Paradoks: k&#305;s&#305;tlama &#199;in&#8217;i Palmer Luckey&#8217;nin ideal dedi&#287;i &#8220;ucuz, bol, y&#305;pranmaya diren&#231;li&#8221; modele yakla&#351;t&#305;rd&#305;.'},
+  {y:'2025 sonu',t:'DAWG Kuruldu &#8212; 243&#215; B&#252;t&#231;e Art&#305;&#351;&#305;',s:'Biden&#8217;&#305;n Replicator&#8217;&#305;n&#305;n yeniden marklanmas&#305;',tag:'fin',tagLabel:'Finansal',
+   detail:'Savunma Otonom Sava&#351; Grubu 225 milyon dolarla kuruldu. SOCOM b&#252;nyesine ta&#351;&#305;nd&#305; &#8212; bu mevzuat ve kamuoyu denetiminden g&#246;rece uzak bir yap&#305;lanmad&#305;r. 2027 i&#231;in 54.6 milyar dolar talep etti &#8212; Deniz Piyadeleri&#8217;nin t&#252;m b&#252;t&#231;esinden b&#252;y&#252;k.'},
+  {y:'&#350;ubat 2026',t:'&#304;ran Harek&#226;t&#305; &#8212; Yapay Zek&#226;n&#305;n Sahne S&#305;nav&#305;',s:'4 g&#252;nde 2000+ hedef',tag:'op',tagLabel:'Harek&#226;tsal',
+   detail:'4 g&#252;nde 2000+ hedef vuruldu. ISD operasyonunda benzer say&#305;ya 6 ayda ula&#351;&#305;lm&#305;&#351;t&#305;. Claude + Palantir AIP sistemi aktif. &#199;ereveleme uyard&#305;s&#305;: 45&#215; h&#305;zlanman&#305;n ne kadar&#305; AI, ne kadar&#305; &#246;nceden haz&#305;rlanm&#305;&#351; hedef listesi? A&#231;&#305;klanmad&#305;. Bir ilkokul bombalanmas&#305; haberleri hukuki sorular&#305; g&#252;nceledi.'},
+  {y:'Mart 2026',t:'Anthropic&#8211;Pentagon &#304;htilaf&#305;',s:'Kitlesel g&#246;zetim ve otonom silah ret',tag:'norm',tagLabel:'Normatif K&#305;r&#305;lma',
+   detail:'Anthropic kitlesel g&#246;zetim ve tam otonom silah sistemleri i&#231;in Claude&#8217;u kulland&#305;rmay&#305; reddetti. Trump y&#246;netimi &#351;irketi &#8220;tedarik zinciri riski&#8221; ilan etti. Bir Kaliforniya federal mahkemesi bu m&#252;dahaleyi hukuka ayk&#305;r&#305; buldu.'},
+  {y:'Nisan 2026',t:'Etik Durum Piyasada Avantaj Oldu',s:'G&#252;nde 1M+ yeni kullan&#305;c&#305;',tag:'fin',tagLabel:'Piyasa',
+   detail:'Pentagon ile ihtilaf s&#252;rerken Claude g&#252;nde 1M+ yeni kullan&#305;c&#305; kazand&#305;. Karp&#8217;&#305;n &#8220;ulusal misyon ya da t&#252;ketici &#252;r&#252;n&#252;&#8221; ikili&#287;i yanl&#305;&#351; soru oldu&#287;unu ortaya koydu: etik pozisyon piyasada farkl&#305;la&#351;t&#305;r&#305;c&#305; oldu.'}
+];
+
+function buildTimeline(){
+  var root=$('tl-root');
+  if(!root)return;
+  root.innerHTML='';
+  tlData.forEach(function(d,i){
+    var el=document.createElement('div');
+    el.className='tli';
+    el.innerHTML='<div class="tly">'+d.y+'</div>'
+      +'<div class="tlt">'+d.t+' <span class="arr">&#9658;</span></div>'
+      +'<div class="tld-short">'+d.s+'&nbsp;<span class="tag '+d.tag+'">'+d.tagLabel+'</span></div>'
+      +'<div class="tld-detail">'+d.detail+'</div>';
+    el.onclick=function(){
+      var wasOpen=el.classList.contains('expanded');
+      document.querySelectorAll('.tli').forEach(function(e){e.classList.remove('expanded')});
+      if(!wasOpen)el.classList.add('expanded');
+    };
+    root.appendChild(el);
+  });
+}
+buildTimeline();
+
+// ===== BAR ANIMATION =====
+function animBars(){
+  var b1=$('b1'),b2=$('b2'),v1=$('v1'),v2=$('v2');
+  if(!b1)return;
+  b1.style.width='2%';v1.textContent='~11/g\u00fcn';
+  b2.style.width='100%';v2.textContent='500+/g\u00fcn';
+}
+
+// ===== MAP SIMULATION =====
+var simR=false,simT=null,simC=0,simS=0,ctx=null,parts=[],tgts=[],nodes2=[];
+var mapInited=false;
+
+function initMap(){
+  if(mapInited)return;
+  mapInited=true;
+  var cv=$('mc');if(!cv)return;
+  cv.width=cv.offsetWidth||680;cv.height=310;
+  ctx=cv.getContext('2d');
+  var w=cv.width,h=cv.height;
+  nodes2=[
+    {x:w*.18,y:h*.3,lbl:'Claude Node',col:'#2a78d6',r:10},
+    {x:w*.78,y:h*.22,lbl:'Palantir AIP',col:'#1baf7a',r:9},
+    {x:w*.5,y:h*.12,lbl:'NATO Tesis',col:'#1baf7a',r:8}
+  ];
+  tgts=[];
+  for(var i=0;i<10;i++){
+    tgts.push({x:w*.45+Math.random()*w*.38,y:h*.25+Math.random()*h*.6,hit:false,pulse:0});
+  }
+  drawMap();
+}
+
+function drawMap(){
+  if(!ctx)return;
+  var cv=$('mc');var w=cv.width,h=cv.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#060610';ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(42,120,214,.06)';ctx.lineWidth=0.5;
+  for(var gx=0;gx<w;gx+=36){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,h);ctx.stroke();}
+  for(var gy=0;gy<h;gy+=36){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(w,gy);ctx.stroke();}
+
+  ctx.strokeStyle='rgba(42,120,214,.15)';ctx.lineWidth=0.5;ctx.setLineDash([3,5]);
+  for(var i=0;i<nodes2.length;i++){for(var j=i+1;j<nodes2.length;j++){
+    ctx.beginPath();ctx.moveTo(nodes2[i].x,nodes2[i].y);ctx.lineTo(nodes2[j].x,nodes2[j].y);ctx.stroke();
+  }}
+  ctx.setLineDash([]);
+
+  tgts.forEach(function(t){
+    if(t.pulse>0){
+      ctx.beginPath();ctx.arc(t.x,t.y,t.pulse,0,Math.PI*2);
+      ctx.fillStyle='rgba(227,73,72,'+(0.4-t.pulse/60)+')';ctx.fill();
+      t.pulse+=1.5;if(t.pulse>45)t.pulse=0;
+    }
+    ctx.beginPath();ctx.arc(t.x,t.y,4.5,0,Math.PI*2);
+    ctx.fillStyle=t.hit?'#e34948':'#7878a0';ctx.fill();
+    if(!t.hit&&simR&&Math.random()<.12){
+      ctx.strokeStyle='rgba(237,161,0,.65)';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.arc(t.x,t.y,9,0,Math.PI*2);ctx.stroke();
+    }
+  });
+
+  parts=parts.filter(function(p){
+    p.x+=p.vx;p.y+=p.vy;p.l--;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.c+Math.floor(p.l/p.ml*255).toString(16).padStart(2,'0');ctx.fill();
+    return p.l>0;
+  });
+
+  nodes2.forEach(function(n){
+    if(simR){
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.2,0,Math.PI*2);
+      ctx.fillStyle=n.col+'20';ctx.fill();
+    }
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fillStyle=n.col;ctx.fill();
+    ctx.fillStyle='#e8e8ff';ctx.font='10px "Noto Sans",sans-serif';
+    ctx.textAlign='center';ctx.fillText(n.lbl,n.x,n.y+n.r+12);
+  });
+}
+
+function spawn(x,y){
+  for(var i=0;i<20;i++){
+    var a=Math.random()*Math.PI*2,s=Math.random()*3+1;
+    parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:Math.random()*2.5+.5,c:'#e34948',l:28,ml:28});
+  }
+}
+
+var raf=null;
+function loop(){drawMap();raf=requestAnimationFrame(loop);}
+
+var intelMsgs=[
+  {t:'norm',msg:'Sekt&#246;r 7G taranıyor&#8230; 3 potansiyel hedef tespit edildi.'},
+  {t:'norm',msg:'Claude: Koordinat verileri Palantir AIP ile e&#351;leniyor.'},
+  {t:'ok',msg:'Hedef &#246;nceliklendirme tamamlandı. &#214;ncelik-1 onayland&#305;.'},
+  {t:'ok',msg:'Sens&#246;r f&#252;zyonu: %98.7 g&#252;ven skoru.'},
+  {t:'warn',msg:'&#304;nsan operat&#246;r onay bekliyor&#8230; [Sol kl&#305;k]'},
+  {t:'warn',msg:'UYARI: Sivil altyap&#305; &#246;rt&#252;&#351;mesi tespit edildi. Analiz devam.'},
+  {t:'norm',msg:'Kill chain h&#305;z: ISD operasyonundan 45&#215; daha h&#305;zl&#305;.'},
+  {t:'ok',msg:'Claude &#246;nerisi g&#252;ncellendi: Hedef listesi yeniden s&#305;raland&#305;.'},
+  {t:'warn',msg:'Jessica Dorsey sorusu: 37M hes/sn kara kutusu denetlenebilir mi?'}
+];
+var iIdx=0;
+
+function addIntelLine(type,msg){
+  var feed=$('ifeed');if(!feed)return;
+  var d=document.createElement('div');d.className='intel-line '+type;
+  d.innerHTML='<span class="intel-ts">['+simS+'s]</span><span>'+msg+'</span>';
+  feed.insertBefore(d,feed.firstChild);
+  var lines=feed.querySelectorAll('.intel-line');
+  if(lines.length>7)feed.removeChild(feed.lastChild);
+}
+
+function toggleSim(){
+  if(simR){
+    simR=false;clearInterval(simT);cancelAnimationFrame(raf);
+    $('simBtn').textContent='\u25ba Ba\u015flat';$('simBtn').classList.remove('stop');
+    drawMap();
+  } else {
+    simR=true;
+    if(!mapInited)initMap();
+    loop();
+    $('simBtn').textContent='\u23f8 Durdur';$('simBtn').classList.add('stop');
+    $('ifeed').innerHTML='';
+    simT=setInterval(function(){
+      simS++;
+      $('st').textContent=simS;
+      var rate=Math.round(simC/Math.max(1,simS)*60);
+      $('sr').textContent=rate;
+      var unhit=tgts.filter(function(t){return!t.hit;});
+      if(unhit.length>0&&Math.random()<.45){
+        var t=unhit[Math.floor(Math.random()*unhit.length)];
+        t.hit=true;t.pulse=5;simC++;
+        $('sc').textContent=simC;
+        spawn(t.x,t.y);
+      }
+      var m=intelMsgs[iIdx%intelMsgs.length];iIdx++;
+      addIntelLine(m.t,m.msg);
+    },750);
+  }
+}
+
+function resetSim(){
+  simR=false;clearInterval(simT);cancelAnimationFrame(raf);
+  simC=0;simS=0;iIdx=0;
+  $('sc').textContent='0';$('st').textContent='0';$('sr').textContent='0';
+  $('simBtn').textContent='\u25ba Ba\u015flat';$('simBtn').classList.remove('stop');
+  if($('ifeed'))$('ifeed').innerHTML='<span style="color:var(--text-muted)">Sim\u00fclas\u00f3n ba\u015flat\u0131ld\u0131ktan sonra istihbarat ak\u0131\u015f\u0131 burada g\u00f6r\u00fcnecek.</span>';
+  tgts.forEach(function(t){t.hit=false;t.pulse=0;});parts=[];
+  if(ctx)drawMap();
+}
+
+// ===== NETWORK GRAPH =====
+var nwInited=false;
+var nwNodes=[
+  {id:0,x:.5,y:.12,lbl:'Peter Thiel',col:'#eda100',r:18},
+  {id:1,x:.15,y:.38,lbl:'Palantir',col:'#2a78d6',r:14},
+  {id:2,x:.5,y:.38,lbl:'Founders Fund',col:'#2a78d6',r:13},
+  {id:3,x:.83,y:.38,lbl:'Anduril',col:'#2a78d6',r:14},
+  {id:4,x:.08,y:.7,lbl:'Maven / Pentagon',col:'#e34948',r:12},
+  {id:5,x:.3,y:.7,lbl:'P. Luckey',col:'#1baf7a',r:11},
+  {id:6,x:.55,y:.7,lbl:'DAWG $54.6B',col:'#e34948',r:13},
+  {id:7,x:.82,y:.7,lbl:'Trae Stephens',col:'#1baf7a',r:10},
+  {id:8,x:.5,y:.9,lbl:'Savunma AI Ekosistemi',col:'#4a3aa7',r:12}
+];
+var nwEdges=[[0,1],[0,2],[0,3],[1,2],[2,3],[1,4],[3,5],[2,6],[3,7],[5,8],[6,8],[7,8]];
+var nwCtx=null,nwAnim=null,nwTick=0;
+
+function initNetwork(){
+  if(nwInited)return;nwInited=true;
+  var cv=$('nc');if(!cv)return;
+  cv.width=cv.offsetWidth||680;cv.height=280;
+  nwCtx=cv.getContext('2d');
+  function drawNw(){
+    var w=cv.width,h=cv.height;
+    nwCtx.clearRect(0,0,w,h);
+    nwCtx.fillStyle='#060610';nwCtx.fillRect(0,0,w,h);
+    nwTick+=.018;
+    nwEdges.forEach(function(e){
+      var a=nwNodes[e[0]],b=nwNodes[e[1]];
+      nwCtx.beginPath();
+      nwCtx.moveTo(a.x*w,a.y*h);nwCtx.lineTo(b.x*w,b.y*h);
+      nwCtx.strokeStyle='rgba(42,120,214,.25)';nwCtx.lineWidth=0.8;
+      nwCtx.stroke();
+    });
+    nwNodes.forEach(function(n,i){
+      var px=n.x*w,py=n.y*h;
+      var pulse=Math.sin(nwTick*2+i)*2;
+      nwCtx.beginPath();nwCtx.arc(px,py,n.r+pulse+4,0,Math.PI*2);
+      nwCtx.fillStyle=n.col+'18';nwCtx.fill();
+      nwCtx.beginPath();nwCtx.arc(px,py,n.r,0,Math.PI*2);
+      nwCtx.fillStyle=n.col;nwCtx.fill();
+      nwCtx.fillStyle='#e8e8ff';nwCtx.font='10px "Noto Sans",sans-serif';
+      nwCtx.textAlign='center';nwCtx.fillText(n.lbl,px,py+n.r+13);
+    });
+    nwAnim=requestAnimationFrame(drawNw);
+  }
+  drawNw();
+}
+
+// ===== QUIZ =====
+var qs=[
+  {q:'Project Maven hangi y&#305;l kuruldu ve ilk amac&#305; neydi?',
+   o:['2015 &#8212; &#304;nsans&#305;z hava arac&#305; &#252;retmek','2017 &#8212; Drone g&#246;r&#252;nt&#252;lerini h&#305;zl&#305; i&#351;lemek','2019 &#8212; Otonom sava&#351; sistemleri geli&#351;tirmek','2021 &#8212; &#199;in&#8217;in yapay zek&#226;s&#305;na kar&#351;&#305; durmak'],
+   c:1,e:'2017&#8217;de Korgeneral Jack Shanahan taraf&#305;ndan kuruldu. Sorun veri eksikli&#287;i de&#287;il, veri bollu&#287;uydu: drone g&#246;r&#252;nt&#252;lerinden sinyal ay&#305;klamak imk&#226;ns&#305;zla&#351;m&#305;&#351;t&#305;. Google 2018&#8217;de &#231;al&#305;&#351;an protestolar&#305; &#252;zerine ayr&#305;ld&#305;; Palantir devrald&#305;.'},
+  {q:'DAWG&#8217;nin 2027 b&#252;t&#231;e talebi neden &#231;arp&#305;c&#305;?',
+   o:['Yaln&#305;zca 1 milyar dolar talep etti','T&#252;m NATO b&#252;t&#231;esinden b&#252;y&#252;k','Deniz Piyadeleri b&#252;t&#231;esinden b&#252;y&#252;k ve bir &#246;nceki y&#305;la g&#246;re 243&#215; art&#305;&#351;','Reagan d&#246;nemi SDI&#8217;ye e&#351;it'],
+   c:2,e:'225M$ ba&#351;lang&#305;&#231;tan 54.6 milyar dolara &#8212; ABD Deniz Piyadeleri&#8217;nin t&#252;m b&#252;t&#231;esinden (52.8B$) b&#252;y&#252;k. Enflasyona g&#246;re Reagan&#8217;&#305;n SDI&#8217;sinin zirve y&#305;ll&#305;k harcamas&#305;n&#305;n yakla&#351;&#305;k 5 kat&#305;. Trump y&#246;netiminin imza savunma program&#305; haline geldi.'},
+  {q:'Anthropic hangi iki kullan&#305;m i&#231;in Pentagon&#8217;a ret verdi?',
+   o:['Hedef tespiti ve drone navigasyonu','Kitlesel g&#246;zetim ve tam otonom silah sistemleri','Siber sald&#305;r&#305; ve biyolojik silah tasarimi','Komuta-kontrol ve lojistik destek'],
+   c:1,e:'Anthropic iki k&#305;rm&#305;z&#305; &#231;izgi &#231;izdi: (1) halk&#305;n sistematik g&#246;zetimi ve (2) tamamen insans&#305;z lethal karar sistemleri. Bu durum &#351;irketi "tedarik zinciri riski" ilan ettirdi ama ayn&#305; zamanda g&#252;nde 1M+ yeni kullan&#305;c&#305; kazand&#305;rd&#305;.'},
+  {q:'DeepSeek paradoksu ne anlama geliyor?',
+   o:['&#199;in Amerikan yapay zek&#226;s&#305;n&#305; do&#287;rudan kopyalad&#305;','ABD&#8217;nin &#231;ip k&#305;s&#305;tlamalar&#305; &#199;in&#8217;i daha verimli yaz&#305;l&#305;m geli&#351;tirmeye itti','DeepSeek askeri ama&#231;l&#305; tasarland&#305;','&#199;in t&#252;m ABD yapt&#305;r&#305;mlar&#305;n&#305; deldi'],
+   c:1,e:'ABD &#231;ip ihracat&#305;n&#305; k&#305;s&#305;nca &#199;in daha az donan&#305;mla daha iyi sonu&#231; almay&#305; &#246;&#287;rendi. Paradoks: k&#305;s&#305;tlama &#199;in&#8217;i Palmer Luckey&#8217;nin ideal dedi&#287;i "ucuz, bol, y&#305;pranmaya diren&#231;li" modele yakla&#351;t&#305;rd&#305;.'},
+  {q:'ABD ve &#199;in askeri yapay zek&#226; doktrinleri hakk&#305;nda ne s&#246;ylenebilir?',
+   o:['Tamamen z&#305;t yakla&#351;&#305;mlar','Operasyonel d&#252;zeyde neredeyse ayn&#305; kavramlar&#305; kullan&#305;yor','&#199;in &#231;ok daha geli&#351;mi&#351;','ABD hen&#252;z resmi doktrin olu&#351;turmad&#305;'],
+   c:1,e:'PLA Daily&#8217;deki Wei Hong makalesi ile Pentagon&#8217;un JADC2 doktrini neredeyse birebir &#246;rt&#252;&#351;&#252;yor. "Deneyimden ak&#305;ll&#305; yetkilendirmeye" (&#199;in) = "Sol t&#305;klama" (ABD). Fark i&#231;erikte de&#287;il &#351;effafl&#305;kta.'},
+  {q:'"&#304;stihbarat fazlal&#305;&#287;&#305;" tezine g&#246;re Claude&#8217;un as&#305;l de&#287;eri nedir?',
+   o:['S&#305;f&#305;rdan yeni istihbarat &#252;retmek','D&#252;&#351;man sistemlerini hacklemek','Veri denizinden kal&#305;p ve ba&#287;lant&#305; &#231;&#305;karmak','Otonom karar vermek'],
+   c:2,e:'Tarihsel felaketler &#8212; Barbarossa, Normandiya &#8212; veri eksikli&#287;inden de&#287;il &#231;ok fazla veriden sinyal ay&#305;klayamamaktan kaynakland&#305;. Claude&#8217;un rol&#252;: yeni bilgi &#252;retmek de&#287;il, mevcut istihbarat okyanusundan anlaml&#305; kal&#305;plar bulmak.'},
+  {q:'Anthropic&#8211;Pentagon ihtilaf&#305; hangi federal mahkeme karar&#305;yla sonu&#231;land&#305;?',
+   o:['Mahkeme Anthropic&#8217;e kar&#351;&#305; karar verdi','Mahkeme Trump y&#246;netiminin m&#252;dahalesini hukuka ayk&#305;r&#305; buldu','Dava halen s&#252;r&#252;yor','Mahkeme konuya bakmay&#305; reddetti'],
+   c:1,e:'Mart 2026&#8217;da Kaliforniya&#8217;daki bir federal mahkeme, Trump y&#246;netiminin Anthropic&#8217;i "tedarik zinciri riski" ilan ederek &#252;r&#252;nlerinin federal kurumlarda kullan&#305;m&#305;n&#305; yasaklamas&#305;n&#305;n yetki aş&#305;m&#305; oldu&#287;una h&#252;kmetti.'},
+  {q:'T&#252;rkiye&#8217;nin bu d&#246;n&#252;&#351;&#252;m i&#231;indeki stratejik konumu nedir?',
+   o:['DAWG ekosisteminin merkezi aktör&#252;','Bayraktar ekosistemiyle "ucuz ve kanıtlanm&#305;&#351;" pazarda zaten konumlu','Yapay zek&#226; silah&#305; teknolojisinde hen&#252;z yoktur','Sadece NATO &#252;yelik&#305; &#231;er&#231;evesinde rol oynuyor'],
+   c:1,e:'Bayraktar TB2 ve Ak&#305;nc&#305;, Ukrayna&#8217;da operasyonel kan&#305;t kazanm&#305;&#351; insans&#305;z hava ara&#231;lar&#305; olarak Anduril&#8217;in doldurmaya &#231;al&#305;&#351;t&#305;&#287;&#305; pazara zaten yerle&#351;mi&#351;tir. Kritik ikilem: ucuz ve kan&#305;tlanm&#305;&#351; model mi, yoksa pahal&#305; ama denenmemi&#351; platform mu?'}
+];
+
+var qi=0,qscore=0,qanswered=false;
+var qtopics=['Maven tarihi','DAWG b\u00fct\u00e7esi','Anthropic k\u0131rm\u0131z\u0131 \u00e7izgiler','DeepSeek paradoksu','Doktrin yak\u0131nsamas\u0131','\u0130stihbarat fazlal\u0131\u011f\u0131','Federal mahkeme karar\u0131','T\u00fcrkiye stratejisi'];
+
+function renderQ(){
+  var q=qs[qi];
+  $('qw').innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem">'
+    +'<span style="font-size:.74rem;color:var(--text-muted)">Soru '+(qi+1)+' / '+qs.length+'</span>'
+    +'<span style="font-size:.74rem;color:var(--text-warning,#eda100)">Puan: <strong>'+qscore+'</strong></span>'
+    +'</div>'
+    +'<div class="prog-wrap"><div class="prog-fill" style="width:'+Math.round(qi/qs.length*100)+'%"></div></div>'
+    +'<div class="q-q">'+q.q+'</div>'
+    +'<div class="q-opts">'+q.o.map(function(o,i){return'<button class="q-opt" onclick="ans('+i+')">'+o+'</button>';}).join('')+'</div>'
+    +'<div class="q-fb" id="qfb"></div>'
+    +'<div style="display:flex;justify-content:flex-end;margin-top:.85rem">'
+    +'<button class="btn off" id="nb" onclick="nxtQ()">'+(qi===qs.length-1?'Sonu\u00e7lar\u0131 g\u00f6r \u2192':'Sonraki \u2192')+'</button>'
+    +'</div>';
+  qanswered=false;
+}
+
+function ans(i){
+  if(qanswered)return;qanswered=true;
+  var q=qs[qi];
+  document.querySelectorAll('.q-opt').forEach(function(o,idx){
+    o.disabled=true;
+    if(idx===q.c)o.classList.add('ok');
+    if(idx===i&&i!==q.c)o.classList.add('no');
+  });
+  var fb=$('qfb');fb.style.display='block';
+  if(i===q.c){qscore++;fb.className='q-fb show ok';fb.innerHTML='&#9989; Do&#287;ru! '+q.e;}
+  else{fb.className='q-fb show no';fb.innerHTML='&#10060; Yanl&#305;&#351;. '+q.e;}
+  $('nb').classList.remove('off');
+  $('nb').textContent=qi===qs.length-1?'Sonu\u00e7lar\u0131 g\u00f6r \u2192':'Sonraki \u2192';
+}
+
+function nxtQ(){if(!qanswered)return;qi++;if(qi>=qs.length){showResult();return;}renderQ();}
+
+function showResult(){
+  $('qa').style.display='none';$('qr').style.display='block';
+  var pct=Math.round(qscore/qs.length*100);
+  var em,lbl;
+  if(pct>=87){em='&#127942;';lbl='Stratejik analist seviyesi! Yapay zek\u00e2 ve sava\u015f s\u00f6yleminin t\u00fcm n\u00fcanslar\u0131n\u0131 kavrad\u0131n.';}
+  else if(pct>=60){em='&#127919;';lbl='Geli\u015fmekte olan stratejik analist! Birka\u00e7 n\u00fcans daha \u00f6\u011frenilebilir.';}
+  else{em='&#128218;';lbl='Konuyu daha derinlemesine ke\u015ffetmeye davet ediliyorsun. B\u00f6l\u00fcmlere tekrar g\u00f6z at.';}
+  $('rw').innerHTML='<div style="font-size:2.8rem;margin-bottom:.4rem">'+em+'</div>'
+    +'<div style="font-size:2.1rem;font-weight:500;color:var(--text-warning,#eda100)">'+qscore+'/'+qs.length+'</div>'
+    +'<div style="font-size:.8rem;color:var(--text-warning,#eda100);margin-bottom:.25rem">%'+pct+'</div>'
+    +'<div style="font-size:.83rem;color:var(--text-muted);margin-bottom:1.2rem;line-height:1.5">'+lbl+'</div>'
+    +'<div style="background:var(--surface-2,rgba(255,255,255,.04));border-radius:8px;padding:.9rem;margin-bottom:.9rem;text-align:left">'
+    +'<div style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Konu baz\u0131nda \u00f6zet</div>'
+    +qtopics.map(function(t,i){return'<div style="display:flex;justify-content:space-between;font-size:.76rem;padding:.2rem 0;color:var(--text-muted)"><span>'+t+'</span><span>'+(i<qscore?'&#9989;':'&#10060;')+'</span></div>';}).join('')
+    +'</div>'
+    +'<button class="btn" onclick="restartQ()" style="width:100%">Tekrar Dene</button>';
+}
+
+function restartQ(){qi=0;qscore=0;qanswered=false;$('qa').style.display='block';$('qr').style.display='none';renderQ();}
+
+renderQ();
+</script>
+</body></html>

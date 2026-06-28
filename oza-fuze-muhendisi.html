@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Füze Mühendisi — Mineral Yapboz | OZA</title>
+<link rel="stylesheet" href="hs-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0f17;color:#e8e8e8;font-family:'IBM Plex Sans',sans-serif;overflow-x:hidden;min-height:100vh}
+.back-btn{position:fixed;top:20px;left:20px;z-index:100;color:#5865f2;text-decoration:none;font-size:14px;opacity:.8}
+.back-btn:hover{opacity:1}
+.game-container{max-width:700px;margin:0 auto;padding:20px;padding-top:60px}
+.game-header{text-align:center;margin-bottom:30px}
+.game-header h1{font-family:'Chakra Petch',sans-serif;font-size:28px;color:#fff}
+.game-header h1 span{color:#c41e3a}
+.game-header p{color:#7a8290;font-size:14px;margin-top:8px}
+
+.score-bar{display:flex;justify-content:space-between;align-items:center;background:#111827;border:1px solid #1e293b;border-radius:10px;padding:12px 20px;margin-bottom:20px}
+.score-item{text-align:center}
+.score-label{font-size:10px;color:#7a8290;text-transform:uppercase}
+.score-value{font-family:'Chakra Petch',sans-serif;font-size:18px;color:#00e0ff}
+.streak{color:#ffa500!important}
+
+.question-card{background:linear-gradient(135deg,#111827,#1a2332);border:1px solid #1e293b;border-radius:16px;padding:30px;margin-bottom:20px;text-align:center}
+.q-category{font-size:11px;color:#c41e3a;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.q-text{font-family:'Chakra Petch',sans-serif;font-size:20px;color:#fff;line-height:1.4;margin-bottom:8px}
+.q-hint{font-size:13px;color:#7a8290;font-style:italic}
+
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.answer-btn{background:#111827;border:2px solid #1e293b;border-radius:12px;padding:16px;cursor:pointer;transition:all .3s;text-align:center}
+.answer-btn:hover{border-color:#5865f2;transform:scale(1.02)}
+.answer-btn.correct{border-color:#00ff88;background:rgba(0,255,136,.1);animation:pulse .5s}
+.answer-btn.wrong{border-color:#c41e3a;background:rgba(196,30,58,.1);animation:shake .5s}
+.answer-symbol{font-family:'IBM Plex Mono',monospace;font-size:28px;color:#00e0ff;margin-bottom:4px}
+.answer-name{font-size:14px;color:#fff}
+.answer-detail{font-size:11px;color:#7a8290;margin-top:4px}
+
+.progress-bar{height:6px;background:#1e293b;border-radius:3px;overflow:hidden;margin-bottom:20px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#5865f2,#00e0ff);transition:width .5s;border-radius:3px}
+
+.explanation{background:#0a1a0a;border:1px solid #1e3a1e;border-radius:12px;padding:20px;margin-top:16px;display:none}
+.explanation.show{display:block;animation:fadeIn .4s}
+.explanation h3{font-family:'Chakra Petch',sans-serif;font-size:16px;color:#00ff88;margin-bottom:8px}
+.explanation p{font-size:13px;color:#a0a8b4;line-height:1.6}
+
+.game-over{text-align:center;padding:40px;display:none}
+.game-over h2{font-family:'Chakra Petch',sans-serif;font-size:32px;color:#fff;margin-bottom:16px}
+.game-over .final-score{font-size:48px;color:#5865f2;font-family:'Chakra Petch',sans-serif}
+.game-over .accuracy{font-size:18px;color:#00e0ff;margin-top:8px}
+.restart-btn{margin-top:20px;padding:14px 40px;background:linear-gradient(135deg,#5865f2,#4752c4);color:#fff;border:none;border-radius:12px;font-family:'Chakra Petch',sans-serif;font-size:16px;cursor:pointer}
+
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:500px){.answers{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<a href="oza-hub.html" class="back-btn">← OZA Hub</a>
+
+<div class="game-container">
+  <div class="game-header">
+    <h1>Füze <span>Mühendisi</span></h1>
+    <p>Doğru minerali doğru bileşene yerleştir! Her füze parçası farklı bir nadir element gerektirir.</p>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-item"><div class="score-label">Puan</div><div class="score-value" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Soru</div><div class="score-value" id="q-num">1/20</div></div>
+    <div class="score-item"><div class="score-label">Seri</div><div class="score-value streak" id="streak">0🔥</div></div>
+    <div class="score-item"><div class="score-label">Doğru</div><div class="score-value" id="correct">0%</div></div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:5%"></div></div>
+
+  <div id="quiz-area">
+    <div class="question-card">
+      <div class="q-category" id="q-cat"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-hint" id="q-hint"></div>
+    </div>
+    <div class="answers" id="answers"></div>
+    <div class="explanation" id="explanation">
+      <h3 id="exp-title"></h3>
+      <p id="exp-text"></p>
+    </div>
+  </div>
+
+  <div class="game-over" id="game-over">
+    <h2>Mühendislik Tamamlandı!</h2>
+    <div class="final-score" id="final-score">0</div>
+    <div class="accuracy" id="final-accuracy"></div>
+    <button class="restart-btn" onclick="startGame()">Tekrar Oyna</button>
+    <button class="restart-btn" style="background:#1e293b;margin-left:10px" onclick="location.href='oza-hub.html'">OZA Hub</button>
+  </div>
+</div>
+
+<script src="hs-nav.js?v=11"></script>
+<script>
+const QUESTIONS = [
+  {cat:"Arayıcı Başlık",text:"Füze kızılötesi arayıcısında hangi mineral lens olarak kullanılır?",hint:"2-14μm dalga boyunda geçirgen",correct:"Ge",options:["Ge","Si","Ga","Ti"],
+   exp:"Germanyum (Ge) kızılötesi spektrumda %99+ geçirgenlik sağlar. Javelin, TOW ve tüm termal güdümlü füzelerin arayıcı başlığında kullanılır."},
+  {cat:"Güdüm Mıknatısları",text:"Füze güdüm aktüatörlerinde dünyanın en güçlü kalıcı mıknatısı hangi elementten yapılır?",hint:"NdFeB alaşımının ana bileşeni",correct:"Nd",options:["Nd","Sm","Fe","Co"],
+   exp:"Neodimyum (Nd) NdFeB mıknatısların temel bileşenidir. Tomahawk, AMRAAM ve tüm modern güdümlü füzelerin aktüatörlerinde kullanılır."},
+  {cat:"Atalet Navigasyonu",text:"Füze jiroskoplarında yüksek sıcaklığa dayanıklı hangi mıknatıs kullanılır?",hint:"SmCo alaşımı 300°C\'ye dayanır",correct:"Sm",options:["Sm","Nd","Dy","Pr"],
+   exp:"Samaryum (Sm) SmCo mıknatıslar 300°C\'ye kadar dayanır. Patriot AN/MPQ-65 radarı ve AIM-120 AMRAAM füzesinin atalet navigasyonunda kullanılır."},
+  {cat:"Savaş Başlığı",text:"Kinetik enerji penetratörlerinde (zırh delici) hangi metal kullanılır?",hint:"Yoğunluğu 19.3 g/cm³ — çelikten 2.5 kat ağır",correct:"W",options:["W","U","Mo","Ta"],
+   exp:"Tungsten (W) 19.3 g/cm³ yoğunluğuyla mükemmel kinetik penetratördür. Hipersonik füze kılıfları ve tank mermilerinde kullanılır."},
+  {cat:"Roket Motoru",text:"Füze türbojet motorunun türbin kanatçıklarında hangi element süper alaşım oluşturur?",hint:"Jet motorlarında 1100°C\'ye dayanır",correct:"Re",options:["Re","Nb","Co","Ni"],
+   exp:"Renyum (Re) süper alaşımlarda 1100°C\'ye dayanım sağlar. F-35 F135 motoru ve cruise füze türbojetlerinde kritik bileşendir."},
+  {cat:"Güç Kaynağı",text:"Füzelerde 10+ yıl bakımsız enerji sağlayan betavoltaik pil hangi elementle çalışır?",hint:"Radyoaktif nadir toprak, yarı ömrü 2.6 yıl",correct:"Pm",options:["Pm","Pu","Sr","Cs"],
+   exp:"Prometyum-147 (Pm) betavoltaik pillerde kullanılır. Nükleer başlıklı füzelerin güdüm elektroniğine 10+ yıl kesintisiz güç sağlar."},
+  {cat:"Radar Sistemi",text:"AESA radar dizilerinde GaN (Galyum Nitrit) yarı iletken hangi elementi kullanır?",hint:"III-V grubu yarı iletken, LED\'lerde de kullanılır",correct:"Ga",options:["Ga","In","As","Ge"],
+   exp:"Galyum (Ga) GaN yarı iletkenlerin temel bileşenidir. Patriot, AN/SPY-6 ve tüm modern AESA radarlarında kullanılır."},
+  {cat:"Nükleer Kalkan",text:"Nükleer denizaltılarda nötron emici kalkan hangi elementten yapılır?",hint:"En yüksek nötron yakalama kesitine sahip element",correct:"Gd",options:["Gd","B","Cd","Hf"],
+   exp:"Gadolinyum (Gd) tüm elementler arasında en yüksek nötron yakalama kesitine sahiptir. Nükleer denizaltı reaktörlerinde kalkan malzemesi olarak kullanılır."},
+  {cat:"Isı Dayanımı",text:"NdFeB mıknatısların yüksek sıcaklıkta performans kaybını önleyen element hangisidir?",hint:"Mıknatısın Curie sıcaklığını yükseltir",correct:"Dy",options:["Dy","Tb","Ho","Er"],
+   exp:"Disprosyum (Dy) NdFeB mıknatısların termal stabilitesini artırır. F-35, KAAN ve tüm 5. nesil jet motorlarında kritik bileşendir."},
+  {cat:"Sonar Sistemi",text:"Denizaltı sonar sistemlerinde manyetostriktif malzeme Terfenol-D hangi elementi içerir?",hint:"Manyetik alanda şekil değiştiren nadir toprak",correct:"Tb",options:["Tb","Dy","Sm","Nd"],
+   exp:"Terbiyum (Tb) Terfenol-D\'nin ana bileşenidir. SQQ-89 denizaltı savaş sistemi ve sonar dizilerinde ses dalgası üretir/algılar."},
+  {cat:"Optik Cam",text:"Gece görüş dürbünlerinde yüksek kırılma indeksli cam hangi elementle yapılır?",hint:"Lantanit serisinin ilk elementi",correct:"La",options:["La","Ce","Pr","Nd"],
+   exp:"Lantan (La) optik camda yüksek kırılma indeksi sağlar. Tüm askeri dürbün, teleskop ve gece görüş optiklerinde lens kalitesini artırır."},
+  {cat:"Fiber Optik",text:"Askeri fiber optik iletişimde sinyal güçlendirici (EDFA) hangi elementi kullanır?",hint:"Erbiyum katkılı fiber amplifikatör",correct:"Er",options:["Er","Yb","Nd","Tm"],
+   exp:"Erbiyum (Er) EDFA amplifikatörlerin temel bileşenidir. Denizaltı iletişimi ve askeri fiber optik ağlarda sinyal güçlendirir."},
+  {cat:"Nükleer Tespit",text:"Gama ışını algılama ve nükleer madde tespitinde hangi element kullanılır?",hint:"JCAD kimyasal dedektörde de kullanılır",correct:"Lu",options:["Lu","Gd","Eu","Tb"],
+   exp:"Lutesyum (Lu) gama ışını sintilasyon kristallerinde kullanılır. M4 JCAD dedektörü ve nükleer madde tarama sistemlerinde kritik bileşendir."},
+  {cat:"Lazer Sistemi",text:"Askeri lazer işaretleyicilerde Nd:YAG lazerin ana bileşeni hangisidir?",hint:"YAG = İtriyum Alüminyum Garnet",correct:"Y",options:["Y","Nd","Er","Ho"],
+   exp:"İtriyum (Y) YAG kristalinin ana bileşenidir. Askeri lazer işaretleyiciler, mesafe ölçerler ve yüksek güçlü lazer silahlarında kullanılır."},
+  {cat:"Kapasitör",text:"Askeri sınıf elektronik kapasitörlerde hangi metal kullanılır?",hint:"Yüksek sıcaklık ve titreşime dayanıklı",correct:"Ta",options:["Ta","Nb","Al","Ti"],
+   exp:"Tantal (Ta) askeri sınıf kapasitörlerin temel malzemesidir. Radar, aviyonik ve füze elektroniğinde güvenilir enerji depolama sağlar."},
+  {cat:"HUD Ekran",text:"Savaş uçağı HUD (Heads-Up Display) ekranlarında hangi element kullanılır?",hint:"Artırılmış gerçeklik optikleri",correct:"Pr",options:["Pr","Nd","Eu","Ce"],
+   exp:"Praseodimyum (Pr) HUD ekranlarında ve artırılmış gerçeklik optiklerinde kullanılır. F-35 kask ekranı ve kokpit HUD\'larında kritik bileşendir."},
+  {cat:"X-Ray Tarama",text:"Havalimanı ve askeri X-ray tarama sistemlerinde fosfor ekran hangi elementle yapılır?",hint:"Kırmızı ve mavi fosfor üretir",correct:"Eu",options:["Eu","Tb","Y","Gd"],
+   exp:"Europiyum (Eu) X-ray fosfor ekranlarında kırmızı ve mavi renk üretir. Güvenlik tarama ve tıbbi görüntüleme sistemlerinde kullanılır."},
+  {cat:"Denizaltı Gövdesi",text:"Denizaltı basınç gövdesi ve F-35 yapısal parçalarında hangi hafif metal kullanılır?",hint:"Güç/ağırlık oranı en yüksek yapısal metal",correct:"Ti",options:["Ti","Al","Mg","Be"],
+   exp:"Titanyum (Ti) en yüksek güç/ağırlık oranına sahip yapısal metaldir. Denizaltı gövdeleri, F-35 yapısal parçaları ve hipersonik araçlarda kullanılır."},
+  {cat:"Jiroskop",text:"ICBM atalet navigasyonu jiroskoplarında hangi hafif metal kullanılır?",hint:"Atom numarası 4, çok hafif ve sert",correct:"Be",options:["Be","Li","B","Mg"],
+   exp:"Berilyum (Be) hafifliği ve sertliğiyle jiroskoplarda ideal malzemedir. ICBM navigasyonu, uydu optikleri ve hedefleme sensörlerinde kullanılır."},
+  {cat:"Türbin Kanatçığı",text:"Jet motoru türbin kanatçıklarını güçlendiren ve süper alaşım oluşturan element hangisidir?",hint:"Çelik alaşımlarında da kullanılır, atom no: 41",correct:"Nb",options:["Nb","Mo","V","W"],
+   exp:"Niyobyum (Nb) süper alaşımlarda türbin kanatçıklarını güçlendirir. Brezilya dünya üretiminin %90\'ını kontrol eder. Jet motorları ve roket nozullarında kritik bileşendir."}
+];
+
+let gameState = {current:0, score:0, streak:0, correctCount:0, answered:false};
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function startGame(){
+  gameState = {current:0, score:0, streak:0, correctCount:0, answered:false};
+  document.getElementById('game-over').style.display='none';
+  document.getElementById('quiz-area').style.display='block';
+  showQuestion();
+}
+
+function showQuestion(){
+  if(gameState.current >= QUESTIONS.length){endGame();return;}
+  gameState.answered = false;
+  const q = QUESTIONS[gameState.current];
+  
+  document.getElementById('q-cat').textContent = q.cat;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-hint').textContent = '💡 '+q.hint;
+  document.getElementById('q-num').textContent = (gameState.current+1)+'/'+QUESTIONS.length;
+  document.getElementById('score').textContent = gameState.score;
+  document.getElementById('streak').textContent = gameState.streak+'🔥';
+  document.getElementById('correct').textContent = gameState.current>0?Math.round(gameState.correctCount/gameState.current*100)+'%':'0%';
+  document.getElementById('progress').style.width = ((gameState.current+1)/QUESTIONS.length*100)+'%';
+  document.getElementById('explanation').classList.remove('show');
+  
+  const answersDiv = document.getElementById('answers');
+  answersDiv.innerHTML = '';
+  const shuffled = shuffle(q.options);
+  
+  const ELEMENT_NAMES = {Ge:'Germanyum',Nd:'Neodimyum',Sm:'Samaryum',W:'Tungsten',Re:'Renyum',Pm:'Prometyum',Ga:'Galyum',Gd:'Gadolinyum',Dy:'Disprosyum',Tb:'Terbiyum',La:'Lantan',Er:'Erbiyum',Lu:'Lutesyum',Y:'İtriyum',Ta:'Tantal',Pr:'Praseodimyum',Eu:'Europiyum',Ti:'Titanyum',Be:'Berilyum',Nb:'Niyobyum',Si:'Silisyum',Fe:'Demir',Co:'Kobalt',Ni:'Nikel',Mo:'Molibden',V:'Vanadyum',In:'İndiyum',As:'Arsenik',B:'Bor',Cd:'Kadmiyum',Hf:'Hafniyum',Ho:'Holmiyum',Yb:'İterbiyum',Tm:'Tulyum',Al:'Alüminyum',Mg:'Magnezyum',Li:'Lityum',U:'Uranyum',Pu:'Plütonyum',Sr:'Stronsiyum',Cs:'Sezyum',Ce:'Seryum'};
+  
+  shuffled.forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'answer-btn';
+    btn.innerHTML = '<div class="answer-symbol">'+opt+'</div><div class="answer-name">'+(ELEMENT_NAMES[opt]||opt)+'</div>';
+    btn.onclick = () => answer(opt, btn);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function answer(selected, btn){
+  if(gameState.answered) return;
+  gameState.answered = true;
+  const q = QUESTIONS[gameState.current];
+  
+  if(selected === q.correct){
+    btn.classList.add('correct');
+    gameState.streak++;
+    gameState.correctCount++;
+    const bonus = gameState.streak >= 3 ? 15 : 10;
+    gameState.score += bonus;
+  } else {
+    btn.classList.add('wrong');
+    gameState.streak = 0;
+    // Doğru cevabı göster
+    document.querySelectorAll('.answer-btn').forEach(b => {
+      if(b.querySelector('.answer-symbol').textContent === q.correct) b.classList.add('correct');
+    });
+  }
+  
+  // Açıklama göster
+  document.getElementById('exp-title').textContent = (selected===q.correct?'✓ Doğru!':'✗ Yanlış — Doğru: '+q.correct);
+  document.getElementById('exp-text').textContent = q.exp;
+  document.getElementById('explanation').classList.add('show');
+  
+  document.getElementById('score').textContent = gameState.score;
+  document.getElementById('streak').textContent = gameState.streak+'🔥';
+  
+  gameState.current++;
+  setTimeout(showQuestion, 2500);
+}
+
+function endGame(){
+  document.getElementById('quiz-area').style.display='none';
+  document.getElementById('game-over').style.display='block';
+  document.getElementById('final-score').textContent = gameState.score+' Puan';
+  const acc = Math.round(gameState.correctCount/QUESTIONS.length*100);
+  document.getElementById('final-accuracy').textContent = 'Doğruluk: %'+acc+' ('+gameState.correctCount+'/'+QUESTIONS.length+')';
+  
+  const prev = parseInt(localStorage.getItem('hs_fuze_best')||'0');
+  if(gameState.score > prev) localStorage.setItem('hs_fuze_best', gameState.score);
+}
+
+startGame();
+</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Frekans Savaşı — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:440px;margin:0 auto;padding:16px 16px 80px}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;flex:1}
+.sval{font-size:18px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.stage-badge{text-align:center;margin-bottom:12px}
+.stage-pill{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid}
+.s1{border-color:var(--green);color:var(--green)}.s2{border-color:var(--gold);color:var(--gold)}.s3{border-color:var(--red);color:var(--red)}
+.spectrum{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+.spec-title{font-size:12px;color:var(--dim);text-transform:uppercase;margin-bottom:12px;text-align:center}
+.spec-canvas{width:100%;height:80px;border-radius:8px;background:#060c14;display:block;margin-bottom:12px}
+.freq-display{text-align:center;font-size:28px;font-weight:700;color:var(--cyan);margin-bottom:8px;font-family:monospace}
+.freq-unit{font-size:12px;color:var(--dim);text-align:center;margin-bottom:14px}
+.slider-wrap{position:relative;margin-bottom:14px}
+input[type=range]{width:100%;height:8px;-webkit-appearance:none;appearance:none;background:linear-gradient(to right,var(--red),var(--gold),var(--cyan));border-radius:4px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--cyan);border:3px solid #fff;cursor:pointer;box-shadow:0 0 10px var(--cyan)}
+.power-bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:8px}
+.power-fill{height:100%;transition:width .1s;border-radius:6px}
+.power-label{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-bottom:14px}
+.target-zone{display:flex;align-items:center;gap:8px;background:rgba(0,224,255,.05);border:1px dashed rgba(0,224,255,.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+.msg{text-align:center;font-size:14px;min-height:20px;margin-bottom:10px}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:var(--cyan);color:#000;margin-bottom:8px}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.overlay-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+.big{font-size:48px;font-weight:700;color:var(--cyan)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">📻 FREKANS SAVAŞI</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="stats">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--cyan)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-stage" style="color:var(--gold)">1/3</div><div class="slbl">AŞAMA</div></div>
+  <div class="sbox"><div class="sval" id="s-round" style="color:var(--green)">1/5</div><div class="slbl">TUR</div></div>
+  <div class="sbox"><div class="sval" id="s-time" style="color:var(--red)">—</div><div class="slbl">SÜRE</div></div>
+</div>
+<div class="stage-badge" id="stage-badge"></div>
+<div class="spectrum">
+  <div class="spec-title">📡 SPEKTRUM ANALİZÖRÜ</div>
+  <canvas class="spec-canvas" id="spec-canvas"></canvas>
+  <div class="freq-display" id="freq-display">500 MHz</div>
+  <div class="freq-unit" id="freq-unit">Frekans Aralığı: 100–900 MHz</div>
+  <input type="range" id="freq-slider" min="100" max="900" value="500" oninput="updateFreq()">
+  <div class="power-bar"><div class="power-fill" id="power-fill" style="width:0%;background:var(--red)"></div></div>
+  <div class="power-label"><span>Sinyal Gücü</span><span id="power-pct">0%</span></div>
+  <div class="target-zone" id="target-zone">🎯 Hedef: <span id="target-hint">—</span></div>
+</div>
+<div class="msg" id="msg">Kaydıraçla düşman frekansını bul ve kilitle!</div>
+<div id="end-area"></div>
+<button class="btn" id="lock-btn" onclick="lockFreq()">🔒 KİLİTLE</button>
+</div>
+<script>
+var STAGES=[
+  {label:'AŞAMA 1 — KEŞİF',cls:'s1',sublabel:'Geniş hedef bölgesi · 20sn · 5 tur',
+   rounds:5,timeLimit:20,tolerance:60,min:100,max:900,
+   contexts:['VHF İletişim','UHF Radar','GPS Sinyali','Komuta Frekansı','Keşif Kanalı']},
+  {label:'AŞAMA 2 — JAMMING',cls:'s2',sublabel:'Dar hedef bölgesi · 15sn · 5 tur',
+   rounds:5,timeLimit:15,tolerance:35,min:100,max:900,
+   contexts:['Drone Kontrol','Elektronik Harp','Uydu Bağlantısı','Şifreli Kanal','Taktik Net']},
+  {label:'AŞAMA 3 — UZMAN',cls:'s3',sublabel:'Çok dar bölge + hareketli hedef · 10sn · 5 tur',
+   rounds:5,timeLimit:10,tolerance:18,min:100,max:900,
+   contexts:['Kuantum Kanal','Milimetre Dalga','Terahertz Band','Lazer İletişim','AESA Radar']}
+];
+
+var stage=0,round=0,pts=0,targetFreq=0,timer=null,timeLeft=0,locked=false;
+var specAnim=null;
+
+function startStage(){
+  var s=STAGES[stage];
+  round=0;locked=false;
+  document.getElementById('stage-badge').innerHTML=
+    '<div class="stage-pill '+s.cls+'">'+s.label+'</div>'+
+    '<div style="font-size:11px;color:var(--dim);margin-top:4px">'+s.sublabel+'</div>';
+  document.getElementById('s-stage').textContent=(stage+1)+'/3';
+  nextRound();
+}
+
+function nextRound(){
+  if(round>=STAGES[stage].rounds){endStage();return;}
+  var s=STAGES[stage];
+  locked=false;
+  targetFreq=Math.floor(s.min+Math.random()*(s.max-s.min));
+  timeLeft=s.timeLimit;
+  document.getElementById('s-round').textContent=(round+1)+'/'+s.rounds;
+  document.getElementById('s-time').textContent=timeLeft+'s';
+  document.getElementById('target-hint').textContent=s.contexts[round%s.contexts.length];
+  document.getElementById('freq-slider').value=500;
+  document.getElementById('end-area').innerHTML='';
+  document.getElementById('lock-btn').style.display='';
+  document.getElementById('msg').textContent='Hedef frekansı bul ve kilitle!';
+  updateFreq();
+  clearInterval(timer);
+  timer=setInterval(function(){
+    timeLeft--;
+    document.getElementById('s-time').textContent=timeLeft+'s';
+    if(timeLeft<=0){clearInterval(timer);failRound();}
+  },1000);
+  drawSpectrum();
+}
+
+function updateFreq(){
+  var val=parseInt(document.getElementById('freq-slider').value);
+  document.getElementById('freq-display').textContent=val+' MHz';
+  var diff=Math.abs(val-targetFreq);
+  var s=STAGES[stage];
+  var power=Math.max(0,100-Math.round(diff/s.tolerance*100));
+  power=Math.min(100,power);
+  document.getElementById('power-fill').style.width=power+'%';
+  document.getElementById('power-fill').style.background=power>80?'var(--green)':power>40?'var(--gold)':'var(--red)';
+  document.getElementById('power-pct').textContent=power+'%';
+}
+
+function lockFreq(){
+  if(locked)return;
+  var val=parseInt(document.getElementById('freq-slider').value);
+  var diff=Math.abs(val-targetFreq);
+  var s=STAGES[stage];
+  clearInterval(timer);
+  locked=true;
+  if(diff<=s.tolerance){
+    var bonus=Math.round((1-diff/s.tolerance)*200)+timeLeft*10;
+    pts+=bonus;
+    document.getElementById('msg').textContent='✅ KİLİTLENDİ! Hedef: '+targetFreq+' MHz · +'+bonus+' puan';
+    document.getElementById('end-area').innerHTML='<div style="text-align:center;color:var(--green);font-size:13px;margin-bottom:8px">🎯 Doğru frekans: '+targetFreq+' MHz</div>';
+    updateStats();
+    round++;
+    setTimeout(nextRound,1200);
+  } else {
+    document.getElementById('msg').textContent='❌ Kaçırdın! Hedef: '+targetFreq+' MHz (Fark: '+diff+' MHz)';
+    document.getElementById('end-area').innerHTML='<div style="text-align:center;color:var(--red);font-size:13px;margin-bottom:8px">Hedef: '+targetFreq+' MHz idi</div>';
+    round++;
+    setTimeout(nextRound,1500);
+  }
+}
+
+function failRound(){
+  document.getElementById('msg').textContent='⏱️ Süre doldu! Hedef: '+targetFreq+' MHz';
+  round++;
+  setTimeout(nextRound,1200);
+}
+
+function endStage(){
+  clearInterval(timer);
+  try{
+    var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    sc['mobil-frekans']=Math.max(sc['mobil-frekans']||0,pts);
+    localStorage.setItem('hs_scores',JSON.stringify(sc));
+  }catch(e){}
+  var html='<div class="overlay-card"><div style="font-size:36px">'+(stage<2?'🎯':'🏆')+'</div>'+
+    '<div class="big">'+pts+'</div>'+
+    '<div style="font-size:13px;color:var(--dim)">'+(stage<2?'Aşama '+(stage+1)+' tamamlandı!':'Tüm aşamalar tamamlandı!')+'</div></div>';
+  document.getElementById('end-area').innerHTML=html;
+  document.getElementById('lock-btn').style.display='none';
+  if(stage<2){
+    var btn=document.createElement('button');
+    btn.className='btn';btn.textContent='▶ AŞAMA '+(stage+2);
+    btn.onclick=function(){stage++;startStage();};
+    document.getElementById('end-area').appendChild(btn);
+  } else {
+    var btn=document.createElement('button');
+    btn.className='btn';btn.textContent='🔄 BAŞTAN OYNA';
+    btn.onclick=function(){stage=0;pts=0;startStage();};
+    document.getElementById('end-area').appendChild(btn);
+  }
+}
+
+function updateStats(){
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+}
+
+function drawSpectrum(){
+  var c=document.getElementById('spec-canvas');
+  var ctx2=c.getContext('2d');
+  c.width=c.offsetWidth;c.height=80;
+  var W2=c.width,H2=c.height;
+  ctx2.fillStyle='#060c14';ctx2.fillRect(0,0,W2,H2);
+  var s=STAGES[stage];
+  // Draw noise
+  for(var x=0;x<W2;x++){
+    var freq=s.min+(x/W2)*(s.max-s.min);
+    var diff=Math.abs(freq-targetFreq);
+    var signal=Math.max(0,1-diff/(s.tolerance*3));
+    var noise=Math.random()*0.15;
+    var h=(signal*0.7+noise)*H2*0.85;
+    var alpha=0.3+signal*0.7;
+    ctx2.fillStyle='rgba(0,224,255,'+alpha+')';
+    ctx2.fillRect(x,H2-h,1,h);
+  }
+  // Target marker
+  var tx=(targetFreq-s.min)/(s.max-s.min)*W2;
+  ctx2.strokeStyle='rgba(201,162,75,.4)';ctx2.lineWidth=1;ctx2.setLineDash([3,3]);
+  ctx2.beginPath();ctx2.moveTo(tx,0);ctx2.lineTo(tx,H2);ctx2.stroke();
+  ctx2.setLineDash([]);
+}
+
+startStage();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

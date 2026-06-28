@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Senaryo Üretici — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--purple:#c41e3a;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--cyan))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.btn-gold{background:var(--gold);color:#000}
+/* Form */
+.form-group{margin-bottom:14px}
+.form-label{font-size:10px;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:block}
+.form-input{width:100%;background:var(--panel2);border:2px solid var(--line2);border-radius:10px;padding:12px;color:var(--tx);font-family:'IBM Plex Mono',monospace;font-size:13px;outline:none;transition:.2s;resize:vertical}
+.form-input:focus{border-color:var(--purple)}
+.form-input::placeholder{color:var(--dim)}
+.form-select{width:100%;background:var(--panel2);border:2px solid var(--line2);border-radius:10px;padding:12px;color:var(--tx);font-family:'IBM Plex Mono',monospace;font-size:13px;outline:none;cursor:pointer}
+.form-select:focus{border-color:var(--purple)}
+/* Seçenek oluşturucu */
+.option-builder{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px;margin-bottom:12px}
+.ob-title{font-size:10px;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.ob-option{background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:10px;margin-bottom:8px;position:relative}
+.ob-option-num{font-size:9px;color:var(--dim);margin-bottom:6px}
+.ob-input{width:100%;background:transparent;border:none;color:var(--tx);font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;padding:0}
+.ob-input::placeholder{color:var(--dim)}
+.ob-remove{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--red2);cursor:pointer;font-size:14px}
+/* Senaryo kartı önizleme */
+.preview-card{background:rgba(168,85,247,.04);border:2px solid rgba(168,85,247,.3);border-radius:14px;padding:16px;margin-bottom:14px;display:none}
+.preview-card.show{display:block}
+.pc-tag{font-size:9px;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.pc-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;margin-bottom:8px}
+.pc-body{font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:10px}
+.pc-options{display:flex;flex-direction:column;gap:6px}
+.pc-opt{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:10px;font-size:11px}
+/* Topluluk senaryoları */
+.community-scenarios{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.cs-item{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:14px;transition:.2s}
+.cs-item:active{transform:scale(.99)}
+.cs-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.cs-title{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700}
+.cs-votes{font-size:11px;color:var(--gold)}
+.cs-body{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:8px}
+.cs-meta{display:flex;gap:8px;font-size:9px;color:var(--dim)}
+.cs-tag{padding:2px 8px;border-radius:4px;font-size:9px}
+.vote-btn{background:var(--panel);border:1px solid var(--line2);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:11px;color:var(--gold);transition:.2s}
+.vote-btn:active{transform:scale(.97)}
+.vote-btn.voted{border-color:var(--gold);background:rgba(201,162,75,.1)}
+/* Tabs */
+.tabs{display:flex;gap:2px;background:var(--panel2);border-radius:10px;padding:4px;margin-bottom:16px}
+.tab{flex:1;padding:10px;border:none;background:transparent;color:var(--dim);font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-radius:8px;transition:.2s}
+.tab.active{background:var(--panel);color:var(--tx)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">✍️ SENARYO ÜRETİCİ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">✍️ Senaryo Üretici</div>
+  <div class="card-sub">Kendi kriz senaryolarını yaz, topluluk oylar, en iyi senaryolar OZA oyunlarına eklenir. Yaratıcılığını stratejiye dönüştür!</div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('create')">✍️ OLUŞTUR</button>
+    <button class="tab" onclick="switchTab('community')">🌐 TOPLULUK</button>
+    <button class="tab" onclick="switchTab('mine')">📁 BENİMKİLER</button>
+  </div>
+
+  <!-- OLUŞTUR TAB -->
+  <div id="tab-create">
+    <div class="form-group">
+      <label class="form-label">🎯 Senaryo Başlığı</label>
+      <input class="form-input" id="sc-title-input" placeholder="Örn: Boğaz Krizi 2027" maxlength="80">
+    </div>
+    <div class="form-group">
+      <label class="form-label">🏷️ Kategori</label>
+      <select class="form-select" id="sc-category">
+        <option value="siber">💻 Siber Savaş</option>
+        <option value="konvansiyonel">⚔️ Konvansiyonel Çatışma</option>
+        <option value="enformasyon">📡 Enformasyon Savaşı</option>
+        <option value="ekonomi">💰 Ekonomik Kriz</option>
+        <option value="enerji">⚡ Enerji Güvenliği</option>
+        <option value="yz">🤖 YZ & Teknoloji</option>
+        <option value="uzay">🛸 Uzay Hakimiyeti</option>
+        <option value="kbrn">☢️ KBRN Tehdidi</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">📋 Kriz Açıklaması (max 300 karakter)</label>
+      <textarea class="form-input" id="sc-body-input" rows="4" placeholder="Krizi detaylı anlat. Hangi aktörler var? Ne tehlikede? Karar vericinin rolü ne?" maxlength="300"></textarea>
+      <div style="font-size:9px;color:var(--dim);margin-top:4px;text-align:right" id="sc-char-count">0/300</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">⚡ Zorluk Seviyesi</label>
+      <select class="form-select" id="sc-difficulty">
+        <option value="kolay">🟢 Kolay</option>
+        <option value="orta" selected>🟡 Orta</option>
+        <option value="zor">🔴 Zor</option>
+        <option value="uzman">⚫ Uzman</option>
+      </select>
+    </div>
+    <div class="option-builder">
+      <div class="ob-title">
+        <span>🎮 KARAR SEÇENEKLERİ (min 2, max 4)</span>
+        <button onclick="addOption()" style="background:var(--purple);border:none;color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">+ EKLE</button>
+      </div>
+      <div id="ob-options">
+        <div class="ob-option" id="opt-0">
+          <div class="ob-option-num">SEÇENEK A</div>
+          <input class="ob-input" placeholder="Seçenek açıklaması..." maxlength="100">
+          <button class="ob-remove" onclick="removeOption(0)" style="display:none">✕</button>
+        </div>
+        <div class="ob-option" id="opt-1">
+          <div class="ob-option-num">SEÇENEK B</div>
+          <input class="ob-input" placeholder="Seçenek açıklaması..." maxlength="100">
+          <button class="ob-remove" onclick="removeOption(1)" style="display:none">✕</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-outline" onclick="previewScenario()">👁️ ÖNİZLE</button>
+    <div class="preview-card" id="preview-card">
+      <div class="pc-tag" id="pc-tag">ÖNİZLEME</div>
+      <div class="pc-title" id="pc-title"></div>
+      <div class="pc-body" id="pc-body"></div>
+      <div class="pc-options" id="pc-options"></div>
+    </div>
+    <button class="btn btn-purple" onclick="submitScenario()">🚀 TOPLULUĞA GÖNDER</button>
+  </div>
+
+  <!-- TOPLULUK TAB -->
+  <div id="tab-community" style="display:none">
+    <div style="font-size:11px;color:var(--dim);margin-bottom:12px">En çok oy alan senaryolar OZA oyunlarına eklenir. Oy ver, yorum yap!</div>
+    <div class="community-scenarios" id="community-scenarios"></div>
+  </div>
+
+  <!-- BENİMKİLER TAB -->
+  <div id="tab-mine" style="display:none">
+    <div style="font-size:11px;color:var(--dim);margin-bottom:12px">Gönderdiğin senaryolar ve aldıkları oylar:</div>
+    <div id="my-scenarios">
+      <div style="text-align:center;color:var(--dim);padding:30px;font-size:12px">Henüz senaryo göndermediniz.<br>İlk senaryonuzu oluşturun!</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+var optCount=2;
+var LETTERS=['A','B','C','D'];
+var COMMUNITY_SCENARIOS=[
+  {title:'Boğaz Krizi 2027',category:'konvansiyonel',body:'Türk Boğazları\'nda yabancı savaş gemisi geçişi engellendi. NATO ve Rusya karşı karşıya. 24 saat içinde karar verilmeli.',difficulty:'zor',votes:847,myVote:false,author:'Albay_Kerem',
+   options:['Diplomatik müzakere başlat','Askerî hazırlık yap','BM\'ye başvur','Geçişe izin ver']},
+  {title:'Yapay Zekâ Silah Yarışı',category:'yz',body:'İki süper güç otonom silah sistemlerinde eşitliği bozdu. Üçüncü ülkeler teknoloji transferi için baskı altında.',difficulty:'uzman',votes:623,myVote:false,author:'StratejiUstası',
+   options:['Kendi YZ programını hızlandır','Uluslararası düzenleme talep et','İttifak kur','Tarafsız kal']},
+  {title:'Kritik Mineral Ambargosu',category:'ekonomi',body:'Lityum ve kobalt ihracatı kesildi. Savunma sanayii ve elektrikli araç üretimi tehlikede. 6 ay içinde alternatif bulunmalı.',difficulty:'orta',votes:412,myVote:false,author:'EkonomistMehmet',
+   options:['Yerli kaynak geliştir','Alternatif ülkeden al','Geri dönüşüm teknolojisi','Diplomatik çözüm']},
+  {title:'Uzay Silahlanması',category:'uzay',body:'Düşman ülke alçak yörüngede silah sistemi konuşlandırdı. Uydu ağı tehdit altında. Uzay Kuvvetleri harekete geçmeli.',difficulty:'zor',votes:389,myVote:false,author:'KuantumSavaşçı',
+   options:['Karşı sistem konuşlandır','Diplomatik protesto','Siber saldırı','Uluslararası ittifak']}
+];
+
+document.getElementById('sc-body-input').addEventListener('input',function(){
+  document.getElementById('sc-char-count').textContent=this.value.length+'/300';
+});
+
+function switchTab(tab){
+  ['create','community','mine'].forEach(function(t){
+    document.getElementById('tab-'+t).style.display=t===tab?'':'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    el.classList.toggle('active',['create','community','mine'][i]===tab);
+  });
+  if(tab==='community')renderCommunity();
+  if(tab==='mine')renderMine();
+}
+
+function addOption(){
+  if(optCount>=4)return;
+  var div=document.createElement('div');
+  div.className='ob-option';
+  div.id='opt-'+optCount;
+  div.innerHTML='<div class="ob-option-num">SEÇENEK '+LETTERS[optCount]+'</div>'+
+    '<input class="ob-input" placeholder="Seçenek açıklaması..." maxlength="100">'+
+    '<button class="ob-remove" onclick="removeOption('+optCount+')">✕</button>';
+  document.getElementById('ob-options').appendChild(div);
+  optCount++;
+}
+
+function removeOption(idx){
+  var el=document.getElementById('opt-'+idx);
+  if(el)el.remove();
+}
+
+function previewScenario(){
+  var title=document.getElementById('sc-title-input').value.trim();
+  var body=document.getElementById('sc-body-input').value.trim();
+  var cat=document.getElementById('sc-category').value;
+  if(!title||!body){alert('Başlık ve açıklama zorunlu!');return;}
+  var opts=Array.from(document.querySelectorAll('.ob-input')).map(function(el){return el.value.trim();}).filter(Boolean);
+  if(opts.length<2){alert('En az 2 seçenek gerekli!');return;}
+  var catLabels={siber:'💻 SİBER',konvansiyonel:'⚔️ KONVANSİYONEL',enformasyon:'📡 ENFORMASYON',ekonomi:'💰 EKONOMİ',enerji:'⚡ ENERJİ',yz:'🤖 YZ',uzay:'🛸 UZAY',kbrn:'☢️ KBRN'};
+  document.getElementById('pc-tag').textContent=catLabels[cat]||cat;
+  document.getElementById('pc-title').textContent=title;
+  document.getElementById('pc-body').textContent=body;
+  document.getElementById('pc-options').innerHTML=opts.map(function(o,i){
+    return '<div class="pc-opt">'+LETTERS[i]+') '+o+'</div>';
+  }).join('');
+  document.getElementById('preview-card').classList.add('show');
+}
+
+function submitScenario(){
+  var title=document.getElementById('sc-title-input').value.trim();
+  var body=document.getElementById('sc-body-input').value.trim();
+  if(!title||!body){alert('Başlık ve açıklama zorunlu!');return;}
+  var opts=Array.from(document.querySelectorAll('.ob-input')).map(function(el){return el.value.trim();}).filter(Boolean);
+  if(opts.length<2){alert('En az 2 seçenek gerekli!');return;}
+  var scenario={title:title,body:body,category:document.getElementById('sc-category').value,difficulty:document.getElementById('sc-difficulty').value,options:opts,votes:0,date:new Date().toLocaleDateString('tr-TR')};
+  try{
+    var mine=JSON.parse(localStorage.getItem('hs_my_scenarios')||'[]');
+    mine.push(scenario);
+    localStorage.setItem('hs_my_scenarios',JSON.stringify(mine));
+    // Puan ver
+    var scores=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    scores['senaryo-uretici']=(scores['senaryo-uretici']||0)+150;
+    localStorage.setItem('hs_scores',JSON.stringify(scores));
+  }catch(e){}
+  alert('✅ Senaryo gönderildi! +150 puan kazandınız.\n\nEn çok oy alan senaryolar OZA oyunlarına eklenecek!');
+  document.getElementById('sc-title-input').value='';
+  document.getElementById('sc-body-input').value='';
+  document.getElementById('preview-card').classList.remove('show');
+  document.getElementById('sc-char-count').textContent='0/300';
+  updateHdrPts();
+}
+
+function renderCommunity(){
+  document.getElementById('community-scenarios').innerHTML=COMMUNITY_SCENARIOS.map(function(s,i){
+    var catColors={konvansiyonel:'var(--red2)',yz:'var(--purple)',ekonomi:'var(--gold)',uzay:'var(--cyan)'};
+    var diffColors={kolay:'var(--green)',orta:'var(--gold)',zor:'var(--red2)',uzman:'#ff00ff'};
+    return '<div class="cs-item">'+
+      '<div class="cs-header">'+
+        '<div>'+
+          '<div class="cs-title">'+s.title+'</div>'+
+          '<div class="cs-meta">'+
+            '<span class="cs-tag" style="background:rgba(0,0,0,.3);color:'+(catColors[s.category]||'var(--dim)')+'">'+s.category+'</span>'+
+            '<span class="cs-tag" style="background:rgba(0,0,0,.3);color:'+(diffColors[s.difficulty]||'var(--dim)')+'">'+s.difficulty+'</span>'+
+            '<span>✍️ '+s.author+'</span>'+
+          '</div>'+
+        '</div>'+
+        '<button class="vote-btn'+(s.myVote?' voted':'')+'" onclick="voteScenario('+i+')">'+
+          (s.myVote?'✅ ':'👍 ')+s.votes+
+        '</button>'+
+      '</div>'+
+      '<div class="cs-body">'+s.body+'</div>'+
+      '<div style="font-size:10px;color:var(--dim)">'+s.options.map(function(o,j){return LETTERS[j]+') '+o;}).join(' · ')+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+function voteScenario(idx){
+  if(COMMUNITY_SCENARIOS[idx].myVote)return;
+  COMMUNITY_SCENARIOS[idx].myVote=true;
+  COMMUNITY_SCENARIOS[idx].votes++;
+  renderCommunity();
+  beepWin();
+}
+
+function renderMine(){
+  try{
+    var mine=JSON.parse(localStorage.getItem('hs_my_scenarios')||'[]');
+    if(mine.length===0){
+      document.getElementById('my-scenarios').innerHTML='<div style="text-align:center;color:var(--dim);padding:30px;font-size:12px">Henüz senaryo göndermediniz.<br>İlk senaryonuzu oluşturun!</div>';
+      return;
+    }
+    document.getElementById('my-scenarios').innerHTML=mine.map(function(s){
+      return '<div class="cs-item">'+
+        '<div class="cs-title">'+s.title+'</div>'+
+        '<div class="cs-body" style="margin-top:6px">'+s.body+'</div>'+
+        '<div style="font-size:9px;color:var(--dim);margin-top:6px">'+s.date+' · '+s.category+' · '+s.difficulty+'</div>'+
+      '</div>';
+    }).join('');
+  }catch(e){}
+}
+
+function updateHdrPts(){
+  try{
+    var scores=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+    var total=Object.values(scores).reduce(function(s,v){return s+v;},0);
+    document.getElementById('hdr-pts').textContent='⭐ '+total;
+  }catch(e){}
+}
+
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+
+updateHdrPts();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

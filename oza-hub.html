@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>OZA — Oyunlaştırılmış Strateji Analizi | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+/* Game Card Styles */
+.game-card{background:rgba(15,20,30,.8);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2rem;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.game-card:hover{border-color:#5865f2;transform:translateY(-3px);box-shadow:0 8px 24px rgba(88,101,242,.15);}
+.game-card .game-badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.7rem;font-weight:600;color:#fff;background:#5865f2;margin-bottom:.5rem;}
+.game-card .game-icon{font-size:2rem;margin-bottom:.5rem;}
+.game-card .game-title,.game-card h3,.game-card h4{font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:.3rem;}
+.game-card .game-desc,.game-card p{font-size:.8rem;color:#9ca3af;line-height:1.4;}
+.game-card .badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.65rem;font-weight:600;color:#fff;background:#5865f2;margin-bottom:.4rem;}
+.oza-section{padding:2rem;}
+.oza-section-title{font-family:var(--font-display);font-size:1.3rem;color:#e2e8f0;margin-bottom:1rem;font-weight:700;}
+.oza-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+.oza-card{display:block;background:rgba(15,20,30,.8);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2rem;text-decoration:none;transition:all .3s;}
+.oza-card:hover{border-color:#5865f2;transform:translateY(-3px);box-shadow:0 8px 24px rgba(88,101,242,.15);}
+.oza-card-icon{font-size:1.8rem;display:block;margin-bottom:.5rem;}
+.oza-card-title{display:block;font-size:.95rem;font-weight:700;color:#e2e8f0;margin-bottom:.4rem;}
+.oza-card-desc{display:block;font-size:.8rem;color:#9ca3af;line-height:1.4;}
+.oza-cat-badge{display:inline-block;margin-top:.6rem;padding:.2rem .6rem;border-radius:4px;font-size:.65rem;font-weight:600;background:rgba(88,101,242,.15);color:#8b9cf7;}
+.oza-card-tag{display:inline-block;margin-top:.6rem;padding:.2rem .6rem;border-radius:4px;font-size:.65rem;font-weight:600;}
+body{background:#0a0f17;padding:0;}
+/* === PARTICLES === */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:#C9A24B;border-radius:50%;opacity:.3;animation:float-particle linear infinite;}
+@keyframes float-particle{0%{transform:translateY(100vh) translateX(0);opacity:0;}10%{opacity:.3;}90%{opacity:.3;}100%{transform:translateY(-100px) translateX(50px);opacity:0;}}
+/* === HERO === */
+.oza-hero{position:relative;text-align:center;padding:5rem 2rem 3rem;overflow:hidden;border-bottom:2px solid rgba(201,168,76,.2);}
+.oza-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.1) 0%,transparent 60%);pointer-events:none;}
+.oza-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent);}
+.oza-hero h1{font-family:'Oswald',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;background:linear-gradient(135deg,#C9A24B 0%,#FFD700 50%,#C9A24B 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradientShift 4s ease infinite;margin-bottom:.8rem;}
+@keyframes gradientShift{0%,100%{background-position:0% center;}50%{background-position:100% center;}}
+.oza-hero p{color:rgba(255,255,255,.6);font-size:1rem;max-width:750px;margin:0 auto;line-height:1.7;}
+.oza-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:2rem;flex-wrap:wrap;}
+.oza-stat{text-align:center;position:relative;padding:1rem 1.5rem;border-radius:12px;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.08);transition:all .3s;}
+.oza-stat:hover{border-color:rgba(201,168,76,.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(201,168,76,.1);}
+.oza-stat-num{font-family:'Oswald',sans-serif;font-size:2.2rem;font-weight:700;color:#C9A24B;display:block;}
+.oza-stat-lbl{font-size:.75rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem;font-weight:500;}
+.oza-hero-cta{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.5rem;padding:.7rem 1.8rem;background:linear-gradient(135deg,#5865f2,#8b5cf6);border-radius:24px;color:#fff;text-decoration:none;font-family:'Oswald',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.05em;transition:all .3s;border:1px solid rgba(255,255,255,.15);}
+.oza-hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(88,101,242,.3);}
+
+/* === FILTER BAR === */
+.oza-filter{display:flex;justify-content:center;gap:.6rem;padding:1.5rem 2rem;flex-wrap:wrap;position:sticky;top:0;z-index:100;background:rgba(10,15,23,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.04);}
+.oza-filter-inner{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:none;justify-content:center;flex-wrap:wrap;}
+.oza-filter-inner::-webkit-scrollbar{display:none;}
+.oza-chip{font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;padding:.5rem 1.2rem;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .25s;white-space:nowrap;}
+.oza-chip:hover{border-color:rgba(201,168,76,.4);color:#C9A24B;background:rgba(201,168,76,.05);}
+.oza-chip.active{background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(255,215,0,.1));border-color:#C9A24B;color:#C9A24B;box-shadow:0 0 12px rgba(201,168,76,.2);}
+
+/* Category Sections */
+.oza-cat{max-width:1300px;margin:0 auto;padding:2rem 2rem;border-bottom:1px solid rgba(255,255,255,.04);}
+.oza-cat-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;}
+.oza-cat-icon{font-size:1.3rem;}
+.oza-cat-title{font-family:var(--font-display);font-size:.85rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
+.oza-cat-count{font-family:var(--font-mono);font-size:.55rem;color:rgba(255,255,255,.3);margin-left:auto;}
+
+/* Game Grid */
+.oza-game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;}
+.oza-game{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:1rem;cursor:pointer;transition:all var(--t);position:relative;overflow:hidden;}
+.oza-game:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 24px rgba(201,168,76,.12);}
+.oza-game::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity var(--t);}
+.oza-game:hover::before{opacity:1;}
+.oza-game-icon{font-size:1.6rem;margin-bottom:.5rem;}
+.oza-game-title{font-family:var(--font-display);font-size:.78rem;font-weight:600;color:#fff;margin-bottom:.25rem;line-height:1.3;}
+.oza-game-meta{font-family:var(--font-mono);font-size:.52rem;color:rgba(255,255,255,.35);display:flex;gap:.5rem;flex-wrap:wrap;}
+.oza-game-badge{position:absolute;top:.5rem;right:.5rem;font-family:var(--font-mono);font-size:.45rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .4rem;border-radius:2px;}
+.badge-new{background:var(--crimson);color:#fff;}
+.badge-pop{background:var(--gold);color:#0a0f17;}
+.badge-edu{background:rgba(0,224,255,.15);color:var(--cyan);border:1px solid rgba(0,224,255,.3);}
+
+/* EVREN Section */
+.evren-section{padding:2rem 0;background:linear-gradient(180deg,rgba(201,168,76,.03),transparent);border-top:1px solid rgba(201,168,76,.1);}
+.evren-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.8rem;}
+.evren-card{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:var(--r);padding:.9rem;text-align:center;cursor:pointer;transition:all var(--t);}
+.evren-card:hover{border-color:var(--gold);background:rgba(201,168,76,.1);transform:translateY(-2px);}
+.evren-card-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.evren-card-title{font-family:var(--font-display);font-size:.72rem;font-weight:600;color:var(--gold);}
+.evren-card-meta{font-family:var(--font-mono);font-size:.5rem;color:rgba(255,255,255,.3);margin-top:.2rem;}
+
+/* === CARD MOUSE TRACKING === */
+.oza-game::after{content:'';position:absolute;inset:0;border-radius:var(--r);background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(201,168,76,.06) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.oza-game:hover::after{opacity:1;}
+/* === RESPONSIVE === */
+@media(max-width:768px){
+  .oza-game-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  .oza-hero{padding:3rem 1.5rem 2rem;}
+  .oza-hero h1{font-size:1.8rem;}
+  .oza-stats{gap:1rem;}
+  .oza-stat{padding:.7rem 1rem;}
+  .oza-filter{gap:.4rem;padding:1rem;}
+  .oza-chip{font-size:.7rem;padding:.4rem .8rem;}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<!-- Ambient Particles -->
+<div class="particles" id="particles"></div>
+<!-- OZA HERO -->
+<section class="oza-hero">
+  <h1>OZA Strateji Oyunları</h1>
+  <p>Stratejik düşünceyi oyunlaştırılmış deneyimlerle keşfedin. Tarihsel savaşlardan siber harp simülasyonlarına, ekonomi yönetiminden yapay zekâ düellolarına kadar 144+ interaktif oyun ve simülasyon.</p>
+  <div class="oza-stats">
+    <div class="oza-stat"><span class="oza-stat-num" data-target="144">0</span><div class="oza-stat-lbl">Oyun & Sim</div></div>
+    <div class="oza-stat"><span class="oza-stat-num" data-target="10">0</span><div class="oza-stat-lbl">Kategori</div></div>
+    <div class="oza-stat"><span class="oza-stat-num" data-target="300">0</span><div class="oza-stat-lbl">Etap</div></div>
+    <div class="oza-stat"><span class="oza-stat-num" data-target="20">0</span><div class="oza-stat-lbl">Simülasyon</div></div>
+  </div>
+  <a href="oza-sonsuz.html" class="oza-hero-cta">∞ OZA∞ Keşfet →</a>
+  <a href="oza-gozcu.html" class="oza-hero-cta" style="background:linear-gradient(135deg,rgba(0,224,255,.15),rgba(139,92,246,.15));border-color:rgba(0,224,255,.3);color:#00E0FF;">⚡ Gözcü Keşfet →</a>
+</section>
+
+<!-- CATEGORY FILTER -->
+<section class="oza-filter">
+  <div class="container">
+    <div class="oza-filter-inner">
+      <span class="oza-chip active" data-cat="all">Tümü</span>
+      <span class="oza-chip" data-cat="strateji">Strateji</span>
+      <span class="oza-chip" data-cat="tarih">Tarihsel Savaşlar</span>
+      <span class="oza-chip" data-cat="aksiyon">Aksiyon & Arcade</span>
+      <span class="oza-chip" data-cat="arcade">Külliyat Arcade</span>
+      <span class="oza-chip" data-cat="siber">Siber & Teknoloji</span>
+      <span class="oza-chip" data-cat="ekonomi">Ekonomi & Kaynak</span>
+      <span class="oza-chip" data-cat="egitim">Eğitim Modülleri</span>
+      <span class="oza-chip" data-cat="mobil">Mobil Mini</span>
+            <span class="oza-chip" data-cat="evren">EVREN</span>
+      <span class="oza-chip" data-cat="infografik">İnfografikler</span>
+    </div>
+  </div>
+</section>
+
+<main>
+<div class="container">
+
+<!-- TÜM KATEGORİLER - 115+ Oyun & Simülasyon -->
+<section class="oza-cat" data-cat="strateji">
+<div class="oza-cat-head"><span class="oza-cat-icon">♟️</span><span class="oza-cat-title">Stratejik Karar</span><span class="oza-cat-count">12 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Kritik kararlar, kriz yönetimi, OODA döngüsü</p>
+<div class="oza-game-grid"><a href="oza-kriz-odasi.html" class="oza-game"><div class="oza-game-icon">🔴</div><div class="oza-game-title">Kriz Odası</div><div class="oza-game-meta"><span>10sn karar</span></div></a>
+<a href="oza-kriz-masasi.html" class="oza-game"><div class="oza-game-icon">👥</div><div class="oza-game-title">Kriz Masası</div><div class="oza-game-meta"><span>2-4 kişi rol</span></div></a>
+<a href="oza-ooda-x.html" class="oza-game"><div class="oza-game-icon">⚡</div><div class="oza-game-title">OODA-X Düellosu</div><div class="oza-game-meta"><span>250ms YZ</span></div></a>
+<a href="oza-asimetri-kart.html" class="oza-game"><div class="oza-game-icon">⚖️</div><div class="oza-game-title">Asimetri Terazisi</div><div class="oza-game-meta"><span>Swipe karar</span></div></a>
+<a href="oza-guc-paradoksu.html" class="oza-game"><div class="oza-game-icon">💪</div><div class="oza-game-title">Güç Paradoksu</div><div class="oza-game-meta"><span>Güç dengesi</span></div></a>
+<a href="oza-bm-reform.html" class="oza-game"><div class="oza-game-icon">🏛️</div><div class="oza-game-title">BM Reform ya da İflas</div><div class="oza-game-meta"><span>Diplomasi</span></div></a>
+<a href="oza-diplomasi-masasi.html" class="oza-game"><div class="oza-game-icon">🤝</div><div class="oza-game-title">Diplomasi Masası</div><div class="oza-game-meta"><span>Müzakere</span></div></a>
+<a href="oza-termodinamik-rejim.html" class="oza-game"><div class="oza-game-icon">🔥</div><div class="oza-game-title">Termodinamik Rejim</div><div class="oza-game-meta"><span>Endüstriyel Savaş</span></div><span class="oza-game-badge badge-new">YENİ</span></a></div>
+</section>
+<section class="oza-cat" data-cat="siber">
+<div class="oza-cat-head"><span class="oza-cat-icon">🔐</span><span class="oza-cat-title">Siber & Teknoloji</span><span class="oza-cat-count">11 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Siber savaş, kuantum, fiber optik, yapay zekâ</p>
+<div class="oza-game-grid"><a href="oza-kuantum-kilit.html" class="oza-game"><div class="oza-game-icon">🔮</div><div class="oza-game-title">Kuantum Kilit</div><div class="oza-game-meta"><span>Şifreleme</span></div></a>
+<a href="oza-fiber-optik.html" class="oza-game"><div class="oza-game-icon">🕸️</div><div class="oza-game-title">Fiber-Optik Örümcek</div><div class="oza-game-meta"><span>Ağ savaşı</span></div></a>
+<a href="oza-bilissel-kalkan.html" class="oza-game"><div class="oza-game-icon">🛡️</div><div class="oza-game-title">Bilişsel Kalkan</div><div class="oza-game-meta"><span>Dezenformasyon</span></div></a>
+<a href="oza-yz-mahkemesi.html" class="oza-game"><div class="oza-game-icon">⚖️</div><div class="oza-game-title">YZ Mahkemesi</div><div class="oza-game-meta"><span>Etik karar</span></div></a>
+<a href="oza-otonom-savas.html" class="oza-game"><div class="oza-game-icon">🤖</div><div class="oza-game-title">Otonom Savaş</div><div class="oza-game-meta"><span>Drone YZ</span></div></a>
+<a href="oza-kill-chain.html" class="oza-game"><div class="oza-game-icon">🎯</div><div class="oza-game-title">Kill-Chain Yarışı</div><div class="oza-game-meta"><span>Hedef döngüsü</span></div></a>
+<a href="oza-teknoloji-agaci.html" class="oza-game"><div class="oza-game-icon">🌳</div><div class="oza-game-title">Teknoloji Ağacı</div><div class="oza-game-meta"><span>Ar-Ge yönetimi</span></div></a>
+<a href="oza-casus-dosyalari.html" class="oza-game"><div class="oza-game-icon">🕵️</div><div class="oza-game-title">Casus Dosyaları</div><div class="oza-game-meta"><span>İstihbarat</span></div></a>
+<a href="oza-istihbarat-agi.html" class="oza-game"><div class="oza-game-icon">📡</div><div class="oza-game-title">İstihbarat Ağı</div><div class="oza-game-meta"><span>HUMINT/SIGINT</span></div></a></div>
+</section>
+<section class="oza-cat" data-cat="ekonomi">
+<div class="oza-cat-head"><span class="oza-cat-icon">💰</span><span class="oza-cat-title">Ekonomi & Kaynak</span><span class="oza-cat-count">7 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Emtia, ticaret, enerji, nadir metaller</p>
+<div class="oza-game-grid"><a href="oza-emtia-imparatorlugu.html" class="oza-game"><div class="oza-game-icon">📈</div><div class="oza-game-title">Emtia İmparatorluğu</div><div class="oza-game-meta"><span>Idle tycoon</span></div></a>
+<a href="oza-savas-ekonomisi.html" class="oza-game"><div class="oza-game-icon">💹</div><div class="oza-game-title">Savaş Ekonomisi</div><div class="oza-game-meta"><span>Kaynak yönetimi</span></div></a>
+<a href="oza-golge-ticaret.html" class="oza-game"><div class="oza-game-icon">🌑</div><div class="oza-game-title">Gölge Ticaret Ağı</div><div class="oza-game-meta"><span>Kaçakçılık</span></div></a>
+<a href="oza-nadir-metaller-oyun.html" class="oza-game"><div class="oza-game-icon">💎</div><div class="oza-game-title">Nadir Metaller</div><div class="oza-game-meta"><span>Maden stratejisi</span></div></a>
+<a href="oza-ekolojik-mizan.html" class="oza-game"><div class="oza-game-icon">🌿</div><div class="oza-game-title">Ekolojik Mizan</div><div class="oza-game-meta"><span>Çevre dengesi</span></div></a>
+<a href="oza-terazi-simulasyon.html" class="oza-game"><div class="oza-game-icon">⚖️</div><div class="oza-game-title">Terazi Simülasyon</div><div class="oza-game-meta"><span>Denge analizi</span></div></a>
+<a href="oza-stratejik-ozerklik.html" class="oza-game"><div class="oza-game-icon">🏴</div><div class="oza-game-title">Stratejik Özerklik</div><div class="oza-game-meta"><span>Bağımsızlık</span></div></a></div>
+</section>
+<section class="oza-cat" data-cat="tarih">
+<div class="oza-cat-head"><span class="oza-cat-icon">⚔️</span><span class="oza-cat-title">Tarihsel Savaşlar</span><span class="oza-cat-count">14 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Büyük Türk savaşları — interaktif deneyim</p>
+<div class="oza-game-grid"><a href="oza-malazgirt-1071.html" class="oza-game"><div class="oza-game-icon">🏹</div><div class="oza-game-title">Malazgirt 1071</div><div class="oza-game-meta"><span>Strateji/Aksiyon</span></div></a>
+<a href="oza-canakkale-br.html" class="oza-game"><div class="oza-game-icon">🎖️</div><div class="oza-game-title">Çanakkale Son Kahraman</div><div class="oza-game-meta"><span>Battle Royale</span></div></a>
+<a href="oza-canakkale-1915.html" class="oza-game"><div class="oza-game-icon">🏰</div><div class="oza-game-title">Çanakkale 1915</div><div class="oza-game-meta"><span>Savunma</span></div></a>
+<a href="oza-canakkale-1915-v2.html" class="oza-game"><div class="oza-game-icon">⭐</div><div class="oza-game-title">Çanakkale 1915 v2</div><div class="oza-game-meta"><span>Gelişmiş</span></div></a>
+<a href="oza-kurtulus-atesi.html" class="oza-game"><div class="oza-game-icon">🔥</div><div class="oza-game-title">Kurtuluş Ateşi</div><div class="oza-game-meta"><span>Top-Down Shooter</span></div></a>
+<a href="oza-kurtulus-atesi-v2.html" class="oza-game"><div class="oza-game-icon">⭐</div><div class="oza-game-title">Kurtuluş Ateşi v2</div><div class="oza-game-meta"><span>Gelişmiş</span></div></a>
+<a href="oza-buyuk-taarruz-1922.html" class="oza-game"><div class="oza-game-icon">🇹🇷</div><div class="oza-game-title">Büyük Taarruz 1922</div><div class="oza-game-meta"><span>Strateji</span></div></a>
+<a href="oza-istanbul-fethi-1453.html" class="oza-game"><div class="oza-game-icon">🏰</div><div class="oza-game-title">İstanbul Fethi 1453</div><div class="oza-game-meta"><span>Kuşatma</span></div></a>
+<a href="oza-istanbul-fethi.html" class="oza-game"><div class="oza-game-icon">⚔️</div><div class="oza-game-title">İstanbul Fethi</div><div class="oza-game-meta"><span>Klasik</span></div></a>
+<a href="oza-preveze-1538.html" class="oza-game"><div class="oza-game-icon">⚓</div><div class="oza-game-title">Preveze 1538</div><div class="oza-game-meta"><span>Deniz savaşı</span></div></a>
+<a href="oza-osmanli-deniz-imparatorlugu.html" class="oza-game"><div class="oza-game-icon">🚢</div><div class="oza-game-title">Osmanlı Deniz İmp.</div><div class="oza-game-meta"><span>Donanma</span></div></a>
+<a href="oza-talas-751.html" class="oza-game"><div class="oza-game-icon">🏹</div><div class="oza-game-title">Talas 751</div><div class="oza-game-meta"><span>Kader savaşı</span></div></a>
+<a href="oza-talas-751-v2.html" class="oza-game"><div class="oza-game-icon">⭐</div><div class="oza-game-title">Talas 751 v2</div><div class="oza-game-meta"><span>Gelişmiş</span></div></a>
+<a href="oza-alternatif-tarih.html" class="oza-game"><div class="oza-game-icon">🔄</div><div class="oza-game-title">Alternatif Tarih</div><div class="oza-game-meta"><span>What-if</span></div></a></div>
+</section>
+<section class="oza-cat" data-cat="aksiyon">
+<div class="oza-cat-head"><span class="oza-cat-icon">🎮</span><span class="oza-cat-title">Aksiyon & Taktik</span><span class="oza-cat-count">12 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Nişancı, bomba imha, üs inşa, drone</p>
+<div class="oza-game-grid"><a href="oza-taktik-nisanci.html" class="oza-game"><div class="oza-game-icon">🎯</div><div class="oza-game-title">Taktik Nişancı</div><div class="oza-game-meta"><span>Top-Down</span></div></a>
+<a href="oza-bomba-imha.html" class="oza-game"><div class="oza-game-icon">💣</div><div class="oza-game-title">Bomba İmha</div><div class="oza-game-meta"><span>Defuse</span></div></a>
+<a href="oza-us-insa.html" class="oza-game"><div class="oza-game-icon">🏗️</div><div class="oza-game-title">Üs İnşa Et</div><div class="oza-game-meta"><span>Builder</span></div></a>
+<a href="oza-drone-kosusu.html" class="oza-game"><div class="oza-game-icon">🚁</div><div class="oza-game-title">Drone Koşusu</div><div class="oza-game-meta"><span>Endless Runner</span></div></a>
+<a href="oza-silah-kombinasyon.html" class="oza-game"><div class="oza-game-icon">🔫</div><div class="oza-game-title">Silah Kombinasyonu</div><div class="oza-game-meta"><span>Match-3</span></div></a>
+<a href="oza-hipersonik-yaris.html" class="oza-game"><div class="oza-game-icon">🚀</div><div class="oza-game-title">Hipersonik Yarış</div><div class="oza-game-meta"><span>Hız</span></div></a>
+<a href="oza-karanlik-kis.html" class="oza-game"><div class="oza-game-icon">❄️</div><div class="oza-game-title">Karanlık Kış</div><div class="oza-game-meta"><span>Rogue-like</span></div></a>
+<a href="oza-nato-uzay-2025.html" class="oza-game"><div class="oza-game-icon">🛰️</div><div class="oza-game-title">Uzay Hakimiyeti</div><div class="oza-game-meta"><span>Uydu savunma</span></div></a>
+<a href="oza-uzay-hakimiyeti.html" class="oza-game"><div class="oza-game-icon">🌌</div><div class="oza-game-title">Uzay Hakimiyeti v2</div><div class="oza-game-meta"><span>Orbital</span></div></a>
+<a href="oza-savas-laboratuvari.html" class="oza-game"><div class="oza-game-icon">🧪</div><div class="oza-game-title">Savaş Laboratuvarı</div><div class="oza-game-meta"><span>Deney</span></div></a></div>
+</section>
+<section class="oza-cat" data-cat="egitim">
+<div class="oza-cat-head"><span class="oza-cat-icon">📚</span><span class="oza-cat-title">Eğitim & Quiz</span><span class="oza-cat-count">13 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Doktrin, tarih, KBRN, quiz testleri</p>
+<div class="oza-game-grid"><a href="oza-doktrin-testi.html" class="oza-game"><div class="oza-game-icon">📖</div><div class="oza-game-title">Doktrin Testi</div><div class="oza-game-meta"><span>12 düşünür</span></div></a>
+<a href="oza-tarihsel-sim.html" class="oza-game"><div class="oza-game-icon">🗺️</div><div class="oza-game-title">Tarihsel Simülasyon</div><div class="oza-game-meta"><span>Küba/Ukrayna</span></div></a>
+<a href="oza-kbrn-triage.html" class="oza-game"><div class="oza-game-icon">☢️</div><div class="oza-game-title">KBRN Triage</div><div class="oza-game-meta"><span>Acil müdahale</span></div></a>
+<a href="oza-harbi-quiz.html" class="oza-game"><div class="oza-game-icon">❓</div><div class="oza-game-title">Harbi Quiz</div><div class="oza-game-meta"><span>Bilgi yarışması</span></div></a>
+<a href="oza-hibrit-harita.html" class="oza-game"><div class="oza-game-icon">🗺️</div><div class="oza-game-title">Hibrit Harita</div><div class="oza-game-meta"><span>Coğrafya</span></div></a>
+<a href="oza-kuresel-guc.html" class="oza-game"><div class="oza-game-icon">🌍</div><div class="oza-game-title">Küresel Güç</div><div class="oza-game-meta"><span>Güç endeksi</span></div></a>
+<a href="oza-16-turk-devleti.html" class="oza-game"><div class="oza-game-icon">🏛️</div><div class="oza-game-title">16 Türk Devleti</div><div class="oza-game-meta"><span>Zaman çizelgesi</span></div></a>
+<a href="oza-komutan-sozleri.html" class="oza-game"><div class="oza-game-icon">💬</div><div class="oza-game-title">Komutan Sözleri</div><div class="oza-game-meta"><span>Koleksiyon</span></div></a>
+<a href="oza-turk-savas-zekasi.html" class="oza-game"><div class="oza-game-icon">🧠</div><div class="oza-game-title">Türk Savaş Zekâsı</div><div class="oza-game-meta"><span>Strateji quiz</span></div></a>
+<a href="oza-turk-havacilik-tarihi.html" class="oza-game"><div class="oza-game-icon">✈️</div><div class="oza-game-title">Türk Havacılık Tarihi</div><div class="oza-game-meta"><span>Timeline</span></div></a>
+<a href="ooda-dongusu-interaktif.html" class="oza-game"><div class="oza-game-icon">🔄</div><div class="oza-game-title">OODA Döngüsü</div><div class="oza-game-meta"><span>Boyd İnteraktif</span></div></a>
+<a href="ooda-x-super-dongu-simulatoru.html" class="oza-game"><div class="oza-game-icon">⚡</div><div class="oza-game-title">OODA-X Süper Döngü</div><div class="oza-game-meta"><span>YZ+Kuantum</span></div></a>
+<a href="savas-evrimi-zaman-tuneli.html" class="oza-game"><div class="oza-game-icon">🕐</div><div class="oza-game-title">Savaşın Evrimi</div><div class="oza-game-meta"><span>Zaman Tüneli</span></div></a>
+<a href="oza-saat-ordular.html" class="oza-game"><div class="oza-game-icon">⏰</div><div class="oza-game-title">Saat Gibi İşleyen Ordular</div><div class="oza-game-meta"><span>Mekanik Rejim</span></div><span class="oza-game-badge badge-new">YENİ</span></a>
+<a href="oza-komutan-avi.html" class="oza-game"><div class="oza-game-icon">🎯</div><div class="oza-game-title">Komutan Avı</div><div class="oza-game-meta"><span>15 komutan quiz</span></div><span class="oza-game-badge badge-new">YENİ</span></a></div>
+</section>
+
+<section class="oza-cat" data-cat="arcade">
+<div class="oza-cat-head"><span class="oza-cat-icon">🎧</span><span class="oza-cat-title">Külliyat Arcade</span><span class="oza-cat-count">10 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Canvas tabanlı, Web Audio ses sentezleyicili, kaskad FX efektli arcade oyunlar</p>
+<div class="oza-game-grid"><a href="oza-doktrin-dash.html" class="oza-game"><div class="oza-game-icon">📜</div><div class="oza-game-title">Doktrin Dash</div><div class="oza-game-meta"><span>Endless Run + SES FX</span></div></a>
+<a href="oza-siber-tetris.html" class="oza-game"><div class="oza-game-icon">🛡️</div><div class="oza-game-title">Siber Savunma: Blok</div><div class="oza-game-meta"><span>Tetris + SES FX</span></div></a>
+<a href="oza-mineral-madenci.html" class="oza-game"><div class="oza-game-icon">⛏️</div><div class="oza-game-title">Mineral Madencisi</div><div class="oza-game-meta"><span>Clicker + Idle</span></div></a>
+<a href="oza-radar-ping.html" class="oza-game"><div class="oza-game-icon">📡</div><div class="oza-game-title">Radar Ping</div><div class="oza-game-meta"><span>Reaksiyon + EMS</span></div></a>
+<a href="oza-supply-chain.html" class="oza-game"><div class="oza-game-icon">🚛</div><div class="oza-game-title">Tedarik Zinciri</div><div class="oza-game-meta"><span>Tower Defense</span></div></a>
+<a href="oza-kripto-kirik.html" class="oza-game"><div class="oza-game-icon">🔐</div><div class="oza-game-title">Kripto Kırık</div><div class="oza-game-meta"><span>Puzzle + Kripto</span></div></a>
+<a href="oza-iha-fabrika.html" class="oza-game"><div class="oza-game-icon">🏭</div><div class="oza-game-title">İHA Fabrika</div><div class="oza-game-meta"><span>Fabrika + Idle</span></div></a>
+<a href="oza-diplomasi-poker.html" class="oza-game"><div class="oza-game-icon">🃏</div><div class="oza-game-title">Diplomasi Poker</div><div class="oza-game-meta"><span>Kart + Blöf</span></div></a>
+<a href="oza-ooda-x-speed.html" class="oza-game"><div class="oza-game-icon">⚡</div><div class="oza-game-title">OODA-X: Hız Üstünlüğü</div><div class="oza-game-meta"><span>Canvas + Hız</span></div></a>
+<a href="oza-asimetri-ezici.html" class="oza-game"><div class="oza-game-icon">💥</div><div class="oza-game-title">Asimetri Ezici: NATO 2026</div><div class="oza-game-meta"><span>Match-3 + SES FX</span></div></a></div>
+</section>
+
+<section class="oza-cat" data-cat="mobil">
+<div class="oza-cat-head"><span class="oza-cat-icon">📱</span><span class="oza-cat-title">Mobil Mini Oyunlar</span><span class="oza-cat-count">16 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Hızlı, mobil uyumlu mini oyunlar — 3 aşamalı ilerleme</p>
+<div class="oza-game-grid"><a href="oza-mobil-oyunlar.html#tepki" class="oza-game"><div class="oza-game-icon">⚡</div><div class="oza-game-title">Tepki Testi</div><div class="oza-game-meta"><span>Reaksiyon</span></div></a>
+<a href="oza-mobil-oyunlar.html#hedef" class="oza-game"><div class="oza-game-icon">🎯</div><div class="oza-game-title">Hedef Vur</div><div class="oza-game-meta"><span>Nişancı</span></div></a>
+<a href="oza-mobil-oyunlar.html#siralama" class="oza-game"><div class="oza-game-icon">📊</div><div class="oza-game-title">Tehdit Sırala</div><div class="oza-game-meta"><span>Sıralama</span></div></a>
+<a href="oza-mobil-oyunlar.html#hafiza" class="oza-game"><div class="oza-game-icon">🧠</div><div class="oza-game-title">Askeri Hafıza</div><div class="oza-game-meta"><span>Hafıza</span></div></a>
+<a href="oza-mobil-oyunlar.html#kod" class="oza-game"><div class="oza-game-icon">🔑</div><div class="oza-game-title">Şifre Kır</div><div class="oza-game-meta"><span>Kod çözme</span></div></a>
+<a href="oza-mobil-oyunlar.html#bulmaca" class="oza-game"><div class="oza-game-icon">🧩</div><div class="oza-game-title">Strateji Bulmaca</div><div class="oza-game-meta"><span>Puzzle</span></div></a>
+<a href="oza-mobil-oyunlar.html#matematik" class="oza-game"><div class="oza-game-icon">🔢</div><div class="oza-game-title">Hız Matematik</div><div class="oza-game-meta"><span>Hesaplama</span></div></a>
+<a href="oza-mobil-oyunlar.html#drone" class="oza-game"><div class="oza-game-icon">🚁</div><div class="oza-game-title">Drone Kaçış</div><div class="oza-game-meta"><span>Kaçış</span></div></a>
+<a href="oza-mobil-oyunlar.html#drone-suruc" class="oza-game"><div class="oza-game-icon">🛸</div><div class="oza-game-title">Drone Sürüsü</div><div class="oza-game-meta"><span>Sürü</span></div></a>
+<a href="oza-mobil-oyunlar.html#frekans" class="oza-game"><div class="oza-game-icon">📻</div><div class="oza-game-title">Frekans Savaşı</div><div class="oza-game-meta"><span>EMS</span></div></a>
+<a href="oza-mobil-oyunlar.html#biyometri" class="oza-game"><div class="oza-game-icon">👁️</div><div class="oza-game-title">Biyometri</div><div class="oza-game-meta"><span>Tanıma</span></div></a>
+<a href="oza-mobil-oyunlar.html#nukleer" class="oza-game"><div class="oza-game-icon">☢️</div><div class="oza-game-title">Nükleer Denge</div><div class="oza-game-meta"><span>Denge</span></div></a>
+<a href="oza-mobil-oyunlar.html#tedarik" class="oza-game"><div class="oza-game-icon">🚚</div><div class="oza-game-title">Tedarik Koridoru</div><div class="oza-game-meta"><span>Lojistik</span></div></a>
+<a href="oza-mobil-oyunlar.html#sifreli" class="oza-game"><div class="oza-game-icon">📨</div><div class="oza-game-title">Şifreli Mesaj</div><div class="oza-game-meta"><span>Kripto</span></div></a>
+<a href="oza-mobil-oyunlar.html#kamuoyu" class="oza-game"><div class="oza-game-icon">🌡️</div><div class="oza-game-title">Kamuoyu Termometresi</div><div class="oza-game-meta"><span>Algı</span></div></a>
+<a href="oza-mobil-oyunlar.html#butce" class="oza-game"><div class="oza-game-icon">💰</div><div class="oza-game-title">Bütçe Tetikçisi</div><div class="oza-game-meta"><span>Ekonomi</span></div></a></div>
+</section>
+
+<section class="oza-cat" data-cat="sosyal">
+<div class="oza-cat-head"><span class="oza-cat-icon">👥</span><span class="oza-cat-title">Çok Oyunculu & Sosyal</span><span class="oza-cat-count">2 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Turnuva, UGC, liderlik tablosu</p>
+<div class="oza-game-grid"><a href="oza-strateji-ligi.html" class="oza-game"><div class="oza-game-icon">🏆</div><div class="oza-game-title">Strateji Ligi</div><div class="oza-game-meta"><span>Haftalık turnuva</span></div></a>
+<a href="oza-senaryo-uretici.html" class="oza-game"><div class="oza-game-icon">✍️</div><div class="oza-game-title">Senaryo Üretici</div><div class="oza-game-meta"><span>UGC</span></div></a></div>
+</section>
+
+<section class="oza-cat" data-cat="infografik">
+<div class="oza-cat-head"><span class="oza-cat-icon">📊</span><span class="oza-cat-title">İnfografikler & Kuvvet Analizi</span><span class="oza-cat-count">12 içerik</span></div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem;">Animasyonlu, sesli, interaktif infografikler — Hava, Kara, Deniz kuvvetleri</p>
+<div class="oza-game-grid"><a href="infografik-turk-hava-kuvvetleri.html" class="oza-game"><div class="oza-game-icon">✈️</div><div class="oza-game-title">Türk Hava Kuvvetleri</div><div class="oza-game-meta"><span>Animasyonlu</span></div></a>
+<a href="infografik-turk-kara-kuvvetleri.html" class="oza-game"><div class="oza-game-icon">🚜</div><div class="oza-game-title">Türk Kara Kuvvetleri</div><div class="oza-game-meta"><span>Animasyonlu</span></div></a>
+<a href="infografik-turk-deniz-kuvvetleri.html" class="oza-game"><div class="oza-game-icon">⚓</div><div class="oza-game-title">Türk Deniz Kuvvetleri</div><div class="oza-game-meta"><span>Animasyonlu</span></div></a>
+<a href="infografik-turk-savunma-yukselisi.html" class="oza-game"><div class="oza-game-icon">🚀</div><div class="oza-game-title">Savunma Sanayii Yükselisi</div><div class="oza-game-meta"><span>Animasyonlu</span></div></a>
+<a href="infografik-siber-savas-anatomisi.html" class="oza-game"><div class="oza-game-icon">💻</div><div class="oza-game-title">Siber Savaş Anatomisi</div><div class="oza-game-meta"><span>Matrix efekt</span></div></a>
+<a href="infografik-nato-genislemesi.html" class="oza-game"><div class="oza-game-icon">🌍</div><div class="oza-game-title">NATO Genişlemesi</div><div class="oza-game-meta"><span>Harita anim.</span></div></a>
+<a href="infografik-kuresel-enerji-savaslari.html" class="oza-game"><div class="oza-game-icon">🔥</div><div class="oza-game-title">Küresel Enerji Savaşları</div><div class="oza-game-meta"><span>Gauge efekt</span></div></a>
+<a href="infografik-yapay-zeka-savas.html" class="oza-game"><div class="oza-game-icon">🤖</div><div class="oza-game-title">YZ ve Savaşın Geleceği</div><div class="oza-game-meta"><span>Neon/glitch</span></div></a>
+<a href="infografik-hurmuz-bogazi.html" class="oza-game"><div class="oza-game-icon">🚢</div><div class="oza-game-title">Hürmüz Boğazı Krizi</div><div class="oza-game-meta"><span>Particle efekt</span></div></a>
+<a href="infografik-turk-deniz-gucu.html" class="oza-game"><div class="oza-game-icon">⛵</div><div class="oza-game-title">Türk Deniz Gücü</div><div class="oza-game-meta"><span>Dalga anim.</span></div></a>
+<a href="jeopolitik-infografik.html" class="oza-game"><div class="oza-game-icon">🗺️</div><div class="oza-game-title">Jeopolitik Atlas</div><div class="oza-game-meta"><span>İnteraktif Harita</span></div></a>
+<a href="jeopolitik-infografik-atlas.html" class="oza-game"><div class="oza-game-icon">🌐</div><div class="oza-game-title">Stratejik Bölgeler</div><div class="oza-game-meta"><span>SVG Harita</span></div></a></div>
+</section>
+
+</div>
+<div class="oza-section" id="sec-strateji-kartlari" style="margin:2rem 1.5rem;">
+<!-- STRATEJİK ANALİZ -->
+<div style="margin:2rem 0;padding:0 1.5rem;">
+  <h2 class="oza-section-title" style="font-size:1.3rem;margin-bottom:1rem;">📡 Stratejik Analiz</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;">
+    <a href="elon_musk_disruptor_universe.html" style="display:block;background:rgba(15,15,26,.9);border:1px solid rgba(239,159,39,.3);border-radius:12px;padding:1.2rem;text-decoration:none;transition:all .3s;"><div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;"><span style="font-size:1.5rem;">🌌</span><div><div style="color:#EF9F27;font-size:.65rem;font-weight:700;letter-spacing:.05em;">STRATEJİK ANALİZ</div><div style="color:#fff;font-size:.95rem;font-weight:600;">Elon Musk — Disruptor: Z Kuşağı</div></div></div><div style="color:#9ca3af;font-size:.8rem;line-height:1.4;">7 şirket gezegen haritası — Tesla, SpaceX, xAI, Neuralink. Portföy, Vizyon, Askeri Analiz, OODA.</div><div style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span style="background:rgba(239,159,39,.15);color:#EF9F27;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">7 Sekme</span><span style="background:rgba(55,138,221,.15);color:#378ADD;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">İnteraktif</span><span style="background:rgba(29,158,117,.15);color:#1D9E75;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;">Gezegen Haritası</span></div></a>
+  </div>
+</div>
+  <h2 class="oza-section-title" style="font-size:1.3rem;margin-bottom:1rem;">🃏 Strateji Kartları & Quiz</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;">
+<div class="game-card" onclick="location.href='musk-disruptor-zgen.html'" style="border:2px solid #8b5cf6;grid-column:span 2;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(88,101,242,.1));min-height:120px;">
+  <div class="game-badge" style="background:#8b5cf6;font-size:.9rem;padding:.4rem .8rem;">🃏 Strateji Kartı</div>
+  <div class="game-icon" style="font-size:2.5rem;">⚡</div>
+  <div class="game-title" style="font-size:1.2rem;font-weight:700;">Musk — Disruptor: Z Kuşağı</div>
+  <div class="game-desc">Z Kuşağı stratejik analiz — Ekosistem, Askeri, OODA, Vizyon, Jeopolitik, Bilişsel, Ekonomi</div>
+  <div style="margin-top:.5rem;display:flex;gap:.5rem;flex-wrap:wrap;"><span style="background:rgba(139,92,246,.2);color:#c4b5fd;padding:.2rem .5rem;border-radius:4px;font-size:.7rem;">7 Bölüm</span><span style="background:rgba(239,159,39,.2);color:#EF9F27;padding:.2rem .5rem;border-radius:4px;font-size:.7rem;">İnteraktif</span><span style="background:rgba(0,217,255,.2);color:#00d9ff;padding:.2rem .5rem;border-radius:4px;font-size:.7rem;">Müzik</span></div>
+</div>
+
+<!-- Zeki Tez OZA Oyunları -->
+<div class="game-card" onclick="location.href='oza-silah-tarihi-quiz.html'"><span class="badge">Quiz</span><h4>⚔️ Silah Tarihi Quiz</h4><p>Antik çağdan modern silah sistemlerine — 15 soru</p></div><div class="game-card" onclick="location.href='oza-barut-simyacisi.html'">
+  <div class="game-badge">Yeni</div>
+  <div class="game-icon">⚗</div>
+  <h3>Barut Simyacısı</h3>
+  <p>Doğru malzemeleri seç, tarihi patlayıcıları yarat!</p>
+</div>
+<div class="game-card" onclick="location.href='oza-kusatma-ustasi.html'">
+  <div class="game-badge">Yeni</div>
+  <div class="game-icon">🏰</div>
+  <h3>Kuşatma Ustası</h3>
+  <p>Açı ve güç ayarla, tarihi kaleleri yık!</p>
+</div>
+
+<div class="game-card" onclick="location.href='oza-yz-savas-lordu.html'">
+  <div class="game-icon">🤖</div>
+  <div class="game-title">YZ Savaş Lordu</div>
+  <div class="game-desc">İnsansı robot ordusunu komuta et — Terminatör senaryosu</div>
+</div>
+
+
+  </div>
+</div>
+<!-- X/Y KUŞAĞI ANALİZ İÇERİKLERİ -->
+<!-- X/Y KUŞAĞI ANALİZ İÇERİKLERİ -->
+<div class="oza-section" id="sec-analiz">
+  <h2 class="oza-section-title">X/Y Kuşağı Stratejik Analiz</h2>
+  <div class="oza-grid">
+    <a href="siber-operasyon-odasi.html" class="oza-card">
+      <span class="oza-card-icon">🖥️</span>
+      <span class="oza-card-title">Siber Operasyon Odası</span>
+      <span class="oza-card-desc">Bütüncül stratejik matris — konvansiyonel vs algoritmik savaş, OODA-X, canlı osiloskop</span>
+      <span class="oza-cat-badge">Siber · Algoritmik</span>
+    </a>
+    <a href="kuresel-askeri-sistemler.html" class="oza-card">
+      <span class="oza-card-icon">🌐</span>
+      <span class="oza-card-title">Küresel Askeri Sistemler</span>
+      <span class="oza-card-desc">Konvansiyonel vs algoritmik savaş odası — İran analizi, Mind×Mine, maliyet asimetrisi</span>
+      <span class="oza-cat-badge">Jeopolitik · Askeri</span>
+    </a>
+    <a href="stratejik-paradigma-analizi.html" class="oza-card" style="border-left:3px solid #8b5cf6;">
+      <span class="oza-card-icon">🎯</span>
+      <span class="oza-card-title">21. Yüzyıl Stratejik Paradigma</span>
+      <span class="oza-card-desc">Jeopolitik kırılma · HUD konsol</span>
+      <span class="oza-card-tag" style="background:rgba(139,92,246,.15);color:#8b5cf6;">X/Y Kuşağı</span>
+    </a>
+  </div>
+</div>
+<!-- KEŞFET: TikTok/Instagram Kaydırmalı Stil -->
+<section class="kesfet-swipe" style="padding:2.5rem 0;border-top:2px solid rgba(88,101,242,.2);margin-top:2rem;">
+<div class="container">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+    <div>
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;color:#fff;margin:0;">Keşfet</h2>
+      <p style="font-size:.65rem;color:rgba(255,255,255,.4);margin:.2rem 0 0;">Kaydırarak keşfet — TikTok tarzı dikey akış</p>
+    </div>
+    <a href="oza-sonsuz.html" style="font-size:.65rem;color:#8b5cf6;text-decoration:none;">OZA∞ →</a>
+  </div>
+  <div id="kesfetFeed" style="display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+  </div>
+</div>
+</section>
+<!-- HUNİ KÖPRÜSÜ: ANA SİTE & MEDENİYET -->
+<section style="padding:2rem 1.5rem;max-width:1200px;margin:0 auto;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;">
+    <div style="width:4px;height:20px;background:#5865f2;border-radius:2px;"></div>
+    <h3 style="font-family:'Chakra Petch',sans-serif;font-size:1rem;color:#fff;margin:0;">Daha Fazla Keşfet</h3>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">
+    <a href="index.html" style="text-decoration:none;background:rgba(196,30,58,.06);border:1px solid rgba(196,30,58,.25);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;transition:all .2s;">
+      <span style="font-size:1.5rem;">🏠</span>
+      <div><strong style="color:#c41e3a;font-size:.85rem;">Ana Sayfa</strong><p style="color:#8b949e;font-size:.7rem;margin:2px 0 0;">Harb-i Strateji</p></div>
+    </a>
+    <a href="medeniyet-dinamikleri.html" style="text-decoration:none;background:rgba(230,126,34,.06);border:1px solid rgba(230,126,34,.25);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;transition:all .2s;">
+      <span style="font-size:1.5rem;">🌍</span>
+      <div><strong style="color:#e67e22;font-size:.85rem;">Medeniyet Dinamikleri</strong><p style="color:#8b949e;font-size:.7rem;margin:2px 0 0;">Jeopolitik · Kültür · Ekonomi</p></div>
+    </a>
+    <a href="simulasyonlar.html" style="text-decoration:none;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.25);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;transition:all .2s;">
+      <span style="font-size:1.5rem;">🎯</span>
+      <div><strong style="color:#10b981;font-size:.85rem;">Simülasyonlar</strong><p style="color:#8b949e;font-size:.7rem;margin:2px 0 0;">X/Y Kuşağı İçerikleri</p></div>
+    </a>
+    <a href="kulliyat.html" style="text-decoration:none;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;transition:all .2s;">
+      <span style="font-size:1.5rem;">📚</span>
+      <div><strong style="color:#8b5cf6;font-size:.85rem;">Külliyat</strong><p style="color:#8b949e;font-size:.7rem;margin:2px 0 0;">Akademik Kaynaklar</p></div>
+    </a>
+  </div>
+</section>
+</main>
+
+<script src="hs-nav.js?v=11"></script>
+<script>
+// === AMBIENT PARTICLES ===
+(function(){
+  const container = document.getElementById('particles');
+  if(!container) return;
+  for(let i=0;i<30;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDuration = (8+Math.random()*12)+'s';
+    p.style.animationDelay = Math.random()*8+'s';
+    p.style.width = p.style.height = (1+Math.random()*2)+'px';
+    container.appendChild(p);
+  }
+})();
+
+// === COUNTER ANIMATION ===
+function animateCounters(){
+  document.querySelectorAll('.oza-stat-num[data-target]').forEach(el=>{
+    const target = +el.dataset.target;
+    const duration = 1500;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now-start)/duration,1);
+      const eased = 1-Math.pow(1-progress,3);
+      el.textContent = Math.round(target*eased)+(target>=100?'+':'');
+      if(progress<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+const heroObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){animateCounters();heroObs.disconnect();}});
+},{threshold:0.3});
+heroObs.observe(document.querySelector('.oza-hero'));
+
+// === CARD MOUSE TRACKING ===
+document.querySelectorAll('.oza-game').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX-rect.left)/rect.width*100).toFixed(1);
+    const y = ((e.clientY-rect.top)/rect.height*100).toFixed(1);
+    card.style.setProperty('--mx',x+'%');
+    card.style.setProperty('--my',y+'%');
+  });
+});
+
+// === SCROLL REVEAL ===
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.oza-game').forEach((card,i)=>{
+  card.style.opacity='0';
+  card.style.transform='translateY(20px)';
+  card.style.transition='all .4s ease '+(i*0.03)+'s';
+  revealObs.observe(card);
+});
+
+// Category filter
+document.querySelectorAll('.oza-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.oza-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    const cat = chip.dataset.cat;
+    document.querySelectorAll('.oza-cat').forEach(s=>{
+      if(cat==='all') s.style.display='';
+      else s.style.display = s.dataset.cat===cat ? '' : 'none';
+    });
+    // EVREN section
+    const evren = document.querySelector('.evren-section');
+    if(evren){
+      if(cat==='all'||cat==='evren') evren.style.display='';
+      else evren.style.display='none';
+    }
+  });
+});
+
+// Keşfet Feed - TikTok/Instagram kaydırmalı kartlar
+(function(){
+  const feed = document.getElementById('kesfetFeed');
+  if(!feed) return;
+  const items = [
+    {icon:'⚔️',title:'Sun Tzu\'nun Beş Faktörü',cat:'Doktrin',color:'#e01515',link:'oza-sonsuz.html'},
+    {icon:'🚀',title:'Hipersonik Füze Yarışı',cat:'Teknoloji',color:'#00e0ff',link:'oza-sonsuz.html'},
+    {icon:'🇹🇷',title:'Mavi Vatan Doktrini',cat:'Türkiye',color:'#e01515',link:'oza-sonsuz.html'},
+    {icon:'🕷️',title:'Stuxnet: İlk Siber Silah',cat:'Siber',color:'#8b5cf6',link:'oza-sonsuz.html'},
+    {icon:'🛨',title:'FPV Kamikaze Dronları',cat:'Dron Çağı',color:'#c9a84c',link:'oza-sonsuz.html'},
+    {icon:'🏰',title:'İstanbul\'un Fethi 1453',cat:'Tarih',color:'#f4a261',link:'oza-sonsuz.html'},
+    {icon:'🧠',title:'Bilişsel Savaş ve Deepfake',cat:'Bilişsel',color:'#ec4899',link:'oza-sonsuz.html'},
+    {icon:'💵',title:'Dolar Silahlaştırması',cat:'Ekonomi',color:'#10b981',link:'oza-sonsuz.html'},
+    {icon:'🛰️',title:'Uzay Silahlanması',cat:'Uzay',color:'#6366f1',link:'oza-sonsuz.html'},
+    {icon:'✈️',title:'KAAN: 5. Nesil Savaş Uçağı',cat:'Türkiye',color:'#e01515',link:'oza-sonsuz.html'}
+  ];
+  items.forEach(item=>{
+    const card = document.createElement('a');
+    card.href = item.link;
+    card.style.cssText = 'flex:0 0 160px;scroll-snap-align:start;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.2rem .9rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;transition:all .3s;position:relative;overflow:hidden;';
+    card.innerHTML = `<div style="font-size:2rem;margin-bottom:.6rem;">${item.icon}</div><div style="font-size:.72rem;font-weight:600;color:#fff;margin-bottom:.3rem;font-family:var(--font-display);">${item.title}</div><span style="font-size:.5rem;color:${item.color};background:${item.color}15;padding:.15rem .5rem;border-radius:10px;">${item.cat}</span>`;
+    feed.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>

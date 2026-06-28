@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Türklerin İlkleri — İnteraktif Timeline | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d0d0d;--card:#1a1a1a;--red:#c41e3a;--white:#f0f0f0;--gray:#888;--gold:#d4a017;--border:#2a2a2a;--glow:rgba(196,30,58,.3)}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--white);overflow:hidden;height:100vh}
+/* NAV */
+.nav{position:fixed;top:0;width:100%;height:48px;background:rgba(13,13,13,.97);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:200;backdrop-filter:blur(8px)}
+.nav a{color:var(--gray);text-decoration:none;font-size:.9rem;font-weight:700;font-family:'Chakra Petch',sans-serif}
+.nav a:hover{color:var(--white)}
+.nav-title{font-family:'Chakra Petch',sans-serif;font-size:.8rem;font-weight:700;color:var(--red);letter-spacing:1px}
+.nav-links{display:flex;gap:12px}
+/* LAYOUT */
+.layout{display:flex;height:calc(100vh - 48px);margin-top:48px}
+.panel-left{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.panel-right{width:320px;background:var(--card);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+/* TAB BAR */
+.tab-bar{display:flex;background:rgba(26,26,26,.9);border-bottom:1px solid var(--border);padding:8px 12px;gap:6px;flex-shrink:0}
+.tab{padding:6px 14px;border-radius:6px;font-size:.9rem;font-weight:700;font-family:'Chakra Petch',sans-serif;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--gray);transition:all .2s}
+.tab:hover{border-color:var(--red);color:var(--white)}
+.tab.active{background:var(--red);border-color:var(--red);color:#fff}
+/* FILTER BAR */
+.filter-bar{display:flex;gap:4px;padding:8px 12px;flex-wrap:wrap;flex-shrink:0;border-bottom:1px solid var(--border)}
+.filter-btn{padding:4px 10px;border-radius:4px;font-size:.6rem;font-weight:700;cursor:pointer;background:var(--card);border:1px solid var(--border);color:var(--gray);transition:all .2s}
+.filter-btn:hover,.filter-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+/* TIMELINE AREA */
+.timeline-area{flex:1;overflow-y:auto;padding:16px;position:relative}
+.timeline-area::-webkit-scrollbar{width:4px}
+.timeline-area::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px}
+/* TIMELINE LINE */
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--red),var(--gold),var(--red))}
+/* TIMELINE ITEM */
+.tl-item{position:relative;margin-bottom:12px;opacity:0;transform:translateX(-20px);animation:slideIn .4s forwards}
+.tl-item:nth-child(1){animation-delay:.05s}
+.tl-item:nth-child(2){animation-delay:.1s}
+.tl-item:nth-child(3){animation-delay:.15s}
+.tl-item:nth-child(4){animation-delay:.2s}
+.tl-item:nth-child(5){animation-delay:.25s}
+@keyframes slideIn{to{opacity:1;transform:translateX(0)}}
+.tl-dot{position:absolute;left:-22px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--red);border:2px solid var(--bg);box-shadow:0 0 8px var(--glow);z-index:2}
+.tl-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s}
+.tl-card:hover{border-color:var(--red);box-shadow:0 0 12px var(--glow);transform:translateX(4px)}
+.tl-card.selected{border-color:var(--gold);box-shadow:0 0 16px rgba(212,160,23,.3)}
+.tl-num{font-size:.6rem;font-weight:700;color:var(--red);font-family:'IBM Plex Mono',monospace}
+.tl-title{font-size:.78rem;font-weight:700;margin:3px 0 2px;line-height:1.3}
+.tl-answer{font-size:.9rem;color:var(--gold);font-weight:600}
+.tl-cat{display:inline-block;font-size:.55rem;padding:2px 6px;border-radius:3px;background:rgba(196,30,58,.15);color:var(--red);font-weight:700;margin-top:4px}
+/* RIGHT PANEL */
+.panel-header{padding:16px;border-bottom:1px solid var(--border);text-align:center}
+.panel-header h2{font-family:'Chakra Petch',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold)}
+.panel-header p{font-size:.85rem;color:var(--gray);margin-top:4px}
+.detail-box{padding:16px;flex:1}
+.detail-box .empty{text-align:center;padding:40px 20px;color:var(--gray);font-size:.95rem}
+.detail-box .empty .icon{font-size:2rem;margin-bottom:10px}
+.detail-content h3{font-family:'Chakra Petch',sans-serif;font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:8px;line-height:1.3}
+.detail-content .answer-big{font-size:.85rem;color:var(--gold);font-weight:700;margin-bottom:12px;padding:10px;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.2);border-radius:8px}
+.detail-content .meta{font-size:.9rem;color:var(--gray);line-height:1.5}
+.detail-content .meta span{display:inline-block;background:rgba(196,30,58,.1);color:var(--red);padding:2px 8px;border-radius:4px;font-weight:700;margin:2px 4px 2px 0}
+/* STATS */
+.stats-bar{padding:12px 16px;border-top:1px solid var(--border);background:rgba(13,13,13,.5)}
+.stats-row{display:flex;justify-content:space-between;margin-bottom:6px}
+.stat-item{text-align:center}
+.stat-item .val{font-size:1rem;font-weight:900;color:var(--gold);font-family:'Chakra Petch',sans-serif}
+.stat-item .lbl{font-size:.55rem;color:var(--gray)}
+/* AUDIO BTN */
+.audio-toggle{position:fixed;bottom:16px;right:16px;z-index:300;width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem}
+.audio-toggle:hover{border-color:var(--red)}
+/* SEARCH */
+.search-box{padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.search-box input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--white);font-size:.72rem;font-family:'IBM Plex Sans',sans-serif}
+.search-box input::placeholder{color:var(--gray)}
+.search-box input:focus{outline:none;border-color:var(--red)}
+/* COUNTER */
+.counter{position:fixed;bottom:16px;left:16px;z-index:300;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.85rem;color:var(--gray);font-family:'IBM Plex Mono',monospace}
+.counter strong{color:var(--gold)}
+/* MOBILE */
+@media(max-width:768px){
+.panel-right{display:none}
+.layout{flex-direction:column}
+.panel-left{height:100%}
+.tab{font-size:.6rem;padding:5px 8px}
+.filter-btn{font-size:.55rem;padding:3px 6px}
+}
+/* PULSE */
+@keyframes pulse{0%,100%{box-shadow:0 0 4px var(--glow)}50%{box-shadow:0 0 12px var(--glow)}}
+.tl-dot{animation:pulse 2s infinite}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:rgba(196,30,58,0.3);border-radius:50%;animation:floatUp var(--dur) linear infinite;}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(196,30,58,0.3),transparent);animation:scanDown 4s linear infinite;pointer-events:none;z-index:1000;}
+@keyframes scanDown{0%{top:0;}100%{top:100%;}}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body><div class="particles" id="particles"></div><div class="scan-line"></div>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Harb-i Strateji</a>
+<!-- NAV -->
+<nav class="nav">
+<a href="oza-hub.html">← OZA</a>
+<span class="nav-title">TÜRKLERİN İLKLERİ</span>
+<div class="nav-links">
+<a href="infografik.html">İnfografik</a>
+<a href="kulliyat-sozluk.html">Külliyat</a>
+</div>
+</nav>
+
+<div class="layout">
+<!-- LEFT PANEL -->
+<div class="panel-left">
+<!-- TAB BAR -->
+<div class="tab-bar">
+<div class="tab active" data-tab="turk">TÜRK TARİHİ (65)</div>
+<div class="tab" data-tab="osmanli">OSMANLI (81)</div>
+<div class="tab" data-tab="inkilap">İNKILAP (60)</div>
+<div class="tab" data-tab="all">TÜMÜ</div>
+</div>
+<!-- SEARCH -->
+<div class="search-box">
+<input type="text" id="search" placeholder="Ara... (ör: ilk alfabe, ilk matbaa, Fatih)">
+</div>
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filter-bar"></div>
+<!-- TIMELINE -->
+<div class="timeline-area" id="timeline-area">
+<div class="timeline" id="timeline"></div>
+</div>
+</div>
+<!-- RIGHT PANEL -->
+<div class="panel-right">
+<div class="panel-header">
+<h2>DETAY PANELİ</h2>
+<p>Bir "ilk" seçerek detayları görün</p>
+</div>
+<div class="detail-box" id="detail-box">
+<div class="empty">
+<div class="icon">📜</div>
+Soldaki timeline'dan bir madde seçin
+</div>
+</div>
+<div class="stats-bar" id="stats-bar">
+<div class="stats-row">
+<div class="stat-item"><div class="val" id="stat-total">0</div><div class="lbl">TOPLAM</div></div>
+<div class="stat-item"><div class="val" id="stat-turk">0</div><div class="lbl">TÜRK</div></div>
+<div class="stat-item"><div class="val" id="stat-osmanli">0</div><div class="lbl">OSMANLI</div></div>
+<div class="stat-item"><div class="val" id="stat-inkilap">0</div><div class="lbl">İNKILAP</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Counter -->
+<div class="counter">Gösterilen: <strong id="shown-count">0</strong></div>
+
+<!-- Audio Toggle -->
+<button class="audio-toggle" id="audio-toggle" title="Ses Aç/Kapat">🔇</button>
+
+<script>
+// ==================== DATA ====================
+const DATA = {
+turk: [
+{n:1,q:"Tarihte Kurulan İlk Türk Devleti",a:"Asya Hun Devleti",cat:"Devlet",era:"MÖ 220",desc:"Teoman tarafından kurulan Asya Hun Devleti, Orta Asya bozkırlarında Türklerin bilinen ilk siyasi teşkilatlanmasıdır. Çin'e karşı güçlü bir askeri yapı oluşturmuşlardır.",fun:"Çin Seddi, Hun akınlarını durdurmak için inşa edilmiştir."},
+{n:2,q:"Türk Adı İle Kurulan İlk Milli Türk Devleti",a:"I. Göktürk Devleti",cat:"Devlet",era:"552",desc:"Bumin Kağan liderliğinde 552'de kurulan I. Göktürk Devleti, tarihte 'Türk' adını resmi olarak kullanan ilk devlettir. Orta Asya'dan Hazar'a uzanan geniş bir coğrafyaya hükmetmiştir.",fun:"Göktürkler, İpek Yolu ticaretini kontrol eden ilk Türk devletidir."},
+{n:3,q:"Yerleşik Yaşama Geçen İlk Türk Devleti",a:"Uygurlar",cat:"Kültür",era:"744",desc:"Uygurlar göçebe yaşamı terk ederek şehirler kurmuş, tarım ve ticaretle geçimlerini sağlamışlardır. Bu geçiş Türk kültür tarihinde bir dönüm noktasıdır.",fun:"Uygurlar 18 harfli kendi alfabelerini geliştirmiştir."},
+{n:4,q:"Yazıyı İlk Kullanan Türkler",a:"II. Göktürk (Kutluklar)",cat:"Kültür",era:"682",desc:"II. Göktürk Devleti döneminde Orhun Yazıtları dikilmiş, Türkçe ilk kez yazılı olarak kayıt altına alınmıştır. Bu yazıtlar Türk edebiyatının başlangıcı kabul edilir."},
+{n:5,q:"Avrupa'da Kurulan İlk Türk Devleti",a:"Avrupa Hun Devleti",cat:"Devlet",era:"375",desc:"Balamir komutasında batıya göç eden Hunlar, Avrupa'da ilk Türk devletini kurmuştur. Attila döneminde Roma İmparatorluğu'nu titreten bir güç haline gelmiştir.",fun:"Kavimler Göçü'nü başlatarak Roma'nın yıkılışını hızlandırmışlardır."},
+{n:6,q:"İstanbul'u İlk Kuşatan Türkler",a:"Avarlar",cat:"Askerî",era:"619",desc:"Avarlar, Sasanilerle ittifak kurarak Bizans'ın başkenti Konstantinopolis'i kuşatmışlardır. Deniz gücü yetersizliği nedeniyle başarısız olmuşlardır."},
+{n:7,q:"Alfabeyi İlk Kullanan Türkler",a:"Türgişler",cat:"Kültür",era:"717",desc:"Türgişler, Göktürk alfabesini kullanarak sikke basan ilk Türk topluluğudur. Orta Asya'da Arap ilerleyişine karşı direnmişlerdir."},
+{n:8,q:"Parayı İlk Kullanan Türkler",a:"Sibirler",cat:"Ekonomi",era:"",desc:"Sibirler (Sabirler), ticari ilişkilerinde madeni para kullanan ilk Türk topluluğu olarak bilinir. Kafkasya bölgesinde etkin bir güç olmuşlardır."},
+{n:9,q:"İlk Türk Parasını Basan Türkler",a:"Türgişler",cat:"Ekonomi",era:"717",desc:"Türgişler kendi adlarına sikke bastırarak ekonomik bağımsızlıklarını ilan etmişlerdir. Bu sikkeler Göktürk harfleriyle yazılmıştır."},
+{n:10,q:"Bizans'la Siyasal İlişki Kuran İlk Türkler",a:"Göktürkler",cat:"Diplomasi",era:"568",desc:"Göktürkler, İpek Yolu ticareti için Sasanilere karşı Bizans ile ittifak kurmuştur. İstemi Yabgu'nun elçileri Konstantinopolis'e gitmiştir."},
+{n:11,q:"Türk Tarihinin İlk Yazılı Antlaşması",a:"Asya Hun-Çin Antlaşması",cat:"Diplomasi",era:"MÖ 318",desc:"Hunlar ile Çin arasında yapılan bu antlaşma, Türk tarihinin bilinen ilk diplomatik belgesidir. Sınır güvenliği ve ticaret konularını düzenlemiştir."},
+{n:12,q:"İlk Türk Alfabesi",a:"Göktürk – Orhun Alfabesi",cat:"Kültür",era:"6. yy",desc:"38 harften oluşan Göktürk alfabesi, sağdan sola yazılır. Orhun Yazıtları bu alfabeyle yazılmıştır. Türklerin kendi geliştirdiği özgün bir yazı sistemidir.",fun:"Alfabe, Danimarkalı Vilhelm Thomsen tarafından 1893'te çözülmüştür."},
+{n:13,q:"Töreyi Yazılı Hale Getiren İlk Türkler",a:"Uygurlar",cat:"Hukuk",era:"744",desc:"Uygurlar yerleşik hayata geçtikten sonra sözlü hukuk geleneği olan töreyi yazılı kurallara dönüştürmüşlerdir. Bu, Türk hukuk tarihinde önemli bir adımdır."},
+{n:14,q:"Türk Tarihi ile İlk Yazılı Belgeler",a:"Orhun Kitabeleri",cat:"Kültür",era:"732",desc:"Bilge Kağan, Kül Tigin ve Tonyukuk adına dikilen bu kitabeler, Türk tarihinin ilk yazılı kaynağıdır. Türk milletine seslenen bir siyasi vasiyetname niteliğindedir.",fun:"Kitabelerde 'Türk milleti yok olmasın' ifadesi yer alır."},
+{n:15,q:"Tarihte İlk Onlu Sisteme Dayalı Ordu",a:"Asya Hunları - Metehan",cat:"Askerî",era:"MÖ 209",desc:"Metehan orduyu 10, 100, 1000 ve 10.000 kişilik birliklere ayırarak tarihte ilk düzenli ordu sistemini kurmuştur. Bu sistem Cengiz Han'a kadar kullanılmıştır.",fun:"Islık çalan ok (çavuş oku) Metehan'ın icadıdır."},
+{n:16,q:"İlk Türk Hükümdarı",a:"Teoman (Asya Hun Devleti)",cat:"Devlet",era:"MÖ 220",desc:"Teoman, Asya Hun Devleti'nin bilinen ilk hükümdarıdır. Oğlu Metehan tarafından tahttan indirilmiştir."},
+{n:17,q:"Türk Adı İlk Defa Geçen Kaynak",a:"Çin Kaynakları",cat:"Kültür",era:"MÖ 318",desc:"'Türk' adı ilk kez Çin yıllıklarında geçmektedir. Göktürk Devleti'nden çok önce Türk boylarına atıfta bulunulmuştur."},
+{n:18,q:"Türklerin İlk Başkenti",a:"Ötüken",cat:"Devlet",era:"",desc:"Ötüken, Moğolistan'daki kutsal orman bölgesidir. Hunlardan Göktürklere ve Uygurlara kadar pek çok Türk devletinin başkenti olmuştur.",fun:"Orhun Kitabeleri'nde 'Ötüken'i bırakma' uyarısı yapılır."},
+{n:19,q:"İlk Hayvan Sanat Üslubu",a:"İskitler",cat:"Kültür",era:"MÖ 7. yy",desc:"İskitler altın ve bronz işçiliğinde hayvan figürlerini kullanan ilk Türk topluluğudur. Geyik, kartal ve panter motifleri karakteristiktir."},
+{n:20,q:"İlk Ceket, Pantolon, Kemer ve Kemer Tokası",a:"İskitler",cat:"Kültür",era:"MÖ 7. yy",desc:"At üzerinde rahat hareket edebilmek için pantolon, ceket ve kemer kullanan ilk topluluk İskitlerdir. Bu giyim tarzı tüm dünyaya yayılmıştır.",fun:"Avrupa'da pantolon ancak yüzyıllar sonra yaygınlaşmıştır."},
+{n:21,q:"Yabancı Dinleri Benimseyen İlk Türkler",a:"Uygurlar (Maniheizm)",cat:"Din",era:"762",desc:"Böğü Kağan 762'de Maniheizm'i resmi din ilan etmiştir. Bu karar Uygurların savaşçı karakterini yumuşatmış, sanat ve edebiyata yönelmelerine yol açmıştır."},
+{n:22,q:"Anadolu'ya İlk Gelen Türkler",a:"Hunlar",cat:"Askerî",era:"395",desc:"395 yılında Hunlar Kafkaslar üzerinden Anadolu'ya akın düzenlemiştir. Bu, Türklerin Anadolu ile ilk temasıdır ancak kalıcı yerleşim olmamıştır."},
+{n:23,q:"İlk Atlı Göçebe Türk Uygarlığı",a:"İskitler",cat:"Kültür",era:"MÖ 7. yy",desc:"İskitler, at üzerinde yaşayan ve savaşan ilk organize Türk topluluğudur. Bozkır kültürünün temellerini atmışlardır."},
+{n:24,q:"Kâğıt ve Matbaayı İlk Kullanan Türkler",a:"Uygurlar",cat:"Teknoloji",era:"8. yy",desc:"Uygurlar tahta kalıplarla baskı (hareketli matbaa) tekniğini kullanmışlardır. Kâğıt üretimini de Çin'den öğrenerek yaygınlaştırmışlardır.",fun:"Gutenberg'den yaklaşık 600 yıl önce matbaa kullanmışlardır."},
+{n:25,q:"Tarihte Atı İlk Evcilleştiren Millet",a:"Türkler",cat:"Kültür",era:"",desc:"Arkeolojik bulgulara göre atın evcilleştirilmesi Orta Asya bozkırlarında gerçekleşmiştir. At, Türk kültürünün ve savaş gücünün temel unsuru olmuştur."},
+{n:26,q:"İlk Yazılı Türk Milli Tarih Kaynağı",a:"Orhun Kitabeleri",cat:"Kültür",era:"732",desc:"Orhun Kitabeleri sadece tarihi değil, siyasi öğütleri ve milli bilinç mesajlarını da içerir. Türk edebiyatının ve tarih yazıcılığının başlangıcıdır."},
+{n:27,q:"İlk Yoğurt, Pastırma ve Konserve Et",a:"Türkler",cat:"Kültür",era:"",desc:"Göçebe yaşamda yiyecekleri uzun süre saklamak için Türkler yoğurt, pastırma ve kurutulmuş et tekniklerini geliştirmiştir.",fun:"'Yoğurt' kelimesi tüm dünya dillerine Türkçeden geçmiştir."},
+{n:28,q:"En Uzun Destan",a:"Manas Destanı (Kırgızlar)",cat:"Edebiyat",era:"",desc:"500.000'den fazla mısradan oluşan Manas Destanı, dünyanın en uzun destanıdır. Kırgız Türklerinin milli kimliğinin temel taşıdır.",fun:"İlyada ve Odysseia'nın toplamından 20 kat uzundur."},
+{n:29,q:"Musevi Olan Tek Türkler",a:"Hazarlar",cat:"Din",era:"740",desc:"Hazar Kağanlığı'nın üst tabakası 740 civarında Museviliği benimsemiştir. Halk arasında İslam, Hristiyanlık ve Şamanizm de yaşanmıştır."},
+{n:30,q:"İslamiyet'i Kabul Eden İlk Türk Boyu",a:"Karluklar",cat:"Din",era:"751",desc:"Talas Savaşı'nda (751) Abbasiler safında yer alan Karluklar, İslam'ı benimseyen ilk Türk boyudur. Bu savaş Türk-İslam tarihinin başlangıcıdır.",fun:"Talas Savaşı aynı zamanda kâğıdın batıya yayılmasını sağlamıştır."},
+{n:31,q:"İlk Müslüman Türk Devleti",a:"Karahanlılar",cat:"Devlet",era:"840",desc:"Satuk Buğra Han'ın İslam'ı kabul etmesiyle Karahanlılar ilk Müslüman Türk devleti olmuştur. Türkçeyi resmi dil olarak kullanmaya devam etmişlerdir."},
+{n:32,q:"İlk Müslüman Türk İmparatorluğu",a:"Gazneliler",cat:"Devlet",era:"963",desc:"Gazneliler, Afganistan merkezli kurulmuş ve Hindistan'a kadar genişlemiş büyük bir Türk-İslam imparatorluğudur. Sultan Mahmud dönemi en parlak çağıdır."},
+{n:33,q:"Mısır'da Kurulan İlk Türk İslam Devleti",a:"Tolunoğulları",cat:"Devlet",era:"868",desc:"Ahmet bin Tolun, Abbasi valisi iken bağımsızlığını ilan ederek Mısır'da ilk Türk devletini kurmuştur. Kahire'de büyük bir cami yaptırmıştır."},
+{n:34,q:"Hicaz Bölgesine Hâkim Olan İlk Türk Devleti",a:"İhşitler",cat:"Devlet",era:"935",desc:"İhşitler (Akşitler), Mısır ve Suriye'nin yanı sıra Mekke ve Medine'yi de kontrol eden ilk Türk devletidir."},
+{n:35,q:"Hindistan'a İslamiyet'i İlk Götüren Türkler",a:"Gazneliler",cat:"Din",era:"1001",desc:"Sultan Mahmud 17 sefer düzenleyerek Kuzey Hindistan'a İslam'ı taşımıştır. Delhi Sultanlığı'nın temellerini atmıştır."},
+{n:36,q:"Türkçeyi Resmi Dil İlan Eden İlk Türk Devleti",a:"Karahanlılar",cat:"Kültür",era:"840",desc:"Karahanlılar, Arapça ve Farsça yerine Türkçeyi devlet dili olarak kullanmışlardır. Bu dönemde Divan-ı Lügati't Türk ve Kutadgu Bilig yazılmıştır."},
+{n:37,q:"Türkçeyi Resmi Dil İlan Eden İlk Türk Beyliği",a:"Karamanoğulları",cat:"Kültür",era:"1277",desc:"Mehmet Bey 1277'de 'Bundan sonra divanda, dergâhta, bargâhta Türkçeden başka dil kullanılmayacaktır' fermanını yayınlamıştır.",fun:"Bu ferman, Türk dil bilincinin Anadolu'daki ilk resmi ifadesidir."},
+{n:38,q:"Türklerin Anadolu'daki İlk Başkenti",a:"İznik",cat:"Devlet",era:"1075",desc:"Anadolu Selçuklu Devleti'nin ilk başkenti İznik (Nikaia) olmuştur. I. Haçlı Seferi sonrası başkent Konya'ya taşınmıştır."},
+{n:39,q:"İlk Türk Denizcisi ve Amirali",a:"Çaka Bey",cat:"Askerî",era:"1081",desc:"Çaka Bey, İzmir'de bağımsız bir beylik kurarak Ege'de donanma oluşturmuş ve adalara seferler düzenlemiştir. Türk denizcilik tarihinin öncüsüdür."},
+{n:40,q:"Selçukluların Bizans'la Yaptığı İlk Savaş",a:"Pasinler Savaşı",cat:"Askerî",era:"1048",desc:"1048'de Erzurum yakınlarında yapılan Pasinler Savaşı, Selçukluların Bizans'a karşı kazandığı ilk büyük zaferdir. Malazgirt'in habercisidir."},
+{n:41,q:"Türk Âleminin İlk Sözlüğü",a:"Divan-ı Lügati't Türk (Kaşgarlı Mahmud)",cat:"Edebiyat",era:"1072",desc:"Kaşgarlı Mahmud'un 1072-1074 yılları arasında yazdığı bu eser, Türk lehçelerinin karşılaştırmalı sözlüğüdür. Araplara Türkçe öğretmek amacıyla yazılmıştır.",fun:"Eserde Türk dünyasının ilk haritası da yer alır."},
+{n:42,q:"İlk Türkçe Siyasetname Eseri",a:"Kutadgu Bilig (Yusuf Has Hacib)",cat:"Edebiyat",era:"1069",desc:"'Mutluluk Veren Bilgi' anlamına gelen Kutadgu Bilig, devlet yönetimi ve ahlak üzerine yazılmış ilk Türkçe siyasetnamedir. Aruzla yazılmıştır."},
+{n:43,q:"İstanbul'u İlk Kuşatan Müslüman Türk Devleti",a:"Çaka Beyliği",cat:"Askerî",era:"1090",desc:"Çaka Bey, İstanbul'u denizden kuşatma planı yapmış ancak Bizans'ın diplomatik manevraları sonucu başarılı olamamıştır."},
+{n:44,q:"İlk Türk-İslam Medresesi",a:"Gazneliler - Beyhakiye Medresesi",cat:"Eğitim",era:"998",desc:"Gazneli Mahmut döneminde kurulan Beyhakiye Medresesi, Türk-İslam dünyasının ilk yükseköğretim kurumudur. Nizamiye medreselerinden öncedir."},
+{n:45,q:"Anadolu'da İlk Cami",a:"Diyarbakır Ulu Cami",cat:"Din",era:"639",desc:"Hz. Ömer döneminde 639'da inşa edilen Diyarbakır Ulu Camii, Anadolu'daki en eski cami yapısıdır. Halen ibadete açıktır."},
+{n:46,q:"Anadolu'da İlk Dini-Siyasi Ayaklanma",a:"Babai İsyanı",cat:"Siyasi",era:"1240",desc:"Baba İlyas ve Baba İshak önderliğindeki bu isyan, Anadolu Selçuklu Devleti'ni derinden sarsmış ve Moğol istilasına zemin hazırlamıştır."},
+{n:47,q:"Anadolu'da İlk Destan",a:"Danişmentname",cat:"Edebiyat",era:"12. yy",desc:"Danişmentlilerin Anadolu'daki fetihlerini anlatan bu destan, Battal Gazi geleneğinin devamı niteliğindedir."},
+{n:48,q:"Anadolu Selçukluları'nda İlk Tersane",a:"Sinop (I. İzzettin Keykavus)",cat:"Askerî",era:"1214",desc:"1214'te Sinop'un fethiyle birlikte burada tersane kurulmuş, Selçuklular Karadeniz'de deniz gücü elde etmiştir."},
+{n:49,q:"Anadolu Selçuklularında İlk Gümüş Para",a:"II. Kılıç Arslan",cat:"Ekonomi",era:"1156",desc:"II. Kılıç Arslan döneminde basılan gümüş sikkeler, Anadolu Selçuklu ekonomisinin güçlendiğinin göstergesidir."},
+{n:50,q:"Anadolu Selçuklularında İlk Bakır Para",a:"I. Mesut",cat:"Ekonomi",era:"1116",desc:"I. Mesut döneminde basılan bakır paralar, günlük ticaretin kolaylaştırılması amacıyla tedavüle çıkarılmıştır."},
+{n:51,q:"Anadolu Selçuklularında İlk Kapitülasyon",a:"Venedik - I. Alaettin Keykubat",cat:"Diplomasi",era:"1220",desc:"Ticaretin geliştirilmesi için Venedik'e verilen ticari ayrıcalıklar, Anadolu'daki ilk kapitülasyon uygulamasıdır."},
+{n:52,q:"Haçlılara İlk Karşı Koyan İslam ve Türk Devleti",a:"Anadolu Selçukluları",cat:"Askerî",era:"1097",desc:"I. Kılıç Arslan, I. Haçlı Seferi'nde Haçlı ordularıyla ilk karşılaşan ve direnen Müslüman hükümdardır."},
+{n:53,q:"Anadolu'da İlk Esnaf Teşkilatı",a:"Ahilik (Anadolu Selçuklu)",cat:"Ekonomi",era:"13. yy",desc:"Ahi Evran tarafından kurulan Ahilik teşkilatı, esnaf ve zanaatkârları örgütleyen, ahlaki kurallar koyan bir meslek birliğidir.",fun:"Ahilik, Osmanlı lonca sisteminin temelini oluşturmuştur."},
+{n:54,q:"Osmanlı'ya İlk Katılan Beylik",a:"Karesioğulları",cat:"Devlet",era:"1345",desc:"Karesioğulları'nın katılımıyla Osmanlılar ilk kez deniz gücüne kavuşmuştur. Hacı İlbey ve Evrenos Bey gibi komutanlar Osmanlı'ya geçmiştir."},
+{n:55,q:"İlk Denizci Türk Beyliği",a:"Menteşeoğulları",cat:"Askerî",era:"1261",desc:"Ege kıyılarında kurulan Menteşeoğulları, donanma kurarak deniz ticareti ve korsanlık faaliyetleri yürütmüştür."},
+{n:56,q:"Sultan Unvanını İlk Kullanan Türk Hükümdarı",a:"Gazneli Mahmut",cat:"Devlet",era:"998",desc:"Gazneli Mahmut, Abbasi halifesinden 'Sultan' unvanını alan ilk Türk hükümdarıdır. Bu unvan dini ve siyasi meşruiyetin birleşimini simgeler."},
+{n:57,q:"Türk-İslam Edebiyatının İlk Örneği",a:"Kutadgu Bilig",cat:"Edebiyat",era:"1069",desc:"Yusuf Has Hacib'in kâleme aldığı Kutadgu Bilig, aruz ölçüsüyle yazılmış ilk Türk-İslam eseridir. Alegorik dört karakter üzerinden devlet felsefesi anlatılır."},
+{n:58,q:"Edebiyatımızın Anı Türündeki İlk Eseri",a:"Babürşah'ın Babürnamesi",cat:"Edebiyat",era:"1530",desc:"Babür İmparatorluğu'nun kurucusu Babürşah'ın kendi hayatını anlattığı bu eser, Türk edebiyatının ilk otobiyografik eseridir. Çağatay Türkçesiyle yazılmıştır."}
+,
+{n:59,q:"Bilinen İlk Türk Hükümdarı",a:"Tomris Hatun (İskitler)",cat:"Devlet",era:"MÖ 530",desc:"İskit kraliçesi Tomris, Pers İmparatoru Büyük Kiros'u mağlup ederek öldürmüştür. Herodot tarafından tarihte bilinen ilk Türk hükümdarı olarak kaydedilmiştir."},
+{n:60,q:"İlk Türk Devlet ve Askeri Teşkilatlanması",a:"Mete Han — Onluk Sistem",cat:"Askerî",era:"MÖ 209",desc:"Mete Han, orduyu onluk sisteme göre düzenlemiş ve ilk düzenli Türk ordusunu kurmuştur. Bu sistem daha sonra Cengiz Han dahil pek çok komutan tarafından benimsenmiştir."},
+{n:61,q:"İlk Bağımsızlık Savaşı Veren Türkler",a:"Göktürkler (İlteriş Kağan)",cat:"Askerî",era:"682",desc:"50 yıl Çin egemenliğinde kalan Göktürkler, İlteriş (Kutluk) Kağan önderliğinde bağımsızlık savaşı vererek II. Göktürk Devleti'ni kurmuşlardır."},
+{n:62,q:"En Uzun Türk Destanı",a:"Manas Destanı (Kırgızlar)",cat:"Kültür",era:"9. yy",desc:"500.000 mısradan oluşan Manas Destanı, dünyanın en uzun destanıdır. Kırgız Türklerinin milli kimliğinin temel taşıdır."},
+{n:63,q:"Moğol Hakimiyetini Kabul Eden İlk Türk Kavmi",a:"Kırgızlar",cat:"Devlet",era:"1207",desc:"Kırgızlar, Cengiz Han'a ilk boyun eğen Türk kavmi olmuştur. Bu sayede görece özerkliklerini korumuşlardır."},
+{n:64,q:"İslamiyeti Kabul Eden İlk Türk Topluluğu",a:"Karluklar",cat:"Din",era:"751",desc:"Talas Savaşı'nda Abbasilerin yanında yer alan Karluklar, İslamiyeti kabul eden ilk Türk topluluğu olmuştur."},
+{n:65,q:"Kendi Adına Para Bastıran İlk Türk Hükümdarı",a:"Bağa Tarkan (Türgişler)",cat:"Ekonomi",era:"720",desc:"Türgiş hükümdarı Bağa Tarkan, kendi adına sikke bastıran ilk Türk hükümdarıdır. Bu, devlet otoritesinin ekonomik göstergesidir."}],
+osmanli: [
+{n:1,q:"Osmanlının İlk Başkenti",a:"Söğüt",cat:"Devlet",era:"1299",desc:"Osman Bey'in aşiret merkezinden devlete geçiş yaptığı Söğüt, Osmanlı'nın ilk idari merkezidir. Sonra sırasıyla Bursa, Edirne ve İstanbul başkent olmuştur."},
+{n:2,q:"Doğuda En Geniş Sınırlara Ulaştığımız Antlaşma",a:"1590 Ferhat Paşa Antlaşması (III. Murat)",cat:"Askerî",era:"1590",desc:"Safevi İran'a karşı kazanılan zaferler sonucu Azerbaycan, Gürcistan ve Dağıstan Osmanlı'ya bırakılmıştır."},
+{n:3,q:"Batıda En Geniş Sınırlara Ulaştığımız Antlaşma",a:"1672 Bucaş (IV. Mehmet)",cat:"Askerî",era:"1672",desc:"Lehistan'a karşı kazanılan zafer sonucu Podolya bölgesi alınmış, Osmanlı batıda en geniş sınırlarına ulaşmıştır."},
+{n:4,q:"Yeniçeri Ocağını Kaldırmayı Düşünen İlk Padişah",a:"Genç Osman (1621)",cat:"Askerî",era:"1621",desc:"II. Osman, Yeniçerilerin disiplinsizliğinden rahatsız olarak ocağı kaldırmayı planlamış ancak bu girişimi hayatına mal olmuştur.",fun:"Genç Osman, Yedikule'de boğdurularak öldürülmüştür."},
+{n:5,q:"Osmanlı'nın İlk Toprak Kaybettiği Antlaşma",a:"1611 Nasuh Paşa Antlaşması (İran)",cat:"Diplomasi",era:"1611",desc:"Ferhat Paşa Antlaşması'yla alınan topraklar İran'a geri verilmiştir. Osmanlı'nın doğuda ilk geri adımıdır."},
+{n:6,q:"Ordusunun Başında Sefere Katılmayan İlk Padişah",a:"II. Selim",cat:"Askerî",era:"1566",desc:"Kanuni'nin oğlu II. Selim, babasının aksine seferlere katılmamış, devlet işlerini sadrazamlara bırakmıştır. Sokullu döneminin başlangıcıdır."},
+{n:7,q:"Osmanlı'nın Aldığı İlk Büyük Yenilgi",a:"II. Viyana Kuşatması (1683)",cat:"Askerî",era:"1683",desc:"Merzifonlu Kara Mustafa Paşa'nın başarısız Viyana kuşatması, Osmanlı'nın Avrupa'daki geri çekilişinin başlangıcıdır.",fun:"Kuşatma sırasında Viyanalılar ilk kez kahve ile tanışmıştır."},
+{n:8,q:"Çok Miktarda Toprak Kaybettiğimiz İlk Antlaşma",a:"Karlofça Antlaşması (1699)",cat:"Diplomasi",era:"1699",desc:"Macaristan, Erdel ve Mora yarımadası kaybedilmiştir. Osmanlı ilk kez bir kongrede barış istemek zorunda kalmıştır."},
+{n:9,q:"Osmanlı Başkentinde Elçi Bulunduran İlk Avrupa Devleti",a:"Venedik",cat:"Diplomasi",era:"15. yy",desc:"Venedik, Akdeniz ticaretini korumak için İstanbul'da daimi elçi bulunduran ilk Avrupa devletidir."},
+{n:10,q:"Osmanlı Bütçesinin İlk Defa Açık Verdiği Dönem",a:"Kanuni Sultan Süleyman Dönemi",cat:"Ekonomi",era:"1520",desc:"Uzun süren seferler ve artan saray masrafları nedeniyle bütçe ilk kez açık vermiştir. Paradoks olarak en parlak dönemde başlamıştır."},
+{n:11,q:"Mimar Sinan'ın İlk Eseri",a:"Haseki Külliyesi (İstanbul)",cat:"Kültür",era:"1539",desc:"Mimar Sinan'ın mimarbaşı olduktan sonra yaptığı ilk eser, Kanuni'nin eşi Hürrem Sultan için inşa edilmiştir."},
+{n:12,q:"Osmanlı ile Rusya Arasındaki İlk Antlaşma",a:"1700 İstanbul Antlaşması",cat:"Diplomasi",era:"1700",desc:"Karlofça'nın devamı olarak Rusya ile imzalanan bu antlaşmayla Azak Kalesi Rusya'ya bırakılmıştır."},
+{n:13,q:"İlk Osmanlı Bankası",a:"1847 Bank-ı Dersaadet",cat:"Ekonomi",era:"1847",desc:"Galata bankerleri tarafından kurulan Bank-ı Dersaadet, Osmanlı'nın ilk modern bankacılık kurumudur. Kısa ömürlü olmuştur."},
+{n:14,q:"Avrupa'ya İlk Öğrenci Gönderilmesi",a:"II. Mahmut Dönemi",cat:"Eğitim",era:"1830",desc:"Batılılaşma reformları kapsamında Paris, Londra ve Viyana'ya öğrenciler gönderilmiştir. Modern eğitim anlayışının başlangıcıdır."},
+{n:15,q:"İlk Defa Müslüman-Türk Bölgenin Elden Çıkışı",a:"Kırım (Küçük Kaynarca)",cat:"Siyasi",era:"1774",desc:"1774 Küçük Kaynarca Antlaşması ile Kırım bağımsız bırakılmış, kısa süre sonra Rusya tarafından ilhak edilmiştir."},
+{n:16,q:"İlk Çiçek Aşısı, İlk Matbaa, İlk İtfaiye",a:"Lale Devri",cat:"Teknoloji",era:"1727",desc:"III. Ahmed döneminde batıdan pek çok yenilik alınmıştır. İbrahim Müteferrika matbaayı kurmuş, çiçek aşısı uygulanmış, itfaiye teşkilatı oluşturulmuştur.",fun:"Lady Montagu çiçek aşısını Osmanlı'dan Avrupa'ya taşımıştır."},
+{n:17,q:"Batı Tarzı İlk Askerî Islahat",a:"I. Mahmut (1730)",cat:"Askerî",era:"1730",desc:"Comte de Bonneval (Humbaracı Ahmed Paşa) öncülüğünde humbaracı ve topcu ocakları modernize edilmiştir."},
+{n:18,q:"Halktan İlk İç Borçlanma (Esham)",a:"III. Mustafa (1757)",cat:"Ekonomi",era:"1757",desc:"Devlet gelirlerinin bir kısmı halka satılarak iç borçlanma yapılmıştır. Modern tahvil sisteminin öncüsüdür."},
+{n:19,q:"İlk Geçici Elçilik",a:"Fransa'ya (28 Mehmet Çelebi, Lale Devri)",cat:"Diplomasi",era:"1720",desc:"Yirmisekiz Mehmet Çelebi Paris'e gönderilmiş, dönüşünde yazdığı sefaretname batılılaşma hareketlerini etkilemiştir.",fun:"Sefaretnamede Versailles Sarayı ve Paris sokakları detaylı anlatılır."},
+{n:20,q:"İlk Sürekli Elçilik Uygulaması",a:"III. Selim Dönemi (Paris)",cat:"Diplomasi",era:"1793",desc:"III. Selim, Avrupa başkentlerinde daimi elçilikler açarak modern diplomasiye geçişi başlatmıştır."},
+{n:21,q:"Osmanlıdan Ayrılmak İçin İlk İsyan Eden Millet",a:"Sırplar (1804)",cat:"Siyasi",era:"1804",desc:"Kara Yorgi önderliğindeki Sırp isyanı, Osmanlı'da milliyetçilik hareketlerinin başlangıcıdır."},
+{n:22,q:"Osmanlıdan İlk Ayrılan Millet",a:"Yunanlılar (1829 Edirne Ant.)",cat:"Siyasi",era:"1829",desc:"Yunan bağımsızlık savaşı sonucu 1829 Edirne Antlaşması ile Yunanistan bağımsız olmuştur. Osmanlı'dan kopan ilk millettir."},
+{n:23,q:"Osmanlı İlk Defa Avrupa Devleti Sayıldı",a:"1856 Paris Antlaşması",cat:"Diplomasi",era:"1856",desc:"Kırım Savaşı sonrası imzalanan antlaşmayla Osmanlı Avrupa devletler hukukundan yararlanma hakkı kazanmıştır."},
+{n:24,q:"Osmanlı'da İlk Dış Borç",a:"1854 İngiltere'den (Abdülmecid)",cat:"Ekonomi",era:"1854",desc:"Kırım Savaşı masraflarını karşılamak için İngiltere'den borç alınmıştır. Bu, Osmanlı'yı iflasın eşiğine getiren sürecin başlangıcıdır."},
+{n:25,q:"Padişahın Yetkilerini Sınırlayan İlk Gelişme",a:"1808 Sened-i İttifak",cat:"Hukuk",era:"1808",desc:"Ayanlarla yapılan bu anlaşma, padişahın mutlak otoritesini sınırlayan ilk belgedir. İngiliz Magna Carta'ya benzetilir."},
+{n:26,q:"İlk Yurt Dışı Seyahatine Çıkan Padişah",a:"Abdülaziz (1867)",cat:"Siyasi",era:"1867",desc:"Abdülaziz Paris, Londra ve Viyana'yı ziyaret eden ilk Osmanlı padişahıdır. Avrupa'daki gelişmeleri yerinde görmüştür."},
+{n:27,q:"İstanbul'da Açılan İlk Tünel",a:"1873 (Dünya'nın 3. Tüneli)",cat:"Teknoloji",era:"1873",desc:"Karaköy-Beyoğlu arasındaki tünel, Londra ve New York'tan sonra dünyanın 3. yeraltı demiryoludur. Halen çalışmaktadır.",fun:"Tünel sadece 573 metre uzunluğundadır ama 60 metre yükseklik farkı aşar."},
+{n:28,q:"Osmanlı'da İlk Vapur",a:"1827 Buğu Gemisi (II. Mahmut)",cat:"Teknoloji",era:"1827",desc:"II. Mahmut döneminde satın alınan ilk buharlı gemi, İstanbul Boğazı'nda sefere başlamıştır."},
+{n:29,q:"İlk Kıyafet Kanunu",a:"1829 II. Mahmut (Fes, Pantolon)",cat:"Hukuk",era:"1829",desc:"II. Mahmut sarık ve cepken yerine fes ve pantolon giyilmesini zorunlu kılmıştır. Batılılaşma reformlarının sembolik adımıdır."},
+{n:30,q:"İlk Gazete",a:"Takvim-i Vekayi (1831, II. Mahmut)",cat:"Kültür",era:"1831",desc:"Osmanlı'nın ilk resmi gazetesidir. Türkçe ve Fransızca olarak yayımlanmıştır. Basın tarihimizin başlangıcıdır."},
+{n:31,q:"İlk Telgraf",a:"1854 Abdülmecid",cat:"Teknoloji",era:"1854",desc:"Kırım Savaşı sırasında İstanbul-Kırım hattı kurulmuştur. Haberleşmede devrim niteliğindedir."},
+{n:32,q:"İlk Nüfus Sayımı",a:"II. Mahmut (1831)",cat:"Devlet",era:"1831",desc:"Askere alma ve vergi toplama amacıyla yapılan ilk modern nüfus sayımıdır. Sadece erkekler sayılmıştır."},
+{n:33,q:"İlk Posta Teşkilatı (İstanbul-İzmir)",a:"1823 II. Mahmut",cat:"Teknoloji",era:"1823",desc:"Düzenli posta hizmeti başlatılarak haberleşme devlet kontrolüne alınmıştır."},
+{n:34,q:"Devlet Dairelerine Resmini Astıran İlk Padişah",a:"II. Mahmut",cat:"Siyasi",era:"1830",desc:"II. Mahmut, Batılı hükümdarlar gibi portresini devlet dairelerine astırarak otoritesini görsel olarak pekiştirmiştir."},
+{n:35,q:"İlk Kâğıt Para (Kaime)",a:"1840 Abdülmecid",cat:"Ekonomi",era:"1840",desc:"Bütçe açığını kapatmak için çıkarılan kaime, Osmanlı'nın ilk kâğıt para uygulamasıdır. Enflasyona yol açmıştır."},
+{n:36,q:"İlk Demir Yolu",a:"1866 İzmir-Aydın",cat:"Teknoloji",era:"1866",desc:"İngiliz sermayesiyle inşa edilen İzmir-Aydın hattı, Osmanlı'nın ilk demiryoludur. Tarım ürünlerinin limana taşınması amaçlanmıştır."},
+{n:37,q:"İstanbul'a İlk Otomobilin Gelişi",a:"1895",cat:"Teknoloji",era:"1895",desc:"İstanbul sokaklarında görülen ilk otomobil, Avrupa'dan ithal edilmiştir. Motorlu taşıt çağının başlangıcıdır."},
+{n:38,q:"İlk Türk Kadın Romancısı",a:"Fatma Aliye Hanım",cat:"Edebiyat",era:"1891",desc:"Ahmet Cevdet Paşa'nın kızı Fatma Aliye, 'Muhadarat' adlı romanıyla Türk edebiyatının ilk kadın romancısı olmuştur."},
+{n:39,q:"İlk Mecburi İlköğretim",a:"II. Mahmut",cat:"Eğitim",era:"1824",desc:"II. Mahmut ilköğretimi zorunlu hale getirmiştir. Ancak uygulama tam anlamıyla gerçekleşememiştir."},
+{n:40,q:"Osmanlı'da İlk Rasathane",a:"III. Murat (Takiyyüddin)",cat:"Bilim",era:"1577",desc:"Takiyyüddin'in kurduğu İstanbul rasathanesi, dönemin en modern gözlemevlerinden biriydi. Ne yazık ki kısa süre sonra yıktırılmıştır.",fun:"Rasathane, Tycho Brahe'nin gözlemevinden daha önce kurulmuştur."},
+{n:41,q:"En Uzun Süre Tahtta Kalan Padişah",a:"Kanuni Sultan Süleyman (46 yıl)",cat:"Devlet",era:"1520",desc:"1520-1566 arası hüküm süren Kanuni, Osmanlı'yı altın çağına taşımıştır. Avrupa'da 'Muhteşem Süleyman' olarak bilinir."},
+{n:42,q:"En Kısa Süre Tahtta Kalan Padişah",a:"V. Murat (5 ay)",cat:"Devlet",era:"1876",desc:"V. Murat sadece 93 gün tahtta kalmış, ruhsal sağlık sorunları nedeniyle tahttan indirilmiştir."},
+{n:43,q:"İlk Uçağımız",a:"1912 Mehmet Reşat Cülus Töreni",cat:"Teknoloji",era:"1912",desc:"Osmanlı ordusuna ait ilk uçak 1912'de hizmete girmiştir. Balkan Savaşları'nda keşif amacıyla kullanılmıştır."},
+{n:44,q:"İlk Havaalanımız",a:"1912 Yeşilköy Havaalanı",cat:"Teknoloji",era:"1912",desc:"Yeşilköy'de kurulan askeri havalanı, Türkiye'nin ilk havaalanıdır. Bugün Atatürk Havalimanı olarak bilinir."},
+{n:45,q:"İlk Osmanlı Padişahı",a:"Osman Bey (1299-1326)",cat:"Devlet",era:"1299",desc:"Osman Bey, küçük bir uc beyliğini bağımsız bir devlete dönüştürerek 624 yıllık Osmanlı İmparatorluğu'nun temelini atmıştır."},
+{n:46,q:"İlk Düzenli Ordu (Yaya-Müsellem)",a:"Orhan Bey",cat:"Askerî",era:"1326",desc:"Orhan Bey, gönüllü savaşçılar yerine maaşlı piyade (yaya) ve süvari (müsellem) birlikleri kurarak düzenli orduya geçmiştir."},
+{n:47,q:"İlk Osmanlı Medresesi",a:"İznik (Orhan Bey, 1331)",cat:"Eğitim",era:"1331",desc:"İznik'te kurulan medrese, Osmanlı'nın ilk yükseköğretim kurumudur. Davud-i Kayseri ilk müderris olmuştur."},
+{n:48,q:"Rumeli'ye İlk Geçiş",a:"Orhan Bey (Çimpe Kalesi, 1353)",cat:"Askerî",era:"1353",desc:"Süleyman Paşa komutasında Gelibolu'daki Çimpe Kalesi alınarak Osmanlılar Avrupa'ya ilk adımı atmıştır."},
+{n:49,q:"İlk Yeniçeri Ocağı",a:"I. Murat (1362)",cat:"Askerî",era:"1362",desc:"Devşirme sistemiyle toplanan gençlerden oluşan Yeniçeri Ocağı, Osmanlı'nın en güçlü askeri birliği olmuştur.",fun:"Yeniçeriler 1826'da II. Mahmut tarafından kaldırılmıştır (Vaka-i Hayriye)."},
+{n:50,q:"Savaş Alanında Şehit Düşen İlk Padişah",a:"I. Murat (1389 Kosova)",cat:"Askerî",era:"1389",desc:"I. Kosova Savaşı'nda zafer kazanıldıktan sonra savaş alanını gezerken bir Sırp askeri tarafından şehit edilmiştir."},
+{n:51,q:"İlk Osmanlı-Haçlı Savaşı",a:"Sırpsındığı Savaşı (1364)",cat:"Askerî",era:"1364",desc:"Hacı İlbey komutasındaki akıncılar, gece baskınıyla Haçlı ordusunu Meriç Nehri kıyısında imha etmiştir."},
+{n:52,q:"İstanbul'u İlk Kuşatan Osmanlı Padişahı",a:"Yıldırım Bayezid",cat:"Askerî",era:"1395",desc:"Yıldırım Bayezid İstanbul'u kuşatmış ve Anadolu Hisarı'nı yaptırmıştır. Timur istilası nedeniyle fetih gerçekleşememiştir."},
+{n:53,q:"İlk Osmanlı Kanunları",a:"Fatih Kanunnamesi",cat:"Hukuk",era:"1453",desc:"Fatih Sultan Mehmed, devlet teşkilatını ve ceza hukukunu düzenleyen kanunnameler çıkarmıştır. Kardeş katli de bu kanunla meşrulaştırılmıştır."},
+{n:54,q:"İlk Altın Para (Sultanî)",a:"Fatih Sultan Mehmed",cat:"Ekonomi",era:"1478",desc:"Fatih'in bastırdığı altın sikke (Sultanî), Osmanlı'nın uluslararası ticaretteki gücünü simgeler."},
+{n:55,q:"İlk Osmanlı Halifesi",a:"Yavuz Sultan Selim",cat:"Din",era:"1517",desc:"Mısır'ın fethiyle halifelik Abbasilerden Osmanlı'ya geçmiştir. Bu unvan 1924'e kadar Osmanlı padişahlarında kalmıştır."},
+{n:56,q:"İlk Kapitülasyonlar (Fransa'ya)",a:"Kanuni Sultan Süleyman",cat:"Diplomasi",era:"1536",desc:"Fransa'ya verilen ticari ayrıcalıklar başlangıçta Osmanlı'nın lehine olsa da ilerleyen yüzyıllarda ekonomik bağımlılığa yol açmıştır."},
+{n:57,q:"İlk Toprak Kaybı (Karlofça)",a:"1699",cat:"Siyasi",era:"1699",desc:"Kutsal İttifak Savaşları sonucu imzalanan Karlofça ile Macaristan, Erdel ve Mora kaybedilmiştir. Gerileme döneminin resmi başlangıcıdır."},
+{n:58,q:"İlk Matbaa (İbrahim Müteferrika)",a:"Lale Devri (III. Ahmed)",cat:"Teknoloji",era:"1727",desc:"İbrahim Müteferrika'nın kurduğu matbaada ilk basılan eser 'Vankulu Lügati'dir. Dini kitaplar basılmamıştır.",fun:"Müteferrika Macar asıllı bir Müslümandır."},
+{n:59,q:"İlk Modern Ordu (Nizam-ı Cedid)",a:"III. Selim",cat:"Askerî",era:"1793",desc:"III. Selim, Yeniçerilerin yanına Avrupa tarzında eğitilmiş Nizam-ı Cedid ordusunu kurmuştur. Yeniçeri isyanıyla son bulmuştur."},
+{n:60,q:"İlk Osmanlı Gazetesi",a:"Takvim-i Vekayi (II. Mahmut)",cat:"Kültür",era:"1831",desc:"Resmi gazete olarak yayımlanan Takvim-i Vekayi, halkı devlet politikaları hakkında bilgilendirme amacı taşımıştır."},
+{n:61,q:"İlk Osmanlı Anayasası",a:"Kanun-i Esasi (1876)",cat:"Hukuk",era:"1876",desc:"Mithat Paşa'nın öncülüğünde hazırlanan Kanun-i Esasi, Türk tarihinin ilk anayasasıdır. Temel hak ve özgürlükleri güvence altına almıştır."},
+{n:62,q:"İlk Osmanlı Parlamentosu",a:"I. Meşrutiyet (1876)",cat:"Siyasi",era:"1876",desc:"Mebusan Meclisi ve Ayan Meclisi'nden oluşan ilk Osmanlı parlamentosu, II. Abdülhamid tarafından kısa süre sonra kapatılmıştır."},
+{n:63,q:"İlk Medeni Kanun",a:"Mecelle (Abdülhamid)",cat:"Hukuk",era:"1869",desc:"Ahmet Cevdet Paşa başkanlığında hazırlanan Mecelle, İslam hukukunu sistematize eden ilk medeni kanundur. 1926'ya kadar yürürlükte kalmıştır."},
+{n:64,q:"İlk Siyasi Partiler",a:"İttihat ve Terakki (1908)",cat:"Siyasi",era:"1908",desc:"II. Meşrutiyet'in ilanıyla birlikte İttihat ve Terakki Cemiyeti siyasi parti olarak örgütlenmiştir. 1918'e kadar iktidarı elinde tutmuştur."},
+{n:65,q:"İlk Osmanlı Veziri",a:"Alaaddin Ali Paşa (Orhan Bey)",cat:"Devlet",era:"1326",desc:"Orhan Bey'in kardeşi Alaaddin Paşa, ilk Osmanlı veziri olarak devlet teşkilatının kurulmasında önemli rol oynamıştır."},
+{n:66,q:"İlk Vakıf",a:"Orhan Bey",cat:"Kültür",era:"1326",desc:"Orhan Bey'in kurduğu vakıflar, Osmanlı sosyal yardımlaşma sisteminin temelini oluşturmuştur. Eğitim, sağlık ve ibadet hizmetleri finanse edilmiştir."},
+{n:67,q:"İlk Deniz Savaşı",a:"Çelebi Mehmet - Venedikliler",cat:"Askerî",era:"1416",desc:"Osmanlı donanmasının Venedik ile ilk deniz muharebesi, Gelibolu açıklarında gerçekleşmiştir."},
+{n:68,q:"İlk Sürre Alayı",a:"Çelebi Mehmet",cat:"Din",era:"1413",desc:"Mekke ve Medine'ye gönderilen ilk sürre alayı, Osmanlı'nın İslam dünyasındaki liderlik iddiasının göstergesidir."},
+{n:69,q:"Kendi İsteğiyle Tahttan Çekilen İlk Padişah",a:"II. Murat",cat:"Devlet",era:"1444",desc:"II. Murat tahtı oğlu II. Mehmed'e bırakmış ancak Varna Savaşı öncesi tekrar tahta çağrılmıştır."},
+{n:70,q:"İlk Muhtarlık Uygulaması",a:"II. Mahmut",cat:"Devlet",era:"1829",desc:"Yerel yönetimin ilk adımı olarak köy ve mahallelerde muhtar seçimi başlatılmıştır."},
+{n:71,q:"İlk Kahvehanenin Açılışı",a:"1554 İstanbul-Tahtakale",cat:"Kültür",era:"1554",desc:"İstanbul'un ilk kahvehanesi Tahtakale'de açılmış, kısa sürede sosyal yaşamın merkezi haline gelmiştir.",fun:"Kahvehaneler 'mekteb-i irfan' (bilgi okulu) olarak adlandırılırdı."},
+{n:72,q:"Piyanist Olan İlk ve Tek Padişah",a:"V. Murat",cat:"Kültür",era:"1876",desc:"V. Murat Batı müziğine tutkun bir padişahtı. Piyano çalması ve Batılı yaşam tarzıyla bilinirdi."},
+{n:73,q:"İlk Resim Sergisini Açan Ressam",a:"Şeker Ahmet Paşa",cat:"Kültür",era:"1873",desc:"Şeker Ahmet Paşa, Paris'te eğitim almış ve İstanbul'da ilk resim sergisini açmıştır. Türk resim sanatının öncüsüdür."},
+{n:74,q:"Osmanlı'da İlk Telefon",a:"II. Meşrutiyet Dönemi",cat:"Teknoloji",era:"1908",desc:"Telefon Osmanlı'ya 1881'de gelmiş olsa da yaygın kullanım II. Meşrutiyet döneminde başlamıştır."}
+,
+{n:75,q:"İlk Osmanlı-Memlük Savaşı Sebebi",a:"Cem Sultan'ın Himayesi",cat:"Diplomasi",era:"1485",desc:"Memlükler'in Cem Sultan'ı himaye etmesi, Osmanlı-Memlük savaşlarının ilk sebebi olmuştur. Bu rekabet 1517'de Yavuz'un Mısır seferiyle sona ermiştir."},
+{n:76,q:"Avusturya ile İlk Antlaşma",a:"1533 İstanbul Antlaşması",cat:"Diplomasi",era:"1533",desc:"Kanuni döneminde imzalanan bu antlaşma ile Avusturya, Osmanlı'nın üstünlüğünü kabul etmiştir. Avusturya elçisi, sadrazamla eşit protokolde tutulmuştur."},
+{n:77,q:"Osmanlı'nın Batıdan Aldığı İlk Teknik Araç",a:"Matbaa (1727)",cat:"Teknoloji",era:"1727",desc:"İbrahim Müteferrika'nın kurduğu matbaa, Osmanlı'nın Batı'dan aldığı ilk teknik araçtır. İlk basılan eser Vankulu Lügatı'dır."},
+{n:78,q:"İlk Dış Borçlanma",a:"1854 — İngiltere'den (Kırım Savaşı)",cat:"Ekonomi",era:"1854",desc:"Abdülmecit döneminde Kırım Savaşı masrafları için İngiltere'den alınan borç, Osmanlı'nın ilk dış borçlanmasıdır. Bu süreç Düyun-u Umumiye'ye giden yolu açmıştır."},
+{n:79,q:"İlk Anayasa ve Parlamento",a:"1876 Kanun-i Esasi (I. Meşrutiyet)",cat:"Hukuk",era:"1876",desc:"Mithat Paşa'nın öncülüğünde ilan edilen Kanun-i Esasi, Osmanlı'nın ilk anayasasıdır. Meclis-i Mebusan ile halk ilk kez dolaylı olarak yönetime katılmıştır."},
+{n:80,q:"Osmanlı'nın Kazandığı Son Meydan Muharebesi",a:"Dömeke Meydan Muharebesi (1897)",cat:"Askerî",era:"1897",desc:"Osmanlı-Yunan Savaşı'ndaki bu zafer, Osmanlı ordusunun kazandığı son büyük meydan muharebesidir."},
+{n:81,q:"Osmanlı'nın Galip Olarak İmzaladığı Son Antlaşma",a:"Paris Antlaşması (1856)",cat:"Diplomasi",era:"1856",desc:"Kırım Savaşı sonrası imzalanan Paris Antlaşması, Osmanlı'nın galip tarafta olduğu son uluslararası antlaşmadır. Osmanlı Avrupa Konseri'ne kabul edilmiştir."}],
+inkilap: [
+{n:1,q:"Osmanlı'da Halkın İlk Defa Yönetime Katılması",a:"I. Meşrutiyet (1876)",cat:"Siyasi",era:"1876"},
+{n:2,q:"Türk Tarihinin İlk Anayasası",a:"Kanun-u Esasi (1876)",cat:"Hukuk",era:"1876"},
+{n:3,q:"Türk Siyasi Tarihinin İlk Partisi",a:"İttihat ve Terakki (1907)",cat:"Siyasi",era:"1907"},
+{n:4,q:"Türk Siyasi Tarihinin İlk Muhalefet Partisi",a:"Ahrar (1908)",cat:"Siyasi",era:"1908"},
+{n:5,q:"Osmanlıda Rejime Karşı Çıkan İlk İsyan",a:"31 Mart İsyanı (1909)",cat:"Askerî",era:"1909"},
+{n:6,q:"Meclis Kararıyla Görevden Alınan İlk Padişah",a:"II. Abdülhamid (1909)",cat:"Siyasi",era:"1909"},
+{n:7,q:"M. Kemal'in İlk Görev Yeri",a:"Şam, V. Ordu, Kurmay Yüzbaşı",cat:"Atatürk",era:"1905"},
+{n:8,q:"M. Kemal'in İlk Katıldığı Savaş",a:"Trablusgarp (1911-12)",cat:"Atatürk",era:"1911"},
+{n:9,q:"I. Dünya Savaşını İlk Başlatan Devlet",a:"Avusturya-Macaristan",cat:"Askerî",era:"1914"},
+{n:10,q:"I. Dünya Savaşında İlk Açtığımız Cephe",a:"Kafkas Cephesi (22 Aralık 1914)",cat:"Askerî",era:"1914"},
+{n:11,q:"I. Dünya Savaşında Başarılı Olduğumuz Tek Cephe",a:"Çanakkale Cephesi",cat:"Askerî",era:"1915"},
+{n:12,q:"İstanbul'un İlk Fiili İşgali",a:"13 Kasım 1918",cat:"Askerî",era:"1918"},
+{n:13,q:"Mondros'tan Sonra Yapılan İlk İşgal",a:"3 Kasım 1918, Musul",cat:"Askerî",era:"1918"},
+{n:14,q:"İşgallere Karşı İlk Direniş",a:"Hatay-Dörtyol (Kara Hasan Paşa)",cat:"Milli Mücadele",era:"1918"},
+{n:15,q:"Yunanlılara İlk Kurşun",a:"Hasan Tahsin (15 Mayıs 1919)",cat:"Milli Mücadele",era:"1919"},
+{n:16,q:"İlk Kurulan Direniş Cemiyeti",a:"Trakya Paşaeli Cemiyeti",cat:"Milli Mücadele",era:"1918"},
+{n:17,q:"Kuvay-ı Milliye İlk Olarak Ortaya Çıktığı Yer",a:"Batı Anadolu (Yunanlılara karşı)",cat:"Milli Mücadele",era:"1919"},
+{n:18,q:"Türk Milli Mücadelesinin Haklılığını Gösteren İlk Uluslararası Belge",a:"Amiral Bristol Raporu",cat:"Diplomasi",era:"1919"},
+{n:19,q:"M. Kemal'in Resmi Görevine İlk Ters Düşmesi",a:"Havza Genelgesi",cat:"Atatürk",era:"1919"},
+{n:20,q:"İlk Defa Osmanlı Hükümetine Açıkça Karşı Çıkma",a:"Amasya Genelgesi",cat:"Milli Mücadele",era:"1919"},
+{n:21,q:"Kurtuluş Savaşının Amacının İlk Belirlendiği Belge",a:"Amasya Genelgesi",cat:"Milli Mücadele",era:"1919"},
+{n:22,q:"Ulusal Egemenlikten İlk Bahsedilmesi",a:"Amasya Genelgesi",cat:"Milli Mücadele",era:"1919"},
+{n:23,q:"Manda ve Himayenin İlk Reddedilmesi",a:"Erzurum Kongresi",cat:"Milli Mücadele",era:"1919"},
+{n:24,q:"Temsil Heyeti İlk Kez Oluşturulması",a:"Erzurum Kongresi (9 kişi)",cat:"Milli Mücadele",era:"1919"},
+{n:25,q:"İlk ve Tek Milli Kongre",a:"Sivas Kongresi",cat:"Milli Mücadele",era:"1919"},
+{n:26,q:"Temsil Kurulunun İlk Siyasi Başarısı",a:"Damat Ferit Hükümetinin Düşürülmesi",cat:"Milli Mücadele",era:"1919"},
+{n:27,q:"İlk Milli Mücadele Gazetesi",a:"İrade-i Milliye (Sivas)",cat:"Kültür",era:"1919"},
+{n:28,q:"Son Osmanlı Mebusan Meclisinin Kabul Ettiği İlk Belge",a:"Misak-ı Milli (28 Ocak 1920)",cat:"Siyasi",era:"1920"},
+{n:29,q:"İlk TBMM Açılışı",a:"23 Nisan 1920",cat:"Devlet",era:"1920"},
+{n:30,q:"İlk Meclis Başkanı",a:"Mustafa Kemal",cat:"Atatürk",era:"1920"},
+{n:31,q:"İlk Anayasa (Yeni Türk Devleti)",a:"1921 Teşkilat-ı Esasiye",cat:"Hukuk",era:"1921"},
+{n:32,q:"İlk Kanun (TBMM)",a:"Ağnam Vergisi (24 Nisan 1920)",cat:"Hukuk",era:"1920"},
+{n:33,q:"Düzenli Ordunun İlk Askerî Başarısı",a:"I. İnönü Muharebesi",cat:"Askerî",era:"1921"},
+{n:34,q:"Yeni Devleti İlk Tanıyan Batılı Devlet",a:"Rusya (Moskova Antlaşması)",cat:"Diplomasi",era:"1921"},
+{n:35,q:"Yeni Devleti İlk Tanıyan İtilaf Devleti",a:"Fransa (Ankara Antlaşması)",cat:"Diplomasi",era:"1921"},
+{n:36,q:"TBMM'nin İlk Siyasi Başarısı",a:"Gümrü Antlaşması (Ermenistan)",cat:"Diplomasi",era:"1920"},
+{n:37,q:"İlk ve Tek Yenilgi (Kurtuluş Savaşı)",a:"Eskişehir-Kütahya Muharebesi",cat:"Askerî",era:"1921"},
+{n:38,q:"İlk Cumhurbaşkanı",a:"Mustafa Kemal Atatürk",cat:"Atatürk",era:"1923"},
+{n:39,q:"İlk Başbakan",a:"İsmet İnönü",cat:"Devlet",era:"1923"},
+{n:40,q:"İlk Genelkurmay Başkanı",a:"Fevzi Çakmak",cat:"Askerî",era:"1921"},
+{n:41,q:"Cumhuriyet Döneminin İlk Muhalefet Partisi",a:"Terakkiperver Cumhuriyet Fırkası (1924)",cat:"Siyasi",era:"1924"},
+{n:42,q:"Çok Partili Hayata İlk Geçiş Denemesi",a:"Terakkiperver Cumhuriyet Fırkası",cat:"Siyasi",era:"1924"},
+{n:43,q:"Cumhuriyete Karşı İlk İsyan",a:"Şeyh Said İsyanı (1925)",cat:"Siyasi",era:"1925"},
+{n:44,q:"İlk Beş Yıllık Kalkınma Planı",a:"1933",cat:"Ekonomi",era:"1933"},
+{n:45,q:"Kadınlara İlk Seçme-Seçilme Hakkı",a:"1934",cat:"Hukuk",era:"1934"},
+{n:46,q:"Türkiye'nin İlk Kadın Milletvekilleri",a:"1935 Seçimleri (18 kadın)",cat:"Siyasi",era:"1935"},
+{n:47,q:"İlk Çok Partili Seçim",a:"1946",cat:"Siyasi",era:"1946"},
+{n:48,q:"İlk Demokratik İktidar Değişikliği",a:"1950 (DP İktidara Geldi)",cat:"Siyasi",era:"1950"}
+,
+{n:49,q:"İlk Meclis Başkanı",a:"Ali Fethi Bey (Cumhuriyet dönemi)",cat:"Siyasi",era:"1920",desc:"Cumhuriyet döneminin ilk Meclis Başkanı Ali Fethi (Okyar) Bey olmuştur. Atatürk'ün yakın arkadaşı olan Okyar, aynı zamanda Serbest Cumhuriyet Fırkası'nın da kurucusudur."},
+{n:50,q:"T.C. İlk Siyasi Partisi",a:"Cumhuriyet Halk Fırkası",cat:"Siyasi",era:"1923",desc:"9 Eylül 1923'te kurulan CHF, Türkiye Cumhuriyeti'nin ilk siyasi partisidir. Atatürk'ün altı ilkesi partinin temel programını oluşturmuştur."},
+{n:51,q:"T.C. İlk Muhalefet Partisi",a:"Terakkiperver Cumhuriyet Fırkası",cat:"Siyasi",era:"1924",desc:"Kazım Karabekir, Ali Fuat Cebesoy ve Rauf Orbay tarafından 1924'te kurulan parti, çok partili hayatın ilk denemesidir. Şeyh Said İsyanı sonrası kapatılmıştır."},
+{n:52,q:"İlk Güçler Birliği Anayasası",a:"1921 Anayasası (Teşkilat-ı Esasiye)",cat:"Hukuk",era:"1921",desc:"Kurtuluş Savaşı koşullarında hazırlanan 1921 Anayasası, yasama ve yürütme güçlerini TBMM'de birleştirmiştir. Egemenliğin kayıtsız şartsız millete ait olduğunu ilan etmiştir."},
+{n:53,q:"İlk Güçler Ayrılığı Anayasası",a:"1961 Anayasası",cat:"Hukuk",era:"1961",desc:"27 Mayıs sonrası hazırlanan 1961 Anayasası, Türkiye'de ilk kez güçler ayrılığı ilkesini tam anlamıyla benimsemiştir. Anayasa Mahkemesi de bu dönemde kurulmuştur."},
+{n:54,q:"Unvan Alan İlk Şehir",a:"Maraş — Kahraman",cat:"Milli Mücadele",era:"1920",desc:"12 Şubat 1920'de Fransız işgaline karşı halkın direnişi sonucu Maraş kurtarılmış ve TBMM tarafından \"Kahraman\" unvanı verilmiştir. İlk kurtulan şehirdir."},
+{n:55,q:"İlk Çok Partili Seçim",a:"1946 Genel Seçimleri",cat:"Siyasi",era:"1946",desc:"Türkiye'de ilk çok partili seçim 1946'da yapılmıştır. Demokrat Parti CHP'ye karşı yarışmış, ancak açık oy-gizli sayım tartışmaları yaşanmıştır."},
+{n:56,q:"Osmanlı Devleti'nin Resmen Bitişi",a:"1 Kasım 1922 — Saltanatın Kaldırılması",cat:"Devlet",era:"1922",desc:"TBMM'nin 1 Kasım 1922'de saltanatı kaldırmasıyla 623 yıllık Osmanlı hanedanı resmen sona ermiştir. Son padişah Vahdettin İngiliz gemisiyle İstanbul'dan ayrılmıştır."},
+{n:57,q:"Kurtuluş Savaşı Fiilen Bitişi",a:"Mudanya Ateşkes Antlaşması",cat:"Milli Mücadele",era:"1922",desc:"11 Ekim 1922'de imzalanan Mudanya Ateşkesi ile Kurtuluş Savaşı fiilen sona ermiştir. Doğu Trakya savaşsız geri alınmıştır."},
+{n:58,q:"Laikliğin İlk Aşaması",a:"Saltanatın Kaldırılması",cat:"Atatürk",era:"1922",desc:"Saltanatın kaldırılması, din ve devlet işlerinin ayrılması sürecinin ilk adımıdır. Bunu halifeliğin kaldırılması (1924) takip etmiştir."},
+{n:59,q:"İlk Beş Yıllık Kalkınma Planı",a:"1933-1938 Dönemi",cat:"Ekonomi",era:"1933",desc:"Sovyet uzmanların da katkısıyla hazırlanan plan, devletçilik ilkesi çerçevesinde sanayileşmeyi hedeflemiştir. Sümerbank, Etibank gibi kurumlar bu dönemde kurulmuştur."},
+{n:60,q:"Atatürk İlkelerinin Anayasaya Girmesi",a:"1937 Anayasa Değişikliği",cat:"Atatürk",era:"1937",desc:"Cumhuriyetçilik, Milliyetçilik, Halkçılık, Devletçilik, Laiklik ve İnkılapçılık ilkeleri 1937'de anayasaya eklenmiştir."}]
+};
+
+// Categories
+const CATEGORIES = {
+turk:["Tümü","Devlet","Askerî","Kültür","Ekonomi","Diplomasi","Din","Edebiyat","Eğitim","Hukuk","Teknoloji","Siyasi"],
+osmanli:["Tümü","Devlet","Askerî","Kültür","Ekonomi","Diplomasi","Din","Edebiyat","Eğitim","Hukuk","Teknoloji","Siyasi","Bilim"],
+inkilap:["Tümü","Devlet","Askerî","Siyasi","Hukuk","Diplomasi","Milli Mücadele","Atatürk","Kültür","Ekonomi"]
+};
+
+let currentTab = 'turk';
+let currentFilter = 'Tümü';
+let audioEnabled = false;
+let audioCtx = null;
+
+// Init
+function init(){
+renderTabs();
+renderFilters();
+renderTimeline();
+updateStats();
+}
+
+function renderTabs(){
+document.querySelectorAll('.tab').forEach(t=>{
+t.classList.toggle('active', t.dataset.tab===currentTab);
+t.onclick=()=>{currentTab=t.dataset.tab;currentFilter='Tümü';renderTabs();renderFilters();renderTimeline();};
+});
+}
+
+function renderFilters(){
+const bar=document.getElementById('filter-bar');
+const cats = currentTab==='all' ? ["Tümü","Devlet","Askerî","Kültür","Ekonomi","Diplomasi","Din","Edebiyat","Eğitim","Hukuk","Teknoloji","Siyasi","Milli Mücadele","Atatürk","Bilim"] : CATEGORIES[currentTab]||["Tümü"];
+bar.innerHTML=cats.map(c=>`<div class="filter-btn${c===currentFilter?' active':''}" onclick="setFilter('${c}')">${c}</div>`).join('');
+}
+
+function setFilter(f){currentFilter=f;renderFilters();renderTimeline();}
+
+function getItems(){
+const search=document.getElementById('search').value.toLowerCase();
+let items=[];
+if(currentTab==='all'){items=[...DATA.turk.map(i=>({...i,section:'turk'})),...DATA.osmanli.map(i=>({...i,section:'osmanli'})),...DATA.inkilap.map(i=>({...i,section:'inkilap'}))]}
+else{items=DATA[currentTab].map(i=>({...i,section:currentTab}))}
+if(currentFilter!=='Tümü')items=items.filter(i=>i.cat===currentFilter);
+if(search)items=items.filter(i=>(i.q+' '+i.a).toLowerCase().includes(search));
+return items;
+}
+
+function renderTimeline(){
+const items=getItems();
+const tl=document.getElementById('timeline');
+tl.innerHTML=items.map((item,idx)=>`
+<div class="tl-item" style="animation-delay:${Math.min(idx*0.03,.6)}s" onclick="selectItem('${item.section}',${item.n-1})">
+<div class="tl-dot"></div>
+<div class="tl-card" id="card-${item.section}-${item.n}">
+<div class="tl-num">#${item.n} ${item.era?'• '+item.era:''}</div>
+<div class="tl-title">${item.q}</div>
+<div class="tl-answer">${item.a}</div>
+<span class="tl-cat">${item.cat}</span>
+</div>
+</div>`).join('');
+document.getElementById('shown-count').textContent=items.length;
+// Reset scroll
+document.getElementById('timeline-area').scrollTop=0;
+}
+
+function selectItem(section,idx){
+const item=DATA[section][idx];
+if(!item)return;
+// Highlight
+document.querySelectorAll('.tl-card').forEach(c=>c.classList.remove('selected'));
+const card=document.getElementById(`card-${section}-${item.n}`);
+if(card)card.classList.add('selected');
+// Detail
+const box=document.getElementById('detail-box');
+const sectionLabel={turk:'Türk Tarihi',osmanli:'Osmanlı Tarihi',inkilap:'İnkılap Tarihi'}[section];
+box.innerHTML=`<div class="detail-content">
+<h3>${item.q}</h3>
+<div class="answer-big">${item.a}</div>
+<div class="meta">
+<p><span>${item.cat}</span> <span>${sectionLabel}</span></p>
+${item.era?`<p style="margin-top:8px;color:var(--gray)">Dönem: <strong style="color:var(--gold)">${item.era}</strong></p>`:''}
+${item.desc?`<p style="margin-top:12px;font-size:.68rem;color:var(--gray);line-height:1.6;border-left:2px solid var(--red);padding-left:8px">${item.desc}</p>`:''}
+${item.fun?`<p style="margin-top:8px;font-size:.85rem;color:var(--gold);font-style:italic">💡 ${item.fun}</p>`:''}
+${item.src?`<p style="margin-top:6px;font-size:.6rem;color:var(--gray);opacity:.7">📚 ${item.src}</p>`:''}
+</div>
+</div>`;
+// Sound
+if(audioEnabled)playClick();
+}
+
+function updateStats(){
+document.getElementById('stat-total').textContent=DATA.turk.length+DATA.osmanli.length+DATA.inkilap.length;
+document.getElementById('stat-turk').textContent=DATA.turk.length;
+document.getElementById('stat-osmanli').textContent=DATA.osmanli.length;
+document.getElementById('stat-inkilap').textContent=DATA.inkilap.length;
+}
+
+// Audio
+document.getElementById('audio-toggle').onclick=()=>{
+audioEnabled=!audioEnabled;
+document.getElementById('audio-toggle').textContent=audioEnabled?'🔊':'🔇';
+if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+};
+
+function playClick(){
+if(!audioCtx)return;
+const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+o.connect(g);g.connect(audioCtx.destination);
+o.type='sine';o.frequency.setValueAtTime(880,audioCtx.currentTime);
+o.frequency.exponentialRampToValueAtTime(440,audioCtx.currentTime+.08);
+g.gain.setValueAtTime(.08,audioCtx.currentTime);
+g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.1);
+o.start();o.stop(audioCtx.currentTime+.1);
+}
+
+// Search
+document.getElementById('search').addEventListener('input',()=>renderTimeline());
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+if(e.key==='1'){currentTab='turk';currentFilter='Tümü';renderTabs();renderFilters();renderTimeline();}
+if(e.key==='2'){currentTab='osmanli';currentFilter='Tümü';renderTabs();renderFilters();renderTimeline();}
+if(e.key==='3'){currentTab='inkilap';currentFilter='Tümü';renderTabs();renderFilters();renderTimeline();}
+});
+
+// Touch swipe for tabs
+let touchStartX=0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{
+const dx=touchStartX-e.changedTouches[0].clientX;
+const tabs=['turk','osmanli','inkilap','all'];
+const ci=tabs.indexOf(currentTab);
+if(dx>60&&ci<tabs.length-1){currentTab=tabs[ci+1];currentFilter='Tümü';renderTabs();renderFilters();renderTimeline();}
+if(dx<-60&&ci>0){currentTab=tabs[ci-1];currentFilter='Tümü';renderTabs();renderFilters();renderTimeline();}
+},{passive:true});
+
+init();
+</script>
+<script>(function(){var c=document.getElementById('particles');if(!c)return;for(var i=0;i<20;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.setProperty('--dur',(5+Math.random()*10)+'s');p.style.animationDelay=Math.random()*10+'s';c.appendChild(p);}})();</script><script src="hs-nav.js?v=11"></script>
+</body>
+</html>

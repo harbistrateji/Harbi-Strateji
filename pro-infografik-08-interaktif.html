@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kritik Mineraller Kullanım Alanları — İnteraktif İnfografik | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+body{background:#0a0f17;margin:0;font-family:'Segoe UI',sans-serif;color:#e0e0e0;}
+.info-container{max-width:1400px;margin:0 auto;padding:2rem 1rem;}
+.info-title{text-align:center;margin-bottom:2rem;}
+.info-title h1{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;background:linear-gradient(135deg,#ef4444,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem;}
+.info-title p{color:rgba(255,255,255,.5);font-size:.9rem;}
+.domain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
+.domain-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2rem;position:relative;overflow:hidden;transition:all .3s;cursor:pointer;}
+.domain-card:hover{border-color:var(--card-accent,#00e0ff);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.domain-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,#00e0ff);opacity:0;transition:opacity .3s;}
+.domain-card:hover::before{opacity:1;}
+.domain-icon{font-size:2rem;margin-bottom:.8rem;}
+.domain-name{font-size:1rem;font-weight:700;color:#fff;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.03em;}
+.domain-items{list-style:none;padding:0;margin:0;}
+.domain-items li{font-size:.78rem;color:rgba(255,255,255,.6);padding:.25rem 0;padding-left:1.2rem;position:relative;}
+.domain-items li::before{content:'▸';position:absolute;left:0;color:var(--card-accent,#00e0ff);}
+.pro-badge{display:inline-block;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.2rem .6rem;font-size:.65rem;color:rgba(255,255,255,.4);margin-top:1.5rem;text-align:center;width:100%;}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="info-container">
+<div class="info-title">
+<h1>KRITIK MINERALLER KULLANIM ALANLARI</h1>
+<p>Savunma sanayiinde kritik hammaddeler ve kullanım alanları</p>
+</div>
+<div class="domain-grid">
+    <div class="domain-card" style="--card-accent:#ef4444;">
+        <div class="domain-icon">🧲</div>
+        <div class="domain-name">Nadir Toprak (REE)</div>
+        <ul class="domain-items"><li>Neodimyum → Mıknatıslar</li><li>Samaryum → Füze Güdüm</li><li>Disprosyum → Motor</li><li>Terbiyum → Sonar</li><li>Erbiyum → Fiber Optik</li></ul>
+    </div>
+    <div class="domain-card" style="--card-accent:#f59e0b;">
+        <div class="domain-icon">⚡</div>
+        <div class="domain-name">Enerji Metalleri</div>
+        <ul class="domain-items"><li>Lityum → Bataryalar</li><li>Kobalt → Süper Alaşımlar</li><li>Nikel → Jet Motorları</li><li>Vanadyum → Çelik Alaşım</li><li>Platin → Yakıt Hücresi</li></ul>
+    </div>
+    <div class="domain-card" style="--card-accent:#06b6d4;">
+        <div class="domain-icon">📡</div>
+        <div class="domain-name">Elektronik</div>
+        <ul class="domain-items"><li>Galyum → Yarı İletken</li><li>Germanyum → IR Sensör</li><li>İndiyum → Ekranlar</li><li>Tantalyum → Kapasitör</li><li>Silikon → Çipler</li></ul>
+    </div>
+    <div class="domain-card" style="--card-accent:#10b981;">
+        <div class="domain-icon">🛡️</div>
+        <div class="domain-name">Zırh & Yapı</div>
+        <ul class="domain-items"><li>Titanyum → Uçak Gövde</li><li>Tungsten → Zırh Delici</li><li>Molibden → Çelik Güçlendirme</li><li>Berilyum → Uzay Yapı</li><li>Krom → Paslanmaz</li></ul>
+    </div>
+</div>
+<div class="pro-badge">PRO İNFOGRAFİK SERİSİ · Pro-08 · Harb-i Strateji © 2026</div>
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabrika & Tedarik Zinciri — Nadir Metal Yönetimi</title>
+<style>
+:root{--bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#e67e22;--txt:#e8eaf0;--dim:#6b7280;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',monospace,sans-serif;min-height:100vh;overflow-y:auto;overflow-x:hidden;}
+.header{background:linear-gradient(135deg,var(--bg),#0a1a0a);border-bottom:2px solid var(--gold);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.header-title{font-size:1.1rem;font-weight:900;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
+.header-stats{display:flex;gap:16px;align-items:center;}
+.hstat{font-size:.78rem;display:flex;align-items:center;gap:5px;}
+.hv{font-weight:900;color:var(--cyan);}
+.main{max-width:1400px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+/* PANELS */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.panel-title{font-size:.8rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+/* MINE */
+.mine-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mine-card{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;transition:all .15s;}
+.mine-card:hover{border-color:var(--gold);}
+.mine-card.active{border-color:var(--green);}
+.mc-name{font-size:.75rem;font-weight:700;margin-bottom:4px;}
+.mc-rate{font-size:.65rem;color:var(--dim);}
+.mc-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;margin-top:5px;overflow:hidden;}
+.mc-fill{height:100%;border-radius:3px;transition:width .5s;}
+/* INVENTORY */
+.inv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.inv-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:6px;padding:7px;text-align:center;}
+.inv-sym{font-size:1rem;font-weight:900;margin-bottom:2px;}
+.inv-val{font-size:.65rem;font-weight:700;color:var(--cyan);}
+.inv-name{font-size:.5rem;color:var(--dim);}
+/* PRODUCTION */
+.prod-list{display:flex;flex-direction:column;gap:8px;}
+.prod-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:10px;transition:all .15s;}
+.prod-item:hover{border-color:var(--cyan);}
+.pi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.pi-name{font-size:.78rem;font-weight:700;}
+.pi-status{font-size:.65rem;padding:2px 7px;border-radius:4px;}
+.pi-req{font-size:.65rem;color:var(--dim);margin-bottom:5px;}
+.pi-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.pi-fill{height:100%;border-radius:3px;transition:width .3s;}
+.pi-btn{background:var(--gold);color:#000;border:none;border-radius:5px;padding:4px 12px;font-size:.65rem;font-weight:700;cursor:pointer;margin-top:6px;transition:all .15s;}
+.pi-btn:hover{background:#a07820;}
+.pi-btn:disabled{background:var(--border);color:var(--dim);cursor:not-allowed;}
+/* MARKET */
+.market-list{display:flex;flex-direction:column;gap:8px;}
+.market-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:10px;}
+.mi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.mi-name{font-size:.78rem;font-weight:700;}
+.mi-price{font-size:.75rem;font-weight:700;color:var(--gold);}
+.mi-desc{font-size:.65rem;color:var(--dim);margin-bottom:5px;}
+.mi-btn{background:var(--green);color:#000;border:none;border-radius:5px;padding:4px 12px;font-size:.65rem;font-weight:700;cursor:pointer;margin-right:5px;}
+.mi-btn.sell{background:var(--red);color:#fff;}
+/* EVENTS */
+.events-list{display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;}
+.event-item{background:rgba(0,0,0,.3);border-left:3px solid;border-radius:4px;padding:6px 10px;font-size:.7rem;animation:eIn .3s ease;}
+@keyframes eIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;}}
+/* CRISIS */
+.crisis-banner{background:rgba(224,21,21,.1);border:1px solid var(--red);border-radius:8px;padding:10px;margin-bottom:12px;font-size:.78rem;display:none;}
+.crisis-banner.show{display:block;}
+/* INTRO */
+#intro{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.it{font-size:2.2rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;}
+.it span{color:var(--cyan);}
+.btn-play{background:linear-gradient(135deg,var(--gold),#a07820);color:#000;border:none;border-radius:8px;padding:14px 36px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:2px;text-transform:uppercase;}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+
+<div class="header">
+  <div class="header-title">🏭 FABRİKA & TEDARİK ZİNCİRİ</div>
+  <div class="header-stats">
+    <div class="hstat">💰 <span class="hv" id="moneyVal">10,000</span> $</div>
+    <div class="hstat">🏆 <span class="hv" id="scoreVal">0</span></div>
+    <div class="hstat">📅 Gün: <span class="hv" id="dayVal">1</span></div>
+    <div class="hstat">⚠️ Kriz: <span class="hv" id="crisisVal" style="color:var(--green)">YOK</span></div>
+  </div>
+</div>
+
+<div id="crisis-banner" class="crisis-banner">
+  🚨 <strong id="crisisTitle">KRİZ!</strong> — <span id="crisisDesc"></span>
+</div>
+
+<div class="main">
+  <!-- MADEN -->
+  <div class="panel">
+    <div class="panel-title">⛏️ Maden Operasyonları</div>
+    <div class="mine-grid" id="mineGrid"></div>
+    <div style="margin-top:12px;font-size:.7rem;color:var(--dim);">Aktif madenlere tıkla → Üretimi artır</div>
+  </div>
+
+  <!-- ENVANTER -->
+  <div class="panel">
+    <div class="panel-title">📦 Metal Envanteri</div>
+    <div class="inv-grid" id="invGrid"></div>
+    <div style="margin-top:10px;font-size:.7rem;color:var(--dim);">Toplam stok değeri: <span id="stockVal" style="color:var(--gold);font-weight:700">0 $</span></div>
+  </div>
+
+  <!-- OLAYLAR -->
+  <div class="panel">
+    <div class="panel-title">📡 Olay Günlüğü</div>
+    <div class="events-list" id="eventsList"></div>
+  </div>
+
+  <!-- ÜRETİM -->
+  <div class="panel" style="grid-column:1/3;">
+    <div class="panel-title">🔧 Silah Üretim Hattı</div>
+    <div class="prod-list" id="prodList"></div>
+  </div>
+
+  <!-- PAZAR -->
+  <div class="panel">
+    <div class="panel-title">💹 Metal Pazarı</div>
+    <div class="market-list" id="marketList"></div>
+  </div>
+</div>
+
+<div id="intro">
+  <div class="it">🏭 FABRİKA & <span>TEDARİK ZİNCİRİ</span></div>
+  <div style="font-size:.85rem;color:var(--cyan);letter-spacing:2px;margin-bottom:12px;">Nadir Metal Yönetim Simülatörü</div>
+  <div style="font-size:.82rem;color:var(--dim);max-width:500px;line-height:1.7;margin-bottom:24px;">
+    Madenden silaha üretim hattı yönet!<br>
+    <strong>Ambargo krizleri, fiyat şokları, tedarik kesintileri</strong> ile başa çık.<br>
+    Çin'in nadir metal hakimiyetini kır — alternatif tedarik zinciri kur!
+  </div>
+  <button class="btn-play" onclick="startGame()">🏭 FABRİKAYI BAŞLAT</button>
+</div>
+
+<script>
+// ===== DATA =====
+const METALS = [
+  {sym:'Nd',name:'Neodimyum',color:'#e74c3c',price:80,china:85},
+  {sym:'Dy',name:'Disprozyum',color:'#c0392b',price:300,china:99},
+  {sym:'Y',name:'İtriyum',color:'#C9A24B',price:35,china:70},
+  {sym:'Hf',name:'Hafniyum',color:'#16a085',price:900,china:40},
+  {sym:'Co',name:'Kobalt',color:'#2980b9',price:35,china:20},
+  {sym:'Ti',name:'Titanyum',color:'#1abc9c',price:12,china:35},
+  {sym:'Ga',name:'Galyum',color:'#f39c12',price:220,china:98},
+  {sym:'Pt',name:'Platin',color:'#C9A24B',price:30000,china:5},
+  {sym:'Li',name:'Lityum',color:'#27ae60',price:25,china:30},
+  {sym:'Zr',name:'Zirkonyum',color:'#1abc9c',price:40,china:35},
+  {sym:'In',name:'İndiyum',color:'#e91e63',price:170,china:55},
+  {sym:'Ge',name:'Germanyum',color:'#9b59b6',price:1000,china:85},
+];
+
+const MINES = [
+  {id:'nd_mine',name:'Neodimyum Madeni',icon:'⛏️',metal:'Nd',rate:2,cost:500,active:false,level:1},
+  {id:'co_mine',name:'Kobalt Madeni',icon:'⛏️',metal:'Co',rate:3,cost:300,active:false,level:1},
+  {id:'ti_mine',name:'Titanyum Madeni',icon:'⛏️',metal:'Ti',rate:5,cost:200,active:false,level:1},
+  {id:'li_mine',name:'Lityum Madeni',icon:'⛏️',metal:'Li',rate:4,cost:250,active:false,level:1},
+  {id:'ga_import',name:'Galyum İthalatı',icon:'🚢',metal:'Ga',rate:1,cost:800,active:false,level:1},
+  {id:'dy_import',name:'Disprozyum İthalatı',icon:'🚢',metal:'Dy',rate:1,cost:1200,active:false,level:1},
+];
+
+const PRODUCTS = [
+  {id:'jet_engine',name:'F-35 Türbin Motoru',icon:'✈️',req:{Nd:10,Dy:5,Co:8,Ti:15},price:500000,time:10,progress:0,producing:false},
+  {id:'radar',name:'Aktif Faz Dizili Radar',icon:'📡',req:{Ga:5,In:3,Ge:2,Co:5},price:200000,time:7,progress:0,producing:false},
+  {id:'laser',name:'Lazer Silah Sistemi',icon:'⚡',req:{Nd:15,Dy:8,Y:10,Co:6},price:800000,time:15,progress:0,producing:false},
+  {id:'armor',name:'Zırhlı Araç Gövdesi',icon:'🛡️',req:{Ti:30,Co:10},price:150000,time:5,progress:0,producing:false},
+  {id:'missile',name:'Hipersonik Füze',icon:'🚀',req:{Nd:8,Hf:3,Co:12,Ti:20},price:1000000,time:20,progress:0,producing:false},
+];
+
+const CRISES = [
+  {title:'ÇİN AMBARGOSU',desc:'Çin nadir metal ihracatını %80 kısıtladı! Nd, Dy, Ga fiyatları 3x arttı.',metals:['Nd','Dy','Ga'],multiplier:3,duration:5},
+  {title:'KONGO İÇ SAVAŞI',desc:'Kobalt madenleri kapandı! Co fiyatı 2x arttı.',metals:['Co'],multiplier:2,duration:4},
+  {title:'LİTYUM KURAĞI',desc:'Şili\'de kuraklık lityum üretimini durdurdu!',metals:['Li'],multiplier:2.5,duration:3},
+  {title:'SİBER SALDIRI',desc:'Tedarik zinciri sistemleri hacklendi! Üretim %50 yavaşladı.',metals:[],multiplier:1,duration:3,slowdown:true},
+  {title:'RUSYA YAPTIRIMI',desc:'Rusya titanyum ihracatını durdurdu! Ti fiyatı 4x arttı.',metals:['Ti'],multiplier:4,duration:4},
+];
+
+// ===== STATE =====
+let G = {
+  money: 10000,
+  puan: 0,
+  day: 1,
+  inventory: {},
+  mines: [...MINES.map(m=>({...m}))],
+  products: [...PRODUCTS.map(p=>({...p}))],
+  prices: {},
+  crisis: null,
+  crisisTimer: 0,
+  running: false,
+};
+
+// Init inventory and prices
+METALS.forEach(m=>{G.inventory[m.sym]=0;G.prices[m.sym]=m.price;});
+
+function startGame(){
+  document.getElementById('intro').style.display='none';
+  G.running=true;
+  // Start with some resources
+  G.inventory['Ti']=20;G.inventory['Co']=15;G.inventory['Nd']=5;
+  renderAll();
+  setInterval(gameTick,1000);
+}
+
+function gameTick(){
+  if(!G.running) return;
+  G.day++;
+  document.getElementById('dayVal').textContent=G.day;
+  
+  // Mine production
+  G.mines.forEach(mine=>{
+    if(mine.active){
+      const rate=mine.rate*mine.level*(G.crisis?.slowdown?0.5:1);
+      G.inventory[mine.metal]=(G.inventory[mine.metal]||0)+rate;
+    }
+  });
+  
+  // Product progress
+  G.products.forEach(prod=>{
+    if(prod.producing){
+      prod.progress++;
+      if(prod.progress>=prod.time){
+        prod.progress=0;prod.producing=false;
+        G.money+=prod.price;G.score+=Math.floor(prod.price/1000);
+        addEvent(`✅ ${prod.name} tamamlandı! +${prod.price.toLocaleString()}$`,'green');
+        document.getElementById('moneyVal').textContent=G.money.toLocaleString();
+        document.getElementById('scoreVal').textContent=G.score.toLocaleString();
+      }
+    }
+  });
+  
+  // Crisis management
+  if(G.crisis){
+    G.crisisTimer--;
+    if(G.crisisTimer<=0){
+      addEvent(`✅ ${G.crisis.title} krizi sona erdi`,'green');
+      G.crisis=null;
+      document.getElementById('crisisVal').textContent='YOK';
+      document.getElementById('crisisVal').style.color='var(--green)';
+      document.getElementById('crisis-banner').classList.remove('show');
+      METALS.forEach(m=>G.prices[m.sym]=m.price);
+    }
+  } else if(Math.random()<0.05&&G.day>5){
+    triggerCrisis();
+  }
+  
+  // Price fluctuation
+  METALS.forEach(m=>{
+    const change=(Math.random()-.48)*0.05;
+    G.prices[m.sym]=Math.max(m.price*.5,G.prices[m.sym]*(1+change));
+  });
+  
+  renderInventory();
+  renderProducts();
+  renderMarket();
+}
+
+function triggerCrisis(){
+  const c=CRISES[Math.floor(Math.random()*CRISES.length)];
+  G.crisis={...c};
+  G.crisisTimer=c.duration;
+  c.metals.forEach(m=>G.prices[m]=G.prices[m]*c.multiplier);
+  document.getElementById('crisisVal').textContent=c.title;
+  document.getElementById('crisisVal').style.color='var(--red)';
+  document.getElementById('crisisTitle').textContent=c.title;
+  document.getElementById('crisisDesc').textContent=c.desc;
+  document.getElementById('crisis-banner').classList.add('show');
+  addEvent(`🚨 KRİZ: ${c.title}! ${c.desc}`,'red');
+}
+
+function activateMine(id){
+  const mine=G.mines.find(m=>m.id===id);
+  if(!mine) return;
+  if(!mine.active){
+    if(G.money<mine.cost){addEvent(`⚠️ Yetersiz para! Gerekli: ${mine.cost}$`,'red');return;}
+    G.money-=mine.cost;mine.active=true;
+    addEvent(`⛏️ ${mine.name} aktif edildi`,'green');
+  } else {
+    const upgradeCost=mine.cost*mine.level*2;
+    if(G.money<upgradeCost){addEvent(`⚠️ Yükseltme için ${upgradeCost}$ gerekli`,'red');return;}
+    G.money-=upgradeCost;mine.level++;mine.rate=Math.ceil(mine.rate*1.5);
+    addEvent(`⬆️ ${mine.name} Seviye ${mine.level}'e yükseltildi`,'cyan');
+  }
+  document.getElementById('moneyVal').textContent=G.money.toLocaleString();
+  renderMines();
+}
+
+function startProduction(id){
+  const prod=G.products.find(p=>p.id===id);
+  if(!prod||prod.producing) return;
+  const canProduce=Object.entries(prod.req).every(([m,v])=>(G.inventory[m]||0)>=v);
+  if(!canProduce){addEvent(`⚠️ ${prod.name} için yeterli metal yok!`,'red');return;}
+  Object.entries(prod.req).forEach(([m,v])=>G.inventory[m]-=v);
+  prod.producing=true;prod.progress=0;
+  addEvent(`🔧 ${prod.name} üretimi başladı (${prod.time} gün)`,'cyan');
+  renderProducts();renderInventory();
+}
+
+function buyMetal(sym){
+  const price=G.prices[sym];
+  const amount=10;
+  const cost=price*amount;
+  if(G.money<cost){addEvent(`⚠️ Yetersiz para! ${cost.toLocaleString()}$ gerekli`,'red');return;}
+  G.money-=cost;G.inventory[sym]=(G.inventory[sym]||0)+amount;
+  document.getElementById('moneyVal').textContent=G.money.toLocaleString();
+  addEvent(`📦 ${sym} x${amount} satın alındı (${cost.toLocaleString()}$)`,'cyan');
+  renderInventory();renderMarket();
+}
+
+function sellMetal(sym){
+  const amount=Math.min(10,G.inventory[sym]||0);
+  if(amount<=0){addEvent(`⚠️ ${sym} stok yok!`,'red');return;}
+  const revenue=G.prices[sym]*amount;
+  G.inventory[sym]-=amount;G.money+=revenue;
+  document.getElementById('moneyVal').textContent=G.money.toLocaleString();
+  addEvent(`💰 ${sym} x${amount} satıldı (+${revenue.toLocaleString()}$)`,'gold');
+  renderInventory();renderMarket();
+}
+
+// ===== RENDER =====
+function renderAll(){renderMines();renderInventory();renderProducts();renderMarket();}
+
+function renderMines(){
+  document.getElementById('mineGrid').innerHTML=G.mines.map(mine=>`
+    <div class="mine-card ${mine.active?'active':''}" onclick="activateMine('${mine.id}')">
+      <div class="mc-name">${mine.icon} ${mine.name}</div>
+      <div class="mc-rate" style="color:${mine.active?'var(--green)':'var(--dim)'}">
+        ${mine.active?`+${mine.rate*mine.level}/gün (Lv${mine.level})`:mine.cost.toLocaleString()+'$ aktif et'}
+      </div>
+      ${mine.active?`<div class="mc-bar"><div class="mc-fill" style="width:${Math.min(100,mine.level*20)}%;background:var(--green)"></div></div>`:''}
+    </div>
+  `).join('');
+}
+
+function renderInventory(){
+  const stockVal=METALS.reduce((a,m)=>{
+    const qty=G.inventory[m.sym]||0;
+    return a+qty*G.prices[m.sym];
+  },0);
+  document.getElementById('stockVal').textContent=Math.round(stockVal).toLocaleString()+'$';
+  document.getElementById('invGrid').innerHTML=METALS.map(m=>`
+    <div class="inv-item">
+      <div class="inv-sym" style="color:${m.color}">${m.sym}</div>
+      <div class="inv-val">${Math.floor(G.inventory[m.sym]||0)}</div>
+      <div class="inv-name">${m.name.substring(0,8)}</div>
+    </div>
+  `).join('');
+}
+
+function renderProducts(){
+  document.getElementById('prodList').innerHTML=G.products.map(prod=>{
+    const canProduce=Object.entries(prod.req).every(([m,v])=>(G.inventory[m]||0)>=v);
+    const reqStr=Object.entries(prod.req).map(([m,v])=>`${m}:${Math.floor(G.inventory[m]||0)}/${v}`).join(' ');
+    const pct=prod.producing?Math.round(prod.progress/prod.time*100):0;
+    return `<div class="prod-item">
+      <div class="pi-header">
+        <div class="pi-name">${prod.icon} ${prod.name}</div>
+        <span class="pi-status" style="background:${prod.producing?'rgba(0,255,136,.15)':'rgba(201,162,75,.15)'};color:${prod.producing?'var(--green)':'var(--gold)'}">
+          ${prod.producing?`${pct}% (${prod.time-prod.progress}g kaldı)`:'Hazır'}
+        </span>
+      </div>
+      <div class="pi-req">Gerekli: ${reqStr} | Değer: ${prod.price.toLocaleString()}$</div>
+      ${prod.producing?`<div class="pi-bar"><div class="pi-fill" style="width:${pct}%;background:var(--green)"></div></div>`:''}
+      <button class="pi-btn" onclick="startProduction('${prod.id}')" ${prod.producing||!canProduce?'disabled':''}>
+        ${prod.producing?'Üretiliyor...':canProduce?'▶ ÜRETİME BAŞLA':'⚠️ Yetersiz Metal'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function renderMarket(){
+  document.getElementById('marketList').innerHTML=METALS.slice(0,8).map(m=>{
+    const basePrice=m.price;
+    const curPrice=G.prices[m.sym];
+    const change=((curPrice-basePrice)/basePrice*100).toFixed(0);
+    const changeColor=change>0?'var(--red)':'var(--green)';
+    return `<div class="market-item">
+      <div class="mi-header">
+        <div class="mi-name" style="color:${m.color}">${m.sym} — ${m.name}</div>
+        <div class="mi-price">${Math.round(curPrice).toLocaleString()}$/kg <span style="color:${changeColor};font-size:.65rem">${change>0?'+':''}${change}%</span></div>
+      </div>
+      <div class="mi-desc">Çin Hakimiyeti: %${m.china} | Stok: ${Math.floor(G.inventory[m.sym]||0)}</div>
+      <button class="mi-btn" onclick="buyMetal('${m.sym}')">📦 Al x10 (${Math.round(curPrice*10).toLocaleString()}$)</button>
+      <button class="mi-btn sell" onclick="sellMetal('${m.sym}')">💰 Sat x10</button>
+    </div>`;
+  }).join('');
+}
+
+function addEvent(text,type='cyan'){
+  const colors={cyan:'var(--cyan)',green:'var(--green)',red:'var(--red)',gold:'var(--gold)'};
+  const list=document.getElementById('eventsList');
+  const item=document.createElement('div');
+  item.className='event-item';
+  item.style.borderColor=colors[type]||colors.cyan;
+  item.textContent=`Gün ${G.day}: ${text}`;
+  list.insertBefore(item,list.firstChild);
+  while(list.children.length>20)list.removeChild(list.lastChild);
+}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="tr" data-hs-skip>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>TEDARİK ZİNCİRİ SAVUNMASI — OZA Arcade</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080c14;color:#e8eaf0;font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+a{color:#00e0ff;text-decoration:none}
+.back{position:fixed;top:12px;left:12px;font-size:13px;padding:6px 14px;border:1px solid rgba(0,224,255,.3);border-radius:6px;z-index:100;background:rgba(8,12,20,.8)}
+.back:hover{background:rgba(0,224,255,.1)}
+h1{font-family:'Courier New',monospace;font-size:clamp(18px,4vw,28px);text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:2px}
+h1 .icon{font-size:1.2em}
+.sub{color:#9ca3af;font-size:clamp(11px,2vw,14px);text-align:center;margin-bottom:16px;font-family:'Courier New',monospace}
+.game-wrap{display:flex;gap:20px;align-items:flex-start;justify-content:center;width:95%;max-width:1100px;flex-wrap:wrap}
+.game-area{flex:1;min-width:300px;max-width:550px}
+.info-panel{width:320px;max-height:80vh;overflow-y:auto;background:rgba(15,21,32,.9);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;font-size:13px;line-height:1.7}
+.info-panel h2{color:#10b981;font-family:'Courier New',monospace;font-size:15px;margin-bottom:10px;text-transform:uppercase}
+.info-panel h3{color:#10b981;font-size:13px;margin:14px 0 6px}
+.info-panel ul{list-style:none;padding:0}
+.info-panel li::before{content:"▸ ";color:#10b981}
+.info-panel li{margin:4px 0}
+canvas{display:block;border-radius:10px;border:2px solid #10b981;box-shadow:0 0 30px #10b98133;max-width:100%}
+.hud{display:flex;gap:16px;justify-content:center;padding:10px;font-family:'Courier New',monospace;font-size:clamp(11px,2vw,14px);background:rgba(15,21,32,.9);border-radius:8px;border:1px solid rgba(255,255,255,.08);margin-bottom:10px}
+.hud span{color:#9ca3af}
+.hud b{color:#10b981}
+.btn{display:block;margin:16px auto;padding:14px 40px;font-size:16px;font-weight:700;border:none;border-radius:8px;cursor:pointer;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:1px;transition:.2s}
+.mobile-controls{display:none;gap:10px;justify-content:center;margin-top:10px}
+.mobile-controls button{width:60px;height:60px;border-radius:50%;border:2px solid #10b981;background:rgba(0,224,255,.1);color:#fff;font-size:20px;cursor:pointer}
+@media(max-width:768px){
+  .game-wrap{flex-direction:column;align-items:center}
+  .info-panel{width:95%;max-height:200px}
+  .mobile-controls{display:flex}
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<a href="oza-hub.html" class="back">← OZA Hub</a>
+
+<h1><span class="icon">🛡️</span> TEDARİK ZİNCİRİ SAVUNMASI <span class="icon">🛡️</span></h1>
+<p class="sub">Kritik tedarik hatlarını koru. Düşman dalgalarını durdur!</p>
+<div class="game-wrap">
+<div class="game-area">
+  <div class="hud">
+    <span>DALGA: <b id="hWave">1</b></span>
+    <span>ALTIN: <b id="hGold">100</b></span>
+    <span>CAN: <b id="hHP">20</b></span>
+    <span>SKOR: <b id="hScore">0</b></span>
+  </div>
+  <canvas id="gc" width="520" height="520"></canvas>
+  <div class="mobile-controls">
+    <button id="mbTurret1">⚡ Radar</button>
+    <button id="mbTurret2">🔥 Lazer</button>
+    <button id="mbTurret3">❄️ EMP</button>
+  </div>
+</div>
+<div class="info-panel">
+  <h2>🛡️ TEDARİK ZİNCİRİ SAVUNMASI</h2>
+  <p>Stratejik tedarik hatlarını düşman saldırılarından koru!</p>
+  <h3>NASIL OYNANIR</h3>
+  <ul>
+    <li>Haritaya tıklayarak kule yerleştir</li>
+    <li>3 kule tipi: Radar (hızlı), Lazer (güçlü), EMP (yavaşlatır)</li>
+    <li>Her dalga daha güçlü düşmanlar getirir</li>
+    <li>Düşmanlar hedefe ulaşırsa can kaybedersin</li>
+  </ul>
+  <h3>KULE TİPLERİ</h3>
+  <ul>
+    <li><b>⚡ Radar Kulesi (25 altın):</b> Hızlı ateş, düşük hasar</li>
+    <li><b>🔥 Lazer Kulesi (50 altın):</b> Yüksek hasar, yavaş ateş</li>
+    <li><b>❄️ EMP Kulesi (40 altın):</b> Düşmanları yavaşlatır</li>
+  </ul>
+  <h3>DÜŞMAN TİPLERİ</h3>
+  <ul>
+    <li><b>🟢 Keşif Dronu:</b> Hızlı, düşük HP</li>
+    <li><b>🟡 Zırhlı Konvoy:</b> Yavaş, yüksek HP</li>
+    <li><b>🔴 Siber Saldırgan:</b> Kuleleri devre dışı bırakır</li>
+  </ul>
+  <h3>STRATEJİK İPUCU</h3>
+  <ul>
+    <li>EMP + Lazer kombinasyonu en etkili</li>
+    <li>Darboğaz noktalarına kule yerleştir</li>
+    <li>Her 5 dalgada bonus altın kazanırsın</li>
+  </ul>
+</div>
+</div>
+<script>
+(function(){
+const canvas=document.getElementById('gc'),ctx=canvas.getContext('2d');
+const W=520,H=520,CELL=40,COLS=13,ROWS=13;
+let gold=100,hp=20,score=0,wave=1,enemies=[],towers=[],bullets=[],
+    selectedTurret=1,gameOver=false,waveActive=false,spawnTimer=0,enemiesLeft=0;
+
+// Audio
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+function playSound(freq,dur,type='square'){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(.15,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);
+  o.start();o.stop(AC.currentTime+dur);
+}
+
+// Path (S-curve)
+const PATH=[];
+(function buildPath(){
+  for(let x=0;x<COLS;x++) PATH.push({x,y:0});
+  for(let y=0;y<4;y++) PATH.push({x:COLS-1,y});
+  for(let x=COLS-1;x>=0;x--) PATH.push({x,y:4});
+  for(let y=4;y<8;y++) PATH.push({x:0,y});
+  for(let x=0;x<COLS;x++) PATH.push({x,y:8});
+  for(let y=8;y<ROWS;y++) PATH.push({x:COLS-1,y});
+})();
+const pathSet=new Set(PATH.map(p=>p.x+','+p.y));
+
+// Enemy class
+class Enemy{
+  constructor(type){
+    this.pathIdx=0;this.type=type;
+    this.speed=type===0?2:type===1?0.8:1.5;
+    this.maxHp=type===0?30:type===1?120:60;
+    this.hp=this.maxHp;
+    this.x=PATH[0].x*CELL+CELL/2;
+    this.y=PATH[0].y*CELL+CELL/2;
+    this.slowTimer=0;this.reward=type===0?8:type===1?20:15;
+  }
+  update(){
+    let spd=this.slowTimer>0?this.speed*0.4:this.speed;
+    if(this.slowTimer>0)this.slowTimer--;
+    let target=PATH[Math.min(this.pathIdx+1,PATH.length-1)];
+    let tx=target.x*CELL+CELL/2,ty=target.y*CELL+CELL/2;
+    let dx=tx-this.x,dy=ty-this.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<spd){this.pathIdx++;this.x=tx;this.y=ty;}
+    else{this.x+=dx/dist*spd;this.y+=dy/dist*spd;}
+    return this.pathIdx>=PATH.length-1;
+  }
+  draw(){
+    ctx.beginPath();ctx.arc(this.x,this.y,12,0,Math.PI*2);
+    ctx.fillStyle=this.type===0?'#10b981':this.type===1?'#f59e0b':'#ef4444';
+    ctx.fill();
+    // HP bar
+    ctx.fillStyle='#333';ctx.fillRect(this.x-12,this.y-18,24,4);
+    ctx.fillStyle='#10b981';ctx.fillRect(this.x-12,this.y-18,24*(this.hp/this.maxHp),4);
+  }
+}
+
+// Tower class
+class Tower{
+  constructor(x,y,type){
+    this.x=x;this.y=y;this.type=type;
+    this.range=type===0?120:type===1?100:130;
+    this.damage=type===0?8:type===1?25:5;
+    this.fireRate=type===0?15:type===1?40:30;
+    this.timer=0;this.disabled=0;
+  }
+  update(){
+    if(this.disabled>0){this.disabled--;return;}
+    this.timer++;
+    if(this.timer>=this.fireRate){
+      let target=enemies.find(e=>{
+        let dx=e.x-this.x*CELL-CELL/2,dy=e.y-this.y*CELL-CELL/2;
+        return Math.sqrt(dx*dx+dy*dy)<this.range;
+      });
+      if(target){
+        this.timer=0;
+        if(this.type===2){target.slowTimer=60;playSound(200,.2,'sine');}
+        else{
+          bullets.push({x:this.x*CELL+CELL/2,y:this.y*CELL+CELL/2,
+            tx:target.x,ty:target.y,dmg:this.damage,speed:6});
+          playSound(this.type===0?800:400,.1);
+        }
+      }
+    }
+  }
+  draw(){
+    let cx=this.x*CELL+CELL/2,cy=this.y*CELL+CELL/2;
+    ctx.fillStyle=this.type===0?'#00e0ff':this.type===1?'#ef4444':'#a78bfa';
+    ctx.fillRect(this.x*CELL+8,this.y*CELL+8,CELL-16,CELL-16);
+    ctx.strokeStyle=ctx.fillStyle;ctx.globalAlpha=.2;
+    ctx.beginPath();ctx.arc(cx,cy,this.range,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=1;
+    if(this.disabled>0){ctx.fillStyle='#ff0';ctx.font='16px sans-serif';ctx.fillText('⚠',cx-6,cy+5);}
+  }
+}
+
+function startWave(){
+  waveActive=true;spawnTimer=0;
+  enemiesLeft=wave*3+2;
+}
+
+function spawnEnemy(){
+  let type=Math.random()<0.2?2:Math.random()<0.4?1:0;
+  if(wave>5&&Math.random()<0.3)type=2;
+  enemies.push(new Enemy(type));
+}
+
+canvas.addEventListener('click',function(e){
+  if(gameOver)return;
+  let rect=canvas.getBoundingClientRect();
+  let mx=Math.floor((e.clientX-rect.left)*(W/rect.width)/CELL);
+  let my=Math.floor((e.clientY-rect.top)*(H/rect.height)/CELL);
+  if(pathSet.has(mx+','+my))return;
+  if(towers.find(t=>t.x===mx&&t.y===my))return;
+  let cost=[25,50,40][selectedTurret-1];
+  if(gold>=cost){
+    gold-=cost;towers.push(new Tower(mx,my,selectedTurret-1));
+    playSound(600,.15,'triangle');updateHUD();
+  }
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='1')selectedTurret=1;
+  if(e.key==='2')selectedTurret=2;
+  if(e.key==='3')selectedTurret=3;
+  if(e.key===' '&&!waveActive&&!gameOver){startWave();e.preventDefault();}
+});
+
+// Mobile buttons
+document.getElementById('mbTurret1').onclick=()=>selectedTurret=1;
+document.getElementById('mbTurret2').onclick=()=>selectedTurret=2;
+document.getElementById('mbTurret3').onclick=()=>selectedTurret=3;
+
+function updateHUD(){
+  document.getElementById('hWave').textContent=wave;
+  document.getElementById('hGold').textContent=gold;
+  document.getElementById('hHP').textContent=hp;
+  document.getElementById('hScore').textContent=score;
+}
+
+function gameLoop(){
+  ctx.fillStyle='#080c14';ctx.fillRect(0,0,W,H);
+  // Draw grid
+  ctx.strokeStyle='rgba(255,255,255,.03)';
+  for(let i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,H);ctx.stroke();}
+  for(let i=0;i<=ROWS;i++){ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(W,i*CELL);ctx.stroke();}
+  // Draw path
+  ctx.fillStyle='rgba(16,185,129,.08)';
+  PATH.forEach(p=>ctx.fillRect(p.x*CELL,p.y*CELL,CELL,CELL));
+  // Spawn
+  if(waveActive&&enemiesLeft>0){
+    spawnTimer++;
+    if(spawnTimer%30===0){spawnEnemy();enemiesLeft--;}
+  }
+  if(waveActive&&enemiesLeft<=0&&enemies.length===0){
+    waveActive=false;wave++;gold+=20+wave*5;score+=wave*50;
+    playSound(523,.3,'sine');playSound(659,.3,'sine');
+    updateHUD();
+  }
+  // Update enemies
+  for(let i=enemies.length-1;i>=0;i--){
+    if(enemies[i].update()){hp--;enemies.splice(i,1);playSound(150,.3);updateHUD();if(hp<=0)gameOver=true;}
+    else if(enemies[i].hp<=0){gold+=enemies[i].reward;score+=enemies[i].reward*5;enemies.splice(i,1);playSound(1000,.1);updateHUD();}
+  }
+  // Update towers
+  towers.forEach(t=>t.update());
+  // Update bullets
+  for(let i=bullets.length-1;i>=0;i--){
+    let b=bullets[i];
+    let dx=b.tx-b.x,dy=b.ty-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<b.speed){
+      let hit=enemies.find(e=>Math.abs(e.x-b.tx)<20&&Math.abs(e.y-b.ty)<20);
+      if(hit)hit.hp-=b.dmg;
+      bullets.splice(i,1);
+    }else{b.x+=dx/dist*b.speed;b.y+=dy/dist*b.speed;}
+  }
+  // Draw
+  towers.forEach(t=>t.draw());
+  enemies.forEach(e=>e.draw());
+  bullets.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,3,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();});
+  // Game over / wave info
+  if(gameOver){
+    ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#ef4444';ctx.font='bold 28px Courier New';ctx.textAlign='center';
+    ctx.fillText('SAVUNMA KIRILDI!',W/2,H/2-20);
+    ctx.fillStyle='#fff';ctx.font='18px Courier New';
+    ctx.fillText('Skor: '+score+' | Dalga: '+wave,W/2,H/2+20);
+    ctx.fillText('Yeniden başlamak için tıkla',W/2,H/2+50);
+    canvas.onclick=()=>location.reload();
+  }else if(!waveActive){
+    ctx.fillStyle='rgba(16,185,129,.9)';ctx.font='bold 16px Courier New';ctx.textAlign='center';
+    ctx.fillText('DALGA '+wave+' — SPACE veya tıkla',W/2,H-20);
+    canvas.onclick=function(e){
+      if(!waveActive){startWave();canvas.onclick=arguments.callee;return;}
+      // Normal tower placement
+      let rect=canvas.getBoundingClientRect();
+      let mx=Math.floor((e.clientX-rect.left)*(W/rect.width)/CELL);
+      let my=Math.floor((e.clientY-rect.top)*(H/rect.height)/CELL);
+      if(pathSet.has(mx+','+my))return;
+      if(towers.find(t=>t.x===mx&&t.y===my))return;
+      let cost=[25,50,40][selectedTurret-1];
+      if(gold>=cost){gold-=cost;towers.push(new Tower(mx,my,selectedTurret-1));playSound(600,.15,'triangle');updateHUD();}
+    };
+  }
+  ctx.textAlign='left';
+  // Selected turret indicator
+  ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(5,H-30,180,25);
+  ctx.fillStyle='#fff';ctx.font='12px Courier New';
+  ctx.fillText('Seçili: '+(selectedTurret===1?'⚡Radar':selectedTurret===2?'🔥Lazer':'❄️EMP')+' [1/2/3]',10,H-12);
+  requestAnimationFrame(gameLoop);
+}
+updateHUD();
+gameLoop();
+})();
+</script>
+</body></html>

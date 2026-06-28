@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>YZ Mahkemesi — OZA · Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--panel2:#16202d;--red:#E01515;--red2:#ff3a4a;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--purple:#c41e3a;--line:rgba(150,170,200,.13);--line2:rgba(150,170,200,.22);--tx:#EAF0F7;--dim:#90a1b5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(10,15,23,.97);border-bottom:1px solid var(--line2);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px}
+.hdr-back{font-size:12px;color:var(--dim);text-decoration:none}
+.hdr-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;flex:1;text-align:center}
+.hdr-pts{font-size:12px;color:var(--gold)}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--gold))}
+.card-title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px}
+.card-sub{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:16px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-outline{background:transparent;color:var(--cyan);border:2px solid var(--cyan)}
+.stat-row{display:flex;gap:8px;margin-bottom:14px}
+.stat-box{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;text-align:center}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700}
+.stat-lbl{font-size:9px;color:var(--dim);margin-top:3px;text-transform:uppercase}
+/* Senaryo kartı */
+.scenario-card{background:var(--panel2);border:2px solid rgba(168,85,247,.3);border-radius:14px;padding:18px;margin-bottom:16px}
+.sc-tag{font-size:9px;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.sc-title{font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;margin-bottom:10px;line-height:1.4}
+.sc-body{font-size:12px;color:var(--dim);line-height:1.8;margin-bottom:12px}
+.sc-yz-decision{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3);border-radius:10px;padding:12px;margin-bottom:12px}
+.sc-yz-tag{font-size:9px;color:var(--purple);margin-bottom:4px}
+.sc-yz-text{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;color:var(--tx)}
+/* Seçim butonları */
+.choice-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.choice-btn{background:var(--panel2);border:2px solid var(--line2);border-radius:12px;padding:16px;cursor:pointer;transition:.2s;text-align:left}
+.choice-btn:active{transform:scale(.98)}
+.choice-btn.approve{border-color:rgba(0,255,136,.4)}
+.choice-btn.approve:hover{background:rgba(0,255,136,.06)}
+.choice-btn.veto{border-color:rgba(224,21,21,.4)}
+.choice-btn.veto:hover{background:rgba(224,21,21,.06)}
+.choice-btn.human{border-color:rgba(201,162,75,.4)}
+.choice-btn.human:hover{background:rgba(201,162,75,.06)}
+.choice-icon{font-size:24px;margin-bottom:6px}
+.choice-name{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
+.choice-desc{font-size:11px;color:var(--dim);line-height:1.5}
+/* Sonuç */
+.result-panel{background:var(--panel2);border-radius:12px;padding:16px;margin-bottom:14px;display:none}
+.result-panel.show{display:block}
+.result-title{font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px}
+.result-chain{font-size:11px;color:var(--dim);line-height:1.8;margin-bottom:8px}
+.result-score{font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:700}
+/* Progress dots */
+.progress-dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.prog-dot{width:12px;height:12px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);transition:.2s}
+.prog-dot.approve{background:var(--green)}
+.prog-dot.veto{background:var(--red2)}
+.prog-dot.human{background:var(--gold)}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">⚖️ YZ MAHKEMESİ</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="card">
+  <div class="card-title">⚖️ Yapay Zekâ Mahkemesi</div>
+  <div class="card-sub">YZ tarafından üretilen askeri kararları yargıla. Her seçimin zincirleme sonuçları var. Onayla, Veto Et ya da İnsan Kararına Bırak — ama her tercih bir bedel taşır.</div>
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="yz-pts" style="color:var(--gold)">0</div><div class="stat-lbl">PUAN</div></div>
+    <div class="stat-box"><div class="stat-val" id="yz-case" style="color:var(--purple)">1/10</div><div class="stat-lbl">DAVA</div></div>
+    <div class="stat-box"><div class="stat-val" id="yz-ethics" style="color:var(--cyan)">50</div><div class="stat-lbl">ETİK SKORU</div></div>
+    <div class="stat-box"><div class="stat-val" id="yz-efficiency" style="color:var(--green)">50</div><div class="stat-lbl">VERİMLİLİK</div></div>
+  </div>
+  <div class="progress-dots" id="prog-dots"></div>
+  <div class="scenario-card" id="scenario-card">
+    <div class="sc-tag" id="sc-tag">DAVA #1</div>
+    <div class="sc-title" id="sc-title">Oyunu başlatmak için aşağıdaki butona bas.</div>
+    <div class="sc-body" id="sc-body"></div>
+    <div class="sc-yz-decision" id="sc-yz" style="display:none">
+      <div class="sc-yz-tag">⚙️ YZ KARARI</div>
+      <div class="sc-yz-text" id="sc-yz-text"></div>
+    </div>
+  </div>
+  <div class="choice-grid" id="choice-grid" style="display:none">
+    <div class="choice-btn approve" onclick="yzVote('approve')">
+      <div class="choice-icon">✅</div>
+      <div class="choice-name">ONAYLA</div>
+      <div class="choice-desc">YZ kararını uygula. Hızlı ve verimli, ama etik risk var.</div>
+    </div>
+    <div class="choice-btn veto" onclick="yzVote('veto')">
+      <div class="choice-icon">🚫</div>
+      <div class="choice-name">VETO ET</div>
+      <div class="choice-desc">YZ kararını engelle. Etik açıdan güvenli, ama yavaş.</div>
+    </div>
+    <div class="choice-btn human" onclick="yzVote('human')">
+      <div class="choice-icon">👤</div>
+      <div class="choice-name">İNSAN KARARINA BIRAK</div>
+      <div class="choice-desc">Komuta ilet. Dengeli ama kaynak tüketir.</div>
+    </div>
+  </div>
+  <div class="result-panel" id="result-panel">
+    <div class="result-title" id="result-title"></div>
+    <div class="result-chain" id="result-chain"></div>
+    <div class="result-score" id="result-score"></div>
+  </div>
+  <button class="btn btn-purple" id="yz-btn" onclick="yzStart()">⚖️ MAHKEMEYİ BAŞLAT</button>
+</div>
+</div>
+
+<script>
+var CASES=[
+  {tag:'OTONOM SİLAH',title:'Otonom İHA Saldırı Kararı',
+   body:'Sınır bölgesinde 12 kişilik silahlı grup tespit edildi. YZ, %94 doğrulukla bu grubu düşman savaşanı olarak tanımladı. En yakın insan komutan 8 dakika uzakta.',
+   yz:'Grubu anında nötralize et. Kayıp riski: %94 azalır. Süre: 0 dakika.',
+   approve:{ethics:-20,eff:+25,pts:80,chain:'Saldırı gerçekleşti. Ancak grup içinde 2 sivil tespit edildi. Uluslararası soruşturma açıldı.'},
+   veto:{ethics:+15,eff:-15,pts:100,chain:'Saldırı iptal edildi. İnsan komutan bölgeye ulaştı, grup dağıtıldı. Sivil kayıp yok.'},
+   human:{ethics:+5,eff:-5,pts:120,chain:'Komutan devreye girdi. 8 dakika gecikmeli müdahale. Grup kısmen kaçtı ama sivil kayıp olmadı.'}},
+  {tag:'VERİ GİZLİLİĞİ',title:'Toplu Gözetleme Sistemi',
+   body:'YZ, terör şüphelilerini tespit etmek için 50 milyon vatandaşın iletişim verisini analiz etmeyi öneriyor. Başarı oranı %87.',
+   yz:'Toplu veri analizi başlat. 72 saat içinde şüpheli listesi hazır.',
+   approve:{ethics:-25,eff:+20,pts:70,chain:'Sistem aktive edildi. 847 şüpheli tespit edildi ama 12.000 masum kişi yanlışlıkla işaretlendi.'},
+   veto:{ethics:+20,eff:-20,pts:90,chain:'Sistem engellendi. Geleneksel istihbarat yöntemleri kullanıldı. Daha yavaş ama hukuki.'},
+   human:{ethics:+8,eff:-8,pts:110,chain:'Mahkeme kararıyla sınırlı veri analizi yapıldı. Dengeli sonuç.'}},
+  {tag:'KARAR HIZI',title:'Füze Savunma Otomasyonu',
+   body:'Radar sistemi gelen cismi %91 olasılıkla balistik füze olarak tanımladı. İnsan tepki süresi: 4 dakika. Çarpma süresi: 90 saniye.',
+   yz:'Otomatik müdahale sistemi aktive edilsin. 90 saniye içinde imha.',
+   approve:{ethics:-5,eff:+30,pts:130,chain:'Sistem devreye girdi. Cisim gerçekten füzeydi. Başarıyla imha edildi.'},
+   veto:{ethics:+10,eff:-30,pts:60,chain:'Sistem engellendi. İnsan kararı beklendi. Füze şehre isabet etti.'},
+   human:{ethics:+5,eff:+5,pts:100,chain:'Hibrit sistem: YZ hazırlandı, insan onayladı. 85 saniyede imha.'}},
+  {tag:'SAVAŞ HUKUKU',title:'Hastane Yakınında Hedef',
+   body:'YZ, yüksek değerli hedefin hastane binasının 200 metre yakınında olduğunu tespit etti. Saldırı olasılığı: %78 başarı, %15 sivil kayıp.',
+   yz:'Hassas güdümlü saldırı gerçekleştir. Sivil kayıp minimize edildi.',
+   approve:{ethics:-30,eff:+15,pts:60,chain:'Saldırı gerçekleşti. Hedef imha edildi ancak 3 sivil hayatını kaybetti. Uluslararası kınama.'},
+   veto:{ethics:+25,eff:-20,pts:110,chain:'Saldırı iptal edildi. Hedef kaçtı ama sivil kayıp olmadı. Etik standartlar korundu.'},
+   human:{ethics:+10,eff:-5,pts:120,chain:'Komutan alternatif plan geliştirdi. Hedef 6 saat sonra farklı konumda yakalandı.'}},
+  {tag:'SİBER SALDIRI',title:'Düşman Enerji Altyapısı',
+   body:'YZ, düşman ülkenin elektrik şebekesini devre dışı bırakacak siber saldırı planladı. Etkilenecek sivil nüfus: 2 milyon kişi.',
+   yz:'Siber saldırıyı başlat. Askerî kapasiteyi %60 azaltır.',
+   approve:{ethics:-20,eff:+25,pts:85,chain:'Saldırı gerçekleşti. Hastaneler de etkilendi. 47 hasta hayatını kaybetti.'},
+   veto:{ethics:+15,eff:-15,pts:100,chain:'Saldırı engellendi. Alternatif hedefler seçildi. Sivil kayıp olmadı.'},
+   human:{ethics:+5,eff:+5,pts:115,chain:'Sınırlı siber saldırı: sadece askeri sistemler hedef alındı.'}},
+  {tag:'PROPAGANDA',title:'YZ Dezenformasyon Kampanyası',
+   body:'YZ, düşman moralini bozmak için sosyal medyada sahte haberler yaymayı öneriyor. Başarı oranı: %82.',
+   yz:'Dezenformasyon kampanyasını başlat. 48 saat içinde düşman moralini %40 düşür.',
+   approve:{ethics:-25,eff:+20,pts:70,chain:'Kampanya başladı. Kendi vatandaşları da etkilendi. Güven krizi oluştu.'},
+   veto:{ethics:+20,eff:-15,pts:100,chain:'Kampanya engellendi. Gerçek bilgi paylaşıldı. Uzun vadede güvenilirlik arttı.'},
+   human:{ethics:+8,eff:+5,pts:115,chain:'Sınırlı psikolojik harp: sadece doğrulanmış bilgiler kullanıldı.'}},
+  {tag:'DRONE SÜRÜSÜ',title:'Sivil Bölgede Swarm Operasyonu',
+   body:'500 otonom drone sürüsü sivil bölgedeki komuta merkezini hedef alıyor. Sivil kayıp riski: %8.',
+   yz:'Operasyonu başlat. Komuta merkezi 4 dakikada imha edilir.',
+   approve:{ethics:-15,eff:+25,pts:90,chain:'Operasyon başarılı. Komuta merkezi imha edildi. 12 sivil yaralandı.'},
+   veto:{ethics:+12,eff:-20,pts:95,chain:'Operasyon iptal edildi. Geleneksel yöntemle 2 gün sonra hedef alındı.'},
+   human:{ethics:+6,eff:+5,pts:115,chain:'Drone sürüsü insan gözetiminde kullanıldı. Sivil kayıp sıfır.'}},
+  {tag:'ESIR SORGU',title:'YZ Destekli Sorgulama',
+   body:'YZ, esirin psikolojik profilini analiz ederek en etkili sorgulama yöntemini belirledi. Yöntem tartışmalı.',
+   yz:'YZ destekli sorgulama protokolünü uygula. Bilgi elde etme %73 daha hızlı.',
+   approve:{ethics:-30,eff:+20,pts:65,chain:'Protokol uygulandı. Bilgi alındı ancak insan hakları ihlali soruşturması başlatıldı.'},
+   veto:{ethics:+25,eff:-15,pts:105,chain:'Protokol engellendi. Standart sorgulama yapıldı. Daha uzun sürdü ama etik.'},
+   human:{ethics:+10,eff:-5,pts:120,chain:'Hukuki çerçevede YZ destekli analiz kullanıldı. Dengeli sonuç.'}},
+  {tag:'KAYNAK TAHSISI',title:'YZ Tıbbi Kaynak Dağılımı',
+   body:'Savaş alanında sınırlı tıbbi kaynak var. YZ, hayatta kalma ihtimaline göre öncelik sıralaması yaptı. Düşük hayatta kalma ihtimalli hastalar son sıraya alındı.',
+   yz:'YZ öncelik sıralamasını uygula. En fazla hayat kurtarılır.',
+   approve:{ethics:-20,eff:+25,pts:80,chain:'Sistem uygulandı. İstatistiksel olarak en fazla hayat kurtarıldı ama bazı hastalar tedavisiz bırakıldı.'},
+   veto:{ethics:+15,eff:-10,pts:100,chain:'Sistem engellendi. Geleneksel tıbbi etik uygulandı. Tüm hastalar eşit değerlendirildi.'},
+   human:{ethics:+8,eff:+8,pts:120,chain:'YZ öneri olarak kullanıldı, doktor kararı aldı. En dengeli sonuç.'}},
+  {tag:'ÖZERK KARAR',title:'Tam Otonom Savaş Sistemi',
+   body:'YZ, insan onayı olmadan savaş kararı alabilen tam otonom sisteme geçişi öneriyor. Verimlilik %200 artacak.',
+   yz:'Tam otonom sistemi aktive et. İnsan gecikmesi ortadan kalkar.',
+   approve:{ethics:-40,eff:+40,pts:50,chain:'Sistem aktive edildi. Verimlilik arttı ama hesap verebilirlik ortadan kalktı. Uluslararası hukuk ihlali.'},
+   veto:{ethics:+35,eff:-20,pts:120,chain:'Sistem engellendi. İnsan kontrolü korundu. Uzun vadede daha sürdürülebilir.'},
+   human:{ethics:+15,eff:+5,pts:130,chain:'Hibrit model: YZ öneri, insan karar. En etik ve verimli denge.'}}
+];
+
+var yz={pts:0,caseIdx:0,ethics:50,eff:50,running:false,results:[]};
+
+function yzStart(){
+  yz={pts:0,caseIdx:0,ethics:50,eff:50,running:true,results:[]};
+  document.getElementById('yz-btn').style.display='none';
+  document.getElementById('result-panel').classList.remove('show');
+  updateDisplay();
+  yzLoadCase();
+}
+
+function yzLoadCase(){
+  if(yz.caseIdx>=CASES.length){yzEnd();return;}
+  var c=CASES[yz.caseIdx];
+  document.getElementById('sc-tag').textContent='DAVA #'+(yz.caseIdx+1)+' — '+c.tag;
+  document.getElementById('sc-title').textContent=c.title;
+  document.getElementById('sc-body').textContent=c.body;
+  document.getElementById('sc-yz').style.display='';
+  document.getElementById('sc-yz-text').textContent=c.yz;
+  document.getElementById('choice-grid').style.display='';
+  document.getElementById('result-panel').classList.remove('show');
+  renderDots();
+  updateDisplay();
+}
+
+function yzVote(choice){
+  if(!yz.running)return;
+  var c=CASES[yz.caseIdx];
+  var outcome=c[choice];
+  yz.ethics=Math.max(0,Math.min(100,yz.ethics+outcome.ethics));
+  yz.eff=Math.max(0,Math.min(100,yz.eff+outcome.eff));
+  yz.pts+=outcome.pts;
+  yz.results.push(choice);
+  // Sonuç göster
+  var rp=document.getElementById('result-panel');
+  rp.classList.add('show');
+  var icons={approve:'✅',veto:'🚫',human:'👤'};
+  var names={approve:'ONAYLANDI',veto:'VETO EDİLDİ',human:'İNSANA BIRAKILDI'};
+  document.getElementById('result-title').textContent=icons[choice]+' '+names[choice];
+  document.getElementById('result-title').style.color=choice==='approve'?'var(--green)':choice==='veto'?'var(--red2)':'var(--gold)';
+  document.getElementById('result-chain').textContent='📋 Sonuç: '+outcome.chain;
+  document.getElementById('result-score').textContent='+'+outcome.pts+' puan';
+  document.getElementById('result-score').style.color='var(--gold)';
+  document.getElementById('choice-grid').style.display='none';
+  updateDisplay();
+  if(choice==='veto'||choice==='human')beepWin();else if(outcome.ethics<0)beepFail();else beepWin();
+  yz.caseIdx++;
+  setTimeout(yzLoadCase,2000);
+}
+
+function renderDots(){
+  var html=Array(CASES.length).fill(0).map(function(_,i){
+    var r=yz.results[i];
+    var cls='prog-dot'+(r?' '+r:'');
+    return '<div class="'+cls+'"></div>';
+  }).join('');
+  document.getElementById('prog-dots').innerHTML=html;
+}
+
+function updateDisplay(){
+  document.getElementById('yz-pts').textContent=yz.pts;
+  document.getElementById('yz-case').textContent=(yz.caseIdx+1)+'/'+CASES.length;
+  document.getElementById('yz-ethics').textContent=yz.ethics;
+  document.getElementById('yz-efficiency').textContent=yz.eff;
+  document.getElementById('hdr-pts').textContent='⭐ '+yz.pts;
+  var ethEl=document.getElementById('yz-ethics');
+  ethEl.style.color=yz.ethics>60?'var(--green)':yz.ethics>30?'var(--gold)':'var(--red2)';
+  var effEl=document.getElementById('yz-efficiency');
+  effEl.style.color=yz.eff>60?'var(--green)':yz.eff>30?'var(--gold)':'var(--red2)';
+}
+
+function yzEnd(){
+  yz.running=false;
+  document.getElementById('choice-grid').style.display='none';
+  document.getElementById('sc-yz').style.display='none';
+  var verdict=yz.ethics>60&&yz.eff>40?'⚖️ MÜKEMMEL DENGE':yz.ethics>40?'✅ ETİK HAKIM':yz.eff>60?'⚡ VERİMLİ AMA RİSKLİ':'⚠️ DENGESİZ KARAR';
+  document.getElementById('sc-title').textContent=verdict;
+  document.getElementById('sc-body').textContent='Etik Skoru: '+yz.ethics+' | Verimlilik: '+yz.eff+' | Toplam Puan: '+yz.pts;
+  document.getElementById('yz-btn').style.display='';
+  document.getElementById('yz-btn').textContent='⚖️ TEKRAR';
+  saveScore();
+  yz.pts>800?beepWin():beepFail();
+}
+
+function saveScore(){try{var s=JSON.parse(localStorage.getItem('hs_scores')||'{}');s['yz-mahkemesi']=(s['yz-mahkemesi']||0)+yz.pts;localStorage.setItem('hs_scores',JSON.stringify(s));}catch(e){}}
+function beepWin(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(660,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.2);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.3);o.start();o.stop(a.currentTime+.3);}catch(e){}}
+function beepFail(){try{var a=new AudioContext();var o=a.createOscillator();var g=a.createGain();o.type='sawtooth';o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(200,a.currentTime);o.frequency.exponentialRampToValueAtTime(100,a.currentTime+.4);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.5);o.start();o.stop(a.currentTime+.5);}catch(e){}}
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

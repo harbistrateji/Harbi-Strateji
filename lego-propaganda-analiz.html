@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lego Propaganda: İran'ın Dijital Savaş Stratejisi | Harb-i Strateji</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#ff6b35;--cyan:#00d9ff;--red:#ff4757;--bg:#0a0a0a;--card:#1a1a1a;--border:#2a2a2a;--text:#f5f5f5;--muted:#b0b0b0}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.7}
+.back{display:inline-block;padding:1rem 1.5rem;color:#9ca3af;text-decoration:none;font-size:.85rem}
+.back:hover{color:#fff}
+.hero{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 1.5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:20%;left:10%;width:300px;height:300px;background:var(--orange);border-radius:50%;filter:blur(120px);opacity:.08}
+.hero::after{content:'';position:absolute;bottom:20%;right:10%;width:300px;height:300px;background:var(--cyan);border-radius:50%;filter:blur(120px);opacity:.08}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,4rem);margin-bottom:1rem;position:relative}
+.hero h1 span{color:var(--orange)}
+.hero .subtitle{color:var(--muted);font-size:1.1rem;max-width:700px;margin:0 auto 2rem}
+.hero .meta{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.hero .meta span{background:var(--card);border:1px solid var(--border);padding:.4rem 1rem;border-radius:4px;font-size:.8rem}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:600px;margin:2rem auto 0;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.stats-bar div{text-align:center}
+.stats-bar strong{display:block;font-size:1.8rem;color:var(--orange)}
+.stats-bar span{font-size:.7rem;color:var(--muted)}
+.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+.section{margin-bottom:3rem;padding:2rem;background:var(--card);border:1px solid var(--border);border-radius:12px}
+.section h2{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:1rem;color:var(--text);border-left:4px solid var(--orange);padding-left:1rem}
+.section p{color:var(--muted);margin-bottom:1rem;font-size:.95rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.mini-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:1.2rem;transition:all .3s}
+.mini-card:hover{border-color:var(--orange);transform:translateY(-2px)}
+.mini-card h4{color:var(--orange);font-size:.85rem;margin-bottom:.4rem}
+.mini-card p{font-size:.8rem;color:var(--muted);margin:0}
+.quote{border-left:3px solid var(--cyan);padding:1rem 1.5rem;margin:1.5rem 0;background:rgba(0,217,255,.03);border-radius:0 8px 8px 0}
+.quote p{color:var(--text);font-style:italic;margin-bottom:.3rem}
+.quote cite{color:var(--muted);font-size:.8rem}
+.chart-bar{display:flex;align-items:center;gap:.8rem;margin:.6rem 0}
+.chart-bar .label{min-width:100px;font-size:.8rem;color:var(--muted)}
+.chart-bar .bar{flex:1;height:24px;background:var(--border);border-radius:4px;overflow:hidden;position:relative}
+.chart-bar .fill{height:100%;border-radius:4px;transition:width 1s ease}
+.chart-bar .val{font-size:.75rem;color:var(--text);min-width:40px;text-align:right}
+.timeline{position:relative;padding-left:2rem;margin:1.5rem 0}
+.timeline::before{content:'';position:absolute;left:.5rem;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline .item{position:relative;margin-bottom:1.5rem;padding-left:1rem}
+.timeline .item::before{content:'';position:absolute;left:-1.6rem;top:.5rem;width:10px;height:10px;background:var(--orange);border-radius:50%}
+.timeline .item h4{font-size:.85rem;color:var(--text);margin-bottom:.2rem}
+.timeline .item p{font-size:.8rem;color:var(--muted)}
+.cta{display:inline-flex;align-items:center;gap:.5rem;background:var(--orange);color:#fff;padding:.7rem 1.5rem;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600;margin-top:1rem;transition:all .3s}
+.cta:hover{background:#e05a2a;transform:translateX(4px)}
+@media(max-width:600px){.grid-3{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,1fr)}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" class="back">← harbistrateji.com</a>
+
+<div class="hero">
+<h1><span>LEGO</span> PROPAGANDA</h1>
+<p class="subtitle">İran'ın "Lego Trump" Propaganda Kampanyası: Tarihsel Kökenler, Psikolojik Mekanizmalar ve Dijital Savaşın Geleceği</p>
+<div class="meta">
+<span>Harb-i Strateji</span>
+<span>Nisan 2026</span>
+<span>Akademik Analiz</span>
+<span>Bilişsel Savaş</span>
+</div>
+<div class="stats-bar">
+<div><strong>70+</strong><span>Video</span></div>
+<div><strong>128M+</strong><span>Görüntüleme</span></div>
+<div><strong>5</strong><span>Platform</span></div>
+<div><strong>10&gt;</strong><span>Kişilik Ekip</span></div>
+</div>
+</div>
+
+<div class="container">
+<div class="section">
+<h2>Yönetici Özeti</h2>
+<p>28 Şubat 2026'da ABD-İsrail operasyonunun hemen ardından başlayan AI destekli Lego animasyon kampanyası, modern bilişsel savaşın en yenilikçi örneklerinden birini oluşturuyor. "Explosive Media" adlı 10 kişiden az, 19-25 yaş arası bir ekip tarafından üretilen içerikler, günde bir video üretim kapasitesiyle milyonlarca görüntülemeye ulaştı.</p>
+<div class="grid-3">
+<div class="mini-card"><h4>Kampanya Başlangıcı</h4><p>28 Şubat 2026 — ABD-İsrail operasyonu sonrası</p></div>
+<div class="mini-card"><h4>Üretim Ekibi</h4><p>Explosive Media — &lt;10 kişi, 19-25 yaş</p></div>
+<div class="mini-card"><h4>Etki Alanı</h4><p>Viral yayılım, uluslararası medya ilgisi</p></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Platform Dağılımı</h2>
+<p>Kampanya beş farklı platformda eş zamanlı yayılım gösterdi:</p>
+<div class="chart-bar"><span class="label">X (Twitter)</span><div class="bar"><div class="fill" style="width:90%;background:var(--orange)"></div></div><span class="val">45M</span></div>
+<div class="chart-bar"><span class="label">TikTok</span><div class="bar"><div class="fill" style="width:64%;background:var(--cyan)"></div></div><span class="val">32M</span></div>
+<div class="chart-bar"><span class="label">Instagram</span><div class="bar"><div class="fill" style="width:56%;background:var(--red)"></div></div><span class="val">28M</span></div>
+<div class="chart-bar"><span class="label">YouTube</span><div class="bar"><div class="fill" style="width:30%;background:#ffa502"></div></div><span class="val">15M</span></div>
+<div class="chart-bar"><span class="label">Reddit</span><div class="bar"><div class="fill" style="width:17%;background:#808080"></div></div><span class="val">8.5M</span></div>
+</div>
+
+<div class="section">
+<h2>Tarihsel Bağlam: Propagandanın Evrimi</h2>
+<p>Oyuncak ve çocuk estetiğinin propaganda aracı olarak kullanımı binlerce yıl öncesine dayanır:</p>
+<div class="timeline">
+<div class="item"><h4>Antik Mısır — Oyuncak Askerler</h4><p>Çocukları savaşa hazırlamak için minyatür asker figürleri</p></div>
+<div class="item"><h4>Antik Atina — Kukla Tiyatrosu</h4><p>Politik mesajların çocuk estetiğiyle iletilmesi</p></div>
+<div class="item"><h4>1500'ler — Luther Karikatürleri</h4><p>Basit görsellerle kitlesel propaganda</p></div>
+<div class="item"><h4>1943 — Disney Animasyonları</h4><p>ABD hükümeti için savaş propagandası</p></div>
+<div class="item"><h4>2026 — AI Lego Videoları</h4><p>Yapay zekâ destekli, viral, düşük maliyetli bilişsel savaş</p></div>
+</div>
+</div>
+
+<div class="section">
+<h2>İçerik Analizi: Video Temaları</h2>
+<p>70+ videonun tematik dağılımı:</p>
+<div class="chart-bar"><span class="label">Trump Küçümseme</span><div class="bar"><div class="fill" style="width:70%;background:var(--orange)"></div></div><span class="val">%35</span></div>
+<div class="chart-bar"><span class="label">Epstein Bağlantısı</span><div class="bar"><div class="fill" style="width:52%;background:var(--red)"></div></div><span class="val">%26</span></div>
+<div class="chart-bar"><span class="label">Netanyahu Manip.</span><div class="bar"><div class="fill" style="width:44%;background:var(--cyan)"></div></div><span class="val">%22</span></div>
+<div class="chart-bar"><span class="label">Askerî Kayıplar</span><div class="bar"><div class="fill" style="width:30%;background:#ffa502"></div></div><span class="val">%15</span></div>
+<div class="chart-bar"><span class="label">İran Zaferi</span><div class="bar"><div class="fill" style="width:4%;background:#10b981"></div></div><span class="val">%2</span></div>
+</div>
+
+<div class="section">
+<h2>Neden Lego Estetiği?</h2>
+<div class="grid-3">
+<div class="mini-card"><h4>Evrensel Tanınırlık</h4><p>Lego dünya genelinde %96 marka bilinirliğine sahip</p></div>
+<div class="mini-card"><h4>Duygusal Bağ</h4><p>Çocukluk nostaljisi → güven → mesaj kabulü</p></div>
+<div class="mini-card"><h4>Sansür Aşma</h4><p>"Oyuncak" estetiği algoritma filtrelerini atlatır</p></div>
+<div class="mini-card"><h4>Paylaşılabilirlik</h4><p>Eğlenceli görünüm viral paylaşımı tetikler</p></div>
+<div class="mini-card"><h4>Düşük Maliyet</h4><p>AI ile dakikalar içinde üretim mümkün</p></div>
+<div class="mini-card"><h4>Empati Erozyonu</h4><p>Gerçek acıyı oyuncaklaştırarak normalleştirme</p></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Uzman Görüşleri</h2>
+<div class="quote"><p>"Lego'nun eğitimde işe yaramasının nedeni, propagandada da işe yaramasının nedeniyle aynı: insanlar Lego'yu seviyor."</p><cite>— Dan Butler, Washington Üniversitesi</cite></div>
+<div class="quote"><p>"Savaş giderek dikkat ekonomisinin bir parçası haline geliyor. Bu son derece tuhaf ve rahatsız edici bir deneyim."</p><cite>— Emerson Brooking, Atlantic Council</cite></div>
+<div class="quote"><p>"Gördüğümüz şey yalnızca silah savaşı değil, estetik savaşı."</p><cite>— Nancy Snow, Propaganda Araştırmacısı</cite></div>
+</div>
+
+<div class="section">
+<h2>Slopaganda ve Epistemik Çöküş</h2>
+<p><strong>Slopaganda</strong> — kalitesiz ama yüksek hacimli AI üretimi propaganda. Amacı ikna etmek değil, bilgi alanını kirletmek ve "gerçek" kavramını anlamsızlaştırmak.</p>
+<p>Bu kampanya, epistemik çöküşün — yani toplumların neyin gerçek olduğu konusunda uzlaşma yeteneğini kaybetmesinin — somut bir örneğidir. Lego estetiği, gerçeklik ile kurgu arasındaki sınırı kasıtlı olarak bulanıklaştırır.</p>
+<div class="grid-3">
+<div class="mini-card"><h4>Bilgi Kirliliği</h4><p>Hacim > Kalite stratejisi</p></div>
+<div class="mini-card"><h4>Gerçeklik Erozyonu</h4><p>Kurgu-gerçek sınırı bulanıklaşır</p></div>
+<div class="mini-card"><h4>Toplumsal Bölünme</h4><p>Ortak gerçeklik algısı çöker</p></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Gelecek Senaryoları</h2>
+<p>AI destekli propaganda kampanyaları hızla evrilmektedir. 2027'ye kadar beklenen gelişmeler:</p>
+<div class="grid-3">
+<div class="mini-card"><h4>Gerçek Zamanlı Üretim</h4><p>Olaylar yaşanırken anında propaganda videosu</p></div>
+<div class="mini-card"><h4>Kişiselleştirme</h4><p>Her kullanıcıya özel mesaj ve estetik</p></div>
+<div class="mini-card"><h4>Çoklu Format</h4><p>Video, ses, metin, oyun — tüm medya türleri</p></div>
+</div>
+</div>
+
+<a href="index.html" class="cta">← Ana Sayfaya Dön</a>
+</div>
+</body>
+</html>

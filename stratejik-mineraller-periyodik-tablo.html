@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="hs-skip" content="true">
+<title>Stratejik Mineraller — Periyodik Tablo | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="hs-global.css">
+<style>
+
+:root {
+  --border: #2a3a4a;
+  --border-strong: #3d5060;
+  --border-accent: #00E0FF;
+  --border-success: #00FF88;
+  --border-danger: #E24B4A;
+  --border-warning: #EF9F27;
+  --surface-0: #0a0f17;
+  --surface-1: #0d1b2a;
+  --surface-2: #162540;
+  --bg-accent: rgba(0,224,255,.08);
+  --bg-success: rgba(0,255,136,.08);
+  --bg-danger: rgba(226,75,74,.08);
+  --bg-warning: rgba(239,159,39,.08);
+  --text-primary: #E8EDF5;
+  --text-secondary: #7A8BA0;
+  --text-muted: #3D4F65;
+  --text-accent: #00E0FF;
+  --text-success: #00FF88;
+  --text-danger: #E24B4A;
+  --text-warning: #EF9F27;
+  --radius: 8px;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body { background: var(--surface-0); color: var(--text-primary); font-family: 'Inter', sans-serif; }
+.sim-page-wrap { max-width: 900px; margin: 2rem auto; padding: 0 1.25rem; }
+.sim-page-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.sim-page-header h1 { font-family: 'Oswald', sans-serif; font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: .3rem; }
+.sim-page-header p { font-size: .85rem; color: var(--text-secondary); }
+.sim-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .75rem; color: var(--text-accent); margin-bottom: 1rem; text-decoration: none; }
+.sim-back:hover { text-decoration: underline; }
+.sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="sim-page-wrap">
+  <a href="simulasyonlar.html" class="sim-back">← Simülasyonlara Dön</a>
+  
+<h2 class="sr-only">Savunma sanayinde kritik rol oynayan stratejik mineraller — tıklanabilir periyodik tablo.</h2>
+<style>
+.pt-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 3px; padding: 0 0 1rem; }
+.el { border-radius: 6px; border: 0.5px solid var(--border); padding: 4px 2px; cursor: pointer; transition: transform .15s, border-color .15s; text-align: center; min-height: 52px; display: flex; flex-direction: column; justify-content: center; }
+.el:hover { transform: scale(1.12); border-color: var(--border-accent); z-index: 10; position: relative; }
+.el.active { border: 1.5px solid var(--border-accent); background: var(--bg-accent); }
+.el .sym { font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+.el .num { font-size: 9px; color: var(--text-muted); }
+.el .name { font-size: 8px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; }
+.el-empty { min-height: 52px; }
+.info-panel { background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin: 0.5rem 0 0; min-height: 120px; display: none; }
+.info-panel.show { display: block; }
+.ip-header { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.ip-sym { width: 56px; height: 56px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 500; flex-shrink: 0; }
+.risk-bar { height: 6px; border-radius: 3px; background: var(--border); margin-top: 4px; }
+.risk-fill { height: 6px; border-radius: 3px; transition: width .4s; }
+.ip-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.ip-card { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.ip-label { font-size: 11px; color: var(--text-muted); }
+.ip-val { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-top: 2px; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-right: 4px; margin-top: 6px; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; font-size: 11px; color: var(--text-secondary); }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 4px; }
+</style>
+
+<div class="legend">
+  <span><span class="legend-dot" style="background:#3B8BD4"></span>Elektronik & çip</span>
+  <span><span class="legend-dot" style="background:#1D9E75"></span>Mıknatıs & motor</span>
+  <span><span class="legend-dot" style="background:#D85A30"></span>Yapısal & zırh</span>
+  <span><span class="legend-dot" style="background:#BA7517"></span>Enerji & depolama</span>
+  <span><span class="legend-dot" style="background:#639922"></span>Optik & lazer</span>
+  <span><span class="legend-dot" style="background:#8B0000"></span>Nükleer & stratejik</span>
+  <span><span class="legend-dot" style="background:#9B59B6"></span>Elektronik harp</span>
+  <span><span class="legend-dot" style="background:#888780" style="opacity:.4"></span>Diğer element</span>
+</div>
+
+<div class="pt-grid" id="ptgrid"></div>
+<div class="info-panel" id="infopanel">
+  <p style="color:var(--text-muted);font-size:14px;">Bir element seçin.</p>
+</div>
+
+<script>
+const elements = [
+  {z:1,sym:'H',name:'Hidrojen',col:1,row:1},{z:2,sym:'He',name:'Helyum',col:18,row:1},
+  {z:3,sym:'Li',name:'Lityum',col:1,row:2},{z:4,sym:'Be',name:'Berilyum',col:2,row:2},
+  {z:5,sym:'B',name:'Bor',col:13,row:2},{z:6,sym:'C',name:'Karbon',col:14,row:2},
+  {z:7,sym:'N',name:'Azot',col:15,row:2},{z:8,sym:'O',name:'Oksijen',col:16,row:2},
+  {z:9,sym:'F',name:'Flor',col:17,row:2},{z:10,sym:'Ne',name:'Neon',col:18,row:2},
+  {z:11,sym:'Na',name:'Sodyum',col:1,row:3},{z:12,sym:'Mg',name:'Magnezyum',col:2,row:3},
+  {z:13,sym:'Al',name:'Alüminyum',col:13,row:3},{z:14,sym:'Si',name:'Silisyum',col:14,row:3},
+  {z:15,sym:'P',name:'Fosfor',col:15,row:3},{z:16,sym:'S',name:'Kükürt',col:16,row:3},
+  {z:17,sym:'Cl',name:'Klor',col:17,row:3},{z:18,sym:'Ar',name:'Argon',col:18,row:3},
+  {z:19,sym:'K',name:'Potasyum',col:1,row:4},{z:20,sym:'Ca',name:'Kalsiyum',col:2,row:4},
+  {z:21,sym:'Sc',name:'Skandiyum',col:3,row:4},{z:22,sym:'Ti',name:'Titanyum',col:4,row:4},
+  {z:23,sym:'V',name:'Vanadyum',col:5,row:4},{z:24,sym:'Cr',name:'Krom',col:6,row:4},
+  {z:25,sym:'Mn',name:'Mangan',col:7,row:4},{z:26,sym:'Fe',name:'Demir',col:8,row:4},
+  {z:27,sym:'Co',name:'Kobalt',col:9,row:4},{z:28,sym:'Ni',name:'Nikel',col:10,row:4},
+  {z:29,sym:'Cu',name:'Bakır',col:11,row:4},{z:30,sym:'Zn',name:'Çinko',col:12,row:4},
+  {z:31,sym:'Ga',name:'Galyum',col:13,row:4},{z:32,sym:'Ge',name:'Germanyum',col:14,row:4},
+  {z:33,sym:'As',name:'Arsenik',col:15,row:4},{z:34,sym:'Se',name:'Selenyum',col:16,row:4},
+  {z:35,sym:'Br',name:'Brom',col:17,row:4},{z:36,sym:'Kr',name:'Kripton',col:18,row:4},
+  {z:37,sym:'Rb',name:'Rubidyum',col:1,row:5},{z:38,sym:'Sr',name:'Stronsiyum',col:2,row:5},
+  {z:39,sym:'Y',name:'İtriyum',col:3,row:5},{z:40,sym:'Zr',name:'Zirkonyum',col:4,row:5},
+  {z:41,sym:'Nb',name:'Niyobyum',col:5,row:5},{z:42,sym:'Mo',name:'Molibden',col:6,row:5},
+  {z:43,sym:'Tc',name:'Teknesyum',col:7,row:5},{z:44,sym:'Ru',name:'Rutenyum',col:8,row:5},
+  {z:45,sym:'Rh',name:'Rodyum',col:9,row:5},{z:46,sym:'Pd',name:'Paladyum',col:10,row:5},
+  {z:47,sym:'Ag',name:'Gümüş',col:11,row:5},{z:48,sym:'Cd',name:'Kadmiyum',col:12,row:5},
+  {z:49,sym:'In',name:'İndiyum',col:13,row:5},{z:50,sym:'Sn',name:'Kalay',col:14,row:5},
+  {z:51,sym:'Sb',name:'Antimon',col:15,row:5},{z:52,sym:'Te',name:'Tellür',col:16,row:5},
+  {z:53,sym:'I',name:'İyot',col:17,row:5},{z:54,sym:'Xe',name:'Ksenon',col:18,row:5},
+  {z:55,sym:'Cs',name:'Sezyum',col:1,row:6},{z:56,sym:'Ba',name:'Baryum',col:2,row:6},
+  {z:72,sym:'Hf',name:'Hafniyum',col:4,row:6},{z:73,sym:'Ta',name:'Tantal',col:5,row:6},
+  {z:74,sym:'W',name:'Tungsten',col:6,row:6},{z:75,sym:'Re',name:'Renyum',col:7,row:6},
+  {z:76,sym:'Os',name:'Osmiyum',col:8,row:6},{z:77,sym:'Ir',name:'İridyum',col:9,row:6},
+  {z:78,sym:'Pt',name:'Platin',col:10,row:6},{z:79,sym:'Au',name:'Altın',col:11,row:6},
+  {z:80,sym:'Hg',name:'Cıva',col:12,row:6},{z:81,sym:'Tl',name:'Talyum',col:13,row:6},
+  {z:82,sym:'Pb',name:'Kurşun',col:14,row:6},{z:83,sym:'Bi',name:'Bizmut',col:15,row:6},
+  {z:57,sym:'La',name:'Lantan',col:3,row:8.5},{z:58,sym:'Ce',name:'Seryum',col:4,row:8.5},
+  {z:59,sym:'Pr',name:'Praseodim',col:5,row:8.5},{z:60,sym:'Nd',name:'Neodimyum',col:6,row:8.5},
+  {z:61,sym:'Pm',name:'Prometyum',col:7,row:8.5},{z:62,sym:'Sm',name:'Samaryum',col:8,row:8.5},
+  {z:63,sym:'Eu',name:'Europiyum',col:9,row:8.5},{z:64,sym:'Gd',name:'Gadolinyum',col:10,row:8.5},
+  {z:65,sym:'Tb',name:'Terbiyum',col:11,row:8.5},{z:66,sym:'Dy',name:'Disprozyum',col:12,row:8.5},
+  {z:67,sym:'Ho',name:'Holmiyum',col:13,row:8.5},{z:68,sym:'Er',name:'Erbiyum',col:14,row:8.5},
+  {z:69,sym:'Tm',name:'Tulyum',col:15,row:8.5},{z:70,sym:'Yb',name:'İterbiyum',col:16,row:8.5},
+  {z:71,sym:'Lu',name:'Lutesyum',col:17,row:8.5},
+];
+
+const strategic = {
+  // === ELEKTRONİK & ÇİP ===
+  31: { color:'#3B8BD4', cat:'Elektronik & Çip', role:'5G/6G askeri haberleşme, YZ çipleri, radar sistemleri', producers:'Çin (%80+), Japonya, Almanya', risk:95, alt:'GaAs, GaN yarı iletkenleri; ikame çok zor', uses:['AESA Radar','5G/6G','YZ Çipi','Uydu','EH Sistemi'], desc:'Galyum arsenid (GaAs) ve galyum nitrür (GaN) bileşikleri, silisyumdan çok daha hızlı çalışır. F-35 APG-81 radarından KAAN AESA radarına, TB2 haberleşme modülünden uydu alıcılarına kadar kritik. SFA-Oxford: GaN LED\'ler kokpit ekranlarında, kızılötesi yayıcılarda, lazer işaretleyicilerde ve gece görüş sistemlerinde yüksek parlaklık ve enerji verimliliği sağlar. Çin\'in 2023 ihracat kısıtlaması NATO tedarik zincirini doğrudan tehdit ediyor.' },
+  32: { color:'#3B8BD4', cat:'Elektronik & Çip', role:'Kızılötesi optik, fiber optik, yarı iletken lazerler', producers:'Çin (%60), Rusya, Kanada', risk:88, alt:'Bazı uygulamalar için InP ikame edilebilir', uses:['Kızılötesi Optik','Askeri Fiber','Termal Kamera','Gece Görüş'], desc:'Termografik füze güdümünde ve askeri kızılötesi sensörlerde vazgeçilmez. FLIR sistemleri, Javelin füzesi arayıcı başlığı ve tüm termal görüntüleme cihazları germanyum lensleri kullanır.' },
+  49: { color:'#3B8BD4', cat:'Elektronik & Çip', role:'LCD ekranlar, dokunmatik paneller, güneş hücreleri', producers:'Çin (%50), Güney Kore, Japonya', risk:72, alt:'Grafen bazlı iletkenler geliştirilmekte', uses:['Kokpit Ekranı','Güneş Paneli','Dokunmatik Panel','Sensör'], desc:'İndiyum-kalay-oksit (ITO) şeffaf iletken film olarak tüm askeri kokpit ekranlarında, uydu güneş panellerinde ve dokunmatik komuta sistemlerinde kullanılır.' },
+  14: { color:'#3B8BD4', cat:'Elektronik & Çip', role:'Yarı iletken endüstrisinin temeli, güneş hücreleri', producers:'Çin (%70), ABD, Almanya', risk:45, alt:'Hammadde bol; işleme kapasitesi kritik darboğaz', uses:['Mikroçip','Güneş Paneli','Sensör','Optik Fiber'], desc:'Silisyum wafer\'lar tüm modern elektronik savaş, haberleşme ve bilgi işlem sistemlerinin temelidir. Hammadde bol olsa da %7nm altı işleme kapasitesi TSMC ve Samsung\'da yoğunlaşmıştır.' },
+  
+  // === MIKNATIS & MOTOR ===
+  60: { color:'#1D9E75', cat:'Mıknatıs & Motor', role:'Akıllı füze kanatçıkları, uçak motorları, İHA\'lar', producers:'Çin (%85+)', risk:98, alt:'Düşük güçlü alternatifler mevcut; performans kaybı önemli', uses:['Tomahawk Füzesi','F-35 Motoru','İHA','Denizaltı','KAAN'], desc:'Neodimyum-demir-bor (NdFeB) mıknatısları dünyanın en güçlü kalıcı mıknatıslarıdır. KAAN motorundan Bayraktar TB3 servo motorlarına kadar her yerde kullanılır. SFA-Oxford: SQQ-89 denizaltı savaş sisteminde, Tomahawk cruise füzesinde, JTRS güvenli haberleşme sisteminde ve tüm hassas güdümlü mühimmatta elektromanyetik aktüatör olarak kritik. Çin\'in Nd ihracatını kesmesi Batı savunma üretimini ciddi aksatır.' },
+  66: { color:'#1D9E75', cat:'Mıknatıs & Motor', role:'Yüksek ısı ortamında NdFeB mıknatıslarını güçlendirir', producers:'Çin (%99)', risk:99, alt:'Neredeyse ikame edilemez; kritik bağımlılık', uses:['Jet Motoru','EMP Dayanımı','İHA Motoru','Hipersonik'], desc:'Disprozyum eklenmeden NdFeB mıknatısları yüksek ısıda manyetikliğini kaybeder. Tüm üretim neredeyse Çin\'de. ABD\'nin en kritik tedarik zinciri açığı. Hipersonik füze güdüm motorlarında zorunlu.' },
+  62: { color:'#1D9E75', cat:'Mıknatıs & Motor', role:'Hassas güdüm sistemleri, nükleer kontrol çubukları', producers:'Çin (%90), Brezilya, Hindistan', risk:85, alt:'Gadolinyum kısmi ikame; performans düşer', uses:['Hassas Güdüm','Nükleer Kontrol','Lazer','Uydu Motoru'], desc:'Samaryum-kobalt (SmCo) mıknatısları NdFeB\'den daha yüksek ısıya dayanır (-55°C ile 300°C arası stabil). SFA-Oxford: AN/MPQ-65 Patriot radarı, AN/APG-79 AESA radarları, AIM-120 AMRAAM füze güdümü ve EA-18G Growler karıştırma sistemlerinde kullanılır. Sonar uygulamalarında AN/SQS-53C ve CAPTAS-4 sistemlerinde denizaltı tespiti sağlar. Hipersonik tehdit algılamada LRDR radarında Mach 10+ araçları izler.' },
+  59: { color:'#1D9E75', cat:'Mıknatıs & Motor', role:'Uçak motoru alaşımları, NdFeB mıknatıs katkısı', producers:'Çin (%85), Myanmar', risk:87, alt:'Neodimyum ile karıştırılarak kullanılır; tek başına ikame yok', uses:['Motor Alaşımı','Mıknatıs','Optik Cam','Seramik'], desc:'Praseodimyum, neodimyum ile birlikte didimyum alaşımı oluşturur. Jet motoru süper alaşımlarında oksidasyona karşı koruma sağlar. Askeri optik camlarda renk düzeltici olarak kullanılır.' },
+  65: { color:'#1D9E75', cat:'Mıknatıs & Motor', role:'Sonar sistemleri, manyetostriksiyon, lazer', producers:'Çin (%90+)', risk:90, alt:'Gadolinyum kısmi ikame; performans farkı büyük', uses:['Sonar','Denizaltı Algılama','Lazer','Yeşil Fosfor'], desc:'Terbiyum-disprozyum-demir (Terfenol-D) alaşımı dünyanın en güçlü manyetostriktif malzemesidir. Denizaltı sonar sistemlerinde ve akustik mayın tespit cihazlarında kritik.' },
+  
+  // === YAPISAL & ZIRH ===
+  22: { color:'#D85A30', cat:'Yapısal & Zırh', role:'Askeri zırh, uçak gövdesi, deniz araçları', producers:'Çin, Japonya, Rusya, Kazakistan', risk:55, alt:'Berilyum bazı uygulamalar için; çok daha pahalı', uses:['F-22 Gövdesi','KAAN','Deniz Zırhı','Helikopter','Uzay'], desc:'Titanyum-alüminyum alaşımları güç/ağırlık oranında eşsizdir. F-22\'nin yapısının %41\'i, KAAN\'ın kritik yapısal bileşenlerinin büyük kısmı titanyumdur. Tedarik çeşitli ülkelerde dağılmış; risk orta düzeyde.' },
+  73: { color:'#D85A30', cat:'Yapısal & Zırh', role:'İnsansız araç kapasitörleri, jet motorları, korozyon koruması', producers:'Kongo (%40), Ruanda, Avustralya', risk:75, alt:'Niyobyum kısmi ikame; tungsten bazı uygulamalar için', uses:['İHA Elektronik','Zırhlı Araç','Jet Motoru','Cerrahi'], desc:'Tantal kondansatörleri minyatür, güvenilir ve ısıya dayanıklıdır. SFA-Oxford: Yönlendirilmiş enerji silahlarında ve railgun mermilerinde yüksek elektrik iletkenliği ve termal stabilitesi nedeniyle kullanılır. Nikel bazlı süper alaşımlarda türbin kanatçıkları, roket nozulları ve yanma odalarında alaşım bileşeni. Hipersonik füze sistemlerinde ve uzay araçlarında aşırı ısı dayanımı gerektiğinde kritik. Askeri sınıf kapasitörlerde ticari eşdeğerlerinden üstün dayanıklılık ve şok direnci sağlar.' },
+  74: { color:'#D85A30', cat:'Yapısal & Zırh', role:'Zırh delici mermiler, yüksek ısı alaşımları', producers:'Çin (%85), Vietnam, Rusya', risk:92, alt:'Uranyum bazı uygulamalarda; çevresel sorunlar', uses:['Zırh Delici','Roket Nozulu','Isıya Dayanıklı','Kesici'], desc:'Tungsten karbür, tank zırhını delen APFSDS mermilerinin çekirdeğidir. 3.422°C erime noktasıyla roket motor nozullarında ve hipersonik araç ısı kalkanlarında kullanılır. SFA-Oxford: Kinetik enerji penetratörlerinde, füze stabilizasyon sistemlerinde ve drone atılan mühimmatta yüksek yoğunluk ve ultra-yüksek erime noktası nedeniyle kullanılır. Seyreltilmiş uranyuma radyoaktif olmayan alternatif. Hipersonik sistemlerde aerodinamik hassasiyet ve yörünge kontrolü sağlar. Çin\'in %85 pazar payı kritik bağımlılık yaratır.' },
+  41: { color:'#D85A30', cat:'Yapısal & Zırh', role:'Süper alaşımlar, boru hatları, süperiletkenler', producers:'Brezilya (%90), Kanada', risk:65, alt:'Tantal ve vanadyum kısmi ikame', uses:['Jet Motoru','Boru Hattı','Süperiletken','Roket'], desc:'Niyobyum süper alaşımları jet motorlarının en sıcak bölümlerinde kullanılır. GE ve Rolls-Royce motorlarının türbin kanatçıklarında kritik. Brezilya\'nın %90 pazar payı tek kaynak riski oluşturur.' },
+  4:  { color:'#D85A30', cat:'Yapısal & Zırh', role:'Hafif yapısal malzeme, nükleer reaktör penceresi', producers:'ABD (%65), Kazakistan, Çin', risk:60, alt:'Alüminyum-lityum alaşımları kısmi ikame', uses:['F-16 Çerçeve','Uydu Yapı','Nükleer','Uzay Teleskobu'], desc:'Berilyum, çelikten 6 kat daha sert ve alüminyumdan %30 daha hafiftir. F-16 fren diskleri, uydu yapısal elemanları ve nükleer reaktör yansıtıcılarında kullanılır. Toz halinde son derece toksiktir.' },
+  23: { color:'#D85A30', cat:'Yapısal & Zırh', role:'Yüksek mukavemet çelik alaşımları, titanyum güçlendirici', producers:'Çin (%55), Güney Afrika, Rusya', risk:50, alt:'Molibden ve niyobyum kısmi ikame', uses:['Tank Zırhı','Denizaltı Gövdesi','Nükleer','Yay Çeliği'], desc:'Vanadyum çelik alaşımları ALTAY tankı zırhında, denizaltı basınç gövdelerinde ve nükleer reaktör yapısal elemanlarında kullanılır. Titanyum alaşımlarına eklenerek mukavemeti %40 artırır.' },
+  24: { color:'#D85A30', cat:'Yapısal & Zırh', role:'Paslanmaz çelik, zırh kaplama, süper alaşımlar', producers:'Güney Afrika (%40), Kazakistan, Hindistan', risk:45, alt:'Nikel bazlı alaşımlar kısmi ikame', uses:['Paslanmaz Çelik','Zırh Kaplama','Jet Motoru','Kimyasal Direnç'], desc:'Krom, tüm askeri paslanmaz çelik uygulamalarının temelidir. Gemi gövdeleri, silah namluları, jet motoru bileşenleri ve kimyasal savaş ajanlarına dayanıklı kaplamalar krom içerir.' },
+  
+  // === ENERJİ & DEPOLAMA ===
+  3:  { color:'#BA7517', cat:'Enerji & Depolama', role:'Hafif savaş araç bataryaları, denizaltı pilleri', producers:'Avustralya, Şili, Çin', risk:70, alt:'Sodyum-iyon piller geliştiriliyor; henüz olgunlaşmadı', uses:['İHA Bataryası','Denizaltı Pili','Silah Güdümü','Radar Güç'], desc:'Lityum-iyon pillerin temel malzemesi. Bayraktar TB3 bataryasından Reis sınıfı denizaltı AIP sistemine kadar her yerde. Çin\'in dönüştürme kapasitesi tedarik riskini artırıyor.' },
+  27: { color:'#BA7517', cat:'Enerji & Depolama', role:'Drone ve insansız araç bataryaları (Li-Co pili)', producers:'Kongo (%70), Zambia, Avustralya', risk:82, alt:'LFP pillerde kullanılmıyor; yüksek yoğunluk gerektiğinde ikame zor', uses:['Drone Bataryası','Denizaltı Bataryası','Uydu','Süper Alaşım'], desc:'Kobalt olmadan lityum-kobalt-oksit katot mümkün değil. Saha İHA\'ları ve elektrikli insansız deniz araçları doğrudan Kongo madenciliğine bağımlı. Ayrıca jet motoru süper alaşımlarında da kritik.' },
+  28: { color:'#BA7517', cat:'Enerji & Depolama', role:'Süper alaşımlar, batarya katotları, paslanmaz çelik', producers:'Endonezya (%50), Filipinler, Rusya', risk:58, alt:'Demir bazlı alaşımlar düşük performansla ikame', uses:['Jet Motoru','Batarya','Gaz Türbini','Kimyasal Direnç'], desc:'Nikel bazlı süper alaşımlar (Inconel, Waspaloy) jet motorlarının en sıcak bölümlerinde çalışır. KAAN motoru ve tüm NATO savaş uçağı motorları nikel süper alaşımları kullanır.' },
+  78: { color:'#BA7517', cat:'Enerji & Depolama', role:'Katalitik dönüştürücüler, yakıt hücreleri, sensörler', producers:'Güney Afrika (%70), Rusya, Zimbabwe', risk:75, alt:'Paladyum kısmi ikame; performans farkı var', uses:['Yakıt Hücresi','Sensör','Kataliz','Patlayıcı Dedektör'], desc:'Platin grubu metaller (PGM) askeri yakıt hücrelerinde, kimyasal ajan dedektörlerinde ve hassas ölçüm sensörlerinde kullanılır. Güney Afrika ve Rusya\'nın %90+ pazar payı jeopolitik risk oluşturur.' },
+  
+  // === OPTİK & LAZER ===
+  64: { color:'#639922', cat:'Optik & Lazer', role:'Askeri lazer güdüm sistemleri, nükleer reaktörler', producers:'Çin (%80), Brezilya', risk:80, alt:'Terbiyum kısmi ikame; zor ve pahalı', uses:['Lazer Silahı','Füze Güdümü','Nükleer Reaktör','MR Cihazı'], desc:'Gadolinyum içeren YIG (itriyum-demir-garnet) kristalleri, yüksek frekanslı mikrodalga askeri radarlarının filtreleme bileşenidir. Ayrıca nükleer reaktörlerde nötron emici olarak kullanılır.' },
+  39: { color:'#639922', cat:'Optik & Lazer', role:'Lazer kristalleri, süperiletkenler, LED', producers:'Çin (%90+), Avustralya', risk:82, alt:'Lutesyum bazı uygulamalarda; çok pahalı', uses:['Lazer','Süperiletken','Radar Filtresi','LED'], desc:'İtriyum-alüminyum-garnet (YAG) lazer kristalleri askeri lazer mesafe ölçerlerden lazer güdümlü bombalara kadar her yerde kullanılır. YBCO süperiletkenleri gelecek nesil EMP korumasında kritik.' },
+  68: { color:'#639922', cat:'Optik & Lazer', role:'Fiber optik amplifikatörler, lazer, nükleer', producers:'Çin (%85), ABD', risk:78, alt:'Tulyum bazı fiber uygulamalar için', uses:['Fiber Optik','Lazer','Nükleer Kontrol','Metalürji'], desc:'Erbiyum katkılı fiber amplifikatörler (EDFA) tüm askeri fiber optik haberleşme ağlarının temelini oluşturur. Denizaltıdan uçak gemisine, karargahtan sahaya tüm güvenli iletişim erbiyuma bağımlıdır.' },
+  
+  // === NÜKLEER & STRATEJİK ===
+  92: { color:'#8B0000', cat:'Nükleer & Stratejik', role:'Nükleer silah, nükleer enerji, zırh delici', producers:'Kazakistan (%40), Kanada, Avustralya', risk:95, alt:'Toryum bazlı reaktörler geliştirilmekte', uses:['Nükleer Silah','Nükleer Enerji','Zırh Delici','Denizaltı'], desc:'Uranyum-235 nükleer silahların ve denizaltı reaktörlerinin yakıtıdır. Seyreltilmiş uranyum (DU) zırh delici mermilerde kullanılır. Akkuyu NGS dahil tüm nükleer santraller uranyuma bağımlıdır.' },
+  72: { color:'#8B0000', cat:'Nükleer & Stratejik', role:'Nükleer reaktör kontrol çubukları, süper alaşımlar', producers:'Avustralya, Güney Afrika, ABD', risk:70, alt:'Zirkonyum ile birlikte kullanılır; tek başına ikame zor', uses:['Nükleer Kontrol','Süper Alaşım','Plazma Kesici','Roket'], desc:'Hafniyum nükleer reaktörlerde nötron emici kontrol çubuğu malzemesidir. Ayrıca jet motoru türbin kanatçıklarının süper alaşımlarında yüksek ısı dayanımı sağlar.' },
+  40: { color:'#8B0000', cat:'Nükleer & Stratejik', role:'Nükleer yakıt kılıfı, kimyasal proses ekipmanı', producers:'Avustralya (%35), Güney Afrika, Çin', risk:55, alt:'Paslanmaz çelik düşük performansla ikame', uses:['Nükleer Yakıt','Kimyasal Direnç','Fotoğraf Flaşı','Seramik'], desc:'Zirkonyum alaşımları (Zircaloy) nükleer reaktörlerde yakıt çubuğu kılıfı olarak kullanılır. Nötronları absorbe etmeden geçirmesi onu nükleer enerji için vazgeçilmez kılar.' },
+  75: { color:'#8B0000', cat:'Nükleer & Stratejik', role:'Jet motoru süper alaşımları, roket nozulları', producers:'Şili (%50), ABD, Polonya', risk:88, alt:'İridyum bazı uygulamalarda; çok daha pahalı', uses:['Jet Motoru','Roket Nozulu','Termoçift','Kataliz'], desc:'Renyum, jet motoru türbin kanatçıklarında tek kristal süper alaşımların vazgeçilmez bileşenidir. F-35 motoru her biri 6 kg renyum içerir. Dünya yıllık üretimi sadece 50 ton civarıdır.' },
+  
+  // === ELEKTRONİK HARP & HABERLEŞME ===
+  55: { color:'#9B59B6', cat:'Elektronik Harp', role:'Atom saatleri, GPS, iyon motorları', producers:'Kanada, Namibya, ABD', risk:65, alt:'Rubidyum bazı uygulamalarda', uses:['Atom Saati','GPS','İyon Motoru','Fotosel'], desc:'Sezyum atom saatleri GPS uydularının ve tüm hassas navigasyon sistemlerinin kalbindedir. Askeri GPS alıcıları ve kriptografik zaman damgalama sezyum referansına bağlıdır.' },
+  21: { color:'#9B59B6', cat:'Elektronik Harp', role:'Hafif yüksek mukavemet alaşımları, yakıt hücreleri', producers:'Çin (%65), Filipinler, Rusya', risk:60, alt:'Titanyum bazı uygulamalarda', uses:['Savaş Uçağı','Füze Gövdesi','Spor Ekipman','Aydınlatma'], desc:'Skandiyum-alüminyum alaşımları %20 daha güçlü ve %15 daha hafiftir. MiG-29 ve Su-27 yapısal bileşenlerinde kullanılır. Gelecek nesil hipersonik araç gövdelerinde potansiyel kullanım alanı var.' },
+  5:  { color:'#9B59B6', cat:'Elektronik Harp', role:'Nötron absorber, radar kubbe, zırh plakası', producers:'Türkiye (%73), ABD, Arjantin', risk:30, alt:'Hafniyum nötron emici olarak kısmi ikame', uses:['Radar Kubbe','Nükleer Kalkan','Zırh','Roket Yakıtı'], desc:'Bor, dünyanın en etkili nötron emicisidir. Bor karbür (B4C) zırh plakalarında, bor nitrür radar kubbelerinde kullanılır. Türkiye dünya bor rezervlerinin %73\'üne sahiptir — stratejik avantaj.' },
+
+  // === SFA-OXFORD SAVUNMA MİNERALLERİ (YENİ EKLENENLER) ===
+  61: { color:'#8B0000', cat:'Nükleer & Stratejik', role:'Betavoltaik piller, füze güdüm güç kaynağı, uzay sistemleri', producers:'Nükleer reaktör yan ürünü (ABD, Rusya, Çin)', risk:92, alt:'Nükleer izotop pilleri; çok sınırlı üretim', uses:['Betavoltaik Pil','Füze Güdüm','Uzay Aracı','Sensör Güç'], desc:'Prometyum-147 düşük seviyeli radyoaktivitesiyle betavoltaik pillerde uzun ömürlü, bakımsız güç kaynağı sağlar. Füze güdüm modülleri, uçak sensörleri ve uzay araçlarında konvansiyonel güç kaynaklarının yetersiz kaldığı ortamlarda kritik. Isıl imzayı minimize ederek gizli operasyonları destekler.' },
+  57: { color:'#639922', cat:'Optik & Lazer', role:'Gece görüş optikleri, yüksek kırılma indeksli cam, kızılötesi', producers:'Çin (%85), ABD, Avustralya', risk:80, alt:'İtriyum bazı uygulamalarda kısmi ikame', uses:['Gece Görüş','Kızılötesi Optik','Kamera Lensi','Teleskop'], desc:'Lantan yüksek kırılma indeksli cam üretiminde kritiktir. Gece görüş cihazlarında lens kalitesini ve optik netliği artırır. Kızılötesi hedefleme ve termal görüntüleme optiklerinde hassas algılama ve gelişmiş gece görüşü sağlar. SFA-Oxford verilerine göre tüm modern gece görüş sistemlerinde vazgeçilmez.' },
+  71: { color:'#639922', cat:'Optik & Lazer', role:'Gama ışını algılama, nükleer madde tespiti, PET tarama', producers:'Çin (%90+), Brezilya', risk:85, alt:'Gadolinyum bazı uygulamalarda; performans farkı var', uses:['Nükleer Tespit','Gama Algılama','PET Tarama','Kimyasal Ajan'], desc:'Lutesyum bazlı sintilatör malzemeler nükleer ve radyolojik maddelerin son derece hassas tespitini sağlar. IdentiFINDER R440 gibi radyasyon tehdit tanımlama sistemlerinde kullanılır. M4 JCAD (Müşterek Kimyasal Ajan Dedektörü) bileşeni olarak savaş alanında tehlikeli madde tespitinde kritik.' },
+  63: { color:'#639922', cat:'Optik & Lazer', role:'Yüksek çözünürlüklü ekranlar, X-ray tarama, fosforlar', producers:'Çin (%90+), Hindistan', risk:88, alt:'Terbiyum kısmi ikame; renk kalitesi düşer', uses:['Askeri Ekran','X-Ray Tarama','Gece Görüş','Fosfor'], desc:'Europiyum kırmızı ve mavi fosforlarda kritik bileşendir. Askeri sınıf monitörler, aviyonik ekranlar ve gece görüş sistemlerinde görüntü netliği ve renk doğruluğunu artırır. X-ray ve güvenlik tarama ekipmanlarında görüntüleme hassasiyetini iyileştirir. SFA-Oxford: Zırhlı araçlarda yansıma önleyici kaplamalarda da kullanılır.' },
+  6:  { color:'#BA7517', cat:'Enerji & Depolama', role:'Grafit anotlar, nükleer moderatör, termal yönetim', producers:'Çin (%65), Mozambik, Brezilya', risk:72, alt:'Sentetik grafit üretilebilir; maliyet yüksek', uses:['Batarya Anot','Nükleer Moderatör','Isı Kalkanı','Fren Diski'], desc:'Grafit, tüm lityum-iyon pillerin anot malzemesidir. Nükleer reaktörlerde nötron moderatörü, hipersonik araçlarda ısı kalkanı, savaş uçağı fren disklerinde sürtünme malzemesi olarak kullanılır. Çin\'in %65 pazar payı batarya tedarik zincirini tehdit eder.' },
+  13: { color:'#D85A30', cat:'Yapısal & Zırh', role:'Hafif zırh, uçak gövdesi, füze yapısı, ambalaj', producers:'Çin (%55), Hindistan, Rusya, Kanada', risk:40, alt:'Titanyum ve kompozitler yüksek performans uygulamalarında', uses:['Uçak Gövdesi','Hafif Zırh','Füze Yapısı','Ambalaj'], desc:'Alüminyum alaşımları askeri uçak gövdelerinin, hafif zırhlı araçların ve füze yapısal bileşenlerinin temelidir. 7075-T6 alaşımı F-16 ve C-130 gövdelerinde kullanılır. Alüminyum-lityum alaşımları yeni nesil uzay araçlarında ağırlık tasarrufu sağlar.' },
+  29: { color:'#9B59B6', cat:'Elektronik Harp', role:'Elektrik iletkeni, mühimmat, ısı yönetimi', producers:'Şili (%25), Peru, Kongo, Çin', risk:35, alt:'Alüminyum kısmi ikame; performans düşer', uses:['Mühimmat','Elektrik İletimi','Isı Borusu','Motor Sargısı'], desc:'Bakır tüm askeri elektrik sistemlerinin, mühimmat kovanlarının, motor sargılarının ve ısı yönetim sistemlerinin temel malzemesidir. Elektromanyetik top (railgun) rayları saf bakırdan yapılır.' },
+};
+
+const grid = document.getElementById('ptgrid');
+const cells = {};
+
+for(let r=1; r<=7; r++) {
+  for(let c=1; c<=18; c++) {
+    const el = elements.find(e => e.col===c && Math.round(e.row)===r);
+    const div = document.createElement('div');
+    if(el) {
+      const s = strategic[el.z];
+      div.className = 'el';
+      div.style.background = s ? s.color+'22' : 'var(--surface-1)';
+      if(s) div.style.borderColor = s.color+'66';
+      div.innerHTML = `<span class="num">${el.z}</span><span class="sym">${el.sym}</span><span class="name">${el.name}</span>`;
+      if(s) { div.title = el.name; div.onclick = ()=>showInfo(el.z, el, s, div); }
+    } else {
+      div.className = 'el-empty';
+    }
+    grid.appendChild(div);
+    if(el) cells[el.z] = div;
+  }
+}
+
+// Lantanidler satırı — boşluklu satır ekle
+const sep = document.createElement('div');
+sep.style.cssText = 'grid-column:1/19; height:6px;';
+grid.appendChild(sep);
+
+for(let c=3; c<=17; c++) {
+  const el = elements.find(e => e.col===c && e.row===8.5);
+  const div = document.createElement('div');
+  if(el) {
+    const s = strategic[el.z];
+    div.className = 'el';
+    div.style.gridColumn = c;
+    div.style.background = s ? s.color+'22' : 'var(--surface-1)';
+    if(s) div.style.borderColor = s.color+'66';
+    div.innerHTML = `<span class="num">${el.z}</span><span class="sym">${el.sym}</span><span class="name">${el.name}</span>`;
+    if(s) { div.onclick = ()=>showInfo(el.z, el, s, div); }
+  } else {
+    div.className = 'el-empty';
+  }
+  grid.appendChild(div);
+  if(el) cells[el.z] = div;
+}
+
+function showInfo(z, el, s, clickedDiv) {
+  Object.values(cells).forEach(c => c.classList.remove('active'));
+  clickedDiv.classList.add('active');
+
+  const panel = document.getElementById('infopanel');
+  panel.classList.add('show');
+
+  const riskColor = s.risk > 90 ? '#E24B4A' : s.risk > 75 ? '#EF9F27' : '#639922';
+  const riskLabel = s.risk > 90 ? 'Kritik' : s.risk > 75 ? 'Yüksek' : s.risk > 50 ? 'Orta' : 'Düşük';
+
+  const badges = s.uses.map(u => `<span class="badge" style="background:${s.color}22;color:${s.color};border:0.5px solid ${s.color}44">${u}</span>`).join('');
+
+  panel.innerHTML = `
+    <div class="ip-header">
+      <div class="ip-sym" style="background:${s.color}22;color:${s.color}">${el.sym}</div>
+      <div>
+        <div style="font-size:18px;font-weight:500;color:var(--text-primary)">${el.name} <span style="font-size:13px;color:var(--text-muted)">— ${el.z}</span></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${s.cat}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <div class="risk-bar" style="width:120px"><div class="risk-fill" style="width:${s.risk}%;background:${riskColor}"></div></div>
+          <span style="font-size:11px;color:${riskColor};font-weight:500">${riskLabel} risk (${s.risk}/100)</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0 0 10px">${s.desc}</p>
+    ${badges}
+    <div class="ip-row">
+      <div class="ip-card">
+        <div class="ip-label">Başlıca üretici ülkeler</div>
+        <div class="ip-val">${s.producers}</div>
+      </div>
+      <div class="ip-card">
+        <div class="ip-label">İkame edilebilirlik</div>
+        <div class="ip-val" style="font-size:12px">${s.alt}</div>
+      </div>
+    </div>
+  `;
+}
+</script>
+
+</div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harb-i Strateji — Z Kuşağı (13-25)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Chakra Petch', 'Arial', sans-serif;
+            background: #0a0f17;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #E01515 0%, #C01010 100%);
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .breaking-news {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .nav {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .nav a:hover {
+            background: #00E0FF;
+            color: #0a0f17;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #E01515 0%, #00E0FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .hero p {
+            color: #b0b0b0;
+            font-size: 0.95em;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+            border: 2px solid #E01515;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .card:hover {
+            border-color: #00E0FF;
+            background: linear-gradient(135deg, #1f2530 0%, #1a1f2e 100%);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 224, 255, 0.3);
+        }
+        
+        .card h3 {
+            color: #E01515;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .card p {
+            color: #b0b0b0;
+            font-size: 0.85em;
+        }
+        
+        .leaderboard {
+            background: #1a1f2e;
+            border: 2px solid #00E0FF;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .leaderboard h2 {
+            color: #00E0FF;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .rank {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            color: #b0b0b0;
+        }
+        
+        .rank:hover {
+            background: rgba(0, 224, 255, 0.1);
+        }
+        
+        .footer {
+            background: #0a0f17;
+            border-top: 2px solid #E01515;
+            padding: 15px;
+            margin-top: 25px;
+            color: #666;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.4em; }
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.95);border:1px solid rgba(150,170,200,0.3);border-radius:8px;padding:6px 14px;color:#90a1b5;text-decoration:none;font-size:12px;font-family:monospace;backdrop-filter:blur(8px);transition:0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3);" onmouseover="this.style.color='#fff';this.style.borderColor='#c41e3a'" onmouseout="this.style.color='#90a1b5';this.style.borderColor='rgba(150,170,200,0.3)'">← Ana Sayfa</a>
+    <div class="header">
+        <div class="breaking-news">⚡ OZA OYUNLARI: OODA-X Düellosu — Hemen Oyna!</div>
+        <div class="nav">
+            <a href="#">Oyunlar</a>
+            <a href="#">Leaderboard</a>
+            <a href="#">Yarışlar</a>
+            <a href="#">Rozet</a>
+            <a href="#">Sosyal</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="hero">
+            <h1>OODA-X DÜELLOSU</h1>
+            <p>250ms'de karar ver, rakibini yendir!</p>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>🎮 Kriz Odası</h3>
+                <p>10sn'de karar ver</p>
+            </div>
+            <div class="card">
+                <h3>⚖️ Asimetri</h3>
+                <p>Terazisini kur</p>
+            </div>
+            <div class="card">
+                <h3>🔄 OODA-X</h3>
+                <p>Düello yap</p>
+            </div>
+            <div class="card">
+                <h3>🎯 Slopaganda</h3>
+                <p>Dedektif ol</p>
+            </div>
+            <div class="card">
+                <h3>❄️ Karanlık Kış</h3>
+                <p>Rogue-like</p>
+            </div>
+            <div class="card">
+                <h3>💰 Emtia</h3>
+                <p>İmparatorluk kur</p>
+            </div>
+        </div>
+        
+        <div class="leaderboard">
+            <h2>🏆 TOP 5 OYUNCU</h2>
+            <div class="rank">
+                <span>1. 🥇 StratejiMaster</span>
+                <span>45.230 puan</span>
+            </div>
+            <div class="rank">
+                <span>2. 🥈 KraliçeAna</span>
+                <span>42.100 puan</span>
+            </div>
+            <div class="rank">
+                <span>3. 🥉 SavaşÇocuğu</span>
+                <span>38.950 puan</span>
+            </div>
+            <div class="rank">
+                <span>4. 🎯 HedefVurucu</span>
+                <span>35.200 puan</span>
+            </div>
+            <div class="rank">
+                <span>5. ⚡ HızlıKarar</span>
+                <span>32.100 puan</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>🎮 OZA — Oyunlaştırılmış Strateji Analizi | Rozet Kazan, Leaderboard'a Çık!</p>
+    </div>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

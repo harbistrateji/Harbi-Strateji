@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dünya Teşkilatlar Atlası — Harb-i Strateji İnfografik</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e1a;color:#e0e0e0;overflow-x:hidden}
+.back-nav{position:fixed;top:12px;left:12px;z-index:999;background:rgba(0,0,0,.7);padding:8px 16px;border-radius:20px;font-size:13px}
+.back-nav a{color:#4fc3f7;text-decoration:none}
+.hero{text-align:center;padding:80px 20px 40px;background:linear-gradient(135deg,#0d1b2a,#1b2838,#0d1b2a)}
+.hero h1{font-size:2.8em;background:linear-gradient(90deg,#4fc3f7,#81c784,#ffb74d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+.hero p{color:#90a4ae;font-size:1.1em;max-width:700px;margin:0 auto}
+.stats-bar{display:flex;justify-content:center;gap:30px;padding:20px;flex-wrap:wrap}
+.stat-item{text-align:center;padding:15px 25px;background:rgba(79,195,247,.1);border-radius:12px;border:1px solid rgba(79,195,247,.3)}
+.stat-item .num{font-size:2.2em;font-weight:700;color:#4fc3f7}
+.stat-item .lbl{font-size:.8em;color:#90a4ae;margin-top:4px}
+.section{padding:40px 20px;max-width:1200px;margin:0 auto}
+.section h2{font-size:1.8em;color:#81c784;margin-bottom:20px;text-align:center}
+.org-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.org-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+.org-card:hover{transform:translateY(-4px);border-color:#4fc3f7;box-shadow:0 8px 30px rgba(79,195,247,.2)}
+.org-card .flag{font-size:2em;margin-bottom:8px}
+.org-card .name{font-size:1.1em;font-weight:600;color:#fff;margin-bottom:4px}
+.org-card .eng{font-size:.75em;color:#78909c;margin-bottom:8px}
+.org-card .info{font-size:.85em;color:#b0bec5;line-height:1.4}
+.org-card .members{display:inline-block;background:rgba(79,195,247,.2);color:#4fc3f7;padding:3px 10px;border-radius:12px;font-size:.75em;margin-top:8px}
+.org-card .turkey-status{position:absolute;top:10px;right:10px;font-size:.7em;padding:3px 8px;border-radius:8px}
+.org-card .turkey-status.member{background:rgba(129,199,132,.2);color:#81c784}
+.org-card .turkey-status.non-member{background:rgba(239,83,80,.2);color:#ef5350}
+.category-tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:30px}
+.cat-tab{padding:8px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.2);cursor:pointer;font-size:.85em;transition:all .3s}
+.cat-tab:hover,.cat-tab.active{background:#4fc3f7;color:#0a0e1a;border-color:#4fc3f7}
+.audio-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:#4fc3f7;border:none;cursor:pointer;font-size:1.5em;z-index:999;box-shadow:0 4px 15px rgba(79,195,247,.4)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.org-card:hover{animation:pulse .5s}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div class="back-nav"><a href="infografik.html">← İnfografikler</a></div>
+<audio id="bgMusic" loop><source src="Zenith_Unbound.mp3" type="audio/mpeg"></audio>
+<button class="audio-btn" onclick="toggleAudio()">🔊</button>
+
+<div class="hero">
+<h1>🌍 Dünya Teşkilatlar Atlası</h1>
+<p>MSB Harita Genel Müdürlüğü © 2026 — Türkiye'nin uluslararası teşkilatlardaki konumu ve küresel güç haritası</p>
+</div>
+
+<div class="stats-bar">
+<div class="stat-item"><div class="num">32</div><div class="lbl">Üye Olunan</div></div>
+<div class="stat-item"><div class="num">4</div><div class="lbl">Üye Olunmayan</div></div>
+<div class="stat-item"><div class="num">193</div><div class="lbl">BM Üye Ülke</div></div>
+<div class="stat-item"><div class="num">32</div><div class="lbl">NATO Müttefik</div></div>
+<div class="stat-item"><div class="num">57</div><div class="lbl">İİT Üyesi</div></div>
+</div>
+
+<div class="section">
+<div class="category-tabs">
+<div class="cat-tab active" onclick="filterOrgs('all')">Tümü</div>
+<div class="cat-tab" onclick="filterOrgs('guvenlik')">Güvenlik</div>
+<div class="cat-tab" onclick="filterOrgs('ekonomi')">Ekonomi</div>
+<div class="cat-tab" onclick="filterOrgs('bolgesel')">Bölgesel</div>
+<div class="cat-tab" onclick="filterOrgs('turk')">Türk Dünyası</div>
+<div class="cat-tab" onclick="filterOrgs('non')">Üye Olunmayan</div>
+</div>
+
+<div class="org-grid" id="orgGrid"></div>
+</div>
+
+<script>
+const orgs = [
+{name:"NATO",eng:"North Atlantic Treaty Organization",flag:"🛡️",cat:"guvenlik",members:32,year:1949,desc:"Kolektif savunma ittifakı. Madde 5: Birine saldırı hepsine saldırıdır.",turkey:true,hq:"Brüksel"},
+{name:"BM",eng:"United Nations",flag:"🌐",cat:"guvenlik",members:193,year:1945,desc:"Uluslararası barış ve güvenlik. Güvenlik Konseyi 5 daimi üye.",turkey:true,hq:"New York"},
+{name:"AGİT",eng:"OSCE",flag:"🔒",cat:"guvenlik",members:57,year:1975,desc:"Avrupa güvenlik ve işbirliği. Silahsızlanma, insan hakları, seçim gözlemi.",turkey:true,hq:"Viyana"},
+{name:"G-20",eng:"Group of Twenty",flag:"💰",cat:"ekonomi",members:20,year:1999,desc:"Küresel ekonomik yönetişim. Dünya GSYH'nın %85'i.",turkey:true,hq:"Dönemsel"},
+{name:"OECD",eng:"Organisation for Economic Co-operation",flag:"📊",cat:"ekonomi",members:38,year:1961,desc:"Ekonomik kalkınma ve ticaret politikaları.",turkey:true,hq:"Paris"},
+{name:"DTÖ",eng:"World Trade Organization",flag:"🏛️",cat:"ekonomi",members:164,year:1995,desc:"Küresel ticaret kuralları ve anlaşmazlık çözümü.",turkey:true,hq:"Cenevre"},
+{name:"ECO",eng:"Economic Cooperation Organization",flag:"🤝",cat:"bolgesel",members:10,year:1985,desc:"İran, Pakistan, Türkiye öncülüğünde ekonomik işbirliği.",turkey:true,hq:"Tahran"},
+{name:"D-8",eng:"Developing Eight",flag:"🌙",cat:"ekonomi",members:8,year:1997,desc:"Gelişen 8 Müslüman ülke ekonomik işbirliği.",turkey:true,hq:"İstanbul"},
+{name:"İİT",eng:"Organisation of Islamic Cooperation",flag:"☪️",cat:"bolgesel",members:57,year:1969,desc:"İslam dünyası siyasi ve ekonomik işbirliği.",turkey:true,hq:"Cidde"},
+{name:"KEİ",eng:"BSEC",flag:"⚓",cat:"bolgesel",members:13,year:1992,desc:"Karadeniz havzası ekonomik işbirliği.",turkey:true,hq:"İstanbul"},
+{name:"Türk Konseyi",eng:"Organization of Turkic States",flag:"🐺",cat:"turk",members:7,year:2009,desc:"Türk dili konuşan ülkeler işbirliği. Kültür, ekonomi, siyaset.",turkey:true,hq:"İstanbul"},
+{name:"TÜRKPA",eng:"Parliamentary Assembly of Turkic States",flag:"🏛️",cat:"turk",members:6,year:2008,desc:"Türk devletleri parlamenter asamblesi.",turkey:true,hq:"Bakü"},
+{name:"Akdeniz İçin Birlik",eng:"Union for the Mediterranean",flag:"🌊",cat:"bolgesel",members:43,year:2008,desc:"AB ve Akdeniz ülkeleri arası diyalog ve işbirliği.",turkey:true,hq:"Barselona"},
+{name:"Avrupa Konseyi",eng:"Council of Europe",flag:"🇪🇺",cat:"guvenlik",members:46,year:1949,desc:"İnsan hakları, demokrasi, hukukun üstünlüğü.",turkey:true,hq:"Strazburg"},
+{name:"TRACECA",eng:"Transport Corridor Europe-Caucasus-Asia",flag:"🚂",cat:"bolgesel",members:14,year:1993,desc:"Avrupa-Kafkasya-Asya ulaştırma koridoru. Orta Koridor.",turkey:true,hq:"Bakü"},
+{name:"IEA",eng:"International Energy Agency",flag:"⚡",cat:"ekonomi",members:31,year:1974,desc:"Enerji güvenliği ve sürdürülebilir enerji politikaları.",turkey:true,hq:"Paris"},
+{name:"ICAO",eng:"International Civil Aviation Organization",flag:"✈️",cat:"ekonomi",members:193,year:1944,desc:"Uluslararası sivil havacılık standartları.",turkey:true,hq:"Montreal"},
+{name:"EUROCONTROL",eng:"European Air Navigation Safety",flag:"🛫",cat:"guvenlik",members:41,year:1960,desc:"Avrupa hava seyrüsefer emniyeti.",turkey:true,hq:"Brüksel"},
+{name:"Dünya Gümrük Örgütü",eng:"World Customs Organization",flag:"📦",cat:"ekonomi",members:184,year:1952,desc:"Gümrük prosedürleri harmonizasyonu.",turkey:true,hq:"Brüksel"},
+{name:"CICA",eng:"Conference on Interaction and Confidence-Building",flag:"🕊️",cat:"guvenlik",members:28,year:1992,desc:"Asya'da güven artırıcı önlemler.",turkey:true,hq:"Astana"},
+{name:"Avrupa Birliği",eng:"European Union",flag:"🇪🇺",cat:"non",members:27,year:1993,desc:"Siyasi ve ekonomik birlik. Türkiye aday ülke statüsünde.",turkey:false,hq:"Brüksel"},
+{name:"Afrika Birliği",eng:"African Union",flag:"🌍",cat:"non",members:55,year:2002,desc:"Afrika kıtası siyasi birliği.",turkey:false,hq:"Addis Ababa"},
+{name:"KGÖT",eng:"Collective Security Treaty Organization",flag:"🛡️",cat:"non",members:6,year:1992,desc:"Rusya liderliğinde kolektif güvenlik. Eski Sovyet ülkeleri.",turkey:false,hq:"Moskova"},
+{name:"ŞİÖ",eng:"Shanghai Cooperation Organisation",flag:"🐉",cat:"non",members:10,year:2001,desc:"Çin-Rusya öncülüğünde güvenlik ve ekonomi. Türkiye diyalog ortağı.",turkey:false,hq:"Pekin"}
+];
+
+function renderOrgs(filter) {
+  const grid = document.getElementById('orgGrid');
+  const filtered = filter === 'all' ? orgs : orgs.filter(o => o.cat === filter);
+  grid.innerHTML = filtered.map((o,i) => `
+    <div class="org-card" style="animation-delay:${i*0.05}s">
+      <span class="turkey-status ${o.turkey?'member':'non-member'}">${o.turkey?'🇹🇷 Üye':'Üye Değil'}</span>
+      <div class="flag">${o.flag}</div>
+      <div class="name">${o.name}</div>
+      <div class="eng">${o.eng}</div>
+      <div class="info">${o.desc}</div>
+      <div style="margin-top:8px;font-size:.8em;color:#78909c">📍 ${o.hq} · Kuruluş: ${o.year}</div>
+      <span class="members">${o.members} üye</span>
+    </div>
+  `).join('');
+}
+
+function filterOrgs(cat) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderOrgs(cat);
+}
+
+let audioPlaying = false;
+function toggleAudio() {
+  const a = document.getElementById('bgMusic');
+  if (audioPlaying) { a.pause(); document.querySelector('.audio-btn').textContent = '🔇'; }
+  else { a.play(); document.querySelector('.audio-btn').textContent = '🔊'; }
+  audioPlaying = !audioPlaying;
+}
+
+renderOrgs('all');
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Drone Koşusu — OZA</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0f17;color:#eaf0f7;font-family:'Segoe UI',system-ui,sans-serif;touch-action:manipulation;user-select:none}
+#app{width:100%;height:100%;display:flex;flex-direction:column}
+#topBar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(10,15,23,.95);border-bottom:1px solid rgba(0,224,255,.15);flex-shrink:0;z-index:10}
+#topBar a{color:#00e0ff;text-decoration:none;font-size:.8rem}
+#topBar .title{font-size:.85rem;font-weight:700;color:#fff}
+#topBar .stats{display:flex;gap:12px;font-size:.75rem}
+#topBar .stats span{color:#c9a24b}
+#gameArea{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+canvas{display:block;background:#0a0f17}
+#hud{position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none;font-size:.75rem}
+#hud .badge{background:rgba(0,0,0,.6);border:1px solid rgba(0,224,255,.3);border-radius:6px;padding:3px 8px}
+#controls{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:12px}
+#controls button{width:52px;height:52px;border-radius:50%;border:2px solid rgba(0,224,255,.4);background:rgba(0,0,0,.5);color:#fff;font-size:1.2rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#controls button:active{background:rgba(0,224,255,.2);transform:scale(.9)}
+#overlay{position:absolute;inset:0;background:rgba(10,15,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;text-align:center;padding:20px}
+#overlay h2{color:#00e0ff;font-size:1.4rem;margin-bottom:8px}
+#overlay p{color:#aaa;font-size:.85rem;margin-bottom:16px;max-width:320px}
+#overlay button{padding:12px 32px;border:2px solid #00e0ff;background:transparent;color:#00e0ff;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:700}
+#overlay button:hover{background:rgba(0,224,255,.1)}
+@media(min-width:769px){#controls{display:none}}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<div id="app">
+<div id="topBar">
+<a href="oza-hub.html">← OZA</a>
+<span class="title">🚁 Drone Koşusu</span>
+<div class="stats"><span id="scoreDisp">0</span> puan</div>
+</div>
+<div id="gameArea">
+<canvas id="gc"></canvas>
+<div id="hud"><div class="badge" id="hudL"></div><div class="badge" id="hudR"></div></div>
+<div id="controls"><button ontouchstart="droneUp=true" ontouchend="droneUp=false">⬆️</button><button ontouchstart="droneDown=true" ontouchend="droneDown=false">⬇️</button>
+</div>
+<div id="overlay">
+<h2 id="ovTitle">BAŞLA</h2>
+<p id="ovDesc">Dokunarak veya tıklayarak başla</p>
+<button id="ovBtn" onclick="startGame()">▶ BAŞLA</button>
+</div>
+</div>
+</div>
+<script>
+// Audio context
+let audioCtx;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playTone(freq,dur,type){if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type||'square';o.frequency.value=freq;g.gain.value=0.08;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur)}
+// Canvas setup
+const canvas=document.getElementById('gc');
+const ctx=canvas.getContext('2d');
+let W,H,gameRunning=false,score=0,level=1;
+function resize(){
+  const area=document.getElementById('gameArea');
+  W=canvas.width=area.clientWidth;
+  H=canvas.height=area.clientHeight;
+}
+window.addEventListener('resize',resize);
+resize();
+function updateScore(v){score+=v;document.getElementById('scoreDisp').textContent=score}
+function showOverlay(t,d,btn){
+  document.getElementById('overlay').style.display='flex';
+  document.getElementById('ovTitle').textContent=t;
+  document.getElementById('ovDesc').textContent=d;
+  document.getElementById('ovBtn').textContent=btn||'▶ TEKRAR';
+}
+function hideOverlay(){document.getElementById('overlay').style.display='none'}
+
+let drone={x:80,y:0,vy:0},obstacles=[],speed=3,dist=0,droneUp=false,droneDown=false;
+function startGame(){initAudio();hideOverlay();gameRunning=true;score=0;speed=3;dist=0;
+  drone.y=H/2;drone.vy=0;obstacles=[];loop3()}
+function loop3(){if(!gameRunning)return;requestAnimationFrame(loop3);update3();draw3()}
+function update3(){
+  // Drone physics
+  if(droneUp||keys.ArrowUp||keys.w)drone.vy-=0.4;
+  if(droneDown||keys.ArrowDown||keys.s)drone.vy+=0.4;
+  drone.vy*=0.96;drone.y+=drone.vy;
+  if(drone.y<20)drone.y=20;if(drone.y>H-20)drone.y=H-20;
+  // Obstacles
+  dist++;if(dist%Math.max(30,60-speed*2)===0){
+    let gap=Math.max(80,150-speed*5);let gapY=Math.random()*(H-gap-60)+30;
+    obstacles.push({x:W+20,gapY:gapY,gap:gap,passed:false})}
+  for(let i=obstacles.length-1;i>=0;i--){let o=obstacles[i];o.x-=speed;
+    if(o.x<-40){obstacles.splice(i,1);continue}
+    if(!o.passed&&o.x<drone.x){o.passed=true;updateScore(10);playTone(523,.1,'sine')}
+    // Collision
+    if(drone.x+12>o.x&&drone.x-12<o.x+25){
+      if(drone.y-10<o.gapY||drone.y+10>o.gapY+o.gap){
+        gameRunning=false;playTone(100,.3,'sawtooth');
+        showOverlay('DÜŞTÜ!','Mesafe: '+dist+' | Skor: '+score,'▶ TEKRAR')}}}
+  speed+=0.001;
+  document.getElementById('hudL').textContent='🚁 '+Math.round(dist/10)+'m';
+  document.getElementById('hudR').textContent='Hız: '+speed.toFixed(1)+'x';
+}
+function draw3(){
+  ctx.fillStyle='#0a0f17';ctx.fillRect(0,0,W,H);
+  // Parallax stars
+  for(let i=0;i<30;i++){ctx.fillStyle='rgba(255,255,255,.2)';ctx.fillRect((i*73+dist*0.5)%W,(i*37)%H,1,1)}
+  // Obstacles (radar towers)
+  obstacles.forEach(o=>{
+    ctx.fillStyle='#1e3a5f';ctx.fillRect(o.x,0,25,o.gapY);ctx.fillRect(o.x,o.gapY+o.gap,25,H-o.gapY-o.gap);
+    ctx.fillStyle='#ff3a4a';ctx.fillRect(o.x+10,o.gapY-5,5,5);ctx.fillRect(o.x+10,o.gapY+o.gap,5,5)});
+  // Drone
+  ctx.save();ctx.translate(drone.x,drone.y);
+  ctx.fillStyle='#00e0ff';ctx.beginPath();ctx.moveTo(15,0);ctx.lineTo(-10,-8);ctx.lineTo(-5,0);ctx.lineTo(-10,8);ctx.closePath();ctx.fill();
+  // Propeller animation
+  ctx.strokeStyle='rgba(0,224,255,.5)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(0,-10,6,0,Math.PI*(1+Math.sin(Date.now()/50)));ctx.stroke();
+  ctx.restore();
+  // Trail
+  ctx.strokeStyle='rgba(0,224,255,.2)';ctx.beginPath();ctx.moveTo(drone.x-15,drone.y);ctx.lineTo(drone.x-40,drone.y+drone.vy*3);ctx.stroke();
+}
+document.addEventListener('keydown',e=>{keys[e.key]=true});
+document.addEventListener('keyup',e=>{keys[e.key]=false});
+canvas.addEventListener('touchstart',e=>{e.preventDefault();let r=canvas.getBoundingClientRect();let t=e.touches[0];
+  if(t.clientY-r.top<H/2)droneUp=true;else droneDown=true});
+canvas.addEventListener('touchend',e=>{droneUp=false;droneDown=false});
+resize();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemler Sistemi — Teknoloji ve Jeopolitiğin Görsel Dili</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#080D17;
+  --deep:#0B1426;
+  --panel:#101D34;
+  --panel-2:#142442;
+  --line:#22324F;
+  --bone:#E9E6DC;
+  --bone-dim:#A8AEBB;
+  --signal:#39FF8A;
+  --signal-dim:#1E8C52;
+  --threat:#FF4D2E;
+  --threat-dim:#8C2A18;
+  --steel:#5B7A9E;
+  --gold:#D8B65C;
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+  position:relative;
+}
+::selection{background:var(--signal);color:var(--void);}
+
+/* ===== ambient network background ===== */
+#net-bg{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  opacity:0.55;
+  pointer-events:none;
+}
+.bg-gradient{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(57,255,138,0.07), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(255,77,46,0.06), transparent),
+    var(--void);
+  pointer-events:none;
+}
+
+.wrap{position:relative;z-index:1;}
+
+/* ===== typography ===== */
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  font-weight:700;
+  letter-spacing:0.01em;
+  line-height:1.15;
+}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--signal);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.eyebrow::before{
+  content:'';
+  width:7px;height:7px;
+  background:var(--signal);
+  border-radius:50%;
+  box-shadow:0 0 10px var(--signal);
+  flex-shrink:0;
+}
+p{color:var(--bone-dim);}
+a{color:var(--signal);text-decoration:none;}
+.mono{font-family:var(--font-mono);}
+
+/* ===== layout helpers ===== */
+.section{
+  max-width:1180px;
+  margin:0 auto;
+  padding:120px 32px;
+  position:relative;
+}
+.section-tight{padding-top:60px;padding-bottom:60px;}
+@media (max-width:720px){
+  .section{padding:72px 20px;}
+}
+
+/* ===== nav ===== */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 32px;
+  background:rgba(8,13,23,0.78);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{
+  font-family:var(--font-display);
+  font-size:0.95rem;
+  letter-spacing:0.05em;
+  color:var(--bone);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.nav-logo span{color:var(--signal);}
+.nav-links{
+  display:flex;
+  gap:28px;
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+.nav-links a{color:var(--bone-dim);transition:color 0.2s;}
+.nav-links a:hover{color:var(--signal);}
+.nav-stat{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--steel);
+  display:flex;
+  gap:14px;
+}
+#xp-pill{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--gold);
+  border:1px solid rgba(216,182,92,0.4);
+  padding:5px 12px;
+  border-radius:20px;
+  background:rgba(216,182,92,0.08);
+}
+.menu-toggle{display:none;background:none;border:none;color:var(--bone);font-size:1.4rem;cursor:pointer;}
+@media (max-width:880px){
+  .nav-links{display:none;}
+  .nav-stat{display:none;}
+  .menu-toggle{display:block;}
+}
+
+/* ===== hero ===== */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:120px 32px 80px;
+  max-width:1180px;
+  margin:0 auto;
+  position:relative;
+}
+.hero-tag{
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  color:var(--threat);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  margin-bottom:24px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.hero-tag::before{content:'⬡';color:var(--threat);}
+.hero h1{
+  font-size:clamp(2.6rem,7vw,6rem);
+  color:var(--bone);
+  margin-bottom:28px;
+  max-width:880px;
+}
+.hero h1 em{
+  font-style:normal;
+  color:var(--signal);
+  position:relative;
+}
+.hero-sub{
+  font-size:clamp(1rem,2vw,1.25rem);
+  max-width:620px;
+  color:var(--bone-dim);
+  margin-bottom:44px;
+}
+.hero-cta{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  margin-bottom:60px;
+}
+.btn{
+  font-family:var(--font-mono);
+  font-size:0.82rem;
+  letter-spacing:0.05em;
+  padding:15px 28px;
+  border-radius:4px;
+  cursor:pointer;
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--bone);
+  transition:all 0.25s;
+  text-transform:uppercase;
+}
+.btn-primary{
+  background:var(--signal);
+  color:var(--void);
+  border-color:var(--signal);
+  font-weight:600;
+}
+.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
+.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  max-width:900px;
+}
+.hero-stat{
+  background:var(--deep);
+  padding:20px 18px;
+}
+.hero-stat .num{
+  font-family:var(--font-display);
+  font-size:1.8rem;
+  color:var(--signal);
+  display:block;
+}
+.hero-stat .lbl{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  color:var(--bone-dim);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+@media (max-width:720px){
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+}
+
+/* generation pills */
+.gen-pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:36px;
+}
+.gen-pill{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  padding:6px 14px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  color:var(--bone-dim);
+}
+.gen-pill b{color:var(--steel);}
+
+/* ===== section heading pattern ===== */
+.sec-head{
+  margin-bottom:56px;
+  max-width:760px;
+}
+.sec-head h2{
+  font-size:clamp(2rem,4.5vw,3.2rem);
+  color:var(--bone);
+  margin:18px 0 18px;
+}
+.sec-head p{font-size:1.05rem;max-width:640px;}
+.sec-num{
+  font-family:var(--font-mono);
+  color:var(--line);
+  font-size:0.85rem;
+}
+
+/* ===== tech map ===== */
+.tech-map-wrap{
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--deep);
+  padding:8px;
+  overflow:hidden;
+}
+#tech-canvas{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.tech-detail{
+  margin-top:24px;
+  padding:28px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  min-height:160px;
+}
+.tech-detail .td-tag{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--signal);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+  display:block;
+}
+.tech-detail h3{font-family:var(--font-body);font-weight:700;font-size:1.4rem;color:var(--bone);margin-bottom:10px;}
+.tech-detail p{font-size:0.97rem;}
+.tech-hint{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:var(--bone-dim);
+  margin-top:14px;
+  text-align:center;
+}
+
+/* ===== timeline ===== */
+.timeline{
+  position:relative;
+  padding-left:32px;
+  border-left:2px solid var(--line);
+  margin-top:40px;
+}
+.tl-item{
+  position:relative;
+  padding:0 0 48px 28px;
+}
+.tl-item::before{
+  content:'';
+  position:absolute;
+  left:-41px;
+  top:4px;
+  width:14px;height:14px;
+  border-radius:50%;
+  background:var(--deep);
+  border:2px solid var(--signal);
+}
+.tl-item.threat::before{border-color:var(--threat);}
+.tl-year{
+  font-family:var(--font-mono);
+  color:var(--signal);
+  font-size:0.85rem;
+  letter-spacing:0.05em;
+}
+.tl-item.threat .tl-year{color:var(--threat);}
+.tl-item h4{font-family:var(--font-body);font-weight:700;font-size:1.15rem;color:var(--bone);margin:6px 0 8px;}
+.tl-item p{font-size:0.94rem;max-width:620px;}
+
+/* ===== minerals periodic table ===== */
+.mineral-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(78px,1fr));
+  gap:6px;
+  margin-top:20px;
+}
+.mineral-cell{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:5px;
+  padding:8px 6px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;
+}
+.mineral-cell:hover{
+  background:var(--panel-2);
+  border-color:var(--signal);
+  transform:translateY(-2px);
+}
+.mineral-cell .m-sym{
+  font-family:var(--font-display);
+  font-size:1.05rem;
+  color:var(--bone);
+  display:block;
+}
+.mineral-cell .m-risk{
+  position:absolute;
+  top:4px;right:4px;
+  width:6px;height:6px;
+  border-radius:50%;
+}
+.risk-high{background:var(--threat);box-shadow:0 0 6px var(--threat);}
+.risk-mid{background:var(--gold);}
+.risk-low{background:var(--signal-dim);}
+.mineral-cell .m-name{
+  font-family:var(--font-mono);
+  font-size:0.58rem;
+  color:var(--bone-dim);
+  display:block;
+  margin-top:2px;
+  line-height:1.1;
+}
+.mineral-detail{
+  margin-top:24px;
+  padding:24px 28px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+.mineral-detail h3{font-family:var(--font-body);font-size:1.3rem;color:var(--bone);margin-bottom:6px;}
+.mineral-detail .m-china{
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  color:var(--threat);
+  margin-bottom:12px;
+  display:block;
+}
+.risk-legend{
+  display:flex;
+  gap:20px;
+  margin-top:16px;
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  color:var(--bone-dim);
+  flex-wrap:wrap;
+}
+.risk-legend span{display:flex;align-items:center;gap:6px;}
+.risk-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+
+/* ===== case studies ===== */
+.case-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:24px;
+  margin-top:40px;
+}
+@media (max-width:820px){.case-grid{grid-template-columns:1fr;}}
+.case-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:32px;
+  position:relative;
+  overflow:hidden;
+}
+.case-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:3px;
+  background:linear-gradient(90deg,var(--signal),var(--threat));
+}
+.case-card .case-flag{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--steel);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+  display:block;
+}
+.case-card h3{font-family:var(--font-body);font-weight:700;font-size:1.5rem;color:var(--bone);margin-bottom:14px;}
+.case-card p{font-size:0.95rem;margin-bottom:14px;}
+.case-stats{
+  display:flex;
+  gap:18px;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  flex-wrap:wrap;
+}
+.case-stats div{font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);}
+.case-stats b{color:var(--signal);font-size:1rem;display:block;}
+
+/* ===== quiz / learning module ===== */
+.quiz-box{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:36px;
+  margin-top:40px;
+}
+.quiz-progress{
+  display:flex;
+  gap:6px;
+  margin-bottom:24px;
+}
+.quiz-progress span{
+  height:4px;flex:1;
+  background:var(--line);
+  border-radius:2px;
+}
+.quiz-progress span.done{background:var(--signal);}
+.quiz-q{font-family:var(--font-body);font-weight:600;font-size:1.2rem;color:var(--bone);margin-bottom:20px;}
+.quiz-opts{display:grid;gap:10px;}
+.quiz-opt{
+  text-align:left;
+  padding:14px 18px;
+  background:var(--deep);
+  border:1px solid var(--line);
+  border-radius:6px;
+  color:var(--bone-dim);
+  font-family:var(--font-body);
+  font-size:0.92rem;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.quiz-opt:hover{border-color:var(--steel);}
+.quiz-opt.correct{border-color:var(--signal);background:rgba(57,255,138,0.08);color:var(--bone);}
+.quiz-opt.wrong{border-color:var(--threat);background:rgba(255,77,46,0.08);color:var(--bone);}
+.quiz-feedback{
+  margin-top:18px;
+  font-size:0.9rem;
+  color:var(--bone-dim);
+  display:none;
+}
+.quiz-result{
+  text-align:center;
+  padding:20px 0;
+}
+.quiz-result .score{
+  font-family:var(--font-display);
+  font-size:3rem;
+  color:var(--signal);
+}
+
+/* ===== simulation game ===== */
+.sim-wrap{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:36px;
+  margin-top:40px;
+}
+.sim-meters{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:28px;
+}
+@media (max-width:680px){.sim-meters{grid-template-columns:1fr;}}
+.sim-meter{
+  background:var(--deep);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:16px 18px;
+}
+.sim-meter .sm-label{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--bone-dim);
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.sm-bar-track{height:8px;background:var(--line);border-radius:4px;overflow:hidden;}
+.sm-bar-fill{height:100%;border-radius:4px;transition:width 0.4s;}
+.sim-turn{
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  color:var(--steel);
+  margin-bottom:8px;
+  display:block;
+}
+.sim-scenario{font-family:var(--font-body);font-weight:600;font-size:1.25rem;color:var(--bone);margin-bottom:10px;}
+.sim-desc{font-size:0.95rem;margin-bottom:24px;}
+.sim-choices{display:grid;gap:12px;}
+.sim-choice{
+  text-align:left;
+  padding:16px 20px;
+  background:var(--deep);
+  border:1px solid var(--line);
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.sim-choice:hover{border-color:var(--signal);transform:translateX(4px);}
+.sim-choice .sc-title{font-family:var(--font-body);font-weight:600;color:var(--bone);font-size:0.98rem;margin-bottom:4px;}
+.sim-choice .sc-sub{font-family:var(--font-mono);font-size:0.74rem;color:var(--bone-dim);}
+.sim-log{
+  margin-top:24px;
+  padding:18px 20px;
+  background:var(--deep);
+  border-left:3px solid var(--signal);
+  border-radius:4px;
+  font-size:0.92rem;
+  color:var(--bone-dim);
+  display:none;
+}
+.sim-restart{
+  display:none;
+  margin-top:20px;
+}
+
+/* ===== gamification: badges / level / leaderboard ===== */
+.gamify-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:28px;
+  margin-top:40px;
+}
+@media (max-width:820px){.gamify-grid{grid-template-columns:1fr;}}
+.level-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:32px;
+}
+.level-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+.level-head .lv-num{font-family:var(--font-display);font-size:2.2rem;color:var(--gold);}
+.level-head .lv-title{font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);text-transform:uppercase;}
+.xp-track{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin-bottom:8px;}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--signal-dim),var(--signal));border-radius:5px;transition:width 0.5s;}
+.xp-text{font-family:var(--font-mono);font-size:0.72rem;color:var(--bone-dim);}
+.badge-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px;}
+.badge{
+  text-align:center;
+  padding:14px 6px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  opacity:0.35;
+  transition:all 0.3s;
+}
+.badge.earned{opacity:1;border-color:var(--gold);background:rgba(216,182,92,0.07);}
+.badge .b-icon{font-size:1.5rem;display:block;margin-bottom:6px;}
+.badge .b-name{font-family:var(--font-mono);font-size:0.6rem;color:var(--bone-dim);text-transform:uppercase;}
+.leaderboard-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:32px;
+}
+.lb-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.lb-row:last-child{border-bottom:none;}
+.lb-rank{font-family:var(--font-display);font-size:1.1rem;color:var(--steel);width:28px;}
+.lb-row.you .lb-rank{color:var(--signal);}
+.lb-name{flex:1;font-family:var(--font-body);font-size:0.92rem;color:var(--bone);}
+.lb-row.you .lb-name{color:var(--signal);}
+.lb-score{font-family:var(--font-mono);font-size:0.85rem;color:var(--bone-dim);}
+
+/* ===== footer ===== */
+footer{
+  border-top:1px solid var(--line);
+  padding:60px 32px 40px;
+  text-align:center;
+}
+footer p{font-family:var(--font-mono);font-size:0.75rem;color:var(--bone-dim);}
+
+/* ===== scroll reveal ===== */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* ===== misc ===== */
+.divider-label{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin:0 0 50px;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--line);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+}
+.divider-label::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.glossary-link{
+  font-family:var(--font-mono);
+  border-bottom:1px dashed var(--steel);
+  cursor:help;
+}
+</style>
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<canvas id="net-bg"></canvas>
+
+<nav>
+  <div class="nav-logo">SİSTEMLER<span>::</span>SİSTEMİ</div>
+  <div class="nav-links">
+    <a href="#harita">Teknoloji Haritası</a>
+    <a href="#zaman-cizelgesi">Zaman Çizelgesi</a>
+    <a href="#mineraller">Mineraller</a>
+    <a href="#vakalar">Vaka Çalışmaları</a>
+    <a href="#oyun">Simülasyon</a>
+    <a href="#quiz">Bilgi Testi</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div class="nav-stat"><span id="nav-xp-text">SEVİYE 1 · 0 XP</span></div>
+    <span id="xp-pill">🏅 0 Rozet</span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-tag">Etkileşimli Bilgi Sistemi · Açık Kaynak Sentezi</div>
+  <h1>Savaşın yeni cephesi<br><em>kodlarda</em> ve <em>minerallerde</em> yazılıyor.</h1>
+  <p class="hero-sub">
+    Yapay zekâdan kuantum iletişime, elektronik harpten uzay teknolojilerine — modern gücün
+    9 katmanını keşfedin. Teknoloji artık sadece bir araç değil; jeopolitiğin kendisi.
+  </p>
+  <div class="hero-cta">
+    <button class="btn btn-primary" onclick="document.getElementById('harita').scrollIntoView({behavior:'smooth'})">Haritayı Keşfet →</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('oyun').scrollIntoView({behavior:'smooth'})">Simülasyonu Başlat</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num">9</span><span class="lbl">Teknoloji Alanı</span></div>
+    <div class="hero-stat"><span class="num">225+</span><span class="lbl">Yıllık Zaman Aralığı</span></div>
+    <div class="hero-stat"><span class="num">25+</span><span class="lbl">Kritik Mineral</span></div>
+    <div class="hero-stat"><span class="num">4</span><span class="lbl">Vaka Çalışması</span></div>
+  </div>
+  <div class="gen-pills">
+    <span class="gen-pill"><b>X Kuşağı için:</b> derinlemesine analiz</span>
+    <span class="gen-pill"><b>Y Kuşağı için:</b> bağlamsal kıyaslama</span>
+    <span class="gen-pill"><b>Z Kuşağı için:</b> interaktif keşif</span>
+    <span class="gen-pill"><b>Alfa Kuşağı için:</b> oyunlaştırılmış öğrenme</span>
+  </div>
+</section>
+
+<!-- placeholder sections will be inserted -->
+<section class="section" id="harita">
+  <div class="sec-head reveal">
+    <span class="sec-num">01 / SİSTEM HARİTASI</span>
+    <h2>Sistemler Sistemi</h2>
+    <p>1990'larda ABD Donanması'ndan Amiral William Owens'ın ortaya attığı "Sistemler Sistemi" kavramı,
+    veri ve ağ temelli savaşın temelini attı. Bugün dokuz teknoloji alanı birbirine bağımlı, tek bir
+    organizma gibi işliyor. Düğümlere tıklayarak bağlantıları ve detayları keşfedin.</p>
+  </div>
+  <div class="tech-map-wrap reveal">
+    <canvas id="tech-canvas" width="1100" height="620"></canvas>
+  </div>
+  <div class="tech-detail reveal" id="tech-detail">
+    <span class="td-tag">Düğüm seçilmedi</span>
+    <h3>Bir teknoloji düğümüne dokunun</h3>
+    <p>Yapay zekâdan kuantum iletişime kadar dokuz alan arasındaki bağlantıları görmek için haritadaki
+    daireleri tıklayın. Her düğüm, tezde detaylandırılan teknik ve jeopolitik bağlamı açar.</p>
+  </div>
+  <div class="tech-hint">İPUCU: Düğümler arasındaki çizgiler, tezde belgelenen doğrudan teknolojik bağımlılıkları temsil eder.</div>
+</section>
+<section class="section" id="zaman-cizelgesi">
+  <div class="divider-label reveal">Kronoloji</div>
+  <div class="sec-head reveal">
+    <span class="sec-num">02 / ZAMAN ÇİZELGESİ</span>
+    <h2>1800'den Günümüze: Teknoloji ve Güç</h2>
+    <p>Sanayi Devrimi'nden kuantum çağına, her teknolojik sıçrama jeopolitik dengeleri yeniden çizdi.
+    Yeşil noktalar teknolojik dönüm noktalarını, kırmızı noktalar bu teknolojilerin tetiklediği
+    çatışma ve rekabet anlarını gösterir.</p>
+  </div>
+  <div class="timeline reveal" id="timeline-list"></div>
+</section>
+<section class="section" id="mineraller">
+  <div class="divider-label reveal">21. Yüzyılın Petrolü</div>
+  <div class="sec-head reveal">
+    <span class="sec-num">03 / STRATEJİK MİNERALLER</span>
+    <h2>Görünmez Savaş Alanı: Kritik Mineraller</h2>
+    <p>Bir F-35 uçağı yaklaşık 400 kg, bir Virginia sınıfı denizaltı 4 ton nadir toprak elementi
+    gerektirir. Bu elementlerin %70'inden fazlasını işleyen tek ülke: Çin. Hücrelere tıklayarak
+    tedarik riskini ve kullanım alanlarını görün.</p>
+  </div>
+  <div class="mineral-grid reveal" id="mineral-grid"></div>
+  <div class="risk-legend reveal">
+    <span><i style="background:var(--threat)"></i> Yüksek tedarik riski (Çin tekeli / %70+)</span>
+    <span><i style="background:var(--gold)"></i> Orta risk (sınırlı tedarikçi sayısı)</span>
+    <span><i style="background:var(--signal-dim)"></i> Düşük risk (çeşitlendirilmiş tedarik)</span>
+  </div>
+  <div class="mineral-detail reveal" id="mineral-detail">
+    <span class="m-china">Element seçilmedi</span>
+    <h3>Bir mineral hücresine dokunun</h3>
+    <p>Periyodik tablodaki her hücre, savunma sanayisindeki gerçek bir kullanım alanını ve
+    tedarik zinciri riskini temsil eder.</p>
+  </div>
+</section>
+<section class="section" id="vakalar">
+  <div class="divider-label reveal">Saha Gerçekliği</div>
+  <div class="sec-head reveal">
+    <span class="sec-num">04 / VAKA ÇALIŞMALARI</span>
+    <h2>Teori Sahaya İnince</h2>
+    <p>Jeopolitik teorinin soyut kavramları, dört güncel çatışma ve rekabet alanında somutlaşıyor.</p>
+  </div>
+  <div class="case-grid">
+
+    <div class="case-card reveal">
+      <span class="case-flag">🇺🇸 ⚔ 🇨🇳 · Teknoloji Hegemonyası</span>
+      <h3>ABD–Çin Çip Savaşları</h3>
+      <p>ABD, Çin'in yapay zekâ ve askeri sistemlerinde kullanabileceği ileri çipler ile üretim
+      ekipmanlarının ihracatını sınırlandırdı. Çin'in karşı hamlesi: galyum ve germanyum gibi
+      çip üretiminde hayati metallere ihracat lisansı şartı getirmek.</p>
+      <p>IEA'ya göre 2030'a kadar Çin madencilik liderliğini koruyacak, ABD'nin küresel pazar payı
+      ise yalnızca %7 seviyesinde kalacak.</p>
+      <div class="case-stats">
+        <div><b>%70+</b>Çin'in NTE üretim payı</div>
+        <div><b>%72</b>ABD'nin Çin'den NTE ithalat oranı (2019-22)</div>
+      </div>
+    </div>
+
+    <div class="case-card reveal">
+      <span class="case-flag">🇺🇦 · Mineral Diplomasisi</span>
+      <h3>Ukrayna'nın Yer Altı Cephesi</h3>
+      <p>Ukrayna, dünya mineral rezervlerinin yaklaşık %5'ine, 116 maden rezervinde 20 bin doğal
+      yatağa sahip. Avrupa'nın en büyük titanyum rezervlerini (küresel rezervin %7'si) ve lityum
+      yataklarının üçte birini barındırıyor.</p>
+      <p>2025'te ABD ile imzalanan anlaşma, savaş yardımları karşılığında nadir metal erişimini
+      gündeme taşıdı — toprak savunması artık kaynak savunmasıyla iç içe.</p>
+      <div class="case-stats">
+        <div><b>19M ton</b>Grafit rezervi</div>
+        <div><b>%7</b>Avrupa titanyum rezervinin payı</div>
+      </div>
+    </div>
+
+    <div class="case-card reveal">
+      <span class="case-flag">📡 · Ağ Merkezli Harp</span>
+      <h3>Ukrayna Savaşı'nda IoT ve Veri</h3>
+      <p>Javelin tanksavar füzeleri ve Switchblade insansız hava araçları, Nesnelerin İnterneti'nin
+      savaş alanındaki başarılı uygulamaları oldu. Siviller, cep telefonu uygulamalarıyla birer
+      "sensöre" dönüşerek savaşın fiilî aktörleri haline geldi.</p>
+      <p>Rusya'nın Alçak Dünya Yörüngesi'ndeki yapay zekâ destekli jeo-uzamsal zekâ kullanımı,
+      taktikleri anlık olarak değiştirme kapasitesi gösterdi.</p>
+      <div class="case-stats">
+        <div><b>25.000+</b>2030 öngörülen aktif uydu sayısı</div>
+        <div><b>7</b>Katmanlı hibrit savaş alanı sayısı</div>
+      </div>
+    </div>
+
+    <div class="case-card reveal">
+      <span class="case-flag">⚡ · Enerji Jeopolitiği</span>
+      <h3>Rusya'nın Enerji Silahı</h3>
+      <p>Rusya-Ukrayna savaşı, enerji güvenliğini küresel politikanın merkezine yeniden taşıdı.
+      Rusya, enerji ihracat gücünü AB'ye karşı siyasi şantaj aracı olarak kullanarak Avrupa'nın
+      desteğini kesmeyi hedefledi.</p>
+      <p>Savaş sonrası Avrupa'da yaygınlaşan "savaş ekonomisi" modeli, ekonomik güvenliğin
+      ulusal güvenliğin ayrılmaz parçası haline geldiğini gösterdi.</p>
+      <div class="case-stats">
+        <div><b>%45+</b>2035 öngörülen küresel enerji talebi artışı</div>
+        <div><b>2010</b>Rusya'nın uzay yetkinliklerini yeniden yapılandırma yılı</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="section" id="oyun">
+  <div class="divider-label reveal">Karar Simülasyonu</div>
+  <div class="sec-head reveal">
+    <span class="sec-num">05 / STRATEJİK SİMÜLASYON</span>
+    <h2>Devlet Başkanı Koltuğunda</h2>
+    <p>Orta ölçekli bir devletin teknoloji ve güvenlik danışmanısınız. Beş karar turu boyunca
+    Ekonomik Güç, Teknolojik Bağımsızlık ve Jeopolitik İstikrar dengelerini yönetin. Her seçim,
+    tezde incelenen gerçek dinamiklere dayanır.</p>
+  </div>
+  <div class="sim-wrap reveal">
+    <div class="sim-meters">
+      <div class="sim-meter">
+        <div class="sm-label"><span>Ekonomik Güç</span><span id="sm-econ-val">50</span></div>
+        <div class="sm-bar-track"><div class="sm-bar-fill" id="sm-econ-bar" style="width:50%;background:var(--gold)"></div></div>
+      </div>
+      <div class="sim-meter">
+        <div class="sm-label"><span>Teknolojik Bağımsızlık</span><span id="sm-tech-val">50</span></div>
+        <div class="sm-bar-track"><div class="sm-bar-fill" id="sm-tech-bar" style="width:50%;background:var(--signal)"></div></div>
+      </div>
+      <div class="sim-meter">
+        <div class="sm-label"><span>Jeopolitik İstikrar</span><span id="sm-geo-val">50</span></div>
+        <div class="sm-bar-track"><div class="sm-bar-fill" id="sm-geo-bar" style="width:50%;background:var(--steel)"></div></div>
+      </div>
+    </div>
+    <span class="sim-turn" id="sim-turn-label">TUR 1 / 5</span>
+    <div class="sim-scenario" id="sim-scenario-title">Senaryo yükleniyor...</div>
+    <div class="sim-desc" id="sim-scenario-desc"></div>
+    <div class="sim-choices" id="sim-choices"></div>
+    <div class="sim-log" id="sim-log"></div>
+    <button class="btn btn-primary sim-restart" id="sim-restart-btn" onclick="restartSim()">Simülasyonu Yeniden Başlat</button>
+  </div>
+</section>
+<section class="section" id="quiz">
+  <div class="divider-label reveal">Bilgini Test Et</div>
+  <div class="sec-head reveal">
+    <span class="sec-num">06 / BİLGİ TESTİ</span>
+    <h2>Sistem Sınavı</h2>
+    <p>Sekiz soruluk hızlı testle teknoloji-jeopolitik bağlantılarındaki bilginizi ölçün. Her doğru
+    cevap XP ve rozet kazandırır.</p>
+  </div>
+  <div class="quiz-box reveal" id="quiz-box">
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+<section class="section section-tight" id="ilerleme">
+  <div class="divider-label reveal">İlerleme Paneli</div>
+  <div class="gamify-grid">
+    <div class="level-card reveal">
+      <div class="level-head">
+        <div><span class="lv-title">Analist Seviyesi</span><div class="lv-num" id="lv-num">1</div></div>
+        <div class="lv-title" id="lv-name">Stajyer Analist</div>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+      <div class="xp-text"><span id="xp-current">0</span> / <span id="xp-needed">100</span> XP — bir sonraki seviyeye</div>
+      <div class="badge-row" id="badge-row"></div>
+    </div>
+    <div class="leaderboard-card reveal">
+      <h3 style="font-family:var(--font-body);font-size:1.2rem;margin-bottom:18px;color:var(--bone)">Liderlik Tablosu</h3>
+      <div id="leaderboard-list"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Bu sentez, Selahaddin Koyuncu'nun "Yeni Teknolojiler ve Silahlı Çatışmaların Dönüşümü" başlıklı yüksek lisans tezinin (İstanbul Topkapı Üniversitesi, 2025) teknoloji ve jeopolitik bölümlerinden derlenmiştir. Eğitim amaçlıdır.</p>
+</footer>
+
+</div>
+
+<script>
+/* ============ AMBIENT NETWORK BACKGROUND ============ */
+(function(){
+  const canvas = document.getElementById('net-bg');
+  const ctx = canvas.getContext('2d');
+  let w,h,nodes=[];
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = document.documentElement.scrollHeight;
+  }
+  function initNodes(){
+    nodes = [];
+    const count = Math.min(70, Math.floor(w*h/45000));
+    for(let i=0;i<count;i++){
+      nodes.push({
+        x:Math.random()*w, y:Math.random()*h,
+        vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18,
+        r:Math.random()*1.6+0.6
+      });
+    }
+  }
+  resize(); initNodes();
+  window.addEventListener('resize',()=>{resize();initNodes();});
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    const scrollY = window.scrollY;
+    const viewTop = scrollY-200, viewBot = scrollY+window.innerHeight+200;
+    for(const n of nodes){
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0||n.x>w)n.vx*=-1;
+      if(n.y<0||n.y>h)n.vy*=-1;
+    }
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i];
+      if(a.y<viewTop||a.y>viewBot) continue;
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j];
+        if(b.y<viewTop||b.y>viewBot) continue;
+        const dx=a.x-b.x, dy=a.y-b.y, dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<140){
+          ctx.strokeStyle = `rgba(57,255,138,${(1-dist/140)*0.12})`;
+          ctx.lineWidth=1;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+        }
+      }
+    }
+    for(const n of nodes){
+      if(n.y<viewTop||n.y>viewBot) continue;
+      ctx.fillStyle='rgba(57,255,138,0.35)';
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+  window.addEventListener('load',()=>setTimeout(resize,500));
+})();
+
+/* ============ SCROLL REVEAL ============ */
+(function(){
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.12});
+  els.forEach(el=>io.observe(el));
+})();
+
+/* ============ GAMIFICATION CORE ============ */
+const GameState = {
+  xp:0,
+  badges:new Set(),
+  quizScore:0,
+  simCompleted:false,
+  techExplored:new Set(),
+  mineralExplored:new Set()
+};
+const LEVELS = [
+  {min:0,title:'Stajyer Analist'},
+  {min:100,title:'Saha Analisti'},
+  {min:250,title:'Kıdemli Analist'},
+  {min:450,title:'Strateji Danışmanı'},
+  {min:700,title:'Sistem Mimarı'}
+];
+const BADGES = [
+  {id:'explorer',icon:'🗺️',name:'Kâşif',cond:()=>GameState.techExplored.size>=9},
+  {id:'geologist',icon:'⛏️',name:'Jeolog',cond:()=>GameState.mineralExplored.size>=12},
+  {id:'strategist',icon:'♟️',name:'Stratejist',cond:()=>GameState.simCompleted},
+  {id:'scholar',icon:'🎓',name:'Bilgin',cond:()=>GameState.quizScore>=6}
+];
+function addXP(amount){
+  GameState.xp += amount;
+  updateGamifyUI();
+  checkBadges();
+}
+function checkBadges(){
+  BADGES.forEach(b=>{
+    if(!GameState.badges.has(b.id) && b.cond()){
+      GameState.badges.add(b.id);
+    }
+  });
+  updateGamifyUI();
+}
+function currentLevel(){
+  let lvl = 1, title = LEVELS[0].title, idx=0;
+  for(let i=0;i<LEVELS.length;i++){
+    if(GameState.xp>=LEVELS[i].min){ lvl=i+1; title=LEVELS[i].title; idx=i; }
+  }
+  const next = LEVELS[idx+1];
+  return {lvl,title,next};
+}
+function updateGamifyUI(){
+  const {lvl,title,next} = currentLevel();
+  document.getElementById('lv-num').textContent = lvl;
+  document.getElementById('lv-name').textContent = title;
+  document.getElementById('nav-xp-text').textContent = `SEVİYE ${lvl} · ${GameState.xp} XP`;
+  document.getElementById('xp-pill').textContent = `🏅 ${GameState.badges.size} Rozet`;
+  const needed = next ? next.min : LEVELS[LEVELS.length-1].min;
+  const prevMin = LEVELS[lvl-1].min;
+  const pct = next ? Math.min(100,((GameState.xp-prevMin)/(needed-prevMin))*100) : 100;
+  document.getElementById('xp-fill').style.width = pct+'%';
+  document.getElementById('xp-current').textContent = GameState.xp;
+  document.getElementById('xp-needed').textContent = next ? next.min : 'MAKS';
+
+  const row = document.getElementById('badge-row');
+  row.innerHTML = '';
+  BADGES.forEach(b=>{
+    const earned = GameState.badges.has(b.id);
+    row.innerHTML += `<div class="badge ${earned?'earned':''}"><span class="b-icon">${b.icon}</span><span class="b-name">${b.name}</span></div>`;
+  });
+
+  renderLeaderboard();
+}
+function renderLeaderboard(){
+  const fake = [
+    {name:'Ada K.',score:840},
+    {name:'Mert Y.',score:715},
+    {name:'Zeynep T.',score:560},
+    {name:'Burak D.',score:310}
+  ];
+  const all = [...fake, {name:'Siz',score:GameState.xp,you:true}].sort((a,b)=>b.score-a.score);
+  const list = document.getElementById('leaderboard-list');
+  list.innerHTML = all.map((p,i)=>`
+    <div class="lb-row ${p.you?'you':''}">
+      <span class="lb-rank">${i+1}</span>
+      <span class="lb-name">${p.name}${p.you?' (siz)':''}</span>
+      <span class="lb-score">${p.score} XP</span>
+    </div>
+  `).join('');
+}
+updateGamifyUI();
+</script>
+<script>
+/* ============ TECH MAP (interactive network) ============ */
+(function(){
+  const canvas = document.getElementById('tech-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 1100, H = 620;
+
+  const techNodes = [
+    {id:'ai', label:'Yapay Zekâ', x:550, y:300, r:54, color:'#39FF8A',
+      tag:'Ölümcül Öğretiler',
+      desc:'Hedef analizi, görüntü tanıma ve karar destek sistemlerinin merkezinde yer alır. ABD, Çin ve Rusya öncü politikalarla askeri kapasite inşa ediyor. DARPA\'nın Mosaic Warfare konsepti, modüler ve esnek sistemlerle dijital ağlar üzerinden uyarlanabilir savaş stratejileri geliştirmeyi hedefliyor.',
+      links:['robotik','iot','quantum','blockchain','elektronik-harp','bilissel','uzay']},
+    {id:'robotik', label:'Robotik & Otonom Sistemler', x:300, y:170, r:42, color:'#5B7A9E',
+      tag:'Kan Döken Makineler',
+      desc:'İnsansız sistemlerin kökeni 1783\'teki sıcak hava balonlarına uzanır. Bugün İHA\'lar, insansız kara araçları ve "Loyal Wingman" gibi otonom kanat arkadaşları, insan müdahalesi minimize edilmiş bir savaş anlayışı sunuyor. Ölümcül Otonom Silah Sistemleri (LAWS) bu alanın en tartışmalı uzantısı.',
+      links:['ai','iot','elektronik-harp']},
+    {id:'iot', label:'Nesnelerin İnterneti (IoT)', x:830, y:170, r:42, color:'#5B7A9E',
+      tag:'Ağ Merkezli Harp',
+      desc:'2027\'ye kadar 25 milyardan fazla cihazın birbirine bağlanacağı tahmin ediliyor. Askeri IoT (IoMT), asker, araç, uydu ve İHA\'lar arasında sürekli bağlantı sağlayarak durumsal farkındalığı artırır. Ukrayna\'daki Javelin ve Switchblade sistemleri bu teknolojinin sahadaki kanıtı.',
+      links:['ai','robotik','blockchain','quantum']},
+    {id:'blockchain', label:'Blockchain', x:230, y:420, r:38, color:'#D8B65C',
+      tag:'Dağıtık Güvenliğin Savaşı',
+      desc:'Değiştirilemezlik ve merkeziyetsizlik özellikleriyle, askeri tedarik zincirinde veri bütünlüğü sağlıyor. ABD Deniz Piyadeleri şifreli veri paylaşım platformlarını test ederken, Çin askeri robotları blockchain tabanlı kimlik doğrulamayla yönetmeyi planlıyor.',
+      links:['ai','iot','quantum']},
+    {id:'quantum', label:'Kuantum Sistemler', x:870, y:420, r:46, color:'#39FF8A',
+      tag:'Kodların Ötesinde Savaş',
+      desc:'Kuantum Anahtar Dağıtımı (QKD) ile kırılamaz şifreleme mümkün. Çin 2016\'da QUESS uydusunu fırlatarak uzay tabanlı kuantum iletişiminde liderlik üstlendi. ABD 1,2 milyar dolarlık Ulusal Kuantum Girişimi ile yarışı sürdürüyor. Mevcut blockchain şifrelemesi için de bir tehdit-fırsat ikilemi taşıyor.',
+      links:['ai','iot','blockchain','elektronik-harp','uzay']},
+    {id:'elektronik-harp', label:'Elektronik Harp', x:550, y:130, r:40, color:'#FF4D2E',
+      tag:'Ölümcül Frekanslar',
+      desc:'İlk kez 1904-1905 Rus-Japon Savaşı\'nda kullanıldı. Elektronik Taarruz, Koruma ve Destek olmak üzere üç bileşenden oluşur. Komuta-kontrol sistemleri, geleceğin savaşlarında siber saldırıların ilk hedefi olarak görülüyor; siber güvenlikle giderek örtüşüyor.',
+      links:['ai','robotik','quantum','uzay','bilissel']},
+    {id:'bilissel', label:'Bilişsel Savaş', x:380, y:530, r:38, color:'#FF4D2E',
+      tag:'Zihinlerin İşgali',
+      desc:'NATO tarafından "beşinci boyut" olarak tanımlanan bilişsel savaş, düşüncenin içeriğini değil oluşum sürecini hedefler. Sosyal medya algoritmaları, deepfake içerikler ve mikro hedefleme ile "düşünceyi değil, düşünmenin biçimini değiştirmeyi" amaçlar.',
+      links:['ai','elektronik-harp']},
+    {id:'uzay', label:'Uydu & Uzay Sistemleri', x:720, y:530, r:42, color:'#5B7A9E',
+      tag:'Dünyaya Sığmayan Savaş',
+      desc:'2000\'de 46 ülkenin uydusu varken 2023\'te bu sayı 100\'e ulaştı. 2030\'a kadar 25.000 aktif uydu öngörülüyor. İstihbarat, navigasyon ve komuta-kontrol sistemlerinin omurgasını oluşturuyor; artık sadece destekleyici değil, doğrudan bir çatışma alanı.',
+      links:['ai','quantum','elektronik-harp']},
+    {id:'mineral', label:'Stratejik Mineraller', x:550, y:600, r:36, color:'#D8B65C',
+      tag:'21. Yüzyılın Petrolü',
+      desc:'Yukarıdaki sekiz teknolojinin tamamı, tedariki son derece sınırlı kritik minerallere bağımlı. Nadir toprak elementleri, lityum, kobalt, galyum — bu mineraller olmadan ne bir çip, ne bir mıknatıs, ne de bir uydu üretilebilir. Aşağıdaki bölümde bu alanı derinlemesine inceleyin.',
+      links:['ai','quantum','uzay','robotik']}
+  ];
+
+  function findNode(id){ return techNodes.find(n=>n.id===id); }
+
+  function draw(highlightId){
+    ctx.clearRect(0,0,W,H);
+    // edges
+    techNodes.forEach(n=>{
+      n.links.forEach(linkId=>{
+        const t = findNode(linkId);
+        if(!t) return;
+        const active = highlightId && (highlightId===n.id || highlightId===linkId);
+        ctx.strokeStyle = active ? 'rgba(57,255,138,0.85)' : 'rgba(91,122,158,0.22)';
+        ctx.lineWidth = active ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(n.x,n.y); ctx.lineTo(t.x,t.y); ctx.stroke();
+      });
+    });
+    // nodes
+    techNodes.forEach(n=>{
+      const isHi = highlightId===n.id;
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle = isHi ? n.color : 'rgba(16,29,52,0.9)';
+      ctx.fill();
+      ctx.lineWidth = isHi ? 3 : 1.5;
+      ctx.strokeStyle = n.color;
+      ctx.stroke();
+      ctx.fillStyle = isHi ? '#080D17' : '#E9E6DC';
+      ctx.font = '600 13px IBM Plex Sans, sans-serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      wrapText(ctx, n.label, n.x, n.y, n.r*1.7, 14);
+    });
+  }
+  function wrapText(ctx,text,x,y,maxWidth,lineHeight){
+    const words = text.split(' ');
+    let line='', lines=[];
+    for(const w of words){
+      const test = line+w+' ';
+      if(ctx.measureText(test).width>maxWidth && line!==''){ lines.push(line); line=w+' '; }
+      else line=test;
+    }
+    lines.push(line);
+    const offset = (lines.length-1)*lineHeight/2;
+    lines.forEach((l,i)=>ctx.fillText(l.trim(), x, y-offset+i*lineHeight));
+  }
+
+  let selected = null;
+  function showDetail(id){
+    const n = findNode(id);
+    if(!n) return;
+    selected = id;
+    GameState.techExplored.add(id);
+    document.getElementById('tech-detail').innerHTML = `
+      <span class="td-tag">${n.tag}</span>
+      <h3>${n.label}</h3>
+      <p>${n.desc}</p>
+    `;
+    draw(id);
+    addXP(8);
+  }
+
+  canvas.addEventListener('click', (e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W/rect.width, scaleY = H/rect.height;
+    const mx = (e.clientX-rect.left)*scaleX;
+    const my = (e.clientY-rect.top)*scaleY;
+    for(const n of techNodes){
+      const d = Math.hypot(mx-n.x,my-n.y);
+      if(d<=n.r){ showDetail(n.id); return; }
+    }
+  });
+  canvas.addEventListener('mousemove',(e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W/rect.width, scaleY = H/rect.height;
+    const mx = (e.clientX-rect.left)*scaleX;
+    const my = (e.clientY-rect.top)*scaleY;
+    let hovering=false;
+    for(const n of techNodes){
+      if(Math.hypot(mx-n.x,my-n.y)<=n.r){ hovering=true; break; }
+    }
+    canvas.style.cursor = hovering?'pointer':'default';
+  });
+
+  draw(null);
+})();
+</script>
+<script>
+/* ============ TIMELINE ============ */
+(function(){
+  const events = [
+    {year:'1783', type:'tech', title:'İlk İnsansız Sistem Denemeleri', desc:'Sıcak hava balonlarının askeri amaçlarla kullanılması, otonom sistemlerin en eski atası oldu.'},
+    {year:'1885', type:'threat', title:'Berlin Konferansı', desc:'Avrupa güçleri Afrika\'yı kendi ekonomik çıkarlarına göre paylaştı; emperyal jeopolitiğin dönüm noktası.'},
+    {year:'1898', type:'tech', title:'Tesla\'nın Radyo Kontrollü Sistemleri', desc:'Nikola Tesla, ileride elektronik harbin temelini oluşturacak radyo kontrollü cihazları geliştirdi.'},
+    {year:'1904', type:'threat', title:'Rus-Japon Savaşı: İlk Elektronik Harp', desc:'Elektronik harp, Heinrich Hertz\'in elektromanyetik dalga keşfine dayanarak ilk kez askeri amaçla kullanıldı.'},
+    {year:'1914–1918', type:'threat', title:'I. Dünya Savaşı', desc:'Sanayi Devrimi\'nin endüstriyel kapasitesi, savaşı kitlesel bir teknolojik mücadeleye dönüştürdü.'},
+    {year:'1930\'lar', type:'tech', title:'Sovyet Uzaktan Kumandalı Tanklar', desc:'SSCB\'nin denemeleri, kara savaşlarındaki ilk insansız sistem örneklerinden oldu.'},
+    {year:'1939–1945', type:'threat', title:'II. Dünya Savaşı', desc:'Telsiz kontrollü uçaklar ve motorize-endüstriyel kapasite, savaşın doğasını kökten değiştirdi.'},
+    {year:'1947–1991', type:'threat', title:'Soğuk Savaş', desc:'Nükleer ve dijital caydırıcılık dönemi; ABD-SSCB uzay silahlanma yarışı başladı.'},
+    {year:'1970\'ler', type:'tech', title:'Shakey Robotu (DARPA)', desc:'DARPA ve Stanford\'ın geliştirdiği ilk mobil sensörlü robot, modern robotik ve otonom sistemlerin atası oldu.'},
+    {year:'1991', type:'threat', title:'Körfez Savaşı', desc:'Uzay varlıklarının (GPS, hedef istihbaratı) büyük ölçekli ilk uygulaması; "bilgi savaşı" çağı başladı.'},
+    {year:'2001', type:'tech', title:'Çin\'in DTÖ\'ye Katılımı', desc:'Çin küresel üretim merkezi haline gelmenin ilk büyük adımını attı.'},
+    {year:'2015', type:'tech', title:'"Made in China 2025"', desc:'Çin, yüksek teknoloji sektörlerinde küresel liderlik hedefleyen sanayi girişimini başlattı.'},
+    {year:'2016', type:'tech', title:'Çin\'in QUESS Kuantum Uydusu', desc:'Dünyanın ilk kuantum uydusu fırlatıldı; 2017\'de bir fotonu Dünya\'ya "ışınlamayı" başardı.'},
+    {year:'2018', type:'tech', title:'ABD Ulusal Kuantum Girişimi', desc:'1,2 milyar dolarlık yatırımla ABD, kuantum yarışında resmî olarak sahaya indi.'},
+    {year:'2019', type:'threat', title:'ABD-Çin "Dijital Savaş" Başlıyor', desc:'ABD, mikroelektronik ve yarı iletken teknolojilerini hedef alan yaptırımlara başladı.'},
+    {year:'2020', type:'tech', title:'NATO: Bilişsel Savaş "Beşinci Boyut"', desc:'NATO, bilişsel savaşı siber ve bilgi savaşlarından ayrı bir kategori olarak tanımladı.'},
+    {year:'2022', type:'threat', title:'Rusya-Ukrayna Savaşı', desc:'IoT, kuantum iletişim ve enerji jeopolitiğinin sahada eşzamanlı test edildiği hibrit savaş örneği.'},
+    {year:'2023', type:'threat', title:'Çin\'in Galyum-Germanyum İhracat Kısıtlaması', desc:'ABD çip yaptırımlarına karşılık, Çin kritik mineralleri jeopolitik araca dönüştürdü.'},
+    {year:'2025', type:'threat', title:'ABD-Ukrayna Nadir Metal Anlaşması', desc:'Savaş yardımları karşılığında nadir metal erişimi gündeme geldi; kaynak diplomasisi yeni bir evreye girdi.'}
+  ];
+  const list = document.getElementById('timeline-list');
+  list.innerHTML = events.map(e=>`
+    <div class="tl-item ${e.type==='threat'?'threat':''}">
+      <span class="tl-year mono">${e.year}</span>
+      <h4>${e.title}</h4>
+      <p>${e.desc}</p>
+    </div>
+  `).join('');
+})();
+</script>
+<script>
+/* ============ MINERALS GRID ============ */
+(function(){
+  const minerals = [
+    {sym:'Nd', name:'Neodimyum', risk:'high', china:'Çin payı: ~%85 (hafif NTE)', use:'Kalıcı mıknatıslarda (NdFeB) kullanılır; sabit disk motorlarından güdümlü mühimmat aktüatörlerine kadar geniş bir alanda görev yapar. Tomahawk seyir füzesi ve akıllı bombalarda kritik bileşendir.'},
+    {sym:'Dy', name:'Disprozyum', risk:'high', china:'Çin payı: ~%100 (ağır NTE)', use:'Yüksek sıcaklıkta mıknatısların gücünü korur; füze güdüm sistemleri ve elektronik yüksek güç ekipmanında vazgeçilmezdir.'},
+    {sym:'Tb', name:'Terbiyum', risk:'high', china:'Çin payı: ~%100 (ağır NTE)', use:'Lazer hedefleme ve hava tabanlı silah sistemlerinde enerji/çözünürlük amplifikasyonu sağlar.'},
+    {sym:'Ga', name:'Galyum', risk:'high', china:'2023\'te ihracat lisansı şartı getirildi', use:'GaAs ve GaN bileşik yarı iletkenlerde kullanılır; 5G altyapısı, AI donanımı ve uydu sistemlerinin temel bileşenidir.'},
+    {sym:'Ge', name:'Germanyum', risk:'high', china:'2023\'te ABD\'ye karşı ihracat kısıtlaması', use:'Fiber optik kablo ve kızılötesi optik sistemlerde; çip üretiminde hayati öneme sahiptir.'},
+    {sym:'Co', name:'Kobalt', risk:'high', china:'DR Kongo en büyük üretici, Çin işleme tekeli', use:'Lityum-iyon piller ve süper alaşımlarda kullanılır; otonom sistemlerin enerji depolamasında merkezi rol oynar.'},
+    {sym:'Li', name:'Lityum', risk:'mid', china:'Çeşitlendirilmiş ama Çin işleme gücü yüksek', use:'Taşınabilir depolama, SSD ve veri merkezi pillerinde; enerji yoğunluğu mobil ve uç bilişimde vazgeçilmezdir.'},
+    {sym:'Ta', name:'Tantal', risk:'mid', china:'DR Kongo ve Ruanda öncü tedarikçi', use:'Uçaklar, insansız sistemler ve robot teknolojilerinde; karmaşık çok aşamalı tedarik zinciriyle bilinir.'},
+    {sym:'Nb', name:'Niyobyum', risk:'mid', china:'Brezilya en büyük tedarikçi', use:'Çelik alaşımları ve süper alaşımlarda; savunma sanayisinde Kanada\'da önemli rezervleri var.'},
+    {sym:'W', name:'Tungsten', risk:'mid', china:'Çin önde, Kazakistan\'a Çin yatırımı var', use:'Kesici takımlar ve transistörlerde olağanüstü ısı direnci sağlar; çip bağlantılarında temas metali olarak kullanılır.'},
+    {sym:'Be', name:'Berilyum', risk:'low', china:'ABD en büyük tedarikçi', use:'Havacılık, savunma ve nükleer enerji uygulamalarında hafif-yüksek mukavemetli yapı malzemesi.'},
+    {sym:'Y', name:'İtriyum', risk:'high', china:'Çin payı: ~%100 (ağır NTE grubu)', use:'Radar, sonar sistemlerinde ve yarı iletken bileşiklerin elektriksel özelliklerini geliştirmede kullanılır.'},
+    {sym:'Sm', name:'Samaryum', risk:'high', china:'Çin payı: ~%85 (hafif NTE)', use:'SmCo mıknatıslarında; aşırı sıcaklıklarda güvenilir çalışması gereken savunma sınıfı sistemler için tercih edilir.'},
+    {sym:'Pr', name:'Praseodimyum', risk:'high', china:'Çin payı: ~%85 (hafif NTE)', use:'NdFeB mıknatıslarının manyetik gücünü ve sıcaklık toleransını artırır; HDD motorlarında kullanılır.'},
+    {sym:'Eu', name:'Europiyum', risk:'high', china:'Çin payı: ~%100 (ağır NTE)', use:'Optoelektronik yarı iletkenlerde, lazer hedefleme ve hava tabanlı silah sistemlerinde.'},
+    {sym:'Sc', name:'Skandiyum', risk:'mid', china:'Sınırlı küresel üretim', use:'Alüminyum alaşımlarında ve yakıt hücrelerinde hafiflik-mukavemet dengesi sağlar.'},
+    {sym:'Si', name:'Silisyum Metal', risk:'mid', china:'Çin önemli üretici', use:'Tüm mikroçiplerin temel alt tabanı; yapay zekâ çiplerinin ve güneş panellerinin omurgası.'},
+    {sym:'V', name:'Vanadyum', risk:'low', china:'Çeşitlendirilmiş tedarik', use:'Çelik alaşımları ve enerji depolama sistemlerinde kullanılır.'},
+    {sym:'Sb', name:'Antimon', risk:'mid', china:'Çin önde', use:'Alev geciktiriciler ve elektronik bileşenlerde; kurşun alaşımlarında kullanılır.'},
+    {sym:'Pt', name:'Platin Grubu', risk:'low', china:'Güney Afrika ve Rusya öncü', use:'Otomotiv katalizörleri ve bellek/depolama aygıtı üretiminde yüksek saflıkta cam ve pota üretiminde kullanılır.'},
+    {sym:'Au', name:'Altın', risk:'low', china:'Geniş çaplı tedarik', use:'Bellek çiplerinde kablo ve elektrik konnektörlerini bağlamak için; yüksek iletkenlik sağlar.'},
+    {sym:'Mn', name:'Manganez', risk:'low', china:'Çeşitlendirilmiş tedarik', use:'Çelik üretimi ve yeni nesil bellek teknolojilerinde (ReRAM, spintronik) kullanılır.'},
+    {sym:'Hf', name:'Hafniyum', risk:'mid', china:'Sınırlı küresel üretici sayısı', use:'Nükleer reaktörler ve yarı iletkenlerde kullanılır.'},
+    {sym:'Gd', name:'Gadolinyum', risk:'high', china:'Çin payı: ~%100 (ağır NTE)', use:'Manyeto-optik depolama ve gelecekteki spintronik/kuantum bellek cihazlarında rol oynar.'},
+    {sym:'Ti', name:'Titanyum', risk:'mid', china:'Ukrayna Avrupa\'nın en büyük rezervine sahip (%7)', use:'Havacılık ve uzay mühendisliğinde hafif-yüksek mukavemet malzemesi; savaş uçaklarında yoğun kullanılır.'}
+  ];
+
+  const grid = document.getElementById('mineral-grid');
+  grid.innerHTML = minerals.map(m=>`
+    <div class="mineral-cell" data-sym="${m.sym}">
+      <span class="m-risk risk-${m.risk}"></span>
+      <span class="m-sym">${m.sym}</span>
+      <span class="m-name">${m.name}</span>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.mineral-cell').forEach((cell,i)=>{
+    cell.addEventListener('click',()=>{
+      const m = minerals[i];
+      GameState.mineralExplored.add(m.sym);
+      document.getElementById('mineral-detail').innerHTML = `
+        <span class="m-china">${m.china}</span>
+        <h3>${m.name} (${m.sym})</h3>
+        <p>${m.use}</p>
+      `;
+      addXP(5);
+    });
+  });
+})();
+</script>
+<script>
+/* ============ STRATEGIC SIMULATION GAME ============ */
+const SimGame = (function(){
+  let state = {econ:50, tech:50, geo:50, turn:0};
+  const maxTurns = 5;
+
+  const scenarios = [
+    {
+      title:'Çip İhracat Krizi',
+      desc:'Müttefik bir ülke, ileri yarı iletken teknolojisine erişiminizi kısıtlamayı düşünüyor. Aynı zamanda rakip bir blok, size kritik mineral tedariki karşılığında teknoloji transferi öneriyor.',
+      choices:[
+        {title:'Rakip blokla mineral-teknoloji anlaşması imzala', sub:'Teknolojik bağımsızlık ↑ · Jeopolitik istikrar ↓',
+         effect:{econ:5,tech:15,geo:-15}, log:'Tedarik zincirinizi çeşitlendirdiniz, ancak müttefikleriniz güven kaybına işaret ediyor.'},
+        {title:'Müttefikle sadakat göster, kısıtlamayı kabul et', sub:'Jeopolitik istikrar ↑ · Teknolojik bağımsızlık ↓',
+         effect:{econ:-5,tech:-15,geo:15}, log:'İttifak güçlendi, ama yerli çip üretiminde geri kaldınız.'},
+        {title:'Her iki tarafla da temkinli denge kur', sub:'Düşük risk, düşük getiri',
+         effect:{econ:0,tech:2,geo:2}, log:'Belirsizlik sürüyor ama hiçbir tarafı da kaybetmediniz.'}
+      ]
+    },
+    {
+      title:'Kuantum Yarışı Yatırımı',
+      desc:'Ulusal bütçenizde sınırlı bir fon var. Kuantum iletişim altyapısına mı, yoksa geleneksel siber savunmaya mı yatırım yapacaksınız?',
+      choices:[
+        {title:'Kuantum anahtar dağıtımı (QKD) altyapısına yatırım yap', sub:'Teknolojik bağımsızlık ↑↑ · Ekonomik güç ↓',
+         effect:{econ:-12,tech:20,geo:5}, log:'Uzun vadeli güvenli iletişim altyapınız güçlendi, bütçe baskısı arttı.'},
+        {title:'Mevcut siber savunma sistemlerini güçlendir', sub:'Ekonomik güç ↑ · Teknolojik bağımsızlık değişmez',
+         effect:{econ:10,tech:0,geo:0}, log:'Kısa vadeli güvenlik sağlandı, ama rakipler kuantumda öne geçiyor.'},
+        {title:'NATO\'nun DISCRETION benzeri ortak projesine katıl', sub:'Dengeli büyüme, paylaşılan risk',
+         effect:{econ:2,tech:10,geo:8}, log:'Ortak yatırım maliyeti düşürdü ve ittifak bağlarını güçlendirdi.'}
+      ]
+    },
+    {
+      title:'Enerji Şantajı',
+      desc:'Bölgesel bir güç, enerji ihracatını kesme tehdidiyle dış politikanızı etkilemeye çalışıyor. Enerji kaynaklarınızın %60\'ı bu tek tedarikçiye bağımlı.',
+      choices:[
+        {title:'Acil olarak alternatif tedarikçilerle anlaş', sub:'Ekonomik maliyet ↑ · Jeopolitik bağımlılık ↓',
+         effect:{econ:-15,tech:0,geo:18}, log:'Bağımlılığınızı azalttınız ama maliyetler kısa vadede arttı.'},
+        {title:'Tedarikçinin taleplerine kısmen razı ol', sub:'Ekonomik istikrar ↑ · İtibar kaybı',
+         effect:{econ:8,tech:0,geo:-12}, log:'Ekonomik şoku önlediniz, ancak diğer müttefikler gözünde güvenilirliğiniz sarsıldı.'},
+        {title:'Yenilenebilir enerjiye hızlandırılmış geçiş başlat', sub:'Uzun vadeli bağımsızlık · Kısa vadeli maliyet',
+         effect:{econ:-8,tech:8,geo:10}, log:'Geçiş süreci başladı; tam etkisi zaman alacak ama yön doğru.'}
+      ]
+    },
+    {
+      title:'Bilişsel Savaş Tehdidi',
+      desc:'İstihbarat raporları, seçim sürecinizde yabancı destekli dezenformasyon kampanyalarının arttığını gösteriyor. Algoritmik manipülasyon toplumsal kutuplaşmayı körüklüyor.',
+      choices:[
+        {title:'YZ destekli dezenformasyon tespit sistemine yatırım yap', sub:'Teknolojik bağımsızlık ↑ · Maliyetli',
+         effect:{econ:-10,tech:14,geo:8}, log:'Tespit kapasiteniz arttı, toplumsal güven kısmen onarıldı.'},
+        {title:'Dijital okuryazarlık kampanyası başlat', sub:'Uzun vadeli toplumsal direnç',
+         effect:{econ:-3,tech:4,geo:10}, log:'Toplumsal farkındalık arttı; etkisi yavaş ama kalıcı.'},
+        {title:'Müdahaleyi görmezden gel, ekonomiye odaklan', sub:'Kısa vadede tasarruf, uzun vadede risk',
+         effect:{econ:6,tech:-4,geo:-14}, log:'Kısa vadeli tasarruf sağladınız ama toplumsal kutuplaşma derinleşti.'}
+      ]
+    },
+    {
+      title:'Uzay Varlıkları Tartışması',
+      desc:'Komşu bir rakip, uydu karşıtı silah (ASAT) testi yaptı. Kendi uzay varlıklarınızın güvenliği tartışma konusu oldu.',
+      choices:[
+        {title:'Kendi karşı-uzay savunma kapasitenizi geliştir', sub:'Teknolojik güç ↑ · Silahlanma riski ↑',
+         effect:{econ:-10,tech:18,geo:-10}, log:'Caydırıcılığınız arttı, ancak bölgesel silahlanma yarışı hız kazandı.'},
+        {title:'Uluslararası uzay güvenliği anlaşması öner', sub:'Diplomatik çözüm, yavaş ilerleme',
+         effect:{econ:0,tech:2,geo:14}, log:'Diplomatik girişim kısmen destek buldu; istikrar arttı.'},
+        {title:'Müttefik uzay programlarıyla ortak savunma kur', sub:'Paylaşılan maliyet ve risk',
+         effect:{econ:-4,tech:10,geo:8}, log:'Ortaklık maliyetleri düşürdü ve caydırıcılığı paylaştırdı.'}
+      ]
+    }
+  ];
+
+  function clamp(v){ return Math.max(0,Math.min(100,v)); }
+
+  function renderMeters(){
+    document.getElementById('sm-econ-val').textContent = state.econ;
+    document.getElementById('sm-tech-val').textContent = state.tech;
+    document.getElementById('sm-geo-val').textContent = state.geo;
+    document.getElementById('sm-econ-bar').style.width = state.econ+'%';
+    document.getElementById('sm-tech-bar').style.width = state.tech+'%';
+    document.getElementById('sm-geo-bar').style.width = state.geo+'%';
+  }
+
+  function renderScenario(){
+    if(state.turn>=maxTurns){ renderEnding(); return; }
+    const sc = scenarios[state.turn];
+    document.getElementById('sim-turn-label').textContent = `TUR ${state.turn+1} / ${maxTurns}`;
+    document.getElementById('sim-scenario-title').textContent = sc.title;
+    document.getElementById('sim-scenario-desc').textContent = sc.desc;
+    const choicesEl = document.getElementById('sim-choices');
+    choicesEl.innerHTML = sc.choices.map((c,i)=>`
+      <div class="sim-choice" data-i="${i}">
+        <div class="sc-title">${c.title}</div>
+        <div class="sc-sub">${c.sub}</div>
+      </div>
+    `).join('');
+    document.getElementById('sim-log').style.display='none';
+    choicesEl.querySelectorAll('.sim-choice').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const choice = sc.choices[+el.dataset.i];
+        state.econ = clamp(state.econ+choice.effect.econ);
+        state.tech = clamp(state.tech+choice.effect.tech);
+        state.geo = clamp(state.geo+choice.effect.geo);
+        renderMeters();
+        const logEl = document.getElementById('sim-log');
+        logEl.textContent = '▸ '+choice.log;
+        logEl.style.display='block';
+        addXP(15);
+        choicesEl.querySelectorAll('.sim-choice').forEach(c2=>c2.style.pointerEvents='none');
+        setTimeout(()=>{
+          state.turn++;
+          renderScenario();
+        }, 1800);
+      });
+    });
+  }
+
+  function renderEnding(){
+    const avg = Math.round((state.econ+state.tech+state.geo)/3);
+    let verdict;
+    if(avg>=70) verdict = 'Stratejik bir vizyoner olarak ülkenizi dengeli bir güç haline getirdiniz.';
+    else if(avg>=45) verdict = 'Dengeyi büyük ölçüde korudunuz, ancak bazı kırılganlıklar devam ediyor.';
+    else verdict = 'Ülkeniz ciddi yapısal zafiyetlerle karşı karşıya — gelecekteki krizlere karşı kırılgan.';
+    document.getElementById('sim-turn-label').textContent = 'SİMÜLASYON TAMAMLANDI';
+    document.getElementById('sim-scenario-title').textContent = `Nihai Skor: ${avg} / 100`;
+    document.getElementById('sim-scenario-desc').textContent = verdict;
+    document.getElementById('sim-choices').innerHTML = '';
+    document.getElementById('sim-log').style.display='none';
+    document.getElementById('sim-restart-btn').style.display='inline-block';
+    GameState.simCompleted = true;
+    addXP(30);
+    checkBadges();
+  }
+
+  function restart(){
+    state = {econ:50, tech:50, geo:50, turn:0};
+    renderMeters();
+    document.getElementById('sim-restart-btn').style.display='none';
+    renderScenario();
+  }
+
+  return {init:restart};
+})();
+function restartSim(){ SimGame.init(); }
+SimGame.init();
+</script>
+<script>
+/* ============ QUIZ ============ */
+const QuizGame = (function(){
+  const questions = [
+    {q:'Elektronik harp ilk olarak hangi savaşta askeri amaçla kullanıldı?', opts:['I. Dünya Savaşı','Rus-Japon Savaşı (1904-1905)','Kore Savaşı','Falkland Savaşı'], a:1},
+    {q:'2027 yılına kadar dünya genelinde ne kadar IoT cihazının birbirine bağlanacağı tahmin ediliyor?', opts:['5 milyar','10 milyar','25 milyardan fazla','100 milyon'], a:2},
+    {q:'Kuantum Anahtar Dağıtımı (QKD) hangi amaca hizmet eder?', opts:['Daha hızlı internet','Kırılamaz şifreleme','Daha ucuz uydu fırlatma','Yapay zekâ eğitimi'], a:1},
+    {q:'2023 yılında Çin, ABD\'ye karşı hangi metallere ihracat lisansı şartı getirdi?', opts:['Lityum ve Kobalt','Altın ve Gümüş','Galyum ve Germanyum','Titanyum ve Nikel'], a:2},
+    {q:'NATO, 2020 raporunda bilişsel savaşı ne olarak tanımladı?', opts:['Üçüncü boyut','Dördüncü nesil savaş','Beşinci boyut','Hibrit savaşın alt kümesi'], a:2},
+    {q:'Bir F-35 savaş uçağı yaklaşık kaç kilogram nadir toprak elementine ihtiyaç duyar?', opts:['50 kg','150 kg','400 kg\'dan fazla','1 ton'], a:2},
+    {q:'"Sistemler Sistemi" kavramını 1990\'larda ortaya atan kimdir?', opts:['William Owens (ABD Donanması)','Halford Mackinder','Alfred Mahan','John McCarthy'], a:0},
+    {q:'Ukrayna\'nın dünya mineral rezervlerindeki yaklaşık payı nedir?', opts:['%1','%5','%20','%50'], a:1}
+  ];
+  let current = 0, score = 0, answered = false;
+
+  function renderProgress(){
+    const prog = document.getElementById('quiz-progress');
+    prog.innerHTML = questions.map((_,i)=>`<span class="${i<current?'done':''}"></span>`).join('');
+  }
+
+  function renderQuestion(){
+    answered = false;
+    renderProgress();
+    const q = questions[current];
+    document.getElementById('quiz-body').innerHTML = `
+      <div class="quiz-q">${current+1}. ${q.q}</div>
+      <div class="quiz-opts" id="quiz-opts"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+    `;
+    const optsEl = document.getElementById('quiz-opts');
+    optsEl.innerHTML = q.opts.map((o,i)=>`<button class="quiz-opt" data-i="${i}">${o}</button>`).join('');
+    optsEl.querySelectorAll('.quiz-opt').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        if(answered) return;
+        answered = true;
+        const idx = +btn.dataset.i;
+        const correct = idx===q.a;
+        if(correct){ score++; addXP(10); }
+        optsEl.querySelectorAll('.quiz-opt').forEach((b,i)=>{
+          if(i===q.a) b.classList.add('correct');
+          else if(i===idx) b.classList.add('wrong');
+        });
+        const fb = document.getElementById('quiz-feedback');
+        fb.style.display='block';
+        fb.textContent = correct ? '✓ Doğru! +10 XP' : `✗ Yanlış. Doğru cevap: "${q.opts[q.a]}"`;
+        setTimeout(()=>{
+          current++;
+          if(current<questions.length) renderQuestion();
+          else renderResult();
+        },1600);
+      });
+    });
+  }
+
+  function renderResult(){
+    GameState.quizScore = score;
+    document.getElementById('quiz-progress').innerHTML = questions.map(()=>`<span class="done"></span>`).join('');
+    document.getElementById('quiz-body').innerHTML = `
+      <div class="quiz-result">
+        <div class="score">${score} / ${questions.length}</div>
+        <p style="margin-top:10px;">${score>=6?'Sistemler arası bağlantıları çok iyi kavramışsınız.':score>=4?'İyi bir başlangıç — haritayı ve mineralleri tekrar gezin.':'Teknoloji haritasını ve zaman çizelgesini tekrar inceleyin, tekrar deneyin!'}</p>
+        <button class="btn btn-primary" style="margin-top:20px;" onclick="QuizGame.restart()">Testi Tekrar Çöz</button>
+      </div>
+    `;
+    checkBadges();
+  }
+
+  function restart(){ current=0; score=0; renderQuestion(); }
+  return {restart};
+})();
+QuizGame.restart();
+</script>
+
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

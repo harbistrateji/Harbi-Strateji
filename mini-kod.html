@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="hs-skip" content="true">
+<title>Şifre Kır — OZA Mini</title>
+<style>
+:root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--red:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif}
+.hdr{background:rgba(10,15,23,.97);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;height:52px;gap:12px;position:sticky;top:0;z-index:10}
+.hdr-back{font-size:13px;color:var(--dim);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+.hdr-title{font-size:17px;font-weight:700;flex:1;text-align:center}
+.hdr-pts{font-size:13px;color:var(--gold);font-weight:600}
+.container{max-width:400px;margin:0 auto;padding:16px 16px 80px}
+.stats{display:flex;gap:10px;margin-bottom:14px}
+.sbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;flex:1}
+.sval{font-size:20px;font-weight:700}
+.slbl{font-size:9px;color:var(--dim);text-transform:uppercase}
+.history{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;min-height:200px}
+.hist-row{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.hist-digits{display:flex;gap:6px}
+.hist-digit{width:36px;height:36px;border-radius:8px;background:rgba(150,170,200,.1);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700}
+.hist-digit.correct{background:rgba(0,255,136,.15);border-color:var(--green);color:var(--green)}
+.hist-digit.present{background:rgba(201,162,75,.15);border-color:var(--gold);color:var(--gold)}
+.hist-hints{display:flex;gap:4px;margin-left:auto}
+.hint-dot{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.hint-dot.correct{background:var(--green)}
+.hint-dot.present{background:var(--gold)}
+.input-row{display:flex;gap:8px;margin-bottom:10px}
+.digit-btn{flex:1;height:52px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--tx);font-size:22px;font-weight:700;cursor:pointer;transition:.1s}
+.digit-btn.active{border-color:var(--red);background:rgba(0,224,255,.1);color:var(--red)}
+.numpad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+.num-btn{padding:14px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--tx);font-size:18px;font-weight:700;cursor:pointer;transition:.1s}
+.num-btn:active{background:rgba(0,224,255,.15);border-color:var(--red)}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px}
+.btn-cyan{background:var(--cyan);color:#000}
+.btn-red{background:var(--red);color:#fff}
+.msg{text-align:center;font-size:13px;color:var(--dim);margin-bottom:10px;min-height:18px}
+.legend{display:flex;gap:12px;font-size:11px;color:var(--dim);margin-bottom:12px;justify-content:center}
+.leg-item{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:50%}
+</style>
+<link rel="stylesheet" href="hs-global.css">
+<link rel="stylesheet" href="sim-ui-fix.css">
+<link rel="stylesheet" href="hs-global-fix.css">
+</head>
+<body>
+<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
+<header class="hdr">
+  <a href="oza-hub.html" class="hdr-back">← OZA</a>
+  <div class="hdr-title">🔐 ŞİFRE KIR</div>
+  <div class="hdr-pts" id="hdr-pts">⭐ 0</div>
+</header>
+<div class="container">
+<div class="stats">
+  <div class="sbox"><div class="sval" id="s-pts" style="color:var(--red)">0</div><div class="slbl">PUAN</div></div>
+  <div class="sbox"><div class="sval" id="s-tries" style="color:var(--red)">8</div><div class="slbl">KALAN</div></div>
+  <div class="sbox"><div class="sval" id="s-wins" style="color:var(--green)">0</div><div class="slbl">KAZANMA</div></div>
+</div>
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Doğru yer</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>Yanlış yer</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--line)"></div>Yok</div>
+</div>
+<div class="history" id="history"></div>
+<div class="msg" id="msg">4 haneli şifreyi bul!</div>
+<div class="input-row" id="input-row">
+  <div class="digit-btn" id="d0" onclick="selectPos(0)">?</div>
+  <div class="digit-btn" id="d1" onclick="selectPos(1)">?</div>
+  <div class="digit-btn" id="d2" onclick="selectPos(2)">?</div>
+  <div class="digit-btn" id="d3" onclick="selectPos(3)">?</div>
+</div>
+<div class="numpad" id="numpad">
+  <button class="num-btn" onclick="enterNum(1)">1</button>
+  <button class="num-btn" onclick="enterNum(2)">2</button>
+  <button class="num-btn" onclick="enterNum(3)">3</button>
+  <button class="num-btn" onclick="enterNum(4)">4</button>
+  <button class="num-btn" onclick="enterNum(5)">5</button>
+  <button class="num-btn" onclick="enterNum(6)">6</button>
+  <button class="num-btn" onclick="enterNum(7)">7</button>
+  <button class="num-btn" onclick="enterNum(8)">8</button>
+  <button class="num-btn" onclick="enterNum(9)">9</button>
+  <button class="num-btn" onclick="enterNum(0)">0</button>
+</div>
+<button class="btn btn-cyan" onclick="submitGuess()">✅ DENE</button>
+<button class="btn btn-red" style="margin-top:6px" onclick="newGame()">🔄 YENİ OYUN</button>
+</div>
+<script>
+var secret=[],guess=[null,null,null,null],curPos=0,triesLeft=8,pts=0,wins=0,gameOver=false;
+
+function newGame(){
+  secret=[];
+  while(secret.length<4){var d=Math.floor(Math.random()*10);if(!secret.includes(d))secret.push(d);}
+  guess=[null,null,null,null];curPos=0;triesLeft=8;gameOver=false;
+  document.getElementById('history').innerHTML='';
+  document.getElementById('msg').textContent='4 haneli şifreyi bul! (0-9, tekrarsız)';
+  updateInput();
+  updateStats();
+}
+
+function selectPos(i){curPos=i;updateInput();}
+
+function enterNum(n){
+  if(gameOver)return;
+  guess[curPos]=n;
+  curPos=(curPos+1)%4;
+  updateInput();
+}
+
+function updateInput(){
+  for(var i=0;i<4;i++){
+    var el=document.getElementById('d'+i);
+    el.textContent=guess[i]===null?'?':guess[i];
+    el.className='digit-btn'+(i===curPos?' active':'');
+  }
+}
+
+function submitGuess(){
+  if(gameOver)return;
+  if(guess.includes(null)){document.getElementById('msg').textContent='Tüm haneleri doldur!';return;}
+  triesLeft--;
+  var correct=0,present=0;
+  var sUsed=secret.slice(),gUsed=guess.slice();
+  for(var i=0;i<4;i++){if(guess[i]===secret[i]){correct++;sUsed[i]=gUsed[i]=-1;}}
+  for(var i=0;i<4;i++){
+    if(gUsed[i]===-1)continue;
+    var idx=sUsed.indexOf(gUsed[i]);
+    if(idx!==-1){present++;sUsed[idx]=-1;}
+  }
+  addHistory(guess.slice(),correct,present);
+  if(correct===4){
+    var bonus=(triesLeft+1)*100;pts+=bonus;wins++;
+    try{
+      var sc=JSON.parse(localStorage.getItem('hs_scores')||'{}');
+      sc['mobil-kod']=Math.max(sc['mobil-kod']||0,pts);
+      localStorage.setItem('hs_scores',JSON.stringify(sc));
+    }catch(e){}
+    document.getElementById('msg').textContent='🎉 BULDU! +'+bonus+' puan';
+    gameOver=true;
+  } else if(triesLeft<=0){
+    document.getElementById('msg').textContent='❌ Şifre: '+secret.join('');
+    gameOver=true;
+  } else {
+    document.getElementById('msg').textContent=correct+' doğru yer, '+present+' yanlış yer · '+triesLeft+' hak kaldı';
+    guess=[null,null,null,null];curPos=0;
+    updateInput();
+  }
+  updateStats();
+}
+
+function addHistory(g,correct,present){
+  var row=document.createElement('div');
+  row.className='hist-row';
+  var digits=g.map(function(d,i){
+    var cls='hist-digit'+(g[i]===secret[i]?' correct':'');
+    return '<div class="'+cls+'">'+d+'</div>';
+  }).join('');
+  var dots='<div class="hist-hints">';
+  for(var i=0;i<correct;i++)dots+='<div class="hint-dot correct"></div>';
+  for(var i=0;i<present;i++)dots+='<div class="hint-dot present"></div>';
+  for(var i=0;i<4-correct-present;i++)dots+='<div class="hint-dot"></div>';
+  dots+='</div>';
+  row.innerHTML='<div class="hist-digits">'+digits+'</div>'+dots;
+  document.getElementById('history').prepend(row);
+}
+
+function updateStats(){
+  document.getElementById('s-pts').textContent=pts;
+  document.getElementById('s-tries').textContent=triesLeft;
+  document.getElementById('s-wins').textContent=wins;
+  document.getElementById('hdr-pts').textContent='⭐ '+pts;
+}
+
+newGame();
+</script>
+<script src="hs-nav.js?v=11"></script>
+</body>
+</html>

@@ -383,3 +383,58 @@ html{scroll-behavior:smooth;}
   .hs-nav-item.open .hs-nav-dropdown { display: block !important; }
 }
 .hs-nav-item.open .hs-nav-dropdown { display: block !important; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   PATCH v11 — Spacing, Alignment, Dropdown, Split-screen
+══════════════════════════════════════════════════════════════ */
+
+/* ── Dropdown z-index fix ── */
+.hs-nav-drop{z-index:9999!important;pointer-events:auto;}
+.hs-nav-link:hover .hs-nav-drop{display:block!important;}
+
+/* ── Body padding consistency ── */
+body{padding-top:126px!important;margin-top:0!important;}
+@media(max-width:480px){body{padding-top:116px!important;}}
+
+/* ── Section spacing ── */
+.hs-section:first-child{padding-top:1.5rem;}
+.hs-section + .hs-section{padding-top:1rem;}
+.hs-section-header{margin-bottom:1.2rem;}
+
+/* ── Card grid spacing ── */
+.hs-grid-3,.hs-grid-4{gap:1.2rem;}
+.hs-card,.hs-game-card,.sim-card,.oza-card{margin-bottom:0;}
+
+/* ── Content max-width ── */
+.container,.hs-container{max-width:1400px;margin:0 auto;width:100%;}
+
+/* ── Footer spacing ── */
+.hs-footer{margin-top:3rem;padding:2.5rem 0 1.5rem;}
+
+/* ── Intel strip ── */
+.hs-intel{margin:0;padding:0;}
+.hs-intel-grid{max-width:1400px;margin:0 auto;}
+
+/* ── Hero compact ── */
+.hs-hero{padding:2rem 1.5rem;text-align:left;}
+.hs-hero h1{font-size:clamp(1.4rem,3vw,2.2rem);margin-bottom:.5rem;line-height:1.2;}
+.hs-hero p{font-size:.85rem;margin-bottom:1rem;max-width:700px;}
+
+/* ── Simulation split-screen ── */
+.sim-split-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;min-height:70vh;align-items:start;}
+.sim-split-layout .sim-controls{position:sticky;top:140px;}
+.sim-split-layout .sim-display{min-height:400px;}
+@media(max-width:1024px){.sim-split-layout{grid-template-columns:1fr;}}
+
+/* ── Related section ── */
+.hs-related-section{padding:2rem 1.5rem;margin-top:2rem;border-top:1px solid rgba(255,255,255,.06);}
+.hs-related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+
+/* ── OZA mini card fix ── */
+.mini-game-card,.oza-mini-card{padding:1rem;min-height:auto;}
+.mini-game-card h3,.oza-mini-card h3{margin:0.5rem 0 0.3rem;}
+
+/* ── Nav alignment ── */
+.hs-nav-bar-inner{align-items:center;min-height:36px;}
+.hs-nav-link>a{padding:.5rem .7rem;}

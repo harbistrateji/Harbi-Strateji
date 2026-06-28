@@ -54,7 +54,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg,#0a0f17);color:var(--tex
 .ig-card-visual .ig-icon{font-size:3.5rem;opacity:.4;z-index:0;filter:drop-shadow(0 0 20px currentColor)}
 .ig-card-visual.cat-nato{background:linear-gradient(135deg,#0d1f3c,#1a3a6b)}
 .ig-card-visual.cat-savunma{background:linear-gradient(135deg,#1a2d1a,#2d5a2d)}
-.ig-card-visual.cat-turkiye{background:linear-gradient(135deg,#3d1515,#6b1a1a)}
+.ig-card-visual.cat-türkiye{background:linear-gradient(135deg,#3d1515,#6b1a1a)}
 .ig-card-visual.cat-yz{background:linear-gradient(135deg,#1a1a3d,#2d2d6b)}
 .ig-card-visual.cat-siber{background:linear-gradient(135deg,#0d2a2a,#1a4a4a)}
 .ig-card-visual.cat-analog{background:linear-gradient(135deg,#2a1a0d,#4a3a1a)}
@@ -66,7 +66,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg,#0a0f17);color:var(--tex
 .ig-card-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:10px}
 .ig-card-tag.t-nato{background:rgba(26,86,219,.2);color:#4a9eff}
 .ig-card-tag.t-savunma{background:rgba(34,197,94,.15);color:#4ade80}
-.ig-card-tag.t-turkiye{background:rgba(187,25,25,.2);color:#ff6b6b}
+.ig-card-tag.t-türkiye{background:rgba(187,25,25,.2);color:#ff6b6b}
 .ig-card-tag.t-yz{background:rgba(139,92,246,.2);color:#a78bfa}
 .ig-card-tag.t-siber{background:rgba(0,224,255,.15);color:#00E0FF}
 .ig-card-tag.t-analog{background:rgba(201,168,76,.2);color:#c9a84c}
@@ -146,7 +146,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg,#0a0f17);color:var(--tex
 const INFOGRAPHICS = [
   {href:"infografik-ukrayna-10-ders.html",title:"Ukrayna'dan 10 Yeni Savas Dersi",tag:"NATO",type:"interactive",icon:"⚔️"},
   {href:"infografik-dron-cagi.html",title:"Dron Cagi",tag:"Savunma",type:"interactive",icon:"🛸"},
-  {href:"infografik-gelecegin-savasi.html",title:"Gelecegin Savasi",tag:"Savunma",type:"interactive",icon:"🔮"},
+  {href:"infografik-geleceğin-savasi.html",title:"Geleceğin Savasi",tag:"Savunma",type:"interactive",icon:"🔮"},
   {href:"infografik-deniz-hakimiyeti-2050.html",title:"Deniz Hakimiyeti 2050",tag:"Deniz",type:"interactive",icon:"🚢"},
   {href:"infografik-cipler-ve-savaslar.html",title:"Cipler ve Savaslar",tag:"Teknoloji",type:"interactive",icon:"🔬"},
   {href:"infografik-ukrayna-hazinesi.html",title:"Ukrayna'nin Gorunmeyen Hazinesi",tag:"Enerji",type:"interactive",icon:"💎"},
@@ -156,40 +156,40 @@ const INFOGRAPHICS = [
   {href:"infografik-robotik-otonom.html",title:"Robotik ve Otonom Sistemler",tag:"NATO",type:"interactive",icon:"🤖"},
   {href:"infografik-binyillik-analoglar.html",title:"Binyillik Analoglar Serisi",tag:"Analog",type:"interactive",icon:"📜"},
   {href:"infografik-sanayi-devrimleri.html",title:"Sanayi Devrimleri ve Askeri Guc",tag:"Tarih",type:"interactive",icon:"🏭"},
-  {href:"infografik-caydiricilik-doktrini.html",title:"Turkiye Caydiricilik Doktrini 2026",tag:"Turkiye",type:"interactive",icon:"🛡️"},
+  {href:"infografik-caydiricilik-doktrini.html",title:"Türkiye Caydiricilik Doktrini 2026",tag:"Türkiye",type:"interactive",icon:"🛡️"},
   {href:"infografik-seffaf-savas.html",title:"Seffaf Savas Alani",tag:"NATO",type:"interactive",icon:"👁️"},
   {href:"infografik-maliyet-terazisi.html",title:"Maliyet Asimetrisi Terazisi",tag:"Savunma",type:"interactive",icon:"⚖️"},
   {href:"infografik-mineral-agi.html",title:"Kritik Mineral Agi",tag:"Enerji",type:"interactive",icon:"⛏️"},
   {href:"infografik-savas-evrimi.html",title:"Savas Evrimi Zaman Tuneli",tag:"Tarih",type:"interactive",icon:"⏳"},
   {href:"infografik-saha2026.html",title:"Saha 2026: Muharebe Alani",tag:"Savunma",type:"interactive",icon:"🎯"},
-  {href:"infografik-askeri-harcama.html",title:"Kuresel Askeri Harcamalar",tag:"Savunma",type:"interactive",icon:"💰"},
-  {href:"infografik-caydiricilik-piramidi.html",title:"Caydiricilik Piramidi",tag:"Turkiye",type:"interactive",icon:"🔺"},
+  {href:"infografik-askeri-harcama.html",title:"Küresel Askeri Harcamalar",tag:"Savunma",type:"interactive",icon:"💰"},
+  {href:"infografik-caydiricilik-piramidi.html",title:"Caydiricilik Piramidi",tag:"Türkiye",type:"interactive",icon:"🔺"},
   {href:"infografik-drone-devrim.html",title:"Drone Devrimi",tag:"Savunma",type:"interactive",icon:"✈️"},
   {href:"infografik-bm-reform.html",title:"BM Reform Infografigi",tag:"NATO",type:"interactive",icon:"🏛️"},
-  {href:"dis_politika_interaktif_infografik.html",title:"Dis Politika Interaktif Analiz",tag:"Turkiye",type:"interactive",icon:"🌐"},
+  {href:"dis_politika_interaktif_infografik.html",title:"Dis Politika Interaktif Analiz",tag:"Türkiye",type:"interactive",icon:"🌐"},
   {href:"hibrit_savas_interaktif_infografik.html",title:"Hibrit Savas Interaktif",tag:"Siber",type:"interactive",icon:"🕸️"},
   {href:"infografik-arktik-yarisi.html",title:"Arktik Yarisi",tag:"Enerji",type:"interactive",icon:"❄️"},
   {href:"infografik-buyuk-muharebeler.html",title:"Buyuk Muharebeler",tag:"Tarih",type:"interactive",icon:"⚔️"},
   {href:"infografik-casuslar-gizli-operasyonlar.html",title:"Casuslar ve Gizli Operasyonlar",tag:"Siber",type:"interactive",icon:"🕵️"},
   {href:"infografik-hurmuz-bogazi.html",title:"Hurmuz Bogazi Krizi",tag:"Enerji",type:"interactive",icon:"🛢️"},
   {href:"infografik-jeopolitik-simulator.html",title:"Jeopolitik Simulator",tag:"NATO",type:"interactive",icon:"🗺️"},
-  {href:"infografik-kuresel-enerji-savaslari.html",title:"Kuresel Enerji Savaslari",tag:"Enerji",type:"interactive",icon:"⚡"},
+  {href:"infografik-küresel-enerji-savaslari.html",title:"Küresel Enerji Savaslari",tag:"Enerji",type:"interactive",icon:"⚡"},
   {href:"infografik-modern-savas-akademisi.html",title:"Modern Savas Akademisi",tag:"Savunma",type:"interactive",icon:"🎓"},
   {href:"infografik-nadir-madenler-savasi.html",title:"Nadir Madenler Savasi",tag:"Enerji",type:"interactive",icon:"💎"},
   {href:"infografik-nato-genislemesi.html",title:"NATO Genislemesi",tag:"NATO",type:"interactive",icon:"🌍"},
   {href:"infografik-osmanli-padisahlari.html",title:"Osmanli Padisahlari",tag:"Tarih",type:"interactive",icon:"👑"},
   {href:"infografik-siber-savas-anatomisi.html",title:"Siber Savas Anatomisi",tag:"Siber",type:"interactive",icon:"💻"},
   {href:"infografik-su-savaslari.html",title:"Su Savaslari",tag:"Enerji",type:"interactive",icon:"💧"},
-  {href:"infografik-turk-deniz-gucu.html",title:"Turk Deniz Gucu",tag:"Turkiye",type:"interactive",icon:"⚓"},
-  {href:"infografik-turk-deniz-kuvvetleri.html",title:"Turk Deniz Kuvvetleri",tag:"Turkiye",type:"interactive",icon:"🚢"},
-  {href:"infografik-turk-hava-kuvvetleri.html",title:"Turk Hava Kuvvetleri",tag:"Turkiye",type:"interactive",icon:"✈️"},
-  {href:"infografik-turk-kara-kuvvetleri.html",title:"Turk Kara Kuvvetleri",tag:"Turkiye",type:"interactive",icon:"🪖"},
-  {href:"infografik-turk-savunma-yukselisi.html",title:"Turk Savunma Yukselisi",tag:"Turkiye",type:"interactive",icon:"📈"},
+  {href:"infografik-turk-deniz-gucu.html",title:"Turk Deniz Gucu",tag:"Türkiye",type:"interactive",icon:"⚓"},
+  {href:"infografik-turk-deniz-kuvvetleri.html",title:"Turk Deniz Kuvvetleri",tag:"Türkiye",type:"interactive",icon:"🚢"},
+  {href:"infografik-turk-hava-kuvvetleri.html",title:"Turk Hava Kuvvetleri",tag:"Türkiye",type:"interactive",icon:"✈️"},
+  {href:"infografik-turk-kara-kuvvetleri.html",title:"Turk Kara Kuvvetleri",tag:"Türkiye",type:"interactive",icon:"🪖"},
+  {href:"infografik-turk-savunma-yukselisi.html",title:"Turk Savunma Yukselisi",tag:"Türkiye",type:"interactive",icon:"📈"},
   {href:"infografik-turklerin-ilkleri.html",title:"Turklerin Ilkleri",tag:"Tarih",type:"interactive",icon:"🏆"},
   {href:"infografik-ulke-karsilastirma.html",title:"Ulke Karsilastirma",tag:"NATO",type:"interactive",icon:"📊"},
   {href:"infografik-uzay-hakimiyeti.html",title:"Uzay Hakimiyeti",tag:"NATO",type:"interactive",icon:"🛰️"},
-  {href:"infografik-yapay-zeka-savas.html",title:"Yapay Zeka ve Savas",tag:"YZ",type:"interactive",icon:"🧠"},
-  {href:"infografik-yapay-zeka-yarisi.html",title:"Yapay Zeka Yarisi",tag:"YZ",type:"interactive",icon:"🤖"},
+  {href:"infografik-yapay-zeka-savas.html",title:"Yapay Zekâ ve Savas",tag:"YZ",type:"interactive",icon:"🧠"},
+  {href:"infografik-yapay-zeka-yarisi.html",title:"Yapay Zekâ Yarisi",tag:"YZ",type:"interactive",icon:"🤖"},
   {href:"ooda-dongusu-interaktif.html",title:"OODA Dongusu Interaktif",tag:"Savunma",type:"interactive",icon:"🔄"},
   {href:"ooda-x-super-dongu-simulatoru.html",title:"OODA-X Super Dongu Simulatoru",tag:"Savunma",type:"interactive",icon:"⚡"},
   {href:"savas-evrimi-zaman-tuneli.html",title:"Savas Evrimi Zaman Tuneli",tag:"Tarih",type:"interactive",icon:"📅"},
@@ -199,17 +199,17 @@ const INFOGRAPHICS = [
   {href:"infog-png/nato-ankara-zirvesi-2026-TR.png",title:"NATO Ankara Zirvesi 2026",tag:"NATO",type:"static",icon:"🏛️"},
   {href:"infog-png/AI-Askerilestirme-TR.png",title:"AI Askerilestirme",tag:"YZ",type:"static",icon:"🤖"},
   {href:"infog-png/AI-Enerji-Su-Paradoksu-TR.png",title:"AI Enerji-Su Paradoksu",tag:"YZ",type:"static",icon:"💧"},
-  {href:"infog-png/Bogaz-Analizi-2026-TR.png",title:"Bogaz Analizi 2026",tag:"Turkiye",type:"static",icon:"🌊"},
+  {href:"infog-png/Bogaz-Analizi-2026-TR.png",title:"Bogaz Analizi 2026",tag:"Türkiye",type:"static",icon:"🌊"},
   {href:"infog-png/Cin-AI-Casusluk-Agi-TR.png",title:"Cin AI Casusluk Agi",tag:"YZ",type:"static",icon:"🕵️"},
   {href:"infog-png/Cin-AI-Polis-Zihin-Okuma-TR.png",title:"Cin AI Polis Zihin Okuma",tag:"YZ",type:"static",icon:"🧠"},
   {href:"infog-png/Darbe-30-State-Merchant-TR.png",title:"Darbe 30 — Tuccar Devlet",tag:"Analog",type:"static",icon:"🏪"},
   {href:"infog-png/Dunya-Kupasi-2026-Teknoloji-TR.png",title:"Dunya Kupasi 2026 Teknoloji",tag:"Teknoloji",type:"static",icon:"⚽"},
   {href:"infog-png/FBI-Cin-Siber-Operasyon-TR.png",title:"FBI-Cin Siber Operasyon",tag:"Siber",type:"static",icon:"🔒"},
   {href:"infog-png/FCAS-Iptali-Infografik-TR.png",title:"FCAS Iptali",tag:"NATO",type:"static",icon:"✈️"},
-  {href:"infog-png/Gelecegin-Askeri-TR.png",title:"Gelecegin Askeri",tag:"Savunma",type:"static",icon:"🪖"},
+  {href:"infog-png/Geleceğin-Askeri-TR.png",title:"Geleceğin Askeri",tag:"Savunma",type:"static",icon:"🪖"},
   {href:"infog-png/Harpte-Yeni-Kavramlar-TR.png",title:"Harpte Yeni Kavramlar",tag:"Savunma",type:"static",icon:"📋"},
   {href:"infog-png/Imparatorluk-Cokusu-Stres-Testi-TR.png",title:"Imparatorluk Cokusu Stres Testi",tag:"Analog",type:"static",icon:"🏚️"},
-  {href:"infog-png/Kuresel-Askeri-Sistemler-TR.png",title:"Kuresel Askeri Sistemler",tag:"Savunma",type:"static",icon:"🌐"},
+  {href:"infog-png/Küresel-Askeri-Sistemler-TR.png",title:"Küresel Askeri Sistemler",tag:"Savunma",type:"static",icon:"🌐"},
   {href:"infog-png/PLA-AI-Dalkavukluk-TR.png",title:"PLA AI Dalkavukluk Sorunu",tag:"YZ",type:"static",icon:"🇨🇳"},
   {href:"infog-png/Pentagon-1260H-Listesi-Infografik-TR.png",title:"Pentagon 1260H Listesi",tag:"NATO",type:"static",icon:"📋"},
   {href:"infog-png/Qianfan-Starlink-Karsilastirma-TR.png",title:"Qianfan vs Starlink",tag:"YZ",type:"static",icon:"🛰️"},
@@ -234,7 +234,7 @@ filterBar.innerHTML = filterHTML;
 const cardGrid = document.getElementById('cardGrid');
 
 function getTagClass(tag) {
-  const map = {NATO:'nato',Savunma:'savunma','Turkiye':'turkiye',YZ:'yz',Siber:'siber',Analog:'analog',Enerji:'enerji',Tarih:'tarih',Deniz:'deniz'};
+  const map = {NATO:'nato',Savunma:'savunma','Türkiye':'türkiye',YZ:'yz',Siber:'siber',Analog:'analog',Enerji:'enerji',Tarih:'tarih',Deniz:'deniz'};
   return map[tag] || 'default';
 }
 
@@ -302,5 +302,11 @@ setTimeout(() => {
   document.querySelectorAll('.ig-card').forEach(card => observer.observe(card));
 }, 100);
 </script>
+
+<!-- İlgili Simülasyonlar -->
+<div style="max-width:1200px;margin:30px auto;padding:20px 24px;background:rgba(15,25,35,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+<h4 style="font-family:Chakra Petch,sans-serif;color:#c9a24b;margin-bottom:10px;font-size:0.95rem;">İlgili Simülasyonlar</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px;"><a href="suru-iha-tasarim-simulatoru.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Sürü İHA Simülatörü &rarr;</a><a href="sim1-demir-kubbe.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Sim1: Demir Kubbe &rarr;</a><a href="siber-eh-simulatoru.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Siber/EH Simülatörü &rarr;</a><a href="sim8-siber-casusluk-ai.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Sim8: Siber Casusluk &rarr;</a></div>
+</div>
 </body>
 </html>

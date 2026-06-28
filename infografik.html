@@ -54,7 +54,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg,#0a0f17);color:var(--tex
 .ig-card-visual .ig-icon{font-size:3.5rem;opacity:.4;z-index:0;filter:drop-shadow(0 0 20px currentColor)}
 .ig-card-visual.cat-nato{background:linear-gradient(135deg,#0d1f3c,#1a3a6b)}
 .ig-card-visual.cat-savunma{background:linear-gradient(135deg,#1a2d1a,#2d5a2d)}
-.ig-card-visual.cat-turkiye{background:linear-gradient(135deg,#3d1515,#6b1a1a)}
+.ig-card-visual.cat-türkiye{background:linear-gradient(135deg,#3d1515,#6b1a1a)}
 .ig-card-visual.cat-yz{background:linear-gradient(135deg,#1a1a3d,#2d2d6b)}
 .ig-card-visual.cat-siber{background:linear-gradient(135deg,#0d2a2a,#1a4a4a)}
 .ig-card-visual.cat-analog{background:linear-gradient(135deg,#2a1a0d,#4a3a1a)}
@@ -66,7 +66,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg,#0a0f17);color:var(--tex
 .ig-card-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:10px}
 .ig-card-tag.t-nato{background:rgba(26,86,219,.2);color:#4a9eff}
 .ig-card-tag.t-savunma{background:rgba(34,197,94,.15);color:#4ade80}
-.ig-card-tag.t-turkiye{background:rgba(187,25,25,.2);color:#ff6b6b}
+.ig-card-tag.t-türkiye{background:rgba(187,25,25,.2);color:#ff6b6b}
 .ig-card-tag.t-yz{background:rgba(139,92,246,.2);color:#a78bfa}
 .ig-card-tag.t-siber{background:rgba(0,224,255,.15);color:#00E0FF}
 .ig-card-tag.t-analog{background:rgba(201,168,76,.2);color:#c9a84c}
@@ -146,7 +146,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg,#0a0f17);color:var(--tex
 const INFOGRAPHICS = [
   {href:"infografik-ukrayna-10-ders.html",title:"Ukrayna'dan 10 Yeni Savaş Dersi",tag:"NATO",type:"interactive",icon:"⚔️"},
   {href:"infografik-dron-cagi.html",title:"Dron Çağı",tag:"Savunma",type:"interactive",icon:"🛸"},
-  {href:"infografik-gelecegin-savasi.html",title:"Geleceğin Savaşı",tag:"Savunma",type:"interactive",icon:"🔮"},
+  {href:"infografik-geleceğin-savasi.html",title:"Geleceğin Savaşı",tag:"Savunma",type:"interactive",icon:"🔮"},
   {href:"infografik-deniz-hakimiyeti-2050.html",title:"Deniz Hâkimiyeti 2050",tag:"Deniz",type:"interactive",icon:"🚢"},
   {href:"infografik-cipler-ve-savaslar.html",title:"Çipler ve Savaşlar",tag:"Teknoloji",type:"interactive",icon:"🔬"},
   {href:"infografik-ukrayna-hazinesi.html",title:"Ukrayna'nın Görünmeyen Hazinesi",tag:"Enerji",type:"interactive",icon:"💎"},
@@ -173,7 +173,7 @@ const INFOGRAPHICS = [
   {href:"infografik-casuslar-gizli-operasyonlar.html",title:"Casuslar ve Gizli Operasyonlar",tag:"Siber",type:"interactive",icon:"🕵️"},
   {href:"infografik-hurmuz-bogazi.html",title:"Hürmüz Boğazı Krizi",tag:"Enerji",type:"interactive",icon:"🛢️"},
   {href:"infografik-jeopolitik-simulator.html",title:"Jeopolitik Simülatör",tag:"NATO",type:"interactive",icon:"🗺️"},
-  {href:"infografik-kuresel-enerji-savaslari.html",title:"Küresel Enerji Savaşlari",tag:"Enerji",type:"interactive",icon:"⚡"},
+  {href:"infografik-küresel-enerji-savaslari.html",title:"Küresel Enerji Savaşlari",tag:"Enerji",type:"interactive",icon:"⚡"},
   {href:"infografik-modern-savas-akademisi.html",title:"Modern Savaş Akademisi",tag:"Savunma",type:"interactive",icon:"🎓"},
   {href:"infografik-nadir-madenler-savasi.html",title:"Nadir Madenler Savaşı",tag:"Enerji",type:"interactive",icon:"💎"},
   {href:"infografik-nato-genislemesi.html",title:"NATO Genislemesi",tag:"NATO",type:"interactive",icon:"🌍"},
@@ -204,7 +204,7 @@ const INFOGRAPHICS = [
   {href:"analog_10_truva_stuxnet(1).png",title:"Truva Atı → Stuxnet",tag:"Analog",type:"static",icon:"🐴"},
   // Veri Özeti İnfografikleri (YENİ)
   {href:"infografik_algoritmik_harp.webp",title:"Algoritmik Harp",tag:"Savunma",type:"static",icon:"🧮"},
-  {href:"infografik_gelecegin_ordusu.webp",title:"Geleceğin Ordusu",tag:"Savunma",type:"static",icon:"🎖️"},
+  {href:"infografik_geleceğin_ordusu.webp",title:"Geleceğin Ordusu",tag:"Savunma",type:"static",icon:"🎖️"},
   {href:"infografik_hibrit_spektrum.webp",title:"Hibrit Spektrum Savaşı",tag:"Savunma",type:"static",icon:"📡"},
   {href:"infografik_hormuz_jeopolitik.webp",title:"Hürmüz Jeopolitik Analiz",tag:"Enerji",type:"static",icon:"🛢️"},
   {href:"infografik_maliyet_asimetrisi.webp",title:"Maliyet Asimetrisi",tag:"Savunma",type:"static",icon:"⚖️"},
@@ -253,7 +253,7 @@ filterBar.innerHTML = filterHTML;
 const cardGrid = document.getElementById('cardGrid');
 
 function getTagClass(tag) {
-  const map = {NATO:'nato',Savunma:'savunma','Türkiye':'turkiye',YZ:'yz',Siber:'siber',Analog:'analog',Enerji:'enerji',Tarih:'tarih',Deniz:'deniz'};
+  const map = {NATO:'nato',Savunma:'savunma','Türkiye':'türkiye',YZ:'yz',Siber:'siber',Analog:'analog',Enerji:'enerji',Tarih:'tarih',Deniz:'deniz'};
   return map[tag] || 'default';
 }
 

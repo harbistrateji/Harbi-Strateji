@@ -81,6 +81,7 @@ a{color:var(--cyan);text-decoration:none;}
 }
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
+<link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
 <a href="infografik.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#f4a261;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #f4a26133;backdrop-filter:blur(8px);">← İnfografikler</a>
@@ -340,5 +341,12 @@ const tlObserver = new IntersectionObserver((entries) => {
 }, {threshold: 0.3});
 document.querySelectorAll('.tl-item').forEach(t => tlObserver.observe(t));
 </script>
+<script src="hs-nav.js"></script>
+
+<!-- İlgili Simülasyonlar -->
+<div style="max-width:1200px;margin:30px auto;padding:20px 24px;background:rgba(15,25,35,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+<h4 style="font-family:Chakra Petch,sans-serif;color:#c9a24b;margin-bottom:10px;font-size:0.95rem;">İlgili Simülasyonlar</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px;"><a href="sim-nato-ankara.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">NATO Ankara Simülasyonu &rarr;</a><a href="infografik-nato-kuantum-2025.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Kuantum Teknolojileri &rarr;</a></div>
+</div>
 </body>
 </html>

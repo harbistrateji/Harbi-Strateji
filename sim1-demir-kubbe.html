@@ -282,6 +282,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
 </style>
 
+<link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
@@ -303,7 +304,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div class="eyebrow">Stratejik Simülasyon</div>
   <h1>Demir Kubbe <em>Çöküşü</em></h1>
   <p class="lead">Doygunluk Krizi Simülatörü — Bernoulli ve Wilkening modellerini kullanarak hava savunma sistemlerinin doygunluk noktasını analiz edin.</p>
-<div class="hero-stats"><div class="hero-stat"><span class="num">3</span><span class="lbl">Dalga</span></div><div class="hero-stat"><span class="num">100</span><span class="lbl">Maks Füze</span></div><div class="hero-stat"><span class="num">0.99</span><span class="lbl">Maks P</span></div><div class="hero-stat"><span class="num">3</span><span class="lbl">Senaryo</span></div></div>
+<div class="hero-stats"><div class="hero-stat"><span class="num">5</span><span class="lbl">Dalga</span></div><div class="hero-stat"><span class="num">200</span><span class="lbl">Maks Füze</span></div><div class="hero-stat"><span class="num">0.99</span><span class="lbl">Maks P</span></div><div class="hero-stat"><span class="num">5</span><span class="lbl">Senaryo</span></div></div>
 </header>
 
 <main class="sim-content">
@@ -314,6 +315,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             <div class="phase-dot active" id="pd1"></div>
             <div class="phase-dot" id="pd2"></div>
             <div class="phase-dot" id="pd3"></div>
+            <div class="phase-dot" id="pd4"></div>
+            <div class="phase-dot" id="pd5"></div>
         </div>
         
         <!-- AŞAMA 1: Ayarlar -->
@@ -348,7 +351,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         
         <!-- AŞAMA 2: Simülasyon -->
         <div id="phase-sim" class="panel" style="display:none;">
-            <div class="panel-title">📡 CANLI RADAR - <span id="wave-label">Dalga 1/3</span></div>
+            <div class="panel-title">📡 CANLI RADAR - <span id="wave-label">Dalga 1/5</span></div>
             
             <div class="radar-container">
                 <div class="radar-screen" id="radar">
@@ -470,17 +473,37 @@ C_defense / C_attack = $50.000 / $30.000 ≈ 1.67:1 (Roket saldırısında)</div
             classic: { name: 'Klasik Saldırı', waves: [
                 { threats: 8, type: 'Balistik Füze', speed: 'Mach 3', desc: 'Konvansiyonel balistik saldırı' },
                 { threats: 15, type: 'Cruise Füze', speed: 'Mach 1.5', desc: 'Orta yoğunluklu saldırı' },
-                { threats: 25, type: 'Karışık', speed: 'Çeşitli', desc: 'Koordineli çoklu saldırı' }
+                { threats: 25, type: 'Karışık', speed: 'Çeşitli', desc: 'Koordineli çoklu saldırı' },
+                { threats: 40, type: 'Satürasyon Saldırısı', speed: 'Mach 2-4', desc: 'Sistem doygunluk testi - tüm vektörler' },
+                { threats: 60, type: 'İkinci Dalga + Taktik Balistik', speed: 'Mach 5', desc: 'Yeniden yükleme sonrası koordineli saldırı' }
             ]},
             swarm: { name: 'Dron Sürüsü', waves: [
                 { threats: 30, type: 'Şahid-136 Dron', speed: '185 km/h', desc: 'İlk sürü dalgası' },
                 { threats: 60, type: 'Şahid Sürüsü', speed: '185 km/h', desc: 'Doygunluk saldırısı' },
-                { threats: 120, type: 'Sürü + Balistik', speed: 'Çeşitli', desc: 'Tam doygunluk - sistem çöküşü' }
+                { threats: 120, type: 'Sürü + Balistik', speed: 'Çeşitli', desc: 'Tam doygunluk - sistem çöküşü' },
+                { threats: 200, type: 'Otonom AI Sürüsü', speed: '250 km/h', desc: 'AI koordineli adaptif sürü - radar aldatmacası' },
+                { threats: 300, type: 'Mega Sürü + EMP', speed: '300 km/h', desc: 'EMP öncü darbesi + 300 dronluk final sürüsü' }
             ]},
             hypersonic: { name: 'Hipersonik + Sürü', waves: [
                 { threats: 20, type: 'Fattah-1 Hipersonik', speed: 'Mach 13', desc: 'Plazma karartması aktif' },
                 { threats: 50, type: 'Dron + Hipersonik', speed: 'Karışık', desc: 'Çok katmanlı saldırı' },
-                { threats: 150, type: 'Tam Spektrum', speed: 'Mach 1-13', desc: 'Toplam doygunluk + hipersonik' }
+                { threats: 80, type: 'Hipersonik Glide', speed: 'Mach 15', desc: 'Manevra yapan hipersonik kayma aracı' },
+                { threats: 120, type: 'Tam Spektrum', speed: 'Mach 1-15', desc: 'Toplam doygunluk + hipersonik + sürü' },
+                { threats: 200, type: 'Kıyamet Senaryosu', speed: 'Mach 1-20', desc: 'Nükleer başlıklı hipersonik + 150 dron + EMP' }
+            ]},
+            emp: { name: 'EMP + Lazer Krizi', waves: [
+                { threats: 5, type: 'EMP Füzesi', speed: 'Mach 4', desc: 'Yüksek irtifa EMP patlaması - elektronik sistemler tehdit altında' },
+                { threats: 40, type: 'Post-EMP Sürü', speed: '200 km/h', desc: 'EMP sonrası zayıflamış savunmaya sürü saldırısı' },
+                { threats: 25, type: 'Lazer Doygunluk', speed: 'Işık Hızı', desc: 'Düşman lazer sistemi ile optik sensör körleme' },
+                { threats: 80, type: 'Karanlık Saldırı', speed: 'Çeşitli', desc: 'Radar körleme + termal aldatma + fiziksel saldırı' },
+                { threats: 150, type: 'Tam Karartma', speed: 'Mach 2-10', desc: 'Tüm sensörler devre dışı - sadece pasif savunma' }
+            ]},
+            multifront: { name: 'Çok Cepheli Savaş', waves: [
+                { threats: 15, type: 'Kuzey Cephesi - Balistik', speed: 'Mach 6', desc: 'Kuzeyden taktik balistik füze saldırısı' },
+                { threats: 30, type: 'Güney Cephesi - Dron', speed: '200 km/h', desc: 'Güneyden eşzamanlı dron sürüsü' },
+                { threats: 50, type: 'Deniz Cephesi - Cruise', speed: 'Mach 2', desc: 'Denizden anti-gemi füzeleri ile koordineli saldırı' },
+                { threats: 100, type: 'Üç Cephe Eşzamanlı', speed: 'Çeşitli', desc: 'Tüm cephelerden eşzamanlı koordineli saldırı' },
+                { threats: 180, type: 'Stratejik Darbe', speed: 'Mach 3-15', desc: 'Hipersonik + balistik + sürü - kritik altyapı hedefli' }
             ]}
         };
         
@@ -549,8 +572,18 @@ C_defense / C_attack = $50.000 / $30.000 ≈ 1.67:1 (Roket saldırısında)</div
             
             // Hipersonik senaryoda P düşer
             if (config.scenario === 'hypersonic' && state.wave >= 1) {
-                effectiveP *= 0.4; // Plazma karartması etkisi
-                addLog(`⚡ PLAZMA KARARTMASI: Önleme olasılığı ${(effectiveP*100).toFixed(0)}%'e düştü!`, 'miss');
+                effectiveP *= 0.4;
+                addLog(\`⚡ PLAZMA KARARTMASI: Önleme olasılığı \${(effectiveP*100).toFixed(0)}%'e düştü!\`, 'miss');
+            }
+            // EMP senaryosunda elektronik hasar
+            if (config.scenario === 'emp' && state.wave >= 1) {
+                effectiveP *= 0.5;
+                addLog(\`⚡ EMP ETKİSİ: Elektronik sistemler hasarlı! Önleme olasılığı \${(effectiveP*100).toFixed(0)}%'e düştü!\`, 'miss');
+            }
+            // Çok cepheli senaryoda kaynak bölünmesi
+            if (config.scenario === 'multifront' && state.wave >= 2) {
+                effectiveP *= 0.6;
+                addLog(\`🎯 ÇOK CEPHELİ BASKI: Kaynaklar bölündü! Etkinlik \${(effectiveP*100).toFixed(0)}%'e düştü!\`, 'miss');
             }
             
             // Doygunluk etkisi
@@ -709,5 +742,6 @@ C_defense / C_attack = $50.000 / $30.000 ≈ 1.67:1 (Roket saldırısında)</div
 function toggleDeepAnalysis(){var p=document.getElementById('deep-analysis-panel');if(p.classList.contains('show')){p.classList.remove('show');setTimeout(function(){p.style.display='none';},300);}else{p.style.display='block';setTimeout(function(){p.classList.add('show');},10);p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
 </script>
 
+<script src="hs-nav.js"></script>
 </body>
 </html>

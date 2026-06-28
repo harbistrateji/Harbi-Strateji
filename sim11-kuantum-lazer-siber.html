@@ -353,6 +353,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 @keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
 </style>
 
+<link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
 <div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
@@ -382,13 +383,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
     <div class="header">
         
-        <p>Rol: Türk Savunma Sanayii Başkanlığı Teknoloji Direktörü | 3 Kritik Karar</p>
+        <p>Rol: Türk Savunma Sanayii Başkanlığı Teknoloji Direktörü | 5 Kritik Karar</p>
     </div>
     
         <div class="phase-indicator" id="phaseIndicator">
             <div class="phase-dot active" id="dot1"></div>
             <div class="phase-dot" id="dot2"></div>
             <div class="phase-dot" id="dot3"></div>
+            <div class="phase-dot" id="dot4"></div>
+            <div class="phase-dot" id="dot5"></div>
         </div>
 
         <div class="stats-grid">
@@ -460,10 +463,55 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             </div>
         </div>
 
+
+        <!-- PHASE 4: Uzay Silahları -->
+        <div id="phase4" class="hidden">
+            <div class="scenario-box">
+                <h2>SENARYO 4: Uzay Tabanlı Silah Sistemleri</h2>
+                <p>Rakip devletler LEO yörüngesine kinetik bombardıman platformları yerleştirmeye başladı. "Tanrı'nın Asaları" (Rods from God) konsepti artık teorik değil. Türkiye'nin uzay savunma stratejisi ne olmalı? Mevcut GÖKTÜRK uydu ailesi yetersiz kalıyor.</p>
+                <p style="margin-top:10px;"><span class="tag">Uzay Hâkimiyeti</span> <span class="tag">LEO Savunma</span> <span class="tag">Anti-Uydu</span></p>
+            </div>
+            <div class="decision-card" onclick="decide(4,'A')">
+                <h3>A) Yerli Anti-Uydu Sistemi (ASAT) Geliştir</h3>
+                <p>Kinetik önleyici veya lazer tabanlı ASAT sistemi geliştir. Düşman uydularını yörüngede imha edebilecek kapasite kazan. Maliyet yüksek, uluslararası tepki riski var.</p>
+            </div>
+            <div class="decision-card" onclick="decide(4,'B')">
+                <h3>B) Mikro-Uydu Sürüsü (Orbital Savunma Ağı)</h3>
+                <p>Yüzlerce ucuz mikro-uydudan oluşan bir savunma ağı kur. Düşman uydularını takip et, gerektiğinde yaklaşarak devre dışı bırak. Daha az provokatif ama teknolojik olarak zorlu.</p>
+            </div>
+            <div class="decision-card" onclick="decide(4,'C')">
+                <h3>C) Yerden Uzaya Lazer Savunma</h3>
+                <p>Yüksek enerjili lazer istasyonları ile yörüngedeki tehditleri yerden vur. Mevcut lazer AR-GE'yi uzay savunmasına yönlendir. Hava koşullarına bağımlılık dezavantajı.</p>
+            </div>
+        </div>
+
+        <!-- PHASE 5: Otonom Savaş Etiği -->
+        <div id="phase5" class="hidden">
+            <div class="scenario-box">
+                <h2>SENARYO 5: Otonom Silah Sistemleri ve Savaş Etiği</h2>
+                <p>Geliştirdiğiniz AI destekli otonom silah sistemi, insan onayı olmadan hedef tespit edip imha edebiliyor. BM'de "Katil Robotlar Yasağı" tartışılıyor. Rakipleriniz tam otonom sistemlere geçti. Türkiye ne yapmalı?</p>
+                <p style="margin-top:10px;"><span class="tag">AI Etiği</span> <span class="tag">LAWS</span> <span class="tag">İnsan Döngüsü</span></p>
+            </div>
+            <div class="decision-card" onclick="decide(5,'A')">
+                <h3>A) Tam Otonom (Human-Out-of-the-Loop)</h3>
+                <p>AI'ın insan onayı olmadan ateş açmasına izin ver. Tepki süresi milisaniyeye düşer. Rakiplerle eşit hız. Ancak hukuki ve etik sorumluluk belirsiz, sivil kayıp riski yüksek.</p>
+            </div>
+            <div class="decision-card" onclick="decide(5,'B')">
+                <h3>B) İnsan Denetimli Otonom (Human-On-the-Loop)</h3>
+                <p>AI hedefi tespit eder ve önerir, insan operatör veto hakkına sahip ama süre kısıtlı (3 saniye). Denge noktası: Hız + kontrol. Ancak 3 saniye hipersonik tehditte çok uzun.</p>
+            </div>
+            <div class="decision-card" onclick="decide(5,'C')">
+                <h3>C) Hibrit Doktrin: Savunmada Otonom, Saldırıda İnsan</h3>
+                <p>Savunma sistemleri (hava savunma, siber) tam otonom çalışsın. Saldırı operasyonları (hedef tespiti, ateş emri) insan onaylı kalsın. Uluslararası hukuka uygun + caydırıcı.</p>
+            </div>
+        </div>
+
         <!-- Sonuç Kutuları -->
         <div id="result1" class="result-box"></div>
         <div id="result2" class="result-box"></div>
         <div id="result3" class="result-box"></div>
+        <div id="result4" class="result-box"></div>
+        <div id="result5" class="result-box"></div>
 
         <!-- Final Skor -->
         <div id="finalScore" class="final-score">
@@ -577,7 +625,32 @@ Mevcut Sistemler:<br>
                     budget -= 8; tech += 5; deter += 15;
                     html = '<h3>Tallinn Kriteri Uygulaması Sonucu</h3><p>Saldırının fiziksel etkileri (hastane çöküşü, can kaybı riski) belgelendi. BM Madde 51 kapsamında meşru müdafaa ilan edildi. Hem siber hem kinetik seçenekler masada tutularak caydırıcılık sağlandı. Uluslararası destek alındı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Optimal:</strong> Hukuki meşruiyet + caydırıcılık dengesi.</p>';
                 }
+            
+            } else if (p === 4) {
+                if (choice === 'A') {
+                    budget -= 25; tech += 20; deter += 25;
+                    html = '<h3>ASAT Sistemi Sonucu</h3><p>Yerli ASAT sistemi başarıyla test edildi. Düşman uydu varlıkları artık tehdit altında. Ancak "uzayın silahlanması" nedeniyle BM'de kınama aldınız ve bazı müttefikler endişeli.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Stratejik Etki:</strong> Uzay caydırıcılığı kazanıldı. Kessler Sendromu riski not edildi.</p>';
+                } else if (choice === 'B') {
+                    budget -= 15; tech += 15; deter += 12;
+                    html = '<h3>Mikro-Uydu Sürüsü Sonucu</h3><p>200+ mikro-uydudan oluşan orbital savunma ağı kuruldu. Düşman uyduları sürekli takip altında. Gerektiğinde "yakın geçiş" ile devre dışı bırakma kapasitesi kazanıldı. Uluslararası tepki minimal.</p><p style="margin-top:10px;color:#90caf9;"><strong>Değerlendirme:</strong> Akıllı ve ölçülü bir hamle. Ancak kinetik tehditlere karşı yetersiz.</p>';
+                } else {
+                    budget -= 20; tech += 18; deter += 15;
+                    html = '<h3>Yerden Uzaya Lazer Sonucu</h3><p>3 adet yüksek enerjili lazer istasyonu kuruldu. Bulutlu havalarda etkinlik %40'a düşüyor ama açık havada yörüngedeki tehditleri 3 saniyede imha edebiliyor.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Kısıt:</strong> Hava koşullarına bağımlılık kritik zayıflık. Yedek sistemler şart.</p>';
+                }
+            } else if (p === 5) {
+                if (choice === 'A') {
+                    budget -= 5; tech += 10; deter += 20;
+                    html = '<h3>Tam Otonom Sonucu</h3><p>Tepki süresi 0.003 saniyeye düştü. Hipersonik tehditlere karşı etkili. Ancak bir sivil uçak "yanlış pozitif" ile düşürüldü. Uluslararası kriz, BM soruşturması başlatıldı.</p><p style="margin-top:10px;color:#ff5252;"><strong>Felaket:</strong> Teknolojik üstünlük kazanıldı ama meşruiyet kaybedildi.</p>';
+                    isNeg = true;
+                } else if (choice === 'B') {
+                    budget -= 8; tech += 12; deter += 10;
+                    html = '<h3>İnsan Denetimli Otonom Sonucu</h3><p>3 saniyelik veto penceresi çoğu durumda yeterli. Ancak bir hipersonik saldırıda operatör tepki veremedi ve hedef kaçırıldı. Sistem güvenilir ama mükemmel değil.</p><p style="margin-top:10px;color:#ffd54f;"><strong>Denge:</strong> Etik standartlar korundu, bazı taktik kayıplar yaşandı.</p>';
+                } else {
+                    budget -= 10; tech += 15; deter += 18;
+                    html = '<h3>Hibrit Doktrin Sonucu</h3><p>Savunma sistemleri tam otonom çalışıyor: Hava savunma 0.01s tepki, siber savunma anlık. Saldırı operasyonlarında insan karar veriyor. Uluslararası hukuka tam uyumlu + caydırıcı.</p><p style="margin-top:10px;color:#69f0ae;"><strong>Optimal:</strong> Hem etik hem etkili. NATO standartlarıyla uyumlu.</p>';
+                }
             }
+}
 
             resultEl.innerHTML = html;
             resultEl.className = isNeg ? 'result-box negative' : 'result-box';
@@ -631,5 +704,6 @@ Mevcut Sistemler:<br>
 function toggleDeepAnalysis(){var p=document.getElementById('deep-analysis-panel');if(p.classList.contains('show')){p.classList.remove('show');setTimeout(function(){p.style.display='none';},300);}else{p.style.display='block';setTimeout(function(){p.classList.add('show');},10);p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
 </script>
 
+<script src="hs-nav.js"></script>
 </body>
 </html>

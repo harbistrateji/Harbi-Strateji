@@ -51,6 +51,7 @@
   @media (max-width: 768px) { .stats { grid-template-columns: repeat(2, 1fr); } }
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
+<link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
 <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
@@ -122,7 +123,7 @@ const scenes = [
   { id: "guc_formulu", title: "Gücün Algoritması", subtitle: "G = T × S × E × L", category: "Formül", duration: 10, type: "formula" },
   { id: "sistemler_savasi", title: "Sistemler Savaşı", subtitle: "SW = (Sk×Sh×Sd) − (Sf+Se)", category: "Formül", duration: 10, type: "formula" },
   { id: "stratejik_ozerklik", title: "Stratejik Özerklik İndeksi", subtitle: "SÖİ = (DEE+FEE+EES+TEK+KUR)/5", category: "Formül", duration: 10, type: "formula" },
-  { id: "turkiye_grand_strateji", title: "Türkiye Grand Strateji 2040", subtitle: "TG = (C×O×B×S×D) ÷ K", category: "Formül", duration: 10, type: "formula" },
+  { id: "türkiye_grand_strateji", title: "Türkiye Grand Strateji 2040", subtitle: "TG = (C×O×B×S×D) ÷ K", category: "Formül", duration: 10, type: "formula" },
   { id: "finansman_zinciri", title: "Savunma Finansman Zinciri", subtitle: "E → I → T → M → F", category: "Formül", duration: 10, type: "formula" },
   { id: "kanun1_duzen", title: "1. Kanun: Düzen Pahalıdır", subtitle: "K_yıkma / K_inşa = 1:10.000", category: "Kanun", duration: 8, type: "comparison" },
   { id: "kanun1_bagdat", title: "1. Kanun: Bağdat Örneği", subtitle: "500 Yıl İnşa — 13 Gün Yıkım", category: "Kanun", duration: 8, type: "comparison" },
@@ -150,15 +151,15 @@ const scenes = [
   { id: "fpv_tank", title: "FPV Drone vs T-72 Tank", subtitle: "Ukrayna Cephesi 2023", category: "Silah", duration: 8, type: "comparison" },
   { id: "tb2_pantsir", title: "TB2 MAM-L vs Pantsir-S1", subtitle: "Libya/Karabağ 2020", category: "Silah", duration: 8, type: "comparison" },
   { id: "hpm", title: "HPM Mikrodalga Silahı", subtitle: "Sürü Drone Katili", category: "Silah", duration: 8, type: "counter" },
-  { id: "maven", title: "Maven Projesi — YZ Hedefleme", subtitle: "Pentagon $480M Yapay Zeka Alımı", category: "Silah", duration: 8, type: "counter" },
+  { id: "maven", title: "Maven Projesi — YZ Hedefleme", subtitle: "Pentagon $480M Yapay Zekâ Alımı", category: "Silah", duration: 8, type: "counter" },
   { id: "abd_profil", title: "ABD Güç Profili", subtitle: "G = 3.705 · SÖİ = 88", category: "Ülke", duration: 8, type: "radar_pulse" },
   { id: "cin_profil", title: "Çin Güç Profili", subtitle: "G = 3.672 · SÖİ = 75", category: "Ülke", duration: 8, type: "radar_pulse" },
   { id: "rusya_profil", title: "Rusya Güç Profili", subtitle: "G = 2.079 · SÖİ = 62", category: "Ülke", duration: 8, type: "radar_pulse" },
-  { id: "turkiye_profil", title: "Türkiye Güç Profili", subtitle: "G = 1.536 · SÖİ = 50", category: "Ülke", duration: 8, type: "radar_pulse" },
+  { id: "türkiye_profil", title: "Türkiye Güç Profili", subtitle: "G = 1.536 · SÖİ = 50", category: "Ülke", duration: 8, type: "radar_pulse" },
   { id: "israil_profil", title: "İsrail Güç Profili", subtitle: "G = 1.874 · SÖİ = 65", category: "Ülke", duration: 8, type: "radar_pulse" },
-  { id: "kuresel_guc_sira", title: "Küresel Güç Sıralaması", subtitle: "G Formülü ile 6 Ülke", category: "Ülke", duration: 10, type: "bar_race" },
+  { id: "küresel_guc_sira", title: "Küresel Güç Sıralaması", subtitle: "G Formülü ile 6 Ülke", category: "Ülke", duration: 10, type: "bar_race" },
   { id: "savunma_harcama", title: "Küresel Savunma Harcamaları", subtitle: "2025 SIPRI Verileri", category: "Finans", duration: 10, type: "bar_race" },
-  { id: "turkiye_savunma_buyume", title: "Türkiye Savunma Sanayii", subtitle: "2018 → 2025 Büyüme", category: "Finans", duration: 8, type: "counter" },
+  { id: "türkiye_savunma_buyume", title: "Türkiye Savunma Sanayii", subtitle: "2018 → 2025 Büyüme", category: "Finans", duration: 8, type: "counter" },
   { id: "abd_paradoks", title: "ABD Savunma Paradoksu", subtitle: "FY2027: $1.5T Talep vs $36T Borç", category: "Finans", duration: 8, type: "comparison" },
   { id: "rusya_maliyet", title: "Rusya Savaş Maliyeti", subtitle: "Ukrayna Savaşı Günlük Harcama", category: "Finans", duration: 8, type: "counter" },
   { id: "hurmuz_krizi", title: "Hürmüz Boğazı Krizi", subtitle: "Dünya petrolünün %21'i", category: "Kriz", duration: 8, type: "counter" },

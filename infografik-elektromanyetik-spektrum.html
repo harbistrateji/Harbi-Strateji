@@ -45,6 +45,7 @@ body{background:#050a12;color:#e2e8f0;font-family:'Chakra Petch',sans-serif;over
 @keyframes signalPulse{0%,100%{transform:scaleY(0.3)}50%{transform:scaleY(1)}}
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
+<link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
 <div class="back-nav">
@@ -178,5 +179,12 @@ document.querySelectorAll('.section').forEach(s=>{s.style.opacity='0';s.style.tr
 // Animate threat meter
 setTimeout(()=>{document.querySelectorAll('.threat-fill').forEach(f=>{f.style.width=f.style.width})},500);
 </script>
+<script src="hs-nav.js"></script>
+
+<!-- İlgili Simülasyonlar -->
+<div style="max-width:1200px;margin:30px auto;padding:20px 24px;background:rgba(15,25,35,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+<h4 style="font-family:Chakra Petch,sans-serif;color:#c9a24b;margin-bottom:10px;font-size:0.95rem;">İlgili Simülasyonlar</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px;"><a href="sim12-spektrum-savasi.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Spektrum Savaşı &rarr;</a><a href="suru-iha-tasarim-simulatoru.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Sürü İHA Simülatörü &rarr;</a><a href="sim1-demir-kubbe.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Sim1: Demir Kubbe &rarr;</a><a href="siber-eh-simulatoru.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Siber/EH Simülatörü &rarr;</a></div>
+</div>
 </body>
 </html>

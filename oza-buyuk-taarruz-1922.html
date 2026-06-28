@@ -38,7 +38,7 @@ const PHASES=[
 {label:"💣 Yogun Bombardiman",cost:"-12 cephane",effect:()=>{G.ammo-=12;G.enemyMorale-=10;G.cephe-=8;return"200 top birden! Düşman siperleri dagildi.";}},
 {label:"🎯 Hassas Atis",cost:"-6 cephane",effect:()=>{G.ammo-=6;G.enemyMorale-=6;G.cephe-=4;return"Komuta merkezleri hedef alindi.";}},
 {label:"✈️ Hava Bombardimani",cost:"-4 cephane",effect:()=>{G.ammo-=4;G.enemyMorale-=5;return"Ucaklar ikmal yollarini bombaliyor!";}},
-{label:"📡 Ates Tanzimi",cost:"+1 gun",effect:()=>{G.morale+=3;return"Gozlemciler ates duzeltmesi yapiyor.";}}]},
+{label:"📡 Ates Tanzimi",cost:"+1 gun",effect:()=>{G.morale+=3;return"Gözlemciler ates duzeltmesi yapiyor.";}}]},
 {title:"Yarilma — Afyon Cephesi",desc:"Piyade taarruzu! Düşman hattini yar!",days:[5,6],actions:[
 {label:"⚔️ Piyade Taarruzu",cost:"-8 asker, -6 cephane",effect:()=>{G.army-=8;G.ammo-=6;G.enemyMorale-=12;G.cephe-=10;G.advance+=30;return"Cephe yarildi! Afyon dustu! +30km";}},
 {label:"💣 Topcu Destegi",cost:"-10 cephane",effect:()=>{G.ammo-=10;G.enemyMorale-=8;G.cephe-=6;return"Topcu baraji piyadeyi destekliyor!";}},

@@ -37,6 +37,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0e1a;color:#e0e0e0;overflow
 .org-card:hover{animation:pulse .5s}
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
+<link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
 <div class="back-nav"><a href="infografik.html">← İnfografikler</a></div>
@@ -59,9 +60,9 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0e1a;color:#e0e0e0;overflow
 <div class="section">
 <div class="category-tabs">
 <div class="cat-tab active" onclick="filterOrgs('all')">Tümü</div>
-<div class="cat-tab" onclick="filterOrgs('guvenlik')">Güvenlik</div>
+<div class="cat-tab" onclick="filterOrgs('güvenlik')">Güvenlik</div>
 <div class="cat-tab" onclick="filterOrgs('ekonomi')">Ekonomi</div>
-<div class="cat-tab" onclick="filterOrgs('bolgesel')">Bölgesel</div>
+<div class="cat-tab" onclick="filterOrgs('bölgesel')">Bölgesel</div>
 <div class="cat-tab" onclick="filterOrgs('turk')">Türk Dünyası</div>
 <div class="cat-tab" onclick="filterOrgs('non')">Üye Olunmayan</div>
 </div>
@@ -71,26 +72,26 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0e1a;color:#e0e0e0;overflow
 
 <script>
 const orgs = [
-{name:"NATO",eng:"North Atlantic Treaty Organization",flag:"🛡️",cat:"guvenlik",members:32,year:1949,desc:"Kolektif savunma ittifakı. Madde 5: Birine saldırı hepsine saldırıdır.",turkey:true,hq:"Brüksel"},
-{name:"BM",eng:"United Nations",flag:"🌐",cat:"guvenlik",members:193,year:1945,desc:"Uluslararası barış ve güvenlik. Güvenlik Konseyi 5 daimi üye.",turkey:true,hq:"New York"},
-{name:"AGİT",eng:"OSCE",flag:"🔒",cat:"guvenlik",members:57,year:1975,desc:"Avrupa güvenlik ve işbirliği. Silahsızlanma, insan hakları, seçim gözlemi.",turkey:true,hq:"Viyana"},
+{name:"NATO",eng:"North Atlantic Treaty Organization",flag:"🛡️",cat:"güvenlik",members:32,year:1949,desc:"Kolektif savunma ittifakı. Madde 5: Birine saldırı hepsine saldırıdır.",turkey:true,hq:"Brüksel"},
+{name:"BM",eng:"United Nations",flag:"🌐",cat:"güvenlik",members:193,year:1945,desc:"Uluslararası barış ve güvenlik. Güvenlik Konseyi 5 daimi üye.",turkey:true,hq:"New York"},
+{name:"AGİT",eng:"OSCE",flag:"🔒",cat:"güvenlik",members:57,year:1975,desc:"Avrupa güvenlik ve işbirliği. Silahsızlanma, insan hakları, seçim gözlemi.",turkey:true,hq:"Viyana"},
 {name:"G-20",eng:"Group of Twenty",flag:"💰",cat:"ekonomi",members:20,year:1999,desc:"Küresel ekonomik yönetişim. Dünya GSYH'nın %85'i.",turkey:true,hq:"Dönemsel"},
 {name:"OECD",eng:"Organisation for Economic Co-operation",flag:"📊",cat:"ekonomi",members:38,year:1961,desc:"Ekonomik kalkınma ve ticaret politikaları.",turkey:true,hq:"Paris"},
 {name:"DTÖ",eng:"World Trade Organization",flag:"🏛️",cat:"ekonomi",members:164,year:1995,desc:"Küresel ticaret kuralları ve anlaşmazlık çözümü.",turkey:true,hq:"Cenevre"},
-{name:"ECO",eng:"Economic Cooperation Organization",flag:"🤝",cat:"bolgesel",members:10,year:1985,desc:"İran, Pakistan, Türkiye öncülüğünde ekonomik işbirliği.",turkey:true,hq:"Tahran"},
+{name:"ECO",eng:"Economic Cooperation Organization",flag:"🤝",cat:"bölgesel",members:10,year:1985,desc:"İran, Pakistan, Türkiye öncülüğünde ekonomik işbirliği.",turkey:true,hq:"Tahran"},
 {name:"D-8",eng:"Developing Eight",flag:"🌙",cat:"ekonomi",members:8,year:1997,desc:"Gelişen 8 Müslüman ülke ekonomik işbirliği.",turkey:true,hq:"İstanbul"},
-{name:"İİT",eng:"Organisation of Islamic Cooperation",flag:"☪️",cat:"bolgesel",members:57,year:1969,desc:"İslam dünyası siyasi ve ekonomik işbirliği.",turkey:true,hq:"Cidde"},
-{name:"KEİ",eng:"BSEC",flag:"⚓",cat:"bolgesel",members:13,year:1992,desc:"Karadeniz havzası ekonomik işbirliği.",turkey:true,hq:"İstanbul"},
+{name:"İİT",eng:"Organisation of Islamic Cooperation",flag:"☪️",cat:"bölgesel",members:57,year:1969,desc:"İslam dünyası siyasi ve ekonomik işbirliği.",turkey:true,hq:"Cidde"},
+{name:"KEİ",eng:"BSEC",flag:"⚓",cat:"bölgesel",members:13,year:1992,desc:"Karadeniz havzası ekonomik işbirliği.",turkey:true,hq:"İstanbul"},
 {name:"Türk Konseyi",eng:"Organization of Turkic States",flag:"🐺",cat:"turk",members:7,year:2009,desc:"Türk dili konuşan ülkeler işbirliği. Kültür, ekonomi, siyaset.",turkey:true,hq:"İstanbul"},
 {name:"TÜRKPA",eng:"Parliamentary Assembly of Turkic States",flag:"🏛️",cat:"turk",members:6,year:2008,desc:"Türk devletleri parlamenter asamblesi.",turkey:true,hq:"Bakü"},
-{name:"Akdeniz İçin Birlik",eng:"Union for the Mediterranean",flag:"🌊",cat:"bolgesel",members:43,year:2008,desc:"AB ve Akdeniz ülkeleri arası diyalog ve işbirliği.",turkey:true,hq:"Barselona"},
-{name:"Avrupa Konseyi",eng:"Council of Europe",flag:"🇪🇺",cat:"guvenlik",members:46,year:1949,desc:"İnsan hakları, demokrasi, hukukun üstünlüğü.",turkey:true,hq:"Strazburg"},
-{name:"TRACECA",eng:"Transport Corridor Europe-Caucasus-Asia",flag:"🚂",cat:"bolgesel",members:14,year:1993,desc:"Avrupa-Kafkasya-Asya ulaştırma koridoru. Orta Koridor.",turkey:true,hq:"Bakü"},
+{name:"Akdeniz İçin Birlik",eng:"Union for the Mediterranean",flag:"🌊",cat:"bölgesel",members:43,year:2008,desc:"AB ve Akdeniz ülkeleri arası diyalog ve işbirliği.",turkey:true,hq:"Barselona"},
+{name:"Avrupa Konseyi",eng:"Council of Europe",flag:"🇪🇺",cat:"güvenlik",members:46,year:1949,desc:"İnsan hakları, demokrasi, hukukun üstünlüğü.",turkey:true,hq:"Strazburg"},
+{name:"TRACECA",eng:"Transport Corridor Europe-Caucasus-Asia",flag:"🚂",cat:"bölgesel",members:14,year:1993,desc:"Avrupa-Kafkasya-Asya ulaştırma koridoru. Orta Koridor.",turkey:true,hq:"Bakü"},
 {name:"IEA",eng:"International Energy Agency",flag:"⚡",cat:"ekonomi",members:31,year:1974,desc:"Enerji güvenliği ve sürdürülebilir enerji politikaları.",turkey:true,hq:"Paris"},
 {name:"ICAO",eng:"International Civil Aviation Organization",flag:"✈️",cat:"ekonomi",members:193,year:1944,desc:"Uluslararası sivil havacılık standartları.",turkey:true,hq:"Montreal"},
-{name:"EUROCONTROL",eng:"European Air Navigation Safety",flag:"🛫",cat:"guvenlik",members:41,year:1960,desc:"Avrupa hava seyrüsefer emniyeti.",turkey:true,hq:"Brüksel"},
+{name:"EUROCONTROL",eng:"European Air Navigation Safety",flag:"🛫",cat:"güvenlik",members:41,year:1960,desc:"Avrupa hava seyrüsefer emniyeti.",turkey:true,hq:"Brüksel"},
 {name:"Dünya Gümrük Örgütü",eng:"World Customs Organization",flag:"📦",cat:"ekonomi",members:184,year:1952,desc:"Gümrük prosedürleri harmonizasyonu.",turkey:true,hq:"Brüksel"},
-{name:"CICA",eng:"Conference on Interaction and Confidence-Building",flag:"🕊️",cat:"guvenlik",members:28,year:1992,desc:"Asya'da güven artırıcı önlemler.",turkey:true,hq:"Astana"},
+{name:"CICA",eng:"Conference on Interaction and Confidence-Building",flag:"🕊️",cat:"güvenlik",members:28,year:1992,desc:"Asya'da güven artırıcı önlemler.",turkey:true,hq:"Astana"},
 {name:"Avrupa Birliği",eng:"European Union",flag:"🇪🇺",cat:"non",members:27,year:1993,desc:"Siyasi ve ekonomik birlik. Türkiye aday ülke statüsünde.",turkey:false,hq:"Brüksel"},
 {name:"Afrika Birliği",eng:"African Union",flag:"🌍",cat:"non",members:55,year:2002,desc:"Afrika kıtası siyasi birliği.",turkey:false,hq:"Addis Ababa"},
 {name:"KGÖT",eng:"Collective Security Treaty Organization",flag:"🛡️",cat:"non",members:6,year:1992,desc:"Rusya liderliğinde kolektif güvenlik. Eski Sovyet ülkeleri.",turkey:false,hq:"Moskova"},
@@ -129,5 +130,12 @@ function toggleAudio() {
 
 renderOrgs('all');
 </script>
+<script src="hs-nav.js"></script>
+
+<!-- İlgili Simülasyonlar -->
+<div style="max-width:1200px;margin:30px auto;padding:20px 24px;background:rgba(15,25,35,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+<h4 style="font-family:Chakra Petch,sans-serif;color:#c9a24b;margin-bottom:10px;font-size:0.95rem;">İlgili Simülasyonlar</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px;"><a href="sim14-hurmuz-petrodolar.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Hürmüz Petrodolar Krizi &rarr;</a><a href="sim-nato-ankara.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">NATO Ankara Simülasyonu &rarr;</a><a href="infografik-nato-kuantum-2025.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Kuantum Teknolojileri &rarr;</a><a href="sim4-maliyet-terazisi.html" style="display:inline-block;padding:6px 14px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:6px;color:#00b4d8;text-decoration:none;font-size:0.82rem;margin:4px;transition:all 0.2s;">Maliyet Terazisi &rarr;</a></div>
+</div>
 </body>
 </html>

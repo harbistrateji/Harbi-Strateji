@@ -326,7 +326,7 @@ function inject(){
     header:not(.hs-header){display:none!important;}
     
     /* ── Color links ── */
-    .hs-nav-link>a.oza-link{color:var(--oza-purple,#5865f2)!important;}
+    .hs-nav-link>a.oza-link{color:var(--oza-purple,#5865f2)!important;text-transform:none!important;}
     .hs-nav-link>a.gold-link{color:var(--gold,#c9a84c)!important;}
     .hs-nav-link>a.med-link{color:#e67e22!important;}
     .hs-nav-link>a.evren-link{color:var(--cyan,#00E0FF)!important;}

@@ -1,183 +1,264 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Harb-i Strateji | Algoritmik Harp</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+<title>Algoritmik Harp Merkezi | Harb-i Strateji</title>
+<link rel="icon" href="logo-icon-64.png">
+<script src="hs-nav.js" defer></script>
 <style>
 html{scroll-padding-top:80px}
-:root{--void:#080D17;--deep:#0B1426;--panel:#101D34;--panel-2:#142442;--line:#22324F;--bone:#E9E6DC;--bone-dim:#A8AEBB;--signal:#39FF8A;--signal-dim:#1E8C52;--threat:#FF4D2E;--threat-dim:#8C2A18;--steel:#5B7A9E;--gold:#D8B65C;--font-display:'Orbitron',sans-serif;--font-body:'IBM Plex Sans',sans-serif;--font-mono:'IBM Plex Mono',monospace;}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--void);color:var(--bone);font-family:var(--font-body);line-height:1.6;overflow-x:hidden;}
-::selection{background:var(--signal);color:var(--void);}
-h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:0.01em;line-height:1.15;}
-p{color:var(--bone-dim);}
-.bg-gradient{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 70% 45% at 50% -5%,rgba(57,255,138,0.06),transparent),radial-gradient(ellipse 55% 35% at 95% 90%,rgba(255,77,46,0.05),transparent),var(--void);pointer-events:none;}
-.corp-nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(8,13,23,0.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
-.nav-logo{font-family:var(--font-display);font-size:0.85rem;letter-spacing:0.05em;color:var(--bone);display:flex;align-items:center;gap:8px;text-decoration:none;}
-.nav-logo span{color:var(--signal);}
-.nav-links{display:flex;gap:24px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
-.nav-links a{color:var(--bone-dim);text-decoration:none;transition:color 0.2s;}
-.nav-links a:hover{color:var(--signal);}
-.nav-back{font-family:var(--font-mono);font-size:0.72rem;color:var(--steel);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s;}
-.nav-back:hover{color:var(--signal);}
-.sim-hero{min-height:auto;display:flex;flex-direction:column;justify-content:center;padding:120px 32px 60px;max-width:1180px;margin:0 auto;position:relative;z-index:1;}
-.eyebrow{font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--signal);display:flex;align-items:center;gap:10px;margin-bottom:20px;}
-.eyebrow::before{content:'';width:7px;height:7px;background:var(--signal);border-radius:50%;box-shadow:0 0 10px var(--signal);}
-.sim-hero h1{font-size:clamp(1.8rem,4.5vw,3rem);color:var(--bone);margin-bottom:14px;}
-.sim-hero h1 em{font-style:normal;color:var(--signal);}
-.sim-hero .lead{font-size:1.05rem;max-width:640px;margin-bottom:28px;}
-.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);max-width:700px;}
-.hero-stat{background:var(--deep);padding:16px 14px;}
-.hero-stat .num{font-family:var(--font-display);font-size:1.4rem;color:var(--signal);display:block;}
-.hero-stat .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
-.sim-content{max-width:1180px;margin:0 auto;padding:40px 32px 100px;position:relative;z-index:1;}
-.sim-panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:28px;margin-bottom:24px;}
-.sim-panel-header{font-family:var(--font-mono);font-size:0.7rem;color:var(--signal);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.sim-panel-header::before{content:'';width:5px;height:5px;background:var(--signal);border-radius:50%;box-shadow:0 0 6px var(--signal);}
-.sim-panel h3{font-family:var(--font-body);font-weight:700;font-size:1.2rem;color:var(--bone);margin-bottom:10px;}
-.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
-.stat-card{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:16px;text-align:center;}
-.stat-card .num{font-family:var(--font-display);font-size:1.6rem;color:var(--signal);display:block;margin-bottom:4px;}
-.stat-card .lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
-.stat-card.threat .num{color:var(--threat);}
-.stat-card.warning .num{color:var(--gold);}
-.btn{font-family:var(--font-mono);font-size:0.82rem;letter-spacing:0.05em;padding:14px 24px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--bone);transition:all 0.25s;text-transform:uppercase;}
-.btn-primary{background:var(--signal);color:var(--void);border-color:var(--signal);font-weight:600;}
-.btn-primary:hover{box-shadow:0 0 24px rgba(57,255,138,0.5);transform:translateY(-2px);}
-.btn-threat{background:var(--threat);color:var(--bone);border-color:var(--threat);font-weight:600;}
-.btn-ghost:hover{border-color:var(--signal);color:var(--signal);}
-.btn:disabled{opacity:0.4;cursor:not-allowed;}
-.radar-container{position:relative;width:100%;max-width:400px;margin:0 auto 20px;}
-.radar-screen{width:100%;aspect-ratio:1;background:radial-gradient(circle,rgba(11,20,38,1) 0%,var(--void) 100%);border-radius:50%;border:2px solid var(--signal);position:relative;overflow:hidden;}
-.radar-sweep{position:absolute;width:50%;height:50%;top:0;left:50%;transform-origin:bottom left;background:linear-gradient(90deg,rgba(57,255,138,0.3),transparent);animation:sweep 3s linear infinite;border-radius:0 100% 0 0;}
-@keyframes sweep{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-.threat-dot{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;box-shadow:0 0 6px var(--threat);}
-@keyframes blink{to{opacity:0.3;}}
-.intercept-dot{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;box-shadow:0 0 4px var(--signal);}
-.formula-box{background:var(--deep);border-left:3px solid var(--gold);padding:14px 18px;border-radius:0 6px 6px 0;font-family:var(--font-mono);font-size:0.85rem;margin:16px 0;color:var(--gold);}
-.log-area{background:var(--void);border:1px solid var(--line);border-radius:6px;padding:12px;max-height:200px;overflow-y:auto;font-family:var(--font-mono);font-size:0.78rem;}
-.log-entry{padding:3px 0;border-bottom:1px solid rgba(34,50,79,0.5);}
-.log-entry.hit{color:var(--signal);}
-.log-entry.miss{color:var(--threat);}
-.log-entry.info{color:var(--gold);}
-.progress-bar{width:100%;height:8px;background:var(--deep);border-radius:4px;overflow:hidden;margin:10px 0;}
-.progress-fill{height:100%;transition:width 0.5s;border-radius:4px;}
-.progress-fill.green{background:linear-gradient(90deg,var(--signal-dim),var(--signal));}
-.progress-fill.red{background:linear-gradient(90deg,var(--threat-dim),var(--threat));}
-.phase-indicator{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
-.phase-dot{width:10px;height:10px;border-radius:50%;background:var(--deep);border:2px solid var(--steel);transition:all 0.3s;}
-.phase-dot.active{border-color:var(--signal);background:var(--signal);box-shadow:0 0 8px var(--signal);}
-.phase-dot.completed{background:var(--signal-dim);border-color:var(--signal-dim);}
-.slider-group{margin:14px 0;}
-.slider-group label{display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--bone-dim);margin-bottom:6px;}
-input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--line);border-radius:2px;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--signal);cursor:pointer;box-shadow:0 0 8px rgba(57,255,138,0.4);}
-.result-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,23,0.95);z-index:100;justify-content:center;align-items:center;padding:20px;}
-.result-card{background:var(--panel);border:1px solid var(--gold);border-radius:8px;padding:36px;max-width:600px;width:100%;text-align:center;}
-.result-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px;}
-.result-text{color:var(--bone-dim);line-height:1.7;margin-bottom:24px;}
-.scenario-btn{font-family:var(--font-mono);font-size:0.72rem;padding:8px 16px;border:1px solid var(--line);border-radius:4px;background:var(--deep);color:var(--bone-dim);cursor:pointer;transition:all 0.2s;}
-.scenario-btn:hover{border-color:var(--steel);color:var(--bone);}
-.scenario-btn.active{border-color:var(--signal);color:var(--signal);background:rgba(57,255,138,0.08);}
-/* Old sim compat */
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:24px;margin-bottom:20px;}
-.panel-title{font-family:var(--font-mono);font-size:0.8rem;color:var(--signal);font-weight:600;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:8px;letter-spacing:0.05em;}
-.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px;}
-.stat-box{background:var(--deep);padding:14px;border-radius:6px;text-align:center;border:1px solid var(--line);}
-.stat-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--bone-dim);text-transform:uppercase;letter-spacing:0.05em;}
-.stat-value{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--signal);}
-.stat-value.danger{color:var(--threat);}
-.stat-value.warning{color:var(--gold);}
-.stat-value.success{color:var(--signal);}
-.radar-grid{position:absolute;inset:0;}
-.radar-grid::before,.radar-grid::after{content:'';position:absolute;background:rgba(57,255,138,0.15);}
-.radar-grid::before{width:1px;height:100%;left:50%;}
-.radar-grid::after{width:100%;height:1px;top:50%;}
-.threat{position:absolute;width:8px;height:8px;background:var(--threat);border-radius:50%;animation:blink 0.5s infinite alternate;}
-.interceptor{position:absolute;width:6px;height:6px;background:var(--signal);border-radius:50%;}
-@media(max-width:720px){.corp-nav{padding:12px 18px;}.nav-links{display:none;}.hero-stats{grid-template-columns:repeat(2,1fr);}.sim-content{padding:24px 18px 80px;}.sim-hero{padding:40px 18px 40px;}}
-
-/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
-@media (max-width: 768px) {
-  body { font-size: 14px !important; }
-  .container, .main, .wrap, .content, .page-content {
-    padding: 12px !important;
-    max-width: 100% !important;
-  }
-  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
-  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
-  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
-  table { font-size: 11px !important; }
-  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
-  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
-}
-@media (max-width: 480px) {
-  body { font-size: 13px !important; }
-  .container, .main, .wrap { padding: 8px !important; }
-  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
-  .nav, .navbar, .top-bar, .header { 
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-  }
-}
-/* Prevent horizontal overflow */
-html { overflow-x: hidden !important; }
-body { overflow-x: hidden !important; max-width: 100vw !important; }
-img, video, iframe, canvas, svg, table { max-width: 100% !important; }
-pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
-
-
-/* === BAŞLIK GÖRÜNÜRLÜk DÜZELTMESİ === */
-h1, .sim-title, .game-title, .page-title {
-  overflow: visible !important;
-  text-overflow: unset !important;
-  white-space: normal !important;
-  line-height: 1.2 !important;
-}
-.sim-hero h1, .hero h1, .page-hero h1 {
-  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-  white-space: normal !important;
-  word-wrap: break-word !important;
-}
-
+:root{--bg:#0a0e14;--surface:#111827;--card:#1a2332;--border:#2a3a4f;--accent:#00ff88;--red:#ef4444;--cyan:#00e0ff;--gold:#f59e0b;--text:#e2e8f0;--dim:#94a3b8;--purple:#a855f7}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Chakra Petch',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+.sim-hero{text-align:center;padding:80px 20px 40px;background:linear-gradient(180deg,rgba(0,255,136,.03) 0%,transparent 60%);position:relative}
+.sim-hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(0,255,136,.08) 0%,transparent 70%);pointer-events:none}
+.sim-hero h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:800;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.sim-hero .subtitle{color:var(--dim);font-size:1rem;margin-bottom:24px}
+.hero-badges{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.hero-badge{background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:20px;font-size:.8rem;display:flex;align-items:center;gap:6px}
+.hero-badge .val{color:var(--accent);font-weight:700}
+.tab-bar{display:flex;justify-content:center;gap:4px;padding:0 20px;margin-bottom:24px;flex-wrap:wrap}
+.tab-btn{background:var(--card);border:1px solid var(--border);color:var(--dim);padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.85rem;font-family:inherit;transition:all .2s}
+.tab-btn:hover{border-color:var(--accent);color:var(--text)}
+.tab-btn.active{background:rgba(0,255,136,.1);border-color:var(--accent);color:var(--accent)}
+.tab-content{display:none;padding:0 20px;max-width:1400px;margin:0 auto}
+.tab-content.active{display:block}
+.battlefield{position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+.bf-header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.3);flex-wrap:wrap;gap:8px}
+.bf-title{font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.bf-title .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.bf-controls{display:flex;gap:8px;flex-wrap:wrap}
+.bf-btn{background:var(--surface);border:1px solid var(--border);color:var(--dim);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.75rem;font-family:inherit;transition:all .2s}
+.bf-btn:hover{border-color:var(--accent);color:var(--accent)}
+.bf-btn.active{background:rgba(0,255,136,.1);border-color:var(--accent);color:var(--accent)}
+#battleCanvas{width:100%;height:400px;display:block}
+.ooda-panel{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:768px){.ooda-panel{grid-template-columns:repeat(2,1fr)}}
+.ooda-step{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.ooda-step.active{border-color:var(--accent);box-shadow:0 0 20px rgba(0,255,136,.1)}
+.ooda-step.active::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--accent);animation:progress 2s linear}
+@keyframes progress{from{width:0}to{width:100%}}
+.ooda-icon{font-size:2rem;margin-bottom:8px}
+.ooda-label{font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.ooda-value{font-size:1.1rem;font-weight:700}
+.ooda-time{font-size:.7rem;color:var(--accent);margin-top:4px;font-family:'IBM Plex Mono',monospace}
+.decisions{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.decision-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .3s;position:relative}
+.decision-card:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.decision-card.selected{border-color:var(--accent);background:rgba(0,255,136,.05)}
+.dc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.dc-icon{font-size:1.5rem}
+.dc-title{font-weight:600;font-size:.95rem}
+.dc-risk{font-size:.7rem;padding:3px 8px;border-radius:10px;margin-left:auto}
+.dc-risk.low{background:rgba(0,255,136,.1);color:var(--accent)}
+.dc-risk.med{background:rgba(245,158,11,.1);color:var(--gold)}
+.dc-risk.high{background:rgba(239,68,68,.1);color:var(--red)}
+.dc-desc{font-size:.82rem;color:var(--dim);line-height:1.5;margin-bottom:12px}
+.dc-stats{display:flex;gap:12px;font-size:.75rem;flex-wrap:wrap}
+.dc-stat{display:flex;align-items:center;gap:4px;color:var(--dim)}
+.dc-stat .v{color:var(--text);font-weight:600}
+.layers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.layer-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;transition:all .3s}
+.layer-card:hover{border-color:var(--cyan)}
+.layer-card.threat{border-color:var(--red);background:rgba(239,68,68,.03)}
+.layer-icon{font-size:1.8rem;margin-bottom:8px}
+.layer-name{font-size:.85rem;font-weight:600;margin-bottom:4px}
+.layer-status{font-size:.75rem;color:var(--dim)}
+.layer-bar{height:4px;background:var(--surface);border-radius:2px;margin-top:8px;overflow:hidden}
+.layer-bar-fill{height:100%;border-radius:2px;transition:width .5s}
+.scoreboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px}
+.score-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.score-val{font-size:1.8rem;font-weight:800;margin-bottom:4px}
+.score-val.green{color:var(--accent)}
+.score-val.red{color:var(--red)}
+.score-val.cyan{color:var(--cyan)}
+.score-val.gold{color:var(--gold)}
+.score-lbl{font-size:.75rem;color:var(--dim)}
+.action-bar{position:sticky;bottom:0;background:rgba(10,14,20,.95);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;flex-wrap:wrap}
+.action-bar .turn-info{font-size:.85rem;color:var(--dim)}
+.action-bar .turn-info strong{color:var(--accent)}
+.execute-btn{background:linear-gradient(135deg,var(--accent),#00cc6a);color:#000;border:none;padding:12px 32px;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit;transition:all .2s}
+.execute-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(0,255,136,.3)}
+.execute-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.scenarios{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.scenario-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;cursor:pointer;transition:all .3s}
+.scenario-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.scenario-card.active{border-color:var(--accent);background:rgba(0,255,136,.05)}
+.sc-icon{font-size:2.5rem;margin-bottom:12px}
+.sc-title{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.sc-desc{font-size:.82rem;color:var(--dim);line-height:1.5;margin-bottom:12px}
+.sc-meta{display:flex;gap:12px;font-size:.75rem;color:var(--dim)}
+.sc-meta span{display:flex;align-items:center;gap:4px}
+.log-container{background:var(--card);border:1px solid var(--border);border-radius:10px;max-height:300px;overflow-y:auto;font-family:'IBM Plex Mono',monospace;font-size:.78rem;padding:12px}
+.log-entry{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:8px}
+.log-entry .lt{color:var(--dim);min-width:60px}
+.log-entry .lm{color:var(--text)}
+.log-entry.threat .lm{color:var(--red)}
+.log-entry.success .lm{color:var(--accent)}
+.log-entry.info .lm{color:var(--cyan)}
+@media(max-width:768px){.decisions{grid-template-columns:1fr}.layers-grid{grid-template-columns:repeat(2,1fr)}.scoreboard{grid-template-columns:repeat(3,1fr)}.bf-controls{gap:4px}.bf-btn{padding:4px 8px;font-size:.65rem}}
+@media(max-width:480px){.layers-grid{grid-template-columns:1fr}.scoreboard{grid-template-columns:repeat(2,1fr)}}
 </style>
-<link rel="stylesheet" href="hs-global-fix.css">
-<link rel="stylesheet" href="hs-global.css">
 </head>
 <body>
-<div style="position:fixed;top:12px;left:12px;z-index:9999;display:flex;gap:8px;"><a href="oza-hub.html" style="background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a></div>
-<div class="bg-gradient"></div>
-
 <header class="sim-hero">
-  <div class="eyebrow">Stratejik Simülasyon</div>
-  <h1>Algoritmik <em>Harp</em></h1>
-  <p class="lead">Yapay zekâ destekli muharebe karar destek sistemi simülasyonu — OODA döngüsü hızlandırması.</p>
-<div class="hero-stats"><div class="hero-stat"><span class="num">AI</span><span class="lbl">Karar</span></div><div class="hero-stat"><span class="num">250ms</span><span class="lbl">OODA</span></div><div class="hero-stat"><span class="num">6</span><span class="lbl">Katman</span></div><div class="hero-stat"><span class="num">4</span><span class="lbl">Senaryo</span></div></div>
+<h1>ALGORİTMİK HARP MERKEZİ</h1>
+<p class="subtitle">Yapay Zekâ Destekli Çok Katmanlı Muharebe Karar Destek Simülasyonu</p>
+<div class="hero-badges">
+<div class="hero-badge"><span class="val">OODA-X</span> Karar Motoru</div>
+<div class="hero-badge"><span class="val">6</span> Harp Katmanı</div>
+<div class="hero-badge"><span class="val">250ms</span> Karar Hızı</div>
+<div class="hero-badge"><span class="val">4</span> Senaryo</div>
+<div class="hero-badge"><span class="val">AI</span> Adaptif Rakip</div>
+</div>
 </header>
-<main class="sim-content">
-<div style="text-align:center;padding:40px 20px;">
-<h2 style="color:#00ff88;margin-bottom:20px;">Algoritmik Harp Simülasyonu</h2>
-<p style="color:rgba(255,255,255,.7);margin-bottom:30px;">Yapay zekâ destekli OODA döngüsü hızlandırma simülasyonu. 6 katmanlı karar mekanizması, 4 farklı senaryo.</p>
-<a href="ooda-x-super-dongu-simulatoru.html" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-weight:700;border-radius:8px;text-decoration:none;font-size:1.1rem;transition:transform .2s;">▶ Simülasyonu Başlat</a>
-<div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;text-align:left;">
-<div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:16px;"><h4 style="color:#00ff88;">🎯 OODA Döngüsü</h4><p style="color:rgba(255,255,255,.6);font-size:.85rem;">Gözle → Yönel → Karar Ver → Harekete Geç. 250ms içinde karar al.</p></div>
-<div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:16px;"><h4 style="color:#00ff88;">🤖 YZ Rakip</h4><p style="color:rgba(255,255,255,.6);font-size:.85rem;">Adaptif yapay zekâ rakibine karşı stratejik üstünlük kur.</p></div>
-<div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:16px;"><h4 style="color:#00ff88;">📊 6 Katman</h4><p style="color:rgba(255,255,255,.6);font-size:.85rem;">Siber, EMS, Hava, Kara, Deniz ve Uzay katmanlarında eş zamanlı operasyon.</p></div>
-<div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:16px;"><h4 style="color:#00ff88;">⚡ 4 Senaryo</h4><p style="color:rgba(255,255,255,.6);font-size:.85rem;">Savunma, Taarruz, Hibrit ve Asimetrik savaş senaryoları.</p></div>
+<div class="tab-bar">
+<button class="tab-btn active" data-tab="sim">▶ Simülasyon</button>
+<button class="tab-btn" data-tab="scenarios">📋 Senaryolar</button>
+<button class="tab-btn" data-tab="doctrine">📖 Doktrin</button>
+<button class="tab-btn" data-tab="log">📊 Harp Günlüğü</button>
+</div>
+<div class="tab-content active" id="tab-sim">
+<div class="scoreboard" id="scoreboard">
+<div class="score-card"><div class="score-val green" id="sc-turn">1</div><div class="score-lbl">Tur</div></div>
+<div class="score-card"><div class="score-val cyan" id="sc-ooda">250ms</div><div class="score-lbl">OODA Hızı</div></div>
+<div class="score-card"><div class="score-val gold" id="sc-force">100%</div><div class="score-lbl">Kuvvet</div></div>
+<div class="score-card"><div class="score-val green" id="sc-moral">95</div><div class="score-lbl">Moral</div></div>
+<div class="score-card"><div class="score-val red" id="sc-enemy">100%</div><div class="score-lbl">Düşman</div></div>
+<div class="score-card"><div class="score-val cyan" id="sc-intel">30%</div><div class="score-lbl">İstihbarat</div></div>
+</div>
+<div class="ooda-panel" id="oodaPanel">
+<div class="ooda-step active" id="ooda-observe"><div class="ooda-icon">👁️</div><div class="ooda-label">Gözle</div><div class="ooda-value">Observe</div><div class="ooda-time">85ms</div></div>
+<div class="ooda-step" id="ooda-orient"><div class="ooda-icon">🧭</div><div class="ooda-label">Yönel</div><div class="ooda-value">Orient</div><div class="ooda-time">65ms</div></div>
+<div class="ooda-step" id="ooda-decide"><div class="ooda-icon">⚡</div><div class="ooda-label">Karar</div><div class="ooda-value">Decide</div><div class="ooda-time">60ms</div></div>
+<div class="ooda-step" id="ooda-act"><div class="ooda-icon">🎯</div><div class="ooda-label">Hareket</div><div class="ooda-value">Act</div><div class="ooda-time">40ms</div></div>
+</div>
+<div class="battlefield">
+<div class="bf-header">
+<div class="bf-title"><span class="dot"></span> Taktik Harita — Canlı</div>
+<div class="bf-controls">
+<button class="bf-btn active" data-layer="all">Tümü</button>
+<button class="bf-btn" data-layer="air">Hava</button>
+<button class="bf-btn" data-layer="land">Kara</button>
+<button class="bf-btn" data-layer="sea">Deniz</button>
+<button class="bf-btn" data-layer="cyber">Siber</button>
+<button class="bf-btn" data-layer="space">Uzay</button>
 </div>
 </div>
-</main>
+<canvas id="battleCanvas" width="1200" height="400"></canvas>
+</div>
+<div class="layers-grid" id="layersGrid">
+<div class="layer-card" data-domain="cyber"><div class="layer-icon">🖥️</div><div class="layer-name">Siber Alan</div><div class="layer-status">Aktif — Tarama devam ediyor</div><div class="layer-bar"><div class="layer-bar-fill" style="width:75%;background:var(--cyan)"></div></div></div>
+<div class="layer-card" data-domain="ems"><div class="layer-icon">📡</div><div class="layer-name">Elektromanyetik Spektrum</div><div class="layer-status">Karıştırma tespit edildi</div><div class="layer-bar"><div class="layer-bar-fill" style="width:60%;background:var(--gold)"></div></div></div>
+<div class="layer-card" data-domain="air"><div class="layer-icon">✈️</div><div class="layer-name">Hava Sahası</div><div class="layer-status">12 platform aktif</div><div class="layer-bar"><div class="layer-bar-fill" style="width:85%;background:var(--accent)"></div></div></div>
+<div class="layer-card" data-domain="land"><div class="layer-icon">🏔️</div><div class="layer-name">Kara Harekâtı</div><div class="layer-status">3 tugay konuşlu</div><div class="layer-bar"><div class="layer-bar-fill" style="width:70%;background:var(--accent)"></div></div></div>
+<div class="layer-card" data-domain="sea"><div class="layer-icon">🚢</div><div class="layer-name">Deniz Kuvvetleri</div><div class="layer-status">Görev kuvveti hazır</div><div class="layer-bar"><div class="layer-bar-fill" style="width:80%;background:var(--cyan)"></div></div></div>
+<div class="layer-card" data-domain="space"><div class="layer-icon">🛰️</div><div class="layer-name">Uzay Varlıkları</div><div class="layer-status">4 uydu aktif</div><div class="layer-bar"><div class="layer-bar-fill" style="width:50%;background:var(--purple)"></div></div></div>
+</div>
+<h3 style="color:var(--accent);margin-bottom:16px;font-size:1rem;">⚡ Karar Noktası — Hamlenizi Seçin</h3>
+<div class="decisions" id="decisions"></div>
+</div>
+<div class="tab-content" id="tab-scenarios">
+<div class="scenarios">
+<div class="scenario-card active" data-scenario="defense" onclick="selectScenario('defense')"><div class="sc-icon">🛡️</div><div class="sc-title">Stratejik Savunma</div><div class="sc-desc">Düşman taarruzu karşısında savunma hattını koruyun. Derinlik savunması, karşı taarruz zamanlaması ve yıpratma stratejisi.</div><div class="sc-meta"><span>⏱️ 12 Tur</span><span>⚠️ Orta</span><span>🎯 Savunma</span></div></div>
+<div class="scenario-card" data-scenario="offense" onclick="selectScenario('offense')"><div class="sc-icon">⚔️</div><div class="sc-title">Taarruz Harekâtı</div><div class="sc-desc">Düşman mevzilerine karşı çok eksenli taarruz planlayın. Aldatma, ana darbe ve takip harekâtı.</div><div class="sc-meta"><span>⏱️ 15 Tur</span><span>⚠️ Yüksek</span><span>🎯 Taarruz</span></div></div>
+<div class="scenario-card" data-scenario="hybrid" onclick="selectScenario('hybrid')"><div class="sc-icon">🌐</div><div class="sc-title">Hibrit Savaş</div><div class="sc-desc">Konvansiyonel ve konvansiyonel olmayan tehditleri eş zamanlı yönetin. Siber, dezenformasyon ve vekâlet güçleri.</div><div class="sc-meta"><span>⏱️ 18 Tur</span><span>⚠️ Çok Yüksek</span><span>🎯 Hibrit</span></div></div>
+<div class="scenario-card" data-scenario="asymmetric" onclick="selectScenario('asymmetric')"><div class="sc-icon">🎭</div><div class="sc-title">Asimetrik Muharebe</div><div class="sc-desc">Sayıca üstün düşmana karşı asimetrik avantajları kullanın. İHA sürüleri, siber saldırılar ve psikolojik harp.</div><div class="sc-meta"><span>⏱️ 10 Tur</span><span>⚠️ Ekstrem</span><span>🎯 Asimetrik</span></div></div>
+</div>
+</div>
+<div class="tab-content" id="tab-doctrine">
+<div style="max-width:900px;margin:0 auto;">
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;">
+<h3 style="color:var(--accent);margin-bottom:12px;">📖 OODA-X Doktrini</h3>
+<p style="color:var(--dim);line-height:1.8;margin-bottom:16px;">John Boyd'un OODA döngüsü (Observe-Orient-Decide-Act), Algoritmik Harp Merkezi'nde <strong style="color:var(--text)">OODA-X</strong> olarak genişletilmiştir. X faktörü, yapay zekâ destekli karar hızlandırmasını ve çok katmanlı eş zamanlı operasyonu temsil eder.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+<div style="background:var(--surface);padding:12px;border-radius:8px;border-left:3px solid var(--accent)"><strong style="color:var(--accent)">Observe (Gözle)</strong><br><span style="color:var(--dim);font-size:.82rem">Sensör füzyonu, uydu görüntüsü, SIGINT, HUMINT verilerinin birleştirilmesi</span></div>
+<div style="background:var(--surface);padding:12px;border-radius:8px;border-left:3px solid var(--cyan)"><strong style="color:var(--cyan)">Orient (Yönel)</strong><br><span style="color:var(--dim);font-size:.82rem">Durum değerlendirmesi, düşman niyeti analizi, kültürel/tarihsel bağlam</span></div>
+<div style="background:var(--surface);padding:12px;border-radius:8px;border-left:3px solid var(--gold)"><strong style="color:var(--gold)">Decide (Karar)</strong><br><span style="color:var(--dim);font-size:.82rem">YZ destekli seçenek üretimi, risk matrisi, komutan onayı</span></div>
+<div style="background:var(--surface);padding:12px;border-radius:8px;border-left:3px solid var(--red)"><strong style="color:var(--red)">Act (Hareket)</strong><br><span style="color:var(--dim);font-size:.82rem">Eş zamanlı çok eksenli icra, geri besleme, adaptasyon</span></div>
+</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;">
+<h3 style="color:var(--cyan);margin-bottom:12px;">🏗️ 6 Harp Katmanı</h3>
+<p style="color:var(--dim);line-height:1.8;margin-bottom:16px;">Modern muharebe alanı altı eş zamanlı katmanda yönetilir. Her katmandaki üstünlük, toplam harp gücünü belirler.</p>
+<table style="width:100%;border-collapse:collapse;font-size:.82rem;">
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:var(--accent)">🖥️ Siber</td><td style="padding:8px;color:var(--dim)">Ağ savunması, saldırı, zero-day istismarı, SCADA koruması</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:var(--gold)">📡 EMS</td><td style="padding:8px;color:var(--dim)">Elektronik harp, radar karıştırma, frekans atlama, COMINT</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:var(--cyan)">✈️ Hava</td><td style="padding:8px;color:var(--dim)">Hava üstünlüğü, SEAD/DEAD, İHA operasyonları, hava savunma</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:var(--accent)">🏔️ Kara</td><td style="padding:8px;color:var(--dim)">Manevra, ateş desteği, lojistik, şehir muharebesi</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:var(--cyan)">🚢 Deniz</td><td style="padding:8px;color:var(--dim)">Deniz kontrolü, amfibi harekât, denizaltı savaşı, mayın</td></tr>
+<tr><td style="padding:8px;color:var(--purple)">🛰️ Uzay</td><td style="padding:8px;color:var(--dim)">ISR uyduları, GPS, uzay durumsal farkındalık, anti-uydu</td></tr>
+</table>
+</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;">
+<h3 style="color:var(--gold);margin-bottom:12px;">⚖️ Güç Formülü: G = T × S × E × L</h3>
+<p style="color:var(--dim);line-height:1.8;">Harb-i Strateji Külliyatı'nın temel formülü simülasyonun karar ağırlıklarını belirler:</p>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
+<div style="background:var(--surface);padding:12px;border-radius:8px"><strong style="color:var(--accent)">T — Teknoloji</strong><br><span style="color:var(--dim);font-size:.82rem">Silah sistemleri, C4ISR, siber kabiliyetler</span></div>
+<div style="background:var(--surface);padding:12px;border-radius:8px"><strong style="color:var(--cyan)">S — Sistem</strong><br><span style="color:var(--dim);font-size:.82rem">Komuta yapısı, doktrin, eğitim seviyesi</span></div>
+<div style="background:var(--surface);padding:12px;border-radius:8px"><strong style="color:var(--gold)">E — Ekonomi</strong><br><span style="color:var(--dim);font-size:.82rem">Lojistik derinlik, savunma bütçesi, üretim kapasitesi</span></div>
+<div style="background:var(--surface);padding:12px;border-radius:8px"><strong style="color:var(--red)">L — Liderlik</strong><br><span style="color:var(--dim);font-size:.82rem">Stratejik vizyon, moral, meşruiyet, irade</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="tab-content" id="tab-log">
+<div class="log-container" id="logContainer">
+<div class="log-entry info"><span class="lt">00:00</span><span class="lm">▶ Algoritmik Harp Merkezi başlatıldı</span></div>
+<div class="log-entry info"><span class="lt">00:01</span><span class="lm">📡 Sensör ağı aktif — 6 katman taranıyor</span></div>
+<div class="log-entry"><span class="lt">00:02</span><span class="lm">🛰️ Uydu görüntüsü alındı — düşman konuşlanması tespit edildi</span></div>
+</div>
+</div>
+<div class="action-bar" id="actionBar">
+<div class="turn-info">Tur: <strong id="turnNum">1</strong>/12 | Senaryo: <strong id="scenarioName">Stratejik Savunma</strong></div>
+<button class="execute-btn" id="executeBtn" onclick="executeTurn()">⚡ Kararı Uygula</button>
+</div>
 <script>
-
+const state={turn:1,maxTurns:12,scenario:'defense',force:100,moral:95,enemy:100,intel:30,ooda:250,selectedDecision:null,layers:{cyber:75,ems:60,air:85,land:70,sea:80,space:50},log:[],gameOver:false};
+const scenarios={
+defense:{name:'Stratejik Savunma',turns:12,decisions:[
+{id:'d1',icon:'🛡️',title:'Derinlik Savunması',risk:'low',desc:'Düşmanı derinliğe çek, yıprat ve karşı taarruz fırsatı bekle.',stats:{force:5,moral:10,enemy:-8},time:200},
+{id:'d2',icon:'🎯',title:'Aktif Savunma',risk:'med',desc:'Düşman ilerleyişini durdurmak için proaktif darbeler vur.',stats:{force:-10,moral:5,enemy:-15},time:180},
+{id:'d3',icon:'📡',title:'İstihbarat Toplama',risk:'low',desc:'Düşman niyetini ve kuvvet yapısını deşifre et.',stats:{force:0,moral:5,enemy:0,intel:25},time:300},
+{id:'d4',icon:'🖥️',title:'Siber Karşı Saldırı',risk:'high',desc:'Düşman C4ISR altyapısına siber saldırı başlat.',stats:{force:0,moral:15,enemy:-20,cyber:15},time:150}
+]},
+offense:{name:'Taarruz Harekâtı',turns:15,decisions:[
+{id:'o1',icon:'⚔️',title:'Ana Darbe',risk:'high',desc:'Düşman merkezine yoğunlaştırılmış kuvvetle taarruz et.',stats:{force:-20,moral:15,enemy:-30},time:160},
+{id:'o2',icon:'🎭',title:'Aldatma Harekâtı',risk:'med',desc:'Tali cephede gösteri yaparak düşman ihtiyatlarını çek.',stats:{force:-5,moral:10,enemy:-10,intel:15},time:220},
+{id:'o3',icon:'🚀',title:'Derin Darbe',risk:'high',desc:'Uzun menzilli ateş ve İHA ile düşman lojistiğini kes.',stats:{force:-5,moral:10,enemy:-25},time:140},
+{id:'o4',icon:'🏔️',title:'Kuşatma Manevra',risk:'med',desc:'Düşman kanatlarını sararak çevirme harekâtı yap.',stats:{force:-15,moral:20,enemy:-20},time:200}
+]},
+hybrid:{name:'Hibrit Savaş',turns:18,decisions:[
+{id:'h1',icon:'📰',title:'Bilgi Operasyonu',risk:'low',desc:'Düşman kamuoyunu hedefleyen dezenformasyon kampanyası.',stats:{force:0,moral:10,enemy:-5},time:350},
+{id:'h2',icon:'🕵️',title:'Vekâlet Gücü Aktivasyonu',risk:'med',desc:'Düşman arka alanında vekâlet güçlerini harekete geçir.',stats:{force:0,moral:5,enemy:-15},time:280},
+{id:'h3',icon:'💰',title:'Ekonomik Baskı',risk:'low',desc:'Düşman tedarik zincirini ve enerji kaynaklarını hedefle.',stats:{force:0,moral:15,enemy:-10},time:400},
+{id:'h4',icon:'🖥️',title:'Kritik Altyapı Saldırısı',risk:'high',desc:'Düşman enerji şebekesi ve iletişim ağına siber saldırı.',stats:{force:0,moral:20,enemy:-25,cyber:20},time:120}
+]},
+asymmetric:{name:'Asimetrik Muharebe',turns:10,decisions:[
+{id:'a1',icon:'🐝',title:'İHA Sürüsü',risk:'med',desc:'Düşman hava savunmasını doyurmak için 50+ kamikaze İHA.',stats:{force:-5,moral:15,enemy:-20},time:130},
+{id:'a2',icon:'🕸️',title:'Ağ Merkezli Pusu',risk:'med',desc:'Dağınık küçük birliklerin koordineli pusu harekâtı.',stats:{force:-10,moral:20,enemy:-25},time:170},
+{id:'a3',icon:'⚡',title:'EMP Darbesi',risk:'high',desc:'Yönlendirilmiş enerji silahıyla düşman elektroniğini devre dışı bırak.',stats:{force:0,moral:25,enemy:-30,ems:25},time:100},
+{id:'a4',icon:'🌊',title:'Deniz Dronu Saldırısı',risk:'med',desc:'İnsansız deniz araçlarıyla düşman filosunu hedefle.',stats:{force:-5,moral:15,enemy:-20},time:150}
+]}
+};
+document.querySelectorAll('.tab-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+btn.dataset.tab).classList.add('active');});});
+function selectScenario(id){state.scenario=id;state.turn=1;state.force=100;state.moral=95;state.enemy=100;state.intel=30;state.maxTurns=scenarios[id].turns;state.gameOver=false;document.getElementById('executeBtn').disabled=false;document.getElementById('executeBtn').textContent='⚡ Kararı Uygula';document.querySelectorAll('.scenario-card').forEach(c=>c.classList.remove('active'));document.querySelector(`[data-scenario="${id}"]`).classList.add('active');document.getElementById('scenarioName').textContent=scenarios[id].name;updateUI();renderDecisions();addLog('info',`📋 Senaryo değiştirildi: ${scenarios[id].name}`);}
+function renderDecisions(){const sc=scenarios[state.scenario];const container=document.getElementById('decisions');container.innerHTML=sc.decisions.map(d=>`<div class="decision-card" data-id="${d.id}" onclick="selectDecision('${d.id}')"><div class="dc-header"><div class="dc-icon">${d.icon}</div><div class="dc-title">${d.title}</div><div class="dc-risk ${d.risk}">${d.risk==='low'?'Düşük':d.risk==='med'?'Orta':'Yüksek'}</div></div><div class="dc-desc">${d.desc}</div><div class="dc-stats">${d.stats.force?`<div class="dc-stat">Kuvvet: <span class="v">${d.stats.force>0?'+':''}${d.stats.force}%</span></div>`:''} ${d.stats.enemy?`<div class="dc-stat">Düşman: <span class="v">${d.stats.enemy}%</span></div>`:''} ${d.stats.intel?`<div class="dc-stat">İstihbarat: <span class="v">+${d.stats.intel}%</span></div>`:''}<div class="dc-stat">OODA: <span class="v">${d.time}ms</span></div></div></div>`).join('');}
+function selectDecision(id){state.selectedDecision=id;document.querySelectorAll('.decision-card').forEach(c=>c.classList.remove('selected'));document.querySelector(`[data-id="${id}"]`).classList.add('selected');}
+function executeTurn(){if(state.gameOver||!state.selectedDecision)return;const sc=scenarios[state.scenario];const decision=sc.decisions.find(d=>d.id===state.selectedDecision);if(!decision)return;state.force=Math.max(0,Math.min(100,state.force+(decision.stats.force||0)));state.moral=Math.max(0,Math.min(100,state.moral+(decision.stats.moral||0)));state.enemy=Math.max(0,Math.min(100,state.enemy+(decision.stats.enemy||0)));state.intel=Math.min(100,state.intel+(decision.stats.intel||0));state.ooda=decision.time;const enemyDmg=Math.floor(Math.random()*12)+3;state.force=Math.max(0,state.force-enemyDmg);state.moral=Math.max(0,state.moral-Math.floor(Math.random()*5));if(decision.stats.cyber)state.layers.cyber=Math.min(100,state.layers.cyber+decision.stats.cyber);if(decision.stats.ems)state.layers.ems=Math.min(100,state.layers.ems+decision.stats.ems);animateOODA();addLog('success',`⚡ ${decision.title} uygulandı — Düşman: ${state.enemy}%`);addLog('threat',`🔴 Düşman karşılık verdi — Kuvvet kaybı: -${enemyDmg}%`);state.turn++;state.selectedDecision=null;document.querySelectorAll('.decision-card').forEach(c=>c.classList.remove('selected'));if(state.enemy<=0){endGame(true);return;}if(state.force<=0){endGame(false);return;}if(state.turn>state.maxTurns){endGame(state.enemy<40);return;}updateUI();drawBattlefield();}
+function animateOODA(){const steps=['ooda-observe','ooda-orient','ooda-decide','ooda-act'];steps.forEach((s,i)=>{setTimeout(()=>{document.querySelectorAll('.ooda-step').forEach(el=>el.classList.remove('active'));document.getElementById(s).classList.add('active');},i*400);});}
+function endGame(won){state.gameOver=true;const msg=won?'🏆 ZAFER — Harekât başarıyla tamamlandı!':'💀 YENİLGİ — Kuvvetleriniz tükendi.';addLog(won?'success':'threat',msg);document.getElementById('executeBtn').disabled=true;document.getElementById('executeBtn').textContent=won?'🏆 Zafer!':'💀 Yenilgi';}
+function addLog(type,msg){const time=`${String(state.turn).padStart(2,'0')}:${String(Math.floor(Math.random()*59)).padStart(2,'0')}`;state.log.push({type,msg,time});const container=document.getElementById('logContainer');container.innerHTML+=`<div class="log-entry ${type}"><span class="lt">${time}</span><span class="lm">${msg}</span></div>`;container.scrollTop=container.scrollHeight;}
+function updateUI(){document.getElementById('sc-turn').textContent=state.turn;document.getElementById('sc-ooda').textContent=state.ooda+'ms';document.getElementById('sc-force').textContent=state.force+'%';document.getElementById('sc-moral').textContent=state.moral;document.getElementById('sc-enemy').textContent=state.enemy+'%';document.getElementById('sc-intel').textContent=state.intel+'%';document.getElementById('turnNum').textContent=state.turn;document.querySelectorAll('.layer-card').forEach(card=>{const domain=card.dataset.domain;if(state.layers[domain]){card.querySelector('.layer-bar-fill').style.width=state.layers[domain]+'%';}});}
+// Canvas battlefield
+const canvas=document.getElementById('battleCanvas');const ctx=canvas.getContext('2d');let units=[];
+function initBattlefield(){canvas.width=canvas.offsetWidth*2;canvas.height=800;for(let i=0;i<15;i++){units.push({x:50+Math.random()*canvas.width*0.3,y:50+Math.random()*(canvas.height-100),size:6+Math.random()*4,type:'friendly',vx:0.2+Math.random()*0.3,vy:(Math.random()-0.5)*0.4,domain:['air','land','sea'][Math.floor(Math.random()*3)]});}for(let i=0;i<12;i++){units.push({x:canvas.width*0.6+Math.random()*canvas.width*0.3,y:50+Math.random()*(canvas.height-100),size:6+Math.random()*4,type:'enemy',vx:-0.1-Math.random()*0.2,vy:(Math.random()-0.5)*0.3,domain:['air','land','sea'][Math.floor(Math.random()*3)]});}}
+function drawBattlefield(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='rgba(42,58,79,0.3)';ctx.lineWidth=1;for(let x=0;x<canvas.width;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}for(let y=0;y<canvas.height;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}ctx.strokeStyle='rgba(0,255,136,0.15)';ctx.lineWidth=2;ctx.setLineDash([10,5]);ctx.beginPath();ctx.moveTo(canvas.width/2,0);ctx.lineTo(canvas.width/2,canvas.height);ctx.stroke();ctx.setLineDash([]);units.forEach(u=>{u.x+=u.vx;u.y+=u.vy;if(u.x<20||u.x>canvas.width-20)u.vx*=-1;if(u.y<20||u.y>canvas.height-20)u.vy*=-1;ctx.beginPath();ctx.arc(u.x,u.y,u.size,0,Math.PI*2);if(u.type==='friendly'){ctx.fillStyle=u.domain==='air'?'#00e0ff':u.domain==='sea'?'#00ff88':'#5865f2';ctx.shadowColor=ctx.fillStyle;}else{ctx.fillStyle='#ef4444';ctx.shadowColor='#ef4444';}ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;});ctx.fillStyle='rgba(0,255,136,0.8)';ctx.font='bold 14px Chakra Petch';ctx.fillText(`TUR ${state.turn} | KUVVET: ${state.force}% | DÜŞMAN: ${state.enemy}%`,20,30);ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='11px IBM Plex Mono';ctx.fillText(`OODA: ${state.ooda}ms | İSTİHBARAT: ${state.intel}%`,20,50);requestAnimationFrame(drawBattlefield);}
+document.querySelectorAll('.bf-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.bf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const layer=btn.dataset.layer;units.forEach(u=>{if(layer==='all'){u.size=6+Math.random()*4;}else if(u.domain===layer){u.size=8+Math.random()*4;}else{u.size=2;}});});});
+initBattlefield();drawBattlefield();renderDecisions();
+window.addEventListener('resize',()=>{canvas.width=canvas.offsetWidth*2;canvas.height=800;});
 </script>
-<script src="hs-nav.js"></script>
 </body>
 </html>

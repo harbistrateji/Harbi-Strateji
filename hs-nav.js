@@ -111,7 +111,8 @@ const NAV_LINKS = [
       {t:'Sözlük',h:'kesfet.html'},
       {t:'Videolar',h:'hs-tv.html'},
       {t:'Bilgi Merkezi',h:'bilgi-merkezi.html'},
-      {t:'Teknik Kartlar',h:'teknik-kartlar.html'}
+      {t:'Teknik Kartlar',h:'teknik-kartlar.html'},
+      {t:'Raporlar',h:'raporlar.html'}
     ]}
   ]},
   { label:'HSTV', href:'hs-tv.html' },
@@ -174,7 +175,10 @@ const SEARCH_INDEX = [
   {t:'Savaş Evrimi',h:'infografik-savas-evrimi.html',k:'savaş evrim tarih'},
   {t:'Şeffaf Savaş',h:'infografik-seffaf-savas.html',k:'şeffaf savaş istihbarat'},
   {t:'Alternatif Tarih',h:'oza-alternatif-tarih.html',k:'alternatif tarih osmanlı'},
-  {t:'Osmanlı Deniz İmparatorluğu',h:'oza-osmanli-deniz-imparatorlugu.html',k:'osmanlı deniz tersane'}
+  {t:'Osmanlı Deniz İmparatorluğu',h:'oza-osmanli-deniz-imparatorlugu.html',k:'osmanlı deniz tersane'},
+  {t:'Hakkımızda',h:'hakkimizda.html',k:'hakkımızda künye misyon vizyon'},
+  {t:'Raporlar',h:'raporlar.html',k:'rapor analiz strateji savunma'},
+  {t:'Dijital Ayna: Kuşakların Varoluş Savaşı',h:'sk-dijital-ayna.html',k:'kuşak dijital savaş cevher koyuncu köşe yazısı'}
 ];
 
 function buildTicker(){
@@ -275,6 +279,8 @@ function buildFooter(){
         </div>
         <div class="hs-footer-col">
           <h4>Platform</h4>
+          <a href="raporlar.html">Raporlar</a>
+          <a href="hakkimizda.html">Hakkımızda</a>
           <a href="veri-tabani.html">Veri</a>
           <a href="panel-silah-metal.html">Silah Paneli</a>
           <a href="editor.html">Editör Paneli</a>
@@ -282,8 +288,9 @@ function buildFooter(){
         </div>
       </div>
       <div class="hs-footer-bottom">
+        <div class="hs-footer-copy" style="font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:#c41e3a;margin-bottom:4px">"Gerçeklerden Geleceğe"</div>
         <div class="hs-footer-copy">© 2026 Harb-i Strateji — Tüm Hakları Saklıdır</div>
-        <div class="hs-footer-copy">21. Yüzyıl Savaşları ve Jeopolitik Akademisi</div>
+        <div class="hs-footer-copy" style="margin-top:6px;font-size:10px"><a href="hakkimizda.html" style="color:#94a3b8;margin-right:12px">Hakkımızda</a><a href="raporlar.html" style="color:#94a3b8;margin-right:12px">Raporlar</a><a href="uyelik.html" style="color:#94a3b8">Üyelik</a></div>
       </div>
     </div>
   </footer>`;

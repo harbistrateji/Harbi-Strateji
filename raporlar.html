@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raporlar — Harb-i Strateji | Stratejik Analiz Raporları</title>
+<link rel="icon" href="logo-icon-64.png">
+<link rel="stylesheet" href="hs-global.css">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+.raporlar-page{max-width:1100px;margin:0 auto;padding:2rem 2rem 4rem}
+.raporlar-hero{text-align:center;padding:2.5rem 0 2rem;border-bottom:1px solid var(--bd,#1e293b)}
+.raporlar-hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;margin-bottom:.5rem}
+.raporlar-hero .sub{font-size:.85rem;color:var(--tx2,#94a3b8)}
+
+.raporlar-filter{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:2rem 0 1.5rem}
+.raporlar-filter .btn{padding:6px 14px;border-radius:20px;font-size:.7rem;font-weight:500;cursor:pointer;border:1px solid var(--bd,#1e293b);background:transparent;color:var(--tx2,#94a3b8);transition:all .2s}
+.raporlar-filter .btn.active,.raporlar-filter .btn:hover{background:var(--red,#c41e3a);color:#fff;border-color:var(--red,#c41e3a)}
+
+.raporlar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+.rapor-card{background:var(--sf,#111827);border:1px solid var(--bd,#1e293b);border-radius:12px;padding:1.5rem;transition:all .25s;display:block;position:relative;overflow:hidden}
+.rapor-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red,#c41e3a);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.rapor-card:hover{border-color:rgba(196,30,58,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,30,58,.08)}
+.rapor-card:hover::before{transform:scaleX(1)}
+.rapor-card .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--red,#c41e3a);font-weight:600;margin-bottom:6px}
+.rapor-card h3{font-size:.9rem;font-weight:600;margin-bottom:6px}
+.rapor-card .desc{font-size:.72rem;color:var(--tx2,#94a3b8);line-height:1.5;margin-bottom:8px}
+.rapor-card .meta{display:flex;gap:8px;flex-wrap:wrap}
+.rapor-card .tag{font-size:.55rem;padding:2px 7px;border-radius:8px;background:rgba(196,30,58,.08);color:var(--red,#c41e3a);border:1px solid rgba(196,30,58,.15)}
+.rapor-card .date{font-size:.6rem;color:var(--tx2,#94a3b8);margin-top:8px}
+
+.rapor-section{margin-top:2.5rem}
+.rapor-section h2{font-family:'Chakra Petch',sans-serif;font-size:1rem;font-weight:600;margin-bottom:1rem;padding-left:12px;border-left:3px solid var(--red,#c41e3a)}
+</style>
+</head><body>
+<script src="hs-nav.js"></script>
+<div class="raporlar-page">
+
+<div class="raporlar-hero">
+  <h1>Harb-i Strateji Raporları</h1>
+  <p class="sub">Stratejik analiz, jeopolitik değerlendirme ve savunma raporları</p>
+</div>
+
+<div class="raporlar-filter">
+  <span class="btn active" onclick="filterRapor('all')">Tümü</span>
+  <span class="btn" onclick="filterRapor('strateji')">Strateji</span>
+  <span class="btn" onclick="filterRapor('savunma')">Savunma</span>
+  <span class="btn" onclick="filterRapor('jeopolitik')">Jeopolitik</span>
+  <span class="btn" onclick="filterRapor('teknoloji')">Teknoloji</span>
+  <span class="btn" onclick="filterRapor('ekonomi')">Ekonomi</span>
+  <span class="btn" onclick="filterRapor('enerji')">Enerji</span>
+</div>
+
+<!-- STRATEJİK ANALİZ RAPORLARI -->
+<div class="rapor-section">
+<h2>Stratejik Analiz Raporları</h2>
+<div class="raporlar-grid">
+  <a href="gelecegin-harp-ekosistemi.html" class="rapor-card" data-cat="strateji teknoloji">
+    <div class="cat">Strateji · Teknoloji</div>
+    <h3>Geleceğin Harp Ekosistemi 2030-2040</h3>
+    <div class="desc">Otonom sistemler, kuantum bilişim, hipersonik silahlar ve yapay zekâ entegrasyonu — gelecek savaş alanının kapsamlı analizi</div>
+    <div class="meta"><span class="tag">Otonom</span><span class="tag">Kuantum</span><span class="tag">Hipersonik</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-hibrit-savas-tum-boyutlar.html" class="rapor-card" data-cat="strateji">
+    <div class="cat">Strateji</div>
+    <h3>Hibrit Savaş: Tüm Boyutlarıyla</h3>
+    <div class="desc">9 bölüm, ses ve animasyon destekli interaktif analiz — konvansiyonelden bilişsel harbe</div>
+    <div class="meta"><span class="tag">Hibrit</span><span class="tag">Bilişsel</span><span class="tag">9 Bölüm</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="musk-infografik-serisi.html" class="rapor-card" data-cat="strateji teknoloji">
+    <div class="cat">Strateji · Teknoloji</div>
+    <h3>Elon Musk: Küresel Güç Projeksiyonu</h3>
+    <div class="desc">16 infografik ile Musk ekosistemi — SpaceX, Starlink, Tesla, Neuralink stratejik analizi</div>
+    <div class="meta"><span class="tag">Musk</span><span class="tag">SpaceX</span><span class="tag">16 İnfografik</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="lego-propaganda-analiz.html" class="rapor-card" data-cat="strateji">
+    <div class="cat">Bilişsel Savaş</div>
+    <h3>Lego Propaganda: İran'ın Dijital Savaş Stratejisi</h3>
+    <div class="desc">Dezenformasyon, dijital propaganda ve bilişsel savaş teknikleri — derinlemesine analiz</div>
+    <div class="meta"><span class="tag">Propaganda</span><span class="tag">İran</span><span class="tag">Dijital</span></div>
+    <div class="date">2026</div>
+  </a>
+</div>
+</div>
+
+<!-- SAVUNMA RAPORLARI -->
+<div class="rapor-section">
+<h2>Savunma & Güvenlik Raporları</h2>
+<div class="raporlar-grid">
+  <a href="infografik-caydiricilik-piramidi.html" class="rapor-card" data-cat="savunma">
+    <div class="cat">Savunma</div>
+    <h3>Caydırıcılık Piramidi</h3>
+    <div class="desc">Nükleer, konvansiyonel ve asimetrik caydırıcılık katmanları — Türkiye perspektifi</div>
+    <div class="meta"><span class="tag">Caydırıcılık</span><span class="tag">Nükleer</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-drone-devrim.html" class="rapor-card" data-cat="savunma teknoloji">
+    <div class="cat">Savunma · Teknoloji</div>
+    <h3>Drone Devrimi</h3>
+    <div class="desc">İHA/SİHA teknolojileri, sürü sistemleri ve otonom harp — Türk savunma sanayii başarıları</div>
+    <div class="meta"><span class="tag">İHA</span><span class="tag">Sürü</span><span class="tag">Otonom</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-askeri-harcama.html" class="rapor-card" data-cat="savunma ekonomi">
+    <div class="cat">Savunma · Ekonomi</div>
+    <h3>Küresel Askerî Harcamalar</h3>
+    <div class="desc">Ülke bazlı savunma bütçeleri, silahlanma yarışı ve stratejik denge analizi</div>
+    <div class="meta"><span class="tag">Bütçe</span><span class="tag">Silahlanma</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-turk-hava-kuvvetleri.html" class="rapor-card" data-cat="savunma">
+    <div class="cat">Savunma</div>
+    <h3>Türk Hava Kuvvetleri Envanter Analizi</h3>
+    <div class="desc">F-16, KAAN, İHA filosu ve hava savunma sistemleri — güncel durum değerlendirmesi</div>
+    <div class="meta"><span class="tag">KAAN</span><span class="tag">F-16</span><span class="tag">Envanter</span></div>
+    <div class="date">2026</div>
+  </a>
+</div>
+</div>
+
+<!-- JEOPOLİTİK RAPORLAR -->
+<div class="rapor-section">
+<h2>Jeopolitik & Enerji Raporları</h2>
+<div class="raporlar-grid">
+  <a href="infografik-kuresel-enerji-savaslari.html" class="rapor-card" data-cat="jeopolitik enerji">
+    <div class="cat">Jeopolitik · Enerji</div>
+    <h3>Küresel Enerji Savaşları</h3>
+    <div class="desc">Enerji kaynaklarına erişim mücadelesi — petrol, doğalgaz, yenilenebilir enerji jeopolitiği</div>
+    <div class="meta"><span class="tag">Enerji</span><span class="tag">Petrol</span><span class="tag">Jeopolitik</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-arktik-yarisi.html" class="rapor-card" data-cat="jeopolitik">
+    <div class="cat">Jeopolitik</div>
+    <h3>Arktik Yarışı</h3>
+    <div class="desc">Kuzey Kutbu'ndaki kaynak rekabeti ve yeni deniz yolları — stratejik analiz</div>
+    <div class="meta"><span class="tag">Arktik</span><span class="tag">Kaynak</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-nato-genislemesi.html" class="rapor-card" data-cat="jeopolitik savunma">
+    <div class="cat">Jeopolitik · Savunma</div>
+    <h3>NATO Genişlemesi ve Türkiye</h3>
+    <div class="desc">İttifak dinamikleri, genişleme politikası ve Türkiye'nin stratejik konumu</div>
+    <div class="meta"><span class="tag">NATO</span><span class="tag">Genişleme</span><span class="tag">Türkiye</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-bm-kriz.html" class="rapor-card" data-cat="jeopolitik">
+    <div class="cat">Jeopolitik</div>
+    <h3>BM Krizi: Reform mu İflas mı?</h3>
+    <div class="desc">Birleşmiş Milletler'in yapısal sorunları ve reform senaryoları</div>
+    <div class="meta"><span class="tag">BM</span><span class="tag">Reform</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="stratejik-mineraller-periyodik-tablo.html" class="rapor-card" data-cat="ekonomi enerji">
+    <div class="cat">Ekonomi · Enerji</div>
+    <h3>Stratejik Mineraller Periyodik Tablosu</h3>
+    <div class="desc">Nadir toprak elementleri, lityum, kobalt — küresel tedarik zinciri ve güç dengesi</div>
+    <div class="meta"><span class="tag">Mineraller</span><span class="tag">Nadir Toprak</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="sim14-hurmuz-petrodolar.html" class="rapor-card" data-cat="jeopolitik enerji">
+    <div class="cat">Jeopolitik · Enerji</div>
+    <h3>Hürmüz Boğazı Petrodolar Krizi</h3>
+    <div class="desc">Küresel enerji güvenliği senaryosu — boğaz kapanırsa ne olur?</div>
+    <div class="meta"><span class="tag">Hürmüz</span><span class="tag">Petrol</span><span class="tag">Kriz</span></div>
+    <div class="date">2026</div>
+  </a>
+</div>
+</div>
+
+<!-- TEKNOLOJİ RAPORLARI -->
+<div class="rapor-section">
+<h2>Teknoloji & Siber Güvenlik Raporları</h2>
+<div class="raporlar-grid">
+  <a href="infografik-algoritmik-harp.html" class="rapor-card" data-cat="teknoloji">
+    <div class="cat">Teknoloji</div>
+    <h3>Algoritmik Harp</h3>
+    <div class="desc">Yapay zekâ destekli karar alma, otonom silah sistemleri ve algoritmik savaş doktrini</div>
+    <div class="meta"><span class="tag">YZ</span><span class="tag">Algoritma</span><span class="tag">Otonom</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="infografik-robotik-otonom.html" class="rapor-card" data-cat="teknoloji savunma">
+    <div class="cat">Teknoloji · Savunma</div>
+    <h3>Robotik ve Otonom Sistemler</h3>
+    <div class="desc">Kara, deniz ve hava robotik sistemleri — askeri uygulamalar ve gelecek projeksiyonu</div>
+    <div class="meta"><span class="tag">Robotik</span><span class="tag">Otonom</span></div>
+    <div class="date">2026</div>
+  </a>
+  <a href="blockchain-askeri-lojistik.html" class="rapor-card" data-cat="teknoloji">
+    <div class="cat">Teknoloji</div>
+    <h3>Blockchain ve Askerî Lojistik</h3>
+    <div class="desc">Dağıtık defter teknolojisinin savunma lojistiğinde kullanımı</div>
+    <div class="meta"><span class="tag">Blockchain</span><span class="tag">Lojistik</span></div>
+    <div class="date">2026</div>
+  </a>
+</div>
+</div>
+
+</div>
+
+<script>
+function filterRapor(cat){
+  document.querySelectorAll('.raporlar-filter .btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.rapor-card').forEach(card=>{
+    if(cat==='all'||card.dataset.cat.includes(cat)){card.style.display='';}
+    else{card.style.display='none';}
+  });
+}
+</script>
+<link rel="stylesheet" href="hs-global-fix.css">
+</body></html>

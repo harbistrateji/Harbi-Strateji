@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700;900&family=IBM+Plex+Sans:wght@400;600&subset=latin-ext&display=swap" rel="stylesheet">
 <style>
+html{scroll-padding-top:80px}
 :root{--bg:#020d1a;--panel:#041525;--border:#0a3a6a;--blue:#00aaff;--gold:#C9A24B;--red:#E01515;--green:#00ff88;--txt:#b0d8ff;--dim:#2a6aaa;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
@@ -125,14 +126,14 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
     <input type="text" id="searchInput" placeholder="🔍 Silah adı, ülke veya metal ara..." oninput="filterCards()">
     <div class="filter-group" id="countryFilter">
       <button class="filter-btn active" data-filter="country" data-val="all" onclick="setFilter('country','all',this)">🌍 Tümü</button>
-      <button class="filter-btn" data-filter="country" data-val="ABD" onclick="setFilter('country','ABD',this)">🇺🇸 ABD</button>
-      <button class="filter-btn" data-filter="country" data-val="Çin" onclick="setFilter('country','Çin',this)">🇨🇳 Çin</button>
-      <button class="filter-btn" data-filter="country" data-val="Rusya" onclick="setFilter('country','Rusya',this)">🇷🇺 Rusya</button>
-      <button class="filter-btn" data-filter="country" data-val="Türkiye" onclick="setFilter('country','Türkiye',this)">🇹🇷 Türkiye</button>
-      <button class="filter-btn" data-filter="country" data-val="AB" onclick="setFilter('country','AB',this)">🇪🇺 AB</button>
-      <button class="filter-btn" data-filter="country" data-val="Japonya" onclick="setFilter('country','Japonya',this)">🇯🇵 Japonya</button>
-      <button class="filter-btn" data-filter="country" data-val="Hindistan" onclick="setFilter('country','Hindistan',this)">🇮🇳 Hindistan</button>
-      <button class="filter-btn" data-filter="country" data-val="İsrail" onclick="setFilter('country','İsrail',this)">🇮🇱 İsrail</button>
+      <button class="filter-btn" data-filter="country" data-val="ABD" onclick="setFilter('country','ABD',this)"> ABD</button>
+      <button class="filter-btn" data-filter="country" data-val="Çin" onclick="setFilter('country','Çin',this)"> Çin</button>
+      <button class="filter-btn" data-filter="country" data-val="Rusya" onclick="setFilter('country','Rusya',this)"> Rusya</button>
+      <button class="filter-btn" data-filter="country" data-val="Türkiye" onclick="setFilter('country','Türkiye',this)"> Türkiye</button>
+      <button class="filter-btn" data-filter="country" data-val="AB" onclick="setFilter('country','AB',this)"> AB</button>
+      <button class="filter-btn" data-filter="country" data-val="Japonya" onclick="setFilter('country','Japonya',this)"> Japonya</button>
+      <button class="filter-btn" data-filter="country" data-val="Hindistan" onclick="setFilter('country','Hindistan',this)"> Hindistan</button>
+      <button class="filter-btn" data-filter="country" data-val="İsrail" onclick="setFilter('country','İsrail',this)"> İsrail</button>
     </div>
     <div class="filter-group" id="catFilter">
       <button class="filter-btn active" data-filter="cat" data-val="all" onclick="setFilter('cat','all',this)">📋 Tümü</button>
@@ -189,10 +190,10 @@ const CAT_COLORS={
 };
 
 const COUNTRY_FLAGS={
-  'ABD':'🇺🇸','Çin':'🇨🇳','Rusya':'🇷🇺','Türkiye':'🇹🇷','Almanya':'🇩🇪',
-  'Fransa':'🇫🇷','İngiltere':'🇬🇧','İsrail':'🇮🇱','Japonya':'🇯🇵','Hindistan':'🇮🇳',
-  'Güney Kore':'🇰🇷','İtalya':'🇮🇹','İsveç':'🇸🇪','AB':'🇪🇺','Kanada':'🇨🇦',
-  'Avustralya':'🇦🇺','İspanya':'🇪🇸','Hollanda':'🇳🇱','Polonya':'🇵🇱','Ukrayna':'🇺🇦',
+  'ABD':'','Çin':'','Rusya':'','Türkiye':'','Almanya':'',
+  'Fransa':'','İngiltere':'','İsrail':'','Japonya':'','Hindistan':'',
+  'Güney Kore':'','İtalya':'','İsveç':'','AB':'','Kanada':'',
+  'Avustralya':'','İspanya':'','Hollanda':'','Polonya':'','Ukrayna':'',
 };
 
 const WEAPONS=[

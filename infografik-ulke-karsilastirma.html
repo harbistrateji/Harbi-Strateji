@@ -303,7 +303,7 @@ html { scroll-padding-top: 140px; }
 // ===================== DATA =====================
 const COUNTRIES = [
   {
-    id:'usa',name:'ABD',flag:'🇺🇸',color:'#3498db',
+    id:'usa',name:'ABD',flag:'',color:'#3498db',
     chinaPuan:62,mineralIndep:45,prodCapacity:70,techSeviye:95,exports:40,rnd:90,strategicStock:85,
     defBudget:'$916B',weapons:20,
     keyMinerals:['Ti','Be','Li','Co'],
@@ -321,7 +321,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'china',name:'Çin',flag:'🇨🇳',color:'#e74c3c',
+    id:'china',name:'Çin',flag:'',color:'#e74c3c',
     chinaPuan:5,mineralIndep:95,prodCapacity:98,techSeviye:85,exports:95,rnd:80,strategicStock:99,
     defBudget:'$293B',weapons:10,
     keyMinerals:['Nd','Dy','Ga','Ge','W','Co','Li'],
@@ -339,7 +339,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'russia',name:'Rusya',flag:'🇷🇺',color:'#e67e22',
+    id:'russia',name:'Rusya',flag:'',color:'#e67e22',
     chinaPuan:40,mineralIndep:75,prodCapacity:65,techSeviye:70,exports:35,rnd:60,strategicStock:80,
     defBudget:'$109B',weapons:9,
     keyMinerals:['Ti','Ni','Pd','Pt'],
@@ -357,7 +357,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'turkey',name:'Türkiye',flag:'🇹🇷',color:'#C9A24B',
+    id:'turkey',name:'Türkiye',flag:'',color:'#C9A24B',
     chinaPuan:58,mineralIndep:35,prodCapacity:40,techSeviye:65,exports:25,rnd:55,strategicStock:30,
     defBudget:'$41B',weapons:11,
     keyMinerals:['B','Cr','Mn','Fe'],
@@ -375,7 +375,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'japan',name:'Japonya',flag:'🇯🇵',color:'#e91e63',
+    id:'japan',name:'Japonya',flag:'',color:'#e91e63',
     chinaPuan:52,mineralIndep:30,prodCapacity:55,techSeviye:90,exports:30,rnd:88,strategicStock:70,
     defBudget:'$48B',weapons:6,
     keyMinerals:['In','Ga'],
@@ -393,7 +393,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'india',name:'Hindistan',flag:'🇮🇳',color:'#f39c12',
+    id:'india',name:'Hindistan',flag:'',color:'#f39c12',
     chinaPuan:58,mineralIndep:45,prodCapacity:50,techSeviye:65,exports:20,rnd:60,strategicStock:40,
     defBudget:'$83B',weapons:6,
     keyMinerals:['Ti','Mn','Fe','Th'],
@@ -411,7 +411,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'uk',name:'İngiltere',flag:'🇬🇧',color:'#2980b9',
+    id:'uk',name:'İngiltere',flag:'',color:'#2980b9',
     chinaPuan:60,mineralIndep:25,prodCapacity:45,techSeviye:88,exports:35,rnd:82,strategicStock:55,
     defBudget:'$64B',weapons:4,
     keyMinerals:[],
@@ -429,7 +429,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'france',name:'Fransa',flag:'🇫🇷',color:'#3498db',
+    id:'france',name:'Fransa',flag:'',color:'#3498db',
     chinaPuan:60,mineralIndep:30,prodCapacity:50,techSeviye:85,exports:45,rnd:80,strategicStock:50,
     defBudget:'$56B',weapons:4,
     keyMinerals:[],
@@ -447,7 +447,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'germany',name:'Almanya',flag:'🇩🇪',color:'#f1c40f',
+    id:'germany',name:'Almanya',flag:'',color:'#f1c40f',
     chinaPuan:62,mineralIndep:20,prodCapacity:45,techSeviye:88,exports:40,rnd:85,strategicStock:45,
     defBudget:'$66B',weapons:4,
     keyMinerals:[],
@@ -465,7 +465,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'southkorea',name:'G.Kore',flag:'🇰🇷',color:'#1abc9c',
+    id:'southkorea',name:'G.Kore',flag:'',color:'#1abc9c',
     chinaPuan:55,mineralIndep:35,prodCapacity:60,techSeviye:88,exports:55,rnd:85,strategicStock:60,
     defBudget:'$50B',weapons:4,
     keyMinerals:[],
@@ -483,7 +483,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'israel',name:'İsrail',flag:'🇮🇱',color:'#2ecc71',
+    id:'israel',name:'İsrail',flag:'',color:'#2ecc71',
     chinaPuan:65,mineralIndep:15,prodCapacity:40,techSeviye:92,exports:50,rnd:90,strategicStock:55,
     defBudget:'$24B',weapons:5,
     keyMinerals:[],
@@ -501,7 +501,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'canada',name:'Kanada',flag:'🇨🇦',color:'#e74c3c',
+    id:'canada',name:'Kanada',flag:'',color:'#e74c3c',
     chinaPuan:30,mineralIndep:80,prodCapacity:70,techSeviye:75,exports:25,rnd:70,strategicStock:75,
     defBudget:'$26B',weapons:3,
     keyMinerals:['Nd','Co','Li','Ni','Cu','Pt','Pd'],
@@ -519,7 +519,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'australia',name:'Avustralya',flag:'🇦🇺',color:'#f39c12',
+    id:'australia',name:'Avustralya',flag:'',color:'#f39c12',
     chinaPuan:28,mineralIndep:85,prodCapacity:75,techSeviye:70,exports:20,rnd:65,strategicStock:70,
     defBudget:'$32B',weapons:2,
     keyMinerals:['Li','Co','Nd','Dy','Ni','Ti'],
@@ -537,7 +537,7 @@ const COUNTRIES = [
     }
   },
   {
-    id:'sweden',name:'İsveç',flag:'🇸🇪',color:'#3498db',
+    id:'sweden',name:'İsveç',flag:'',color:'#3498db',
     chinaPuan:55,mineralIndep:50,prodCapacity:55,techSeviye:82,exports:30,rnd:78,strategicStock:50,
     defBudget:'$11B',weapons:2,
     keyMinerals:['Fe','Cu','Zn'],

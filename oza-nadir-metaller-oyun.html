@@ -7,6 +7,7 @@
 <meta name="hs-skip" content="true">
 <title>Nadir Metaller Savaşı — Harb-i Strateji</title>
 <style>
+html{scroll-padding-top:80px}
 :root{
   --bg:#0d0d0d;--panel:#111827;--border:#1e2d40;
   --red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;
@@ -441,11 +442,11 @@ const WEAPONS = [
 const EVENTS = [
   {id:'china_embargo',title:'🚨 ÇİN AMBARGOSU',desc:'Çin, galyum ve germanyum ihracatını kısıtladı! (2023 gerçek olay)',type:'crisis',effect:{ga:-15,ge:-10},options:[{text:'Alternatif tedarik kur (+maliyet)',fn:'alternativeSupply'},{text:'Stok kullan (-stok)',fn:'useStock'}]},
   {id:'congo_war',title:'⚔️ KONGO KRİZİ',desc:'Demokratik Kongo\'da çatışma! Kobalt madenleri tehlikede.',type:'crisis',effect:{co:-20,ta:-10},options:[{text:'Özel güvenlik gönder (+güç)',fn:'sendSecurity'},{text:'Alternatif kaynak bul',fn:'findAlternative'}]},
-  {id:'ukraine_minerals',title:'🇺🇦 UKRAYNA MİNERAL ANLAŞMASI',desc:'Ukrayna\'nın kritik mineral rezervleri müzakereye açıldı!',type:'opportunity',effect:{ti:+20,li:+15},options:[{text:'Anlaşmayı imzala (+kaynak)',fn:'signDeal'},{text:'Bekle ve izle',fn:'waitAndSee'}]},
-  {id:'turkey_bor',title:'🇹🇷 TÜRKİYE BOR REZERVI',desc:'Türkiye\'nin dünya bor rezervlerinin %73\'üne sahip olduğu doğrulandı!',type:'opportunity',effect:{li:+25},options:[{text:'Bor üretimini artır',fn:'increaseBor'},{text:'Stratejik stok oluştur',fn:'buildStock'}]},
-  {id:'russia_titanium',title:'🇷🇺 RUSYA TİTANYUM YASAĞI',desc:'Rusya, Batı\'ya titanyum ihracatını durdurdu!',type:'crisis',effect:{ti:-25},options:[{text:'Japonya\'dan tedarik et',fn:'japanSupply'},{text:'Kompozit malzeme geliştir',fn:'developComposite'}]},
+  {id:'ukraine_minerals',title:' UKRAYNA MİNERAL ANLAŞMASI',desc:'Ukrayna\'nın kritik mineral rezervleri müzakereye açıldı!',type:'opportunity',effect:{ti:+20,li:+15},options:[{text:'Anlaşmayı imzala (+kaynak)',fn:'signDeal'},{text:'Bekle ve izle',fn:'waitAndSee'}]},
+  {id:'turkey_bor',title:' TÜRKİYE BOR REZERVI',desc:'Türkiye\'nin dünya bor rezervlerinin %73\'üne sahip olduğu doğrulandı!',type:'opportunity',effect:{li:+25},options:[{text:'Bor üretimini artır',fn:'increaseBor'},{text:'Stratejik stok oluştur',fn:'buildStock'}]},
+  {id:'russia_titanium',title:' RUSYA TİTANYUM YASAĞI',desc:'Rusya, Batı\'ya titanyum ihracatını durdurdu!',type:'crisis',effect:{ti:-25},options:[{text:'Japonya\'dan tedarik et',fn:'japanSupply'},{text:'Kompozit malzeme geliştir',fn:'developComposite'}]},
   {id:'tech_breakthrough',title:'💡 TEKNOLOJİK ATILIM',desc:'Neodimyum kullanımını %30 azaltan yeni mıknatıs teknolojisi!',type:'opportunity',effect:{nd:+20},options:[{text:'Teknolojiyi uygula',fn:'applyTech'},{text:'Araştırmayı sat',fn:'sellResearch'}]},
-  {id:'south_africa_pgm',title:'🇿🇦 G.AFRİKA PLATIN KRİZİ',desc:'Güney Afrika\'daki grevler platin grubu metal üretimini durdurdu!',type:'crisis',effect:{co:-15},options:[{text:'Acil ithalat yap',fn:'emergencyImport'},{text:'Geri dönüşüm programı başlat',fn:'recyclingProgram'}]},
+  {id:'south_africa_pgm',title:' G.AFRİKA PLATIN KRİZİ',desc:'Güney Afrika\'daki grevler platin grubu metal üretimini durdurdu!',type:'crisis',effect:{co:-15},options:[{text:'Acil ithalat yap',fn:'emergencyImport'},{text:'Geri dönüşüm programı başlat',fn:'recyclingProgram'}]},
   {id:'china_dominance',title:'🐉 ÇİN BASKISI',desc:'Çin, nadir toprak elementlerinde küresel fiyatları manipüle ediyor!',type:'crisis',effect:{nd:-10,dy:-8,tb:-6},options:[{text:'WTO\'ya başvur',fn:'wtoComplaint'},{text:'Müttefik stok havuzu kur',fn:'allyStockpile'}]},
 ];
 

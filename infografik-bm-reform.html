@@ -221,11 +221,11 @@ html { scroll-padding-top: 140px; }
     </div>
   </div>
   <div class="p5-grid">
-    <button class="p5-btn" id="p5-usa" onclick="p5Vote('usa',this)" style="border-color:rgba(58,123,213,.4)">🇺🇸<br>ABD</button>
-    <button class="p5-btn" id="p5-uk" onclick="p5Vote('uk',this)" style="border-color:rgba(0,224,255,.3)">🇬🇧<br>İNGİLTERE</button>
-    <button class="p5-btn" id="p5-france" onclick="p5Vote('france',this)" style="border-color:rgba(0,224,255,.3)">🇫🇷<br>FRANSA</button>
-    <button class="p5-btn" id="p5-russia" onclick="p5Vote('russia',this)" style="border-color:rgba(224,21,21,.4)">🇷🇺<br>RUSYA</button>
-    <button class="p5-btn" id="p5-china" onclick="p5Vote('china',this)" style="border-color:rgba(224,21,21,.4)">🇨🇳<br>ÇİN</button>
+    <button class="p5-btn" id="p5-usa" onclick="p5Vote('usa',this)" style="border-color:rgba(58,123,213,.4)"><br>ABD</button>
+    <button class="p5-btn" id="p5-uk" onclick="p5Vote('uk',this)" style="border-color:rgba(0,224,255,.3)"><br>İNGİLTERE</button>
+    <button class="p5-btn" id="p5-france" onclick="p5Vote('france',this)" style="border-color:rgba(0,224,255,.3)"><br>FRANSA</button>
+    <button class="p5-btn" id="p5-russia" onclick="p5Vote('russia',this)" style="border-color:rgba(224,21,21,.4)"><br>RUSYA</button>
+    <button class="p5-btn" id="p5-china" onclick="p5Vote('china',this)" style="border-color:rgba(224,21,21,.4)"><br>ÇİN</button>
   </div>
   <div class="veto-result" id="veto-result">
     <div class="veto-text" id="veto-text">VETO!</div>
@@ -275,21 +275,21 @@ var currentModel = 'mevcut';
 
 // Simplified country blobs (approximate positions as circles for visual effect)
 var countries = [
-  {name:'ABD',x:.15,y:.38,r:.04,type:'p5',flag:'🇺🇸'},
-  {name:'İngiltere',x:.47,y:.3,r:.015,type:'p5',flag:'🇬🇧'},
-  {name:'Fransa',x:.48,y:.33,r:.015,type:'p5',flag:'🇫🇷'},
-  {name:'Rusya',x:.62,y:.28,r:.07,type:'p5',flag:'🇷🇺'},
-  {name:'Çin',x:.72,y:.38,r:.04,type:'p5',flag:'🇨🇳'},
-  {name:'Almanya',x:.49,y:.31,r:.015,type:'g4',flag:'🇩🇪'},
-  {name:'Japonya',x:.79,y:.36,r:.02,type:'g4',flag:'🇯🇵'},
-  {name:'Hindistan',x:.66,y:.43,r:.03,type:'g4',flag:'🇮🇳'},
-  {name:'Brezilya',x:.26,y:.58,r:.04,type:'g4',flag:'🇧🇷'},
+  {name:'ABD',x:.15,y:.38,r:.04,type:'p5',flag:''},
+  {name:'İngiltere',x:.47,y:.3,r:.015,type:'p5',flag:''},
+  {name:'Fransa',x:.48,y:.33,r:.015,type:'p5',flag:''},
+  {name:'Rusya',x:.62,y:.28,r:.07,type:'p5',flag:''},
+  {name:'Çin',x:.72,y:.38,r:.04,type:'p5',flag:''},
+  {name:'Almanya',x:.49,y:.31,r:.015,type:'g4',flag:''},
+  {name:'Japonya',x:.79,y:.36,r:.02,type:'g4',flag:''},
+  {name:'Hindistan',x:.66,y:.43,r:.03,type:'g4',flag:''},
+  {name:'Brezilya',x:.26,y:.58,r:.04,type:'g4',flag:''},
   {name:'Afrika',x:.5,y:.58,r:.06,type:'ezulwini',flag:'🌍'},
-  {name:'Türkiye',x:.55,y:.36,r:.02,type:'temp',flag:'🇹🇷'},
-  {name:'Meksika',x:.18,y:.45,r:.025,type:'temp',flag:'🇲🇽'},
-  {name:'Avustralya',x:.77,y:.62,r:.03,type:'temp',flag:'🇦🇺'},
-  {name:'Kanada',x:.17,y:.28,r:.03,type:'temp',flag:'🇨🇦'},
-  {name:'G.Kore',x:.78,y:.38,r:.015,type:'temp',flag:'🇰🇷'}
+  {name:'Türkiye',x:.55,y:.36,r:.02,type:'temp',flag:''},
+  {name:'Meksika',x:.18,y:.45,r:.025,type:'temp',flag:''},
+  {name:'Avustralya',x:.77,y:.62,r:.03,type:'temp',flag:''},
+  {name:'Kanada',x:.17,y:.28,r:.03,type:'temp',flag:''},
+  {name:'G.Kore',x:.78,y:.38,r:.015,type:'temp',flag:''}
 ];
 
 var modelColors = {
@@ -389,7 +389,7 @@ function animateBaro(id, target) {
 // Veto simulation
 var resolutions = [
   { title:'📋 Gazze Ateşkes Kararı', desc:'Derhal ateşkes, insani yardım koridorları ve yeniden yapılanma fonu.', vetoes: { usa:'ABD, İsrail\'in güvenlik kaygılarını öne sürerek veto kullandı. "Tek taraflı ateşkes Hamas\'ı güçlendirir" gerekçesi.', russia:'Rusya, Batı\'nın çifte standardını eleştirerek çekimser kaldı.', china:'Çin, kararı destekledi ancak ABD vetosu engelledi.' }},
-  { title:'🇺🇦 Ukrayna Toprak Bütünlüğü', desc:'Rusya\'nın işgal ettiği toprakların iadesi ve savaş tazminatı.', vetoes: { russia:'Rusya veto kullandı. "Ukrayna\'nın Rusya\'ya yönelik saldırıları görmezden geliyor" gerekçesi.', china:'Çin çekimser kaldı, Rusya\'yı desteklemedi ama karşı da çıkmadı.' }},
+  { title:' Ukrayna Toprak Bütünlüğü', desc:'Rusya\'nın işgal ettiği toprakların iadesi ve savaş tazminatı.', vetoes: { russia:'Rusya veto kullandı. "Ukrayna\'nın Rusya\'ya yönelik saldırıları görmezden geliyor" gerekçesi.', china:'Çin çekimser kaldı, Rusya\'yı desteklemedi ama karşı da çıkmadı.' }},
   { title:'☢️ Kuzey Kore Nükleer Yaptırım', desc:'KDHC\'nin nükleer programına ek yaptırımlar ve denetim mekanizması.', vetoes: { china:'Çin veto kullandı. "Diyalog yerine baskı istikrarsızlaştırır" gerekçesi.', russia:'Rusya da veto kullandı. ABD\'nin bölgesel askeri varlığına tepki.' }},
   { title:'🌍 İklim Acil Durum Fonu', desc:'Gelişmekte olan ülkelere 500 milyar dolarlık iklim fonu ve teknoloji transferi.', vetoes: { usa:'ABD, ekonomik yük paylaşımını yetersiz bularak veto kullandı.' }}
 ];

@@ -161,14 +161,14 @@ const orgs = [
 {name:"Türk Konseyi",eng:"Organization of Turkic States",flag:"🐺",cat:"turk",members:7,year:2009,desc:"Türk dili konuşan ülkeler işbirliği. Kültür, ekonomi, siyaset.",turkey:true,hq:"İstanbul"},
 {name:"TÜRKPA",eng:"Parliamentary Assembly of Turkic States",flag:"🏛️",cat:"turk",members:6,year:2008,desc:"Türk devletleri parlamenter asamblesi.",turkey:true,hq:"Bakü"},
 {name:"Akdeniz İçin Birlik",eng:"Union for the Mediterranean",flag:"🌊",cat:"bölgesel",members:43,year:2008,desc:"AB ve Akdeniz ülkeleri arası diyalog ve işbirliği.",turkey:true,hq:"Barselona"},
-{name:"Avrupa Konseyi",eng:"Council of Europe",flag:"🇪🇺",cat:"güvenlik",members:46,year:1949,desc:"İnsan hakları, demokrasi, hukukun üstünlüğü.",turkey:true,hq:"Strazburg"},
+{name:"Avrupa Konseyi",eng:"Council of Europe",flag:"",cat:"güvenlik",members:46,year:1949,desc:"İnsan hakları, demokrasi, hukukun üstünlüğü.",turkey:true,hq:"Strazburg"},
 {name:"TRACECA",eng:"Transport Corridor Europe-Caucasus-Asia",flag:"🚂",cat:"bölgesel",members:14,year:1993,desc:"Avrupa-Kafkasya-Asya ulaştırma koridoru. Orta Koridor.",turkey:true,hq:"Bakü"},
 {name:"IEA",eng:"International Energy Agency",flag:"⚡",cat:"ekonomi",members:31,year:1974,desc:"Enerji güvenliği ve sürdürülebilir enerji politikaları.",turkey:true,hq:"Paris"},
 {name:"ICAO",eng:"International Civil Aviation Organization",flag:"✈️",cat:"ekonomi",members:193,year:1944,desc:"Uluslararası sivil havacılık standartları.",turkey:true,hq:"Montreal"},
 {name:"EUROCONTROL",eng:"European Air Navigation Safety",flag:"🛫",cat:"güvenlik",members:41,year:1960,desc:"Avrupa hava seyrüsefer emniyeti.",turkey:true,hq:"Brüksel"},
 {name:"Dünya Gümrük Örgütü",eng:"World Customs Organization",flag:"📦",cat:"ekonomi",members:184,year:1952,desc:"Gümrük prosedürleri harmonizasyonu.",turkey:true,hq:"Brüksel"},
 {name:"CICA",eng:"Conference on Interaction and Confidence-Building",flag:"🕊️",cat:"güvenlik",members:28,year:1992,desc:"Asya'da güven artırıcı önlemler.",turkey:true,hq:"Astana"},
-{name:"Avrupa Birliği",eng:"European Union",flag:"🇪🇺",cat:"non",members:27,year:1993,desc:"Siyasi ve ekonomik birlik. Türkiye aday ülke statüsünde.",turkey:false,hq:"Brüksel"},
+{name:"Avrupa Birliği",eng:"European Union",flag:"",cat:"non",members:27,year:1993,desc:"Siyasi ve ekonomik birlik. Türkiye aday ülke statüsünde.",turkey:false,hq:"Brüksel"},
 {name:"Afrika Birliği",eng:"African Union",flag:"🌍",cat:"non",members:55,year:2002,desc:"Afrika kıtası siyasi birliği.",turkey:false,hq:"Addis Ababa"},
 {name:"KGÖT",eng:"Collective Security Treaty Organization",flag:"🛡️",cat:"non",members:6,year:1992,desc:"Rusya liderliğinde kolektif güvenlik. Eski Sovyet ülkeleri.",turkey:false,hq:"Moskova"},
 {name:"ŞİÖ",eng:"Shanghai Cooperation Organisation",flag:"🐉",cat:"non",members:10,year:2001,desc:"Çin-Rusya öncülüğünde güvenlik ve ekonomi. Türkiye diyalog ortağı.",turkey:false,hq:"Pekin"}
@@ -179,7 +179,7 @@ function renderOrgs(filter) {
   const filtered = filter === 'all' ? orgs : orgs.filter(o => o.cat === filter);
   grid.innerHTML = filtered.map((o,i) => `
     <div class="org-card" style="animation-delay:${i*0.05}s">
-      <span class="turkey-status ${o.turkey?'member':'non-member'}">${o.turkey?'🇹🇷 Üye':'Üye Değil'}</span>
+      <span class="turkey-status ${o.turkey?'member':'non-member'}">${o.turkey?' Üye':'Üye Değil'}</span>
       <div class="flag">${o.flag}</div>
       <div class="name">${o.name}</div>
       <div class="eng">${o.eng}</div>

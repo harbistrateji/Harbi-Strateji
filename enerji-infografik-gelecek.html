@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Geleceğin Enerji Teknolojileri — Harb-i Strateji</title>
 <style>
+html{scroll-padding-top:80px}
 :root{--bg:#050d18;--panel:#0d1b2a;--border:#1e3a5f;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--orange:#e67e22;--purple:#9b59b6;--txt:#e8eaf0;--dim:#6b7280;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -219,7 +220,7 @@ const TECH_DATA = [
     id:'perovskite',name:'Perovskite Güneş Paneli',icon:'☀️',color:'#f39c12',category:'Güneş',
     readiness:'TRL 7-8',readinessColor:'#27ae60',
     commercialYear:2027,costPer:'<$0.01/kWh (hedef)',
-    capacity:'Sınırsız',country:'🇨🇳🇩🇪🇯🇵 Çin/Almanya/Japonya',
+    capacity:'Sınırsız',country:' Çin/Almanya/Japonya',
     metals:['Pb','In','Ga','Se'],
     metalColors:['#7f8c8d','#e91e63','#f39c12','#27ae60'],
     metrics:{
@@ -237,7 +238,7 @@ const TECH_DATA = [
     id:'green_h2',name:'Yeşil Hidrojen',icon:'💧',color:'#3498db',category:'Hidrojen',
     readiness:'TRL 7-9',readinessColor:'#27ae60',
     commercialYear:2026,costPer:'$2-4/kg (hedef <$1)',
-    capacity:'Sınırsız',country:'🇩🇪🇦🇺🇸🇦 Almanya/Avustralya/S.Arabistan',
+    capacity:'Sınırsız',country:' Almanya/Avustralya/S.Arabistan',
     metals:['Pt','Ir','Ti','Ni'],
     metalColors:['#C9A24B','#7f8c8d','#1abc9c','#2980b9'],
     metrics:{
@@ -255,7 +256,7 @@ const TECH_DATA = [
     id:'smr',name:'Küçük Modüler Reaktör (SMR)',icon:'🔬',color:'#9b59b6',category:'Nükleer',
     readiness:'TRL 6-8',readinessColor:'#f39c12',
     commercialYear:2030,costPer:'$0.06-0.10/kWh',
-    capacity:'10-300 MW',country:'🇺🇸🇬🇧🇨🇦 ABD/İngiltere/Kanada',
+    capacity:'10-300 MW',country:' ABD/İngiltere/Kanada',
     metals:['Zr','Hf','Y','Co'],
     metalColors:['#1abc9c','#16a085','#C9A24B','#2980b9'],
     metrics:{
@@ -273,7 +274,7 @@ const TECH_DATA = [
     id:'solid_battery',name:'Katı-Hal Batarya',icon:'🔋',color:'#27ae60',category:'Depolama',
     readiness:'TRL 5-7',readinessColor:'#e67e22',
     commercialYear:2028,costPer:'$50/kWh (hedef)',
-    capacity:'EV + Şebeke',country:'🇯🇵🇰🇷🇺🇸 Toyota/Samsung/QuantumScape',
+    capacity:'EV + Şebeke',country:' Toyota/Samsung/QuantumScape',
     metals:['Li','Co','Nd','Ga','In'],
     metalColors:['#27ae60','#2980b9','#e74c3c','#f39c12','#e91e63'],
     metrics:{
@@ -291,7 +292,7 @@ const TECH_DATA = [
     id:'offshore_wind',name:'Açık Deniz Rüzgar',icon:'🌬️',color:'#1abc9c',category:'Rüzgar',
     readiness:'TRL 9',readinessColor:'#27ae60',
     commercialYear:2024,costPer:'$0.04-0.08/kWh',
-    capacity:'15-20 MW/türbin',country:'🇬🇧🇩🇰🇨🇳 İngiltere/Danimarka/Çin',
+    capacity:'15-20 MW/türbin',country:' İngiltere/Danimarka/Çin',
     metals:['Nd','Dy','Co','Fe'],
     metalColors:['#e74c3c','#c0392b','#2980b9','#7f8c8d'],
     metrics:{
@@ -309,7 +310,7 @@ const TECH_DATA = [
     id:'geothermal',name:'Gelişmiş Jeotermal',icon:'🌋',color:'#e67e22',category:'Jeotermal',
     readiness:'TRL 5-7',readinessColor:'#e67e22',
     commercialYear:2030,costPer:'$0.03-0.06/kWh',
-    capacity:'Sınırsız',country:'🇺🇸🇮🇸🇰🇪 ABD/İzlanda/Kenya',
+    capacity:'Sınırsız',country:' ABD/İzlanda/Kenya',
     metals:['Ti','Ni','Co','Cr'],
     metalColors:['#1abc9c','#2980b9','#2980b9','#7f8c8d'],
     metrics:{
@@ -327,7 +328,7 @@ const TECH_DATA = [
     id:'wave_tidal',name:'Dalga & Gelgit Enerjisi',icon:'🌊',color:'#3498db',category:'Deniz',
     readiness:'TRL 5-6',readinessColor:'#e67e22',
     commercialYear:2032,costPer:'$0.10-0.20/kWh',
-    capacity:'Sınırlı',country:'🇬🇧🇫🇷🇦🇺 İngiltere/Fransa/Avustralya',
+    capacity:'Sınırlı',country:' İngiltere/Fransa/Avustralya',
     metals:['Nd','Co','Ti','Cu'],
     metalColors:['#e74c3c','#2980b9','#1abc9c','#e67e22'],
     metrics:{
@@ -363,16 +364,16 @@ const MINERALS_ENERGY = [
 ];
 
 const COUNTRY_ENERGY = [
-  {flag:'🇨🇳',name:'Çin',re:50,ev:35,h2:20,invest:758,color:'#e74c3c'},
-  {flag:'🇺🇸',name:'ABD',re:22,ev:8,h2:15,invest:369,color:'#3498db'},
-  {flag:'🇩🇪',name:'Almanya',re:59,ev:18,h2:30,invest:86,color:'#f1c40f'},
-  {flag:'🇬🇧',name:'İngiltere',re:42,ev:16,h2:25,invest:64,color:'#2980b9'},
-  {flag:'🇯🇵',name:'Japonya',re:22,ev:3,h2:35,invest:52,color:'#e74c3c'},
-  {flag:'🇫🇷',name:'Fransa',re:27,ev:14,h2:20,invest:45,color:'#3498db'},
-  {flag:'🇮🇳',name:'Hindistan',re:43,ev:2,h2:10,invest:90,color:'#f39c12'},
-  {flag:'🇦🇺',name:'Avustralya',re:35,ev:8,h2:40,invest:38,color:'#f39c12'},
-  {flag:'🇰🇷',name:'G.Kore',re:9,ev:9,h2:30,invest:43,color:'#1abc9c'},
-  {flag:'🇹🇷',name:'Türkiye',re:54,ev:2,h2:8,invest:12,color:'#C9A24B'},
+  {flag:'',name:'Çin',re:50,ev:35,h2:20,invest:758,color:'#e74c3c'},
+  {flag:'',name:'ABD',re:22,ev:8,h2:15,invest:369,color:'#3498db'},
+  {flag:'',name:'Almanya',re:59,ev:18,h2:30,invest:86,color:'#f1c40f'},
+  {flag:'',name:'İngiltere',re:42,ev:16,h2:25,invest:64,color:'#2980b9'},
+  {flag:'',name:'Japonya',re:22,ev:3,h2:35,invest:52,color:'#e74c3c'},
+  {flag:'',name:'Fransa',re:27,ev:14,h2:20,invest:45,color:'#3498db'},
+  {flag:'',name:'Hindistan',re:43,ev:2,h2:10,invest:90,color:'#f39c12'},
+  {flag:'',name:'Avustralya',re:35,ev:8,h2:40,invest:38,color:'#f39c12'},
+  {flag:'',name:'G.Kore',re:9,ev:9,h2:30,invest:43,color:'#1abc9c'},
+  {flag:'',name:'Türkiye',re:54,ev:2,h2:8,invest:12,color:'#C9A24B'},
 ];
 
 const TIMELINE_DATA = [

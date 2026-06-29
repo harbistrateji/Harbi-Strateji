@@ -27,7 +27,7 @@ const TICKER_ITEMS = [
 ];
 
 const NAV_LINKS = [
-  { label:'OZA', href:'oza-hub.html', cls:'oza-link', sub:[
+  { label:'OZA (Ortak Zihin Akademisi)', href:'oza-hub.html', cls:'oza-link', sub:[
     {lbl:'Oyna', links:[
       {t:'Tarihsel Savaşlar',h:'oza-hub.html#tarihsel'},
       {t:'Aksiyon & Taktik',h:'oza-hub.html#aksiyon'},

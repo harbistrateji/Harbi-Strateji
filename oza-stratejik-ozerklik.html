@@ -7,6 +7,7 @@
 <title>Stratejik Özerklik — Harb-i Strateji OZA</title>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&subset=latin-ext&display=swap" rel="stylesheet">
 <style>
+html{scroll-padding-top:80px}
 :root{--bg:#0d0d0d;--panel:#0f1722;--red:#E01515;--cyan:#c41e3a;--gold:#C9A24B;--green:#00ff88;--tx:#EAF0F7;--dim:#90a1b5;--line:rgba(150,170,200,.15)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;min-height:100vh}
@@ -190,14 +191,14 @@ h1, .sim-title, .game-title, .page-title {
 <a href="oza-hub.html" style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(10,15,23,0.9);color:#00E0FF;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid #00E0FF33;backdrop-filter:blur(8px);">← OZA Hub</a><a href="index.html" style="position:fixed;top:12px;left:130px;z-index:9999;background:rgba(10,15,23,0.9);color:#c41e3a;padding:6px 14px;border-radius:20px;text-decoration:none;font-family:Chakra Petch,sans-serif;font-size:13px;border:1px solid rgba(196,30,58,0.3);backdrop-filter:blur(8px);">🏠 Ana Sayfa</a>
 <header class="hdr">
   <a href="oza-hub.html" class="hdr-back">← OZA</a>
-  <div class="hdr-title">🇹🇷 STRATEJİK ÖZERKLİK</div>
+  <div class="hdr-title"> STRATEJİK ÖZERKLİK</div>
   <div class="hdr-score">⭐ <span id="total-score">0</span></div>
 </header>
 
 <!-- INTRO -->
 <div class="screen active" id="s-intro">
   <div class="intro-card">
-    <div class="ic-icon">🇹🇷</div>
+    <div class="ic-icon"></div>
     <div class="ic-title">STRATEJİK ÖZERKLİK</div>
     <div class="ic-desc">Türkiye'nin savunma sanayii direktörüsün. Dışa bağımlılığı azalt, yerli teknoloji geliştir ve stratejik özerkliği %80'in üzerine çıkar. Her teknoloji kararı bütçe, zaman ve jeopolitik denge gerektirir.</div>
     <div class="ic-phases">
@@ -387,7 +388,7 @@ function showFinalResult(){
   var total=G.score;
   var grade=total>2000?'S':total>1400?'A':total>800?'B':total>400?'C':'D';
   var titles={S:'STRATEJİK ÖZERKLİK TAMAMLANDI',A:'BAĞIMSIZ SAVUNMA',B:'KARMA STRATEJİ',C:'BAĞIMLILIK DEVAM EDİYOR',D:'HEDEF KAÇIRILDI'};
-  document.getElementById('rc-icon').textContent=grade==='S'?'🇹🇷':grade==='A'?'🏆':'🎯';
+  document.getElementById('rc-icon').textContent=grade==='S'?'':grade==='A'?'🏆':'🎯';
   document.getElementById('rc-title').textContent=titles[grade];
   document.getElementById('rc-score').textContent=total+' — '+grade+' SINIF';
   document.getElementById('rc-title').style.color=grade==='S'?'var(--cyan)':grade==='A'?'var(--gold)':'var(--tx)';

@@ -40,6 +40,11 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .card .threat-fill{height:100%;border-radius:2px;transition:width .5s}
 .card .threat-lbl{font-size:.6rem;color:rgba(255,255,255,.4)}
 @media(max-width:768px){.grid{grid-template-columns:1fr;padding:1rem}.hero h2{font-size:1.4rem}.stats{gap:.8rem}}
+
+/* SCROLL FIX: hs-nav overlap düzeltme */
+.hero { margin-top: 0 !important; }
+html { scroll-padding-top: 140px; }
+[id] { scroll-margin-top: 140px; }
 </style>
 </head>
 <body>

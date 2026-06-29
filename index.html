@@ -1,437 +1,285 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Harb-i Strateji — 21. Yüzyıl Savaşları ve Jeopolitik Akademisi</title>
 <link rel="icon" href="logo-icon-64.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hs-global.css">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;}
+:root{--navy:#0a0f17;--crimson:#c41e3a;--crim2:#a01830;--gold:#d4a017;--cyan:#00e5ff;--purple:#5865f2;--orange:#f4a261;--font-serif:'Playfair Display',serif;--font-display:'Chakra Petch',sans-serif;--font-mono:'IBM Plex Mono',monospace;--font-body:'IBM Plex Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--navy);color:#e2e8f0;font-family:var(--font-body);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
 
-.ticker-label{flex-shrink:0;background:rgba(0,224,255,0.1);border-right:1px solid rgba(0,224,255,0.3);height:100%;display:flex;align-items:center;padding:0 14px;font-family:'Chakra Petch',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;color:rgba(0,224,255,0.95);gap:6px;}
-.ticker-label::before{content:'';width:6px;height:6px;border-radius:50%;background:#00e0ff;animation:blink-dot 1s infinite;}
-@keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.2}}
+/* === HERO — İLK VIEWPORT === */
+.hs-hero{min-height:calc(100vh - 130px);display:flex;flex-direction:column;justify-content:center;padding:2rem 4rem;position:relative;overflow:hidden}
+.hs-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(196,30,58,.08),transparent 50%),radial-gradient(ellipse at 20% 80%,rgba(88,101,242,.06),transparent 50%)}
+.hs-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%}
 
-100%{transform:translateX(-50%)}}
-.ticker-item{display:inline;margin-right:3rem;}
-.ticker-dot{display:inline-block;width:4px;height:4px;background:#fff;border-radius:50%;margin-right:.5rem;vertical-align:middle;opacity:.6;}
-.intel-strip{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:2px solid var(--crimson);background:linear-gradient(180deg,rgba(10,15,23,.98),rgba(10,15,23,.95));}
-.intel-cell{padding:14px 16px;text-align:center;cursor:pointer;transition:all .25s;border-right:1px solid rgba(255,255,255,.05);text-decoration:none;display:block;}
-.intel-cell:last-child{border-right:none;}
-.intel-cell:hover{background:rgba(196,30,58,.08);}
-.intel-cell:hover .intel-val{transform:scale(1.1);}
-.intel-lbl{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
-.intel-val{font-family:var(--font-display);font-size:1.6rem;font-weight:700;transition:transform .2s;line-height:1;}
-.intel-desc{font-size:.6rem;color:rgba(255,255,255,.35);margin-top:3px;}
-.hero-compact{padding:2rem 0 1.5rem;background:var(--navy);position:relative;overflow:hidden;}
-.hero-compact::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(196,30,58,.06),transparent 60%);}
-.hero-inner{position:relative;z-index:2;}
-.hero-title{font-family:var(--font-serif);font-weight:900;font-size:clamp(1.2rem,2.5vw,1.7rem);color:#fff;line-height:1.25;margin-bottom:.5rem;max-width:700px;}
-.hero-sub{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.5;max-width:600px;}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem;}
-.hero-cta{padding:.5rem 1rem;border-radius:4px;font-family:var(--font-display);font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;text-decoration:none;}
-.cta-red{background:var(--crimson);color:#fff;}.cta-red:hover{background:var(--crim2);}
-.cta-outline{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);}.cta-outline:hover{border-color:var(--crimson);color:#fff;}
-.dash-main{padding:1.2rem 0;background:var(--bg);}
-.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;}
-@media(max-width:1024px){.dash-grid{grid-template-columns:1fr;}}
-.dash-left,.dash-right{display:flex;flex-direction:column;gap:1.2rem;}
-.sec-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all .25s;}
-.sec-card:hover{border-color:rgba(196,30,58,.2);}
-.sec-head{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-bottom:1px solid var(--border);}
-.sec-title{font-family:var(--font-display);font-size:.75rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:.5rem;}
-.sec-title::before{content:'';width:3px;height:14px;background:var(--crimson);border-radius:2px;}
-.sec-more{font-family:var(--font-display);font-size:.58rem;font-weight:600;color:var(--crimson);text-decoration:none;letter-spacing:.05em;text-transform:uppercase;}
-.sec-more:hover{text-decoration:underline;}
-.sec-body{padding:.9rem;}
-.sim-featured{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;}
-@media(max-width:600px){.sim-featured{grid-template-columns:1fr;}}
-.sim-card{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:16/10;cursor:pointer;transition:transform .2s;display:block;text-decoration:none;}
-.sim-card:hover{transform:translateY(-3px);}
-.sim-card img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
-.sim-card:hover img{transform:scale(1.05);}
-.sim-card-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 50%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:.7rem;}
-.sim-card-tag{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:.15rem;}
-.sim-card-title{font-family:var(--font-display);font-size:.75rem;font-weight:700;color:#fff;line-height:1.3;}
-.analysis-list{display:flex;flex-direction:column;gap:.5rem;}
-.analysis-item{display:flex;gap:.7rem;padding:.6rem;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .2s;text-decoration:none;}
-.analysis-item:hover{border-color:var(--crimson);background:rgba(196,30,58,.03);}
-.analysis-thumb{width:55px;height:55px;border-radius:4px;overflow:hidden;flex-shrink:0;}
-.analysis-thumb img{width:100%;height:100%;object-fit:cover;}
-.analysis-info{flex:1;min-width:0;}
-.analysis-cat{font-family:var(--font-mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:.15rem;}
-.analysis-title{font-family:var(--font-display);font-size:.7rem;font-weight:600;color:var(--text);line-height:1.3;}
-.analysis-meta{font-family:var(--font-mono);font-size:.52rem;color:var(--text-3);margin-top:.1rem;}
-.oza-featured{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;}
-@media(max-width:768px){.oza-featured{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:480px){.oza-featured{grid-template-columns:1fr;}}
-.oza-game-card{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:16/10;cursor:pointer;border:1px solid rgba(88,101,242,.2);transition:all .25s;display:block;text-decoration:none;}
-.oza-game-card:hover{border-color:#5865f2;transform:translateY(-2px);box-shadow:0 6px 20px rgba(88,101,242,.2);}
-.oza-game-card img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
-.oza-game-card:hover img{transform:scale(1.05);}
-.oza-game-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.3) 50%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:.6rem;}
-.oza-game-tag{font-family:var(--font-mono);font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:#5865f2;margin-bottom:.1rem;}
-.oza-game-title{font-family:var(--font-display);font-size:.68rem;font-weight:700;color:#fff;}
-.med-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem;}
-.med-card{background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:.7rem;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block;}
-.med-card:hover{border-color:#e67e22;transform:translateY(-2px);}
-.med-card-icon{font-size:1.2rem;margin-bottom:.2rem;}
-.med-card-title{font-family:var(--font-display);font-size:.6rem;font-weight:600;color:var(--text);}
-.infog-strip{display:flex;gap:.7rem;overflow-x:auto;padding-bottom:.4rem;scroll-snap-type:x mandatory;}
-.infog-strip::-webkit-scrollbar{height:3px;}
-.infog-strip::-webkit-scrollbar-thumb{background:var(--crimson);border-radius:2px;}
-.infog-card{flex-shrink:0;width:140px;scroll-snap-align:start;cursor:pointer;transition:transform .2s;text-decoration:none;display:block;}
-.infog-card:hover{transform:translateY(-2px);}
-.infog-card-img{width:100%;aspect-ratio:3/4;border-radius:6px;overflow:hidden;border:1px solid var(--border);margin-bottom:.25rem;}
-.infog-card-img img{width:100%;height:100%;object-fit:cover;}
-.infog-card-title{font-family:var(--font-display);font-size:.58rem;font-weight:600;color:var(--text);}
-.sidebar-widget{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.widget-head{padding:.6rem .8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.widget-title{font-family:var(--font-display);font-size:.7rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:.4rem;}
-.widget-title::before{content:'';width:3px;height:12px;background:var(--crimson);border-radius:2px;}
-.widget-body{padding:.7rem;}
-.strat-resume{padding:.5rem;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;margin-bottom:.4rem;}
-.strat-label{font-family:var(--font-mono);font-size:.48rem;color:var(--text-3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.2rem;}
-.strat-title{font-family:var(--font-display);font-size:.68rem;font-weight:600;color:var(--text);margin-bottom:.3rem;}
-.strat-bar{height:3px;background:var(--bg-3);border-radius:2px;overflow:hidden;margin-bottom:.25rem;}
-.strat-bar-fill{height:100%;background:linear-gradient(90deg,var(--crimson),var(--gold));border-radius:2px;}
-.strat-btn{font-family:var(--font-display);font-size:.55rem;font-weight:700;color:var(--crimson);text-decoration:none;letter-spacing:.05em;text-transform:uppercase;}
-.strat-btn:hover{text-decoration:underline;}
-.news-mini{display:flex;flex-direction:column;gap:.4rem;}
-.news-mini-item{padding:.4rem .5rem;border-left:2px solid var(--crimson);cursor:pointer;transition:background .2s;text-decoration:none;display:block;}
-.news-mini-item:hover{background:rgba(196,30,58,.04);}
-.news-mini-cat{font-family:var(--font-mono);font-size:.45rem;letter-spacing:.08em;text-transform:uppercase;color:var(--crimson);margin-bottom:.1rem;}
-.news-mini-title{font-family:var(--font-display);font-size:.65rem;font-weight:600;color:var(--text);line-height:1.3;}
-.news-mini-date{font-family:var(--font-mono);font-size:.48rem;color:var(--text-3);margin-top:.05rem;}
-.gen-bar{padding:.8rem 0;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;border-top:1px solid var(--border);margin-top:.8rem;}
-.gen-label{font-family:var(--font-mono);font-size:.58rem;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;}
-.gen-btn{padding:.35rem .8rem;border-radius:20px;font-family:var(--font-display);font-size:.65rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-2);transition:all .2s;}
-.gen-btn:hover,.gen-btn.active{border-color:var(--crimson);color:var(--crimson);background:rgba(196,30,58,.08);}
-.gen-btn[data-g="za"].active{border-color:#5865f2;color:#5865f2;background:rgba(88,101,242,.08);}
-.gen-btn[data-g="xy"].active{border-color:#8b5cf6;color:#8b5cf6;background:rgba(139,92,246,.08);}
-.kg-section{padding:1.5rem 0;background:var(--navy);border-top:2px solid var(--border);}
-.kg-inner{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
-@media(max-width:768px){.kg-inner{grid-template-columns:1fr;}}
-.kg-search-box{display:flex;gap:.5rem;margin-bottom:.7rem;}
-.kg-search-box input{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:.45rem .7rem;font-size:.72rem;color:#fff;font-family:var(--font-body);outline:none;}
-.kg-search-box input:focus{border-color:var(--crimson);}
-.kg-search-box button{background:var(--crimson);border:none;color:#fff;padding:.45rem .7rem;border-radius:4px;font-family:var(--font-display);font-size:.58rem;font-weight:700;cursor:pointer;}
-.kg-nodes{display:flex;flex-wrap:wrap;gap:.35rem;}
-.kg-node{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:.25rem .55rem;font-size:.6rem;color:rgba(255,255,255,.6);cursor:pointer;transition:all .2s;}
-.kg-node:hover,.kg-node.active{border-color:var(--crimson);color:#fff;background:rgba(196,30,58,.15);}
-.kg-results{margin-top:.5rem;}
-.kg-results a{display:inline-block;margin:.15rem .2rem .15rem 0;padding:.2rem .5rem;background:rgba(0,224,255,.08);border:1px solid rgba(0,224,255,.2);border-radius:4px;font-size:.58rem;color:var(--cyan);text-decoration:none;transition:all .2s;}
-.kg-results a:hover{background:rgba(0,224,255,.15);}
-@media(max-width:768px){.intel-strip{grid-template-columns:repeat(3,1fr);}.intel-cell:nth-child(n+4){display:none;}.sim-featured{grid-template-columns:1fr;}.oza-featured{grid-template-columns:1fr 1fr;}}
-@media(max-width:480px){.intel-strip{grid-template-columns:repeat(2,1fr);}.intel-cell:nth-child(n+3){display:none;}.oza-featured{grid-template-columns:1fr;}}
+.hs-brand{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem}
+.hs-brand img{width:48px;height:48px;border-radius:8px}
+.hs-brand-text{font-family:var(--font-display);font-size:1.1rem;font-weight:700;letter-spacing:1px;color:#fff}
+.hs-brand-sub{font-size:.7rem;color:rgba(255,255,255,.4);font-family:var(--font-mono);letter-spacing:.5px}
 
-/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
-@media (max-width: 768px) {
-  body { font-size: 14px !important; }
-  .container, .main, .wrap, .content, .page-content {
-    padding: 12px !important;
-    max-width: 100% !important;
-  }
-  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
-  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
-  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
-  table { font-size: 11px !important; }
-  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
-  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
+.hs-headline{font-family:var(--font-serif);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:1rem;max-width:800px}
+.hs-headline .accent{color:var(--crimson)}
+
+.hs-mission{font-size:1rem;color:rgba(255,255,255,.6);line-height:1.7;max-width:650px;margin-bottom:2rem}
+
+/* STAT BAR */
+.hs-stats{display:flex;flex-wrap:wrap;gap:1.5rem;margin-bottom:2rem}
+.hs-stat{text-align:center;min-width:80px}
+.hs-stat-num{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:#fff}
+.hs-stat-label{font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+/* NAVIGATION CARDS */
+.hs-nav-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.hs-nav-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2rem;transition:all .3s;cursor:pointer;display:block}
+.hs-nav-card:hover{border-color:var(--crimson);transform:translateY(-3px);box-shadow:0 8px 24px rgba(196,30,58,.1)}
+.hs-nav-card .icon{font-size:1.5rem;margin-bottom:.5rem}
+.hs-nav-card .title{font-family:var(--font-display);font-size:.85rem;font-weight:600;color:#fff;margin-bottom:.3rem}
+.hs-nav-card .desc{font-size:.72rem;color:rgba(255,255,255,.45);line-height:1.4}
+.hs-nav-card.oza{border-color:rgba(88,101,242,.3)}.hs-nav-card.oza:hover{border-color:var(--purple);box-shadow:0 8px 24px rgba(88,101,242,.15)}
+.hs-nav-card.med{border-color:rgba(212,160,23,.2)}.hs-nav-card.med:hover{border-color:var(--gold);box-shadow:0 8px 24px rgba(212,160,23,.1)}
+.hs-nav-card.evren{border-color:rgba(244,162,97,.2)}.hs-nav-card.evren:hover{border-color:var(--orange);box-shadow:0 8px 24px rgba(244,162,97,.1)}
+
+/* SCROLL INDICATOR */
+.scroll-hint{text-align:center;padding:1rem;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+.scroll-hint span{font-size:.7rem;color:rgba(255,255,255,.3);font-family:var(--font-mono)}
+
+/* === BELOW FOLD — İÇERİK BÖLÜMÜ === */
+.hs-section{padding:3rem 4rem;max-width:1200px;margin:0 auto}
+.hs-section-title{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:.3rem;display:flex;align-items:center;gap:8px}
+.hs-section-title .bar{width:4px;height:20px;background:var(--crimson);border-radius:2px}
+.hs-section-sub{font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1.5rem}
+.hs-section-more{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;color:var(--crimson);font-weight:600;margin-top:1rem;transition:gap .2s}
+.hs-section-more:hover{gap:8px}
+
+/* CONTENT CARDS */
+.hs-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.hs-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden;transition:all .3s;display:block}
+.hs-card:hover{border-color:rgba(196,30,58,.3);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.hs-card-img{width:100%;height:140px;object-fit:cover;border-bottom:1px solid rgba(255,255,255,.05)}
+.hs-card-body{padding:1rem}
+.hs-card-cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--crimson);font-weight:600;margin-bottom:.3rem}
+.hs-card-title{font-size:.85rem;font-weight:600;color:#fff;margin-bottom:.3rem;line-height:1.3}
+.hs-card-desc{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.5}
+
+/* HORIZONTAL SCROLL */
+.hs-hscroll{display:flex;gap:1rem;overflow-x:auto;padding-bottom:1rem;scroll-snap-type:x mandatory}
+.hs-hscroll::-webkit-scrollbar{height:4px}.hs-hscroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.hs-hscroll .hs-card{min-width:260px;flex-shrink:0;scroll-snap-align:start}
+
+/* NEWS STRIP */
+.hs-news{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem}
+.hs-news-item{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:1rem;transition:all .2s}
+.hs-news-item:hover{border-color:rgba(196,30,58,.2)}
+.hs-news-cat{font-size:.55rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:.3rem}
+.hs-news-title{font-size:.78rem;font-weight:500;color:#fff;line-height:1.4;margin-bottom:.3rem}
+.hs-news-date{font-size:.6rem;color:rgba(255,255,255,.3)}
+
+/* KNOWLEDGE GRAPH */
+.hs-kg{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:1.5rem;margin-top:2rem}
+.hs-kg-title{font-family:var(--font-display);font-size:.9rem;font-weight:600;margin-bottom:1rem}
+.hs-kg-input{width:100%;padding:.7rem 1rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.8rem;font-family:var(--font-body)}
+.hs-kg-input::placeholder{color:rgba(255,255,255,.3)}
+.hs-kg-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+.hs-kg-tag{font-size:.6rem;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s}
+.hs-kg-tag:hover{border-color:var(--crimson);color:#fff}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hs-hero{padding:1.5rem}
+  .hs-section{padding:2rem 1.5rem}
+  .hs-headline{font-size:1.8rem}
+  .hs-nav-grid{grid-template-columns:1fr 1fr}
+  .hs-stats{gap:1rem}
+  .hs-stat-num{font-size:1.4rem}
 }
-@media (max-width: 480px) {
-  body { font-size: 13px !important; }
-  .container, .main, .wrap { padding: 8px !important; }
-  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
-  .nav, .navbar, .top-bar, .header { 
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-  }
+@media(max-width:480px){
+  .hs-nav-grid{grid-template-columns:1fr}
+  .hs-hero{padding:1rem}
 }
-/* Prevent horizontal overflow */
-html { overflow-x: hidden !important; }
-body { overflow-x: hidden !important; max-width: 100vw !important; }
-img, video, iframe, canvas, svg, table { max-width: 100% !important; }
-pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
-
 </style>
-</head>
-<body>
+</head><body>
+<script src="hs-nav.js?v=12"></script>
+
+<!-- ═══════════════ HERO — İLK VIEWPORT ═══════════════ -->
+<section class="hs-hero">
+<div class="hs-hero-inner">
+
+<div class="hs-headline">
+  Stratejik düşünceyi <span class="accent">oyunlaştıran</span>,<br>
+  jeopolitiği <span class="accent">görselleştiren</span><br>
+  dijital akademi.
 </div>
 
-<!-- INTEL STRIP -->
-<section class="intel-strip">
-  <a href="haberler.html" class="intel-cell"><div class="intel-lbl">Aktif Kriz</div><div class="intel-val" style="color:var(--crimson);">7</div><div class="intel-desc">Küresel çatışma bölgesi</div></a>
-  <a href="simulasyonlar.html" class="intel-cell"><div class="intel-lbl">Simülasyon</div><div class="intel-val" style="color:var(--cyan);">54</div><div class="intel-desc">Aktif stratejik simülasyon</div></a>
-  <a href="yazarlar.html" class="intel-cell"><div class="intel-lbl">Analiz</div><div class="intel-val" style="color:var(--gold);">383</div><div class="intel-desc">Derinlemesine makale</div></a>
-  <a href="kesfet.html" class="intel-cell"><div class="intel-lbl">Sözlük</div><div class="intel-val" style="color:var(--cyan);">3335</div><div class="intel-desc">Stratejik terim</div></a>
-  <a href="oza-hub.html" class="intel-cell"><div class="intel-lbl">OZA Oyun</div><div class="intel-val" style="color:#8b5cf6;">115</div><div class="intel-desc">İnteraktif oyun</div></a>
+<p class="hs-mission">
+  Derinlemesine analizler, interaktif simülasyonlar, 115+ stratejik oyun ve medeniyet perspektifi — tek platformda. Z kuşağından araştırmacıya, herkes için tasarlandı.
+</p>
+
+<div class="hs-stats">
+  <div class="hs-stat"><div class="hs-stat-num">54</div><div class="hs-stat-label">Simülasyon</div></div>
+  <div class="hs-stat"><div class="hs-stat-num">115+</div><div class="hs-stat-label">Oyun</div></div>
+  <div class="hs-stat"><div class="hs-stat-num">111</div><div class="hs-stat-label">İnfografik</div></div>
+  <div class="hs-stat"><div class="hs-stat-num">383</div><div class="hs-stat-label">Analiz</div></div>
+  <div class="hs-stat"><div class="hs-stat-num">3335</div><div class="hs-stat-label">Sözlük</div></div>
+</div>
+
+<div class="hs-nav-grid">
+  <a href="simulasyonlar.html" class="hs-nav-card">
+    <div class="icon">🎯</div>
+    <div class="title">Simülasyonlar</div>
+    <div class="desc">Demir Kubbe, NATO Zirvesi, Hürmüz Krizi — gerçek senaryolarda karar ver</div>
+  </a>
+  <a href="oza-hub.html" class="hs-nav-card oza">
+    <div class="icon">🎮</div>
+    <div class="title">OZA Oyun Akademisi</div>
+    <div class="desc">115+ stratejik oyun, savaş tarihi, arcade — öğren ve eğlen</div>
+  </a>
+  <a href="medeniyet-dinamikleri.html" class="hs-nav-card med">
+    <div class="icon">🏛️</div>
+    <div class="title">Medeniyet Dinamikleri</div>
+    <div class="desc">Türk tarihi, jeopolitik, kültür, ekonomi — medeniyet perspektifi</div>
+  </a>
+  <a href="evren-hub.html" class="hs-nav-card evren">
+    <div class="icon">🌍</div>
+    <div class="title">EVREN</div>
+    <div class="desc">Küresel sorunlar: su kıtlığı, enerji, mineraller, iklim — interaktif</div>
+  </a>
+  <a href="oza-gozcu.html" class="hs-nav-card">
+    <div class="icon">⚡</div>
+    <div class="title">Gözcü İstihbarat</div>
+    <div class="desc">Canlı kriz takibi, thread analiz, quiz — stratejik istihbarat akışı</div>
+  </a>
+  <a href="kesfet.html" class="hs-nav-card">
+    <div class="icon">📚</div>
+    <div class="title">Külliyat & Sözlük</div>
+    <div class="desc">Harb-i Strateji Külliyatı, 3335 terim, formüller, cilt I-II</div>
+  </a>
+</div>
+
+<div class="scroll-hint"><span>↓ İçerikleri keşfet</span></div>
+</div>
 </section>
 
-<!-- HERO COMPACT -->
-<section class="hero-compact">
-  <div class="container">
-    <div class="hero-inner">
-      <h1 class="hero-title">Jeopolitik bilgi, savunma teknolojileri ve stratejik simülasyonları birleştiren dijital çalışma masası.</h1>
-      <p class="hero-sub">Derinlemesine analizler, interaktif simülasyonlar ve oyunlaştırılmış strateji deneyimleri.</p>
-      <div class="hero-ctas">
-        <a href="simulasyonlar.html" class="hero-cta cta-red">Simülasyon Oyna</a>
-        <a href="oza-hub.html" class="hero-cta cta-outline">OZA Keşfet</a>
-        <a href="medeniyet-dinamikleri.html" class="hero-cta cta-outline">Medeniyet</a>
-        <a href="kesfet.html" class="hero-cta cta-outline">Külliyat</a>
-        <a href="yazarlar.html" class="hero-cta cta-outline">Yazarlar</a>
-      </div>
-    </div>
+<!-- ═══════════════ SİMÜLASYONLAR ═══════════════ -->
+<section class="hs-section">
+<div class="hs-section-title"><span class="bar"></span> Simülasyonlar</div>
+<div class="hs-section-sub">Gerçek kriz senaryolarında stratejik karar alma</div>
+<div class="hs-card-grid">
+  <a href="sim1-demir-kubbe.html" class="hs-card"><img src="thumbs/card-demir-kubbe.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Hava Savunma</div><div class="hs-card-title">Demir Kubbe vs Füze Saldırısı</div><div class="hs-card-desc">İsrail hava savunma sistemi simülasyonu</div></div></a>
+  <a href="nato-ankara-zirvesi-2026.html" class="hs-card"><img src="thumbs/card-nato-ankara.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Diplomasi</div><div class="hs-card-title">NATO Ankara Zirvesi 2026</div><div class="hs-card-desc">Türkiye'nin yükselen ağırlığı</div></div></a>
+  <a href="sim14-hurmuz-petrodolar.html" class="hs-card"><img src="thumbs/card-hurmuz.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Enerji Krizi</div><div class="hs-card-title">Hürmüz Boğazı Petrodolar Krizi</div><div class="hs-card-desc">Küresel enerji güvenliği senaryosu</div></div></a>
+  <a href="suru-iha-tasarim-simulatoru.html" class="hs-card"><img src="thumbs/card-suru-drone.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Drone Teknolojisi</div><div class="hs-card-title">Sürü İHA Taktik Tasarım</div><div class="hs-card-desc">Bütçe, işlemci, batarya seçerek drone tasarla</div></div></a>
+</div>
+<a href="simulasyonlar.html" class="hs-section-more">Tüm Simülasyonlar →</a>
+</section>
+
+<!-- ═══════════════ ANALİZ KATMANLARI ═══════════════ -->
+<section class="hs-section">
+<div class="hs-section-title"><span class="bar"></span> Analiz Katmanları</div>
+<div class="hs-section-sub">Derinlemesine stratejik analizler ve interaktif içerikler</div>
+<div class="hs-card-grid">
+  <a href="musk-infografik-serisi.html" class="hs-card"><img src="thumbs/card-kuantum.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Teknoloji</div><div class="hs-card-title">Elon Musk: Küresel Güç Projeksiyonu</div><div class="hs-card-desc">16 infografik ile Musk ekosistemi analizi</div></div></a>
+  <a href="infografik-hibrit-savas-tum-boyutlar.html" class="hs-card"><img src="thumbs/card-mineraller.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Hibrit Savaş</div><div class="hs-card-title">Hibrit Savaş: Tüm Boyutlarıyla</div><div class="hs-card-desc">9 bölüm, ses + animasyon interaktif analiz</div></div></a>
+  <a href="gelecegin-harp-ekosistemi.html" class="hs-card"><img src="thumbs/card-algoritmik-harp.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Gelecek Savaşı</div><div class="hs-card-title">Geleceğin Harp Ekosistemi 2030-2040</div><div class="hs-card-desc">Otonom sistemler, kuantum, hipersonik</div></div></a>
+  <a href="lego-propaganda-analiz.html" class="hs-card"><img src="thumbs/card-siber-eh.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat">Bilişsel Savaş</div><div class="hs-card-title">Lego Propaganda: İran'ın Dijital Savaşı</div><div class="hs-card-desc">Derinlemesine bilişsel savaş analizi</div></div></a>
+</div>
+<a href="yazarlar.html" class="hs-section-more">Tüm Analizler →</a>
+</section>
+
+<!-- ═══════════════ OZA OYUNLARI ═══════════════ -->
+<section class="hs-section">
+<div class="hs-section-title"><span class="bar" style="background:var(--purple)"></span> OZA Oyun Akademisi</div>
+<div class="hs-section-sub">Z ve Alfa kuşağı için stratejik oyunlar</div>
+<div class="hs-hscroll">
+  <a href="oza-kriz-odasi.html" class="hs-card"><img src="thumbs/card-algoritmik-harp.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat" style="color:var(--purple)">Strateji</div><div class="hs-card-title">Kriz Odası</div><div class="hs-card-desc">10 saniyede karar ver</div></div></a>
+  <a href="oza-canakkale-br.html" class="hs-card"><img src="thumbs/card-oza-games.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat" style="color:var(--purple)">Savaş</div><div class="hs-card-title">Çanakkale Son Kahraman</div><div class="hs-card-desc">Battle Royale siper savunma</div></div></a>
+  <a href="oza-ooda-x.html" class="hs-card"><img src="thumbs/card-siber-eh.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat" style="color:var(--purple)">Hız</div><div class="hs-card-title">OODA-X Düellosu</div><div class="hs-card-desc">250ms YZ düellosu</div></div></a>
+  <a href="oza-emtia-imparatorlugu.html" class="hs-card"><img src="thumbs/card-mineraller.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat" style="color:var(--purple)">Ekonomi</div><div class="hs-card-title">Emtia İmparatorluğu</div><div class="hs-card-desc">Idle ekonomi stratejisi</div></div></a>
+  <a href="oza-karanlik-kis.html" class="hs-card"><img src="thumbs/card-demir-kubbe.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat" style="color:var(--purple)">Rogue-like</div><div class="hs-card-title">Karanlık Kış</div><div class="hs-card-desc">Hayatta kalma stratejisi</div></div></a>
+  <a href="oza-malazgirt-1071.html" class="hs-card"><img src="thumbs/card-medeniyet.jpg" class="hs-card-img" alt=""><div class="hs-card-body"><div class="hs-card-cat" style="color:var(--purple)">Tarih</div><div class="hs-card-title">Malazgirt 1071</div><div class="hs-card-desc">Minecraft strateji</div></div></a>
+</div>
+<a href="oza-hub.html" class="hs-section-more" style="color:var(--purple)">Tüm OZA Oyunları →</a>
+</section>
+
+<!-- ═══════════════ MEDENİYET DİNAMİKLERİ ═══════════════ -->
+<section class="hs-section">
+<div class="hs-section-title"><span class="bar" style="background:var(--gold)"></span> Medeniyet Dinamikleri</div>
+<div class="hs-section-sub">Türk tarihi, jeopolitik, kültür ve medeniyet perspektifi</div>
+<div class="hs-nav-grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
+  <a href="medeniyet-dinamikleri.html#jeopolitik" class="hs-nav-card med"><div class="icon">🌍</div><div class="title">Jeopolitik</div></a>
+  <a href="medeniyet-dinamikleri.html#ekonomi" class="hs-nav-card med"><div class="icon">📊</div><div class="title">Ekonomi</div></a>
+  <a href="medeniyet-dinamikleri.html#teknoloji" class="hs-nav-card med"><div class="icon">🔬</div><div class="title">Teknoloji</div></a>
+  <a href="medeniyet-dinamikleri.html#enerji" class="hs-nav-card med"><div class="icon">⚡</div><div class="title">Enerji</div></a>
+  <a href="medeniyet-dinamikleri.html#kultur" class="hs-nav-card med"><div class="icon">🏛️</div><div class="title">Kültür</div></a>
+  <a href="bilim-arenasi-tam.html" class="hs-nav-card med"><div class="icon">🧪</div><div class="title">Bilim</div></a>
+  <a href="md-turklerde-sanat.html" class="hs-nav-card med"><div class="icon">🎨</div><div class="title">Sanat</div></a>
+  <a href="oza-turk-savas-tarihi-hub.html" class="hs-nav-card med"><div class="icon">⚔️</div><div class="title">Savaş Tarihi</div></a>
+</div>
+<a href="medeniyet-dinamikleri.html" class="hs-section-more" style="color:var(--gold)">Tüm Medeniyet →</a>
+</section>
+
+<!-- ═══════════════ SON HABERLER ═══════════════ -->
+<section class="hs-section">
+<div class="hs-section-title"><span class="bar"></span> Son Haberler</div>
+<div class="hs-section-sub">Savunma, teknoloji ve jeopolitik gündem</div>
+<div class="hs-news">
+  <a href="haberler.html" class="hs-news-item"><div class="hs-news-cat" style="color:var(--crimson)">Savunma</div><div class="hs-news-title">KAAN Savaş Uçağı İçin F110 Motor Satışı Kongre'ye Bildirildi</div><div class="hs-news-date">28 Haziran 2026</div></a>
+  <a href="haberler.html" class="hs-news-item"><div class="hs-news-cat" style="color:var(--cyan)">Deniz</div><div class="hs-news-title">TB3 TCG Anadolu'dan Elektronik Taarruz Görevi</div><div class="hs-news-date">26 Haziran 2026</div></a>
+  <a href="haberler.html" class="hs-news-item"><div class="hs-news-cat" style="color:var(--orange)">Uzay</div><div class="hs-news-title">Hava Kuvvetleri Uzay Komutanlığı: 9 Ana Fonksiyon</div><div class="hs-news-date">25 Haziran 2026</div></a>
+  <a href="haberler.html" class="hs-news-item"><div class="hs-news-cat" style="color:var(--purple)">Siber</div><div class="hs-news-title">Siber Vatan Programı 2026 — 81 İlde Uygulanıyor</div><div class="hs-news-date">24 Haziran 2026</div></a>
+  <a href="haberler.html" class="hs-news-item"><div class="hs-news-cat" style="color:var(--gold)">Kara</div><div class="hs-news-title">ALTAY Tankı Seri Üretimde: 2026 Hedefi 11 Araç</div><div class="hs-news-date">22 Haziran 2026</div></a>
+</div>
+<a href="haberler.html" class="hs-section-more">Tüm Haberler →</a>
+</section>
+
+<!-- ═══════════════ BİLGİ MERKEZİ ═══════════════ -->
+<section class="hs-section">
+<div class="hs-section-title"><span class="bar"></span> Bilgi Merkezi</div>
+<div class="hs-nav-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+  <a href="kesfet.html" class="hs-nav-card"><div class="icon">📚</div><div class="title">Külliyat</div><div class="desc">Harb-i Strateji Külliyatı — Cilt I-II, Formüller, Sözlük</div></a>
+  <a href="panel-silah-metal.html" class="hs-nav-card"><div class="icon">🔫</div><div class="title">Silah Sistemleri</div><div class="desc">200+ küresel silah/proje veri tabanı</div></a>
+  <a href="hs-tv.html" class="hs-nav-card"><div class="icon">📺</div><div class="title">HS·TV</div><div class="desc">Video platform — canlı yayın + içerik</div></a>
+  <a href="oza-sonsuz.html" class="hs-nav-card oza"><div class="icon">∞</div><div class="title">OZA Sonsuz</div><div class="desc">48 bölüm interaktif eğitim</div></a>
+</div>
+
+<!-- Knowledge Graph -->
+<div class="hs-kg">
+  <div class="hs-kg-title">🔍 Bilgi Grafiği — Arama</div>
+  <input type="text" class="hs-kg-input" id="kg-input" placeholder="Aktör, silah, kriz, ülke ara...">
+  <div class="hs-kg-tags">
+    <span class="hs-kg-tag" onclick="kgSearch('Türkiye')">Türkiye</span>
+    <span class="hs-kg-tag" onclick="kgSearch('İran')">İran</span>
+    <span class="hs-kg-tag" onclick="kgSearch('NATO')">NATO</span>
+    <span class="hs-kg-tag" onclick="kgSearch('KAAN')">KAAN</span>
+    <span class="hs-kg-tag" onclick="kgSearch('Drone')">Drone</span>
+    <span class="hs-kg-tag" onclick="kgSearch('Hibrit Savaş')">Hibrit Savaş</span>
+    <span class="hs-kg-tag" onclick="kgSearch('Kuantum')">Kuantum</span>
+    <span class="hs-kg-tag" onclick="kgSearch('Siber')">Siber</span>
   </div>
+</div>
 </section>
 
-<!-- MAIN DASHBOARD -->
-<section class="dash-main">
-  <div class="container">
-    <div class="dash-grid">
-      <!-- LEFT COLUMN -->
-      <div class="dash-left">
-        <!-- SIMULATIONS -->
-        <div class="sec-card">
-          <div class="sec-head"><div class="sec-title">Simülasyonlar</div><a href="simulasyonlar.html" class="sec-more">Tümünü Gör &rarr;</a></div>
-          <div class="sec-body">
-            <div class="sim-featured">
-              <a href="sim1-demir-kubbe.html" class="sim-card"><img src="thumbs/card-demir-kubbe.jpg" alt="Demir Kubbe" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag">Hava Savunma</div><div class="sim-card-title">Demir Kubbe vs Füze Saldırısı</div></div></a>
-              <a href="nato-ankara-zirvesi-2026.html" class="sim-card"><img src="thumbs/card-nato-ankara.jpg" alt="NATO" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag">Diplomasi</div><div class="sim-card-title">NATO Ankara Zirvesi 2026</div></div></a>
-              <a href="sim14-hurmuz-petrodolar.html" class="sim-card"><img src="thumbs/card-hurmuz.jpg" alt="Hürmüz" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag">Enerji Krizi</div><div class="sim-card-title">Hürmüz Boğazı Petrodolar Krizi</div></div></a>
-              <a href="suru-iha-tasarim-simulatoru.html" class="sim-card"><img src="thumbs/card-suru-drone.jpg" alt="İHA" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag">Drone Teknolojisi</div><div class="sim-card-title">Sürü İHA Taktik Tasarım</div></div></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- ANALYSIS -->
-        <div class="sec-card">
-          <div class="sec-head"><div class="sec-title">Analiz Katmanları</div><a href="yazarlar.html" class="sec-more">Tümünü Gör &rarr;</a></div>
-          <div class="sec-body">
-            <div class="analysis-list">
-              <a href="musk-infografik-serisi.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-kuantum.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Teknoloji</div><div class="analysis-title">Elon Musk: Medeniyet İşletim Sistemi ve Küresel Güç Projeksiyonu</div><div class="analysis-meta">16 İnfografik Serisi</div></div></a>
-              <a href="lego-propaganda-analiz.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-siber-eh.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Bilişsel Savaş</div><div class="analysis-title">Lego Propaganda: İran'ın Dijital Savaş Stratejisi</div><div class="analysis-meta">Derinlemesine Analiz</div></div></a>
-              <a href="gelecegin-harp-ekosistemi.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Gelecek Savaşı</div><div class="analysis-title">Geleceğin Harp Ekosistemi 2030-2040</div><div class="analysis-meta">Stratejik Öngörü</div></div></a>
-              <a href="infografik-hibrit-savas-tum-boyutlar.html" class="analysis-item"><div class="analysis-thumb"><img src="thumbs/card-mineraller.jpg" alt="" loading="lazy"></div><div class="analysis-info"><div class="analysis-cat">Hibrit Savaş</div><div class="analysis-title">Hibrit Savaş: Tüm Boyutlarıyla İnteraktif Analiz</div><div class="analysis-meta">9 Bölüm · Ses + Animasyon</div></div></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- OZA GAMES -->
-        <div class="sec-card">
-          <div class="sec-head"><div class="sec-title">OZA Oyun Akademisi</div><a href="oza-hub.html" class="sec-more">Tümünü Gör &rarr;</a></div>
-          <div class="sec-body">
-            <div class="oza-featured">
-              <a href="oza-kriz-odasi.html" class="oza-game-card"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Strateji</div><div class="oza-game-title">Kriz Odası</div></div></a>
-              <a href="oza-canakkale-br.html" class="oza-game-card"><img src="thumbs/card-oza-games.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Savaş</div><div class="oza-game-title">Çanakkale Son Kahraman</div></div></a>
-              <a href="oza-emtia-imparatorlugu.html" class="oza-game-card"><img src="thumbs/card-mineraller.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Ekonomi</div><div class="oza-game-title">Emtia İmparatorluğu</div></div></a>
-              <a href="oza-ooda-x.html" class="oza-game-card"><img src="thumbs/card-siber-eh.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Hız</div><div class="oza-game-title">OODA-X Düellosu</div></div></a>
-              <a href="oza-karanlik-kis.html" class="oza-game-card"><img src="thumbs/card-demir-kubbe.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Rogue-like</div><div class="oza-game-title">Karanlık Kış</div></div></a>
-              <a href="oza-turk-savas-zekasi.html" class="oza-game-card"><img src="thumbs/card-medeniyet.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Tarih</div><div class="oza-game-title">Türk Savaş Zekâsı</div></div></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- MEDENIYET -->
-        <div class="sec-card">
-          <div class="sec-head"><div class="sec-title">Medeniyet Dinamikleri</div><a href="medeniyet-dinamikleri.html" class="sec-more">Tümünü Gör &rarr;</a></div>
-          <div class="sec-body">
-            <div class="med-grid">
-              <a href="medeniyet-dinamikleri.html#jeopolitik" class="med-card"><div class="med-card-icon">🌍</div><div class="med-card-title">Jeopolitik</div></a>
-              <a href="medeniyet-dinamikleri.html#ekonomi" class="med-card"><div class="med-card-icon">📊</div><div class="med-card-title">Ekonomi</div></a>
-              <a href="medeniyet-dinamikleri.html#teknoloji" class="med-card"><div class="med-card-icon">🔬</div><div class="med-card-title">Teknoloji</div></a>
-              <a href="medeniyet-dinamikleri.html#enerji" class="med-card"><div class="med-card-icon">⚡</div><div class="med-card-title">Enerji</div></a>
-              <a href="medeniyet-dinamikleri.html#kultur" class="med-card"><div class="med-card-icon">🏛️</div><div class="med-card-title">Kültür</div></a>
-              <a href="md-turklerde-ekonomi.html" class="med-card"><div class="med-card-icon">🪙</div><div class="med-card-title">Ekonomi Tarihi</div></a>
-              <a href="md-turklerde-sanat.html" class="med-card"><div class="med-card-icon">🎨</div><div class="med-card-title">Sanat</div></a>
-              <a href="bilim-arenasi-tam.html" class="med-card"><div class="med-card-icon">🧪</div><div class="med-card-title">Bilim Arenası</div></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- INFOGRAPHICS -->
-        <div class="sec-card">
-          <div class="sec-head"><div class="sec-title">Teknik Kartlar — Veri Özeti</div><a href="teknik-kartlar.html" class="sec-more">Devamını Gör &rarr;</a></div>
-          <div class="sec-body">
-            <div class="infog-strip">
-              <a href="infografik-seffaf-savas.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"></div><div class="infog-card-title">Şeffaf Savaş Alanı</div></a>
-              <a href="infografik-drone-devrim.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-suru-drone.jpg" alt="" loading="lazy"></div><div class="infog-card-title">Drone Devrimi</div></a>
-              <a href="infografik-askeri-harcama.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-nato-ankara.jpg" alt="" loading="lazy"></div><div class="infog-card-title">Askerî Harcama</div></a>
-              <a href="stratejik-mineraller-periyodik-tablo.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-mineraller.jpg" alt="" loading="lazy"></div><div class="infog-card-title">Stratejik Mineraller</div></a>
-              <a href="infografik-maliyet-terazisi.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-demir-kubbe.jpg" alt="" loading="lazy"></div><div class="infog-card-title">Maliyet Terazisi</div></a>
-              <a href="infografik-savas-evrimi.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-medeniyet.jpg" alt="" loading="lazy"></div><div class="infog-card-title">Savaş Evrimi</div></a>
-              <a href="teknik-kartlar.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"></div><div class="infog-card-title">KAAN (TF-X)</div></a>
-              <a href="teknik-kartlar.html" class="infog-card"><div class="infog-card-img"><img src="thumbs/card-demir-kubbe.jpg" alt="" loading="lazy"></div><div class="infog-card-title">SİPER Hava Savunma</div></a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="dash-right">
-        <!-- STRATEJI MASASI -->
-        <div class="sidebar-widget">
-          <div class="widget-head"><div class="widget-title">Strateji Masası</div></div>
-          <div class="widget-body">
-            <div class="strat-resume"><div class="strat-label">Son Simülasyon</div><div class="strat-title">İran-İsrail Gerilimi (Hürmüz Boğazı)</div><div class="strat-bar"><div class="strat-bar-fill" style="width:65%"></div></div><a href="sim14-hurmuz-petrodolar.html" class="strat-btn">Devam Et &rarr;</a></div>
-            <div class="strat-resume"><div class="strat-label">Son Silah Sistemi</div><div class="strat-title">Şahab-3 Balistik Füze</div><a href="panel-silah-metal.html" class="strat-btn">İncele &rarr;</a></div>
-            <div class="strat-resume"><div class="strat-label">Son Oyun</div><div class="strat-title">Kriz Odası — Suriye Senaryosu</div><div class="strat-bar"><div class="strat-bar-fill" style="width:40%"></div></div><a href="oza-kriz-odasi.html" class="strat-btn">Devam Et &rarr;</a></div>
-          </div>
-        </div>
-
-        <!-- HABERLER -->
-        <div class="sidebar-widget">
-          <div class="widget-head"><div class="widget-title">Son Haberler</div><a href="haberler.html" class="sec-more">Tümü &rarr;</a></div>
-          <div class="widget-body">
-            <div class="news-mini">
-              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Savunma</div><div class="news-mini-title">Yeni İnfografik: FCAS İptali Stratejik Analiz</div><div class="news-mini-date">26 Haziran 2026</div></a>
-              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Deniz</div><div class="news-mini-title">TB3 TCG Anadolu'dan Elektronik Taarruz</div><div class="news-mini-date">22 Haziran 2026</div></a>
-              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Kara</div><div class="news-mini-title">Yeni Simülasyon: Hürmüz Enerji Şoku Simülatörü</div><div class="news-mini-date">24 Haziran 2026</div></a>
-              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Uzay</div><div class="news-mini-title">İMECE-2 Fırlatma Tarihi Açıklandı</div><div class="news-mini-date">22 Haziran 2026</div></a>
-              <a href="haberler.html" class="news-mini-item"><div class="news-mini-cat">Hava</div><div class="news-mini-title">Kızılelma İlk Uçuş Testi Başarılı</div><div class="news-mini-date">20 Haziran 2026</div></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- BILGI MERKEZI -->
-        <div class="sidebar-widget">
-          <div class="widget-head"><div class="widget-title">Bilgi Merkezi</div><a href="kesfet.html" class="sec-more">Keşfet &rarr;</a></div>
-          <div class="widget-body">
-            <div class="analysis-list">
-              <a href="kesfet.html" class="analysis-item" style="padding:.4rem;"><div class="analysis-info"><div class="analysis-cat">Külliyat</div><div class="analysis-title">Harb-i Strateji Külliyatı</div><div class="analysis-meta">Cilt I-II · Formüller · Sözlük</div></div></a>
-              <a href="panel-silah-metal.html" class="analysis-item" style="padding:.4rem;"><div class="analysis-info"><div class="analysis-cat">Veri Tabanı</div><div class="analysis-title">Silah Sistemleri Paneli</div><div class="analysis-meta">200+ Küresel Silah/Proje</div></div></a>
-              <a href="hs-tv.html" class="analysis-item" style="padding:.4rem;"><div class="analysis-info"><div class="analysis-cat">Video</div><div class="analysis-title">HS·TV Platform</div><div class="analysis-meta">Canlı Yayın + İçerik</div></div></a>
-              <a href="oza-sonsuz.html" class="analysis-item" style="padding:.4rem;"><div class="analysis-info"><div class="analysis-cat">Eğitim</div><div class="analysis-title">OZA Sonsuz</div><div class="analysis-meta">39 Bölüm · İnteraktif</div></div></a>
-            </div>
-          </div>
-        </div>
-
-        <!-- ILGINC BILGILER -->
-        <div class="sidebar-widget">
-          <div class="widget-head"><div class="widget-title">İlginç Bilgiler</div></div>
-          <div class="widget-body">
-            <div style="display:flex;flex-direction:column;gap:.4rem;">
-              <div style="padding:.5rem;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;"><div style="font-family:var(--font-display);font-size:.65rem;font-weight:700;color:var(--text);margin-bottom:.15rem;">Suda Yanan Silah</div><div style="font-size:.58rem;color:var(--text-3);">Grek Ateşi 7 yüzyıl boyunca formülü gizli kalan sıvı silahtı.</div></div>
-              <div style="padding:.5rem;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;"><div style="font-family:var(--font-display);font-size:.65rem;font-weight:700;color:var(--text);margin-bottom:.15rem;">680 Kiloluk Mermi</div><div style="font-size:.58rem;color:var(--text-3);">Fatih'in Şahi topları 680 kg mermi atıyordu.</div></div>
-              <div style="padding:.5rem;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;"><div style="font-family:var(--font-display);font-size:.65rem;font-weight:700;color:var(--text);margin-bottom:.15rem;">800 Metrelik Ok</div><div style="font-size:.58rem;color:var(--text-3);">Türk kompozit yayı 800 metreye ok atabiliyordu.</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- GENERATION FILTER -->
-    <div class="gen-bar">
-      <span class="gen-label">Kuşak:</span>
-      <button class="gen-btn active" data-g="all" onclick="filterGen('all')">Tümü</button>
-      <button class="gen-btn" data-g="xy" onclick="filterGen('xy')">X/Y Kuşağı</button>
-      <button class="gen-btn" data-g="za" onclick="filterGen('za')">Z/Alfa Kuşağı</button>
-    </div>
-  </div>
-</section>
-
-<!-- X/Y KUSAGI -->
-<section data-gen-section="xy" style="padding:1.5rem 0;background:var(--bg-2);">
-  <div class="container">
-    <div class="sec-card" style="border-color:rgba(139,92,246,.2);">
-      <div class="sec-head" style="border-color:rgba(139,92,246,.15);"><div class="sec-title" style="color:#8b5cf6;">X/Y Kuşağı · Stratejik Analiz</div></div>
-      <div class="sec-body">
-        <div class="sim-featured">
-          <a href="musk-infografik-serisi.html" class="sim-card"><img src="thumbs/card-kuantum.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#ff6b35;">Teknoloji</div><div class="sim-card-title">Elon Musk: Stratejik Analiz</div></div></a>
-          <a href="lego-propaganda-analiz.html" class="sim-card"><img src="thumbs/card-siber-eh.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#ff4757;">Bilişsel Savaş</div><div class="sim-card-title">Lego Propaganda: Dijital Savaş</div></div></a>
-          <a href="gelecegin-harp-ekosistemi.html" class="sim-card"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#00d9ff;">Gelecek</div><div class="sim-card-title">Geleceğin Harp Ekosistemi</div></div></a>
-          <a href="infografik-hibrit-savas-tum-boyutlar.html" class="sim-card"><img src="thumbs/card-hurmuz.jpg" alt="" loading="lazy"><div class="sim-card-overlay"><div class="sim-card-tag" style="color:#f59e0b;">Analiz</div><div class="sim-card-title">Hibrit Savaş: Tüm Boyutlar</div></div></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Z/ALFA KUSAGI -->
-<section data-gen-section="za" style="padding:1.5rem 0;background:var(--bg-2);">
-  <div class="container">
-    <div class="sec-card" style="border-color:rgba(88,101,242,.2);">
-      <div class="sec-head" style="border-color:rgba(88,101,242,.15);"><div class="sec-title" style="color:#5865f2;">Z/Alfa Kuşağı · Oyun &amp; Eğlence</div></div>
-      <div class="sec-body">
-        <div class="oza-featured">
-          <a href="oza-canakkale-br.html" class="oza-game-card"><img src="thumbs/card-oza-games.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Battle Royale</div><div class="oza-game-title">Çanakkale Son Kahraman</div></div></a>
-          <a href="oza-malazgirt-1071.html" class="oza-game-card"><img src="thumbs/card-medeniyet.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Strateji</div><div class="oza-game-title">Malazgirt 1071</div></div></a>
-          <a href="oza-us-insa.html" class="oza-game-card"><img src="thumbs/card-suru-drone.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Builder</div><div class="oza-game-title">Üs İnşa Et</div></div></a>
-          <a href="oza-doktrin-dash.html" class="oza-game-card"><img src="thumbs/card-algoritmik-harp.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Endless Runner</div><div class="oza-game-title">Doktrin Dash</div></div></a>
-          <a href="oza-siber-tetris.html" class="oza-game-card"><img src="thumbs/card-siber-eh.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Arcade</div><div class="oza-game-title">Siber Savunma: Blok</div></div></a>
-          <a href="oza-ilkler-swipe.html" class="oza-game-card"><img src="thumbs/card-nato-ankara.jpg" alt="" loading="lazy"><div class="oza-game-overlay"><div class="oza-game-tag">Swipe</div><div class="oza-game-title">Türk Tarihi İlkleri</div></div></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- KNOWLEDGE GRAPH -->
-<section class="kg-section">
-  <div class="container">
-    <div class="sec-head" style="border:none;padding:0 0 .8rem 0;"><div class="sec-title" style="color:#fff;">Knowledge Graph Arama</div></div>
-    <div class="kg-inner">
-      <div>
-        <div class="kg-search-box"><input type="text" placeholder="Aktör, silah, kriz, ülke ara..." id="kg-input" onkeydown="if(event.key==='Enter')kgSearch()"><button onclick="kgSearch()">Ara</button></div>
-        <div class="kg-nodes">
-          <span class="kg-node" onclick="kgNodeClick(this)">Türkiye</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">İran</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">ABD</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">İsrail</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Rusya</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">NATO</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Şahab-3</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Demir Kubbe</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">KAAN</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Bayraktar</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Hürmüz</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Hibrit Savaş</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Drone</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Siber</span>
-          <span class="kg-node" onclick="kgNodeClick(this)">Kuantum</span>
-        </div>
-        <div class="kg-results" id="kg-results"></div>
-      </div>
-      <div>
-        <div style="font-family:var(--font-display);font-size:.68rem;color:rgba(255,255,255,.5);margin-bottom:.5rem;">Popüler Aramalar</div>
-        <div style="display:flex;flex-direction:column;gap:.35rem;">
-          <a href="sim1-demir-kubbe.html" style="color:rgba(255,255,255,.7);font-size:.65rem;text-decoration:none;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.05);">Demir Kubbe Simülasyonu</a>
-          <a href="infografik-hibrit-savas-tum-boyutlar.html" style="color:rgba(255,255,255,.7);font-size:.65rem;text-decoration:none;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.05);">Hibrit Savaş Analizi</a>
-          <a href="panel-silah-metal.html" style="color:rgba(255,255,255,.7);font-size:.65rem;text-decoration:none;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.05);">Silah Sistemleri Paneli</a>
-          <a href="suru-iha-tasarim-simulatoru.html" style="color:rgba(255,255,255,.7);font-size:.65rem;text-decoration:none;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.05);">Sürü İHA Simülatörü</a>
-          <a href="siber-eh-simulatoru.html" style="color:rgba(255,255,255,.7);font-size:.65rem;text-decoration:none;padding:.25rem 0;">Siber/EH Simülatörü</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SCRIPTS -->
 <script>
-const KG_DATA=[
-  {term:'Türkiye',links:[{t:'NATO Ankara Zirvesi',h:'nato-ankara-zirvesi-2026.html'},{t:'KAAN Projesi',h:'haberler.html'},{t:'Savunma Sanayii',h:'panel-silah-metal.html'},{t:'Bayraktar TB3',h:'infografik-drone-devrim.html'}]},
-  {term:'İran',links:[{t:'Hürmüz Krizi Simülasyonu',h:'sim14-hurmuz-petrodolar.html'},{t:'Şahab-3 Analizi',h:'panel-silah-metal.html'},{t:'İran-İsrail Gerilimi',h:'haberler.html'}]},
-  {term:'ABD',links:[{t:'Pentagon YZ Stratejisi',h:'haberler.html'},{t:'Iron Dome Sistemi',h:'panel-silah-metal.html'},{t:'NATO İttifakı',h:'nato-ankara-zirvesi-2026.html'}]},
-  {term:'İsrail',links:[{t:'Iron Dome',h:'sim1-demir-kubbe.html'},{t:'İran-İsrail Gerilimi',h:'sim14-hurmuz-petrodolar.html'},{t:'Asimetrik Savaş',h:'infografik-hibrit-savas-tum-boyutlar.html'}]},
-  {term:'Rusya',links:[{t:'Hipersonik Silahlar',h:'haberler.html'},{t:'Karadeniz Stratejisi',h:'simülasyonlar.html'},{t:'Enerji Jeopolitiği',h:'infografik-hibrit-savas-tum-boyutlar.html'}]},
-  {term:'NATO',links:[{t:'Ankara Zirvesi 2026',h:'nato-ankara-zirvesi-2026.html'},{t:'Askerî Harcama',h:'infografik-askeri-harcama.html'},{t:'Kritik Mineral Tedarik',h:'stratejik-mineraller-periyodik-tablo.html'}]},
-  {term:'Şahab-3',links:[{t:'Silah Paneli',h:'panel-silah-metal.html'},{t:'İran Analizi',h:'iran-ek-icerik.html'}]},
-  {term:'Demir Kubbe',links:[{t:'Demir Kubbe Simülasyonu',h:'sim1-demir-kubbe.html'},{t:'Silah Paneli',h:'panel-silah-metal.html'}]},
-  {term:'KAAN',links:[{t:'Hava Kuvvetleri',h:'tsk-hava-kuvvetleri-tarihce.html'},{t:'Haberler',h:'haberler.html'}]},
-  {term:'Bayraktar',links:[{t:'Drone Devrimi',h:'infografik-drone-devrim.html'},{t:'Sürü İHA',h:'suru-iha-tasarim-simulatoru.html'}]},
-  {term:'Hürmüz',links:[{t:'Petrodolar Krizi',h:'sim14-hurmuz-petrodolar.html'},{t:'İran Analizi',h:'iran-ek-icerik.html'}]},
-  {term:'Hibrit Savaş',links:[{t:'Tüm Boyutlarıyla',h:'infografik-hibrit-savas-tum-boyutlar.html'},{t:'Bilişsel Kalkan',h:'oza-bilissel-kalkan.html'},{t:'Siber/EH',h:'siber-eh-simulatoru.html'}]},
-  {term:'Drone',links:[{t:'Drone Devrimi',h:'infografik-drone-devrim.html'},{t:'Sürü İHA Tasarım',h:'suru-iha-tasarim-simulatoru.html'},{t:'Drone Koşusu',h:'oza-drone-kosusu.html'}]},
-  {term:'Siber',links:[{t:'Siber/EH Simülatörü',h:'siber-eh-simulatoru.html'},{t:'Siber Tetris',h:'oza-siber-tetris.html'},{t:'Haberler',h:'haberler.html'}]},
-  {term:'Kuantum',links:[{t:'Kuantum Kilit',h:'oza-kuantum-kilit.html'},{t:'Kripto Kırık',h:'oza-kripto-kirik.html'}]}
-];
-function kgSearch(){const v=document.getElementById('kg-input').value.trim().toLowerCase();if(!v)return;document.querySelectorAll('.kg-node').forEach(n=>{n.classList.toggle('active',n.textContent.toLowerCase().includes(v));});const r=KG_DATA.filter(d=>d.term.toLowerCase().includes(v));const c=document.getElementById('kg-results');if(r.length>0){let h='';r.forEach(x=>{x.links.forEach(l=>{h+='<a href="'+l.h+'">'+l.t+'</a>';});});c.innerHTML=h;}else{c.innerHTML='<span style="font-size:.6rem;color:rgba(255,255,255,.4);">Sonuç bulunamadı</span>';}}
-function kgNodeClick(el){document.getElementById('kg-input').value=el.textContent;kgSearch();}
-function filterGen(g){document.querySelectorAll('.gen-btn').forEach(b=>b.classList.remove('active'));document.querySelector('.gen-btn[data-g="'+g+'"]').classList.add('active');document.querySelectorAll('[data-gen-section]').forEach(s=>{s.style.display=g==='all'?'':s.getAttribute('data-gen-section')===g?'':'none';});}
+function kgSearch(term){
+  const input = document.getElementById('kg-input');
+  input.value = term;
+  // Simple search redirect
+  const pages = {
+    'Türkiye':['nato-ankara-zirvesi-2026.html','haberler.html'],
+    'İran':['sim14-hurmuz-petrodolar.html','haberler.html'],
+    'NATO':['nato-ankara-zirvesi-2026.html','infografik-nato-genislemesi.html'],
+    'KAAN':['haberler.html','infografik-turk-hava-kuvvetleri.html'],
+    'Drone':['suru-iha-tasarim-simulatoru.html','infografik-drone-devrim.html'],
+    'Hibrit Savaş':['infografik-hibrit-savas-tum-boyutlar.html'],
+    'Kuantum':['kuantum-kriptografi-qkd-simulatoru.html'],
+    'Siber':['siber-eh-simulatoru.html','haberler.html']
+  };
+  if(pages[term]) window.location.href = pages[term][0];
+}
+document.getElementById('kg-input').addEventListener('keypress',e=>{
+  if(e.key==='Enter') kgSearch(e.target.value);
+});
 </script>
-<script src="hs-nav.js?v=12"></script>
-</body>
-</html>
+</body></html>

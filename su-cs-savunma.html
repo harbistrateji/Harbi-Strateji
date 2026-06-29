@@ -52,6 +52,11 @@ body { overflow-x: hidden !important; max-width: 100vw !important; }
 img, video, iframe, canvas, svg, table { max-width: 100% !important; }
 pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
 
+
+/* SCROLL FIX: hs-nav overlap düzeltme */
+.hero { margin-top: 0 !important; }
+html { scroll-padding-top: 140px; }
+[id] { scroll-margin-top: 140px; }
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
 <link rel="stylesheet" href="hs-global.css">

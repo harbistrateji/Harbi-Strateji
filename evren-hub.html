@@ -1,315 +1,179 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EVREN — Oyun Evreni | Harb-i Strateji</title>
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="hs-skip" content="true">
+<title>EVREN — Küresel Sorunlar & İnteraktif Analiz | Harb-i Strateji</title>
 <link rel="icon" href="logo-icon-64.png">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="hs-global.css">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-.evren-hero{text-align:center;padding:5rem 2rem 3rem;position:relative;overflow:hidden}
-.evren-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.1) 0%,transparent 60%);pointer-events:none}
-.evren-hero h1{font-family:'Oswald',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;background:linear-gradient(135deg,#8B5CF6,#00E0FF,#00FF88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.75rem;position:relative}
-.evren-hero p{color:rgba(255,255,255,.55);font-size:.9rem;max-width:700px;margin:0 auto 2rem;position:relative;line-height:1.7}
-.evren-subtitle{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;position:relative}
-/* Stats */
-.evren-stats{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.5rem;position:relative}
-.evren-stat{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:12px;padding:1rem 1.5rem;text-align:center;min-width:100px;transition:all .3s}
-.evren-stat:hover{border-color:rgba(139,92,246,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,92,246,.1)}
-.evren-stat-val{font-family:'Oswald',sans-serif;font-size:1.6rem;font-weight:700;color:#8B5CF6}
-.evren-stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-top:4px}
-/* Particles */
-.evren-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.evren-particle{position:absolute;width:2px;height:2px;background:#8B5CF6;border-radius:50%;opacity:.25;animation:evFloat 10s infinite ease-in-out}
-@keyframes evFloat{0%,100%{transform:translateY(0) translateX(0);}50%{transform:translateY(-40px) translateX(15px);}}
-/* CTA */
-.evren-cta{display:inline-block;padding:.7rem 1.5rem;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(0,224,255,.1));border:1px solid rgba(139,92,246,.3);border-radius:8px;color:#8B5CF6;font-family:'Oswald',sans-serif;font-size:.8rem;font-weight:600;text-decoration:none;transition:all .2s;position:relative}
-.evren-cta:hover{background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(0,224,255,.15));transform:translateY(-1px);box-shadow:0 6px 20px rgba(139,92,246,.15)}
-.evren-content{max-width:1300px;margin:0 auto;padding:2rem 2rem 4rem}
-.evren-section{margin-bottom:2.5rem}
-.evren-section-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.06)}
-.evren-section-icon{font-size:1.3rem}
-.evren-section-title{font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:600;color:#E8EDF5}
-.evren-section-count{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.3);margin-left:auto}
-.evren-section-desc{font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:1rem}
-.evren-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
-.evren-card{background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.15);border-radius:10px;padding:1.1rem;cursor:pointer;transition:all .2s;text-decoration:none;display:block;position:relative;overflow:hidden;color:inherit}
-.evren-card:hover{border-color:#8B5CF6;transform:translateY(-2px);box-shadow:0 8px 32px rgba(139,92,246,.12)}
-.evren-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#8B5CF6,transparent);opacity:0;transition:opacity .2s}
-.evren-card:hover::before{opacity:1}
-.evren-card-icon{font-size:1.5rem;margin-bottom:.4rem}
-.evren-card-title{font-family:'Oswald',sans-serif;font-size:.8rem;font-weight:600;color:#E8EDF5;margin-bottom:.2rem}
-.evren-card-desc{font-size:.68rem;color:rgba(255,255,255,.4);line-height:1.4;margin-bottom:.4rem}
-.evren-card-meta{display:flex;gap:.4rem;flex-wrap:wrap}
-.evren-card-tag{font-family:'JetBrains Mono',monospace;font-size:.5rem;padding:.12rem .35rem;border-radius:3px;background:rgba(139,92,246,.1);color:#8B5CF6;border:1px solid rgba(139,92,246,.2)}
-.evren-card-tag.arcade{background:rgba(0,255,136,.08);color:#00FF88;border-color:rgba(0,255,136,.15)}
-.evren-card-tag.td{background:rgba(0,224,255,.08);color:#00E0FF;border-color:rgba(0,224,255,.15)}
-.evren-card-tag.swipe{background:rgba(255,159,67,.08);color:#FF9F43;border-color:rgba(255,159,67,.15)}
-.evren-card-tag.sim{background:rgba(255,71,87,.08);color:#FF4757;border-color:rgba(255,71,87,.15)}
-.evren-filter{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;padding:.75rem 0}
-.evren-filter-btn{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.4rem .8rem;border:1px solid rgba(139,92,246,.2);border-radius:16px;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s}
-.evren-filter-btn:hover,.evren-filter-btn.active{background:rgba(139,92,246,.15);color:#8B5CF6;border-color:#8B5CF6}
-@media(max-width:768px){.evren-hero h1{font-size:1.8rem}.evren-grid{grid-template-columns:1fr 1fr}}
+:root{--bg:#0a0f17;--sf:#111827;--bd:#1e293b;--orange:#f4a261;--amber:#e9c46a;--teal:#2dd4bf;--tx:#e2e8f0;--tx2:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+.evren-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--bd)}
+.evren-back{font-size:.8rem;color:var(--tx2);display:flex;align-items:center;gap:6px}
+.evren-back:hover{color:#fff}
+.evren-logo{font-family:'Chakra Petch',sans-serif;font-size:1.3rem;font-weight:700;color:var(--orange)}
+
+.evren-hero{text-align:center;padding:3rem 2rem 2rem;position:relative;overflow:hidden}
+.evren-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(244,162,97,.06),transparent 60%)}
+.evren-hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:700;background:linear-gradient(135deg,var(--orange),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem;position:relative}
+.evren-hero .sub{color:var(--tx2);font-size:.9rem;margin-bottom:1.5rem;position:relative}
+
+.evren-stats{display:flex;justify-content:center;gap:2rem;margin-bottom:2rem;flex-wrap:wrap;position:relative}
+.evren-stat{text-align:center}
+.evren-stat .n{font-family:'Chakra Petch',sans-serif;font-size:1.5rem;font-weight:700;color:var(--orange)}
+.evren-stat .l{font-size:.65rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.05em}
+
+.evren-section{padding:0 2rem 2rem;max-width:1200px;margin:0 auto}
+.evren-sec-title{font-family:'Chakra Petch',sans-serif;font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:1rem;padding-left:12px;border-left:3px solid var(--orange)}
+
+.evren-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:2.5rem}
+.evren-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.2rem;transition:all .25s;display:block;position:relative;overflow:hidden}
+.evren-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--teal));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.evren-card:hover{border-color:rgba(244,162,97,.4);transform:translateY(-3px);box-shadow:0 8px 24px rgba(244,162,97,.1)}
+.evren-card:hover::before{transform:scaleX(1)}
+.evren-card .icon{font-size:1.5rem;margin-bottom:.5rem}
+.evren-card .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--orange);font-weight:600;margin-bottom:6px}
+.evren-card h3{font-size:.88rem;font-weight:600;color:#fff;margin-bottom:4px}
+.evren-card .desc{font-size:.72rem;color:var(--tx2);line-height:1.4}
+.evren-card .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.evren-card .tag{font-size:.55rem;padding:2px 7px;border-radius:8px;background:rgba(244,162,97,.08);color:var(--orange);border:1px solid rgba(244,162,97,.15)}
+
+@media(max-width:768px){
+  .evren-hero{padding:2rem 1rem 1rem}
+  .evren-section{padding:0 1rem 2rem}
+  .evren-grid{grid-template-columns:1fr 1fr}
+}
 @media(max-width:480px){.evren-grid{grid-template-columns:1fr}}
-
-/* ═══ MOBİL UYUMLU RESPONSIVE ═══ */
-@media (max-width: 768px) {
-  body { font-size: 14px !important; }
-  .container, .main, .wrap, .content, .page-content {
-    padding: 12px !important;
-    max-width: 100% !important;
-  }
-  h1 { font-size: clamp(18px, 5vw, 28px) !important; }
-  h2 { font-size: clamp(15px, 4vw, 22px) !important; }
-  h3 { font-size: clamp(13px, 3.5vw, 18px) !important; }
-  table { font-size: 11px !important; }
-  img, video, canvas, svg { max-width: 100% !important; height: auto !important; }
-  .grid, .card-grid, .cards { grid-template-columns: 1fr !important; }
-}
-@media (max-width: 480px) {
-  body { font-size: 13px !important; }
-  .container, .main, .wrap { padding: 8px !important; }
-  h1 { font-size: clamp(16px, 5vw, 24px) !important; }
-  .nav, .navbar, .top-bar, .header { 
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-  }
-}
-/* Prevent horizontal overflow */
-html { overflow-x: hidden !important; }
-body { overflow-x: hidden !important; max-width: 100vw !important; }
-img, video, iframe, canvas, svg, table { max-width: 100% !important; }
-pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-word !important; }
-
 </style>
-<link rel="stylesheet" href="hs-global-fix.css">
-</head>
-<body>
+</head><body>
+
+<div class="evren-header">
+  <a href="index.html" class="evren-back">← Ana Sayfa</a>
+  <span class="evren-logo">EVREN</span>
+  <a href="oza-hub.html" class="evren-back">OZA →</a>
+</div>
+
 <div class="evren-hero">
-  <div class="evren-particles" id="evParticles"></div>
-  <div class="evren-subtitle">// HARB-İ STRATEJİ OYUN EVRENİ</div>
-  <h1>EVREN</h1>
-  <p>Arcade, Tower Defense, Builder ve Mobil Mini oyunlar — stratejik düşünceyi eğlenceli ve hızlı deneyimlerle birleştiren oyun evreni.</p>
+  <h1>Küresel Sorunlar & Analiz</h1>
+  <p class="sub">Su kıtlığı, enerji krizi, stratejik mineraller, iklim değişikliği — interaktif içerikler</p>
   <div class="evren-stats">
-    <div class="evren-stat"><div class="evren-stat-val" data-target="42">0</div><div class="evren-stat-lbl">Oyun</div></div>
-    <div class="evren-stat"><div class="evren-stat-val" data-target="7">0</div><div class="evren-stat-lbl">Kategori</div></div>
-    <div class="evren-stat"><div class="evren-stat-val" data-target="120">0</div><div class="evren-stat-lbl">Etap</div></div>
-    <div class="evren-stat"><div class="evren-stat-val" data-target="16">0</div><div class="evren-stat-lbl">Mini Oyun</div></div>
+    <div class="evren-stat"><div class="n">6</div><div class="l">İnfografik</div></div>
+    <div class="evren-stat"><div class="n">3</div><div class="l">Simülasyon</div></div>
+    <div class="evren-stat"><div class="n">4</div><div class="l">Konu Alanı</div></div>
   </div>
-  <a href="oza-hub.html" class="evren-cta">OZA Hub'a Git →</a>
 </div>
 
-<div class="evren-content">
-
-<!-- FILTER -->
-<div class="evren-filter">
-  <button class="evren-filter-btn active" onclick="filterEvren('all')">Tümü</button>
-  <button class="evren-filter-btn" onclick="filterEvren('swipe')">Swipe & Hikâye</button>
-  <button class="evren-filter-btn" onclick="filterEvren('mini')">Mini Oyunlar</button>
-  <button class="evren-filter-btn" onclick="filterEvren('kaynak')">Nadir Metaller</button>
-  <button class="evren-filter-btn" onclick="filterEvren('tarih')">Tarihsel Savaşlar</button>
-  <button class="evren-filter-btn" onclick="filterEvren('aksiyon')">Aksiyon & Arcade</button>
-  <button class="evren-filter-btn" onclick="filterEvren('strateji')">Strateji</button>
+<!-- ENERJİ KRİZİ -->
+<div class="evren-section">
+<div class="evren-sec-title">Enerji Krizi & Dönüşüm</div>
+<div class="evren-grid">
+  <a href="enerji-infografik-gelecek.html" class="evren-card">
+    <div class="icon">🔋</div>
+    <div class="cat">İnfografik</div>
+    <h3>Küresel Enerji Geleceği</h3>
+    <div class="desc">Fosil yakıttan yenilenebilire — enerji dönüşümü haritası</div>
+    <div class="tags"><span class="tag">Enerji</span><span class="tag">2030</span></div>
+  </a>
+  <a href="enerji-cs-savunma.html" class="evren-card">
+    <div class="icon">⚡</div>
+    <div class="cat">Simülasyon</div>
+    <h3>Enerji Altyapı Savunması</h3>
+    <div class="desc">Enerji şebekesini siber saldırılardan koru</div>
+    <div class="tags"><span class="tag">Siber</span><span class="tag">Altyapı</span></div>
+  </a>
+  <a href="enerji-minecraft-reaktor.html" class="evren-card">
+    <div class="icon">☢️</div>
+    <div class="cat">İnteraktif</div>
+    <h3>Nükleer Reaktör Tasarla</h3>
+    <div class="desc">Minecraft tarzı — güvenli reaktör inşa et</div>
+    <div class="tags"><span class="tag">Nükleer</span><span class="tag">İnşa</span></div>
+  </a>
+  <a href="sim14-hurmuz-petrodolar.html" class="evren-card">
+    <div class="icon">🛢️</div>
+    <div class="cat">Simülasyon</div>
+    <h3>Hürmüz Boğazı Enerji Şoku</h3>
+    <div class="desc">Petrol krizi senaryosu — küresel etki analizi</div>
+    <div class="tags"><span class="tag">Petrol</span><span class="tag">Kriz</span></div>
+  </a>
+</div>
 </div>
 
-<!-- SWIPE & HİKÂYE -->
-<section class="evren-section" data-cat="swipe">
-  <div class="evren-section-head">
-    <span class="evren-section-icon">📱</span>
-    <span class="evren-section-title">Swipe & Hikâye</span>
-    <span class="evren-section-count">5 içerik</span>
-  </div>
-  <p class="evren-section-desc">TikTok tarzı swipe deneyimler</p>
-  <div class="evren-grid">
-    <a href="oza-ilkler-swipe.html" class="evren-card"><div class="evren-card-icon">🇹🇷</div><div class="evren-card-title">Türk Tarihi İlkleri</div><div class="evren-card-desc">Swipe quiz — Türk tarihinin ilklerini keşfet</div><div class="evren-card-meta"><span class="evren-card-tag swipe">Swipe</span><span class="evren-card-tag">Quiz</span></div></a>
-    <a href="oza-turk-savaslari-swipe.html" class="evren-card"><div class="evren-card-icon">⚔️</div><div class="evren-card-title">15 Büyük Savaş</div><div class="evren-card-desc">Swipe hikâye — Türk savaş tarihinin dönüm noktaları</div><div class="evren-card-meta"><span class="evren-card-tag swipe">Swipe</span><span class="evren-card-tag">Hikâye</span></div></a>
-    <a href="oza-canakkale-hikaye.html" class="evren-card"><div class="evren-card-icon">📖</div><div class="evren-card-title">Çanakkale Hikâyesi</div><div class="evren-card-desc">Bir Yolcuya şiiri ile Çanakkale destanı</div><div class="evren-card-meta"><span class="evren-card-tag swipe">Story</span></div></a>
-    <a href="oza-16-turk-devleti.html" class="evren-card"><div class="evren-card-icon">🏛️</div><div class="evren-card-title">16 Türk Devleti</div><div class="evren-card-desc">İnteraktif zaman çizelgesi</div><div class="evren-card-meta"><span class="evren-card-tag swipe">Zaman Çizelgesi</span></div></a>
-    <a href="oza-komutan-sozleri.html" class="evren-card"><div class="evren-card-icon">🎬</div><div class="evren-card-title">Komutan Sözleri</div><div class="evren-card-desc">Büyük komutanların stratejik sözleri</div><div class="evren-card-meta"><span class="evren-card-tag swipe">Koleksiyon</span></div></a>
-  </div>
-</section>
-
-<!-- MİNİ OYUNLAR -->
-<section class="evren-section" data-cat="mini">
-  <div class="evren-section-head">
-    <span class="evren-section-icon">🕹️</span>
-    <span class="evren-section-title">Mini Oyunlar</span>
-    <span class="evren-section-count">16 oyun</span>
-  </div>
-  <p class="evren-section-desc">30 saniye — 2 dakika hızlı oyunlar</p>
-  <div class="evren-grid">
-    <a href="mini-tepki.html" class="evren-card"><div class="evren-card-icon">⚡</div><div class="evren-card-title">Tepki Testi</div><div class="evren-card-desc">Refleks hızını ölç</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Refleks</span></div></a>
-    <a href="mini-hedef.html" class="evren-card"><div class="evren-card-icon">🎯</div><div class="evren-card-title">Hedef Vur</div><div class="evren-card-desc">Hassas nişancılık</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Nişancılık</span></div></a>
-    <a href="mini-siralama.html" class="evren-card"><div class="evren-card-icon">📊</div><div class="evren-card-title">Tehdit Sırala</div><div class="evren-card-desc">Önceliklendirme yeteneği</div><div class="evren-card-meta"><span class="evren-card-tag">Sıralama</span></div></a>
-    <a href="mini-hafiza.html" class="evren-card"><div class="evren-card-icon">🧠</div><div class="evren-card-title">Askerî Hafıza</div><div class="evren-card-desc">Bellek ve dikkat</div><div class="evren-card-meta"><span class="evren-card-tag">Bellek</span></div></a>
-    <a href="mini-kod.html" class="evren-card"><div class="evren-card-icon">🔐</div><div class="evren-card-title">Şifre Kır</div><div class="evren-card-desc">Kriptografi bulmacası</div><div class="evren-card-meta"><span class="evren-card-tag">Kripto</span></div></a>
-    <a href="mini-bulmaca.html" class="evren-card"><div class="evren-card-icon">🧩</div><div class="evren-card-title">Strateji Bulmaca</div><div class="evren-card-desc">Taktik puzzle</div><div class="evren-card-meta"><span class="evren-card-tag">Puzzle</span></div></a>
-    <a href="mini-matematik.html" class="evren-card"><div class="evren-card-icon">🔢</div><div class="evren-card-title">Hız Matematik</div><div class="evren-card-desc">Hızlı hesaplama</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Hesap</span></div></a>
-    <a href="mini-drone.html" class="evren-card"><div class="evren-card-icon">🚁</div><div class="evren-card-title">Drone Kaçış</div><div class="evren-card-desc">Engelden kaçış</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Runner</span></div></a>
-    <a href="mini-biyometri.html" class="evren-card"><div class="evren-card-icon">👁️</div><div class="evren-card-title">Biyometri</div><div class="evren-card-desc">Yüz ve parmak izi tanıma</div><div class="evren-card-meta"><span class="evren-card-tag">Tanıma</span></div></a>
-    <a href="mini-butce.html" class="evren-card"><div class="evren-card-icon">💰</div><div class="evren-card-title">Bütçe Yönetimi</div><div class="evren-card-desc">Savunma bütçesi dağıtımı</div><div class="evren-card-meta"><span class="evren-card-tag">Ekonomi</span></div></a>
-    <a href="mini-drone-suruc.html" class="evren-card"><div class="evren-card-icon">🎮</div><div class="evren-card-title">Drone Sürücü</div><div class="evren-card-desc">İHA pilotaj simülasyonu</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Pilotaj</span></div></a>
-    <a href="mini-frekans.html" class="evren-card"><div class="evren-card-icon">📡</div><div class="evren-card-title">Frekans Avı</div><div class="evren-card-desc">Sinyal yakalama</div><div class="evren-card-meta"><span class="evren-card-tag td">Sinyal</span></div></a>
-    <a href="mini-kamuoyu.html" class="evren-card"><div class="evren-card-icon">📢</div><div class="evren-card-title">Kamuoyu</div><div class="evren-card-desc">Algı yönetimi</div><div class="evren-card-meta"><span class="evren-card-tag">Algı</span></div></a>
-    <a href="mini-nukleer.html" class="evren-card"><div class="evren-card-icon">☢️</div><div class="evren-card-title">Nükleer Denge</div><div class="evren-card-desc">Nükleer fizik dengesi</div><div class="evren-card-meta"><span class="evren-card-tag sim">Fizik</span></div></a>
-    <a href="mini-sifreli.html" class="evren-card"><div class="evren-card-icon">📝</div><div class="evren-card-title">Şifreli Mesaj</div><div class="evren-card-desc">Kod çözme yarışı</div><div class="evren-card-meta"><span class="evren-card-tag">Kod</span></div></a>
-    <a href="mini-tedarik.html" class="evren-card"><div class="evren-card-icon">🚚</div><div class="evren-card-title">Tedarik Zinciri</div><div class="evren-card-desc">Lojistik yönetimi</div><div class="evren-card-meta"><span class="evren-card-tag">Lojistik</span></div></a>
-  </div>
-</section>
-
-<!-- NADİR METALLER & KAYNAK -->
-<section class="evren-section" data-cat="kaynak">
-  <div class="evren-section-head">
-    <span class="evren-section-icon">⛏️</span>
-    <span class="evren-section-title">Nadir Metaller & Kaynak</span>
-    <span class="evren-section-count">8 oyun</span>
-  </div>
-  <p class="evren-section-desc">Minecraft/Tycoon tarzı kaynak oyunları</p>
-  <div class="evren-grid">
-    <a href="oyun-minecraft-maden.html" class="evren-card"><div class="evren-card-icon">⛏️</div><div class="evren-card-title">Minecraft Maden</div><div class="evren-card-desc">Kazı ve keşif — nadir metal çıkar</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Builder</span></div></a>
-    <a href="oyun-lego-silah.html" class="evren-card"><div class="evren-card-icon">🧱</div><div class="evren-card-title">Lego Silah Montaj</div><div class="evren-card-desc">Silah sistemlerini monte et</div><div class="evren-card-meta"><span class="evren-card-tag arcade">İnşa</span></div></a>
-    <a href="oyun-fabrika-zinciri.html" class="evren-card"><div class="evren-card-icon">🏭</div><div class="evren-card-title">Fabrika Zinciri</div><div class="evren-card-desc">Üretim hattı yönetimi</div><div class="evren-card-meta"><span class="evren-card-tag">Tycoon</span></div></a>
-    <a href="oyun-cs-taktik.html" class="evren-card"><div class="evren-card-icon">🔫</div><div class="evren-card-title">Taktik Nişancı</div><div class="evren-card-desc">Top-down taktik savaş</div><div class="evren-card-meta"><span class="evren-card-tag sim">Taktik</span></div></a>
-    <a href="enerji-minecraft-reaktor.html" class="evren-card"><div class="evren-card-icon">⚛️</div><div class="evren-card-title">Enerji Reaktör</div><div class="evren-card-desc">Nükleer reaktör inşa et</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Builder</span></div></a>
-    <a href="enerji-cs-savunma.html" class="evren-card"><div class="evren-card-icon">🔋</div><div class="evren-card-title">Enerji Savunma</div><div class="evren-card-desc">Enerji altyapısını koru</div><div class="evren-card-meta"><span class="evren-card-tag td">TD</span></div></a>
-    <a href="su-minecraft-aritma.html" class="evren-card"><div class="evren-card-icon">💧</div><div class="evren-card-title">Su Arıtma</div><div class="evren-card-desc">Su arıtma tesisi kur</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Builder</span></div></a>
-    <a href="su-cs-savunma.html" class="evren-card"><div class="evren-card-icon">🌊</div><div class="evren-card-title">Su Savunma</div><div class="evren-card-desc">Su kaynaklarını koru</div><div class="evren-card-meta"><span class="evren-card-tag td">TD</span></div></a>
-  </div>
-</section>
-
-<!-- TARİHSEL SAVAŞLAR -->
-<section class="evren-section" data-cat="tarih">
-  <div class="evren-section-head">
-    <span class="evren-section-icon">⚔️</span>
-    <span class="evren-section-title">Tarihsel Savaşlar</span>
-    <span class="evren-section-count">8 oyun</span>
-  </div>
-  <p class="evren-section-desc">Büyük Türk zaferlerini yeniden yaşa</p>
-  <div class="evren-grid">
-    <a href="oza-istanbul-fethi-1453.html" class="evren-card"><div class="evren-card-icon">🏰</div><div class="evren-card-title">İstanbul'un Fethi 1453</div><div class="evren-card-desc">Kuşatma stratejisi — Şahi Topu, Yeniçeri</div><div class="evren-card-meta"><span class="evren-card-tag sim">Kuşatma</span></div></a>
-    <a href="oza-canakkale-1915-v2.html" class="evren-card"><div class="evren-card-icon">🎖️</div><div class="evren-card-title">Çanakkale 1915</div><div class="evren-card-desc">Siper savunması — Mauser, Nusret</div><div class="evren-card-meta"><span class="evren-card-tag sim">Savunma</span></div></a>
-    <a href="oza-malazgirt-1071.html" class="evren-card"><div class="evren-card-icon">🏇</div><div class="evren-card-title">Malazgirt 1071</div><div class="evren-card-desc">Hilal taktiği — Selçuklu süvarisi</div><div class="evren-card-meta"><span class="evren-card-tag sim">Meydan</span></div></a>
-    <a href="oza-preveze-1538.html" class="evren-card"><div class="evren-card-icon">⚓</div><div class="evren-card-title">Preveze 1538</div><div class="evren-card-desc">Deniz muharebesi — Barbaros</div><div class="evren-card-meta"><span class="evren-card-tag td">Deniz</span></div></a>
-    <a href="oza-kurtulus-atesi-v2.html" class="evren-card"><div class="evren-card-icon">🔥</div><div class="evren-card-title">Büyük Taarruz 1922</div><div class="evren-card-desc">Taarruz stratejisi — Kurtuluş</div><div class="evren-card-meta"><span class="evren-card-tag sim">Taarruz</span></div></a>
-    <a href="oza-canakkale-br.html" class="evren-card"><div class="evren-card-icon">🎖️</div><div class="evren-card-title">Çanakkale Son Kahraman</div><div class="evren-card-desc">Battle Royale — hayatta kal</div><div class="evren-card-meta"><span class="evren-card-tag arcade">BR</span></div></a>
-    <a href="oza-osmanli-deniz-imparatorlugu.html" class="evren-card"><div class="evren-card-icon">🚢</div><div class="evren-card-title">Osmanlı Deniz İmparatorluğu</div><div class="evren-card-desc">Grand strateji — Akdeniz fethi</div><div class="evren-card-meta"><span class="evren-card-tag">Grand</span></div></a>
-    <a href="oza-turk-savas-tarihi-hub.html" class="evren-card"><div class="evren-card-icon">📚</div><div class="evren-card-title">Savaş Tarihi Hub</div><div class="evren-card-desc">Tüm tarihsel içerikler</div><div class="evren-card-meta"><span class="evren-card-tag">Hub</span></div></a>
-  </div>
-</section>
-
-<!-- AKSİYON & ARCADE -->
-<section class="evren-section" data-cat="aksiyon">
-  <div class="evren-section-head">
-    <span class="evren-section-icon">🎮</span>
-    <span class="evren-section-title">Aksiyon & Arcade</span>
-    <span class="evren-section-count">5 oyun</span>
-  </div>
-  <p class="evren-section-desc">Hızlı refleks ve aksiyon oyunları</p>
-  <div class="evren-grid">
-    <a href="oza-us-insa.html" class="evren-card"><div class="evren-card-icon">🏗️</div><div class="evren-card-title">Üs İnşa Et</div><div class="evren-card-desc">Askerî üs inşa et ve savun</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Builder</span></div></a>
-    <a href="oza-taktik-nisanci.html" class="evren-card"><div class="evren-card-icon">🎯</div><div class="evren-card-title">Taktik Nişancı</div><div class="evren-card-desc">Top-down nişancılık</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Shooter</span></div></a>
-    <a href="oza-bomba-imha.html" class="evren-card"><div class="evren-card-icon">💣</div><div class="evren-card-title">Bomba İmha</div><div class="evren-card-desc">Bombayı etkisiz hâle getir</div><div class="evren-card-meta"><span class="evren-card-tag sim">Defuse</span></div></a>
-    <a href="oza-drone-kosusu.html" class="evren-card"><div class="evren-card-icon">🚁</div><div class="evren-card-title">Drone Koşusu</div><div class="evren-card-desc">Endless runner — engelden kaç</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Runner</span></div></a>
-    <a href="oza-silah-kombinasyon.html" class="evren-card"><div class="evren-card-icon">🔧</div><div class="evren-card-title">Silah Kombinasyonu</div><div class="evren-card-desc">Match-3 silah birleştirme</div><div class="evren-card-meta"><span class="evren-card-tag arcade">Match-3</span></div></a>
-  </div>
-</section>
-
-<!-- STRATEJİ -->
-<section class="evren-section" data-cat="strateji">
-  <div class="evren-section-head">
-    <span class="evren-section-icon">🧠</span>
-    <span class="evren-section-title">Strateji & Simülasyon</span>
-    <span class="evren-section-count">10+ oyun</span>
-  </div>
-  <p class="evren-section-desc">Derin düşünce gerektiren strateji oyunları</p>
-  <div class="evren-grid">
-    <a href="oza-kriz-odasi.html" class="evren-card"><div class="evren-card-icon">🚨</div><div class="evren-card-title">Kriz Odası</div><div class="evren-card-desc">10 saniye karar ver</div><div class="evren-card-meta"><span class="evren-card-tag sim">Kriz</span></div></a>
-    <a href="oza-karanlik-kis.html" class="evren-card"><div class="evren-card-icon">❄️</div><div class="evren-card-title">Karanlık Kış</div><div class="evren-card-desc">Rogue-like hayatta kalma</div><div class="evren-card-meta"><span class="evren-card-tag sim">Rogue</span></div></a>
-    <a href="oza-emtia-imparatorlugu.html" class="evren-card"><div class="evren-card-icon">🏭</div><div class="evren-card-title">Emtia İmparatorluğu</div><div class="evren-card-desc">Idle ekonomi yönetimi</div><div class="evren-card-meta"><span class="evren-card-tag">Idle</span></div></a>
-    <a href="oza-devlet-os.html" class="evren-card"><div class="evren-card-icon">🖥️</div><div class="evren-card-title">Devlet OS</div><div class="evren-card-desc">Devlet yönetim simülasyonu</div><div class="evren-card-meta"><span class="evren-card-tag sim">Yönetim</span></div></a>
-    <a href="oza-hipersonik-yaris.html" class="evren-card"><div class="evren-card-icon">🚀</div><div class="evren-card-title">Hipersonik Yarış</div><div class="evren-card-desc">Silah geliştirme yarışı</div><div class="evren-card-meta"><span class="evren-card-tag td">Teknoloji</span></div></a>
-  </div>
-</section>
-
-<!-- ENERJİ & SU -->
-<section class="evren-section" data-cat="kaynak">
-  <div class="evren-section-head">
-    <span class="evren-section-icon">⚡</span>
-    <span class="evren-section-title">Enerji & Su İnfografikleri</span>
-    <span class="evren-section-count">2 içerik</span>
-  </div>
-  <div class="evren-grid">
-    <a href="enerji-infografik-gelecek.html" class="evren-card"><div class="evren-card-icon">🔋</div><div class="evren-card-title">Enerji Geleceği</div><div class="evren-card-desc">Küresel enerji dönüşümü</div><div class="evren-card-meta"><span class="evren-card-tag">İnfografik</span></div></a>
-    <a href="su-infografik-kitlik.html" class="evren-card"><div class="evren-card-icon">💧</div><div class="evren-card-title">Su Kıtlığı</div><div class="evren-card-desc">Su kaynaklarının geleceği</div><div class="evren-card-meta"><span class="evren-card-tag">İnfografik</span></div></a>
-  </div>
-</section>
-
+<!-- SU KITLIĞI -->
+<div class="evren-section">
+<div class="evren-sec-title">Su Kıtlığı & Kaynak Savaşları</div>
+<div class="evren-grid">
+  <a href="su-infografik-kitlik.html" class="evren-card">
+    <div class="icon">💧</div>
+    <div class="cat">İnfografik</div>
+    <h3>Küresel Su Kıtlığı Haritası</h3>
+    <div class="desc">2030'da 2 milyar insan su kıtlığı riski altında</div>
+    <div class="tags"><span class="tag">Su</span><span class="tag">2030</span></div>
+  </a>
+  <a href="su-cs-savunma.html" class="evren-card">
+    <div class="icon">🏗️</div>
+    <div class="cat">Simülasyon</div>
+    <h3>Su Altyapı Savunması</h3>
+    <div class="desc">Su arıtma ve dağıtım altyapısını koru</div>
+    <div class="tags"><span class="tag">Altyapı</span><span class="tag">Savunma</span></div>
+  </a>
+  <a href="su-minecraft-aritma.html" class="evren-card">
+    <div class="icon">🧪</div>
+    <div class="cat">İnteraktif</div>
+    <h3>Su Arıtma Tesisi Tasarla</h3>
+    <div class="desc">Minecraft tarzı — arıtma tesisi inşa et</div>
+    <div class="tags"><span class="tag">İnşa</span><span class="tag">Arıtma</span></div>
+  </a>
+</div>
 </div>
 
-<script>
-// Filter
-function filterEvren(cat){
-  document.querySelectorAll('.evren-filter-btn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.querySelectorAll('.evren-section').forEach(sec=>{
-    if(cat==='all'||sec.dataset.cat===cat){sec.style.display='';}
-    else{sec.style.display='none';}
-  });
-}
+<!-- STRATEJİK MİNERALLER -->
+<div class="evren-section">
+<div class="evren-sec-title">Stratejik Mineraller & Nadir Metaller</div>
+<div class="evren-grid">
+  <a href="stratejik-mineraller-periyodik-tablo.html" class="evren-card">
+    <div class="icon">⛏️</div>
+    <div class="cat">İnfografik</div>
+    <h3>Stratejik Mineraller Periyodik Tablosu</h3>
+    <div class="desc">Nadir toprak elementleri — küresel güç dengesi</div>
+    <div class="tags"><span class="tag">Mineraller</span><span class="tag">Periyodik</span></div>
+  </a>
+  <a href="oyun-minecraft-maden.html" class="evren-card">
+    <div class="icon">💎</div>
+    <div class="cat">İnteraktif</div>
+    <h3>Maden İşletme Simülasyonu</h3>
+    <div class="desc">Minecraft tarzı — nadir mineral çıkar ve işle</div>
+    <div class="tags"><span class="tag">Maden</span><span class="tag">İşletme</span></div>
+  </a>
+  <a href="oyun-fabrika-zinciri.html" class="evren-card">
+    <div class="icon">🏭</div>
+    <div class="cat">Simülasyon</div>
+    <h3>Tedarik Zinciri Fabrikası</h3>
+    <div class="desc">Hammaddeden ürüne — küresel tedarik zinciri yönet</div>
+    <div class="tags"><span class="tag">Fabrika</span><span class="tag">Tedarik</span></div>
+  </a>
+</div>
+</div>
 
-// Particles
-(function(){
-  const c=document.getElementById('evParticles');
-  for(let i=0;i<25;i++){
-    const p=document.createElement('div');
-    p.className='evren-particle';
-    p.style.left=Math.random()*100+'%';
-    p.style.top=Math.random()*100+'%';
-    p.style.animationDelay=(Math.random()*6)+'s';
-    p.style.animationDuration=(7+Math.random()*6)+'s';
-    c.appendChild(p);
-  }
-})();
+<!-- İKLİM & ÇEVRE -->
+<div class="evren-section">
+<div class="evren-sec-title">İklim Değişikliği & Çevre</div>
+<div class="evren-grid">
+  <a href="infografik-kuresel-enerji-savaslari.html" class="evren-card">
+    <div class="icon">🌡️</div>
+    <div class="cat">İnfografik</div>
+    <h3>Küresel Enerji Savaşları</h3>
+    <div class="desc">Enerji kaynaklarına erişim mücadelesi — jeopolitik analiz</div>
+    <div class="tags"><span class="tag">Enerji</span><span class="tag">Jeopolitik</span></div>
+  </a>
+  <a href="mini-nukleer.html" class="evren-card">
+    <div class="icon">☢️</div>
+    <div class="cat">Mini Simülasyon</div>
+    <h3>Nükleer Risk Değerlendirme</h3>
+    <div class="desc">Nükleer enerji güvenliği — risk analizi</div>
+    <div class="tags"><span class="tag">Nükleer</span><span class="tag">Risk</span></div>
+  </a>
+</div>
+</div>
 
-// Counter animation
-const evCounters=document.querySelectorAll('.evren-stat-val[data-target]');
-const evObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const el=e.target;
-      const target=parseInt(el.dataset.target);
-      let current=0;
-      const step=Math.max(1,Math.ceil(target/35));
-      const timer=setInterval(()=>{
-        current+=step;
-        if(current>=target){current=target;clearInterval(timer);}
-        el.textContent=current+(target>=100?'+':'');
-      },30);
-      evObs.unobserve(el);
-    }
-  });
-},{threshold:0.5});
-evCounters.forEach(c=>evObs.observe(c));
-
-// Scroll reveal for cards
-const evCards=document.querySelectorAll('.evren-card');
-const cardObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.style.opacity='1';
-      e.target.style.transform='translateY(0)';
-      cardObs.unobserve(e.target);
-    }
-  });
-},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
-evCards.forEach(c=>{
-  c.style.opacity='0';
-  c.style.transform='translateY(15px)';
-  c.style.transition='opacity .4s ease, transform .4s ease';
-  cardObs.observe(c);
-});
-</script>
-<script src="hs-nav.js?v=11"></script>
-</body>
-</html>
+</body></html>

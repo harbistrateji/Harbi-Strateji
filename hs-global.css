@@ -438,3 +438,14 @@ body{padding-top:126px!important;margin-top:0!important;}
 /* ── Nav alignment ── */
 .hs-nav-bar-inner{align-items:center;min-height:36px;}
 .hs-nav-link>a{padding:.5rem .7rem;}
+
+/* TEMA RENK DEĞİŞKENLERİ */
+.theme-medeniyet { --theme-accent: #d4a017; --theme-glow: rgba(212,160,23,.12); }
+.theme-oza { --theme-accent: #5865f2; --theme-glow: rgba(88,101,242,.12); }
+.theme-ozasonsuz { --theme-accent: #00e5ff; --theme-glow: rgba(0,229,255,.12); }
+.theme-evren { --theme-accent: #f4a261; --theme-glow: rgba(244,162,97,.12); }
+/* Tema bazlı kart border */
+.theme-medeniyet .card { border-left-color: var(--theme-accent) !important; }
+.theme-oza .card, .theme-oza .sim-card { border-color: rgba(88,101,242,.3) !important; }
+.theme-ozasonsuz .card { border-color: rgba(0,229,255,.3) !important; }
+.theme-evren .card { border-color: rgba(244,162,97,.3) !important; }

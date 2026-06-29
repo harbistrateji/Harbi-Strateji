@@ -106,6 +106,21 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
 
 .sim-card-hidden{opacity:0;transform:translateY(20px);transition:opacity .5s, transform .5s;animation:cardAppear .6s ease forwards;}
 .sim-card-visible{opacity:1!important;transform:translateY(0)!important;transition:opacity .5s, transform .5s;}@keyframes cardAppear{to{opacity:1;transform:translateY(0);}}
+
+/* KATEGORİ RENK SİSTEMİ */
+.sim-card[data-category="bolgesel"]{ border-left: 3px solid #e74c3c; }
+.sim-card[data-category="teknoloji"]{ border-left: 3px solid #00e5ff; }
+.sim-card[data-category="stratejik"]{ border-left: 3px solid #f4a261; }
+.sim-card[data-category="yeni-nesil"]{ border-left: 3px solid #00ff88; }
+.sim-card[data-category="bolgesel"] .sim-card-tag.cat{ background:rgba(231,76,60,.1); color:#e74c3c; border-color:rgba(231,76,60,.2); }
+.sim-card[data-category="teknoloji"] .sim-card-tag.cat{ background:rgba(0,229,255,.1); color:#00e5ff; border-color:rgba(0,229,255,.2); }
+.sim-card[data-category="stratejik"] .sim-card-tag.cat{ background:rgba(244,162,97,.1); color:#f4a261; border-color:rgba(244,162,97,.2); }
+.sim-card[data-category="yeni-nesil"] .sim-card-tag.cat{ background:rgba(0,255,136,.1); color:#00ff88; border-color:rgba(0,255,136,.2); }
+/* Tema renkleri: Medeniyet=altın, OZA=mor, OZA∞=cyan, EVREN=turuncu */
+.theme-medeniyet { --accent: #d4a017; --accent-glow: rgba(212,160,23,.15); }
+.theme-oza { --accent: #5865f2; --accent-glow: rgba(88,101,242,.15); }
+.theme-ozasonsuz { --accent: #00e5ff; --accent-glow: rgba(0,229,255,.15); }
+.theme-evren { --accent: #f4a261; --accent-glow: rgba(244,162,97,.15); }
 </style>
 <link rel="stylesheet" href="hs-global-fix.css">
 </head>
@@ -158,7 +173,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
         <div class="sim-card-difficulty"><span class="filled hard"></span><span class="filled hard"></span><span class="filled hard"></span><span></span></div>
       </div>
     </a>
-    <a href="siber-eh-simulatoru.html" class="sim-card" data-cat="yeni siber">
+    <a href="siber-eh-simulatoru.html" class="sim-card" data-category="teknoloji" data-cat="yeni siber">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">📡</div>
@@ -170,7 +185,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
         <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span></span></div>
       </div>
     </a>
-    <a href="suru-iha-tasarim-simulatoru.html" class="sim-card" data-cat="yeni algoritmik">
+    <a href="suru-iha-tasarim-simulatoru.html" class="sim-card" data-category="teknoloji" data-cat="yeni algoritmik">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">🤖</div>
@@ -182,7 +197,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
         <div class="sim-card-difficulty"><span class="filled"></span><span class="filled"></span><span></span><span></span></div>
       </div>
     </a>
-    <a href="stratejik-mineraller-periyodik-tablo.html" class="sim-card" data-cat="yeni jeopolitik">
+    <a href="stratejik-mineraller-periyodik-tablo.html" class="sim-card" data-category="stratejik" data-cat="yeni jeopolitik">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">💎</div>
@@ -194,7 +209,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
         <div class="sim-card-difficulty"><span class="filled"></span><span></span><span></span><span></span></div>
       </div>
     </a>
-    <a href="kuantum-kriptografi-qkd-simulatoru.html" class="sim-card" data-cat="yeni siber">
+    <a href="kuantum-kriptografi-qkd-simulatoru.html" class="sim-card" data-category="teknoloji" data-cat="yeni siber">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">🔐</div>
@@ -206,7 +221,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
         <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span></span><span></span></div>
       </div>
     </a>
-    <a href="nato-ankara-zirvesi-2026.html" class="sim-card" data-cat="yeni jeopolitik">
+    <a href="nato-ankara-zirvesi-2026.html" class="sim-card" data-category="bolgesel" data-cat="yeni jeopolitik">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">🏛️</div>
@@ -229,7 +244,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
     <span class="sim-section-count">5 simülasyon</span>
   </div>
   <div class="sim-grid">
-    <a href="sim1-demir-kubbe.html" class="sim-card" data-cat="algoritmik">
+    <a href="sim1-demir-kubbe.html" class="sim-card" data-category="bolgesel" data-cat="algoritmik">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">🛡️</div>
@@ -336,7 +351,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
         <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span></span><span></span></div>
       </div>
     </a>
-    <a href="sim14-hurmuz-petrodolar.html" class="sim-card" data-cat="jeopolitik">
+    <a href="sim14-hurmuz-petrodolar.html" class="sim-card" data-category="bolgesel" data-cat="jeopolitik">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">🛢️</div>
@@ -407,7 +422,7 @@ body{background:#060a10;color:#e8edf5;font-family:'Inter',sans-serif;overflow-x:
         <div class="sim-card-difficulty"><span class="filled med"></span><span class="filled med"></span><span class="filled med"></span><span></span></div>
       </div>
     </a>
-    <a href="gelecegin-harp-ekosistemi.html" class="sim-card" data-cat="siber">
+    <a href="gelecegin-harp-ekosistemi.html" class="sim-card" data-category="yeni-nesil" data-cat="siber">
       <div class="sim-card-play"></div>
       <div class="sim-card-header">
         <div class="sim-card-icon">🦾</div>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Manufactured Chaos | OZA</title>
+<link rel="icon" href="logo-icon-64.png">
+<script src="hs-nav.js" defer></script>
+<style>
+html{scroll-padding-top:80px}
+:root{--bg:#0a0e1a;--surface:#111827;--border:#2a3a4f;--text:#e2e8f0;--dim:#94a3b8;--red:#ef4444;--green:#10b981;--gold:#f59e0b;--accent:#5865f2}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Chakra Petch',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 20px 40px}
+.game-container{max-width:700px;width:100%;text-align:center}
+h1{font-size:2rem;margin-bottom:8px;color:var(--red)}
+.desc{color:var(--dim);margin-bottom:24px}
+.scenario{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;text-align:left}
+.scenario h3{color:var(--gold);margin-bottom:8px}
+.choices{display:grid;gap:10px;margin-top:16px}
+.choice{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;transition:all .2s;text-align:left}
+.choice:hover{border-color:var(--accent);transform:translateX(4px)}
+.result{padding:16px;border-radius:8px;margin-top:16px;display:none}
+.result.good{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green)}
+.result.bad{background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
+.score{font-size:1.5rem;font-weight:700;color:var(--accent);margin:16px 0}
+.back-link{color:var(--dim);text-decoration:none;margin-top:24px;display:inline-block}
+.back-link:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="game-container">
+  <h1>Manufactured Chaos</h1>
+  <p class="desc">Kaos mühendisliği — düşmanın istikrarsızlık stratejilerini çöz ve karşı hamle geliştir</p>
+  <div class="score">Puan: <span id="pts">0</span></div>
+  <div id="scene" class="scenario"></div>
+  <div id="res" class="result"></div>
+  <a href="oza-hub.html" class="back-link">&larr; OZA Hub</a>
+</div>
+<script>
+const scenarios=[
+{q:"Bir ülkede sosyal medya üzerinden etnik gerilim tırmandırılıyor. Bot ağları tespit edildi. Ne yaparsın?",
+ opts:[{t:"Sosyal medya platformlarını tamamen kapat",s:-10,r:"Kötü: İfade özgürlüğü ihlali + Streisand etkisi"},
+       {t:"Bot ağlarını izole et, karşı-anlatı başlat",s:20,r:"İyi: Cerrahi müdahale + bilgi dominansı"},
+       {t:"Hiçbir şey yapma, kendiliğinden söner",s:-5,r:"Riskli: Kaos büyüyebilir"}]},
+{q:"Komşu ülke sınırda 'insani yardım koridoru' açmak istiyor ama istihbarat raporları silah sevkiyatı gösteriyor.",
+ opts:[{t:"Koridoru kabul et, gizlice denetle",s:15,r:"İyi: Diplomasi + istihbarat avantajı"},
+       {t:"Koridoru reddet, BM'ye şikâyet et",s:5,r:"Orta: Diplomatik maliyet ama güvenlik korunur"},
+       {t:"Askeri güçle koridoru kapat",s:-15,r:"Kötü: Uluslararası izolasyon riski"}]},
+{q:"Enerji altyapısına siber saldırı başladı. 3 şehirde elektrik kesildi. Saldırının kaynağı belirsiz.",
+ opts:[{t:"Karşı siber saldırı başlat (şüpheli ülkeye)",s:-20,r:"Kötü: Yanlış hedef + tırmanma riski"},
+       {t:"Savunma moduna geç, yedek sistemleri aktive et",s:15,r:"İyi: Hasar minimizasyonu + zaman kazanma"},
+       {t:"Kamuoyuna açıklama yap, uluslararası destek iste",s:10,r:"Orta: Meşruiyet kazanımı"}]},
+{q:"Seçim öncesi deepfake video yayıldı. Cumhurbaşkanı savaş ilan ediyor gibi görünüyor.",
+ opts:[{t:"Hemen tekzip yayınla + orijinal video kanıtı sun",s:20,r:"İyi: Hızlı tepki + kanıt"},
+       {t:"Videoyu yasakla, paylaşanları gözaltına al",s:-10,r:"Kötü: Otoriter algı + viral etki"},
+       {t:"Deepfake tespit teknolojisini kamuoyuyla paylaş",s:15,r:"İyi: Eğitim + güven inşası"}]}
+];
+let idx=0,score=0;
+function show(){
+  if(idx>=scenarios.length){document.getElementById('scene').innerHTML='<h3>Oyun Bitti!</h3><p>Toplam Puan: '+score+'</p><p>'+(score>=40?'Mükemmel stratejist!':score>=20?'İyi analiz yeteneği':'Daha fazla pratik gerekli')+'</p>';return}
+  const s=scenarios[idx];
+  let h='<h3>Senaryo '+(idx+1)+'/'+scenarios.length+'</h3><p>'+s.q+'</p><div class="choices">';
+  s.opts.forEach((o,i)=>{h+='<div class="choice" onclick="pick('+i+')">'+o.t+'</div>'});
+  h+='</div>';
+  document.getElementById('scene').innerHTML=h;
+  document.getElementById('res').style.display='none';
+}
+function pick(i){
+  const o=scenarios[idx].opts[i];
+  score+=o.s;
+  document.getElementById('pts').textContent=score;
+  const r=document.getElementById('res');
+  r.className='result '+(o.s>0?'good':'bad');
+  r.textContent=o.r;
+  r.style.display='block';
+  idx++;
+  setTimeout(show,2000);
+}
+show();
+</script>
+</body>
+</html>

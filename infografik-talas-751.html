@@ -274,7 +274,7 @@ html { scroll-padding-top: 140px; }
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Animasyonlu noktalar
+            // İnfografik noktalar
             const time = animationTime * 0.001;
             for (let i = 0; i < 50; i++) {
                 const x = (Math.sin(time + i) * canvas.width * 0.5) + canvas.width * 0.5;
@@ -370,7 +370,7 @@ html { scroll-padding-top: 140px; }
             ctx.fillText('İSLAM', endX, endY - 5);
             ctx.fillText('📚 KÜTÜPHANELER', endX, endY + 15);
 
-            // Animasyonlu oklar
+            // İnfografik oklar
             const progress = (Math.sin(animationTime * 0.005) + 1) / 2;
             const arrowX = startX + (endX - startX) * progress;
             ctx.fillStyle = '#e01515';

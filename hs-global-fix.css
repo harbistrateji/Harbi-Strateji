@@ -234,3 +234,43 @@ img[src=""], img:not([src]), img[src*="placeholder"] {
   th, td { border: 1px solid #666; padding: 4px 8px; }
   a { color: #000; text-decoration: underline; }
 }
+
+/* ═══ WCAG AA KONTRAST DÜZELTMELERİ ═══ */
+body { color: #e0e0e0; }
+p, .desc, [class*="-desc"] { color: rgba(255,255,255,.7) !important; }
+h1, h2, h3, h4, h5, h6, [class*="-title"] { color: #ffffff !important; }
+
+/* ═══ MOBİL DOKUNMA HEDEFLERİ ═══ */
+a, button, [onclick], input, select, textarea {
+  min-height: 44px;
+  min-width: 44px;
+}
+nav a, .nav-link { padding: .6rem .8rem !important; }
+
+/* ═══ TUTARLI SPACING ═══ */
+html { scroll-padding-top: 110px !important; scroll-behavior: smooth; }
+@media(max-width:768px) { html { scroll-padding-top: 65px !important; } }
+
+/* ═══ CROSS-LINK STİLİ ═══ */
+.cross-link {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .3rem .8rem; border-radius: 16px;
+  background: rgba(88,101,242,.08); border: 1px solid rgba(88,101,242,.2);
+  color: #5865f2; font-size: .7rem; text-decoration: none;
+  transition: all .2s; min-height: 32px;
+}
+.cross-link:hover { background: rgba(88,101,242,.15); border-color: #5865f2; }
+
+/* ═══ ETİKET BADGE ═══ */
+.tag-badge {
+  display: inline-block; font-size: .6rem; text-transform: uppercase;
+  letter-spacing: .06em; font-weight: 700; padding: 3px 8px;
+  border-radius: 4px; margin-bottom: .4rem;
+}
+.tag-oyun { background: rgba(88,101,242,.1); color: #5865f2; }
+.tag-simulasyon { background: rgba(196,30,58,.1); color: #c41e3a; }
+.tag-analiz { background: rgba(212,160,23,.1); color: #d4a017; }
+.tag-infografik { background: rgba(0,224,255,.1); color: #00e0ff; }
+.tag-referans { background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); }
+.tag-harita { background: rgba(45,212,191,.1); color: #2dd4bf; }
+.tag-quiz { background: rgba(224,86,253,.1); color: #e056fd; }

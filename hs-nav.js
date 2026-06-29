@@ -27,91 +27,67 @@ const TICKER_ITEMS = [
 ];
 
 const NAV_LINKS = [
-  { label:'Analizler', href:'index.html', sub:[
-    {lbl:'Strateji', links:[
-      {t:'Küresel Strateji',h:'kulliyat.html'},
-      {t:'Bölgesel Strateji',h:'iran-ek-icerik.html'},
-      {t:'Genel Strateji',h:'kulliyat.html'}
-    ]},
-    {lbl:'Türk Silahlı Kuvvetleri', links:[
-      {t:'Kara Savunması',h:'tsk-kara-kuvvetleri-tarihce.html'},
-      {t:'Hava Savunması',h:'tsk-hava-kuvvetleri-tarihce.html'},
-      {t:'Deniz Savunması',h:'tsk-deniz-kuvvetleri-tarihce.html'}
-    ]},
-    {lbl:'Jeopolitik', links:[
-      {t:'Bölgesel Dinamikler',h:'iran-ek-icerik.html'},
-      {t:'Enerji Jeopolitiği',h:'infografik-hibrit-savas-tum-boyutlar.html'},
-      {t:'Siber Jeopolitik',h:'siber-eh-simulatoru.html'}
-    ]}
-  ]},
-  { label:'Simülasyonlar', href:'simulasyonlar.html', sub:[
-    {lbl:'Aktif Simülasyonlar', links:[
-      {t:'Algoritmik Harp',h:'sim1-demir-kubbe.html'},
-      {t:'Sürü Otonomisi',h:'suru-iha-tasarim-simulatoru.html'},
-      {t:'Spektrum Savaşı',h:'sim12-spektrum-savasi.html'},
-      {t:'Geleceğin Askeri',h:'simulasyonlar.html'}
-    ]},
-    {lbl:'Yeni', links:[
-      {t:'Siber/EH Simülatörü',h:'siber-eh-simulatoru.html'},
-      {t:'Sürü İHA Tasarım',h:'suru-iha-tasarim-simulatoru.html'},
-      {t:'Stratejik Mineraller',h:'stratejik-mineraller-periyodik-tablo.html'},
-      {t:'Kuantum QKD',h:'kuantum-kriptografi-qkd-simulatoru.html'},
-      {t:'NATO Ankara Zirvesi',h:'nato-ankara-zirvesi-2026.html'}
-    ]}
-  ]},
   { label:'OZA', href:'oza-hub.html', cls:'oza-link', sub:[
-    {lbl:'Oyunlar', links:[
-      {t:'İstanbul Fethi 1453',h:'oza-istanbul-fethi-1453.html'},
-      {t:'Malazgirt 1071',h:'oza-malazgirt-1071.html'},
-      {t:'Kill-Chain Yarışı',h:'oza-kill-chain.html'},
-      {t:'Preveze 1538',h:'oza-preveze-1538.html'}
+    {lbl:'Oyna', links:[
+      {t:'Tarihsel Savaşlar',h:'oza-hub.html#tarihsel'},
+      {t:'Aksiyon & Taktik',h:'oza-hub.html#aksiyon'},
+      {t:'Stratejik Karar',h:'oza-hub.html#strateji'},
+      {t:'Siber & Teknoloji',h:'oza-hub.html#siber'},
+      {t:'Ekonomi & Kaynak',h:'oza-hub.html#ekonomi'},
+      {t:'Simülasyonlar',h:'oza-hub.html#simulasyon'}
     ]},
-    {lbl:'EVREN', links:[
-      {t:'Sürü Savunması',h:'oza-suru-savunmasi.html'},
-      {t:'Asimetri Topu',h:'oza-asimetri-topu.html'},
-      {t:'Türk Savaş Zekâsı',h:'oza-turk-savas-zekasi.html'},
-      {t:'Mobil Oyunlar',h:'oza-mobil-oyunlar.html'}
+    {lbl:'Öğren', links:[
+      {t:'Eğitim & Quiz',h:'oza-hub.html#egitim'},
+      {t:'OZA∞ Bilgi Kütüphanesi',h:'oza-sonsuz.html'},
+      {t:'Mobil Mini Oyunlar',h:'oza-mobil-oyunlar.html'}
+    ]},
+    {lbl:'Yarış & Canlı', links:[
+      {t:'Strateji Ligi',h:'oza-strateji-ligi.html'},
+      {t:'Kriz Masası (2-4 kişi)',h:'oza-kriz-masasi.html'},
+      {t:'Gözcü Canlı Analiz',h:'oza-gozcu.html'}
     ]}
   ]},
-  { label:'EVREN', href:'evren-hub.html', cls:'evren-link' },
+  { label:'EVREN', href:'evren-hub.html', cls:'evren-link', sub:[
+    {lbl:'Küresel Sorunlar', links:[
+      {t:'Enerji Krizi & Dönüşüm',h:'evren-hub.html#enerji'},
+      {t:'Su Kıtlığı & Savaşları',h:'evren-hub.html#su'},
+      {t:'Stratejik Mineraller',h:'evren-hub.html#mineraller'},
+      {t:'İklim & Çevre Riski',h:'evren-hub.html#iklim'}
+    ]},
+    {lbl:'İnteraktif Araçlar', links:[
+      {t:'Enerji Geleceği İnfografiği',h:'enerji-infografik-gelecek.html'},
+      {t:'Su Kıtlığı Haritası',h:'su-infografik-kitlik.html'},
+      {t:'Mineraller Periyodik Tablo',h:'stratejik-mineraller-periyodik-tablo.html'}
+    ]}
+  ]},
   { label:'MEDENİYET', href:'medeniyet-dinamikleri.html', cls:'med-link', sub:[
-    {lbl:'Kategoriler', links:[
-      {t:'Jeopolitik',h:'medeniyet-dinamikleri.html#jeopolitik'},
-      {t:'Jeostrateji',h:'medeniyet-dinamikleri.html#jeostrateji'},
-      {t:'Jeoekonomi',h:'medeniyet-dinamikleri.html#jeoekonomi'},
-      {t:'Enerji',h:'medeniyet-dinamikleri.html#enerji'},
-      {t:'Psikoloji',h:'medeniyet-dinamikleri.html#psikoloji'},
-      {t:'Spor',h:'medeniyet-dinamikleri.html#spor'},
-      {t:'Yaşam',h:'medeniyet-dinamikleri.html#yasam'},
-      {t:'Uzay',h:'medeniyet-dinamikleri.html#uzay'},
-      {t:'Yapay Dünya',h:'medeniyet-dinamikleri.html#yapay-dunya'},
-      {t:'Yapay Zekâ',h:'medeniyet-dinamikleri.html#yapay-zeka'}
+    {lbl:'5 Ana Kategori', links:[
+      {t:'Tarih & Kimlik',h:'medeniyet-dinamikleri.html#tarih'},
+      {t:'Jeopolitik & Strateji',h:'medeniyet-dinamikleri.html#jeopolitik'},
+      {t:'Ekonomi & Enerji',h:'medeniyet-dinamikleri.html#ekonomi'},
+      {t:'Teknoloji & Gelecek',h:'medeniyet-dinamikleri.html#teknoloji'},
+      {t:'Kültür & Uygarlık',h:'medeniyet-dinamikleri.html#kultur'}
     ]},
-    {lbl:'Türk & İslam Tarihi', links:[
+    {lbl:'Öne Çıkanlar', links:[
+      {t:'Elon Musk Serisi',h:'musk-infografik-serisi.html'},
+      {t:'Geleceğin Harp Ekosistemi',h:'gelecegin-harp-ekosistemi.html'},
       {t:'Bilim Arenası',h:'bilim-arenasi-tam.html'},
-      {t:'Ekonomi Tarihi',h:'md-turklerde-ekonomi.html'},
-      {t:'Toplum Tarihi',h:'md-turklerde-toplum.html'},
-      {t:'Sanat Tarihi',h:'md-turklerde-sanat.html'},
-      {t:'Spor Tarihi',h:'md-turklerde-spor.html'},
-      {t:'Eğitim Tarihi',h:'md-turklerde-egitim.html'}
+      {t:'Küresel Askeri Sistemler',h:'infografik-ulke-karsilastirma.html'}
     ]}
   ]},
-  { label:'Veri', href:'veri-tabani.html', sub:[
-    {lbl:'Kategoriler', links:[
-      {t:'Silah Sistemleri',h:'panel-silah-metal.html'},
-      {t:'Aktörler',h:'veri-tabani.html'},
-      {t:'Doktrinler',h:'veri-tabani.html'},
-      {t:'Krizler',h:'veri-tabani.html'}
-    ]}
-  ]},
-  { label:'Külliyat', href:'kesfet.html', sub:[
-    {lbl:'İçerikler', links:[
-      {t:'Makaleler',h:'kulliyat.html'},
-      {t:'Görsel Brifing',h:'infografik.html'},
-      {t:'Sözlük',h:'kesfet.html'},
-      {t:'Videolar',h:'hs-tv.html'},
-      {t:'Bilgi Merkezi',h:'bilgi-merkezi.html'},
-      {t:'Teknik Kartlar',h:'teknik-kartlar.html'},
+  { label:'KÜLLİYAT', href:'kesfet.html', sub:[
+    {lbl:'5 Cilt', links:[
+      {t:'Cilt I — Gücün Algoritması',h:'kulliyat.html#cilt1'},
+      {t:'Cilt II — Sistemler Savaşı',h:'kulliyat.html#cilt2'},
+      {t:'Cilt III — Savaşın Finansmanı',h:'kulliyat.html#cilt3'},
+      {t:'Cilt IV — Formüller & Bilim',h:'kulliyat.html#cilt4'},
+      {t:'Cilt V — Makaleler & Analizler',h:'kulliyat.html#cilt5'}
+    ]},
+    {lbl:'Referans', links:[
+      {t:'Stratejik Sözlük (3.335)',h:'kesfet.html#sozluk'},
+      {t:'Silah & Metal Paneli',h:'panel-silah-metal.html'},
+      {t:'Formül Laboratuvarı',h:'formul-lab.html'},
+      {t:'Yazarlar & Köşe Yazıları',h:'yazarlar.html'},
       {t:'Raporlar',h:'raporlar.html'}
     ]}
   ]},

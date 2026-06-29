@@ -588,7 +588,7 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
                 <span class="ba-menu-icon">🧠</span>
                 <h1>İSLAM VE TÜRK BİLGİNLERİNİN KARARGAHI</h1>
                 <p>Bilim Tarihinin Altın Çağı</p>
-                <div class="ba-global-stats" id="ba-menu-global-xp">📊 Akademik Enerji: 0 Bilim XP</div>
+                <div class="ba-global-stats" id="ba-menu-global-xp">📊 Referans Enerji: 0 Bilim XP</div>
             </div>
             <div class="ba-scholar-grid" id="ba-scholar-selector-grid"></div>
         </div>
@@ -653,9 +653,9 @@ pre, code { overflow-x: auto !important; white-space: pre-wrap !important; word-
         addXP(val) { this.totalXP += val; localStorage.setItem("scholarsXP", this.totalXP); this.updateHUD(); },
         updateHUD() {
             document.getElementById("ha-hud-xp").innerText = `⚡ ${this.totalXP} XP`;
-            let r = "Stajyer Danışman"; if(this.totalXP>600) r="Akademik Danışman"; if(this.totalXP>1200) r="Kıdemli Mucit"; if(this.totalXP>1800) r="Bilim Ordinaryüsü";
+            let r = "Stajyer Danışman"; if(this.totalXP>600) r="Referans Danışman"; if(this.totalXP>1200) r="Kıdemli Mucit"; if(this.totalXP>1800) r="Bilim Ordinaryüsü";
             document.getElementById("ha-hud-rank").innerText = `🏆 ${r}`;
-            if(document.getElementById("ba-menu-global-xp")) document.getElementById("ba-menu-global-xp").innerText = `📊 Akademik Enerji: ${this.totalXP} Bilim XP`;
+            if(document.getElementById("ba-menu-global-xp")) document.getElementById("ba-menu-global-xp").innerText = `📊 Referans Enerji: ${this.totalXP} Bilim XP`;
         },
         triggerFail(reason) { document.getElementById("ha-fail-reason").innerText = reason; document.getElementById("ha-fail-overlay").style.display = "flex"; SoundFX.play("fail"); },
         retry() { document.getElementById("ha-fail-overlay").style.display = "none"; BattleLauncher.renderStage(); }

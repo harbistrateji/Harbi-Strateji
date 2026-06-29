@@ -533,7 +533,7 @@ function endQuiz(){
 }
 
 function copyShareCard(){
-  var text = '🎓 HARBİ QUİZ\n'+quizScore+' puan\n'+document.getElementById('sc-sub').textContent+'\nHarb-i Strateji · OZA Oyun Merkezi';
+  var text = '🎓 HARBİ QUİZ\n'+quizScore+' puan\n'+document.getElementById('sc-sub').textContent+'\nHarb-i Strateji · Oyun Merkezi';
   if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){ HS.beepOK(); }); }
   HS.showShareCard({title:'Harbi Quiz',puan:quizScore,game:'harbi-quiz',color:'#E01515'});
 }

@@ -498,7 +498,7 @@ function endStage(){
   } else {
     var b=document.createElement('button');b.className='btn-main';b.textContent='🔄 BAŞTAN OYNA';
     b.onclick=function(){stage=0;pts=0;chainCount=0;startStage();};document.getElementById('action-area').appendChild(b);
-    var b2=document.createElement('button');b2.className='btn-sec';b2.textContent='← OZA Oyun Merkezine Dön';
+    var b2=document.createElement('button');b2.className='btn-sec';b2.textContent='← Oyun Merkezine Dön';
     b2.onclick=function(){location.href='oza-hub.html';};document.getElementById('action-area').appendChild(b2);
   }
   document.getElementById('feedback').innerHTML='';
